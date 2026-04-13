@@ -105,6 +105,8 @@ export default [
         closeModal: "writable",
         showToast: "writable",
         printGuests: "writable",
+        showUpdateBanner: "writable",
+        applyUpdate: "writable",
         // nav.js
         showSection: "writable",
         // dashboard.js

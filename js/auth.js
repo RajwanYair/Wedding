@@ -98,35 +98,44 @@ function hideAuthOverlay() {
 }
 
 function updateUserBar() {
-  const group  = document.getElementById('userBarGroup');
-  const nameEl = document.getElementById('userDisplayName');
-  const avatar = document.getElementById('userAvatar');
-  const badge  = document.getElementById('userRoleBadge');
+  const group = document.getElementById("userBarGroup");
+  const nameEl = document.getElementById("userDisplayName");
+  const avatar = document.getElementById("userAvatar");
+  const badge = document.getElementById("userRoleBadge");
+  const btnOut = document.getElementById("btnSignOut");
+  const btnIn = document.getElementById("btnSignIn");
   if (!group || !_authUser) return;
-  group.style.display = 'flex';
+  group.style.display = "flex";
+  const isAnon = _authUser.provider === "guest";
   if (_authUser.picture) {
     avatar.src = _authUser.picture;
-    avatar.style.display = 'inline';
+    avatar.style.display = "inline";
   } else {
-    avatar.style.display = 'none';
+    avatar.style.display = "none";
   }
-  nameEl.textContent = _authUser.name || t('role_guest');
-  badge.textContent  = _authUser.isAdmin ? ('\ud83d\udc51 ' + t('role_admin')) : t('role_guest');
-  badge.className    = 'user-role-chip ' + (_authUser.isAdmin ? 'role-admin' : 'role-guest');
+  nameEl.textContent = _authUser.name || t("role_guest");
+  badge.textContent = _authUser.isAdmin
+    ? "\ud83d\udc51 " + t("role_admin")
+    : t("role_guest");
+  badge.className =
+    "user-role-chip " + (_authUser.isAdmin ? "role-admin" : "role-guest");
+  // Show sign-out for authenticated users, sign-in for anonymous guests
+  if (btnOut) btnOut.style.display = isAnon ? "none" : "";
+  if (btnIn) btnIn.style.display = isAnon ? "" : "none";
 }
 
 function applyUserLevel() {
   if (!_authUser) return;
   if (_authUser.isAdmin) {
-    document.body.classList.remove('guest-mode');
-    showSection('dashboard');
+    document.body.classList.remove("guest-mode");
+    showSection("dashboard");
   } else {
-    document.body.classList.add('guest-mode');
-    const fn = document.getElementById('rsvpFirstName');
-    const ln = document.getElementById('rsvpLastName');
+    document.body.classList.add("guest-mode");
+    const fn = document.getElementById("rsvpFirstName");
+    const ln = document.getElementById("rsvpLastName");
     if (fn && !fn.value && _authUser.firstName) fn.value = _authUser.firstName;
-    if (ln && !ln.value && _authUser.lastName)  ln.value = _authUser.lastName;
-    showSection('rsvp');
+    if (ln && !ln.value && _authUser.lastName) ln.value = _authUser.lastName;
+    showSection("rsvp");
   }
 }
 
@@ -135,53 +144,58 @@ function onAuthSuccess() {
   updateUserBar();
   applyUserLevel();
   // Request Sheets OAuth2 token for admin users signed in with Google
-  if (_authUser && _authUser.isAdmin && _authUser.provider === 'google') {
+  if (_authUser && _authUser.isAdmin && _authUser.provider === "google") {
     requestSheetsAccess();
   }
 }
 
 function initGoogleSignIn() {
-  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.includes('YOUR_GOOGLE')) {
-    console.warn('Wedding Manager: Set GOOGLE_CLIENT_ID in index.html to enable Google Sign-In. See comments for setup steps.');
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.includes("YOUR_GOOGLE")) {
+    console.warn(
+      "Wedding Manager: Set GOOGLE_CLIENT_ID in index.html to enable Google Sign-In. See comments for setup steps.",
+    );
     return;
   }
   window.google.accounts.id.initialize({
-    client_id:             GOOGLE_CLIENT_ID,
-    callback:              handleGoogleCredential,
-    auto_select:           false,
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    auto_select: false,
     cancel_on_tap_outside: false,
   });
-  const btnEl = document.getElementById('googleSignInBtn');
+  const btnEl = document.getElementById("googleSignInBtn");
   if (btnEl) {
     window.google.accounts.id.renderButton(btnEl, {
-      theme:  'filled_black',
-      size:   'large',
-      shape:  'rectangular',
-      width:  280,
-      locale: _currentLang === 'he' ? 'iw' : 'en',
+      theme: "filled_black",
+      size: "large",
+      shape: "rectangular",
+      width: 280,
+      locale: _currentLang === "he" ? "iw" : "en",
     });
   }
   if (!_authUser) window.google.accounts.id.prompt();
 }
 
 function initAuth() {
-  const saved = load('auth');
+  const saved = load("auth");
   if (saved && saved.email) {
-    const parts = (saved.name || '').split(' ');
+    const parts = (saved.name || "").split(" ");
     _authUser = {
-      name:      saved.name      || '',
-      firstName: parts[0]        || '',
-      lastName:  parts.slice(1).join(' ') || '',
-      email:     saved.email,
-      picture:   saved.picture   || '',
-      isAdmin:   saved.isAdmin   || false,
-      provider:  saved.provider  || 'google',
+      name: saved.name || "",
+      firstName: parts[0] || "",
+      lastName: parts.slice(1).join(" ") || "",
+      email: saved.email,
+      picture: saved.picture || "",
+      isAdmin: saved.isAdmin || false,
+      provider: saved.provider || "google",
     };
     hideAuthOverlay();
     updateUserBar();
     applyUserLevel();
+  } else {
+    // No saved auth — auto-enter as anonymous guest (RSVP only)
+    loginGuest();
   }
-  if (typeof window.google !== 'undefined' && window.google.accounts) {
+  if (typeof window.google !== "undefined" && window.google.accounts) {
     initGoogleSignIn();
   }
   // If GIS script not yet loaded, window.onGoogleLibraryLoad (below) handles it

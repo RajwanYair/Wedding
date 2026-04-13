@@ -1,6 +1,6 @@
 // =============================================================================
 // Service Worker — Wedding Manager v1.2.0
-// APP_SHELL pre-cache + offline fallback
+// Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
 'use strict';
 
@@ -36,7 +36,27 @@ const APP_SHELL = [
   "./js/app.js",
 ];
 
-// Install: pre-cache app shell
+// Lazily-resolved Set of fully-qualified app-shell URLs
+let _shellUrls = null;
+function getShellUrls() {
+  if (!_shellUrls) {
+    const base = self.registration.scope;
+    _shellUrls = new Set(APP_SHELL.map(function(p) { return new URL(p, base).href; }));
+  }
+  return _shellUrls;
+}
+
+// Broadcast UPDATE_AVAILABLE to all window clients (once per SW lifetime)
+let _updateNotified = false;
+function notifyClients() {
+  if (_updateNotified) return;
+  _updateNotified = true;
+  self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clients) {
+    clients.forEach(function(c) { c.postMessage({ type: 'UPDATE_AVAILABLE' }); });
+  });
+}
+
+// ── Install: pre-cache app shell ─────────────────────────────────────────────
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
@@ -45,7 +65,7 @@ self.addEventListener('install', function(e) {
   );
 });
 
-// Activate: clean old caches
+// ── Activate: remove stale caches, claim all clients ─────────────────────────
 self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keys) {
@@ -53,40 +73,63 @@ self.addEventListener('activate', function(e) {
         keys.filter(function(k) { return k !== CACHE_NAME; })
           .map(function(k) { return caches.delete(k); })
       );
-    })
+    }).then(function() { return self.clients.claim(); })
   );
-  self.clients.claim();
 });
 
-// Fetch: cache-first for app shell, network-first for others
+// ── Fetch: stale-while-revalidate for app shell ───────────────────────────────
 self.addEventListener('fetch', function(e) {
   const url = new URL(e.request.url);
 
-  // Skip non-GET and cross-origin
+  // Only handle same-origin GETs
   if (e.request.method !== 'GET') return;
   if (url.origin !== self.location.origin) return;
 
-  e.respondWith(
-    caches.match(e.request).then(function(cached) {
-      if (cached) return cached;
-      return fetch(e.request).then(function(response) {
-        // Only cache successful same-origin responses
-        if (response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(e.request, clone);
+  const isShell = getShellUrls().has(url.href);
+
+  if (isShell) {
+    // Stale-while-revalidate: respond from cache instantly; refresh cache in background.
+    // If the server signals new content (ETag/Last-Modified changed), notify all clients.
+    e.respondWith(
+      caches.open(CACHE_NAME).then(function(cache) {
+        return cache.match(e.request).then(function(cached) {
+          const networkUpdate = fetch(e.request).then(function(response) {
+            if (response.status === 200) {
+              const newV = response.headers.get('ETag') || response.headers.get('Last-Modified') || '';
+              const oldV = cached ? (cached.headers.get('ETag') || cached.headers.get('Last-Modified') || '') : '';
+              if (cached && newV && newV !== oldV) notifyClients();
+              cache.put(e.request, response.clone());
+            }
+            return response;
+          }).catch(function() {
+            return cached || caches.match('./index.html');
           });
-        }
-        return response;
-      });
-    }).catch(function() {
-      // Offline fallback: return cached index
-      return caches.match('./index.html');
-    })
-  );
+          // Serve stale cache immediately; background revalidation runs regardless
+          return cached || networkUpdate;
+        });
+      })
+    );
+  } else {
+    // Non-shell resources: cache-first, fetch on miss
+    e.respondWith(
+      caches.match(e.request).then(function(cached) {
+        if (cached) return cached;
+        return fetch(e.request).then(function(response) {
+          if (response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });
+          }
+          return response;
+        });
+      }).catch(function() {
+        return caches.match('./index.html');
+      })
+    );
+  }
 });
 
-// Skip waiting on message
+// ── Message: SKIP_WAITING — new SW takes over immediately ────────────────────
 self.addEventListener('message', function(e) {
   if (e.data === 'SKIP_WAITING') self.skipWaiting();
 });
+

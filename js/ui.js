@@ -84,3 +84,32 @@ function showToast(msg, type) {
 /* ── Print ── */
 function printGuests() { window.print(); }
 
+/* ── Update Banner ── */
+/** Show a persistent top banner prompting the user to reload for new content. */
+function showUpdateBanner() {
+  if (document.getElementById('updateBanner')) return; // already visible
+  const banner = document.createElement('div');
+  banner.id = 'updateBanner';
+  banner.className = 'update-banner';
+
+  const msg = document.createElement('span');
+  msg.className = 'update-banner-msg';
+  msg.textContent = t('sw_update_msg');
+
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-primary update-banner-btn';
+  btn.textContent = t('sw_update_btn');
+  btn.addEventListener('click', function() { applyUpdate(); });
+
+  const dismiss = document.createElement('button');
+  dismiss.className = 'update-banner-dismiss';
+  dismiss.textContent = '\u00d7';
+  dismiss.setAttribute('aria-label', 'Dismiss update notification');
+  dismiss.addEventListener('click', function() { banner.remove(); });
+
+  banner.appendChild(msg);
+  banner.appendChild(btn);
+  banner.appendChild(dismiss);
+  document.body.appendChild(banner);
+}
+

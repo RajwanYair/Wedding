@@ -20,7 +20,7 @@
 </head>
 <body>
   <!-- ── Auth Overlay ── -->
-  <div class="auth-overlay" id="authOverlay">
+  <div class="auth-overlay auth-hidden" id="authOverlay">
     <div class="auth-card">
       <div class="auth-logo-icon">💍</div>
       <h2 class="auth-card-title" data-i18n="auth_title">ניהול חתונה</h2>
@@ -59,7 +59,8 @@
       <img id="userAvatar" class="user-avatar-sm" alt="" style="display:none;">
       <span id="userDisplayName" class="user-display-name"></span>
       <span id="userRoleBadge" class="user-role-chip"></span>
-      <button class="user-signout-btn" onclick="signOut()" data-i18n-tooltip="tip_sign_out" data-tooltip-pos="down">↩</button>
+      <button class="user-signout-btn" id="btnSignOut" onclick="signOut()" data-i18n-tooltip="tip_sign_out" data-tooltip-pos="down" style="display:none;">↩</button>
+      <button class="user-signout-btn" id="btnSignIn" onclick="showAuthOverlay()" data-i18n="auth_sign_in" data-tooltip-pos="down">🔑 כניסה</button>
     </div>
     <div class="top-bar-group">
       <span id="topBarCouple" style="font-size:0.82em; color:var(--gold); font-weight:600; letter-spacing:0.02em;"></span>
