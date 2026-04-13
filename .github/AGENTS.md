@@ -1,10 +1,4 @@
-<div align="center">
-
-# 🤖 Agents — Wedding Manager
-
-![Copilot](https://img.shields.io/badge/GitHub_Copilot-Agents-8b5cf6?style=flat-square&logo=github&logoColor=white)
-
-</div>
+# Agents — Wedding Manager
 
 ## Available Custom Agents
 
@@ -31,9 +25,9 @@ Guest management specialist for RSVP workflows, table seating logic, WhatsApp me
 
 | Instruction | Applies To | Purpose |
 | --- | --- | --- |
-| `wedding` | `*.html` | HTML/CSS/JS coding standards |
+| `wedding` | `*.html` | HTML/CSS/JS implementation patterns |
 | `cicd` | `*.yml, *.yaml, .github/**` | CI/CD workflow standards |
-| `workspace` | `**` | Project architecture overview |
+| `workspace` | on-demand | File structure and resource map |
 
 ## MCP Servers (`.vscode/mcp.json`)
 

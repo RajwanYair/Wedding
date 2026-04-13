@@ -1,40 +1,83 @@
 ---
 applyTo: "**/*.html"
-description: "Use when: editing the wedding app HTML file. Coding standards for HTML/CSS/JS, i18n, and data patterns."
+description: "Use when: editing the wedding app HTML file. Implementation patterns for CSS, JS, i18n, and data."
 ---
 
-# Wedding HTML Instructions — v1.0.0
+# Wedding HTML — Implementation Patterns
 
-## CSS Rules
+## CSS Custom Properties
 
-- Use CSS custom properties defined in `:root` — never hardcode colors
-- Variables: `--bg-primary`, `--bg-card`, `--accent`, `--gold`, `--rose`, `--text-primary`, `--text-secondary`, `--positive`, `--negative`, `--warning`
-- 5 themes override all variables: `body.theme-{rosegold,gold,emerald,royal}` + default purple
-- RTL layout: `dir="rtl"`, `lang="he"` — use `margin-right: auto` for accents
-- Glassmorphism: `backdrop-filter: blur(16px)` on cards
-- `prefers-reduced-motion`: disables all animations
+Root variables in `:root` — never hardcode colors:
 
-## JavaScript Rules
+- Background: `--bg-primary`, `--bg-secondary`, `--bg-card`, `--bg-card-hover`
+- Accent: `--accent`, `--accent-light`, `--accent-dark`, `--gold`, `--rose`
+- Text: `--text-primary`, `--text-secondary`, `--text-muted`
+- States: `--positive`, `--negative`, `--warning`
+- Theme overrides: `body.theme-{rosegold,gold,emerald,royal}` — replaces all vars
 
-- Cache DOM in `el` object — no repeated `getElementById`
-- `textContent` for external data — never `innerHTML` with unsanitized content
-- All user text must use i18n: `data-i18n` attribute on HTML, `t(key)` in JS
-- ES2020+: async/await, `?.`, `??`
-- localStorage with `wedding_v1_` prefix
-- Phone numbers: `cleanPhone()` converts Israeli format to international
+## Section Pattern
+
+```html
+<section class="section" id="sec-{name}">
+  <div class="card">
+    <h2 class="section-title" data-i18n="sec_{name}">כותרת</h2>
+  </div>
+</section>
+```
+
+## Modal Pattern
+
+```html
+<div class="modal-overlay" id="{name}Modal" onclick="closeModal('{name}Modal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="modal-close" onclick="closeModal('{name}Modal')">×</span>
+  </div>
+</div>
+```
+
+## JS Patterns
+
+```js
+// DOM — always from `el` object, never getElementById inline
+el.statTotal.textContent = n;
+
+// i18n
+t('key')                          // JS string lookup
+data-i18n="key"                   // HTML attribute binding
+data-i18n-placeholder="key"       // input placeholder
+data-i18n-tooltip="key"           // tooltip text
+
+// Storage
+saveAll()                         // persists _guests, _tables, _weddingInfo
+const g = _guests.find(x => x.id === id);
+
+// Phone
+cleanPhone('054-123-4567')        // → '972541234567' (wa.me ready)
+
+// ES2020+ patterns preferred
+const x = obj?.prop ?? defaultVal;
+```
 
 ## i18n Rules
 
-- Every visible string needs `data-i18n="key"` attribute
-- Placeholders use `data-i18n-placeholder="key"`
-- JS strings use `t('key')` function
-- Both `he` and `en` translations in `I18N` object
-- Language persisted in localStorage
+- Every visible string: `data-i18n="key"` on HTML element
+- JS strings: `t('key')` — never hardcoded Hebrew or English
+- Both `he` and `en` entries required in the `I18N` object
+- Language and theme both persisted in `localStorage`
 
-## Data Model
+## Guest Data Model (v1.1.0)
 
 ```text
-Guest: { id, name, phone, count, status, group, tableId, notes, sent, createdAt }
-Table: { id, name, capacity, shape }
-WeddingInfo: { groom, bride, date, time, venue, address }
+{
+  id, firstName, lastName, phone, email,
+  count, children,
+  status: 'pending'|'confirmed'|'declined'|'maybe',
+  side:   'groom'|'bride'|'mutual',
+  group:  'family'|'friends'|'work'|'other',
+  relationship,
+  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',
+  mealNotes, accessibility: boolean,
+  tableId, gift, notes, sent: boolean,
+  rsvpDate, createdAt, updatedAt
+}
 ```

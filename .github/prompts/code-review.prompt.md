@@ -1,9 +1,11 @@
 ---
-mode: ask
+mode: agent
 description: "Full code review: security, UI, i18n, data integrity, and performance audit for the wedding app."
 ---
 
 # Code Review — Wedding Manager
+
+Read `index.html` and audit it for each category below. Report pass/fail per item with line numbers for failures.
 
 Review `index.html` for:
 

@@ -1,71 +1,65 @@
 ---
-applyTo: "**"
-description: "Use when: working on any file in the Wedding workspace. Provides project context and architecture overview."
+description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace Instructions — Wedding Manager
+# Workspace — Wedding Manager
 
-## Project Overview
+## Available Resources
 
-| Property | Value |
+| Type | Available |
 | --- | --- |
-| **Name** | Wedding Manager |
-| **Type** | Single-page HTML app |
-| **Version** | v1.0.0 |
-| **Owner** | @RajwanYair |
-| **Stack** | HTML5, CSS3, vanilla JS (ES2020+) |
-| **Dependencies** | Zero (no npm, no build) |
-| **Language** | Hebrew RTL (primary), English (toggle) |
-| **Themes** | 5 (purple, rose gold, gold, emerald, royal blue) |
+| Agents | `@wedding-designer` — CSS/UI/themes; `@guest-manager` — data/RSVP/tables |
+| Prompts | `/add-feature` — scaffold new section; `/code-review` — full audit |
+| Instructions | `wedding` (*.html) — HTML patterns; `cicd` (*.yml) — CI/CD standards |
+| MCP | `filesystem` — scoped project read/write; `fetch` — test endpoints |
 
-## File Structure
+## Detailed File Structure
 
 ```text
 Wedding/
-├── index.html            # App (HTML + CSS + JS)
-├── sw.js                 # ServiceWorker (offline + cache, v1.0.0)
+├── index.html            # App (HTML + CSS + JS — single file)
+├── sw.js                 # ServiceWorker (offline cache, APP_SHELL)
 ├── manifest.json         # PWA manifest
 ├── icon.svg              # 512×512 app icon (rings + heart)
-├── README.md
-├── CHANGELOG.md
-├── LICENSE
-├── .editorconfig
-├── .gitignore / .gitattributes
-├── eslint.config.mjs
+├── invitation.jpg        # Default invitation background image
+├── package.json          # devDeps: eslint, stylelint, htmlhint, markdownlint-cli2
+├── eslint.config.mjs     # JS lint — ecmaVersion: latest, all rules: error
+├── .stylelintrc.json     # CSS lint — extends stylelint-config-standard
+├── .htmlhintrc           # HTML lint
+├── .markdownlint.json    # Markdown lint rules
+├── .markdownlint-cli2.jsonc  # Ignore node_modules
+├── .editorconfig / .gitignore / .gitattributes
 ├── tests/
-│   └── wedding.test.mjs
+│   └── wedding.test.mjs  # Node built-in test runner (125 tests)
 ├── .github/
-│   ├── copilot-instructions.md
-│   ├── copilot/config.json
-│   ├── workflows/          # ci, deploy, release
-│   ├── instructions/
-│   ├── prompts/
+│   ├── copilot-instructions.md   ← master project spec (always loaded)
+│   ├── AGENTS.md                 ← agent/prompt discovery index
+│   ├── CODEOWNERS
 │   ├── agents/
-│   ├── AGENTS.md
-│   └── CONTRIBUTING.md / CODEOWNERS
+│   │   ├── guest-manager.agent.md
+│   │   └── wedding-designer.agent.md
+│   ├── instructions/
+│   │   ├── wedding.instructions.md    (applyTo: **/*.html)
+│   │   ├── cicd.instructions.md       (applyTo: **/*.yml, .github/**)
+│   │   └── workspace.instructions.md  (on-demand)
+│   ├── prompts/
+│   │   ├── add-feature.prompt.md
+│   │   └── code-review.prompt.md
+│   ├── workflows/
+│   │   ├── ci.yml      # lint + test + security scan
+│   │   ├── deploy.yml  # GitHub Pages deploy
+│   │   └── release.yml # artifact attach on vX.Y.Z tags
+│   └── copilot/config.json
 └── .vscode/
-    ├── settings.json
-    ├── extensions.json
-    └── mcp.json
+    ├── settings.json    # ESLint/Stylelint/markdownlint inline
+    ├── extensions.json  # Recommended extensions
+    └── mcp.json         # MCP server config
 ```
-
-## Key Systems
-
-| System | Details |
-| --- | --- |
-| **Storage** | localStorage with `wedding_v1_` prefix, JSON serialization |
-| **i18n** | Dual-language (he/en) via `data-i18n` attrs + `t()` function |
-| **Themes** | 5 CSS-variable themes, cycled with 🎨 button |
-| **WhatsApp** | `wa.me` deep links with templated messages |
-| **RSVP** | Client-side guest self-registration with auto-match |
-| **Tables** | Visual floor plan with drag-and-drop seating |
-| **Export** | CSV with UTF-8 BOM for Hebrew, print stylesheet |
-| **PWA** | Installable, offline-first via `sw.js` |
 
 ## What NOT To Do
 
-- Do NOT add npm/node/build tools
-- Do NOT use external CSS/JS libraries
-- Do NOT hardcode colors — use CSS custom properties
-- Do NOT use `innerHTML` with unsanitized data
-- Do NOT skip i18n for new visible text
+- No runtime npm/build tools (devDeps for linting only)
+- No external CSS/JS libraries or CDNs
+- No hardcoded colors — CSS custom properties only
+- No `innerHTML` with unsanitized data
+- No visible text without `data-i18n` / `t()`

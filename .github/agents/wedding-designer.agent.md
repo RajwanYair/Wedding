@@ -4,9 +4,13 @@ description: "UI/UX specialist for the Wedding Manager. Use when: redesigning se
 tools:
   - read_file
   - replace_string_in_file
+  - multi_replace_string_in_file
+  - file_search
   - grep_search
   - semantic_search
   - get_errors
+  - run_in_terminal
+  - manage_todo_list
 ---
 
 # Wedding Designer Agent
