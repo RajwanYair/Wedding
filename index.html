@@ -1100,6 +1100,70 @@ th.sort-desc .sort-indicator { opacity: 1; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Tooltips ────────────────────────────────────────────── */
+[data-tooltip] { position: relative; }
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(10, 5, 22, 0.96);
+  color: #f0eaff;
+  padding: 0.45em 0.85em;
+  border-radius: 8px;
+  font-size: 0.76em;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: normal;
+  max-width: 240px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9950;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+}
+[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 3px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(10, 5, 22, 0.96);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 9951;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+[data-tooltip]:hover::before,
+[data-tooltip]:focus-visible::before { opacity: 1; }
+/* Tooltip opening downward (for items near top of screen) */
+[data-tooltip][data-tooltip-pos="down"]::after {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+[data-tooltip][data-tooltip-pos="down"]::before {
+  bottom: auto;
+  top: calc(100% + 3px);
+  border-top-color: transparent;
+  border-bottom-color: rgba(10, 5, 22, 0.96);
+}
+[data-tooltip][data-tooltip-pos="down"]:hover::after,
+[data-tooltip][data-tooltip-pos="down"]:focus-visible::after {
+  transform: translateX(-50%) translateY(0);
+}
+[dir="rtl"] [data-tooltip]::after { direction: rtl; }
   </style>
 </head>
 <body>
@@ -1109,8 +1173,8 @@ th.sort-desc .sort-indicator { opacity: 1; }
   <!-- ── Top Bar ── -->
   <div class="top-bar">
     <div class="top-bar-group">
-      <button class="btn-lang" id="btnLang" title="Switch Language" onclick="toggleLanguage()">EN</button>
-      <button class="btn-icon" id="btnTheme" title="Change Theme" onclick="cycleTheme()">🎨</button>
+      <button class="btn-lang" id="btnLang" title="Switch Language" onclick="toggleLanguage()" data-i18n-tooltip="tip_btn_lang" data-tooltip-pos="down">EN</button>
+      <button class="btn-icon" id="btnTheme" title="Change Theme" onclick="cycleTheme()" data-i18n-tooltip="tip_btn_theme" data-tooltip-pos="down">🎨</button>
     </div>
     <div class="top-bar-group">
       <span id="topBarCouple" style="font-size:0.82em; color:var(--gold); font-weight:600; letter-spacing:0.02em;"></span>
@@ -1135,26 +1199,26 @@ th.sort-desc .sort-indicator { opacity: 1; }
 
   <!-- ── Navigation ── -->
   <nav class="nav-tabs" id="navTabs">
-    <button class="nav-tab active" data-tab="dashboard" onclick="showSection('dashboard')">
+    <button class="nav-tab active" data-tab="dashboard" onclick="showSection('dashboard')" data-i18n-tooltip="tip_nav_dashboard" data-tooltip-pos="down">
       <span>📊</span> <span data-i18n="nav_dashboard">לוח בקרה</span>
     </button>
-    <button class="nav-tab" data-tab="guests" onclick="showSection('guests')">
+    <button class="nav-tab" data-tab="guests" onclick="showSection('guests')" data-i18n-tooltip="tip_nav_guests" data-tooltip-pos="down">
       <span>👥</span> <span data-i18n="nav_guests">אורחים</span>
       <span class="badge" id="guestCount">0</span>
     </button>
-    <button class="nav-tab" data-tab="tables" onclick="showSection('tables')">
+    <button class="nav-tab" data-tab="tables" onclick="showSection('tables')" data-i18n-tooltip="tip_nav_tables" data-tooltip-pos="down">
       <span>🪑</span> <span data-i18n="nav_tables">שולחנות</span>
     </button>
-    <button class="nav-tab" data-tab="invitation" onclick="showSection('invitation')">
+    <button class="nav-tab" data-tab="invitation" onclick="showSection('invitation')" data-i18n-tooltip="tip_nav_invitation" data-tooltip-pos="down">
       <span>💌</span> <span data-i18n="nav_invitation">הזמנה</span>
     </button>
-    <button class="nav-tab" data-tab="whatsapp" onclick="showSection('whatsapp')">
+    <button class="nav-tab" data-tab="whatsapp" onclick="showSection('whatsapp')" data-i18n-tooltip="tip_nav_whatsapp" data-tooltip-pos="down">
       <span>📱</span> <span data-i18n="nav_whatsapp">וואטסאפ</span>
     </button>
-    <button class="nav-tab" data-tab="rsvp" onclick="showSection('rsvp')">
+    <button class="nav-tab" data-tab="rsvp" onclick="showSection('rsvp')" data-i18n-tooltip="tip_nav_rsvp" data-tooltip-pos="down">
       <span>✅</span> <span data-i18n="nav_rsvp">אישור הגעה</span>
     </button>
-    <button class="nav-tab" data-tab="settings" onclick="showSection('settings')">
+    <button class="nav-tab" data-tab="settings" onclick="showSection('settings')" data-i18n-tooltip="tip_nav_settings" data-tooltip-pos="down">
       <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
     </button>
   </nav>
@@ -1169,61 +1233,61 @@ th.sort-desc .sort-indicator { opacity: 1; }
 
       <!-- Stats Grid -->
       <div class="stats-grid" id="statsGrid">
-        <div class="stat-card">
+        <div class="stat-card" data-i18n-tooltip="tip_stat_total">
           <span class="stat-icon-bg">👥</span>
           <span class="stat-icon">👥</span>
           <div class="stat-number" id="statTotal">0</div>
           <div class="stat-label" data-i18n="stat_total">סה"כ מוזמנים</div>
         </div>
-        <div class="stat-card positive">
+        <div class="stat-card positive" data-i18n-tooltip="tip_stat_confirmed">
           <span class="stat-icon-bg">✅</span>
           <span class="stat-icon">✅</span>
           <div class="stat-number" id="statConfirmed">0</div>
           <div class="stat-label" data-i18n="stat_confirmed">אישרו הגעה</div>
         </div>
-        <div class="stat-card warning">
+        <div class="stat-card warning" data-i18n-tooltip="tip_stat_pending">
           <span class="stat-icon-bg">⏳</span>
           <span class="stat-icon">⏳</span>
           <div class="stat-number" id="statPending">0</div>
           <div class="stat-label" data-i18n="stat_pending">ממתינים</div>
         </div>
-        <div class="stat-card negative">
+        <div class="stat-card negative" data-i18n-tooltip="tip_stat_declined">
           <span class="stat-icon-bg">❌</span>
           <span class="stat-icon">❌</span>
           <div class="stat-number" id="statDeclined">0</div>
           <div class="stat-label" data-i18n="stat_declined">לא מגיעים</div>
         </div>
-        <div class="stat-card accent">
+        <div class="stat-card accent" data-i18n-tooltip="tip_stat_tables">
           <span class="stat-icon-bg">🪑</span>
           <span class="stat-icon">🪑</span>
           <div class="stat-number" id="statTables">0</div>
           <div class="stat-label" data-i18n="stat_tables">שולחנות</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" data-i18n-tooltip="tip_stat_seated">
           <span class="stat-icon-bg">💺</span>
           <span class="stat-icon">💺</span>
           <div class="stat-number" id="statSeated">0</div>
           <div class="stat-label" data-i18n="stat_seated">שובצו לשולחן</div>
         </div>
-        <div class="stat-card" style="border-color:rgba(96,165,250,0.3);">
+        <div class="stat-card" style="border-color:rgba(96,165,250,0.3);" data-i18n-tooltip="tip_stat_groom">
           <span class="stat-icon-bg">🤵</span>
           <span class="stat-icon">🤵</span>
           <div class="stat-number" id="statGroomSide" style="color:#60a5fa;">0</div>
           <div class="stat-label" data-i18n="stat_groom_side">אורחי חתן</div>
         </div>
-        <div class="stat-card" style="border-color:rgba(232,160,180,0.3);">
+        <div class="stat-card" style="border-color:rgba(232,160,180,0.3);" data-i18n-tooltip="tip_stat_bride">
           <span class="stat-icon-bg">👰</span>
           <span class="stat-icon">👰</span>
           <div class="stat-number" id="statBrideSide" style="color:var(--rose);">0</div>
           <div class="stat-label" data-i18n="stat_bride_side">אורחי כלה</div>
         </div>
-        <div class="stat-card" style="border-color:rgba(110,231,183,0.3);">
+        <div class="stat-card" style="border-color:rgba(110,231,183,0.3);" data-i18n-tooltip="tip_stat_veg">
           <span class="stat-icon-bg">🥗</span>
           <span class="stat-icon">🥗</span>
           <div class="stat-number" id="statVeg" style="color:var(--positive);">0</div>
           <div class="stat-label" data-i18n="stat_vegetarian">צמחוני/טבעוני</div>
         </div>
-        <div class="stat-card" style="border-color:rgba(252,165,165,0.3);">
+        <div class="stat-card" style="border-color:rgba(252,165,165,0.3);" data-i18n-tooltip="tip_stat_accessibility">
           <span class="stat-icon-bg">♿</span>
           <span class="stat-icon">♿</span>
           <div class="stat-number" id="statAccessibility" style="color:var(--negative);">0</div>
@@ -1249,16 +1313,16 @@ th.sort-desc .sort-indicator { opacity: 1; }
       <div class="card">
         <div class="card-header"><span class="icon">⚡</span> <span data-i18n="quick_actions">פעולות מהירות</span></div>
         <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-          <button class="btn btn-primary" onclick="showSection('guests'); openAddGuestModal()">
+          <button class="btn btn-primary" onclick="showSection('guests'); openAddGuestModal()" data-i18n-tooltip="tip_add_guest">
             <span>➕</span> <span data-i18n="action_add_guest">הוסף אורח</span>
           </button>
-          <button class="btn btn-whatsapp" onclick="showSection('whatsapp')">
+          <button class="btn btn-whatsapp" onclick="showSection('whatsapp')" data-i18n-tooltip="tip_send_wa">
             <span>📱</span> <span data-i18n="action_send_wa">שלח בוואטסאפ</span>
           </button>
-          <button class="btn btn-secondary" onclick="exportGuestsCSV()">
+          <button class="btn btn-secondary" onclick="exportGuestsCSV()" data-i18n-tooltip="tip_export_csv">
             <span>📥</span> <span data-i18n="action_export">ייצוא CSV</span>
           </button>
-          <button class="btn btn-secondary" onclick="printGuests()">
+          <button class="btn btn-secondary" onclick="printGuests()" data-i18n-tooltip="tip_print">
             <span>🖨️</span> <span data-i18n="action_print">הדפסה</span>
           </button>
         </div>
@@ -1281,7 +1345,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
 
         <!-- Toolbar -->
         <div class="guests-toolbar">
-          <input type="search" class="search-box" id="guestSearch" data-i18n-placeholder="search_guests" placeholder="חיפוש שם, משפחה, טלפון..." oninput="filterGuests()">
+          <input type="search" class="search-box" id="guestSearch" data-i18n-placeholder="search_guests" placeholder="חיפוש שם, משפחה, טלפון..." oninput="filterGuests()" data-i18n-tooltip="tip_search_guests">
           <div class="toolbar-group">
             <span class="toolbar-label">סטטוס:</span>
             <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" data-i18n="filter_all">הכל</button>
@@ -1351,7 +1415,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
       </div>
 
       <!-- Unassigned Guests -->
-      <div class="card" id="unassignedCard">
+      <div class="card" id="unassignedCard" data-i18n-tooltip="tip_unassigned">
         <div class="card-header"><span class="icon">🔀</span> <span data-i18n="unassigned_title">אורחים ללא שולחן</span></div>
         <div id="unassignedGuests" style="display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
       </div>
@@ -1373,7 +1437,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
 
         <!-- Upload -->
         <div class="invitation-upload">
-          <label>
+          <label data-i18n-tooltip="tip_upload_invite">
             <span>📁</span> <span data-i18n="upload_invitation">העלה תמונת הזמנה (JPG/PNG/SVG)</span>
             <input type="file" id="invitationFile" accept="image/*,.svg" onchange="handleInvitationUpload(event)">
           </label>
@@ -1454,7 +1518,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
         <!-- Message Template -->
         <div class="form-group">
           <label data-i18n="wa_template_label">תבנית הודעה</label>
-          <textarea id="waTemplate" rows="6" oninput="updateWaPreview()" style="direction:rtl;">שלום {name}! 🎊
+          <textarea id="waTemplate" rows="6" oninput="updateWaPreview()" style="direction:rtl;" data-i18n-tooltip="tip_wa_template">שלום {name}! 🎊
 
 אנו שמחים להזמינך לחתונה של {groom} ו{bride} 💍
 
@@ -1476,10 +1540,10 @@ th.sort-desc .sort-indicator { opacity: 1; }
         <div class="card" style="margin-top:1rem;">
           <div class="card-header"><span class="icon">📤</span> <span data-i18n="wa_send_title">שליחה</span></div>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin-bottom:1rem;">
-            <button class="btn btn-whatsapp" onclick="sendWhatsAppAll('pending')">
+            <button class="btn btn-whatsapp" onclick="sendWhatsAppAll('pending')" data-i18n-tooltip="tip_wa_pending">
               <span>📱</span> <span data-i18n="wa_send_pending">שלח לממתינים</span>
             </button>
-            <button class="btn btn-whatsapp" onclick="sendWhatsAppAll('all')">
+            <button class="btn btn-whatsapp" onclick="sendWhatsAppAll('all')" data-i18n-tooltip="tip_wa_all">
               <span>📱</span> <span data-i18n="wa_send_all">שלח לכולם</span>
             </button>
           </div>
@@ -1587,10 +1651,10 @@ th.sort-desc .sort-indicator { opacity: 1; }
           <div class="settings-card">
             <h3>🗄️ <span data-i18n="backup_title">גיבוי ושחזור</span></h3>
             <p data-i18n="backup_desc">ייצא/ייבא גיבוי מלא של כל הנתונים בפורמט JSON</p>
-            <button class="btn btn-primary" onclick="exportJSON()">
+            <button class="btn btn-primary" onclick="exportJSON()" data-i18n-tooltip="tip_backup_export">
               📦 <span data-i18n="backup_export">ייצוא גיבוי JSON</span>
             </button>
-            <label class="btn btn-secondary" style="cursor:pointer; margin-top:0.3rem;">
+            <label class="btn btn-secondary" style="cursor:pointer; margin-top:0.3rem;" data-i18n-tooltip="tip_backup_import">
               📂 <span data-i18n="backup_import">ייבוא גיבוי JSON</span>
               <input type="file" id="importJsonFile" accept=".json" onchange="importJSON(event)" style="display:none;">
             </label>
@@ -1600,10 +1664,10 @@ th.sort-desc .sort-indicator { opacity: 1; }
           <div class="settings-card">
             <h3>📊 <span data-i18n="import_csv_title">ייבוא / ייצוא CSV</span></h3>
             <p data-i18n="import_csv_desc">ייבא רשימת אורחים מקובץ אקסל / ייצא לאקסל</p>
-            <button class="btn btn-secondary" onclick="downloadCSVTemplate()">
+            <button class="btn btn-secondary" onclick="downloadCSVTemplate()" data-i18n-tooltip="tip_csv_template">
               📋 <span data-i18n="import_csv_template">הורד תבנית CSV</span>
             </button>
-            <label class="btn btn-secondary" style="cursor:pointer; margin-top:0.3rem;">
+            <label class="btn btn-secondary" style="cursor:pointer; margin-top:0.3rem;" data-i18n-tooltip="tip_csv_import">
               📥 <span data-i18n="import_csv_btn">ייבוא מ-CSV</span>
               <input type="file" id="importCsvFile" accept=".csv,.txt" onchange="importCSV(event)" style="display:none;">
             </label>
@@ -1622,7 +1686,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
           <div class="settings-card" style="border-color:rgba(252,165,165,0.25);">
             <h3 style="color:var(--negative);">⚠️ <span data-i18n="clear_data_title">מחיקת נתונים</span></h3>
             <p data-i18n="clear_data_warning">פעולה זו מוחקת את כל נתוני האורחים והשולחנות ואינה הפיכה!</p>
-            <button class="btn btn-danger" onclick="clearAllData()">
+            <button class="btn btn-danger" onclick="clearAllData()" data-i18n-tooltip="tip_clear_data">
               🗑️ <span data-i18n="clear_data_btn">מחק את כל הנתונים</span>
             </button>
           </div>
@@ -1689,11 +1753,11 @@ th.sort-desc .sort-indicator { opacity: 1; }
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" data-i18n-tooltip="tip_guest_count">
           <label data-i18n="label_guest_count">כמות מוזמנים (כולל)</label>
           <input type="number" id="guestCount2" min="1" max="30" value="1">
         </div>
-        <div class="form-group">
+        <div class="form-group" data-i18n-tooltip="tip_guest_children">
           <label data-i18n="label_children">ילדים</label>
           <input type="number" id="guestChildren" min="0" max="20" value="0">
         </div>
@@ -1729,7 +1793,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
             <option value="other"       data-i18n="meal_other">אחר</option>
           </select>
         </div>
-        <div class="form-group" style="display:flex; flex-direction:column; justify-content:flex-end;">
+        <div class="form-group" style="display:flex; flex-direction:column; justify-content:flex-end;" data-i18n-tooltip="tip_guest_accessibility">
           <label class="form-checkbox">
             <input type="checkbox" id="guestAccessibility">
             <span data-i18n="label_accessibility">צרכי נגישות</span>
@@ -1750,7 +1814,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
             <option value="" data-i18n="no_table">ללא שולחן</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" data-i18n-tooltip="tip_guest_gift">
           <label data-i18n="label_gift">מתנה</label>
           <input type="text" id="guestGift" data-i18n-placeholder="ph_gift" placeholder="תיאור המתנה...">
         </div>
@@ -1784,7 +1848,7 @@ th.sort-desc .sort-indicator { opacity: 1; }
           <input type="number" id="tableCapacity" min="1" max="30" value="10">
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" data-i18n-tooltip="tip_table_shape">
         <label data-i18n="label_table_shape">צורת שולחן</label>
         <select id="tableShape">
           <option value="round" data-i18n="shape_round">עגול</option>
@@ -2067,6 +2131,46 @@ const I18N = {
     countdown_seconds: 'שניות',
     seats: 'מקומות',
     of: 'מתוך',
+    /* tooltips */
+    tip_btn_lang: 'החלף בין עברית לאנגלית',
+    tip_btn_theme: 'החלף ערכת צבעים (5 אפשרויות)',
+    tip_nav_dashboard: 'סקירה כוללת – סטטיסטיקות, ספירה לאחור ופעולות מהירות',
+    tip_nav_guests: 'רשימת אורחים – הוסף, ערוך, חפש וסנן',
+    tip_nav_tables: 'תוכנית ישיבה – צור שולחנות וגרור אורחים לשיבוץ',
+    tip_nav_invitation: 'הצג את ההזמנה ועדכן פרטי החתונה',
+    tip_nav_whatsapp: 'שלח הזמנות בוואטסאפ ישירות לאורחים',
+    tip_nav_rsvp: 'שתף קישור זה עם האורחים לאישור הגעה עצמאי',
+    tip_nav_settings: 'גיבוי, שחזור, ייבוא ומחיקת נתונים',
+    tip_stat_total: 'סך כל האנשים שהוזמנו לאירוע',
+    tip_stat_confirmed: 'אישרו הגעה – עדכן סטטוס בכרטיס האורח',
+    tip_stat_pending: 'טרם קיבלנו תשובה – שלח תזכורת בוואטסאפ',
+    tip_stat_declined: 'לא יוכלו להגיע לאירוע',
+    tip_stat_tables: 'שולחנות שהגדרת בתוכנית הישיבה',
+    tip_stat_seated: 'אורחים שכבר שובצו לשולחן ספציפי',
+    tip_stat_groom: 'אורחים שהוגדרו כצד החתן',
+    tip_stat_bride: 'אורחים שהוגדרו כצד הכלה',
+    tip_stat_veg: 'אורחים שביקשו תפריט צמחוני או טבעוני',
+    tip_stat_accessibility: 'אורחים עם צרכי נגישות מיוחדים',
+    tip_add_guest: 'פתח טופס להוספת אורח חדש לרשימה',
+    tip_send_wa: 'עבור לשונית שליחת ההזמנות בוואטסאפ',
+    tip_export_csv: 'הורד את רשימת האורחים כקובץ Excel / CSV',
+    tip_print: 'הדפס גרסה נקייה של הרשימה ללא כפתורים',
+    tip_wa_template: 'ניתן לעריכה. השתמש ב-{name} {groom} {bride} {date} {time} {venue} {address}',
+    tip_wa_pending: 'שולח הודעה לכל האורחים שעדיין לא ענו',
+    tip_wa_all: 'שולח הודעה לכל האורחים שיש להם מספר טלפון',
+    tip_backup_export: 'שמור גיבוי מלא כ-JSON – מומלץ לפני ביצוע שינויים',
+    tip_backup_import: 'שחזר נתונים מקובץ גיבוי JSON שנשמר קודם',
+    tip_csv_template: 'הורד תבנית CSV ריקה – מלא ב-Excel ואז ייבא',
+    tip_csv_import: 'ייבא רשימת אורחים מקובץ CSV שנוצר ב-Excel',
+    tip_clear_data: '⚠️ מוחק לצמיתות את כל הנתונים – לא ניתן לשחזר!',
+    tip_guest_count: 'כמה אנשים מגיעים עם האורח הזה, כולל עצמם',
+    tip_guest_children: 'ילדים מלווים – חשוב לתכנון הישיבה',
+    tip_guest_accessibility: 'סמן אם האורח זקוק לנגישות – כיסא גלגלים, מעלית וכד׳',
+    tip_guest_gift: 'מעקב פנימי אחר מתנות שהתקבלו',
+    tip_upload_invite: 'העלה תמונה מותאמת אישית (JPG/PNG/SVG) כהזמנה',
+    tip_unassigned: 'גרור שמות מכאן לתוך שולחן כדי לשבץ ישיבה',
+    tip_table_shape: 'עגול = שולחן עגול | מלבני = שולחן מלבני ארוך',
+    tip_search_guests: 'חפש לפי שם פרטי, שם משפחה או מספר טלפון',
   },
   en: {
     app_title: 'Wedding Manager',
@@ -2258,6 +2362,46 @@ const I18N = {
     countdown_seconds: 'Seconds',
     seats: 'seats',
     of: 'of',
+    /* tooltips */
+    tip_btn_lang: 'Toggle between Hebrew and English',
+    tip_btn_theme: 'Cycle through 5 color themes',
+    tip_nav_dashboard: 'Overview – stats, countdown & quick actions',
+    tip_nav_guests: 'Guest list – add, edit, search & filter',
+    tip_nav_tables: 'Seating plan – create tables & drag guests to assign',
+    tip_nav_invitation: 'View invitation & update wedding details',
+    tip_nav_whatsapp: 'Send WhatsApp invitations directly to guests',
+    tip_nav_rsvp: 'Share this link with guests for self-RSVP',
+    tip_nav_settings: 'Backup, restore, import & clear data',
+    tip_stat_total: 'Total headcount invited to the event',
+    tip_stat_confirmed: 'Confirmed attendance – update via guest form',
+    tip_stat_pending: 'No reply yet – send a WhatsApp reminder',
+    tip_stat_declined: 'Cannot attend the event',
+    tip_stat_tables: 'Tables defined in the seating plan',
+    tip_stat_seated: 'Guests already assigned to a specific table',
+    tip_stat_groom: "Guests on the groom's side",
+    tip_stat_bride: "Guests on the bride's side",
+    tip_stat_veg: 'Guests who requested vegetarian or vegan meals',
+    tip_stat_accessibility: 'Guests with special accessibility needs',
+    tip_add_guest: 'Open the form to add a new guest',
+    tip_send_wa: 'Go to WhatsApp invitation sending',
+    tip_export_csv: 'Download guest list as Excel / CSV file',
+    tip_print: 'Print a clean list without UI buttons',
+    tip_wa_template: 'Editable template. Use {name} {groom} {bride} {date} {time} {venue} {address}',
+    tip_wa_pending: "Sends to guests who haven't replied yet",
+    tip_wa_all: 'Sends to all guests who have a phone number',
+    tip_backup_export: 'Save full JSON backup – recommended before changes',
+    tip_backup_import: 'Restore from a previously saved JSON backup',
+    tip_csv_template: 'Download blank CSV template – fill in Excel then import',
+    tip_csv_import: 'Import guest list from Excel-exported CSV file',
+    tip_clear_data: '⚠️ Permanently deletes ALL data – cannot be undone!',
+    tip_guest_count: 'How many people attend including this guest',
+    tip_guest_children: 'Accompanying children – important for seating',
+    tip_guest_accessibility: 'Check if guest needs accessibility – wheelchair, elevator, etc.',
+    tip_guest_gift: 'Internal tracking of gifts received',
+    tip_upload_invite: 'Upload a custom image (JPG/PNG/SVG) as invitation',
+    tip_unassigned: 'Drag guest chips onto a table card to assign seating',
+    tip_table_shape: 'Round = circular table | Rect = long rectangular table',
+    tip_search_guests: 'Search by first name, last name or phone number',
   },
 };
 
@@ -2333,6 +2477,11 @@ function applyLanguage() {
     const key = node.getAttribute('data-i18n-placeholder');
     const val = t(key);
     if (val !== key) node.placeholder = val;
+  });
+  document.querySelectorAll('[data-i18n-tooltip]').forEach(function(node) {
+    const key = node.getAttribute('data-i18n-tooltip');
+    const val = t(key);
+    if (val !== key) node.setAttribute('data-tooltip', val);
   });
 
   const btnLang = document.getElementById('btnLang');
