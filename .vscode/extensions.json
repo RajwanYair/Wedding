@@ -20,7 +20,8 @@
         "EditorConfig.EditorConfig",
         "Gruntfuggly.todo-tree",
         "mhutchie.git-graph",
-        "christian-kohler.path-intellisense"
+        "christian-kohler.path-intellisense",
+        "DavidAnson.vscode-markdownlint"
     ],
     "unwantedRecommendations": []
 }

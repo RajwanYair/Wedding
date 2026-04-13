@@ -1,4 +1,5 @@
 {
+    "extends": ["stylelint-config-standard"],
     "rules": {
         "block-no-empty": true,
         "color-no-invalid-hex": true,
@@ -12,7 +13,6 @@
             }
         ],
         "font-family-no-duplicate-names": true,
-        "function-calc-no-unspaced-operator": true,
         "no-duplicate-at-import-rules": true,
         "property-no-unknown": [
             true,
@@ -26,7 +26,29 @@
         "selector-type-no-unknown": [true, { "ignoreTypes": ["/^--/"] }],
         "unit-no-unknown": true,
         "at-rule-no-unknown": [true, { "ignoreAtRules": ["property"] }],
+
         "no-descending-specificity": null,
-        "no-duplicate-selectors": null
+        "no-duplicate-selectors": null,
+
+        "selector-class-pattern": null,
+        "keyframes-name-pattern": null,
+        "custom-property-pattern": null,
+        "value-keyword-case": ["lower", { "camelCaseSvgKeywords": true }],
+
+        "alpha-value-notation": "number",
+        "color-function-notation": "legacy",
+        "import-notation": "string",
+
+        "rule-empty-line-before": null,
+        "at-rule-empty-line-before": null,
+        "comment-empty-line-before": null,
+        "declaration-block-single-line-max-declarations": null,
+        "color-function-alias-notation": null,
+        "property-no-vendor-prefix": [
+            true,
+            { "ignoreProperties": ["-webkit-backdrop-filter"] }
+        ],
+        "media-feature-range-notation": null,
+        "shorthand-property-no-redundant-values": null
     }
 }

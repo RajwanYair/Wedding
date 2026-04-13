@@ -1,7 +1,7 @@
 export default [
   {
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: "latest",
       sourceType: "script",
       globals: {
         window: "readonly",
@@ -50,9 +50,12 @@ export default [
       },
     },
     rules: {
+      // ── Security ──────────────────────────────────────────────────
       "no-eval": "error",
       "no-implied-eval": "error",
       "no-new-func": "error",
+
+      // ── Correctness ───────────────────────────────────────────────
       "no-undef": "error",
       "no-dupe-args": "error",
       "no-dupe-keys": "error",
@@ -61,23 +64,35 @@ export default [
       "use-isnan": "error",
       "valid-typeof": "error",
       "no-constant-condition": ["error", { checkLoops: false }],
+      "no-redeclare": "error",
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      eqeqeq: ["error", "smart"],
+
+      // ── Modernisation ─────────────────────────────────────────────
+      "no-var": "error",
+      "prefer-const": "error",
+
+      // ── Unused variables ──────────────────────────────────────────
+      // Functions used as HTML inline event handlers (onclick, oninput…)
+      // are never "called" from JS so ESLint marks them unused.
+      // Each prefix corresponds to a naming convention in index.html.
       "no-unused-vars": [
-        "warn",
+        "error",
         {
           varsIgnorePattern:
-            "^_|^load|^render|^init|^toggle|^update|^handle|^show|^hide|^open|^close|^add|^remove|^save|^delete|^export|^import|^send",
+            "^_|^load|^render|^init|^toggle|^update|^handle" +
+            "|^show|^hide|^open|^close|^add|^remove|^save|^delete" +
+            "|^export|^import|^send|^cycle|^filter|^set|^sort|^edit" +
+            "|^submit|^download|^clear|^print",
           argsIgnorePattern: "^_|^e$|^k$",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",
         },
       ],
-      eqeqeq: ["warn", "smart"],
-      "no-var": "warn",
-      "no-redeclare": "warn",
-      "no-empty": ["warn", { allowEmptyCatch: true }],
-      "prefer-const": "off",
-      "no-prototype-builtins": "off",
-      "no-inner-declarations": "off",
+
+      // ── Style ─────────────────────────────────────────────────────
+      "no-prototype-builtins": "error",
+      "no-inner-declarations": "error",
     },
   },
 ];

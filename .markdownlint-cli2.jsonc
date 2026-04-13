@@ -1,0 +1,5 @@
+{
+    // markdownlint-cli2 configuration
+    // Rules are defined in .markdownlint.json
+    "ignores": ["**/node_modules/**"]
+}

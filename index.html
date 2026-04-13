@@ -38,8 +38,8 @@
   --border-radius: 16px;
   --card-border: 1px solid rgba(212, 165, 116, 0.15);
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --font-main: 'Segoe UI', Tahoma, Arial, sans-serif;
-  --font-decorative: Georgia, 'Times New Roman', serif;
+  --font-main: 'Segoe UI', tahoma, arial, sans-serif;
+  --font-decorative: georgia, 'Times New Roman', serif;
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -3080,7 +3080,7 @@ function submitRSVP() {
   const now          = new Date().toISOString();
 
   // Match by phone or full name
-  let existing = _guests.find(function(g) {
+  const existing = _guests.find(function(g) {
     return (phone && g.phone === phone) ||
       (guestFullName(g).toLowerCase() === (firstName + ' ' + lastName).trim().toLowerCase());
   });

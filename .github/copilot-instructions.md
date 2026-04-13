@@ -5,7 +5,7 @@
 ## Quick Facts
 
 | Key | Value |
-|-----|-------|
+| --- | --- |
 | Main file | `index.html` (HTML + CSS + JS) |
 | Version | **v1.0.0** |
 | Stack | HTML5, vanilla CSS3, vanilla JS (ES2020+) |
@@ -34,7 +34,7 @@
 ## Features
 
 | Feature | Description |
-|---------|-------------|
+| --- | --- |
 | Dashboard | Stats overview, countdown, progress bars, quick actions |
 | Guests | CRUD guest list with search, filter by status, group tags |
 | Tables | Visual seating floor plan, drag-and-drop guest assignment |

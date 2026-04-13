@@ -75,5 +75,25 @@
 
     // ── Terminal ──
     "terminal.integrated.gpuAcceleration": "on",
-    "terminal.integrated.shellIntegration.enabled": true
+    "terminal.integrated.shellIntegration.enabled": true,
+
+    // ── ESLint ──
+    "eslint.enable": true,
+    "eslint.run": "onType",
+    "eslint.validate": ["javascript"],
+
+    // ── Stylelint ──
+    "stylelint.enable": true,
+    "stylelint.validate": ["css", "html"],
+    "stylelint.snippet": ["css", "html"],
+
+    // ── markdownlint ──
+    "markdownlint.run": "onType",
+
+    // ── Code actions on save ──
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.stylelint": "explicit",
+        "source.fixAll.markdownlint": "explicit"
+    }
 }

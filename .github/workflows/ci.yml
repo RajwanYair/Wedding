@@ -1,6 +1,6 @@
 # =============================================================================
 # CI — Wedding Manager
-# HTML validation, security scan, unit tests
+# Lint (HTML + CSS + JS + Markdown), unit tests, security scan
 # =============================================================================
 name: CI
 
@@ -16,33 +16,31 @@ permissions:
 
 jobs:
   lint:
-    name: Lint (HTML + CSS + JS)
+    name: Lint (HTML + CSS + JS + MD)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
-      - name: Install linters
-        run: npm install -g htmlhint stylelint eslint
+      - name: Install dependencies
+        run: npm ci
 
       - name: Lint HTML
-        run: htmlhint index.html
+        run: npm run lint:html
 
-      - name: Extract and lint CSS
-        run: |
-          sed -n '/<style>/,/<\/style>/p' index.html | sed '1d;$d' > .extracted.css
-          stylelint --config .stylelintrc.json .extracted.css
-          rm .extracted.css
+      - name: Lint CSS
+        run: npm run lint:css
 
-      - name: Extract and lint JS
-        run: |
-          sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d' > .extracted.js
-          eslint --config eslint.config.mjs .extracted.js
-          rm .extracted.js
+      - name: Lint JS
+        run: npm run lint:js
+
+      - name: Lint Markdown
+        run: npm run lint:md
 
   unit-tests:
     name: Unit Tests (Node ${{ matrix.node-version }})
@@ -51,10 +49,10 @@ jobs:
       matrix:
         node-version: ["20", "22"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -65,12 +63,12 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Check for hardcoded secrets
         run: |
           echo "Scanning for potential secrets..."
-          if grep -rn "api_key\|apiKey\|secret\|password\|token" index.html --include="*.html" | grep -v "//.*api_key\|//.*secret"; then
+          if grep -rn "api_key\|apiKey\|secret\|password\|token" index.html | grep -v "//.*api_key\|//.*secret"; then
             echo "::warning::Potential secrets found in source code"
           else
             echo "No hardcoded secrets detected"

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] — 2026-04-13
 
 ### Added
+
 - Initial release
 - Dashboard with stats, countdown, progress bars, quick actions
 - Guest management: CRUD, search, filter by status, group tags

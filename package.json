@@ -6,9 +6,21 @@
     "private": true,
     "scripts": {
         "test": "node --test tests/wedding.test.mjs",
-        "test:watch": "node --test --watch tests/wedding.test.mjs"
+        "test:watch": "node --test --watch tests/wedding.test.mjs",
+        "lint:html": "htmlhint --config .htmlhintrc index.html",
+        "lint:css": "node -e \"const fs=require('fs'),h=fs.readFileSync('index.html','utf8');fs.writeFileSync('.extracted.css',h.slice(h.indexOf('<style>')+7,h.indexOf('</style>')))\" && stylelint --config .stylelintrc.json --max-warnings 0 .extracted.css",
+        "lint:js": "node -e \"const fs=require('fs'),h=fs.readFileSync('index.html','utf8');fs.writeFileSync('.extracted.js',h.slice(h.indexOf('<script>')+8,h.indexOf('</script>')))\" && eslint --config eslint.config.mjs --max-warnings 0 .extracted.js",
+        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md \".github/**/*.md\"",
+        "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md"
     },
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=20.0.0"
+    },
+    "devDependencies": {
+        "eslint": "^10.2.0",
+        "htmlhint": "^1.9.2",
+        "markdownlint-cli2": "^0.22.0",
+        "stylelint": "^17.7.0",
+        "stylelint-config-standard": "^40.0.0"
     }
 }

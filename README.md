@@ -18,7 +18,7 @@
 ## Features
 
 | Feature | Description |
-|---------|-------------|
+| --- | --- |
 | 📊 **Dashboard** | Stats overview, countdown timer, progress bars, quick actions |
 | 👥 **Guest List** | Full CRUD — search, filter by status, group tags (family/friends/work) |
 | 🪑 **Table Seating** | Visual floor plan with round/rectangular tables, drag-and-drop assignment |
@@ -54,9 +54,7 @@ node --test --watch tests/wedding.test.mjs
 
 ## Project Structure
 
-```
-Wedding/
-├── index.html            # Full app (HTML + CSS + JS)
+```text            # Full app (HTML + CSS + JS)
 ├── sw.js                 # Service Worker (offline + cache)
 ├── manifest.json         # PWA manifest
 ├── icon.svg              # App icon (512×512 rings + heart)
@@ -86,7 +84,7 @@ Wedding/
 ## Themes
 
 | Theme | Preview |
-|-------|---------|
+| --- | --- |
 | Default Purple | `--accent: #d4a574` elegant gold on dark purple |
 | Rose Gold | `--accent: #e8a0b4` warm pink tones |
 | Classic Gold | `--accent: #d4a030` traditional gold |
@@ -96,6 +94,7 @@ Wedding/
 ## i18n
 
 Full Hebrew (RTL) and English (LTR) support:
+
 - Language toggle button in top bar
 - All UI text uses `data-i18n` attributes
 - Dynamic content uses `t('key')` function

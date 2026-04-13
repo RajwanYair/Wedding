@@ -33,7 +33,7 @@ description: "Use when: editing the wedding app HTML file. Coding standards for 
 
 ## Data Model
 
-```
+```text
 Guest: { id, name, phone, count, status, group, tableId, notes, sent, createdAt }
 Table: { id, name, capacity, shape }
 WeddingInfo: { groom, bride, date, time, venue, address }

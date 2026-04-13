@@ -8,7 +8,7 @@ description: "Use when: working on any file in the Wedding workspace. Provides p
 ## Project Overview
 
 | Property | Value |
-|----------|-------|
+| --- | --- |
 | **Name** | Wedding Manager |
 | **Type** | Single-page HTML app |
 | **Version** | v1.0.0 |
@@ -20,7 +20,7 @@ description: "Use when: working on any file in the Wedding workspace. Provides p
 
 ## File Structure
 
-```
+```text
 Wedding/
 ├── index.html            # App (HTML + CSS + JS)
 ├── sw.js                 # ServiceWorker (offline + cache, v1.0.0)
@@ -52,7 +52,7 @@ Wedding/
 ## Key Systems
 
 | System | Details |
-|--------|---------|
+| --- | --- |
 | **Storage** | localStorage with `wedding_v1_` prefix, JSON serialization |
 | **i18n** | Dual-language (he/en) via `data-i18n` attrs + `t()` function |
 | **Themes** | 5 CSS-variable themes, cycled with 🎨 button |

@@ -8,6 +8,7 @@ description: "Scaffold a new feature section in the wedding app."
 I want to add a new feature to the wedding app.
 
 ## Requirements
+
 1. Add a new nav tab with icon and Hebrew/English label
 2. Create a new section div with proper `id="sec-{name}"` and class `section`
 3. Add both `he` and `en` translations to the `I18N` object
