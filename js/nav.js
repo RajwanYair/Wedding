@@ -17,6 +17,9 @@ function showSection(name) {
   if (name === 'whatsapp')  { updateWaPreview(); renderWaGuestList(); }
   if (name === 'tables')    { renderTables(); renderUnassignedGuests(); }
   if (name === 'budget')    { renderBudget(); }
-  if (name === 'settings')  { renderDataSummary(); }
+  if (name === "settings") {
+    renderDataSummary();
+    renderUserManager();
+  }
 }
 

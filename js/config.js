@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.4.0 ── */
+/* ── Wedding Manager — Config & State v1.5.0 ── */
 
 /* ── State ── */
 /* ── State ── */
@@ -99,3 +99,7 @@ const TABLE_COLS = ["id", "name", "capacity", "shape"];
 let _authUser = null; // null | { name, firstName, lastName, email, picture, isAdmin, provider }
 let _sheetsToken = null; // OAuth2 access token for Sheets API (in-memory only)
 let _sheetsTokenClient = null; // google.accounts.oauth2 token client instance
+// Extra admin emails approved via Settings (stored in localStorage, merged with ADMIN_EMAILS)
+let _approvedEmails = [];
+// Runtime override for provider credentials (entered via Settings, stored in localStorage)
+let _runtimeAuthConfig = { googleClientId: '', fbAppId: '', appleServiceId: '' };

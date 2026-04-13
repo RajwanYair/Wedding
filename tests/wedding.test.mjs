@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.4.0
+// Wedding Manager — Test Suite v1.5.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.4.0", function () {
-    assert.ok(SRC.includes("v1.4.0"));
+  it("HTML contains v1.5.0", function () {
+    assert.ok(SRC.includes("v1.5.0"));
   });
 
-  it("SW cache name contains v1.4.0", function () {
-    assert.ok(SW.includes("wedding-v1.4.0"));
+  it("SW cache name contains v1.5.0", function () {
+    assert.ok(SW.includes("wedding-v1.5.0"));
   });
 
-  it("package.json version is 1.4.0", function () {
-    assert.equal(PKG.version, "1.4.0");
+  it("package.json version is 1.5.0", function () {
+    assert.equal(PKG.version, "1.5.0");
   });
 });
 
@@ -559,7 +559,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.4.0'));
+    assert.ok(SW.includes('wedding-v1.5.0'));
   });
 
   it('pre-caches app shell', function() {
@@ -632,5 +632,58 @@ describe('Package.json', function() {
 
   it('is ESM module', function() {
     assert.equal(PKG.type, 'module');
+  });
+});
+
+// ── Auth & User Access Management ──
+describe('Auth & User Access Management', function() {
+  it('has isApprovedAdmin function', function() {
+    assert.ok(JS.includes('function isApprovedAdmin'));
+  });
+
+  it('has loadAuthConfig / saveAuthConfig', function() {
+    assert.ok(JS.includes('function loadAuthConfig'));
+    assert.ok(JS.includes('function saveAuthConfig'));
+  });
+
+  it('has dynamic FB SDK loader', function() {
+    assert.ok(JS.includes('function loadFBSDK'));
+    assert.ok(JS.includes('facebook-jssdk'));
+  });
+
+  it('has dynamic Apple SDK loader', function() {
+    assert.ok(JS.includes('function loadAppleSDK'));
+    assert.ok(JS.includes('appleid.cdn-apple.com'));
+  });
+
+  it('has getRuntimeClientId for Google', function() {
+    assert.ok(JS.includes('function getRuntimeClientId'));
+  });
+
+  it('ADMIN_EMAILS contains yair.rajwan@gmail.com', function() {
+    assert.ok(JS.includes('yair.rajwan@gmail.com'));
+  });
+
+  it('has addApprovedEmail / removeApprovedEmail', function() {
+    assert.ok(JS.includes('function addApprovedEmail'));
+    assert.ok(JS.includes('function removeApprovedEmail'));
+  });
+
+  it('has saveProviderConfig / renderUserManager', function() {
+    assert.ok(JS.includes('function saveProviderConfig'));
+    assert.ok(JS.includes('function renderUserManager'));
+  });
+
+  it('User Manager card present in settings HTML', function() {
+    assert.ok(HTML.includes('id="cardUserManager"'));
+    assert.ok(HTML.includes('id="approvedEmailsList"'));
+    assert.ok(HTML.includes('id="settingsGoogleClientId"'));
+    assert.ok(HTML.includes('id="settingsFBAppId"'));
+    assert.ok(HTML.includes('id="settingsAppleServiceId"'));
+  });
+
+  it('_approvedEmails and _runtimeAuthConfig declared in config', function() {
+    assert.ok(JS.includes('_approvedEmails'));
+    assert.ok(JS.includes('_runtimeAuthConfig'));
   });
 });

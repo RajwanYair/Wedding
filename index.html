@@ -697,6 +697,37 @@
             <div id="dataSummary" style="font-size:0.85em; color:var(--text-secondary); line-height:2;"></div>
           </div>
 
+          <!-- User Access Management -->
+          <div class="settings-card" id="cardUserManager">
+            <h3>👥 <span data-i18n="user_mgr_title">ניהול גישה</span></h3>
+            <p style="font-size:0.82rem; color:var(--text-muted);" data-i18n="user_mgr_desc">קבע מי יכול לנהל את החתונה. הגדר אישורי ספקי כניסה ואשר מנהלים נוספים.</p>
+
+            <details style="margin-bottom:0.9rem;">
+              <summary style="font-size:0.85rem; color:var(--text-secondary); cursor:pointer; user-select:none; padding:0.3rem 0;" data-i18n="user_mgr_provider_config">הגדרות ספק כניסה (Google / Facebook / Apple)</summary>
+              <div style="margin-top:0.7rem; display:flex; flex-direction:column; gap:0.4rem;">
+                <label style="font-size:0.78rem; color:var(--text-muted);">Google Client ID <a href="https://console.cloud.google.com" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
+                <input type="text" id="settingsGoogleClientId" style="padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.82rem; width:100%;" data-i18n-placeholder="ph_google_client_id" placeholder="xxxx.apps.googleusercontent.com">
+                <label style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">Facebook App ID <a href="https://developers.facebook.com" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
+                <input type="text" id="settingsFBAppId" style="padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.82rem; width:100%;" placeholder="123456789012345">
+                <label style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">Apple Service ID <a href="https://developer.apple.com" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
+                <input type="text" id="settingsAppleServiceId" style="padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.82rem; width:100%;" placeholder="com.example.wedding">
+                <button class="btn btn-secondary btn-small" onclick="saveProviderConfig()" style="align-self:flex-start; margin-top:0.4rem;">
+                  💾 <span data-i18n="user_mgr_save_provider">שמור הגדרות ספק</span>
+                </button>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin:0.2rem 0 0;" data-i18n="user_mgr_reload_note">לאחר השמירה הדף יטען מחדש להפעלת השינויים.</p>
+              </div>
+            </details>
+
+            <div style="font-size:0.85rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.4rem;" data-i18n="user_mgr_approved_label">אימיילים מורשים לגישה מלאה:</div>
+            <div id="approvedEmailsList" style="margin-bottom:0.6rem;"></div>
+            <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+              <input type="email" id="newApproveEmail" style="flex:1; min-width:180px; padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.85rem;" data-i18n-placeholder="ph_approve_email" placeholder="admin@example.com" onkeydown="if(event.key==='Enter'){addApprovedEmail();}">
+              <button class="btn btn-primary btn-small" onclick="addApprovedEmail()">
+                ➕ <span data-i18n="user_mgr_add">אשר גישה</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Danger Zone -->
           <div class="settings-card" style="border-color:rgba(252,165,165,0.25);">
             <h3 style="color:var(--negative);">⚠️ <span data-i18n="clear_data_title">מחיקת נתונים</span></h3>

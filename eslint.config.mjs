@@ -84,6 +84,8 @@ export default [
         _authUser: "writable",
         _sheetsToken: "writable",
         _sheetsTokenClient: "writable",
+        _approvedEmails: "writable",
+        _runtimeAuthConfig: "writable",
         // i18n.js
         I18N: "writable",
         // dom.js
@@ -190,6 +192,19 @@ export default [
         throttledSaveGift: "writable",
         saveBudgetTarget: "writable",
         // auth.js
+        isApprovedAdmin: "writable",
+        loadAuthConfig: "writable",
+        saveAuthConfig: "writable",
+        getRuntimeClientId: "writable",
+        getRuntimeFBAppId: "writable",
+        getRuntimeAppleServiceId: "writable",
+        loadFBSDK: "writable",
+        loadAppleSDK: "writable",
+        addApprovedEmail: "writable",
+        removeApprovedEmail: "writable",
+        saveProviderConfig: "writable",
+        renderUserManager: "writable",
+        _buildEmailRow: "writable",
         decodeJwt: "writable",
         handleGoogleCredential: "writable",
         loginFacebook: "writable",
