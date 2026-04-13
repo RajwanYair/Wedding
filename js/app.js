@@ -31,6 +31,7 @@ function init() {
   initParticles();
   setInterval(renderCountdown, 1000);
   renderBudget();
+  renderAnalytics();
   initAuth();
   loadFBSDK();
   loadAppleSDK();

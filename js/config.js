@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.11.0 ── */
+/* ── Wedding Manager — Config & State v1.12.0 ── */
 
 /* ── State ── */
 /* ── State ── */

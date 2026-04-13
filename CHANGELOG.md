@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.12.0] — 2025-07-13
+
+### Added
+
+- **Analytics section** — new dedicated analytics page (📈 nav tab) wired from the pre-existing `analytics.js` module (SVG-based donut + bar charts).
+  - 5 chart cards: RSVP status donut, side distribution bars, meal preference bars, invitation sent/unsent bars, headcount summary grid.
+  - 9 new DOM IDs: `analyticsRsvpDonut`, `analyticsSideChart`, `analyticsMealChart`, `analyticsSentChart`, `analyticsHeadAdults`, `analyticsHeadChildren`, `analyticsHeadTotal`, `analyticsHeadConfirmed`, `analyticsHeadAccess`.
+  - 7 new CSS classes in `components.css`: `.analytics-row`, `.analytics-card`, `.analytics-headcount-grid`, `.analytics-stat-box`, `.analytics-stat-num`, `.analytics-stat-lbl`, `.analytics-stat-highlight`.
+  - 17 new i18n keys (he + en): `nav_analytics`, `tip_nav_analytics`, `stat_maybe`, `stat_guests`, `analytics_title`, `analytics_rsvp_title`, `analytics_side_title`, `analytics_meal_title`, `analytics_sent_title`, `analytics_headcount_title`, `analytics_confirmed_heads`, `analytics_total_guests`, `analytics_adults`, `analytics_children`, `analytics_total_heads`, `analytics_confirmed_count`, `analytics_access_count`.
+  - Analytics section is admin-only (added to `adminOnly` array in `nav.js`).
+  - `renderAnalytics()` called on section show and on init.
+  - 10 new tests (187 total).
+
 ## [1.11.0] — 2026-04-14
 
 ### Added

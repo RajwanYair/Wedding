@@ -152,6 +152,9 @@
     <button class="nav-tab" data-tab="budget" onclick="showSection('budget')" data-i18n-tooltip="tip_nav_budget" data-tooltip-pos="down">
       <span>🎁</span> <span data-i18n="nav_budget">מתנות</span>
     </button>
+    <button class="nav-tab" data-tab="analytics" onclick="showSection('analytics')" data-i18n-tooltip="tip_nav_analytics" data-tooltip-pos="down">
+      <span>📈</span> <span data-i18n="nav_analytics">ניתוחים</span>
+    </button>
     <button class="nav-tab" data-tab="settings" onclick="showSection('settings')" data-i18n-tooltip="tip_nav_settings" data-tooltip-pos="down">
       <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
     </button>
@@ -669,6 +672,64 @@
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Analytics
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-analytics">
+
+      <!-- RSVP Status + Headcount Summary -->
+      <div class="analytics-row">
+        <div class="card analytics-card">
+          <div class="card-header"><span class="icon">✅</span> <span data-i18n="analytics_rsvp_title">סטטוס אישור הגעה</span></div>
+          <div id="analyticsRsvpDonut"></div>
+        </div>
+        <div class="card analytics-card">
+          <div class="card-header"><span class="icon">👥</span> <span data-i18n="analytics_headcount_title">סיכום מוזמנים</span></div>
+          <div class="analytics-headcount-grid">
+            <div class="analytics-stat-box">
+              <div class="analytics-stat-num" id="analyticsHeadAdults">0</div>
+              <div class="analytics-stat-lbl" data-i18n="analytics_adults">מבוגרים</div>
+            </div>
+            <div class="analytics-stat-box">
+              <div class="analytics-stat-num" id="analyticsHeadChildren">0</div>
+              <div class="analytics-stat-lbl" data-i18n="analytics_children">ילדים</div>
+            </div>
+            <div class="analytics-stat-box">
+              <div class="analytics-stat-num" id="analyticsHeadTotal">0</div>
+              <div class="analytics-stat-lbl" data-i18n="analytics_total_heads">סה״כ נפשות</div>
+            </div>
+            <div class="analytics-stat-box analytics-stat-highlight">
+              <div class="analytics-stat-num" id="analyticsHeadConfirmed">0</div>
+              <div class="analytics-stat-lbl" data-i18n="analytics_confirmed_count">נפשות מאושרות</div>
+            </div>
+            <div class="analytics-stat-box">
+              <div class="analytics-stat-num" id="analyticsHeadAccess">0</div>
+              <div class="analytics-stat-lbl" data-i18n="analytics_access_count">צרכי נגישות</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Distribution + Meal Preferences -->
+      <div class="analytics-row">
+        <div class="card analytics-card">
+          <div class="card-header"><span class="icon">⚖️</span> <span data-i18n="analytics_side_title">חלוקת צדדים</span></div>
+          <div id="analyticsSideChart"></div>
+        </div>
+        <div class="card analytics-card">
+          <div class="card-header"><span class="icon">🍽️</span> <span data-i18n="analytics_meal_title">העדפות תזונה</span></div>
+          <div id="analyticsMealChart"></div>
+        </div>
+      </div>
+
+      <!-- Invitation Status -->
+      <div class="card">
+        <div class="card-header"><span class="icon">📤</span> <span data-i18n="analytics_sent_title">סטטוס שליחת הזמנות</span></div>
+        <div id="analyticsSentChart"></div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
          SECTION: Settings
          ══════════════════════════════════════════════════════════════════ -->
     <div class="section" id="sec-settings">
@@ -955,6 +1016,7 @@
   <script src="./js/rsvp.js"></script>
   <script src="./js/settings.js"></script>
   <script src="./js/budget.js"></script>
+  <script src="./js/analytics.js"></script>
   <script src="./js/sheets.js"></script>
   <script src="./js/auth.js"></script>
   <script src="./js/app.js"></script>

@@ -2,7 +2,7 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v1.11.0-d4a574?style=flat-square)
+![Version](https://img.shields.io/badge/version-v1.12.0-d4a574?style=flat-square)
 ![Modular](https://img.shields.io/badge/Modular-17_JS_%2B_6_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)

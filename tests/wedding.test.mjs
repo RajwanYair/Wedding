@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.11.0
+// Wedding Manager — Test Suite v1.12.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.11.0", function () {
-    assert.ok(SRC.includes("v1.11.0"));
+  it("HTML contains v1.12.0", function () {
+    assert.ok(SRC.includes("v1.12.0"));
   });
 
-  it("SW cache name contains v1.11.0", function () {
-    assert.ok(SW.includes("wedding-v1.11.0"));
+  it("SW cache name contains v1.12.0", function () {
+    assert.ok(SW.includes("wedding-v1.12.0"));
   });
 
-  it("package.json version is 1.11.0", function () {
-    assert.equal(PKG.version, "1.11.0");
+  it("package.json version is 1.12.0", function () {
+    assert.equal(PKG.version, "1.12.0");
   });
 });
 
@@ -339,6 +339,71 @@ describe('Dashboard Charts', function() {
   });
 });
 
+// ── Analytics Section (v1.12.0) ──
+describe('Analytics Section', function() {
+  it('analytics.js has renderAnalytics function', function() {
+    assert.ok(JS.includes('function renderAnalytics'), 'renderAnalytics missing');
+  });
+
+  it('analytics.js has SVG chart helpers', function() {
+    assert.ok(JS.includes('function buildDonutSVG'), 'buildDonutSVG missing');
+    assert.ok(JS.includes('function buildBarRow'),   'buildBarRow missing');
+    assert.ok(JS.includes('function buildLegend'),   'buildLegend missing');
+  });
+
+  it('analytics section exists in HTML', function() {
+    assert.ok(HTML.includes('id="sec-analytics"'), 'sec-analytics section missing');
+  });
+
+  it('analytics DOM IDs present in HTML', function() {
+    assert.ok(HTML.includes('id="analyticsRsvpDonut"'),  'analyticsRsvpDonut missing');
+    assert.ok(HTML.includes('id="analyticsSideChart"'),  'analyticsSideChart missing');
+    assert.ok(HTML.includes('id="analyticsMealChart"'),  'analyticsMealChart missing');
+    assert.ok(HTML.includes('id="analyticsSentChart"'),  'analyticsSentChart missing');
+    assert.ok(HTML.includes('id="analyticsHeadAdults"'), 'analyticsHeadAdults missing');
+    assert.ok(HTML.includes('id="analyticsHeadChildren"'), 'analyticsHeadChildren missing');
+    assert.ok(HTML.includes('id="analyticsHeadTotal"'),  'analyticsHeadTotal missing');
+    assert.ok(HTML.includes('id="analyticsHeadConfirmed"'), 'analyticsHeadConfirmed missing');
+    assert.ok(HTML.includes('id="analyticsHeadAccess"'), 'analyticsHeadAccess missing');
+  });
+
+  it('analytics nav tab present in HTML', function() {
+    assert.ok(HTML.includes('data-tab="analytics"'), 'analytics nav tab missing');
+  });
+
+  it('analytics.js is loaded as script in HTML', function() {
+    assert.ok(HTML.includes('analytics.js'), 'analytics.js script tag missing');
+  });
+
+  it('renderAnalytics is called in nav.js showSection', function() {
+    assert.ok(JS.includes("renderAnalytics()"), 'renderAnalytics() call missing in nav.js');
+  });
+
+  it('analytics is in adminOnly list in nav.js', function() {
+    assert.ok(JS.includes("'analytics'"), "'analytics' not in adminOnly list");
+  });
+
+  it('analytics i18n keys present in both languages', function() {
+    assert.ok(JS.includes('nav_analytics'),            'nav_analytics key missing');
+    assert.ok(JS.includes('stat_maybe'),               'stat_maybe key missing');
+    assert.ok(JS.includes('stat_guests'),              'stat_guests key missing');
+    assert.ok(JS.includes('analytics_confirmed_heads'), 'analytics_confirmed_heads key missing');
+    assert.ok(JS.includes('analytics_total_guests'),   'analytics_total_guests key missing');
+    assert.ok(JS.includes('analytics_rsvp_title'),     'analytics_rsvp_title key missing');
+    assert.ok(JS.includes('analytics_headcount_title'), 'analytics_headcount_title key missing');
+  });
+
+  it('analytics CSS classes present in components.css', function() {
+    assert.ok(CSS.includes('.analytics-row'),              '.analytics-row missing');
+    assert.ok(CSS.includes('.analytics-card'),             '.analytics-card missing');
+    assert.ok(CSS.includes('.analytics-headcount-grid'),   '.analytics-headcount-grid missing');
+    assert.ok(CSS.includes('.analytics-stat-box'),         '.analytics-stat-box missing');
+    assert.ok(CSS.includes('.analytics-stat-num'),         '.analytics-stat-num missing');
+    assert.ok(CSS.includes('.analytics-stat-lbl'),         '.analytics-stat-lbl missing');
+    assert.ok(CSS.includes('.analytics-stat-highlight'),   '.analytics-stat-highlight missing');
+  });
+});
+
 // ── WhatsApp ──
 describe('WhatsApp Integration', function() {
   it('has WhatsApp template textarea', function() {
@@ -608,7 +673,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.11.0'));
+    assert.ok(SW.includes('wedding-v1.12.0'));
   });
 
   it('pre-caches app shell', function() {
