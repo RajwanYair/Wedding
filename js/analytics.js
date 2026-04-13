@@ -340,7 +340,7 @@ function _renderMealChart(regular, veg, vegan, gluten, kosher, _total) {
   el.appendChild(
     buildBarRow("🌾 " + t("meal_gluten_free"), gluten, max, "var(--warning)"),
   );
-  el.appendChild(buildBarRow("✡️ " + t("meal_kosher"), kosher, max, "#c084fc"));
+  el.appendChild(buildBarRow("🍽️ " + t("meal_kosher"), kosher, max, "#c084fc"));
 }
 
 function _renderSentChart(sent, unsent, _total) {
