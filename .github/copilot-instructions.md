@@ -10,7 +10,7 @@
 | Stack | HTML5 · vanilla CSS3 · vanilla JS (ES2020+) |
 | Runtime deps | Zero — devDeps for lint only |
 | Language | Hebrew RTL primary, English toggle |
-| Tests | `node --test tests/wedding.test.mjs` — 192 pass |
+| Tests | `node --test tests/wedding.test.mjs` — 291 pass |
 | Lint | `npm run lint` → 0 errors · 0 warnings |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 
@@ -22,7 +22,7 @@ css/                # 6 modules: variables · base · layout · components · re
 js/                 # 18 modules: config · i18n · dom · state · utils · ui · nav · dashboard
                     #   guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app
 sw.js               # Service Worker — stale-while-revalidate + update banner (5-min poll)
-tests/wedding.test.mjs  # 192 unit tests
+tests/wedding.test.mjs  # 291 unit tests
 .github/workflows/  # ci.yml · deploy.yml · release.yml
 .vscode/            # settings · extensions · tasks · mcp
 ```

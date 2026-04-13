@@ -56,7 +56,7 @@ Wedding/
 ├── .markdownlint-cli2.jsonc  # Ignore node_modules
 ├── .editorconfig / .gitignore / .gitattributes
 ├── tests/
-│   └── wedding.test.mjs  # Node built-in test runner (192 tests)
+│   └── wedding.test.mjs  # Node built-in test runner (291 tests)
 ├── .github/
 │   ├── copilot-instructions.md   ← master project spec (always loaded)
 │   ├── AGENTS.md                 ← agent/prompt discovery index

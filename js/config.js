@@ -67,7 +67,8 @@ const SHEETS_CONFIG_TAB  = "Config";    // Sheet tab for wedding info (key-value
 // Deploy .github/scripts/sheets-webapp.gs as a Google Apps Script Web App
 // (Execute as: Me | Who has access: Anyone), then paste the Web App URL here
 // or enter it at runtime in the Settings → Google Sheets card:
-const SHEETS_WEBAPP_URL  = "";
+const SHEETS_WEBAPP_URL =
+  "https://script.google.com/macros/s/AKfycbxGYuciHXLurYbZn9s-Gx8uMmBSn1dZ20xOFoZkk3JXg3RrzR741jz2tsIKgLtN8cHQ/exec";
 const SHEETS_SCOPE       = "https://www.googleapis.com/auth/spreadsheets";
 const SHEETS_SYNC_INTERVAL_MS = 30000; // auto-reload interval in milliseconds
 const GUEST_COLS = [

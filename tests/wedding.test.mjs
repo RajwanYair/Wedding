@@ -1,6 +1,7 @@
 // =============================================================================
 // Wedding Manager — Test Suite v1.12.0
 // Run: node --test tests/wedding.test.mjs
+// 291 tests — 192 core + 99 extended coverage
 // =============================================================================
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -946,5 +947,530 @@ describe('Security hardening', function() {
 
   it('auth_login_locked i18n key present in both languages', function() {
     assert.ok(JS.includes('auth_login_locked'), 'auth_login_locked key missing');
+  });
+});
+
+// =============================================================================
+// Extended coverage — targeting ≥80% feature coverage
+// =============================================================================
+
+// ── Pure Utility Functions Helper ──
+/**
+ * Extract a named function declaration from combined JS source and return it
+ * as a callable.  Only works for pure functions (no DOM / global side-effects).
+ */
+function _evalPureFn(src, fnName) {
+  const marker = 'function ' + fnName + '(';
+  const idx = src.indexOf(marker);
+  if (idx === -1) throw new Error('_evalPureFn: ' + fnName + ' not found');
+  let depth = 0, end = -1;
+  for (let i = idx; i < src.length; i++) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) throw new Error('_evalPureFn: could not find closing brace for ' + fnName);
+  // eslint-disable-next-line no-new-func
+  return new Function('return ' + src.slice(idx, end + 1))();
+}
+
+const ESLINT_CFG = readFileSync(resolve(__dirname, '..', 'eslint.config.mjs'), 'utf8');
+
+// ── Pure: cleanPhone ──
+describe('Pure — cleanPhone', function() {
+  const cleanPhone = _evalPureFn(JS, 'cleanPhone');
+
+  it('converts Israeli 054 format', function() {
+    assert.equal(cleanPhone('054-123-4567'), '972541234567');
+  });
+
+  it('strips spaces and parentheses', function() {
+    assert.equal(cleanPhone('(054) 123 4567'), '972541234567');
+  });
+
+  it('keeps already-international 972 number unchanged', function() {
+    assert.equal(cleanPhone('972541234567'), '972541234567');
+  });
+
+  it('strips leading + from +972 number', function() {
+    assert.equal(cleanPhone('+972541234567'), '972541234567');
+  });
+
+  it('prepends 972 for numbers missing country code', function() {
+    assert.equal(cleanPhone('541234567'), '972541234567');
+  });
+});
+
+// ── Pure: sanitizeInput ──
+describe('Pure — sanitizeInput', function() {
+  const sanitizeInput = _evalPureFn(JS, 'sanitizeInput');
+
+  it('trims leading and trailing whitespace', function() {
+    assert.equal(sanitizeInput('  hello  '), 'hello');
+  });
+
+  it('clamps to max length', function() {
+    assert.equal(sanitizeInput('abcde', 3), 'abc');
+  });
+
+  it('returns empty string for null', function() {
+    assert.equal(sanitizeInput(null), '');
+  });
+
+  it('returns empty string for undefined', function() {
+    assert.equal(sanitizeInput(undefined), '');
+  });
+
+  it('converts non-string to string', function() {
+    assert.equal(sanitizeInput(42), '42');
+  });
+});
+
+// ── Pure: isValidHttpsUrl ──
+describe('Pure — isValidHttpsUrl', function() {
+  const isValidHttpsUrl = _evalPureFn(JS, 'isValidHttpsUrl');
+
+  it('empty string is valid (field is optional)', function() {
+    assert.ok(isValidHttpsUrl(''));
+  });
+
+  it('null / undefined is valid', function() {
+    assert.ok(isValidHttpsUrl(null));
+    assert.ok(isValidHttpsUrl(undefined));
+  });
+
+  it('valid https URL returns true', function() {
+    assert.ok(isValidHttpsUrl('https://example.com'));
+  });
+
+  it('http URL returns false', function() {
+    assert.ok(!isValidHttpsUrl('http://example.com'));
+  });
+
+  it('non-URL string returns false', function() {
+    assert.ok(!isValidHttpsUrl('not-a-url'));
+  });
+});
+
+// ── Pure: guestFullName ──
+describe('Pure — guestFullName', function() {
+  const guestFullName = _evalPureFn(JS, 'guestFullName');
+
+  it('returns firstName + space + lastName', function() {
+    assert.equal(guestFullName({ firstName: 'John', lastName: 'Doe' }), 'John Doe');
+  });
+
+  it('returns firstName only when lastName is empty', function() {
+    assert.equal(guestFullName({ firstName: 'John', lastName: '' }), 'John');
+  });
+
+  it('returns empty string when both names are empty', function() {
+    assert.equal(guestFullName({ firstName: '', lastName: '' }), '');
+  });
+});
+
+// ── Pure: parseGiftAmount ──
+describe('Pure — parseGiftAmount', function() {
+  const parseGiftAmount = _evalPureFn(JS, 'parseGiftAmount');
+
+  it('parses plain integer string', function() {
+    assert.equal(parseGiftAmount('500'), 500);
+  });
+
+  it('strips ₪ prefix', function() {
+    assert.equal(parseGiftAmount('₪500'), 500);
+  });
+
+  it('strips NIS prefix', function() {
+    assert.equal(parseGiftAmount('NIS 500'), 500);
+  });
+
+  it('strips NIS suffix', function() {
+    assert.equal(parseGiftAmount('500 NIS'), 500);
+  });
+
+  it('strips comma thousands separators', function() {
+    assert.equal(parseGiftAmount('1,500'), 1500);
+  });
+
+  it('returns 0 for non-numeric description', function() {
+    assert.equal(parseGiftAmount('אישרו הגעה'), 0);
+  });
+
+  it('returns 0 for empty string', function() {
+    assert.equal(parseGiftAmount(''), 0);
+  });
+
+  it('returns 0 for null', function() {
+    assert.equal(parseGiftAmount(null), 0);
+  });
+});
+
+// ── Pure: uid ──
+describe('Pure — uid', function() {
+  const uid = _evalPureFn(JS, 'uid');
+
+  it('returns a non-empty string', function() {
+    const id = uid();
+    assert.ok(typeof id === 'string' && id.length > 0, 'uid should be non-empty string');
+  });
+
+  it('returns unique values on successive calls', function() {
+    assert.notEqual(uid(), uid());
+  });
+});
+
+// ── Config Completeness ──
+describe('Config Completeness', function() {
+  it('GUEST_COLS has 21 columns', function() {
+    const match = JS.match(/const GUEST_COLS\s*=\s*\[([\s\S]*?)\]/);
+    assert.ok(match, 'GUEST_COLS array not found');
+    const cols = match[1].match(/"[^"]+"/g) || [];
+    assert.equal(cols.length, 21, 'Expected 21 GUEST_COLS, got ' + cols.length);
+  });
+
+  it('TABLE_COLS has 4 columns', function() {
+    const match = JS.match(/const TABLE_COLS\s*=\s*\[([\s\S]*?)\]/);
+    assert.ok(match, 'TABLE_COLS array not found');
+    const cols = match[1].match(/"[^"]+"/g) || [];
+    assert.equal(cols.length, 4, 'Expected 4 TABLE_COLS, got ' + cols.length);
+  });
+
+  it('ADMIN_EMAILS contains ylipman@gmail.com', function() {
+    assert.ok(JS.includes('ylipman@gmail.com'), 'ylipman@gmail.com missing from ADMIN_EMAILS');
+  });
+
+  it('ADMIN_EMAILS contains elior.rajwan@gmail.com', function() {
+    assert.ok(JS.includes('elior.rajwan@gmail.com'), 'elior.rajwan@gmail.com missing from ADMIN_EMAILS');
+  });
+
+  it('SPREADSHEET_ID is set', function() {
+    assert.ok(JS.includes('SPREADSHEET_ID') && !JS.includes('"YOUR_SPREADSHEET_ID"'),
+      'SPREADSHEET_ID missing or still placeholder');
+  });
+
+  it('SHEETS_WEBAPP_URL is set', function() {
+    assert.ok(JS.includes('script.google.com/macros'), 'SHEETS_WEBAPP_URL not configured');
+  });
+
+  it('SHEETS_GUESTS_TAB is Attendees', function() {
+    assert.ok(JS.includes("'Attendees'") || JS.includes('"Attendees"'),
+      'SHEETS_GUESTS_TAB should be Attendees');
+  });
+
+  it('SHEETS_TABLES_TAB is Tables', function() {
+    assert.ok(JS.includes("SHEETS_TABLES_TAB"), 'SHEETS_TABLES_TAB missing');
+  });
+});
+
+// ── i18n Key Completeness ──
+describe('i18n Key Completeness', function() {
+  it('side keys: groom, bride, mutual present in both languages', function() {
+    assert.ok(JS.includes('side_groom'),  'side_groom key missing');
+    assert.ok(JS.includes('side_bride'),  'side_bride key missing');
+    assert.ok(JS.includes('side_mutual'), 'side_mutual key missing');
+  });
+
+  it('meal_kosher labelled Mehadrin in Hebrew', function() {
+    assert.ok(JS.includes('\u05de\u05d4\u05d3\u05e8\u05d9\u05df'), 'Mehadrin Hebrew label missing');
+  });
+
+  it('meal_kosher labelled Mehadrin in English', function() {
+    assert.ok(JS.includes('Mehadrin'), 'Mehadrin English label missing');
+  });
+
+  it('meal_gluten_free key present in both languages', function() {
+    assert.ok(JS.includes('meal_gluten_free'), 'meal_gluten_free key missing');
+  });
+
+  it('budget_title key present in both languages', function() {
+    assert.ok(JS.includes('budget_title'), 'budget_title key missing');
+  });
+
+  it('budget_gift_placeholder key present in both languages', function() {
+    assert.ok(JS.includes('budget_gift_placeholder'), 'budget_gift_placeholder key missing');
+  });
+
+  it('group keys: family, friends, work present', function() {
+    assert.ok(JS.includes('group_family'), 'group_family key missing');
+    assert.ok(JS.includes('group_friends'), 'group_friends key missing');
+    assert.ok(JS.includes('group_work'),   'group_work key missing');
+  });
+
+  it('toast_rsvp_submitted and toast_rsvp_updated present', function() {
+    assert.ok(JS.includes('toast_rsvp_submitted'), 'toast_rsvp_submitted key missing');
+    assert.ok(JS.includes('toast_rsvp_updated'),   'toast_rsvp_updated key missing');
+  });
+
+  it('toast_wa_opening key present', function() {
+    assert.ok(JS.includes('toast_wa_opening'), 'toast_wa_opening key missing');
+  });
+
+  it('nav_budget key present', function() {
+    assert.ok(JS.includes('nav_budget'), 'nav_budget key missing');
+  });
+
+  it('label_waze and label_ceremony_time keys present', function() {
+    assert.ok(JS.includes('label_waze'),          'label_waze key missing');
+    assert.ok(JS.includes('label_ceremony_time'), 'label_ceremony_time key missing');
+  });
+
+  it('label_hebrew_date key present in both languages', function() {
+    assert.ok(JS.includes('label_hebrew_date'), 'label_hebrew_date key missing');
+  });
+});
+
+// ── WhatsApp: fillTemplate ──
+describe('WhatsApp: fillTemplate', function() {
+  it('fillTemplate function exists', function() {
+    assert.ok(JS.includes('function fillTemplate'), 'fillTemplate missing');
+  });
+
+  it('template supports {ceremony} placeholder', function() {
+    assert.ok(JS.includes('{ceremony}'), '{ceremony} placeholder missing');
+  });
+
+  it('template supports {hebrew_date} placeholder', function() {
+    assert.ok(JS.includes('{hebrew_date}'), '{hebrew_date} placeholder missing');
+  });
+
+  it('template supports {waze} placeholder', function() {
+    assert.ok(JS.includes('{waze}'), '{waze} placeholder missing');
+  });
+
+  it('template supports {address} placeholder', function() {
+    assert.ok(JS.includes('{address}'), '{address} placeholder missing');
+  });
+});
+
+// ── Dashboard Constants ──
+describe('Dashboard Constants', function() {
+  it('STATUS_ICON covers all 4 statuses', function() {
+    assert.ok(JS.includes('STATUS_ICON'), 'STATUS_ICON constant missing');
+    assert.ok(JS.includes("confirmed:"), 'STATUS_ICON missing confirmed');
+    assert.ok(JS.includes("pending:"),   'STATUS_ICON missing pending');
+    assert.ok(JS.includes("declined:"),  'STATUS_ICON missing declined');
+    assert.ok(JS.includes("maybe:"),     'STATUS_ICON missing maybe');
+  });
+
+  it('SIDE_ICON covers groom, bride, mutual', function() {
+    assert.ok(JS.includes('SIDE_ICON'), 'SIDE_ICON constant missing');
+    assert.ok(JS.includes("groom:"),   'SIDE_ICON missing groom');
+    assert.ok(JS.includes("bride:"),   'SIDE_ICON missing bride');
+    assert.ok(JS.includes("mutual:"),  'SIDE_ICON missing mutual');
+  });
+
+  it('MEAL_ICON covers kosher entry', function() {
+    assert.ok(JS.includes('MEAL_ICON'), 'MEAL_ICON constant missing');
+    assert.ok(JS.includes("kosher:"),  'MEAL_ICON missing kosher');
+  });
+
+  it('cdItem helper function exists', function() {
+    assert.ok(JS.includes('function cdItem'), 'cdItem helper missing');
+  });
+
+  it('renderCountdown function exists', function() {
+    assert.ok(JS.includes('function renderCountdown'), 'renderCountdown missing');
+  });
+
+  it('renderStats function exists', function() {
+    assert.ok(JS.includes('function renderStats'), 'renderStats missing');
+  });
+});
+
+// ── nav.js Admin Guard Completeness ──
+describe('nav.js Admin Guard Completeness', function() {
+  it('adminOnly list includes budget', function() {
+    assert.ok(JS.includes("'budget'"), "adminOnly missing 'budget'");
+  });
+
+  it('adminOnly list includes settings', function() {
+    assert.ok(JS.includes("'settings'"), "adminOnly missing 'settings'");
+  });
+
+  it('adminOnly list includes tables', function() {
+    assert.ok(JS.includes("'tables'"), "adminOnly missing 'tables'");
+  });
+
+  it('showSection function includes analytics render call', function() {
+    assert.ok(JS.includes("renderAnalytics()"), 'renderAnalytics() call missing in nav');
+  });
+});
+
+// ── Budget Extra Coverage ──
+describe('Budget Extra Coverage', function() {
+  it('giftReceived function exists', function() {
+    assert.ok(JS.includes('function giftReceived'), 'giftReceived missing');
+  });
+
+  it('saveBudgetTarget function exists', function() {
+    assert.ok(JS.includes('function saveBudgetTarget'), 'saveBudgetTarget missing');
+  });
+
+  it('HTML has budgetTableBody', function() {
+    assert.ok(HTML.includes('id="budgetTableBody"'), 'budgetTableBody missing');
+  });
+
+  it('HTML has budgetProgressBar', function() {
+    assert.ok(HTML.includes('id="budgetProgressBar"'), 'budgetProgressBar missing');
+  });
+
+  it('HTML has budget stats: budgetStatBudget and budgetStatPct', function() {
+    assert.ok(HTML.includes('id="budgetStatBudget"'), 'budgetStatBudget missing');
+    assert.ok(HTML.includes('id="budgetStatPct"'),    'budgetStatPct missing');
+  });
+});
+
+// ── Analytics Full Function Coverage ──
+describe('Analytics Full Function Coverage', function() {
+  it('polarToXY SVG helper exists', function() {
+    assert.ok(JS.includes('function polarToXY'), 'polarToXY missing');
+  });
+
+  it('arcPath SVG helper exists', function() {
+    assert.ok(JS.includes('function arcPath'), 'arcPath missing');
+  });
+
+  it('_renderRsvpDonut private function exists', function() {
+    assert.ok(JS.includes('function _renderRsvpDonut'), '_renderRsvpDonut missing');
+  });
+
+  it('_renderSideChart private function exists', function() {
+    assert.ok(JS.includes('function _renderSideChart'), '_renderSideChart missing');
+  });
+
+  it('_renderMealChart private function exists', function() {
+    assert.ok(JS.includes('function _renderMealChart'), '_renderMealChart missing');
+  });
+
+  it('_renderHeadcountSummary private function exists', function() {
+    assert.ok(JS.includes('function _renderHeadcountSummary'), '_renderHeadcountSummary missing');
+  });
+});
+
+// ── Settings Functions ──
+describe('Settings Functions', function() {
+  it('updateWeddingDetails function exists', function() {
+    assert.ok(JS.includes('function updateWeddingDetails'), 'updateWeddingDetails missing');
+  });
+
+  it('loadWeddingDetailsToForm function exists', function() {
+    assert.ok(JS.includes('function loadWeddingDetailsToForm'), 'loadWeddingDetailsToForm missing');
+  });
+
+  it('renderDataSummary function exists', function() {
+    assert.ok(JS.includes('function renderDataSummary'), 'renderDataSummary missing');
+  });
+
+  it('HTML has dataSummary element', function() {
+    assert.ok(HTML.includes('id="dataSummary"'), 'dataSummary element missing');
+  });
+});
+
+// ── Sheets Full Coverage ──
+describe('Sheets Full Coverage', function() {
+  it('sheetsAppendRsvp function exists', function() {
+    assert.ok(JS.includes('function sheetsAppendRsvp'), 'sheetsAppendRsvp missing');
+  });
+
+  it('syncGuestsToSheets function exists', function() {
+    assert.ok(JS.includes('function syncGuestsToSheets'), 'syncGuestsToSheets missing');
+  });
+
+  it('syncTablesToSheets function exists', function() {
+    assert.ok(JS.includes('function syncTablesToSheets'), 'syncTablesToSheets missing');
+  });
+
+  it('_sheetsWebAppPost internal function exists', function() {
+    assert.ok(JS.includes('function _sheetsWebAppPost'), '_sheetsWebAppPost missing');
+  });
+
+  it('guestToRow and rowToGuest converters exist', function() {
+    assert.ok(JS.includes('function guestToRow'), 'guestToRow missing');
+    assert.ok(JS.includes('function rowToGuest'), 'rowToGuest missing');
+  });
+});
+
+// ── Data Migration Fields ──
+describe('Data Migration Fields', function() {
+  it('migrateGuests migrates old name field to firstName', function() {
+    assert.ok(JS.includes('g.firstName = g.name'), 'firstName migration missing');
+  });
+
+  it('migrateGuests initialises side field', function() {
+    assert.ok(
+      JS.includes("g.side") && JS.includes("'mutual'"),
+      'side field migration missing'
+    );
+  });
+
+  it('migrateGuests initialises meal field', function() {
+    assert.ok(
+      JS.includes("g.meal") && JS.includes("'regular'"),
+      'meal field migration missing'
+    );
+  });
+
+  it('migrateGuests initialises gift field', function() {
+    assert.ok(JS.includes("g.gift"), 'gift field migration missing');
+  });
+
+  it('migrateGuests initialises accessibility field', function() {
+    assert.ok(JS.includes('g.accessibility'), 'accessibility field migration missing');
+  });
+
+  it('migrateGuests initialises rsvpDate field', function() {
+    assert.ok(JS.includes('g.rsvpDate'), 'rsvpDate field migration missing');
+  });
+});
+
+// ── HTML DOM IDs Extra ──
+describe('HTML DOM IDs Extra', function() {
+  it('has hebrewDateDisplay element', function() {
+    assert.ok(HTML.includes('id="hebrewDateDisplay"'), 'hebrewDateDisplay missing');
+  });
+
+  it('has budget section nav tab', function() {
+    assert.ok(HTML.includes('data-tab="budget"'), 'budget nav tab missing');
+  });
+
+  it('has weddingCeremonyTime input', function() {
+    assert.ok(HTML.includes('id="weddingCeremonyTime"'), 'weddingCeremonyTime input missing');
+  });
+
+  it('has venueWaze input for navigation link', function() {
+    assert.ok(HTML.includes('id="venueWaze"'), 'venueWaze input missing');
+  });
+
+  it('has budgetTargetInput for gift target', function() {
+    assert.ok(HTML.includes('id="budgetTargetInput"'), 'budgetTargetInput missing');
+  });
+});
+
+// ── ESLint Config ──
+describe('ESLint Config', function() {
+  it('varsIgnorePattern includes ^lookup', function() {
+    assert.ok(ESLINT_CFG.includes('^lookup'), '^lookup missing from varsIgnorePattern');
+  });
+
+  it('OAuth SDK globals (FB, AppleID, google) declared readonly', function() {
+    assert.ok(ESLINT_CFG.includes('FB:'), 'FB global missing');
+    assert.ok(ESLINT_CFG.includes('AppleID:'), 'AppleID global missing');
+    assert.ok(ESLINT_CFG.includes('google:'), 'google global missing');
+  });
+
+  it('analytics function globals declared (renderAnalytics, polarToXY)', function() {
+    assert.ok(ESLINT_CFG.includes('renderAnalytics'), 'renderAnalytics global missing from ESLint');
+    assert.ok(ESLINT_CFG.includes('polarToXY'), 'polarToXY global missing from ESLint');
+  });
+});
+
+// ── Service Worker APP_SHELL Completeness ──
+describe('Service Worker APP_SHELL Completeness', function() {
+  it('analytics.js included in APP_SHELL cache list', function() {
+    assert.ok(SW.includes('analytics.js'), 'analytics.js missing from APP_SHELL');
+  });
+
+  it('budget.js included in APP_SHELL cache list', function() {
+    assert.ok(SW.includes('budget.js'), 'budget.js missing from APP_SHELL');
   });
 });

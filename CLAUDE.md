@@ -5,7 +5,7 @@
 ## Commands
 
 ```bash
-node --test tests/wedding.test.mjs   # 192 tests — must all pass
+node --test tests/wedding.test.mjs   # 291 tests — must all pass
 npm run lint                         # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run lint:fix                     # Auto-fix CSS + JS
 npm run ci                           # lint + test (same as CI)
@@ -20,7 +20,7 @@ npm run ci                           # lint + test (same as CI)
 | `js/` (18 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app |
 | `sw.js` | Stale-while-revalidate + 5-min update polling |
 | `manifest.json` | PWA manifest |
-| `tests/wedding.test.mjs` | 192 unit tests (Node built-in runner) |
+| `tests/wedding.test.mjs` | 291 unit tests (Node built-in runner) |
 
 ## Auth Setup
 
