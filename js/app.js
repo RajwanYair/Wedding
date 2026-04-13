@@ -24,6 +24,8 @@ function init() {
   setInterval(renderCountdown, 1000);
   renderBudget();
   initAuth();
+  loadFBSDK();
+  loadAppleSDK();
   initSW();
   /* Load primary data from Google Sheets (public read, no auth) */
   loadFromSheetsOnInit();
@@ -95,4 +97,7 @@ function initSW() {
 }
 
 init();
+
+/* Google Identity Services calls this after its SDK loads */
+window.onGoogleLibraryLoad = function() { initGoogleSignIn(); };
 

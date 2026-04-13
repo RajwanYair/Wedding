@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.10.0
+// Wedding Manager — Test Suite v1.11.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.10.0", function () {
-    assert.ok(SRC.includes("v1.10.0"));
+  it("HTML contains v1.11.0", function () {
+    assert.ok(SRC.includes("v1.11.0"));
   });
 
-  it("SW cache name contains v1.10.0", function () {
-    assert.ok(SW.includes("wedding-v1.10.0"));
+  it("SW cache name contains v1.11.0", function () {
+    assert.ok(SW.includes("wedding-v1.11.0"));
   });
 
-  it("package.json version is 1.10.0", function () {
-    assert.equal(PKG.version, "1.10.0");
+  it("package.json version is 1.11.0", function () {
+    assert.equal(PKG.version, "1.11.0");
   });
 });
 
@@ -290,7 +290,7 @@ describe('Budget & Gift Tracker', function() {
   });
 });
 
-// ── Charts (v1.10.0) ──
+// ── Charts (v1.11.0) ──
 describe('Dashboard Charts', function() {
   it('has charts card in dashboard HTML', function() {
     assert.ok(HTML.includes('id="sec-dashboard"'), 'dashboard section missing');
@@ -608,7 +608,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.10.0'));
+    assert.ok(SW.includes('wedding-v1.11.0'));
   });
 
   it('pre-caches app shell', function() {

@@ -277,6 +277,12 @@ const I18N = {
       "האימייל אינו ברשימת המורשים. בקש ממנהל להוסיף אותך.",
     auth_login_locked:
       "יותר מדי ניסיונות כניסה. נסה שוב בעוד 5 דקות.",
+    auth_or_social: "── או התחבר עם ──",
+    auth_continue_google: "🔵 המשך עם Google",
+    auth_continue_fb: "📘 המשך עם Facebook",
+    auth_continue_apple: "🍎 המשך עם Apple",
+    auth_oauth_no_email: "לא הצלחנו לקבל אימייל מספק הזהות",
+    auth_oauth_not_configured: "ספק הזהות לא הוגדר עדיין",
     user_mgr_title: "ניהול גישה",
     user_mgr_desc:
       "הוסף כאן אימיילים שיקבלו גישה מלאה לניהול החתונה. הכניסה נעשית דרך כפתור 🔑 בפינה.",
@@ -591,6 +597,12 @@ const I18N = {
       "Email not in approved list. Ask a manager to add you.",
     auth_login_locked:
       "Too many failed sign-in attempts. Please try again in 5 minutes.",
+    auth_or_social: "── or sign in with ──",
+    auth_continue_google: "🔵 Continue with Google",
+    auth_continue_fb: "📘 Continue with Facebook",
+    auth_continue_apple: "🍎 Continue with Apple",
+    auth_oauth_no_email: "Could not get an email from the identity provider",
+    auth_oauth_not_configured: "Identity provider not yet configured",
     user_mgr_title: "User Access",
     user_mgr_desc:
       "Add emails here for full wedding management access. Sign-in is done via the 🔑 button in the taskbar.",

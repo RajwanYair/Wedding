@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.11.0] — 2026-04-14
+
+### Added
+
+- **OAuth re-added** — Google (GIS), Facebook (JS SDK), Apple Sign-In as supplementary login paths alongside email allowlist. All providers call `isApprovedAdmin(email)` — the allowlist remains the single authorization source. `handleGoogleCredential`, `loadFBSDK`, `loginFacebook`, `loadAppleSDK`, `loginApple`, `_oauthLogin` added to `auth.js`. `window.onGoogleLibraryLoad` callback in `app.js`. `FB_APP_ID`, `APPLE_SERVICE_ID` constants in `config.js`. New CSS classes: `.btn-facebook`, `.btn-apple` in `auth.css`.
+- New i18n keys: `auth_or_social`, `auth_continue_google`, `auth_continue_fb`, `auth_continue_apple`, `auth_oauth_no_email`, `auth_oauth_not_configured` (both `he`+`en`).
+- `npm run lint:fix` and `npm run ci` script aliases in `package.json`.
+
+### Changed
+
+- `eslint.config.mjs`: upgraded `ecmaVersion` to `2025`; added `no-throw-literal`, `no-self-compare`, `no-sequences`, `no-useless-concat`, `no-useless-return`, `no-lone-blocks`, `no-lonely-if` rules; declared `google` readonly global.
+- `.vscode/tasks.json`: updated test label to "177 tests"; CI task now runs `npm run ci` directly.
+- `.vscode/extensions.json`: added `GitHub.copilot` recommendation.
+- `.vscode/settings.json`: removed corrupted duplicate block.
+- `.github/workflows/ci.yml`: updated header comment to v1.11.0.
+- `copilot-instructions.md` + `CLAUDE.md`: updated to v1.11.0, 177 tests, correct auth table.
+- `CHANGELOG.md`: collapsed v1.3.0–v1.7.0 to one-liners.
+
 ## [1.10.0] — 2026-04-13
 
 ### Added
@@ -60,86 +78,23 @@ All notable changes to this project will be documented in this file.
 
 ## [1.7.0] — 2025-08-01
 
-### Security
-
-- Added comprehensive Content-Security-Policy meta tag (restricts `script-src`, `connect-src`, `img-src`, `frame-src`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`)
-- Added JavaScript framebusting guard (`window.top !== window.self`) for clickjacking protection in browsers that ignore CSP `frame-ancestors` in meta tags
-- Added `Referrer-Policy: strict-origin-when-cross-origin` meta tag
-- Fixed three `rel="noopener"` links to include `noreferrer`
-- Added `sanitizeInput(str, maxLen)` utility — trims + length-clamps all free-text user inputs
-- Added `isValidHttpsUrl(url)` utility — rejects non-HTTPS and malformed URLs at system boundaries
-- RSVP rate-limiting: 90-second cooldown per browser for non-admin users (stored as `wedding_v1_lastRsvp`)
-- Validated `wazeLink` as a valid HTTPS URL before saving in `updateWeddingDetails()`; shows `toast_invalid_url` on rejection
-- Applied `sanitizeInput()` to all wedding-info fields (groom, bride, venue, address, etc.) and all RSVP text inputs
-- JSON import now scrubs and validates guest schema (known keys only, bounded lengths, allowlisted enum values) to prevent prototype pollution
-- `renderInvitation()` now rejects `_invitationDataUrl` values that do not start with `data:image/`
-- 9 new security tests added (163 total)
+CSP meta tag, framebusting guard, `sanitizeInput`/`isValidHttpsUrl` utilities, RSVP rate-limiting (90 s), JSON import scrubbing, `renderInvitation` data-URI guard, 9 security tests (163 total).
 
 ## [1.6.0] — 2026-04-13
 
-### Added
-
-- Google Sheet as primary backend database — public read via `gviz/tq` endpoint (no auth required)
-- Apps Script Web App for writes — `replaceAll` + `append` + `ensureSheets` actions
-- `Config` sheet tab for wedding info (key-value pairs: groom, bride, date, venue, etc.)
-- `loadFromSheetsOnInit()` — loads all three tabs on startup, overwrites localStorage
-- `startSheetsAutoSync()` — polls every 30 s for remote changes via fingerprint comparison
-- `syncConfigToSheets()` — syncs wedding info to the Config tab on every save
-- `saveWebAppUrl()` / `renderSheetsSettings()` — runtime Apps Script URL config in Settings
-- `createMissingSheetTabs()` — button to create Attendees / Tables / Config tabs via Apps Script
-- Sheets settings card redesign: Web App URL input, status badge (read-only vs read+write), direct link to spreadsheet
-- `SHEETS_CONFIG_TAB = "Config"`, `SHEETS_SYNC_INTERVAL_MS = 30000` in config
-
-### Changed
-
-- `syncGuestsToSheets` / `syncTablesToSheets` now use Apps Script Web App (no-cors POST); OAuth v4 kept as optional fallback
-- Settings nav tab now also calls `renderSheetsSettings()` on open
-- `updateWeddingDetails()` now calls `syncConfigToSheets()` after saving
+Google Sheets backend: gviz public read, Apps Script Web App writes, `Config` tab for wedding info, 30 s auto-sync, `createMissingSheetTabs()`, runtime Web App URL in Settings.
 
 ## [1.5.0] — 2026-04-14
 
-### Added
-
-- Full multi-provider auth support: Google (GIS), Facebook (JS SDK), Apple Sign-In — all SDKs loaded dynamically at runtime
-- User Access Management UI in Settings: approve additional admin emails, configure provider credentials (Client ID / App ID / Service ID) without redeploying
-- `isApprovedAdmin()` — checks both hardcoded `ADMIN_EMAILS` and runtime-approved list from localStorage
-- `addApprovedEmail()` / `removeApprovedEmail()` — manage runtime admin list
-- `saveProviderConfig()` / `renderUserManager()` — Settings card to configure SDKs and approved users
-- `loadAuthConfig()` / `saveAuthConfig()` — persist auth config under `wedding_v1_authConfig`
-- `loadFBSDK()` / `loadAppleSDK()` — dynamic SDK injection (no hard-wired `<script>` tags needed)
-- Setup hint rendered in Google button area when no Client ID is configured
-- Root admin `yair.rajwan@gmail.com` has full access (hardcoded, cannot be removed)
-
-### Changed
-
-- `initGoogleSignIn()` now uses runtime Client ID from Settings, not hardcoded placeholder
-- `initAuth()` loads auth config and re-evaluates `isAdmin` against current approved list on every startup
-- Facebook and Apple login use runtime App ID / Service ID respectively
+Multi-provider OAuth: Google GIS, Facebook JS SDK, Apple Sign-In — all dynamically loaded; Settings UI for credentials + approved-email management; `isApprovedAdmin()`, `loadFBSDK()`, `loadAppleSDK()`.
 
 ## [1.4.0] — 2026-04-13
 
-### Added
-
-- **Budget & Gift Tracker** (`js/budget.js`): new admin-only section 🎁 to track per-guest gifts and total event budget
-  - Summary stats: gifts received, total ₪ amount, pending guests, expected budget, % of target
-  - Progress bar renders when a budget target is set
-  - Inline gift input per guest (throttled 600ms save) — leverages existing `gift` field on the Guest model
-  - Guests sorted by received-first then alphabetically; side icons (🤵👰🤝) and attendance multiplier shown
-  - `parseGiftAmount()` parses numeric gift strings (with ₪/NIS/commas) for totals; descriptions treated as non-monetary
-  - `saveBudgetTarget()` persists `_weddingInfo.giftBudget` via `saveAll()`
-- `budget` route added to admin-only nav guard in `nav.js`
-- `giftBudget: 0` default added to `_weddingDefaults` in `config.js`
-- Budget section i18n keys (he + en): `nav_budget`, `budget_title`, `budget_target_label`, `budget_save`, `budget_stat_*`, `budget_gift_placeholder`, `budget_empty`, `toast_budget_saved`, `tip_nav_budget`, `col_gift_status`, `col_gift`, `col_amount`
-- 9 new tests in *Budget & Gift Tracker* suite
+**Budget & Gift Tracker** (`budget.js`): gift totals, progress bar, inline per-guest gift input, `parseGiftAmount()`, `saveBudgetTarget()`, 9 new tests.
 
 ## [1.3.0] — 2026-04-13
 
-### Added
-
-- Seating Chart PDF export (`printSeatingChart()`): opens a print-ready window with wedding header, table grid (guest names, meal icons, occupancy), unassigned guests section; auto-triggers `window.print()` for PDF save — zero dependencies (Blob URL API)
-- `action_print_seating`, `seating_chart_title`, `toast_popup_blocked`, `tip_print_seating` i18n keys (he + en)
-- "Export Seating Chart" 🖨️ button in Tables section header
-- 2 new tests: `printSeatingChart` function presence, Blob URL export pattern
+Seating chart PDF export (`printSeatingChart()`): print-ready popup, table grid with meal icons, zero dependencies.
 
 ## [1.2.0] — 2026-04-13
 

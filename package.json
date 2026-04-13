@@ -1,6 +1,6 @@
 {
     "name": "wedding-manager",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
     "type": "module",
     "private": true,
@@ -9,9 +9,11 @@
         "test:watch": "node --test --watch tests/wedding.test.mjs",
         "lint:html": "htmlhint --config .htmlhintrc index.html",
         "lint:css": "stylelint --config .stylelintrc.json --max-warnings 0 css/*.css",
-        "lint:js": "eslint --config eslint.config.mjs --max-warnings 0 js/*.js",
+        "lint:js": "eslint --max-warnings 0 js/*.js",
         "lint:md": "markdownlint-cli2 README.md CHANGELOG.md CLAUDE.md \".github/**/*.md\"",
-        "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md"
+        "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
+        "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
+        "ci": "npm run lint && npm test"
     },
     "engines": {
         "node": ">=20.0.0"

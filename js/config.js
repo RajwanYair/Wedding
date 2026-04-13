@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.10.0 ── */
+/* ── Wedding Manager — Config & State v1.11.0 ── */
 
 /* ── State ── */
 /* ── State ── */
@@ -46,9 +46,17 @@ let _themeIndex = 0;
 // ⚠️  This is a client-side check — appropriate for a personal wedding app only.
 const ADMIN_EMAILS = ["yair.rajwan@gmail.com"];
 
-// Google Client ID — used by sheets.js for optional direct Sheets API v4 access (OAuth2).
-// Login no longer requires this; set only if you want direct Sheets API token refresh.
+// Google Client ID — required for Google Sign-In and optional Sheets API v4 OAuth.
+// Get from https://console.cloud.google.com → Credentials → OAuth 2.0 Client IDs
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+// Facebook App ID — required for Facebook Sign-In.
+// Get from https://developers.facebook.com → My Apps
+const FB_APP_ID = "";
+
+// Apple Service ID — required for Sign in with Apple.
+// Get from https://developer.apple.com → Certificates, Identifiers & Profiles → Services IDs
+const APPLE_SERVICE_ID = "";
 
 /* ── Google Sheets Config ── */
 // Spreadsheet: https://docs.google.com/spreadsheets/d/1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA

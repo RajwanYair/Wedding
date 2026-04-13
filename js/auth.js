@@ -90,6 +90,128 @@ function submitEmailLogin() {
   onAuthSuccess();
 }
 
+/* ─── OAuth (Google · Facebook · Apple) ─────────────────────────────
+   Each provider calls _oauthLogin(email, name, picture, provider).
+   The email is checked against the allowlist — no parallel auth path.
+   ─────────────────────────────────────────────────────────────────── */
+
+function _oauthLogin(email, name, picture, provider) {
+  if (!email) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+  const lc = email.toLowerCase();
+  if (!isApprovedAdmin(lc)) { showToast(t('auth_email_not_approved'), 'warning'); return; }
+  _clearLoginFailures();
+  const parts = (name || lc.split('@')[0]).split(' ');
+  _authUser = {
+    name:      name || parts[0],
+    firstName: parts[0] || '',
+    lastName:  parts.slice(1).join(' ') || '',
+    email:     lc,
+    picture:   picture || '',
+    isAdmin:   true,
+    provider:  provider,
+    expiresAt: Date.now() + _SESSION_TTL_MS,
+  };
+  save('auth', { name: _authUser.name, email: lc, picture: _authUser.picture, isAdmin: true, provider: provider, expiresAt: _authUser.expiresAt });
+  onAuthSuccess();
+}
+
+/* ── Google Sign-In (GIS SDK) ── */
+
+/** Called by the GIS library after load (set on window) */
+function handleGoogleCredential(response) {
+  if (!response || !response.credential) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+  /* Decode the JWT payload — no verification needed (server side not applicable here) */
+  const parts = response.credential.split('.');
+  if (parts.length < 2) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+  let payload;
+  try {
+    payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+  } catch (_e) {
+    showToast(t('auth_oauth_no_email'), 'error'); return;
+  }
+  _oauthLogin(payload.email, payload.name || '', payload.picture || '', 'google');
+}
+
+function initGoogleSignIn() {
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.startsWith('YOUR_')) return;
+  /* google.accounts.id available after GIS SDK loads */
+  if (typeof google === 'undefined' || !google.accounts) return;
+  google.accounts.id.initialize({
+    client_id:        GOOGLE_CLIENT_ID,
+    callback:         handleGoogleCredential,
+    auto_select:      false,
+    cancel_on_tap_outside: true,
+  });
+  const btn = document.getElementById('googleSignInBtn');
+  if (btn) {
+    google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large', width: 280, locale: _currentLang === 'he' ? 'he' : 'en' });
+  }
+}
+
+/* ── Facebook Sign-In (FB JS SDK) ── */
+
+function loadFBSDK() {
+  if (!FB_APP_ID || document.getElementById('fb-jssdk')) return;
+  window.fbAsyncInit = function() {
+    /* global FB */
+    FB.init({ appId: FB_APP_ID, cookie: true, xfbml: false, version: 'v20.0' });
+  };
+  const s  = document.createElement('script');
+  s.id     = 'fb-jssdk';
+  s.src    = 'https://connect.facebook.net/en_US/sdk.js';
+  s.defer  = true;
+  document.head.appendChild(s);
+}
+
+function loginFacebook() {
+  if (!FB_APP_ID) { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
+  if (typeof FB === 'undefined') { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
+  FB.login(function(resp) {
+    if (resp.authResponse) {
+      FB.api('/me', { fields: 'name,email,picture' }, function(user) {
+        _oauthLogin(user.email, user.name, user.picture && user.picture.data ? user.picture.data.url : '', 'facebook');
+      });
+    }
+  }, { scope: 'public_profile,email' });
+}
+
+/* ── Apple Sign-In ── */
+
+function loadAppleSDK() {
+  if (!APPLE_SERVICE_ID || document.getElementById('apple-signin-sdk')) return;
+  const s  = document.createElement('script');
+  s.id     = 'apple-signin-sdk';
+  s.src    = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
+  s.defer  = true;
+  document.head.appendChild(s);
+}
+
+function loginApple() {
+  if (!APPLE_SERVICE_ID) { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
+  if (typeof AppleID === 'undefined') { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
+  AppleID.auth.init({
+    clientId:    APPLE_SERVICE_ID,
+    scope:       'name email',
+    redirectURI: location.origin + location.pathname,
+    usePopup:    true,
+  });
+  AppleID.auth.signIn().then(function(data) {
+    const id = data.authorization && data.authorization.id_token;
+    if (!id) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+    let payload;
+    try {
+      payload = JSON.parse(atob(id.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    } catch (_e) {
+      showToast(t('auth_oauth_no_email'), 'error'); return;
+    }
+    const nameObj = data.user && data.user.name;
+    const name    = nameObj ? ((nameObj.firstName || '') + ' ' + (nameObj.lastName || '')).trim() : '';
+    _oauthLogin(payload.email, name, '', 'apple');
+  }).catch(function(_err) {
+    /* User closed popup — silently ignore */
+  });
+}
+
 /** Continue anonymously: shows RSVP only */
 function loginGuest() {
   _authUser = { name: '', firstName: '', lastName: '', email: '', picture: '', isAdmin: false, provider: 'guest' };

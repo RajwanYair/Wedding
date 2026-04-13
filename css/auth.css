@@ -52,6 +52,10 @@
 .auth-social-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
 .auth-social-btn.btn-fb { color: rgb(123, 158, 222); border-color: rgba(66, 103, 178, 0.35); }
 .auth-social-btn.btn-fb:hover { background: rgba(66, 103, 178, 0.14); }
+.auth-social-btn.btn-facebook { color: rgb(123, 158, 222); border-color: rgba(66, 103, 178, 0.35); }
+.auth-social-btn.btn-facebook:hover { background: rgba(66, 103, 178, 0.14); }
+.auth-social-btn.btn-apple { color: var(--text-primary); border-color: rgba(255, 255, 255, 0.2); }
+.auth-social-btn.btn-apple:hover { background: rgba(255, 255, 255, 0.08); }
 .auth-social-btn.btn-guest {
   color: var(--text-muted);
   font-size: 0.85rem;

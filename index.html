@@ -38,6 +38,10 @@
         <button class="btn btn-primary" style="width:100%; max-width:280px; justify-content:center;" onclick="submitEmailLogin()">
           🔑 <span data-i18n="auth_sign_in_btn">כניסה כמנהל</span>
         </button>
+        <div class="auth-divider-line"><span data-i18n="auth_or_social">── או התחבר עם ──</span></div>
+        <div id="googleSignInBtn" style="display:flex; justify-content:center; width:100%; max-width:280px;"></div>
+        <button class="auth-social-btn btn-facebook" onclick="loginFacebook()" data-i18n="auth_continue_fb">📘 המשך עם Facebook</button>
+        <button class="auth-social-btn btn-apple" onclick="loginApple()" data-i18n="auth_continue_apple">🍎 המשך עם Apple</button>
         <div class="auth-divider-line"><span data-i18n="auth_or">או</span></div>
         <button class="auth-social-btn btn-guest" onclick="hideAuthOverlay()">
           <span data-i18n="auth_back_guest">👤 חזור לאורח</span>

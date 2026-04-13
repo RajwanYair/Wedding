@@ -5,15 +5,13 @@
 ## Commands
 
 ```bash
-node --test tests/wedding.test.mjs   # 125 tests — must all pass
+node --test tests/wedding.test.mjs   # 177 tests — must all pass
 npm run lint                         # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
-npm run lint:html                    # HTMLHint → index.html
-npm run lint:css                     # Stylelint → css/*.css
-npm run lint:js                      # ESLint → js/*.js
-npm run lint:md                      # markdownlint-cli2
+npm run lint:fix                     # Auto-fix CSS + JS
+npm run ci                           # lint + test (same as CI)
 ```
 
-## Architecture (v1.4.0 — modular)
+## Architecture (v1.11.0 — modular)
 
 | Path | Role |
 | --- | --- |
@@ -22,7 +20,7 @@ npm run lint:md                      # markdownlint-cli2
 | `js/` (17 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · app |
 | `sw.js` | Stale-while-revalidate + 5-min update polling |
 | `manifest.json` | PWA manifest |
-| `tests/wedding.test.mjs` | 125 unit tests (Node built-in runner) |
+| `tests/wedding.test.mjs` | 177 unit tests (Node built-in runner) |
 
 ## Auth Setup
 
@@ -34,7 +32,7 @@ const FB_APP_ID         = "";   // developers.facebook.com
 const APPLE_SERVICE_ID  = "";   // developer.apple.com
 ```
 
-SDKs must be loaded as `<script>` tags in `index.html` for Facebook and Apple.
+Google GIS SDK is loaded as `<script>` in `index.html`. Facebook and Apple SDKs are loaded dynamically by `loadFBSDK()` / `loadAppleSDK()` in `auth.js` when their App ID / Service ID is set. All OAuth providers check `isApprovedAdmin(email)` — the email allowlist is the single authorization source.
 
 ## Mandatory Rules
 
@@ -55,8 +53,9 @@ SDKs must be loaded as `<script>` tags in `index.html` for Facebook and Apple.
 ## Key Patterns
 
 ```js
-t('key')                      // i18n lookup
-data-i18n="key"               // HTML binding
-saveAll()                     // persists guests + tables + weddingInfo
-cleanPhone('054-123-4567')    // → '972541234567'  (wa.me ready)
+t('key')                              // i18n lookup
+data-i18n="key"                       // HTML binding
+saveAll()                             // persists guests + tables + weddingInfo
+cleanPhone('054-123-4567')            // → '972541234567'  (wa.me ready)
+_oauthLogin(email, name, pic, prov)   // central OAuth success handler
 ```

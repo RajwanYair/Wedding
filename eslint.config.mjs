@@ -1,7 +1,7 @@
 export default [
   {
     languageOptions: {
-      ecmaVersion: "latest",
+      ecmaVersion: 2025,
       sourceType: "script",
       globals: {
         /* ── Browser APIs ── */
@@ -51,6 +51,7 @@ export default [
         // Third-party auth SDKs (loaded via <script> in index.html)
         FB: "readonly",
         AppleID: "readonly",
+        google: "readonly",
 
         /* ── Cross-file shared identifiers (multi-file global scope) ── */
         // config.js — constants & state variables
@@ -226,6 +227,14 @@ export default [
         applyUserLevel: "writable",
         onAuthSuccess: "writable",
         initAuth: "writable",
+        // auth.js — OAuth
+        _oauthLogin: "writable",
+        handleGoogleCredential: "writable",
+        initGoogleSignIn: "writable",
+        loadFBSDK: "writable",
+        loginFacebook: "writable",
+        loadAppleSDK: "writable",
+        loginApple: "writable",
       },
     },
     rules: {
@@ -276,6 +285,15 @@ export default [
       // ── Style ─────────────────────────────────────────────────────
       "no-prototype-builtins": "error",
       "no-inner-declarations": "error",
+      "no-throw-literal": "error",
+      "no-self-compare": "error",
+      "no-sequences": "error",
+      "no-useless-concat": "error",
+      "no-useless-return": "error",
+      "no-lone-blocks": "error",
+      "no-lonely-if": "error",
+      "prefer-template": "off",
+      "object-shorthand": "off",
     },
   },
 ];
