@@ -227,8 +227,12 @@ export default [
         applyUserLevel: "writable",
         onAuthSuccess: "writable",
         initAuth: "writable",
-        // auth.js — OAuth
-        _oauthLogin: "writable",
+        // app.js — SW helpers
+        _handleUpdateDetected: "writable",
+        _pageOpenedAt: "writable",
+        _hiddenAt: "writable",
+        _swReg: "writable",
+        _AUTO_REFRESH_AFTER_MS: "writable",
         handleGoogleCredential: "writable",
         initGoogleSignIn: "writable",
         loadFBSDK: "writable",

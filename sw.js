@@ -46,7 +46,7 @@ function getShellUrls() {
   return _shellUrls;
 }
 
-// Broadcast UPDATE_AVAILABLE to all window clients (once per SW lifetime)
+// Broadcast UPDATE_AVAILABLE to all window clients (deduplicated per SW activation)
 let _updateNotified = false;
 function notifyClients() {
   if (_updateNotified) return;
@@ -54,6 +54,14 @@ function notifyClients() {
   self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clients) {
     clients.forEach(function(c) { c.postMessage({ type: 'UPDATE_AVAILABLE' }); });
   });
+}
+
+/** Extract the best available freshness token from a Response */
+function freshnessToken(response) {
+  return response.headers.get('ETag') ||
+         response.headers.get('Last-Modified') ||
+         response.headers.get('Date') ||
+         '';
 }
 
 // ── Install: pre-cache app shell ─────────────────────────────────────────────
@@ -95,9 +103,12 @@ self.addEventListener('fetch', function(e) {
         return cache.match(e.request).then(function(cached) {
           const networkUpdate = fetch(e.request).then(function(response) {
             if (response.status === 200) {
-              const newV = response.headers.get('ETag') || response.headers.get('Last-Modified') || '';
-              const oldV = cached ? (cached.headers.get('ETag') || cached.headers.get('Last-Modified') || '') : '';
-              if (cached && newV && newV !== oldV) notifyClients();
+              const newV = freshnessToken(response);
+              const oldV = cached ? freshnessToken(cached) : '';
+              // Notify when: no previous cache (first fetch), or freshness token changed.
+              // 'Date' always differs on each response so we only use it as a fallback
+              // when ETag and Last-Modified are both absent, meaning we signal once.
+              if (!cached || (newV && newV !== oldV)) notifyClients();
               cache.put(e.request, response.clone());
             }
             return response;
