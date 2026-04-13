@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ניהול חתונה — אישורי הגעה, סידורי שולחנות, שליחת הזמנות בוואטסאפ">
+  <meta name="description" content="חתונת אליאור וטובה — כ׳ באייר התשפ״ו | ניהול אורחים, אישורי הגעה, סידורי שולחנות">
   <meta name="theme-color" content="#1a0a2e">
-  <title>ניהול חתונה | Wedding Manager</title>
+  <title>אליאור &amp; טובה | ניהול חתונה</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.json">
   <style>
@@ -897,6 +897,140 @@ body::before {
   .countdown-number { font-size: 1.2em; }
 }
 
+/* ── Side Badges ── */
+.side-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 7px;
+  font-size: 0.76em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.side-groom  { background: rgba(96,165,250,0.15); color: #60a5fa; }
+.side-bride  { background: rgba(232,160,180,0.18); color: var(--rose); }
+.side-mutual { background: rgba(110,231,183,0.15); color: var(--positive); }
+
+/* ── Meal Badges ── */
+.meal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.74em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.meal-regular      { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+.meal-vegetarian   { background: rgba(110,231,183,0.14); color: #6ee7b7; }
+.meal-vegan        { background: rgba(52,211,153,0.18);  color: #34d399; }
+.meal-kosher       { background: rgba(212,165,116,0.18); color: var(--gold); }
+.meal-gluten_free  { background: rgba(252,211,77,0.14);  color: var(--warning); }
+.meal-other        { background: rgba(255,255,255,0.07); color: var(--text-secondary); }
+
+/* ── Accessibility Chip ── */
+.chip-access { background: rgba(252,165,165,0.15); color: var(--negative); padding: 0.12rem 0.5rem; border-radius: 6px; font-size: 0.74em; font-weight: 600; }
+
+/* ── Modal Sections ── */
+.modal-section { margin-bottom: 0.5rem; }
+.modal-section-title {
+  font-size: 0.74em;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 1.1rem 0 0.7rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(212,165,116,0.15);
+}
+
+/* ── Form Section Dividers ── */
+.form-section-title {
+  font-size: 0.74em;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 1rem 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(212,165,116,0.1);
+}
+
+/* ── Checkbox Style ── */
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+.form-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Settings Grid ── */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.settings-card {
+  background: var(--bg-card);
+  border: var(--card-border);
+  border-radius: 14px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.settings-card h3 {
+  font-size: 0.95em;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+}
+.settings-card p { font-size: 0.8em; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Sortable Table Headers ── */
+.guest-table th { cursor: pointer; user-select: none; position: relative; }
+.guest-table th:hover { background: rgba(212,165,116,0.18); }
+.sort-indicator { font-size: 0.65em; opacity: 0.4; margin-right: 0.25rem; }
+th.sort-asc  .sort-indicator { opacity: 1; }
+th.sort-desc .sort-indicator { opacity: 1; }
+
+/* ── Toolbar Side Filters ── */
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.toolbar-label {
+  font-size: 0.72em;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Hebrew Date Display ── */
+.hebrew-date-display {
+  font-size: 0.9em;
+  color: var(--gold);
+  text-align: center;
+  margin-top: 0.2rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
 /* ── Print ── */
 @media print {
   .top-bar, .nav-tabs, .particles, .btn, .toast-container { display: none !important; }
@@ -925,7 +1059,7 @@ body::before {
       <button class="btn-icon" id="btnTheme" title="Change Theme" onclick="cycleTheme()">🎨</button>
     </div>
     <div class="top-bar-group">
-      <span style="font-size:0.75em; color:var(--text-muted)">Wedding Manager v1.0.0</span>
+      <span id="topBarCouple" style="font-size:0.82em; color:var(--gold); font-weight:600; letter-spacing:0.02em;"></span>
     </div>
   </div>
 
@@ -966,6 +1100,9 @@ body::before {
     <button class="nav-tab" data-tab="rsvp" onclick="showSection('rsvp')">
       <span>✅</span> <span data-i18n="nav_rsvp">אישור הגעה</span>
     </button>
+    <button class="nav-tab" data-tab="settings" onclick="showSection('settings')">
+      <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
+    </button>
   </nav>
 
   <!-- ── Main Content ── -->
@@ -1001,6 +1138,22 @@ body::before {
         <div class="stat-card">
           <div class="stat-number" id="statSeated">0</div>
           <div class="stat-label" data-i18n="stat_seated">שובצו לשולחן</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(96,165,250,0.3);">
+          <div class="stat-number" id="statGroomSide" style="color:#60a5fa;">0</div>
+          <div class="stat-label" data-i18n="stat_groom_side">אורחי חתן</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(232,160,180,0.3);">
+          <div class="stat-number" id="statBrideSide" style="color:var(--rose);">0</div>
+          <div class="stat-label" data-i18n="stat_bride_side">אורחי כלה</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(110,231,183,0.3);">
+          <div class="stat-number" id="statVeg" style="color:var(--positive);">0</div>
+          <div class="stat-label" data-i18n="stat_vegetarian">צמחוני/טבעוני</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(252,165,165,0.3);">
+          <div class="stat-number" id="statAccessibility" style="color:var(--negative);">0</div>
+          <div class="stat-label" data-i18n="stat_accessibility">נגישות</div>
         </div>
       </div>
 
@@ -1054,11 +1207,21 @@ body::before {
 
         <!-- Toolbar -->
         <div class="guests-toolbar">
-          <input type="search" class="search-box" id="guestSearch" data-i18n-placeholder="search_guests" placeholder="חיפוש אורחים..." oninput="filterGuests()">
-          <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" data-i18n="filter_all">הכל</button>
-          <button class="filter-btn" data-filter="confirmed" onclick="setFilter('confirmed')" data-i18n="filter_confirmed">אישרו</button>
-          <button class="filter-btn" data-filter="pending" onclick="setFilter('pending')" data-i18n="filter_pending">ממתינים</button>
-          <button class="filter-btn" data-filter="declined" onclick="setFilter('declined')" data-i18n="filter_declined">לא מגיעים</button>
+          <input type="search" class="search-box" id="guestSearch" data-i18n-placeholder="search_guests" placeholder="חיפוש שם, משפחה, טלפון..." oninput="filterGuests()">
+          <div class="toolbar-group">
+            <span class="toolbar-label">סטטוס:</span>
+            <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" data-i18n="filter_all">הכל</button>
+            <button class="filter-btn" data-filter="confirmed" onclick="setFilter('confirmed')" data-i18n="filter_confirmed">אישרו</button>
+            <button class="filter-btn" data-filter="pending" onclick="setFilter('pending')" data-i18n="filter_pending">ממתינים</button>
+            <button class="filter-btn" data-filter="declined" onclick="setFilter('declined')" data-i18n="filter_declined">לא מגיעים</button>
+          </div>
+          <div class="toolbar-group">
+            <span class="toolbar-label">צד:</span>
+            <button class="filter-btn active" data-side="all" onclick="setSideFilter('all')">הכל</button>
+            <button class="filter-btn" data-side="groom" onclick="setSideFilter('groom')" data-i18n="side_groom">צד חתן</button>
+            <button class="filter-btn" data-side="bride" onclick="setSideFilter('bride')" data-i18n="side_bride">צד כלה</button>
+            <button class="filter-btn" data-side="mutual" onclick="setSideFilter('mutual')" data-i18n="side_mutual">משותפ</button>
+          </div>
         </div>
 
         <!-- Table -->
@@ -1066,12 +1229,14 @@ body::before {
           <table class="guest-table" id="guestTable">
             <thead>
               <tr>
-                <th data-i18n="col_name">שם</th>
+                <th id="th-firstName" onclick="sortGuestsBy('firstName')" data-i18n="col_first_name">שם פרטי <span class="sort-indicator" id="si-firstName">⇕</span></th>
+                <th id="th-lastName"  onclick="sortGuestsBy('lastName')"  data-i18n="col_last_name">שם משפחה <span class="sort-indicator" id="si-lastName">⇕</span></th>
+                <th data-i18n="col_side">צד</th>
                 <th data-i18n="col_phone">טלפון</th>
-                <th data-i18n="col_guests_count">מלווים</th>
+                <th data-i18n="col_guests_count">אורחים</th>
+                <th data-i18n="col_meal">ארוחה</th>
                 <th data-i18n="col_status">סטטוס</th>
                 <th data-i18n="col_table">שולחן</th>
-                <th data-i18n="col_notes">הערות</th>
                 <th data-i18n="col_actions">פעולות</th>
               </tr>
             </thead>
@@ -1142,33 +1307,63 @@ body::before {
       <!-- Wedding Details Form -->
       <div class="card">
         <div class="card-header"><span class="icon">⚙️</span> <span data-i18n="wedding_details">פרטי החתונה</span></div>
+
+        <div class="form-section-title" data-i18n="section_names">שמות הזוג</div>
         <div class="form-row">
           <div class="form-group">
-            <label data-i18n="label_groom">שם החתן</label>
+            <label data-i18n="label_groom">שם החתן (עברית)</label>
             <input type="text" id="groomName" data-i18n-placeholder="ph_groom" placeholder="שם החתן" oninput="updateWeddingDetails()">
           </div>
           <div class="form-group">
-            <label data-i18n="label_bride">שם הכלה</label>
+            <label data-i18n="label_bride">שם הכלה (עברית)</label>
             <input type="text" id="brideName" data-i18n-placeholder="ph_bride" placeholder="שם הכלה" oninput="updateWeddingDetails()">
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="label_groom_english">שם החתן (אנגלית)</label>
+            <input type="text" id="groomNameEn" placeholder="Elior" dir="ltr" oninput="updateWeddingDetails()">
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_bride_english">שם הכלה (אנגלית)</label>
+            <input type="text" id="brideNameEn" placeholder="Tova" dir="ltr" oninput="updateWeddingDetails()">
+          </div>
+        </div>
+
+        <div class="form-section-title" data-i18n="section_date">תאריך ושעה</div>
         <div class="form-row">
           <div class="form-group">
             <label data-i18n="label_date">תאריך החתונה</label>
             <input type="date" id="weddingDate" onchange="updateWeddingDetails()">
           </div>
           <div class="form-group">
-            <label data-i18n="label_time">שעת קבלת פנים</label>
-            <input type="time" id="weddingTime" value="18:00" onchange="updateWeddingDetails()">
+            <label data-i18n="label_hebrew_date">תאריך עברי</label>
+            <input type="text" id="weddingHebrewDate" data-i18n-placeholder="ph_hebrew_date" placeholder="כ' באייר התשפ&quot;ו" oninput="updateWeddingDetails()">
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="label_time">קבלת פנים</label>
+            <input type="time" id="weddingTime" value="18:00" onchange="updateWeddingDetails()">
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_ceremony_time">טקס חופה</label>
+            <input type="time" id="weddingCeremonyTime" value="19:30" onchange="updateWeddingDetails()">
+          </div>
+        </div>
+
+        <div class="form-section-title" data-i18n="section_venue">מקום האירוע</div>
         <div class="form-group">
-          <label data-i18n="label_venue">מקום האירוע</label>
+          <label data-i18n="label_venue">שם האולם</label>
           <input type="text" id="venueName" data-i18n-placeholder="ph_venue" placeholder="שם אולם האירועים" oninput="updateWeddingDetails()">
         </div>
         <div class="form-group">
           <label data-i18n="label_venue_address">כתובת</label>
           <input type="text" id="venueAddress" data-i18n-placeholder="ph_address" placeholder="כתובת מלאה" oninput="updateWeddingDetails()">
+        </div>
+        <div class="form-group">
+          <label data-i18n="label_waze">קישור Waze</label>
+          <input type="url" id="venueWaze" data-i18n-placeholder="ph_waze" placeholder="https://waze.com/ul/..." dir="ltr" oninput="updateWeddingDetails()">
         </div>
       </div>
     </div>
@@ -1233,25 +1428,64 @@ body::before {
           <p style="color:var(--text-secondary); margin-bottom:2rem;" data-i18n="rsvp_subtitle">נשמח לדעת שאתם מגיעים!</p>
 
           <div class="rsvp-form">
-            <div class="form-group">
-              <label data-i18n="rsvp_name">שם מלא</label>
-              <input type="text" id="rsvpName" data-i18n-placeholder="ph_full_name" placeholder="השם המלא שלך">
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="label_first_name">שם פרטי *</label>
+                <input type="text" id="rsvpFirstName" data-i18n-placeholder="ph_first_name" placeholder="שם פרטי" autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label data-i18n="label_last_name">שם משפחה</label>
+                <input type="text" id="rsvpLastName" data-i18n-placeholder="ph_last_name" placeholder="שם משפחה" autocomplete="family-name">
+              </div>
             </div>
-            <div class="form-group">
-              <label data-i18n="rsvp_phone">טלפון</label>
-              <input type="tel" id="rsvpPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr">
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="rsvp_phone">טלפון</label>
+                <input type="tel" id="rsvpPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr">
+              </div>
+              <div class="form-group">
+                <label data-i18n="rsvp_side">בצד של</label>
+                <select id="rsvpSide">
+                  <option value="groom"  data-i18n="side_groom">צד חתן</option>
+                  <option value="bride"  data-i18n="side_bride">צד כלה</option>
+                  <option value="mutual" data-i18n="side_mutual">משותף</option>
+                </select>
+              </div>
             </div>
             <div class="form-group">
               <label data-i18n="rsvp_attending">האם מגיע/ה?</label>
               <select id="rsvpAttending">
                 <option value="confirmed" data-i18n="rsvp_yes">כן, מגיע/ה! 🎉</option>
-                <option value="maybe" data-i18n="rsvp_maybe">אולי 🤔</option>
-                <option value="declined" data-i18n="rsvp_no">לצערי לא 😢</option>
+                <option value="maybe"     data-i18n="rsvp_maybe">אולי 🤔</option>
+                <option value="declined"  data-i18n="rsvp_no">לצערי לא 😢</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
+                <input type="number" id="rsvpGuests" min="1" max="20" value="1">
+              </div>
+              <div class="form-group">
+                <label data-i18n="rsvp_children">ילדים</label>
+                <input type="number" id="rsvpChildren" min="0" max="20" value="0">
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-i18n="rsvp_meal">סוג ארוחה</label>
+              <select id="rsvpMeal">
+                <option value="regular"     data-i18n="meal_regular">רגיל</option>
+                <option value="vegetarian"  data-i18n="meal_vegetarian">צמחוני</option>
+                <option value="vegan"       data-i18n="meal_vegan">טבעוני</option>
+                <option value="kosher"      data-i18n="meal_kosher">כשר</option>
+                <option value="gluten_free" data-i18n="meal_gluten_free">ללא גלוטן</option>
+                <option value="other"       data-i18n="meal_other">אחר</option>
               </select>
             </div>
             <div class="form-group">
-              <label data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
-              <input type="number" id="rsvpGuests" min="1" max="20" value="1">
+              <label class="form-checkbox">
+                <input type="checkbox" id="rsvpAccessibility">
+                <span data-i18n="rsvp_accessibility">צרכי נגישות (כיסא גלגלים, מעלית, כניסה נגישה)</span>
+              </label>
             </div>
             <div class="form-group">
               <label data-i18n="rsvp_notes">הערות / מגבלות תזונה</label>
@@ -1259,6 +1493,61 @@ body::before {
             </div>
             <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.8rem;" onclick="submitRSVP()">
               <span>✅</span> <span data-i18n="rsvp_submit">שלח אישור</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Settings
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-settings">
+      <div class="card">
+        <div class="card-header"><span class="icon">⚙️</span> <span data-i18n="settings_title">הגדרות ונתונים</span></div>
+        <div class="settings-grid">
+
+          <!-- Backup & Restore -->
+          <div class="settings-card">
+            <h3>🗄️ <span data-i18n="backup_title">גיבוי ושחזור</span></h3>
+            <p data-i18n="backup_desc">ייצא/ייבא גיבוי מלא של כל הנתונים בפורמט JSON</p>
+            <button class="btn btn-primary" onclick="exportJSON()">
+              📦 <span data-i18n="backup_export">ייצוא גיבוי JSON</span>
+            </button>
+            <label class="btn btn-secondary" style="cursor:pointer; margin-top:0.3rem;">
+              📂 <span data-i18n="backup_import">ייבוא גיבוי JSON</span>
+              <input type="file" id="importJsonFile" accept=".json" onchange="importJSON(event)" style="display:none;">
+            </label>
+          </div>
+
+          <!-- CSV Import/Export -->
+          <div class="settings-card">
+            <h3>📊 <span data-i18n="import_csv_title">ייבוא / ייצוא CSV</span></h3>
+            <p data-i18n="import_csv_desc">ייבא רשימת אורחים מקובץ אקסל / ייצא לאקסל</p>
+            <button class="btn btn-secondary" onclick="downloadCSVTemplate()">
+              📋 <span data-i18n="import_csv_template">הורד תבנית CSV</span>
+            </button>
+            <label class="btn btn-secondary" style="cursor:pointer; margin-top:0.3rem;">
+              📥 <span data-i18n="import_csv_btn">ייבוא מ-CSV</span>
+              <input type="file" id="importCsvFile" accept=".csv,.txt" onchange="importCSV(event)" style="display:none;">
+            </label>
+            <button class="btn btn-secondary" onclick="exportGuestsCSV()" style="margin-top:0.3rem;">
+              📤 <span data-i18n="action_export">ייצוא CSV</span>
+            </button>
+          </div>
+
+          <!-- App Info -->
+          <div class="settings-card">
+            <h3>ℹ️ <span>מידע</span></h3>
+            <div id="dataSummary" style="font-size:0.85em; color:var(--text-secondary); line-height:2;"></div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="settings-card" style="border-color:rgba(252,165,165,0.25);">
+            <h3 style="color:var(--negative);">⚠️ <span data-i18n="clear_data_title">מחיקת נתונים</span></h3>
+            <p data-i18n="clear_data_warning">פעולה זו מוחקת את כל נתוני האורחים והשולחנות ואינה הפיכה!</p>
+            <button class="btn btn-danger" onclick="clearAllData()">
+              🗑️ <span data-i18n="clear_data_btn">מחק את כל הנתונים</span>
             </button>
           </div>
         </div>
@@ -1273,56 +1562,129 @@ body::before {
 
   <!-- Add/Edit Guest Modal -->
   <div class="modal-overlay" id="guestModal">
-    <div class="modal">
+    <div class="modal" style="max-width:680px;">
       <div class="modal-header">
         <h2 id="guestModalTitle" data-i18n="modal_add_guest">הוסף אורח</h2>
         <button class="modal-close" onclick="closeModal('guestModal')">&times;</button>
       </div>
+
+      <!-- SECTION: פרטים אישיים -->
+      <div class="modal-section-title" data-i18n="section_personal">פרטים אישיים</div>
       <div class="form-row">
         <div class="form-group">
-          <label data-i18n="label_guest_name">שם האורח</label>
-          <input type="text" id="guestName" data-i18n-placeholder="ph_guest_name" placeholder="שם מלא">
+          <label data-i18n="label_first_name">שם פרטי</label>
+          <input type="text" id="guestFirstName" data-i18n-placeholder="ph_first_name" placeholder="שם פרטי" autocomplete="given-name">
         </div>
         <div class="form-group">
-          <label data-i18n="label_guest_phone">טלפון</label>
-          <input type="tel" id="guestPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr">
+          <label data-i18n="label_last_name">שם משפחה</label>
+          <input type="text" id="guestLastName" data-i18n-placeholder="ph_last_name" placeholder="שם משפחה" autocomplete="family-name">
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label data-i18n="label_guest_count">מספר אורחים (כולל)</label>
-          <input type="number" id="guestCount2" min="1" max="20" value="1">
+          <label data-i18n="label_guest_phone">טלפון</label>
+          <input type="tel" id="guestPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr" autocomplete="tel">
         </div>
+        <div class="form-group">
+          <label data-i18n="label_email">אימייל</label>
+          <input type="email" id="guestEmail" data-i18n-placeholder="ph_email" placeholder="example@email.com" dir="ltr" autocomplete="email">
+        </div>
+      </div>
+
+      <!-- SECTION: השתתפות -->
+      <div class="modal-section-title" data-i18n="section_attendance">השתתפות</div>
+      <div class="form-row">
         <div class="form-group">
           <label data-i18n="label_guest_status">סטטוס</label>
           <select id="guestStatus">
-            <option value="pending" data-i18n="status_pending">ממתין</option>
+            <option value="pending"   data-i18n="status_pending">ממתין</option>
             <option value="confirmed" data-i18n="status_confirmed">אישר הגעה</option>
-            <option value="declined" data-i18n="status_declined">לא מגיע</option>
-            <option value="maybe" data-i18n="status_maybe">אולי</option>
+            <option value="declined"  data-i18n="status_declined">לא מגיע</option>
+            <option value="maybe"     data-i18n="status_maybe">אולי</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="label_side">צד</label>
+          <select id="guestSide">
+            <option value="groom"  data-i18n="side_groom">צד חתן</option>
+            <option value="bride"  data-i18n="side_bride">צד כלה</option>
+            <option value="mutual" data-i18n="side_mutual">משותף</option>
           </select>
         </div>
       </div>
-      <div class="form-group">
-        <label data-i18n="label_guest_group">קבוצה</label>
-        <select id="guestGroup">
-          <option value="family" data-i18n="group_family">משפחה</option>
-          <option value="friends" data-i18n="group_friends">חברים</option>
-          <option value="work" data-i18n="group_work">עבודה</option>
-          <option value="other" data-i18n="group_other">אחר</option>
-        </select>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="label_guest_count">כמות מוזמנים (כולל)</label>
+          <input type="number" id="guestCount2" min="1" max="30" value="1">
+        </div>
+        <div class="form-group">
+          <label data-i18n="label_children">ילדים</label>
+          <input type="number" id="guestChildren" min="0" max="20" value="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="label_guest_group">קבוצה</label>
+          <select id="guestGroup">
+            <option value="family"    data-i18n="group_family">משפחה</option>
+            <option value="friends"   data-i18n="group_friends">חברים</option>
+            <option value="work"      data-i18n="group_work">עבודה</option>
+            <option value="neighbors" data-i18n="group_neighbors">שכנים</option>
+            <option value="other"     data-i18n="group_other">אחר</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="label_relationship">קשר</label>
+          <input type="text" id="guestRelationship" data-i18n-placeholder="ph_relationship" placeholder="למשל: דוד, חבר ישן...">
+        </div>
+      </div>
+
+      <!-- SECTION: העדפות -->
+      <div class="modal-section-title" data-i18n="section_preferences">העדפות</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="label_meal">ארוחה</label>
+          <select id="guestMeal">
+            <option value="regular"     data-i18n="meal_regular">רגיל</option>
+            <option value="vegetarian"  data-i18n="meal_vegetarian">צמחוני</option>
+            <option value="vegan"       data-i18n="meal_vegan">טבעוני</option>
+            <option value="kosher"      data-i18n="meal_kosher">כשר</option>
+            <option value="gluten_free" data-i18n="meal_gluten_free">ללא גלוטן</option>
+            <option value="other"       data-i18n="meal_other">אחר</option>
+          </select>
+        </div>
+        <div class="form-group" style="display:flex; flex-direction:column; justify-content:flex-end;">
+          <label class="form-checkbox">
+            <input type="checkbox" id="guestAccessibility">
+            <span data-i18n="label_accessibility">צרכי נגישות</span>
+          </label>
+        </div>
       </div>
       <div class="form-group">
-        <label data-i18n="label_guest_table">שולחן</label>
-        <select id="guestTableSelect">
-          <option value="" data-i18n="no_table">ללא שולחן</option>
-        </select>
+        <label data-i18n="label_meal_notes">הערות ארוחה / אלרגיות</label>
+        <input type="text" id="guestMealNotes" data-i18n-placeholder="ph_meal_notes" placeholder="פרט דרישות מזון מיוחדות...">
+      </div>
+
+      <!-- SECTION: שיוך ופרטים -->
+      <div class="modal-section-title" data-i18n="section_seating">שיוך לשולחן</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="label_guest_table">שולחן</label>
+          <select id="guestTableSelect">
+            <option value="" data-i18n="no_table">ללא שולחן</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="label_gift">מתנה</label>
+          <input type="text" id="guestGift" data-i18n-placeholder="ph_gift" placeholder="תיאור המתנה...">
+        </div>
       </div>
       <div class="form-group">
-        <label data-i18n="label_guest_notes">הערות</label>
-        <textarea id="guestNotes" rows="2" data-i18n-placeholder="ph_notes" placeholder="הערות מיוחדות"></textarea>
+        <label data-i18n="label_guest_notes">הערות כלליות</label>
+        <textarea id="guestNotes" rows="2" data-i18n-placeholder="ph_notes" placeholder="הערות נוספות"></textarea>
       </div>
-      <div style="display:flex; gap:0.8rem; justify-content:flex-end; margin-top:1rem;">
+
+      <div style="display:flex; gap:0.8rem; justify-content:flex-end; margin-top:1.2rem;">
         <button class="btn btn-secondary" onclick="closeModal('guestModal')" data-i18n="btn_cancel">ביטול</button>
         <button class="btn btn-primary" id="btnSaveGuest" onclick="saveGuest()" data-i18n="btn_save">שמור</button>
       </div>
@@ -1365,65 +1727,75 @@ body::before {
 
   <script>
 /* ==========================================================================
-   Wedding Manager — JavaScript v1.0.0
-   Single-file, Hebrew RTL, bi-lingual (he/en), localStorage persistence
+   Wedding Manager — JavaScript v1.1.0
+   Elior & Tova | 07.05.2026 | כ' באייר התשפ"ו
+   Enhanced guest model: side, meal, children, accessibility, relationship
+   Settings: JSON backup/restore, CSV import/export, data clear
    ========================================================================== */
 'use strict';
 
 /* ── DOM Cache ── */
 const el = {
-  particles: document.getElementById('particles'),
-  coupleNames: document.getElementById('coupleNames'),
+  particles:        document.getElementById('particles'),
+  coupleNames:      document.getElementById('coupleNames'),
   weddingDateDisplay: document.getElementById('weddingDateDisplay'),
-  countdown: document.getElementById('countdown'),
-  statsGrid: document.getElementById('statsGrid'),
-  statTotal: document.getElementById('statTotal'),
-  statConfirmed: document.getElementById('statConfirmed'),
-  statPending: document.getElementById('statPending'),
-  statDeclined: document.getElementById('statDeclined'),
-  statTables: document.getElementById('statTables'),
-  statSeated: document.getElementById('statSeated'),
-  statSent: document.getElementById('statSent'),
-  statUnsent: document.getElementById('statUnsent'),
-  progressFill: document.getElementById('progressFill'),
-  progressPercent: document.getElementById('progressPercent'),
-  guestCount: document.getElementById('guestCount'),
-  guestTableBody: document.getElementById('guestTableBody'),
-  guestsEmpty: document.getElementById('guestsEmpty'),
-  guestSearch: document.getElementById('guestSearch'),
-  seatingFloor: document.getElementById('seatingFloor'),
-  tablesEmpty: document.getElementById('tablesEmpty'),
+  countdown:        document.getElementById('countdown'),
+  statTotal:        document.getElementById('statTotal'),
+  statConfirmed:    document.getElementById('statConfirmed'),
+  statPending:      document.getElementById('statPending'),
+  statDeclined:     document.getElementById('statDeclined'),
+  statTables:       document.getElementById('statTables'),
+  statSeated:       document.getElementById('statSeated'),
+  statSent:         document.getElementById('statSent'),
+  statUnsent:       document.getElementById('statUnsent'),
+  statGroomSide:    document.getElementById('statGroomSide'),
+  statBrideSide:    document.getElementById('statBrideSide'),
+  statVeg:          document.getElementById('statVeg'),
+  statAccessibility:document.getElementById('statAccessibility'),
+  progressFill:     document.getElementById('progressFill'),
+  progressPercent:  document.getElementById('progressPercent'),
+  guestCount:       document.getElementById('guestCount'),
+  guestTableBody:   document.getElementById('guestTableBody'),
+  guestsEmpty:      document.getElementById('guestsEmpty'),
+  guestSearch:      document.getElementById('guestSearch'),
+  seatingFloor:     document.getElementById('seatingFloor'),
+  tablesEmpty:      document.getElementById('tablesEmpty'),
   unassignedGuests: document.getElementById('unassignedGuests'),
-  invitationPreview: document.getElementById('invitationPreview'),
-  invitationImage: document.getElementById('invitationImage'),
-  waTemplate: document.getElementById('waTemplate'),
-  waPreviewBubble: document.getElementById('waPreviewBubble'),
-  waPreviewTime: document.getElementById('waPreviewTime'),
-  waGuestList: document.getElementById('waGuestList'),
-  toastContainer: document.getElementById('toastContainer'),
-  guestModal: document.getElementById('guestModal'),
-  tableModal: document.getElementById('tableModal'),
-  navTabs: document.getElementById('navTabs'),
+  invitationImage:  document.getElementById('invitationImage'),
+  waTemplate:       document.getElementById('waTemplate'),
+  waPreviewBubble:  document.getElementById('waPreviewBubble'),
+  waPreviewTime:    document.getElementById('waPreviewTime'),
+  waGuestList:      document.getElementById('waGuestList'),
+  toastContainer:   document.getElementById('toastContainer'),
+  guestModal:       document.getElementById('guestModal'),
+  tableModal:       document.getElementById('tableModal'),
+  topBarCouple:     document.getElementById('topBarCouple'),
+  dataSummary:      document.getElementById('dataSummary'),
 };
 
 /* ── State ── */
 const STORAGE_PREFIX = 'wedding_v1_';
 let _guests = [];
 let _tables = [];
-let _weddingInfo = {
-  groom: '',
-  bride: '',
-  date: '',
+const _weddingDefaults = {
+  groom: 'אליאור', groomEn: 'Elior',
+  bride: 'טובה',   brideEn: 'Tova',
+  date: '2026-05-07',
+  hebrewDate: "כ' באייר התשפ\"ו",
   time: '18:00',
-  venue: '',
-  address: '',
+  ceremonyTime: '19:30',
+  venue: '', address: '', wazeLink: '',
 };
+let _weddingInfo = { ..._weddingDefaults };
 let _invitationDataUrl = '';
-let _currentFilter = 'all';
-let _editingGuestId = null;
-let _editingTableId = null;
-let _currentLang = 'he';
-let _currentTheme = '';
+let _currentFilter   = 'all';
+let _sideFilter      = 'all';
+let _sortCol         = '';
+let _sortAsc         = true;
+let _editingGuestId  = null;
+let _editingTableId  = null;
+let _currentLang     = 'he';
+let _currentTheme    = '';
 const THEMES = ['', 'theme-rosegold', 'theme-gold', 'theme-emerald', 'theme-royal'];
 let _themeIndex = 0;
 
@@ -1438,12 +1810,17 @@ const I18N = {
     nav_invitation: 'הזמנה',
     nav_whatsapp: 'וואטסאפ',
     nav_rsvp: 'אישור הגעה',
+    nav_settings: 'הגדרות',
     stat_total: 'סה"כ מוזמנים',
     stat_confirmed: 'אישרו הגעה',
     stat_pending: 'ממתינים',
     stat_declined: 'לא מגיעים',
     stat_tables: 'שולחנות',
     stat_seated: 'שובצו לשולחן',
+    stat_groom_side: 'אורחי חתן',
+    stat_bride_side: 'אורחי כלה',
+    stat_vegetarian: 'צמחוני/טבעוני',
+    stat_accessibility: 'נגישות',
     progress_title: 'התקדמות אישורים',
     progress_confirmed: 'אישרו',
     progress_sent: 'נשלחו הזמנות',
@@ -1454,14 +1831,17 @@ const I18N = {
     action_export: 'ייצוא CSV',
     action_print: 'הדפסה',
     guests_title: 'רשימת אורחים',
-    search_guests: 'חיפוש אורחים...',
+    search_guests: 'חיפוש שם, משפחה, טלפון...',
     filter_all: 'הכל',
     filter_confirmed: 'אישרו',
     filter_pending: 'ממתינים',
     filter_declined: 'לא מגיעים',
-    col_name: 'שם',
+    col_first_name: 'שם פרטי',
+    col_last_name: 'שם משפחה',
+    col_side: 'צד',
     col_phone: 'טלפון',
-    col_guests_count: 'מלווים',
+    col_guests_count: 'אורחים',
+    col_meal: 'ארוחה',
     col_status: 'סטטוס',
     col_table: 'שולחן',
     col_notes: 'הערות',
@@ -1474,79 +1854,137 @@ const I18N = {
     invitation_title: 'הזמנת חתונה',
     upload_invitation: 'העלה תמונת הזמנה (JPG/PNG/SVG)',
     wedding_details: 'פרטי החתונה',
-    label_groom: 'שם החתן',
-    label_bride: 'שם הכלה',
+    section_names: 'שמות הזוג',
+    section_date: 'תאריך ושעה',
+    section_venue: 'מקום האירוע',
+    section_personal: 'פרטים אישיים',
+    section_attendance: 'השתתפות',
+    section_preferences: 'העדפות',
+    section_seating: 'שיוך לשולחן',
+    label_groom: 'שם החתן (עברית)',
+    label_bride: 'שם הכלה (עברית)',
+    label_groom_english: 'שם החתן (אנגלית)',
+    label_bride_english: 'שם הכלה (אנגלית)',
     label_date: 'תאריך החתונה',
-    label_time: 'שעת קבלת פנים',
-    label_venue: 'מקום האירוע',
+    label_hebrew_date: 'תאריך עברי',
+    label_time: 'קבלת פנים',
+    label_ceremony_time: 'טקס חופה',
+    label_venue: 'שם האולם',
     label_venue_address: 'כתובת',
+    label_waze: 'קישור Waze',
+    label_first_name: 'שם פרטי',
+    label_last_name: 'שם משפחה',
+    label_email: 'אימייל',
+    label_side: 'צד',
+    label_meal: 'ארוחה',
+    label_meal_notes: 'הערות ארוחה / אלרגיות',
+    label_children: 'ילדים',
+    label_accessibility: 'צרכי נגישות',
+    label_relationship: 'קשר',
+    label_gift: 'מתנה',
+    label_guest_phone: 'טלפון',
+    label_guest_count: 'כמות מוזמנים',
+    label_guest_status: 'סטטוס',
+    label_guest_group: 'קבוצה',
+    label_guest_table: 'שולחן',
+    label_guest_notes: 'הערות כלליות',
     ph_groom: 'שם החתן',
     ph_bride: 'שם הכלה',
     ph_venue: 'שם אולם האירועים',
     ph_address: 'כתובת מלאה',
+    ph_waze: 'https://waze.com/ul/...',
+    ph_first_name: 'שם פרטי',
+    ph_last_name: 'שם משפחה',
+    ph_email: 'example@email.com',
+    ph_phone: '050-0000000',
+    ph_relationship: 'דוד/ה, חבר/ה ישן, שכן...',
+    ph_meal_notes: 'אלרגיה לאגוזים, ללא בשר...',
+    ph_gift: 'תיאור המתנה',
+    ph_notes: 'הערות נוספות',
+    ph_rsvp_notes: 'הערות מיוחדות, צמחוני, ללא גלוטן...',
+    ph_hebrew_date: "כ' באייר התשפ\"ו",
     wa_title: 'שליחת הזמנות בוואטסאפ',
     wa_template_label: 'תבנית הודעה',
     wa_send_title: 'שליחה',
     wa_send_pending: 'שלח לממתינים',
     wa_send_all: 'שלח לכולם',
-    wa_note: '* ההודעות ייפתחו בוואטסאפ ווב / אפליקציה. יש לאשר שליחה ידנית לכל אורח.',
+    wa_note: '* ההודעות ייפתחו בוואטסאפ. יש לאשר שליחה ידנית לכל אורח.',
     wa_individual: 'שליחה בודדת',
     rsvp_title: 'אישור הגעה',
     rsvp_subtitle: 'נשמח לדעת שאתם מגיעים!',
-    rsvp_name: 'שם מלא',
     rsvp_phone: 'טלפון',
     rsvp_attending: 'האם מגיע/ה?',
     rsvp_yes: 'כן, מגיע/ה! 🎉',
     rsvp_maybe: 'אולי 🤔',
     rsvp_no: 'לצערי לא 😢',
     rsvp_plus: 'מספר מלווים (כולל אותך)',
+    rsvp_children: 'ילדים',
+    rsvp_meal: 'סוג ארוחה',
+    rsvp_side: 'בצד של',
+    rsvp_accessibility: 'צרכי נגישות',
     rsvp_notes: 'הערות / מגבלות תזונה',
     rsvp_submit: 'שלח אישור',
-    ph_full_name: 'השם המלא שלך',
-    ph_phone: '050-0000000',
-    ph_rsvp_notes: 'הערות מיוחדות, צמחוני, ללא גלוטן...',
+    settings_title: 'הגדרות ונתונים',
+    backup_title: 'גיבוי ושחזור',
+    backup_desc: 'ייצא/ייבא גיבוי מלא של כל הנתונים בפורמט JSON',
+    backup_export: 'ייצוא גיבוי JSON',
+    backup_import: 'ייבוא גיבוי JSON',
+    import_csv_title: 'ייבוא / ייצוא CSV',
+    import_csv_desc: 'ייבא רשימת אורחים מקובץ אקסל / ייצא לאקסל',
+    import_csv_btn: 'ייבוא מ-CSV',
+    import_csv_template: 'הורד תבנית CSV',
+    clear_data_title: 'מחיקת נתונים',
+    clear_data_warning: 'פעולה זו מוחקת את כל נתוני האורחים והשולחנות ואינה הפיכה!',
+    clear_data_btn: 'מחק את כל הנתונים',
     modal_add_guest: 'הוסף אורח',
     modal_edit_guest: 'ערוך אורח',
-    label_guest_name: 'שם האורח',
-    label_guest_phone: 'טלפון',
-    label_guest_count: 'מספר אורחים (כולל)',
-    label_guest_status: 'סטטוס',
-    label_guest_group: 'קבוצה',
-    label_guest_table: 'שולחן',
-    label_guest_notes: 'הערות',
-    ph_guest_name: 'שם מלא',
-    ph_notes: 'הערות מיוחדות',
+    modal_add_table: 'הוסף שולחן',
+    modal_edit_table: 'ערוך שולחן',
+    side_groom: 'צד חתן',
+    side_bride: 'צד כלה',
+    side_mutual: 'משותף',
+    meal_regular: 'רגיל',
+    meal_vegetarian: 'צמחוני',
+    meal_vegan: 'טבעוני',
+    meal_kosher: 'כשר',
+    meal_gluten_free: 'ללא גלוטן',
+    meal_other: 'אחר',
     status_pending: 'ממתין',
-    status_confirmed: 'אישר הגעה',
+    status_confirmed: 'אישר',
     status_declined: 'לא מגיע',
     status_maybe: 'אולי',
     group_family: 'משפחה',
     group_friends: 'חברים',
     group_work: 'עבודה',
+    group_neighbors: 'שכנים',
     group_other: 'אחר',
-    no_table: 'ללא שולחן',
-    btn_cancel: 'ביטול',
-    btn_save: 'שמור',
-    btn_edit: 'ערוך',
-    btn_delete: 'מחק',
-    btn_wa_send: 'שלח',
-    modal_add_table: 'הוסף שולחן',
-    modal_edit_table: 'ערוך שולחן',
     label_table_name: 'שם / מספר שולחן',
     label_table_capacity: 'מספר מקומות',
     label_table_shape: 'צורת שולחן',
     ph_table_name: 'לדוגמה: שולחן 1',
     shape_round: 'עגול',
     shape_rect: 'מלבני',
-    toast_guest_saved: 'האורח נשמר בהצלחה!',
+    no_table: 'ללא שולחן',
+    btn_cancel: 'ביטול',
+    btn_save: 'שמור',
+    btn_edit: 'ערוך',
+    btn_delete: 'מחק',
+    btn_wa_send: 'שלח',
+    toast_guest_saved: 'האורח נשמר!',
     toast_guest_deleted: 'האורח נמחק.',
-    toast_table_saved: 'השולחן נשמר בהצלחה!',
+    toast_table_saved: 'השולחן נשמר!',
     toast_table_deleted: 'השולחן נמחק.',
-    toast_rsvp_submitted: 'תודה! אישור ההגעה נקלט.',
+    toast_rsvp_submitted: 'תודה! האישור נקלט.',
     toast_rsvp_updated: 'האישור עודכן.',
     toast_export_done: 'הקובץ יורד...',
     toast_wa_opening: 'פותח וואטסאפ...',
+    toast_backup_exported: 'הגיבוי ירד בהצלחה',
+    toast_backup_imported: 'הנתונים שוחזרו בהצלחה!',
+    toast_csv_imported: 'האורחים יובאו בהצלחה',
+    toast_data_cleared: 'כל הנתונים נמחקו',
+    toast_invalid_file: 'קובץ לא תקין',
     confirm_delete: 'האם למחוק?',
+    confirm_clear: 'למחוק את כל הנתונים לצמיתות?',
     countdown_days: 'ימים',
     countdown_hours: 'שעות',
     countdown_minutes: 'דקות',
@@ -1563,12 +2001,17 @@ const I18N = {
     nav_invitation: 'Invitation',
     nav_whatsapp: 'WhatsApp',
     nav_rsvp: 'RSVP',
+    nav_settings: 'Settings',
     stat_total: 'Total Invited',
     stat_confirmed: 'Confirmed',
     stat_pending: 'Pending',
     stat_declined: 'Declined',
     stat_tables: 'Tables',
     stat_seated: 'Seated',
+    stat_groom_side: "Groom's Guests",
+    stat_bride_side: "Bride's Guests",
+    stat_vegetarian: 'Vegetarian/Vegan',
+    stat_accessibility: 'Accessibility',
     progress_title: 'RSVP Progress',
     progress_confirmed: 'Confirmed',
     progress_sent: 'Invitations Sent',
@@ -1579,68 +2022,124 @@ const I18N = {
     action_export: 'Export CSV',
     action_print: 'Print',
     guests_title: 'Guest List',
-    search_guests: 'Search guests...',
+    search_guests: 'Search name, family, phone...',
     filter_all: 'All',
     filter_confirmed: 'Confirmed',
     filter_pending: 'Pending',
     filter_declined: 'Declined',
-    col_name: 'Name',
+    col_first_name: 'First Name',
+    col_last_name: 'Last Name',
+    col_side: 'Side',
     col_phone: 'Phone',
     col_guests_count: 'Guests',
+    col_meal: 'Meal',
     col_status: 'Status',
     col_table: 'Table',
     col_notes: 'Notes',
     col_actions: 'Actions',
-    guests_empty: 'No guests added yet. Click "Add Guest" to start!',
+    guests_empty: 'No guests yet. Click "Add Guest" to start!',
     tables_title: 'Seating Arrangement',
     action_add_table: 'Add Table',
-    tables_empty: 'No tables defined yet. Click "Add Table" to start!',
+    tables_empty: 'No tables yet. Click "Add Table" to start!',
     unassigned_title: 'Unassigned Guests',
     invitation_title: 'Wedding Invitation',
     upload_invitation: 'Upload Invitation Image (JPG/PNG/SVG)',
     wedding_details: 'Wedding Details',
-    label_groom: 'Groom Name',
-    label_bride: 'Bride Name',
+    section_names: 'Couple Names',
+    section_date: 'Date & Time',
+    section_venue: 'Venue',
+    section_personal: 'Personal Info',
+    section_attendance: 'Attendance',
+    section_preferences: 'Preferences',
+    section_seating: 'Table Assignment',
+    label_groom: 'Groom Name (Hebrew)',
+    label_bride: 'Bride Name (Hebrew)',
+    label_groom_english: 'Groom Name (English)',
+    label_bride_english: 'Bride Name (English)',
     label_date: 'Wedding Date',
-    label_time: 'Reception Time',
-    label_venue: 'Venue',
+    label_hebrew_date: 'Hebrew Date',
+    label_time: 'Reception',
+    label_ceremony_time: 'Ceremony',
+    label_venue: 'Venue Name',
     label_venue_address: 'Address',
+    label_waze: 'Waze Link',
+    label_first_name: 'First Name',
+    label_last_name: 'Last Name',
+    label_email: 'Email',
+    label_side: 'Side',
+    label_meal: 'Meal',
+    label_meal_notes: 'Meal Notes / Allergies',
+    label_children: 'Children',
+    label_accessibility: 'Accessibility Needs',
+    label_relationship: 'Relationship',
+    label_gift: 'Gift',
+    label_guest_phone: 'Phone',
+    label_guest_count: 'Guest Count',
+    label_guest_status: 'Status',
+    label_guest_group: 'Group',
+    label_guest_table: 'Table',
+    label_guest_notes: 'Notes',
     ph_groom: 'Groom name',
     ph_bride: 'Bride name',
     ph_venue: 'Venue name',
     ph_address: 'Full address',
+    ph_waze: 'https://waze.com/ul/...',
+    ph_first_name: 'First name',
+    ph_last_name: 'Last name',
+    ph_email: 'example@email.com',
+    ph_phone: '050-0000000',
+    ph_relationship: 'Uncle, Old friend, Neighbor...',
+    ph_meal_notes: 'Nut allergy, no meat...',
+    ph_gift: 'Gift description',
+    ph_notes: 'Additional notes',
+    ph_rsvp_notes: 'Special notes, vegetarian, gluten-free...',
+    ph_hebrew_date: "כ' באייר התשפ\"ו",
     wa_title: 'Send WhatsApp Invitations',
     wa_template_label: 'Message Template',
     wa_send_title: 'Send',
     wa_send_pending: 'Send to Pending',
     wa_send_all: 'Send to All',
-    wa_note: '* Messages will open in WhatsApp Web/App. Manual confirmation required for each guest.',
+    wa_note: '* Messages will open in WhatsApp. Manual confirmation required per guest.',
     wa_individual: 'Send Individually',
     rsvp_title: 'RSVP',
     rsvp_subtitle: "We'd love to know you're coming!",
-    rsvp_name: 'Full Name',
     rsvp_phone: 'Phone',
     rsvp_attending: 'Will you attend?',
     rsvp_yes: 'Yes, attending! 🎉',
     rsvp_maybe: 'Maybe 🤔',
     rsvp_no: 'Unfortunately no 😢',
     rsvp_plus: 'Number of guests (including you)',
+    rsvp_children: 'Children',
+    rsvp_meal: 'Meal type',
+    rsvp_side: 'Invited by',
+    rsvp_accessibility: 'Accessibility needs',
     rsvp_notes: 'Notes / Dietary Restrictions',
     rsvp_submit: 'Submit RSVP',
-    ph_full_name: 'Your full name',
-    ph_phone: '050-0000000',
-    ph_rsvp_notes: 'Special notes, vegetarian, gluten-free...',
+    settings_title: 'Settings & Data',
+    backup_title: 'Backup & Restore',
+    backup_desc: 'Export/import a full JSON backup of all your data',
+    backup_export: 'Export JSON Backup',
+    backup_import: 'Import JSON Backup',
+    import_csv_title: 'Import / Export CSV',
+    import_csv_desc: 'Import guest list from Excel / Export to Excel',
+    import_csv_btn: 'Import from CSV',
+    import_csv_template: 'Download CSV Template',
+    clear_data_title: 'Clear Data',
+    clear_data_warning: 'This permanently deletes all guests and tables!',
+    clear_data_btn: 'Delete All Data',
     modal_add_guest: 'Add Guest',
     modal_edit_guest: 'Edit Guest',
-    label_guest_name: 'Guest Name',
-    label_guest_phone: 'Phone',
-    label_guest_count: 'Guest Count (total)',
-    label_guest_status: 'Status',
-    label_guest_group: 'Group',
-    label_guest_table: 'Table',
-    label_guest_notes: 'Notes',
-    ph_guest_name: 'Full name',
-    ph_notes: 'Special notes',
+    modal_add_table: 'Add Table',
+    modal_edit_table: 'Edit Table',
+    side_groom: "Groom's Side",
+    side_bride: "Bride's Side",
+    side_mutual: 'Mutual',
+    meal_regular: 'Regular',
+    meal_vegetarian: 'Vegetarian',
+    meal_vegan: 'Vegan',
+    meal_kosher: 'Kosher',
+    meal_gluten_free: 'Gluten Free',
+    meal_other: 'Other',
     status_pending: 'Pending',
     status_confirmed: 'Confirmed',
     status_declined: 'Declined',
@@ -1648,30 +2147,35 @@ const I18N = {
     group_family: 'Family',
     group_friends: 'Friends',
     group_work: 'Work',
+    group_neighbors: 'Neighbors',
     group_other: 'Other',
-    no_table: 'No table',
-    btn_cancel: 'Cancel',
-    btn_save: 'Save',
-    btn_edit: 'Edit',
-    btn_delete: 'Delete',
-    btn_wa_send: 'Send',
-    modal_add_table: 'Add Table',
-    modal_edit_table: 'Edit Table',
     label_table_name: 'Table Name / Number',
     label_table_capacity: 'Seats',
     label_table_shape: 'Table Shape',
     ph_table_name: 'e.g. Table 1',
     shape_round: 'Round',
     shape_rect: 'Rectangle',
-    toast_guest_saved: 'Guest saved successfully!',
+    no_table: 'No table',
+    btn_cancel: 'Cancel',
+    btn_save: 'Save',
+    btn_edit: 'Edit',
+    btn_delete: 'Delete',
+    btn_wa_send: 'Send',
+    toast_guest_saved: 'Guest saved!',
     toast_guest_deleted: 'Guest deleted.',
-    toast_table_saved: 'Table saved successfully!',
+    toast_table_saved: 'Table saved!',
     toast_table_deleted: 'Table deleted.',
     toast_rsvp_submitted: 'Thank you! RSVP received.',
     toast_rsvp_updated: 'RSVP updated.',
-    toast_export_done: 'Downloading file...',
+    toast_export_done: 'Downloading...',
     toast_wa_opening: 'Opening WhatsApp...',
+    toast_backup_exported: 'Backup downloaded',
+    toast_backup_imported: 'Data restored successfully!',
+    toast_csv_imported: 'Guests imported',
+    toast_data_cleared: 'All data cleared',
+    toast_invalid_file: 'Invalid file',
     confirm_delete: 'Delete?',
+    confirm_clear: 'Delete ALL data permanently?',
     countdown_days: 'Days',
     countdown_hours: 'Hours',
     countdown_minutes: 'Minutes',
@@ -1681,7 +2185,7 @@ const I18N = {
   },
 };
 
-/* ── Persistence ── */
+/* ── Persistence (localStorage) ── */
 function save(key, data) {
   try { localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data)); } catch (_e) {}
 }
@@ -1702,11 +2206,35 @@ function saveAll() {
 function loadAll() {
   _guests = load('guests') || [];
   _tables = load('tables') || [];
-  _weddingInfo = load('wedding') || _weddingInfo;
+  const savedWedding = load('wedding');
+  _weddingInfo = savedWedding ? { ..._weddingDefaults, ...savedWedding } : { ..._weddingDefaults };
   _invitationDataUrl = load('invitation') || '';
-  _currentLang = load('lang') || 'he';
-  _currentTheme = load('theme') || '';
-  _themeIndex = load('themeIndex') || 0;
+  _currentLang  = load('lang')       || 'he';
+  _currentTheme = load('theme')      || '';
+  _themeIndex   = load('themeIndex') || 0;
+  migrateGuests();
+}
+
+/* ── Data Migration v1 → v1.1 ── */
+function migrateGuests() {
+  let changed = false;
+  _guests.forEach(function(g) {
+    // Migrate old 'name' field to firstName
+    if (g.name !== undefined && g.firstName === undefined) {
+      g.firstName = g.name; g.lastName = ''; delete g.name; changed = true;
+    }
+    if (g.side         === undefined) { g.side         = 'mutual';  changed = true; }
+    if (g.meal         === undefined) { g.meal         = 'regular'; changed = true; }
+    if (g.email        === undefined) { g.email        = '';        changed = true; }
+    if (g.children     === undefined) { g.children     = 0;        changed = true; }
+    if (g.accessibility=== undefined) { g.accessibility= false;    changed = true; }
+    if (g.relationship === undefined) { g.relationship = '';        changed = true; }
+    if (g.mealNotes    === undefined) { g.mealNotes    = '';        changed = true; }
+    if (g.rsvpDate     === undefined) { g.rsvpDate     = '';        changed = true; }
+    if (g.gift         === undefined) { g.gift         = '';        changed = true; }
+    if (g.updatedAt    === undefined) { g.updatedAt    = g.createdAt || ''; changed = true; }
+  });
+  if (changed) save('guests', _guests);
 }
 
 /* ── i18n Engine ── */
@@ -1716,34 +2244,30 @@ function t(key) {
 
 function applyLanguage() {
   const lang = _currentLang;
-  const dir = lang === 'he' ? 'rtl' : 'ltr';
+  const dir  = lang === 'he' ? 'rtl' : 'ltr';
   document.documentElement.lang = lang;
-  document.documentElement.dir = dir;
+  document.documentElement.dir  = dir;
 
-  // Update all data-i18n elements
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    const key = el.getAttribute('data-i18n');
-    const translated = t(key);
-    if (translated !== key) el.textContent = translated;
+  document.querySelectorAll('[data-i18n]').forEach(function(node) {
+    const key = node.getAttribute('data-i18n');
+    const val = t(key);
+    if (val !== key) node.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(node) {
+    const key = node.getAttribute('data-i18n-placeholder');
+    const val = t(key);
+    if (val !== key) node.placeholder = val;
   });
 
-  // Update data-i18n-placeholder elements
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-    const key = el.getAttribute('data-i18n-placeholder');
-    const translated = t(key);
-    if (translated !== key) el.placeholder = translated;
-  });
+  const btnLang = document.getElementById('btnLang');
+  if (btnLang) btnLang.textContent = lang === 'he' ? 'EN' : 'עב';
 
-  // Update lang button
-  const btn = document.getElementById('btnLang');
-  if (btn) btn.textContent = lang === 'he' ? 'EN' : 'עב';
-
-  // Re-render dynamic content
   renderGuests();
   renderTables();
   renderStats();
   updateWaPreview();
   renderWaGuestList();
+  updateTopBar();
 }
 
 function toggleLanguage() {
@@ -1754,7 +2278,7 @@ function toggleLanguage() {
 
 /* ── Theme ── */
 function cycleTheme() {
-  _themeIndex = (_themeIndex + 1) % THEMES.length;
+  _themeIndex   = (_themeIndex + 1) % THEMES.length;
   _currentTheme = THEMES[_themeIndex];
   document.body.className = _currentTheme;
   saveAll();
@@ -1770,104 +2294,142 @@ function showSection(name) {
     tab.classList.toggle('active', tab.getAttribute('data-tab') === name);
   });
 
-  // Refresh section-specific content
-  if (name === 'whatsapp') { updateWaPreview(); renderWaGuestList(); }
-  if (name === 'tables') { renderTables(); renderUnassignedGuests(); }
+  if (name === 'whatsapp')  { updateWaPreview(); renderWaGuestList(); }
+  if (name === 'tables')    { renderTables(); renderUnassignedGuests(); }
+  if (name === 'settings')  { renderDataSummary(); }
 }
 
-/* ── Unique ID Generator ── */
+/* ── Top Bar ── */
+function updateTopBar() {
+  if (!el.topBarCouple) return;
+  const g = _weddingInfo.groom || (_currentLang === 'he' ? 'חתן' : 'Groom');
+  const b = _weddingInfo.bride || (_currentLang === 'he' ? 'כלה' : 'Bride');
+  const dateStr = _weddingInfo.date ? ' 💍 ' + _weddingInfo.date.split('-').reverse().join('.') : '';
+  el.topBarCouple.textContent = g + ' & ' + b + dateStr;
+}
+
+/* ── Unique ID ── */
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+/* ── Guest Full Name Helper ── */
+function guestFullName(g) {
+  return (g.firstName || '') + (g.lastName ? ' ' + g.lastName : '');
+}
+
 /* ── Stats ── */
 function renderStats() {
-  const total = _guests.reduce(function(sum, g) { return sum + (g.count || 1); }, 0);
-  const confirmed = _guests.filter(function(g) { return g.status === 'confirmed'; }).reduce(function(sum, g) { return sum + (g.count || 1); }, 0);
-  const pending = _guests.filter(function(g) { return g.status === 'pending'; }).reduce(function(sum, g) { return sum + (g.count || 1); }, 0);
-  const declined = _guests.filter(function(g) { return g.status === 'declined'; }).reduce(function(sum, g) { return sum + (g.count || 1); }, 0);
-  const seated = _guests.filter(function(g) { return g.tableId; }).reduce(function(sum, g) { return sum + (g.count || 1); }, 0);
-  const sent = _guests.filter(function(g) { return g.sent; }).length;
-  const unsent = _guests.length - sent;
+  const total     = _guests.reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const confirmed = _guests.filter(function(g) { return g.status === 'confirmed'; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const pending   = _guests.filter(function(g) { return g.status === 'pending';   }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const declined  = _guests.filter(function(g) { return g.status === 'declined';  }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const seated    = _guests.filter(function(g) { return g.tableId; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const sent      = _guests.filter(function(g) { return g.sent; }).length;
+  const groomSide = _guests.filter(function(g) { return g.side === 'groom'; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const brideSide = _guests.filter(function(g) { return g.side === 'bride'; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const vegCount  = _guests.filter(function(g) { return g.meal === 'vegetarian' || g.meal === 'vegan'; }).length;
+  const accCount  = _guests.filter(function(g) { return g.accessibility; }).length;
 
-  el.statTotal.textContent = total;
-  el.statConfirmed.textContent = confirmed;
-  el.statPending.textContent = pending;
-  el.statDeclined.textContent = declined;
-  el.statTables.textContent = _tables.length;
-  el.statSeated.textContent = seated;
-  el.statSent.textContent = sent;
-  el.statUnsent.textContent = unsent;
-  el.guestCount.textContent = _guests.length;
+  el.statTotal.textContent        = total;
+  el.statConfirmed.textContent    = confirmed;
+  el.statPending.textContent      = pending;
+  el.statDeclined.textContent     = declined;
+  el.statTables.textContent       = _tables.length;
+  el.statSeated.textContent       = seated;
+  el.statSent.textContent         = sent;
+  el.statUnsent.textContent       = _guests.length - sent;
+  el.statGroomSide.textContent    = groomSide;
+  el.statBrideSide.textContent    = brideSide;
+  el.statVeg.textContent          = vegCount;
+  el.statAccessibility.textContent= accCount;
+  el.guestCount.textContent       = _guests.length;
 
   const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
-  el.progressFill.style.width = pct + '%';
+  el.progressFill.style.width   = pct + '%';
   el.progressPercent.textContent = pct + '%';
 }
 
 /* ── Countdown ── */
 function renderCountdown() {
-  if (!_weddingInfo.date) {
-    el.countdown.innerHTML = '';
-    return;
-  }
+  if (!_weddingInfo.date) { el.countdown.innerHTML = ''; return; }
   const target = new Date(_weddingInfo.date + 'T' + (_weddingInfo.time || '18:00'));
-  const now = new Date();
-  const diff = target - now;
+  const diff   = target - new Date();
 
   if (diff <= 0) {
     el.countdown.innerHTML = '<div style="font-size:1.3em; color:var(--gold);">🎉 ' +
       (_currentLang === 'he' ? 'מזל טוב! היום הגדול הגיע!' : 'Mazel Tov! The big day is here!') + '</div>';
     return;
   }
-
   const days = Math.floor(diff / 86400000);
   const hours = Math.floor((diff % 86400000) / 3600000);
-  const minutes = Math.floor((diff % 3600000) / 60000);
-  const seconds = Math.floor((diff % 60000) / 1000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
 
   el.countdown.innerHTML =
-    '<div class="countdown-item"><div class="countdown-number">' + days + '</div><div class="countdown-label">' + t('countdown_days') + '</div></div>' +
-    '<div class="countdown-item"><div class="countdown-number">' + hours + '</div><div class="countdown-label">' + t('countdown_hours') + '</div></div>' +
-    '<div class="countdown-item"><div class="countdown-number">' + minutes + '</div><div class="countdown-label">' + t('countdown_minutes') + '</div></div>' +
-    '<div class="countdown-item"><div class="countdown-number">' + seconds + '</div><div class="countdown-label">' + t('countdown_seconds') + '</div></div>';
+    cdItem(days,  t('countdown_days'))  +
+    cdItem(hours, t('countdown_hours')) +
+    cdItem(mins,  t('countdown_minutes')) +
+    cdItem(secs,  t('countdown_seconds'));
+}
+function cdItem(n, label) {
+  return '<div class="countdown-item"><div class="countdown-number">' + n + '</div><div class="countdown-label">' + label + '</div></div>';
 }
 
 /* ── Guests ── */
 function renderGuests() {
   const q = (el.guestSearch.value || '').trim().toLowerCase();
-  let list = _guests;
+  let list = _guests.slice();
 
-  if (_currentFilter !== 'all') {
-    list = list.filter(function(g) { return g.status === _currentFilter; });
-  }
-  if (q) {
-    list = list.filter(function(g) {
-      return (g.name || '').toLowerCase().includes(q) || (g.phone || '').includes(q);
+  // Sort
+  if (_sortCol) {
+    list.sort(function(a, b) {
+      const av = (a[_sortCol] || '').toString().toLowerCase();
+      const bv = (b[_sortCol] || '').toString().toLowerCase();
+      return _sortAsc ? av.localeCompare(bv, 'he') : bv.localeCompare(av, 'he');
     });
   }
 
-  el.guestsEmpty.style.display = list.length === 0 ? 'block' : 'none';
+  // Filter by status
+  if (_currentFilter !== 'all') {
+    list = list.filter(function(g) { return g.status === _currentFilter; });
+  }
+  // Filter by side
+  if (_sideFilter !== 'all') {
+    list = list.filter(function(g) { return (g.side || 'mutual') === _sideFilter; });
+  }
+  // Search
+  if (q) {
+    list = list.filter(function(g) {
+      const full = ((g.firstName || '') + ' ' + (g.lastName || '')).toLowerCase();
+      return full.includes(q) || (g.phone || '').includes(q) || (g.relationship || '').toLowerCase().includes(q);
+    });
+  }
+
+  el.guestsEmpty.style.display = (list.length === 0 && !q && _currentFilter === 'all' && _sideFilter === 'all') ? 'block' : 'none';
 
   const frag = document.createDocumentFragment();
   list.forEach(function(g) {
     const tr = document.createElement('tr');
-    const tableName = g.tableId ? getTableName(g.tableId) : '—';
+    const tableName   = g.tableId ? getTableName(g.tableId) : '—';
     const statusClass = 'status-' + g.status;
-    const statusText = t('status_' + g.status);
-    const groupText = t('group_' + (g.group || 'other'));
+    const sideClass   = 'side-' + (g.side || 'mutual');
+    const mealClass   = 'meal-' + (g.meal || 'regular');
+    const accessHtml  = g.accessibility ? ' <span class="chip-access" title="' + t('label_accessibility') + '">\u267f</span>' : '';
 
     tr.innerHTML =
-      '<td><strong>' + escapeHtml(g.name) + '</strong><br><span style="font-size:0.75em;color:var(--text-muted)">' + escapeHtml(groupText) + '</span></td>' +
+      '<td><strong>' + escapeHtml(g.firstName || '') + '</strong></td>' +
+      '<td>' + escapeHtml(g.lastName || '') + '</td>' +
+      '<td><span class="side-badge ' + sideClass + '">' + t('side_' + (g.side || 'mutual')) + '</span></td>' +
       '<td dir="ltr" style="text-align:right;">' + escapeHtml(g.phone || '') + '</td>' +
-      '<td>' + (g.count || 1) + '</td>' +
-      '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>' +
+      '<td>' + (g.count || 1) + (g.children ? '+' + g.children + '👶' : '') + '</td>' +
+      '<td><span class="meal-badge ' + mealClass + '">' + t('meal_' + (g.meal || 'regular')) + '</span>' + accessHtml + '</td>' +
+      '<td><span class="status-badge ' + statusClass + '">' + t('status_' + (g.status || 'pending')) + '</span></td>' +
       '<td>' + escapeHtml(tableName) + '</td>' +
-      '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + escapeHtml(g.notes || '') + '">' + escapeHtml(g.notes || '') + '</td>' +
       '<td style="white-space:nowrap;">' +
         '<button class="btn btn-secondary btn-small" onclick="editGuest(\'' + g.id + '\')" title="' + t('btn_edit') + '">✏️</button> ' +
-        '<button class="btn btn-danger btn-small" onclick="deleteGuest(\'' + g.id + '\')" title="' + t('btn_delete') + '">🗑️</button> ' +
-        '<button class="btn btn-whatsapp btn-small" onclick="sendWhatsAppSingle(\'' + g.id + '\')" title="WhatsApp">📱</button>' +
+        '<button class="btn btn-danger btn-small"    onclick="deleteGuest(\'' + g.id + '\')" title="' + t('btn_delete') + '">🗑️</button> ' +
+        '<button class="btn btn-whatsapp btn-small"  onclick="sendWhatsAppSingle(\'' + g.id + '\')" title="WhatsApp">📱</button>' +
       '</td>';
     frag.appendChild(tr);
   });
@@ -1880,21 +2442,48 @@ function filterGuests() { renderGuests(); }
 
 function setFilter(f) {
   _currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+  document.querySelectorAll('[data-filter]').forEach(function(btn) {
     btn.classList.toggle('active', btn.getAttribute('data-filter') === f);
   });
+  renderGuests();
+}
+
+function setSideFilter(f) {
+  _sideFilter = f;
+  document.querySelectorAll('[data-side]').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-side') === f);
+  });
+  renderGuests();
+}
+
+function sortGuestsBy(col) {
+  if (_sortCol === col) { _sortAsc = !_sortAsc; }
+  else { _sortCol = col; _sortAsc = true; }
+  // Update sort indicators
+  document.querySelectorAll('[id^="si-"]').forEach(function(s) { s.textContent = '↕'; });
+  const ind = document.getElementById('si-' + col);
+  if (ind) ind.textContent = _sortAsc ? '↑' : '↓';
   renderGuests();
 }
 
 function openAddGuestModal() {
   _editingGuestId = null;
   document.getElementById('guestModalTitle').textContent = t('modal_add_guest');
-  document.getElementById('guestName').value = '';
-  document.getElementById('guestPhone').value = '';
-  document.getElementById('guestCount2').value = '1';
-  document.getElementById('guestStatus').value = 'pending';
-  document.getElementById('guestGroup').value = 'family';
-  document.getElementById('guestNotes').value = '';
+  document.getElementById('guestFirstName').value   = '';
+  document.getElementById('guestLastName').value    = '';
+  document.getElementById('guestPhone').value       = '';
+  document.getElementById('guestEmail').value       = '';
+  document.getElementById('guestCount2').value      = '1';
+  document.getElementById('guestChildren').value    = '0';
+  document.getElementById('guestStatus').value      = 'pending';
+  document.getElementById('guestSide').value        = 'groom';
+  document.getElementById('guestGroup').value       = 'family';
+  document.getElementById('guestRelationship').value= '';
+  document.getElementById('guestMeal').value        = 'regular';
+  document.getElementById('guestMealNotes').value   = '';
+  document.getElementById('guestAccessibility').checked = false;
+  document.getElementById('guestGift').value        = '';
+  document.getElementById('guestNotes').value       = '';
   populateTableSelect();
   document.getElementById('guestTableSelect').value = '';
   openModal('guestModal');
@@ -1905,52 +2494,55 @@ function editGuest(id) {
   if (!g) return;
   _editingGuestId = id;
   document.getElementById('guestModalTitle').textContent = t('modal_edit_guest');
-  document.getElementById('guestName').value = g.name || '';
-  document.getElementById('guestPhone').value = g.phone || '';
-  document.getElementById('guestCount2').value = g.count || 1;
-  document.getElementById('guestStatus').value = g.status || 'pending';
-  document.getElementById('guestGroup').value = g.group || 'family';
-  document.getElementById('guestNotes').value = g.notes || '';
+  document.getElementById('guestFirstName').value   = g.firstName  || '';
+  document.getElementById('guestLastName').value    = g.lastName   || '';
+  document.getElementById('guestPhone').value       = g.phone      || '';
+  document.getElementById('guestEmail').value       = g.email      || '';
+  document.getElementById('guestCount2').value      = g.count      || 1;
+  document.getElementById('guestChildren').value    = g.children   || 0;
+  document.getElementById('guestStatus').value      = g.status     || 'pending';
+  document.getElementById('guestSide').value        = g.side       || 'groom';
+  document.getElementById('guestGroup').value       = g.group      || 'family';
+  document.getElementById('guestRelationship').value= g.relationship|| '';
+  document.getElementById('guestMeal').value        = g.meal       || 'regular';
+  document.getElementById('guestMealNotes').value   = g.mealNotes  || '';
+  document.getElementById('guestAccessibility').checked = !!g.accessibility;
+  document.getElementById('guestGift').value        = g.gift       || '';
+  document.getElementById('guestNotes').value       = g.notes      || '';
   populateTableSelect();
-  document.getElementById('guestTableSelect').value = g.tableId || '';
+  document.getElementById('guestTableSelect').value = g.tableId    || '';
   openModal('guestModal');
 }
 
 function saveGuest() {
-  const name = document.getElementById('guestName').value.trim();
-  if (!name) return;
+  const firstName = document.getElementById('guestFirstName').value.trim();
+  if (!firstName) { document.getElementById('guestFirstName').focus(); return; }
 
-  const phone = document.getElementById('guestPhone').value.trim();
-  const count = parseInt(document.getElementById('guestCount2').value, 10) || 1;
-  const status = document.getElementById('guestStatus').value;
-  const group = document.getElementById('guestGroup').value;
-  const tableId = document.getElementById('guestTableSelect').value;
-  const notes = document.getElementById('guestNotes').value.trim();
+  const data = {
+    firstName:   firstName,
+    lastName:    document.getElementById('guestLastName').value.trim(),
+    phone:       document.getElementById('guestPhone').value.trim(),
+    email:       document.getElementById('guestEmail').value.trim(),
+    count:       parseInt(document.getElementById('guestCount2').value, 10) || 1,
+    children:    parseInt(document.getElementById('guestChildren').value, 10) || 0,
+    status:      document.getElementById('guestStatus').value,
+    side:        document.getElementById('guestSide').value,
+    group:       document.getElementById('guestGroup').value,
+    relationship:document.getElementById('guestRelationship').value.trim(),
+    meal:        document.getElementById('guestMeal').value,
+    mealNotes:   document.getElementById('guestMealNotes').value.trim(),
+    accessibility: document.getElementById('guestAccessibility').checked,
+    tableId:     document.getElementById('guestTableSelect').value,
+    gift:        document.getElementById('guestGift').value.trim(),
+    notes:       document.getElementById('guestNotes').value.trim(),
+    updatedAt:   new Date().toISOString(),
+  };
 
   if (_editingGuestId) {
     const g = _guests.find(function(x) { return x.id === _editingGuestId; });
-    if (g) {
-      g.name = name;
-      g.phone = phone;
-      g.count = count;
-      g.status = status;
-      g.group = group;
-      g.tableId = tableId;
-      g.notes = notes;
-    }
+    if (g) Object.assign(g, data);
   } else {
-    _guests.push({
-      id: uid(),
-      name: name,
-      phone: phone,
-      count: count,
-      status: status,
-      group: group,
-      tableId: tableId,
-      notes: notes,
-      sent: false,
-      createdAt: new Date().toISOString(),
-    });
+    _guests.push(Object.assign({ id: uid(), sent: false, rsvpDate: '', createdAt: new Date().toISOString() }, data));
   }
 
   saveAll();
@@ -1972,35 +2564,34 @@ function deleteGuest(id) {
 /* ── Tables ── */
 function renderTables() {
   el.tablesEmpty.style.display = _tables.length === 0 ? 'block' : 'none';
-
   el.seatingFloor.innerHTML = '';
   const frag = document.createDocumentFragment();
 
   _tables.forEach(function(tbl) {
-    const guests = _guests.filter(function(g) { return g.tableId === tbl.id; });
-    const totalSeated = guests.reduce(function(sum, g) { return sum + (g.count || 1); }, 0);
-    const full = totalSeated >= tbl.capacity;
+    const guests     = _guests.filter(function(g) { return g.tableId === tbl.id; });
+    const totalSeated= guests.reduce(function(s, g) { return s + (g.count || 1); }, 0);
+    const full       = totalSeated >= tbl.capacity;
 
     const card = document.createElement('div');
     card.className = 'table-card drop-zone' + (full ? ' highlight' : '');
     card.setAttribute('data-table-id', tbl.id);
-    card.ondragover = function(e) { e.preventDefault(); card.classList.add('drag-over'); };
-    card.ondragleave = function() { card.classList.remove('drag-over'); };
-    card.ondrop = function(e) { handleTableDrop(e, tbl.id); card.classList.remove('drag-over'); };
+    card.ondragover  = function(e) { e.preventDefault(); card.classList.add('drag-over'); };
+    card.ondragleave = function()  { card.classList.remove('drag-over'); };
+    card.ondrop      = function(e) { handleTableDrop(e, tbl.id); card.classList.remove('drag-over'); };
 
     let guestHtml = '';
     guests.forEach(function(g) {
-      guestHtml += '<div class="tg-item">' + escapeHtml(g.name) + ' (' + g.count + ')</div>';
+      guestHtml += '<div class="tg-item">' + escapeHtml(guestFullName(g)) + ' (' + (g.count || 1) + ')</div>';
     });
 
     card.innerHTML =
       '<div class="table-shape ' + (tbl.shape || 'round') + '">' + escapeHtml(tbl.name) + '</div>' +
-      '<div class="table-name">' + escapeHtml(tbl.name) + '</div>' +
+      '<div class="table-name">'     + escapeHtml(tbl.name) + '</div>' +
       '<div class="table-capacity">' + totalSeated + ' / ' + tbl.capacity + ' ' + t('seats') + '</div>' +
       '<div class="table-guests-list">' + guestHtml + '</div>' +
       '<div style="margin-top:0.8rem; display:flex; gap:0.3rem; justify-content:center;">' +
         '<button class="btn btn-secondary btn-small" onclick="editTable(\'' + tbl.id + '\')" title="' + t('btn_edit') + '">✏️</button>' +
-        '<button class="btn btn-danger btn-small" onclick="deleteTable(\'' + tbl.id + '\')" title="' + t('btn_delete') + '">🗑️</button>' +
+        '<button class="btn btn-danger btn-small"    onclick="deleteTable(\'' + tbl.id + '\')" title="' + t('btn_delete') + '">🗑️</button>' +
       '</div>';
 
     frag.appendChild(card);
@@ -2022,7 +2613,7 @@ function renderUnassignedGuests() {
     const chip = document.createElement('span');
     chip.className = 'btn btn-secondary btn-small guest-draggable';
     chip.draggable = true;
-    chip.textContent = g.name + ' (' + g.count + ')';
+    chip.textContent = guestFullName(g) + ' (' + (g.count || 1) + ')';
     chip.ondragstart = function(e) { e.dataTransfer.setData('text/plain', g.id); };
     el.unassignedGuests.appendChild(chip);
   });
@@ -2033,21 +2624,15 @@ function handleTableDrop(e, tableId) {
   const guestId = e.dataTransfer.getData('text/plain');
   if (!guestId) return;
   const g = _guests.find(function(x) { return x.id === guestId; });
-  if (g) {
-    g.tableId = tableId;
-    saveAll();
-    renderTables();
-    renderGuests();
-    renderStats();
-  }
+  if (g) { g.tableId = tableId; saveAll(); renderTables(); renderGuests(); renderStats(); }
 }
 
 function openAddTableModal() {
   _editingTableId = null;
   document.getElementById('tableModalTitle').textContent = t('modal_add_table');
-  document.getElementById('tableName').value = '';
-  document.getElementById('tableCapacity').value = '10';
-  document.getElementById('tableShape').value = 'round';
+  document.getElementById('tableName').value      = '';
+  document.getElementById('tableCapacity').value  = '10';
+  document.getElementById('tableShape').value     = 'round';
   openModal('tableModal');
 }
 
@@ -2056,53 +2641,34 @@ function editTable(id) {
   if (!tbl) return;
   _editingTableId = id;
   document.getElementById('tableModalTitle').textContent = t('modal_edit_table');
-  document.getElementById('tableName').value = tbl.name || '';
+  document.getElementById('tableName').value     = tbl.name     || '';
   document.getElementById('tableCapacity').value = tbl.capacity || 10;
-  document.getElementById('tableShape').value = tbl.shape || 'round';
+  document.getElementById('tableShape').value    = tbl.shape    || 'round';
   openModal('tableModal');
 }
 
 function saveTable() {
   const name = document.getElementById('tableName').value.trim();
   if (!name) return;
-
   const capacity = parseInt(document.getElementById('tableCapacity').value, 10) || 10;
-  const shape = document.getElementById('tableShape').value;
+  const shape    = document.getElementById('tableShape').value;
 
   if (_editingTableId) {
     const tbl = _tables.find(function(x) { return x.id === _editingTableId; });
-    if (tbl) {
-      tbl.name = name;
-      tbl.capacity = capacity;
-      tbl.shape = shape;
-    }
+    if (tbl) { tbl.name = name; tbl.capacity = capacity; tbl.shape = shape; }
   } else {
-    _tables.push({
-      id: uid(),
-      name: name,
-      capacity: capacity,
-      shape: shape,
-    });
+    _tables.push({ id: uid(), name, capacity, shape });
   }
 
-  saveAll();
-  closeModal('tableModal');
-  renderTables();
-  renderStats();
+  saveAll(); closeModal('tableModal'); renderTables(); renderStats();
   showToast(t('toast_table_saved'), 'success');
 }
 
 function deleteTable(id) {
   if (!confirm(t('confirm_delete'))) return;
-  // Unassign guests from this table
-  _guests.forEach(function(g) {
-    if (g.tableId === id) g.tableId = '';
-  });
+  _guests.forEach(function(g) { if (g.tableId === id) g.tableId = ''; });
   _tables = _tables.filter(function(tbl) { return tbl.id !== id; });
-  saveAll();
-  renderTables();
-  renderGuests();
-  renderStats();
+  saveAll(); renderTables(); renderGuests(); renderStats();
   showToast(t('toast_table_deleted'), 'error');
 }
 
@@ -2126,26 +2692,11 @@ function populateTableSelect() {
 function handleInvitationUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
-
-  // Validate file type
-  const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'];
-  if (!validTypes.includes(file.type)) {
-    showToast('Unsupported file type', 'error');
-    return;
-  }
-
-  // Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    showToast('File too large (max 5MB)', 'error');
-    return;
-  }
-
+  const validTypes = ['image/jpeg','image/png','image/svg+xml','image/gif','image/webp'];
+  if (!validTypes.includes(file.type)) { showToast(t('toast_invalid_file'), 'error'); return; }
+  if (file.size > 5 * 1024 * 1024)   { showToast('Max 5MB', 'error'); return; }
   const reader = new FileReader();
-  reader.onload = function(ev) {
-    _invitationDataUrl = ev.target.result;
-    renderInvitation();
-    saveAll();
-  };
+  reader.onload = function(ev) { _invitationDataUrl = ev.target.result; renderInvitation(); saveAll(); };
   reader.readAsDataURL(file);
 }
 
@@ -2158,143 +2709,116 @@ function renderInvitation() {
 }
 
 function renderDefaultInvitationSVG() {
-  const groom = _weddingInfo.groom || (_currentLang === 'he' ? 'חתן' : 'Groom');
-  const bride = _weddingInfo.bride || (_currentLang === 'he' ? 'כלה' : 'Bride');
-  const date = _weddingInfo.date ? formatDateHebrew(_weddingInfo.date) : (_currentLang === 'he' ? 'תאריך לא נקבע' : 'Date TBD');
-  const time = _weddingInfo.time || '18:00';
-  const venue = _weddingInfo.venue || (_currentLang === 'he' ? 'אולם האירועים' : 'Venue');
-  const address = _weddingInfo.address || '';
+  const groom   = _weddingInfo.groom   || (_currentLang === 'he' ? 'חתן' : 'Groom');
+  const bride   = _weddingInfo.bride   || (_currentLang === 'he' ? 'כלה' : 'Bride');
+  const groomEn = _weddingInfo.groomEn || 'Groom';
+  const brideEn = _weddingInfo.brideEn || 'Bride';
+  const showHebrew = _currentLang === 'he';
+  const groomDisplay = showHebrew ? groom : groomEn;
+  const brideDisplay = showHebrew ? bride : brideEn;
+  const dateDisp   = _weddingInfo.date ? formatDateHebrew(_weddingInfo.date) : (_currentLang === 'he' ? 'תאריך לא נקבע' : 'Date TBD');
+  const hebrewDate = _weddingInfo.hebrewDate || '';
+  const time       = _weddingInfo.time        || '18:00';
+  const venue      = _weddingInfo.venue       || (_currentLang === 'he' ? 'אולם האירועים' : 'Venue');
+  const address    = _weddingInfo.address     || '';
 
   el.invitationImage.innerHTML =
-    '<svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" style="max-width:400px; width:100%;">' +
+    '<svg viewBox="0 0 500 720" xmlns="http://www.w3.org/2000/svg" style="max-width:420px; width:100%;">' +
       '<defs>' +
         '<linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
-          '<stop offset="0%" style="stop-color:#1a0a2e;stop-opacity:1"/>' +
-          '<stop offset="100%" style="stop-color:#2d1b4e;stop-opacity:1"/>' +
-        '</linearGradient>' +
+          '<stop offset="0%" style="stop-color:#1a0a2e"/><stop offset="100%" style="stop-color:#2d1b4e"/></linearGradient>' +
         '<linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">' +
-          '<stop offset="0%" style="stop-color:#b8864e;stop-opacity:1"/>' +
-          '<stop offset="50%" style="stop-color:#d4a574;stop-opacity:1"/>' +
-          '<stop offset="100%" style="stop-color:#b8864e;stop-opacity:1"/>' +
-        '</linearGradient>' +
+          '<stop offset="0%" style="stop-color:#b8864e"/><stop offset="50%" style="stop-color:#d4a574"/><stop offset="100%" style="stop-color:#b8864e"/></linearGradient>' +
       '</defs>' +
-      '<!-- Background -->' +
-      '<rect width="500" height="700" rx="20" fill="url(#bgGrad)"/>' +
-      '<rect x="10" y="10" width="480" height="680" rx="16" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.4"/>' +
-      '<rect x="20" y="20" width="460" height="660" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="0.5" opacity="0.25"/>' +
-      '<!-- Top Ornament -->' +
-      '<path d="M150 80 Q200 50 250 80 Q300 50 350 80" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.6"/>' +
-      '<path d="M170 90 Q210 65 250 90 Q290 65 330 90" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.4"/>' +
-      '<!-- Rings -->' +
-      '<circle cx="235" cy="140" r="22" fill="none" stroke="#d4a574" stroke-width="2" opacity="0.8"/>' +
-      '<circle cx="265" cy="140" r="22" fill="none" stroke="#d4a574" stroke-width="2" opacity="0.8"/>' +
-      '<text x="250" y="148" text-anchor="middle" font-size="14" fill="#d4a574" opacity="0.6">💍</text>' +
-      '<!-- Title -->' +
-      '<text x="250" y="210" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#d4a574" opacity="0.7">' +
+      '<rect width="500" height="720" rx="20" fill="url(#bgGrad)"/>' +
+      '<rect x="10" y="10" width="480" height="700" rx="16" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.5"/>' +
+      '<rect x="22" y="22" width="456" height="676" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="0.5" opacity="0.25"/>' +
+      '<path d="M150 80 Q200 50 250 80 Q300 50 350 80" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.7"/>' +
+      '<text x="250" y="62" text-anchor="middle" font-size="24" fill="#d4a574" opacity="0.7">✦</text>' +
+      '<circle cx="230" cy="145" r="24" fill="none" stroke="#d4a574" stroke-width="2.5" opacity="0.85"/>' +
+      '<circle cx="270" cy="145" r="24" fill="none" stroke="#d4a574" stroke-width="2.5" opacity="0.85"/>' +
+      '<text x="250" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="18" fill="#d4a574" opacity="0.75">' +
         (_currentLang === 'he' ? 'בשעה טובה ומוצלחת' : 'With great joy') +
       '</text>' +
-      '<!-- Names -->' +
-      '<text x="250" y="280" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#f0dcc4" font-weight="400">' +
-        escapeHtml(groom) +
-      '</text>' +
-      '<text x="250" y="320" text-anchor="middle" font-size="28" fill="#d4a574">&amp;</text>' +
-      '<text x="250" y="360" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#f0dcc4" font-weight="400">' +
-        escapeHtml(bride) +
-      '</text>' +
-      '<!-- Divider -->' +
-      '<line x1="150" y1="395" x2="350" y2="395" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.4"/>' +
-      '<!-- Details -->' +
-      '<text x="250" y="440" text-anchor="middle" font-size="16" fill="#e8c9a0">📅 ' + escapeHtml(date) + '</text>' +
-      '<text x="250" y="475" text-anchor="middle" font-size="16" fill="#e8c9a0">🕐 ' + escapeHtml(time) + '</text>' +
-      '<text x="250" y="510" text-anchor="middle" font-size="16" fill="#e8c9a0">📍 ' + escapeHtml(venue) + '</text>' +
-      (address ? '<text x="250" y="540" text-anchor="middle" font-size="13" fill="#e8c9a0" opacity="0.7">' + escapeHtml(address) + '</text>' : '') +
-      '<!-- Bottom Ornament -->' +
-      '<path d="M150 610 Q200 640 250 610 Q300 640 350 610" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.6"/>' +
-      '<text x="250" y="660" text-anchor="middle" font-size="14" fill="#d4a574" opacity="0.5">' +
-        (_currentLang === 'he' ? 'נשמח לראותכם!' : 'We hope to see you!') +
+      '<text x="250" y="268" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#f0dcc4">' + escapeHtml(groomDisplay) + '</text>' +
+      '<text x="250" y="306" text-anchor="middle" font-size="26" fill="#d4a574">❤</text>' +
+      '<text x="250" y="346" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#f0dcc4">' + escapeHtml(brideDisplay) + '</text>' +
+      (hebrewDate ? '<text x="250" y="390" text-anchor="middle" font-size="16" fill="#e8c9a0" opacity="0.85">' + escapeHtml(hebrewDate) + '</text>' : '') +
+      '<line x1="130" y1="412" x2="370" y2="412" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.45"/>' +
+      '<text x="250" y="448" text-anchor="middle" font-size="15" fill="#e8c9a0">📅 ' + escapeHtml(dateDisp) + '</text>' +
+      '<text x="250" y="480" text-anchor="middle" font-size="15" fill="#e8c9a0">🕐 ' + escapeHtml(time) + '</text>' +
+      '<text x="250" y="512" text-anchor="middle" font-size="15" fill="#e8c9a0">📍 ' + escapeHtml(venue) + '</text>' +
+      (address ? '<text x="250" y="540" text-anchor="middle" font-size="12" fill="#e8c9a0" opacity="0.7">' + escapeHtml(address) + '</text>' : '') +
+      '<path d="M150 620 Q200 650 250 620 Q300 650 350 620" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.6"/>' +
+      '<text x="250" y="672" text-anchor="middle" font-size="13" fill="#d4a574" opacity="0.55">' +
+        (_currentLang === 'he' ? 'נשמח לראותכם! 💍' : 'We hope to see you! 💍') +
       '</text>' +
     '</svg>';
 }
 
 /* ── WhatsApp ── */
 function updateWaPreview() {
-  const template = el.waTemplate.value;
-  const msg = fillTemplate(template, {
-    name: _currentLang === 'he' ? 'ישראל ישראלי' : 'John Doe',
+  const msg = fillTemplate(el.waTemplate.value, {
+    name: _currentLang === 'he' ? 'ישראל כהן' : 'John Cohen',
   });
   el.waPreviewBubble.textContent = msg;
   const now = new Date();
-  el.waPreviewTime.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  el.waPreviewTime.textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
 }
 
 function fillTemplate(template, overrides) {
-  let msg = template;
-  msg = msg.replace(/{name}/g, overrides.name || '');
-  msg = msg.replace(/{groom}/g, _weddingInfo.groom || '');
-  msg = msg.replace(/{bride}/g, _weddingInfo.bride || '');
-  msg = msg.replace(/{date}/g, _weddingInfo.date ? formatDateHebrew(_weddingInfo.date) : '');
-  msg = msg.replace(/{time}/g, _weddingInfo.time || '');
-  msg = msg.replace(/{venue}/g, _weddingInfo.venue || '');
-  msg = msg.replace(/{address}/g, _weddingInfo.address || '');
-  return msg;
+  return template
+    .replace(/{name}/g,    overrides.name || '')
+    .replace(/{groom}/g,   _weddingInfo.groom  || '')
+    .replace(/{bride}/g,   _weddingInfo.bride  || '')
+    .replace(/{date}/g,    _weddingInfo.date   ? formatDateHebrew(_weddingInfo.date) : '')
+    .replace(/{hebrew_date}/g, _weddingInfo.hebrewDate || '')
+    .replace(/{time}/g,    _weddingInfo.time   || '')
+    .replace(/{ceremony}/g,_weddingInfo.ceremonyTime || '')
+    .replace(/{venue}/g,   _weddingInfo.venue  || '')
+    .replace(/{address}/g, _weddingInfo.address|| '')
+    .replace(/{waze}/g,    _weddingInfo.wazeLink|| '');
 }
 
 function sendWhatsAppSingle(guestId) {
   const g = _guests.find(function(x) { return x.id === guestId; });
   if (!g || !g.phone) return;
-
-  const template = el.waTemplate.value;
-  const msg = fillTemplate(template, { name: g.name });
+  const msg   = fillTemplate(el.waTemplate.value, { name: g.firstName || guestFullName(g) });
   const phone = cleanPhone(g.phone);
-  const url = 'https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(msg);
-
-  window.open(url, '_blank', 'noopener,noreferrer');
+  window.open('https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
   g.sent = true;
-  saveAll();
-  renderStats();
-  renderWaGuestList();
+  saveAll(); renderStats(); renderWaGuestList();
   showToast(t('toast_wa_opening'), 'success');
 }
 
 function sendWhatsAppAll(filter) {
   let list = _guests.filter(function(g) { return g.phone; });
-  if (filter === 'pending') {
-    list = list.filter(function(g) { return g.status === 'pending'; });
-  }
-  if (list.length === 0) return;
-
-  // Open WhatsApp for the first guest, mark all as sent
+  if (filter === 'pending') list = list.filter(function(g) { return g.status === 'pending'; });
+  if (!list.length) return;
   list.forEach(function(g) { g.sent = true; });
   saveAll();
-
   const first = list[0];
-  const template = el.waTemplate.value;
-  const msg = fillTemplate(template, { name: first.name });
-  const phone = cleanPhone(first.phone);
-  const url = 'https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(msg);
-  window.open(url, '_blank', 'noopener,noreferrer');
-
-  renderStats();
-  renderWaGuestList();
+  const msg   = fillTemplate(el.waTemplate.value, { name: first.firstName || guestFullName(first) });
+  window.open('https://wa.me/' + encodeURIComponent(cleanPhone(first.phone)) + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+  renderStats(); renderWaGuestList();
   showToast(t('toast_wa_opening') + ' (' + list.length + ')', 'success');
 }
 
 function renderWaGuestList() {
   const list = _guests.filter(function(g) { return g.phone; });
-  if (list.length === 0) {
-    el.waGuestList.innerHTML = '<span style="color:var(--text-muted); font-size:0.85em;">' +
-      (_currentLang === 'he' ? 'אין אורחים עם מספר טלפון.' : 'No guests with phone numbers.') + '</span>';
+  if (!list.length) {
+    el.waGuestList.innerHTML = '<span style="color:var(--text-muted);">' + (_currentLang === 'he' ? 'אין אורחים עם מספר טלפון.' : 'No guests with phone numbers.') + '</span>';
     return;
   }
   el.waGuestList.innerHTML = '';
   list.forEach(function(g) {
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex; align-items:center; gap:0.8rem; padding:0.5rem 0; border-bottom:1px solid rgba(255,255,255,0.03);';
-    const sentIcon = g.sent ? '✅' : '⏳';
+    row.style.cssText = 'display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.03);';
     row.innerHTML =
-      '<span style="font-size:0.9em;">' + sentIcon + '</span>' +
-      '<span style="flex:1; font-size:0.9em;">' + escapeHtml(g.name) + '</span>' +
-      '<span style="font-size:0.8em; color:var(--text-muted);" dir="ltr">' + escapeHtml(g.phone) + '</span>' +
+      '<span>' + (g.sent ? '✅' : '⏳') + '</span>' +
+      '<span style="flex:1;font-size:0.9em;">' + escapeHtml(guestFullName(g)) + '</span>' +
+      '<span class="side-badge side-' + (g.side||'mutual') + '" style="font-size:0.72em;">' + t('side_' + (g.side||'mutual')) + '</span>' +
+      '<span style="font-size:0.8em;color:var(--text-muted);" dir="ltr">' + escapeHtml(g.phone) + '</span>' +
       '<button class="btn btn-whatsapp btn-small" onclick="sendWhatsAppSingle(\'' + g.id + '\')">' + t('btn_wa_send') + '</button>';
     el.waGuestList.appendChild(row);
   });
@@ -2302,60 +2826,74 @@ function renderWaGuestList() {
 
 /* ── RSVP ── */
 function submitRSVP() {
-  const name = document.getElementById('rsvpName').value.trim();
-  const phone = document.getElementById('rsvpPhone').value.trim();
-  const status = document.getElementById('rsvpAttending').value;
-  const count = parseInt(document.getElementById('rsvpGuests').value, 10) || 1;
-  const notes = document.getElementById('rsvpNotes').value.trim();
+  const firstName = document.getElementById('rsvpFirstName').value.trim();
+  if (!firstName) { document.getElementById('rsvpFirstName').focus(); return; }
 
-  if (!name) return;
+  const lastName     = document.getElementById('rsvpLastName').value.trim();
+  const phone        = document.getElementById('rsvpPhone').value.trim();
+  const side         = document.getElementById('rsvpSide').value;
+  const status       = document.getElementById('rsvpAttending').value;
+  const count        = parseInt(document.getElementById('rsvpGuests').value, 10)   || 1;
+  const children     = parseInt(document.getElementById('rsvpChildren').value, 10) || 0;
+  const meal         = document.getElementById('rsvpMeal').value;
+  const accessibility= document.getElementById('rsvpAccessibility').checked;
+  const notes        = document.getElementById('rsvpNotes').value.trim();
+  const now          = new Date().toISOString();
 
-  // Check if guest exists by phone or name
+  // Match by phone or full name
   let existing = _guests.find(function(g) {
-    return (phone && g.phone === phone) || g.name.toLowerCase() === name.toLowerCase();
+    return (phone && g.phone === phone) ||
+      (guestFullName(g).toLowerCase() === (firstName + ' ' + lastName).trim().toLowerCase());
   });
 
   if (existing) {
-    existing.status = status;
-    existing.count = count;
+    existing.status       = status;
+    existing.count        = count;
+    existing.children     = children;
+    existing.meal         = meal;
+    existing.accessibility= accessibility;
     if (notes) existing.notes = notes;
+    if (lastName && !existing.lastName) existing.lastName = lastName;
+    existing.rsvpDate = now;
+    existing.updatedAt= now;
     showToast(t('toast_rsvp_updated'), 'success');
   } else {
     _guests.push({
-      id: uid(),
-      name: name,
-      phone: phone,
-      count: count,
-      status: status,
-      group: 'other',
-      tableId: '',
-      notes: notes,
-      sent: false,
-      createdAt: new Date().toISOString(),
+      id: uid(), firstName, lastName, phone, email: '',
+      count, children, status, side, group: 'other',
+      relationship: '', meal, mealNotes: '', accessibility,
+      tableId: '', notes, gift: '', sent: false,
+      rsvpDate: now, createdAt: now, updatedAt: now,
     });
     showToast(t('toast_rsvp_submitted'), 'success');
   }
 
-  saveAll();
-  renderGuests();
-  renderStats();
+  saveAll(); renderGuests(); renderStats();
 
-  // Reset form
-  document.getElementById('rsvpName').value = '';
-  document.getElementById('rsvpPhone').value = '';
+  // Reset RSVP form
+  ['rsvpFirstName','rsvpLastName','rsvpPhone','rsvpNotes'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
   document.getElementById('rsvpAttending').value = 'confirmed';
-  document.getElementById('rsvpGuests').value = '1';
-  document.getElementById('rsvpNotes').value = '';
+  document.getElementById('rsvpGuests').value    = '1';
+  document.getElementById('rsvpChildren').value  = '0';
+  document.getElementById('rsvpMeal').value      = 'regular';
+  document.getElementById('rsvpAccessibility').checked = false;
 }
 
 /* ── Wedding Details ── */
 function updateWeddingDetails() {
-  _weddingInfo.groom = document.getElementById('groomName').value.trim();
-  _weddingInfo.bride = document.getElementById('brideName').value.trim();
-  _weddingInfo.date = document.getElementById('weddingDate').value;
-  _weddingInfo.time = document.getElementById('weddingTime').value || '18:00';
-  _weddingInfo.venue = document.getElementById('venueName').value.trim();
-  _weddingInfo.address = document.getElementById('venueAddress').value.trim();
+  _weddingInfo.groom       = document.getElementById('groomName').value.trim();
+  _weddingInfo.groomEn     = document.getElementById('groomNameEn').value.trim();
+  _weddingInfo.bride       = document.getElementById('brideName').value.trim();
+  _weddingInfo.brideEn     = document.getElementById('brideNameEn').value.trim();
+  _weddingInfo.date        = document.getElementById('weddingDate').value;
+  _weddingInfo.hebrewDate  = document.getElementById('weddingHebrewDate').value.trim();
+  _weddingInfo.time        = document.getElementById('weddingTime').value        || '18:00';
+  _weddingInfo.ceremonyTime= document.getElementById('weddingCeremonyTime').value|| '19:30';
+  _weddingInfo.venue       = document.getElementById('venueName').value.trim();
+  _weddingInfo.address     = document.getElementById('venueAddress').value.trim();
+  _weddingInfo.wazeLink    = document.getElementById('venueWaze').value.trim();
 
   // Update header
   if (_weddingInfo.groom || _weddingInfo.bride) {
@@ -2364,19 +2902,27 @@ function updateWeddingDetails() {
   if (_weddingInfo.date) {
     el.weddingDateDisplay.textContent = formatDateHebrew(_weddingInfo.date);
   }
+  const hebrewEl = document.getElementById('hebrewDateDisplay');
+  if (hebrewEl && _weddingInfo.hebrewDate) hebrewEl.textContent = _weddingInfo.hebrewDate;
 
+  updateTopBar();
   renderCountdown();
   renderInvitation();
   saveAll();
 }
 
 function loadWeddingDetailsToForm() {
-  document.getElementById('groomName').value = _weddingInfo.groom || '';
-  document.getElementById('brideName').value = _weddingInfo.bride || '';
-  document.getElementById('weddingDate').value = _weddingInfo.date || '';
-  document.getElementById('weddingTime').value = _weddingInfo.time || '18:00';
-  document.getElementById('venueName').value = _weddingInfo.venue || '';
-  document.getElementById('venueAddress').value = _weddingInfo.address || '';
+  document.getElementById('groomName').value          = _weddingInfo.groom        || '';
+  document.getElementById('groomNameEn').value        = _weddingInfo.groomEn      || '';
+  document.getElementById('brideName').value          = _weddingInfo.bride        || '';
+  document.getElementById('brideNameEn').value        = _weddingInfo.brideEn      || '';
+  document.getElementById('weddingDate').value        = _weddingInfo.date         || '';
+  document.getElementById('weddingHebrewDate').value  = _weddingInfo.hebrewDate   || '';
+  document.getElementById('weddingTime').value        = _weddingInfo.time         || '18:00';
+  document.getElementById('weddingCeremonyTime').value= _weddingInfo.ceremonyTime || '19:30';
+  document.getElementById('venueName').value          = _weddingInfo.venue        || '';
+  document.getElementById('venueAddress').value       = _weddingInfo.address      || '';
+  document.getElementById('venueWaze').value          = _weddingInfo.wazeLink     || '';
 
   if (_weddingInfo.groom || _weddingInfo.bride) {
     el.coupleNames.textContent = (_weddingInfo.groom || '?') + ' ❤ ' + (_weddingInfo.bride || '?');
@@ -2386,58 +2932,202 @@ function loadWeddingDetailsToForm() {
   }
 }
 
-/* ── Export ── */
+/* ── Export / Import ── */
 function exportGuestsCSV() {
-  if (_guests.length === 0) return;
-
-  const BOM = '\uFEFF';
-  const header = [t('col_name'), t('col_phone'), t('col_guests_count'), t('col_status'), t('col_table'), t('col_notes')].join(',');
-  const rows = _guests.map(function(g) {
+  if (!_guests.length) return;
+  const BOM  = '\uFEFF';
+  const cols = [t('col_first_name'), t('col_last_name'), t('col_phone'), 'Email',
+                t('col_guests_count'), t('col_status'), t('col_side'), t('col_meal'),
+                'Accessibility', t('col_table'), 'Relationship', 'Notes'];
+  const header = cols.join(',');
+  const rows   = _guests.map(function(g) {
     return [
-      '"' + (g.name || '').replace(/"/g, '""') + '"',
-      '"' + (g.phone || '') + '"',
-      g.count || 1,
+      '"' + (g.firstName || '').replace(/"/g,'""') + '"',
+      '"' + (g.lastName  || '').replace(/"/g,'""') + '"',
+      '"' + (g.phone     || '') + '"',
+      '"' + (g.email     || '') + '"',
+      g.count    || 1,
       '"' + t('status_' + g.status) + '"',
+      '"' + t('side_'   + (g.side||'mutual'))   + '"',
+      '"' + t('meal_'   + (g.meal||'regular'))  + '"',
+      g.accessibility ? '1' : '0',
       '"' + getTableName(g.tableId) + '"',
-      '"' + (g.notes || '').replace(/"/g, '""') + '"',
+      '"' + (g.relationship||'').replace(/"/g,'""') + '"',
+      '"' + (g.notes    ||'').replace(/"/g,'""') + '"',
     ].join(',');
   });
-
-  const csv = BOM + header + '\n' + rows.join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const csv  = BOM + header + '\n' + rows.join('\n');
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'wedding_guests_' + (new Date().toISOString().slice(0, 10)) + '.csv';
+  link.href  = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  link.download = 'wedding_guests_' + (new Date().toISOString().slice(0,10)) + '.csv';
   link.click();
   URL.revokeObjectURL(link.href);
   showToast(t('toast_export_done'), 'success');
 }
 
-function printGuests() {
-  window.print();
+function exportJSON() {
+  const data = {
+    version: '1.1',
+    exported: new Date().toISOString(),
+    wedding:  _weddingInfo,
+    guests:   _guests,
+    tables:   _tables,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href  = URL.createObjectURL(blob);
+  link.download = 'wedding_backup_' + (new Date().toISOString().slice(0,10)) + '.json';
+  link.click();
+  URL.revokeObjectURL(link.href);
+  showToast(t('toast_backup_exported'), 'success');
+}
+
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!file.name.endsWith('.json')) { showToast(t('toast_invalid_file'), 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.guests || !Array.isArray(data.guests)) throw new Error('invalid');
+      _guests      = data.guests;
+      _tables      = data.tables || [];
+      _weddingInfo = { ..._weddingDefaults, ...(data.wedding || {}) };
+      migrateGuests();
+      saveAll();
+      loadWeddingDetailsToForm();
+      renderGuests(); renderTables(); renderStats(); updateTopBar();
+      showToast(t('toast_backup_imported'), 'success');
+    } catch (_err) {
+      showToast(t('toast_invalid_file'), 'error');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function downloadCSVTemplate() {
+  const BOM = '\uFEFF';
+  const header = 'שם פרטי,שם משפחה,טלפון,אימייל,מספר אורחים,צד (groom/bride/mutual),קבוצה (family/friends/work/other),ארוחה (regular/vegetarian/vegan/kosher/gluten_free),ילדים,נגישות (0/1),הערות\n';
+  const example = 'ישראל,כהן,0501234567,israel@example.com,2,groom,family,regular,0,0,\n';
+  const blob = new Blob([BOM + header + example], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href  = URL.createObjectURL(blob);
+  link.download = 'wedding_guests_template.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function importCSV(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const lines = ev.target.result.replace(/^\uFEFF/, '').split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) throw new Error('empty');
+      let imported = 0;
+      const now = new Date().toISOString();
+      // Skip header row (index 0)
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCsvLine(lines[i]);
+        if (!cols[0]) continue;
+        const firstName   = (cols[0] || '').trim();
+        const lastName    = (cols[1] || '').trim();
+        const phone       = (cols[2] || '').trim();
+        const email       = (cols[3] || '').trim();
+        const count       = parseInt(cols[4], 10) || 1;
+        const side        = ['groom','bride','mutual'].includes(cols[5]) ? cols[5] : 'mutual';
+        const group       = ['family','friends','work','neighbors','other'].includes(cols[6]) ? cols[6] : 'other';
+        const meal        = ['regular','vegetarian','vegan','kosher','gluten_free','other'].includes(cols[7]) ? cols[7] : 'regular';
+        const children    = parseInt(cols[8], 10) || 0;
+        const accessibility = cols[9] === '1' || cols[9] === 'true';
+        const notes       = (cols[10] || '').trim();
+
+        if (!firstName) continue;
+        // Check for duplicates by phone or full name
+        const dup = _guests.find(function(g) {
+          return (phone && g.phone === phone) ||
+            (guestFullName(g).toLowerCase() === (firstName + ' ' + lastName).trim().toLowerCase());
+        });
+        if (dup) {
+          Object.assign(dup, { lastName: dup.lastName || lastName, phone: dup.phone || phone,
+            email: dup.email || email, count, side, group, meal, children, accessibility, notes, updatedAt: now });
+        } else {
+          _guests.push({
+            id: uid(), firstName, lastName, phone, email, count, children,
+            status: 'pending', side, group, relationship: '', meal, mealNotes: '',
+            accessibility, tableId: '', notes, gift: '', sent: false,
+            rsvpDate: '', createdAt: now, updatedAt: now,
+          });
+        }
+        imported++;
+      }
+      saveAll(); renderGuests(); renderStats();
+      showToast(t('toast_csv_imported') + ' (' + imported + ')', 'success');
+    } catch (_err) {
+      showToast(t('toast_invalid_file'), 'error');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function parseCsvLine(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (ch === ',' && !inQ) {
+      result.push(cur); cur = '';
+    } else {
+      cur += ch;
+    }
+  }
+  result.push(cur);
+  return result;
+}
+
+function clearAllData() {
+  if (!confirm(t('confirm_clear'))) return;
+  if (!confirm(_currentLang === 'he' ? 'פעולה זו אינה ניתנת לביטול. האם אתה בטוח לחלוטין?' : 'This cannot be undone. Are you absolutely sure?')) return;
+  _guests = []; _tables = [];
+  saveAll();
+  renderGuests(); renderTables(); renderStats();
+  renderDataSummary();
+  showToast(t('toast_data_cleared'), 'error');
+}
+
+function renderDataSummary() {
+  if (!el.dataSummary) return;
+  const lines = [
+    '👥 ' + (_currentLang === 'he' ? 'אורחים' : 'Guests') + ': <strong>' + _guests.length + '</strong>',
+    '🪑 ' + (_currentLang === 'he' ? 'שולחנות' : 'Tables') + ': <strong>' + _tables.length + '</strong>',
+    '✅ ' + (_currentLang === 'he' ? 'אישורים' : 'Confirmed') + ': <strong>' + _guests.filter(function(g){return g.status==='confirmed';}).length + '</strong>',
+    '📱 ' + (_currentLang === 'he' ? 'נשלחו' : 'Sent') + ': <strong>' + _guests.filter(function(g){return g.sent;}).length + '</strong>',
+    'ℹ️ Wedding Manager v1.1.0',
+  ];
+  el.dataSummary.innerHTML = lines.join('<br>');
 }
 
 /* ── Modal ── */
 function openModal(id) {
-  const overlay = document.getElementById(id);
-  if (overlay) overlay.classList.add('active');
+  const o = document.getElementById(id);
+  if (o) o.classList.add('active');
 }
-
 function closeModal(id) {
-  const overlay = document.getElementById(id);
-  if (overlay) overlay.classList.remove('active');
+  const o = document.getElementById(id);
+  if (o) o.classList.remove('active');
 }
-
-// Close modal on Escape or overlay click
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.active').forEach(function(m) { m.classList.remove('active'); });
-  }
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach(function(m) { m.classList.remove('active'); });
 });
 document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) overlay.classList.remove('active');
-  });
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.classList.remove('active'); });
 });
 
 /* ── Toast ── */
@@ -2449,71 +3139,1529 @@ function showToast(msg, type) {
   setTimeout(function() { toast.remove(); }, 3000);
 }
 
+/* ── Print ── */
+function printGuests() { window.print(); }
+
 /* ── Utilities ── */
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
 }
 
 function cleanPhone(phone) {
-  let cleaned = phone.replace(/[\s\-()]/g, '');
-  // Convert Israeli format to international
-  if (cleaned.startsWith('0')) cleaned = '972' + cleaned.slice(1);
-  if (!cleaned.startsWith('+') && !cleaned.startsWith('972')) cleaned = '972' + cleaned;
-  return cleaned.replace(/^\+/, '');
+  let p = phone.replace(/[\s\-()]/g, '');
+  if (p.startsWith('0'))   p = '972' + p.slice(1);
+  if (!p.startsWith('972') && !p.startsWith('+')) p = '972' + p;
+  return p.replace(/^\+/, '');
 }
 
 function formatDateHebrew(dateStr) {
   try {
-    const d = new Date(dateStr + 'T00:00:00');
+    const d      = new Date(dateStr + 'T00:00:00');
     const locale = _currentLang === 'he' ? 'he-IL' : 'en-US';
-    return d.toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  } catch (_e) {
-    return dateStr;
-  }
+    return d.toLocaleDateString(locale, { weekday:'long', year:'numeric', month:'long', day:'numeric',
+      timeZone: 'Asia/Jerusalem' });
+  } catch (_e) { return dateStr; }
 }
 
 /* ── Particles ── */
 function initParticles() {
-  const container = el.particles;
   for (let i = 0; i < 20; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDelay = (Math.random() * 8) + 's';
-    p.style.animationDuration = (6 + Math.random() * 6) + 's';
-    p.style.width = (2 + Math.random() * 4) + 'px';
-    p.style.height = p.style.width;
-    container.appendChild(p);
+    p.style.left              = Math.random() * 100 + '%';
+    p.style.animationDelay   = (Math.random() * 8) + 's';
+    p.style.animationDuration= (6 + Math.random() * 6) + 's';
+    const sz = (2 + Math.random() * 4) + 'px';
+    p.style.width = sz; p.style.height = sz;
+    el.particles.appendChild(p);
   }
 }
 
-/* ── Initialization ── */
+/* ── Init ── */
 function init() {
   loadAll();
-
-  // Apply theme
   if (_currentTheme) document.body.className = _currentTheme;
-
-  // Apply language
   applyLanguage();
-
-  // Load form data
   loadWeddingDetailsToForm();
-
-  // Render everything
   renderStats();
   renderGuests();
   renderTables();
   renderInvitation();
   renderCountdown();
   updateWaPreview();
-
-  // Particles
+  updateTopBar();
   initParticles();
+  setInterval(renderCountdown, 1000);
+}
 
-  // Countdown timer
+init();
+  </script>
+</body>
+</html>JSON backup/restore, CSV import/export, data clear
+   ========================================================================== */
+'use strict';
+
+/* ── DOM Cache ── */
+const el = {
+  particles:        document.getElementById('particles'),
+  coupleNames:      document.getElementById('coupleNames'),
+  weddingDateDisplay: document.getElementById('weddingDateDisplay'),
+  countdown:        document.getElementById('countdown'),
+  statTotal:        document.getElementById('statTotal'),
+  statConfirmed:    document.getElementById('statConfirmed'),
+  statPending:      document.getElementById('statPending'),
+  statDeclined:     document.getElementById('statDeclined'),
+  statTables:       document.getElementById('statTables'),
+  statSeated:       document.getElementById('statSeated'),
+  statSent:         document.getElementById('statSent'),
+  statUnsent:       document.getElementById('statUnsent'),
+  statGroomSide:    document.getElementById('statGroomSide'),
+  statBrideSide:    document.getElementById('statBrideSide'),
+  statVeg:          document.getElementById('statVeg'),
+  statAccessibility:document.getElementById('statAccessibility'),
+  progressFill:     document.getElementById('progressFill'),
+  progressPercent:  document.getElementById('progressPercent'),
+  guestCount:       document.getElementById('guestCount'),
+  guestTableBody:   document.getElementById('guestTableBody'),
+  guestsEmpty:      document.getElementById('guestsEmpty'),
+  guestSearch:      document.getElementById('guestSearch'),
+  seatingFloor:     document.getElementById('seatingFloor'),
+  tablesEmpty:      document.getElementById('tablesEmpty'),
+  unassignedGuests: document.getElementById('unassignedGuests'),
+  invitationImage:  document.getElementById('invitationImage'),
+  waTemplate:       document.getElementById('waTemplate'),
+  waPreviewBubble:  document.getElementById('waPreviewBubble'),
+  waPreviewTime:    document.getElementById('waPreviewTime'),
+  waGuestList:      document.getElementById('waGuestList'),
+  toastContainer:   document.getElementById('toastContainer'),
+  guestModal:       document.getElementById('guestModal'),
+  tableModal:       document.getElementById('tableModal'),
+  topBarCouple:     document.getElementById('topBarCouple'),
+  dataSummary:      document.getElementById('dataSummary'),
+};
+
+/* ── State ── */
+const STORAGE_PREFIX = 'wedding_v1_';
+let _guests = [];
+let _tables = [];
+const _weddingDefaults = {
+  groom: 'אליאור', groomEn: 'Elior',
+  bride: 'טובה',   brideEn: 'Tova',
+  date: '2026-05-07',
+  hebrewDate: "כ' באייר התשפ\"ו",
+  time: '18:00',
+  ceremonyTime: '19:30',
+  venue: '', address: '', wazeLink: '',
+};
+let _weddingInfo = { ..._weddingDefaults };
+let _invitationDataUrl = '';
+let _currentFilter   = 'all';
+let _sideFilter      = 'all';
+let _sortCol         = '';
+let _sortAsc         = true;
+let _editingGuestId  = null;
+let _editingTableId  = null;
+let _currentLang     = 'he';
+let _currentTheme    = '';
+const THEMES = ['', 'theme-rosegold', 'theme-gold', 'theme-emerald', 'theme-royal'];
+let _themeIndex = 0;
+
+/* ── i18n Translations ── */
+const I18N = {
+  he: {
+    app_title: 'ניהול חתונה',
+    app_subtitle: 'מערכת ניהול אירוע חתונה',
+    nav_dashboard: 'לוח בקרה',
+    nav_guests: 'אורחים',
+    nav_tables: 'שולחנות',
+    nav_invitation: 'הזמנה',
+    nav_whatsapp: 'וואטסאפ',
+    nav_rsvp: 'אישור הגעה',
+    nav_settings: 'הגדרות',
+    stat_total: 'סה"כ מוזמנים',
+    stat_confirmed: 'אישרו הגעה',
+    stat_pending: 'ממתינים',
+    stat_declined: 'לא מגיעים',
+    stat_tables: 'שולחנות',
+    stat_seated: 'שובצו לשולחן',
+    stat_groom_side: 'אורחי חתן',
+    stat_bride_side: 'אורחי כלה',
+    stat_vegetarian: 'צמחוני/טבעוני',
+    stat_accessibility: 'נגישות',
+    progress_title: 'התקדמות אישורים',
+    progress_confirmed: 'אישרו',
+    progress_sent: 'נשלחו הזמנות',
+    progress_unsent: 'לא נשלחו',
+    quick_actions: 'פעולות מהירות',
+    action_add_guest: 'הוסף אורח',
+    action_send_wa: 'שלח בוואטסאפ',
+    action_export: 'ייצוא CSV',
+    action_print: 'הדפסה',
+    guests_title: 'רשימת אורחים',
+    search_guests: 'חיפוש שם, משפחה, טלפון...',
+    filter_all: 'הכל',
+    filter_confirmed: 'אישרו',
+    filter_pending: 'ממתינים',
+    filter_declined: 'לא מגיעים',
+    col_first_name: 'שם פרטי',
+    col_last_name: 'שם משפחה',
+    col_side: 'צד',
+    col_phone: 'טלפון',
+    col_guests_count: 'אורחים',
+    col_meal: 'ארוחה',
+    col_status: 'סטטוס',
+    col_table: 'שולחן',
+    col_notes: 'הערות',
+    col_actions: 'פעולות',
+    guests_empty: 'עדיין לא הוספת אורחים. לחץ על "הוסף אורח" כדי להתחיל!',
+    tables_title: 'סידורי ישיבה',
+    action_add_table: 'הוסף שולחן',
+    tables_empty: 'עדיין לא הגדרת שולחנות. לחץ על "הוסף שולחן" כדי להתחיל!',
+    unassigned_title: 'אורחים ללא שולחן',
+    invitation_title: 'הזמנת חתונה',
+    upload_invitation: 'העלה תמונת הזמנה (JPG/PNG/SVG)',
+    wedding_details: 'פרטי החתונה',
+    section_names: 'שמות הזוג',
+    section_date: 'תאריך ושעה',
+    section_venue: 'מקום האירוע',
+    section_personal: 'פרטים אישיים',
+    section_attendance: 'השתתפות',
+    section_preferences: 'העדפות',
+    section_seating: 'שיוך לשולחן',
+    label_groom: 'שם החתן (עברית)',
+    label_bride: 'שם הכלה (עברית)',
+    label_groom_english: 'שם החתן (אנגלית)',
+    label_bride_english: 'שם הכלה (אנגלית)',
+    label_date: 'תאריך החתונה',
+    label_hebrew_date: 'תאריך עברי',
+    label_time: 'קבלת פנים',
+    label_ceremony_time: 'טקס חופה',
+    label_venue: 'שם האולם',
+    label_venue_address: 'כתובת',
+    label_waze: 'קישור Waze',
+    label_first_name: 'שם פרטי',
+    label_last_name: 'שם משפחה',
+    label_email: 'אימייל',
+    label_side: 'צד',
+    label_meal: 'ארוחה',
+    label_meal_notes: 'הערות ארוחה / אלרגיות',
+    label_children: 'ילדים',
+    label_accessibility: 'צרכי נגישות',
+    label_relationship: 'קשר',
+    label_gift: 'מתנה',
+    label_guest_phone: 'טלפון',
+    label_guest_count: 'כמות מוזמנים',
+    label_guest_status: 'סטטוס',
+    label_guest_group: 'קבוצה',
+    label_guest_table: 'שולחן',
+    label_guest_notes: 'הערות כלליות',
+    ph_groom: 'שם החתן',
+    ph_bride: 'שם הכלה',
+    ph_venue: 'שם אולם האירועים',
+    ph_address: 'כתובת מלאה',
+    ph_waze: 'https://waze.com/ul/...',
+    ph_first_name: 'שם פרטי',
+    ph_last_name: 'שם משפחה',
+    ph_email: 'example@email.com',
+    ph_phone: '050-0000000',
+    ph_relationship: 'דוד/ה, חבר/ה ישן, שכן...',
+    ph_meal_notes: 'אלרגיה לאגוזים, ללא בשר...',
+    ph_gift: 'תיאור המתנה',
+    ph_notes: 'הערות נוספות',
+    ph_rsvp_notes: 'הערות מיוחדות, צמחוני, ללא גלוטן...',
+    ph_hebrew_date: "כ' באייר התשפ\"ו",
+    wa_title: 'שליחת הזמנות בוואטסאפ',
+    wa_template_label: 'תבנית הודעה',
+    wa_send_title: 'שליחה',
+    wa_send_pending: 'שלח לממתינים',
+    wa_send_all: 'שלח לכולם',
+    wa_note: '* ההודעות ייפתחו בוואטסאפ. יש לאשר שליחה ידנית לכל אורח.',
+    wa_individual: 'שליחה בודדת',
+    rsvp_title: 'אישור הגעה',
+    rsvp_subtitle: 'נשמח לדעת שאתם מגיעים!',
+    rsvp_phone: 'טלפון',
+    rsvp_attending: 'האם מגיע/ה?',
+    rsvp_yes: 'כן, מגיע/ה! 🎉',
+    rsvp_maybe: 'אולי 🤔',
+    rsvp_no: 'לצערי לא 😢',
+    rsvp_plus: 'מספר מלווים (כולל אותך)',
+    rsvp_children: 'ילדים',
+    rsvp_meal: 'סוג ארוחה',
+    rsvp_side: 'בצד של',
+    rsvp_accessibility: 'צרכי נגישות',
+    rsvp_notes: 'הערות / מגבלות תזונה',
+    rsvp_submit: 'שלח אישור',
+    settings_title: 'הגדרות ונתונים',
+    backup_title: 'גיבוי ושחזור',
+    backup_desc: 'ייצא/ייבא גיבוי מלא של כל הנתונים בפורמט JSON',
+    backup_export: 'ייצוא גיבוי JSON',
+    backup_import: 'ייבוא גיבוי JSON',
+    import_csv_title: 'ייבוא / ייצוא CSV',
+    import_csv_desc: 'ייבא רשימת אורחים מקובץ אקסל / ייצא לאקסל',
+    import_csv_btn: 'ייבוא מ-CSV',
+    import_csv_template: 'הורד תבנית CSV',
+    clear_data_title: 'מחיקת נתונים',
+    clear_data_warning: 'פעולה זו מוחקת את כל נתוני האורחים והשולחנות ואינה הפיכה!',
+    clear_data_btn: 'מחק את כל הנתונים',
+    modal_add_guest: 'הוסף אורח',
+    modal_edit_guest: 'ערוך אורח',
+    modal_add_table: 'הוסף שולחן',
+    modal_edit_table: 'ערוך שולחן',
+    side_groom: 'צד חתן',
+    side_bride: 'צד כלה',
+    side_mutual: 'משותף',
+    meal_regular: 'רגיל',
+    meal_vegetarian: 'צמחוני',
+    meal_vegan: 'טבעוני',
+    meal_kosher: 'כשר',
+    meal_gluten_free: 'ללא גלוטן',
+    meal_other: 'אחר',
+    status_pending: 'ממתין',
+    status_confirmed: 'אישר',
+    status_declined: 'לא מגיע',
+    status_maybe: 'אולי',
+    group_family: 'משפחה',
+    group_friends: 'חברים',
+    group_work: 'עבודה',
+    group_neighbors: 'שכנים',
+    group_other: 'אחר',
+    label_table_name: 'שם / מספר שולחן',
+    label_table_capacity: 'מספר מקומות',
+    label_table_shape: 'צורת שולחן',
+    ph_table_name: 'לדוגמה: שולחן 1',
+    shape_round: 'עגול',
+    shape_rect: 'מלבני',
+    no_table: 'ללא שולחן',
+    btn_cancel: 'ביטול',
+    btn_save: 'שמור',
+    btn_edit: 'ערוך',
+    btn_delete: 'מחק',
+    btn_wa_send: 'שלח',
+    toast_guest_saved: 'האורח נשמר!',
+    toast_guest_deleted: 'האורח נמחק.',
+    toast_table_saved: 'השולחן נשמר!',
+    toast_table_deleted: 'השולחן נמחק.',
+    toast_rsvp_submitted: 'תודה! האישור נקלט.',
+    toast_rsvp_updated: 'האישור עודכן.',
+    toast_export_done: 'הקובץ יורד...',
+    toast_wa_opening: 'פותח וואטסאפ...',
+    toast_backup_exported: 'הגיבוי ירד בהצלחה',
+    toast_backup_imported: 'הנתונים שוחזרו בהצלחה!',
+    toast_csv_imported: 'האורחים יובאו בהצלחה',
+    toast_data_cleared: 'כל הנתונים נמחקו',
+    toast_invalid_file: 'קובץ לא תקין',
+    confirm_delete: 'האם למחוק?',
+    confirm_clear: 'למחוק את כל הנתונים לצמיתות?',
+    countdown_days: 'ימים',
+    countdown_hours: 'שעות',
+    countdown_minutes: 'דקות',
+    countdown_seconds: 'שניות',
+    seats: 'מקומות',
+    of: 'מתוך',
+  },
+  en: {
+    app_title: 'Wedding Manager',
+    app_subtitle: 'Wedding Event Management System',
+    nav_dashboard: 'Dashboard',
+    nav_guests: 'Guests',
+    nav_tables: 'Tables',
+    nav_invitation: 'Invitation',
+    nav_whatsapp: 'WhatsApp',
+    nav_rsvp: 'RSVP',
+    nav_settings: 'Settings',
+    stat_total: 'Total Invited',
+    stat_confirmed: 'Confirmed',
+    stat_pending: 'Pending',
+    stat_declined: 'Declined',
+    stat_tables: 'Tables',
+    stat_seated: 'Seated',
+    stat_groom_side: "Groom's Guests",
+    stat_bride_side: "Bride's Guests",
+    stat_vegetarian: 'Vegetarian/Vegan',
+    stat_accessibility: 'Accessibility',
+    progress_title: 'RSVP Progress',
+    progress_confirmed: 'Confirmed',
+    progress_sent: 'Invitations Sent',
+    progress_unsent: 'Not Sent',
+    quick_actions: 'Quick Actions',
+    action_add_guest: 'Add Guest',
+    action_send_wa: 'Send WhatsApp',
+    action_export: 'Export CSV',
+    action_print: 'Print',
+    guests_title: 'Guest List',
+    search_guests: 'Search name, family, phone...',
+    filter_all: 'All',
+    filter_confirmed: 'Confirmed',
+    filter_pending: 'Pending',
+    filter_declined: 'Declined',
+    col_first_name: 'First Name',
+    col_last_name: 'Last Name',
+    col_side: 'Side',
+    col_phone: 'Phone',
+    col_guests_count: 'Guests',
+    col_meal: 'Meal',
+    col_status: 'Status',
+    col_table: 'Table',
+    col_notes: 'Notes',
+    col_actions: 'Actions',
+    guests_empty: 'No guests yet. Click "Add Guest" to start!',
+    tables_title: 'Seating Arrangement',
+    action_add_table: 'Add Table',
+    tables_empty: 'No tables yet. Click "Add Table" to start!',
+    unassigned_title: 'Unassigned Guests',
+    invitation_title: 'Wedding Invitation',
+    upload_invitation: 'Upload Invitation Image (JPG/PNG/SVG)',
+    wedding_details: 'Wedding Details',
+    section_names: 'Couple Names',
+    section_date: 'Date & Time',
+    section_venue: 'Venue',
+    section_personal: 'Personal Info',
+    section_attendance: 'Attendance',
+    section_preferences: 'Preferences',
+    section_seating: 'Table Assignment',
+    label_groom: 'Groom Name (Hebrew)',
+    label_bride: 'Bride Name (Hebrew)',
+    label_groom_english: 'Groom Name (English)',
+    label_bride_english: 'Bride Name (English)',
+    label_date: 'Wedding Date',
+    label_hebrew_date: 'Hebrew Date',
+    label_time: 'Reception',
+    label_ceremony_time: 'Ceremony',
+    label_venue: 'Venue Name',
+    label_venue_address: 'Address',
+    label_waze: 'Waze Link',
+    label_first_name: 'First Name',
+    label_last_name: 'Last Name',
+    label_email: 'Email',
+    label_side: 'Side',
+    label_meal: 'Meal',
+    label_meal_notes: 'Meal Notes / Allergies',
+    label_children: 'Children',
+    label_accessibility: 'Accessibility Needs',
+    label_relationship: 'Relationship',
+    label_gift: 'Gift',
+    label_guest_phone: 'Phone',
+    label_guest_count: 'Guest Count',
+    label_guest_status: 'Status',
+    label_guest_group: 'Group',
+    label_guest_table: 'Table',
+    label_guest_notes: 'Notes',
+    ph_groom: 'Groom name',
+    ph_bride: 'Bride name',
+    ph_venue: 'Venue name',
+    ph_address: 'Full address',
+    ph_waze: 'https://waze.com/ul/...',
+    ph_first_name: 'First name',
+    ph_last_name: 'Last name',
+    ph_email: 'example@email.com',
+    ph_phone: '050-0000000',
+    ph_relationship: 'Uncle, Old friend, Neighbor...',
+    ph_meal_notes: 'Nut allergy, no meat...',
+    ph_gift: 'Gift description',
+    ph_notes: 'Additional notes',
+    ph_rsvp_notes: 'Special notes, vegetarian, gluten-free...',
+    ph_hebrew_date: "כ' באייר התשפ\"ו",
+    wa_title: 'Send WhatsApp Invitations',
+    wa_template_label: 'Message Template',
+    wa_send_title: 'Send',
+    wa_send_pending: 'Send to Pending',
+    wa_send_all: 'Send to All',
+    wa_note: '* Messages will open in WhatsApp. Manual confirmation required per guest.',
+    wa_individual: 'Send Individually',
+    rsvp_title: 'RSVP',
+    rsvp_subtitle: "We'd love to know you're coming!",
+    rsvp_phone: 'Phone',
+    rsvp_attending: 'Will you attend?',
+    rsvp_yes: 'Yes, attending! 🎉',
+    rsvp_maybe: 'Maybe 🤔',
+    rsvp_no: 'Unfortunately no 😢',
+    rsvp_plus: 'Number of guests (including you)',
+    rsvp_children: 'Children',
+    rsvp_meal: 'Meal type',
+    rsvp_side: 'Invited by',
+    rsvp_accessibility: 'Accessibility needs',
+    rsvp_notes: 'Notes / Dietary Restrictions',
+    rsvp_submit: 'Submit RSVP',
+    settings_title: 'Settings & Data',
+    backup_title: 'Backup & Restore',
+    backup_desc: 'Export/import a full JSON backup of all your data',
+    backup_export: 'Export JSON Backup',
+    backup_import: 'Import JSON Backup',
+    import_csv_title: 'Import / Export CSV',
+    import_csv_desc: 'Import guest list from Excel / Export to Excel',
+    import_csv_btn: 'Import from CSV',
+    import_csv_template: 'Download CSV Template',
+    clear_data_title: 'Clear Data',
+    clear_data_warning: 'This permanently deletes all guests and tables!',
+    clear_data_btn: 'Delete All Data',
+    modal_add_guest: 'Add Guest',
+    modal_edit_guest: 'Edit Guest',
+    modal_add_table: 'Add Table',
+    modal_edit_table: 'Edit Table',
+    side_groom: "Groom's Side",
+    side_bride: "Bride's Side",
+    side_mutual: 'Mutual',
+    meal_regular: 'Regular',
+    meal_vegetarian: 'Vegetarian',
+    meal_vegan: 'Vegan',
+    meal_kosher: 'Kosher',
+    meal_gluten_free: 'Gluten Free',
+    meal_other: 'Other',
+    status_pending: 'Pending',
+    status_confirmed: 'Confirmed',
+    status_declined: 'Declined',
+    status_maybe: 'Maybe',
+    group_family: 'Family',
+    group_friends: 'Friends',
+    group_work: 'Work',
+    group_neighbors: 'Neighbors',
+    group_other: 'Other',
+    label_table_name: 'Table Name / Number',
+    label_table_capacity: 'Seats',
+    label_table_shape: 'Table Shape',
+    ph_table_name: 'e.g. Table 1',
+    shape_round: 'Round',
+    shape_rect: 'Rectangle',
+    no_table: 'No table',
+    btn_cancel: 'Cancel',
+    btn_save: 'Save',
+    btn_edit: 'Edit',
+    btn_delete: 'Delete',
+    btn_wa_send: 'Send',
+    toast_guest_saved: 'Guest saved!',
+    toast_guest_deleted: 'Guest deleted.',
+    toast_table_saved: 'Table saved!',
+    toast_table_deleted: 'Table deleted.',
+    toast_rsvp_submitted: 'Thank you! RSVP received.',
+    toast_rsvp_updated: 'RSVP updated.',
+    toast_export_done: 'Downloading...',
+    toast_wa_opening: 'Opening WhatsApp...',
+    toast_backup_exported: 'Backup downloaded',
+    toast_backup_imported: 'Data restored successfully!',
+    toast_csv_imported: 'Guests imported',
+    toast_data_cleared: 'All data cleared',
+    toast_invalid_file: 'Invalid file',
+    confirm_delete: 'Delete?',
+    confirm_clear: 'Delete ALL data permanently?',
+    countdown_days: 'Days',
+    countdown_hours: 'Hours',
+    countdown_minutes: 'Minutes',
+    countdown_seconds: 'Seconds',
+    seats: 'seats',
+    of: 'of',
+  },
+};
+
+/* ── Persistence (localStorage) ── */
+function save(key, data) {
+  try { localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data)); } catch (_e) {}
+}
+function load(key) {
+  try { const v = localStorage.getItem(STORAGE_PREFIX + key); return v ? JSON.parse(v) : null; } catch (_e) { return null; }
+}
+
+function saveAll() {
+  save('guests', _guests);
+  save('tables', _tables);
+  save('wedding', _weddingInfo);
+  save('invitation', _invitationDataUrl);
+  save('lang', _currentLang);
+  save('theme', _currentTheme);
+  save('themeIndex', _themeIndex);
+}
+
+function loadAll() {
+  _guests = load('guests') || [];
+  _tables = load('tables') || [];
+  const savedWedding = load('wedding');
+  _weddingInfo = savedWedding ? { ..._weddingDefaults, ...savedWedding } : { ..._weddingDefaults };
+  _invitationDataUrl = load('invitation') || '';
+  _currentLang  = load('lang')       || 'he';
+  _currentTheme = load('theme')      || '';
+  _themeIndex   = load('themeIndex') || 0;
+  migrateGuests();
+}
+
+/* ── Data Migration v1 → v1.1 ── */
+function migrateGuests() {
+  let changed = false;
+  _guests.forEach(function(g) {
+    // Migrate old 'name' field to firstName
+    if (g.name !== undefined && g.firstName === undefined) {
+      g.firstName = g.name; g.lastName = ''; delete g.name; changed = true;
+    }
+    if (g.side         === undefined) { g.side         = 'mutual';  changed = true; }
+    if (g.meal         === undefined) { g.meal         = 'regular'; changed = true; }
+    if (g.email        === undefined) { g.email        = '';        changed = true; }
+    if (g.children     === undefined) { g.children     = 0;        changed = true; }
+    if (g.accessibility=== undefined) { g.accessibility= false;    changed = true; }
+    if (g.relationship === undefined) { g.relationship = '';        changed = true; }
+    if (g.mealNotes    === undefined) { g.mealNotes    = '';        changed = true; }
+    if (g.rsvpDate     === undefined) { g.rsvpDate     = '';        changed = true; }
+    if (g.gift         === undefined) { g.gift         = '';        changed = true; }
+    if (g.updatedAt    === undefined) { g.updatedAt    = g.createdAt || ''; changed = true; }
+  });
+  if (changed) save('guests', _guests);
+}
+
+/* ── i18n Engine ── */
+function t(key) {
+  return (I18N[_currentLang] && I18N[_currentLang][key]) || key;
+}
+
+function applyLanguage() {
+  const lang = _currentLang;
+  const dir  = lang === 'he' ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  document.documentElement.dir  = dir;
+
+  document.querySelectorAll('[data-i18n]').forEach(function(node) {
+    const key = node.getAttribute('data-i18n');
+    const val = t(key);
+    if (val !== key) node.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(node) {
+    const key = node.getAttribute('data-i18n-placeholder');
+    const val = t(key);
+    if (val !== key) node.placeholder = val;
+  });
+
+  const btnLang = document.getElementById('btnLang');
+  if (btnLang) btnLang.textContent = lang === 'he' ? 'EN' : 'עב';
+
+  renderGuests();
+  renderTables();
+  renderStats();
+  updateWaPreview();
+  renderWaGuestList();
+  updateTopBar();
+}
+
+function toggleLanguage() {
+  _currentLang = _currentLang === 'he' ? 'en' : 'he';
+  applyLanguage();
+  saveAll();
+}
+
+/* ── Theme ── */
+function cycleTheme() {
+  _themeIndex   = (_themeIndex + 1) % THEMES.length;
+  _currentTheme = THEMES[_themeIndex];
+  document.body.className = _currentTheme;
+  saveAll();
+}
+
+/* ── Navigation ── */
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  const sec = document.getElementById('sec-' + name);
+  if (sec) sec.classList.add('active');
+
+  document.querySelectorAll('.nav-tab').forEach(function(tab) {
+    tab.classList.toggle('active', tab.getAttribute('data-tab') === name);
+  });
+
+  if (name === 'whatsapp')  { updateWaPreview(); renderWaGuestList(); }
+  if (name === 'tables')    { renderTables(); renderUnassignedGuests(); }
+  if (name === 'settings')  { renderDataSummary(); }
+}
+
+/* ── Top Bar ── */
+function updateTopBar() {
+  if (!el.topBarCouple) return;
+  const g = _weddingInfo.groom || (_currentLang === 'he' ? 'חתן' : 'Groom');
+  const b = _weddingInfo.bride || (_currentLang === 'he' ? 'כלה' : 'Bride');
+  const dateStr = _weddingInfo.date ? ' 💍 ' + _weddingInfo.date.split('-').reverse().join('.') : '';
+  el.topBarCouple.textContent = g + ' & ' + b + dateStr;
+}
+
+/* ── Unique ID ── */
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+/* ── Guest Full Name Helper ── */
+function guestFullName(g) {
+  return (g.firstName || '') + (g.lastName ? ' ' + g.lastName : '');
+}
+
+/* ── Stats ── */
+function renderStats() {
+  const total     = _guests.reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const confirmed = _guests.filter(function(g) { return g.status === 'confirmed'; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const pending   = _guests.filter(function(g) { return g.status === 'pending';   }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const declined  = _guests.filter(function(g) { return g.status === 'declined';  }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const seated    = _guests.filter(function(g) { return g.tableId; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const sent      = _guests.filter(function(g) { return g.sent; }).length;
+  const groomSide = _guests.filter(function(g) { return g.side === 'groom'; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const brideSide = _guests.filter(function(g) { return g.side === 'bride'; }).reduce(function(s, g) { return s + (g.count || 1); }, 0);
+  const vegCount  = _guests.filter(function(g) { return g.meal === 'vegetarian' || g.meal === 'vegan'; }).length;
+  const accCount  = _guests.filter(function(g) { return g.accessibility; }).length;
+
+  el.statTotal.textContent        = total;
+  el.statConfirmed.textContent    = confirmed;
+  el.statPending.textContent      = pending;
+  el.statDeclined.textContent     = declined;
+  el.statTables.textContent       = _tables.length;
+  el.statSeated.textContent       = seated;
+  el.statSent.textContent         = sent;
+  el.statUnsent.textContent       = _guests.length - sent;
+  el.statGroomSide.textContent    = groomSide;
+  el.statBrideSide.textContent    = brideSide;
+  el.statVeg.textContent          = vegCount;
+  el.statAccessibility.textContent= accCount;
+  el.guestCount.textContent       = _guests.length;
+
+  const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+  el.progressFill.style.width   = pct + '%';
+  el.progressPercent.textContent = pct + '%';
+}
+
+/* ── Countdown ── */
+function renderCountdown() {
+  if (!_weddingInfo.date) { el.countdown.innerHTML = ''; return; }
+  const target = new Date(_weddingInfo.date + 'T' + (_weddingInfo.time || '18:00'));
+  const diff   = target - new Date();
+
+  if (diff <= 0) {
+    el.countdown.innerHTML = '<div style="font-size:1.3em; color:var(--gold);">🎉 ' +
+      (_currentLang === 'he' ? 'מזל טוב! היום הגדול הגיע!' : 'Mazel Tov! The big day is here!') + '</div>';
+    return;
+  }
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+
+  el.countdown.innerHTML =
+    cdItem(days,  t('countdown_days'))  +
+    cdItem(hours, t('countdown_hours')) +
+    cdItem(mins,  t('countdown_minutes')) +
+    cdItem(secs,  t('countdown_seconds'));
+}
+function cdItem(n, label) {
+  return '<div class="countdown-item"><div class="countdown-number">' + n + '</div><div class="countdown-label">' + label + '</div></div>';
+}
+
+/* ── Guests ── */
+function renderGuests() {
+  const q = (el.guestSearch.value || '').trim().toLowerCase();
+  let list = _guests.slice();
+
+  // Sort
+  if (_sortCol) {
+    list.sort(function(a, b) {
+      const av = (a[_sortCol] || '').toString().toLowerCase();
+      const bv = (b[_sortCol] || '').toString().toLowerCase();
+      return _sortAsc ? av.localeCompare(bv, 'he') : bv.localeCompare(av, 'he');
+    });
+  }
+
+  // Filter by status
+  if (_currentFilter !== 'all') {
+    list = list.filter(function(g) { return g.status === _currentFilter; });
+  }
+  // Filter by side
+  if (_sideFilter !== 'all') {
+    list = list.filter(function(g) { return (g.side || 'mutual') === _sideFilter; });
+  }
+  // Search
+  if (q) {
+    list = list.filter(function(g) {
+      const full = ((g.firstName || '') + ' ' + (g.lastName || '')).toLowerCase();
+      return full.includes(q) || (g.phone || '').includes(q) || (g.relationship || '').toLowerCase().includes(q);
+    });
+  }
+
+  el.guestsEmpty.style.display = (list.length === 0 && !q && _currentFilter === 'all' && _sideFilter === 'all') ? 'block' : 'none';
+
+  const frag = document.createDocumentFragment();
+  list.forEach(function(g) {
+    const tr = document.createElement('tr');
+    const tableName   = g.tableId ? getTableName(g.tableId) : '—';
+    const statusClass = 'status-' + g.status;
+    const sideClass   = 'side-' + (g.side || 'mutual');
+    const mealClass   = 'meal-' + (g.meal || 'regular');
+    const accessHtml  = g.accessibility ? ' <span class="chip-access" title="' + t('label_accessibility') + '">\u267f</span>' : '';
+
+    tr.innerHTML =
+      '<td><strong>' + escapeHtml(g.firstName || '') + '</strong></td>' +
+      '<td>' + escapeHtml(g.lastName || '') + '</td>' +
+      '<td><span class="side-badge ' + sideClass + '">' + t('side_' + (g.side || 'mutual')) + '</span></td>' +
+      '<td dir="ltr" style="text-align:right;">' + escapeHtml(g.phone || '') + '</td>' +
+      '<td>' + (g.count || 1) + (g.children ? '+' + g.children + '👶' : '') + '</td>' +
+      '<td><span class="meal-badge ' + mealClass + '">' + t('meal_' + (g.meal || 'regular')) + '</span>' + accessHtml + '</td>' +
+      '<td><span class="status-badge ' + statusClass + '">' + t('status_' + (g.status || 'pending')) + '</span></td>' +
+      '<td>' + escapeHtml(tableName) + '</td>' +
+      '<td style="white-space:nowrap;">' +
+        '<button class="btn btn-secondary btn-small" onclick="editGuest(\'' + g.id + '\')" title="' + t('btn_edit') + '">✏️</button> ' +
+        '<button class="btn btn-danger btn-small"    onclick="deleteGuest(\'' + g.id + '\')" title="' + t('btn_delete') + '">🗑️</button> ' +
+        '<button class="btn btn-whatsapp btn-small"  onclick="sendWhatsAppSingle(\'' + g.id + '\')" title="WhatsApp">📱</button>' +
+      '</td>';
+    frag.appendChild(tr);
+  });
+
+  el.guestTableBody.innerHTML = '';
+  el.guestTableBody.appendChild(frag);
+}
+
+function filterGuests() { renderGuests(); }
+
+function setFilter(f) {
+  _currentFilter = f;
+  document.querySelectorAll('[data-filter]').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-filter') === f);
+  });
+  renderGuests();
+}
+
+function setSideFilter(f) {
+  _sideFilter = f;
+  document.querySelectorAll('[data-side]').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-side') === f);
+  });
+  renderGuests();
+}
+
+function sortGuestsBy(col) {
+  if (_sortCol === col) { _sortAsc = !_sortAsc; }
+  else { _sortCol = col; _sortAsc = true; }
+  // Update sort indicators
+  document.querySelectorAll('[id^="si-"]').forEach(function(s) { s.textContent = '↕'; });
+  const ind = document.getElementById('si-' + col);
+  if (ind) ind.textContent = _sortAsc ? '↑' : '↓';
+  renderGuests();
+}
+
+function openAddGuestModal() {
+  _editingGuestId = null;
+  document.getElementById('guestModalTitle').textContent = t('modal_add_guest');
+  document.getElementById('guestFirstName').value   = '';
+  document.getElementById('guestLastName').value    = '';
+  document.getElementById('guestPhone').value       = '';
+  document.getElementById('guestEmail').value       = '';
+  document.getElementById('guestCount2').value      = '1';
+  document.getElementById('guestChildren').value    = '0';
+  document.getElementById('guestStatus').value      = 'pending';
+  document.getElementById('guestSide').value        = 'groom';
+  document.getElementById('guestGroup').value       = 'family';
+  document.getElementById('guestRelationship').value= '';
+  document.getElementById('guestMeal').value        = 'regular';
+  document.getElementById('guestMealNotes').value   = '';
+  document.getElementById('guestAccessibility').checked = false;
+  document.getElementById('guestGift').value        = '';
+  document.getElementById('guestNotes').value       = '';
+  populateTableSelect();
+  document.getElementById('guestTableSelect').value = '';
+  openModal('guestModal');
+}
+
+function editGuest(id) {
+  const g = _guests.find(function(x) { return x.id === id; });
+  if (!g) return;
+  _editingGuestId = id;
+  document.getElementById('guestModalTitle').textContent = t('modal_edit_guest');
+  document.getElementById('guestFirstName').value   = g.firstName  || '';
+  document.getElementById('guestLastName').value    = g.lastName   || '';
+  document.getElementById('guestPhone').value       = g.phone      || '';
+  document.getElementById('guestEmail').value       = g.email      || '';
+  document.getElementById('guestCount2').value      = g.count      || 1;
+  document.getElementById('guestChildren').value    = g.children   || 0;
+  document.getElementById('guestStatus').value      = g.status     || 'pending';
+  document.getElementById('guestSide').value        = g.side       || 'groom';
+  document.getElementById('guestGroup').value       = g.group      || 'family';
+  document.getElementById('guestRelationship').value= g.relationship|| '';
+  document.getElementById('guestMeal').value        = g.meal       || 'regular';
+  document.getElementById('guestMealNotes').value   = g.mealNotes  || '';
+  document.getElementById('guestAccessibility').checked = !!g.accessibility;
+  document.getElementById('guestGift').value        = g.gift       || '';
+  document.getElementById('guestNotes').value       = g.notes      || '';
+  populateTableSelect();
+  document.getElementById('guestTableSelect').value = g.tableId    || '';
+  openModal('guestModal');
+}
+
+function saveGuest() {
+  const firstName = document.getElementById('guestFirstName').value.trim();
+  if (!firstName) { document.getElementById('guestFirstName').focus(); return; }
+
+  const data = {
+    firstName:   firstName,
+    lastName:    document.getElementById('guestLastName').value.trim(),
+    phone:       document.getElementById('guestPhone').value.trim(),
+    email:       document.getElementById('guestEmail').value.trim(),
+    count:       parseInt(document.getElementById('guestCount2').value, 10) || 1,
+    children:    parseInt(document.getElementById('guestChildren').value, 10) || 0,
+    status:      document.getElementById('guestStatus').value,
+    side:        document.getElementById('guestSide').value,
+    group:       document.getElementById('guestGroup').value,
+    relationship:document.getElementById('guestRelationship').value.trim(),
+    meal:        document.getElementById('guestMeal').value,
+    mealNotes:   document.getElementById('guestMealNotes').value.trim(),
+    accessibility: document.getElementById('guestAccessibility').checked,
+    tableId:     document.getElementById('guestTableSelect').value,
+    gift:        document.getElementById('guestGift').value.trim(),
+    notes:       document.getElementById('guestNotes').value.trim(),
+    updatedAt:   new Date().toISOString(),
+  };
+
+  if (_editingGuestId) {
+    const g = _guests.find(function(x) { return x.id === _editingGuestId; });
+    if (g) Object.assign(g, data);
+  } else {
+    _guests.push(Object.assign({ id: uid(), sent: false, rsvpDate: '', createdAt: new Date().toISOString() }, data));
+  }
+
+  saveAll();
+  closeModal('guestModal');
+  renderGuests();
+  renderStats();
+  showToast(t('toast_guest_saved'), 'success');
+}
+
+function deleteGuest(id) {
+  if (!confirm(t('confirm_delete'))) return;
+  _guests = _guests.filter(function(g) { return g.id !== id; });
+  saveAll();
+  renderGuests();
+  renderStats();
+  showToast(t('toast_guest_deleted'), 'error');
+}
+
+/* ── Tables ── */
+function renderTables() {
+  el.tablesEmpty.style.display = _tables.length === 0 ? 'block' : 'none';
+  el.seatingFloor.innerHTML = '';
+  const frag = document.createDocumentFragment();
+
+  _tables.forEach(function(tbl) {
+    const guests     = _guests.filter(function(g) { return g.tableId === tbl.id; });
+    const totalSeated= guests.reduce(function(s, g) { return s + (g.count || 1); }, 0);
+    const full       = totalSeated >= tbl.capacity;
+
+    const card = document.createElement('div');
+    card.className = 'table-card drop-zone' + (full ? ' highlight' : '');
+    card.setAttribute('data-table-id', tbl.id);
+    card.ondragover  = function(e) { e.preventDefault(); card.classList.add('drag-over'); };
+    card.ondragleave = function()  { card.classList.remove('drag-over'); };
+    card.ondrop      = function(e) { handleTableDrop(e, tbl.id); card.classList.remove('drag-over'); };
+
+    let guestHtml = '';
+    guests.forEach(function(g) {
+      guestHtml += '<div class="tg-item">' + escapeHtml(guestFullName(g)) + ' (' + (g.count || 1) + ')</div>';
+    });
+
+    card.innerHTML =
+      '<div class="table-shape ' + (tbl.shape || 'round') + '">' + escapeHtml(tbl.name) + '</div>' +
+      '<div class="table-name">'     + escapeHtml(tbl.name) + '</div>' +
+      '<div class="table-capacity">' + totalSeated + ' / ' + tbl.capacity + ' ' + t('seats') + '</div>' +
+      '<div class="table-guests-list">' + guestHtml + '</div>' +
+      '<div style="margin-top:0.8rem; display:flex; gap:0.3rem; justify-content:center;">' +
+        '<button class="btn btn-secondary btn-small" onclick="editTable(\'' + tbl.id + '\')" title="' + t('btn_edit') + '">✏️</button>' +
+        '<button class="btn btn-danger btn-small"    onclick="deleteTable(\'' + tbl.id + '\')" title="' + t('btn_delete') + '">🗑️</button>' +
+      '</div>';
+
+    frag.appendChild(card);
+  });
+
+  el.seatingFloor.appendChild(frag);
+  renderUnassignedGuests();
+}
+
+function renderUnassignedGuests() {
+  const unassigned = _guests.filter(function(g) { return !g.tableId && g.status !== 'declined'; });
+  if (unassigned.length === 0) {
+    el.unassignedGuests.innerHTML = '<span style="color:var(--text-muted); font-size:0.85em;">' +
+      (_currentLang === 'he' ? 'כל האורחים שובצו!' : 'All guests assigned!') + '</span>';
+    return;
+  }
+  el.unassignedGuests.innerHTML = '';
+  unassigned.forEach(function(g) {
+    const chip = document.createElement('span');
+    chip.className = 'btn btn-secondary btn-small guest-draggable';
+    chip.draggable = true;
+    chip.textContent = guestFullName(g) + ' (' + (g.count || 1) + ')';
+    chip.ondragstart = function(e) { e.dataTransfer.setData('text/plain', g.id); };
+    el.unassignedGuests.appendChild(chip);
+  });
+}
+
+function handleTableDrop(e, tableId) {
+  e.preventDefault();
+  const guestId = e.dataTransfer.getData('text/plain');
+  if (!guestId) return;
+  const g = _guests.find(function(x) { return x.id === guestId; });
+  if (g) { g.tableId = tableId; saveAll(); renderTables(); renderGuests(); renderStats(); }
+}
+
+function openAddTableModal() {
+  _editingTableId = null;
+  document.getElementById('tableModalTitle').textContent = t('modal_add_table');
+  document.getElementById('tableName').value      = '';
+  document.getElementById('tableCapacity').value  = '10';
+  document.getElementById('tableShape').value     = 'round';
+  openModal('tableModal');
+}
+
+function editTable(id) {
+  const tbl = _tables.find(function(x) { return x.id === id; });
+  if (!tbl) return;
+  _editingTableId = id;
+  document.getElementById('tableModalTitle').textContent = t('modal_edit_table');
+  document.getElementById('tableName').value     = tbl.name     || '';
+  document.getElementById('tableCapacity').value = tbl.capacity || 10;
+  document.getElementById('tableShape').value    = tbl.shape    || 'round';
+  openModal('tableModal');
+}
+
+function saveTable() {
+  const name = document.getElementById('tableName').value.trim();
+  if (!name) return;
+  const capacity = parseInt(document.getElementById('tableCapacity').value, 10) || 10;
+  const shape    = document.getElementById('tableShape').value;
+
+  if (_editingTableId) {
+    const tbl = _tables.find(function(x) { return x.id === _editingTableId; });
+    if (tbl) { tbl.name = name; tbl.capacity = capacity; tbl.shape = shape; }
+  } else {
+    _tables.push({ id: uid(), name, capacity, shape });
+  }
+
+  saveAll(); closeModal('tableModal'); renderTables(); renderStats();
+  showToast(t('toast_table_saved'), 'success');
+}
+
+function deleteTable(id) {
+  if (!confirm(t('confirm_delete'))) return;
+  _guests.forEach(function(g) { if (g.tableId === id) g.tableId = ''; });
+  _tables = _tables.filter(function(tbl) { return tbl.id !== id; });
+  saveAll(); renderTables(); renderGuests(); renderStats();
+  showToast(t('toast_table_deleted'), 'error');
+}
+
+function getTableName(id) {
+  const tbl = _tables.find(function(x) { return x.id === id; });
+  return tbl ? tbl.name : '';
+}
+
+function populateTableSelect() {
+  const sel = document.getElementById('guestTableSelect');
+  sel.innerHTML = '<option value="">' + t('no_table') + '</option>';
+  _tables.forEach(function(tbl) {
+    const opt = document.createElement('option');
+    opt.value = tbl.id;
+    opt.textContent = tbl.name;
+    sel.appendChild(opt);
+  });
+}
+
+/* ── Invitation ── */
+function handleInvitationUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const validTypes = ['image/jpeg','image/png','image/svg+xml','image/gif','image/webp'];
+  if (!validTypes.includes(file.type)) { showToast(t('toast_invalid_file'), 'error'); return; }
+  if (file.size > 5 * 1024 * 1024)   { showToast('Max 5MB', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = function(ev) { _invitationDataUrl = ev.target.result; renderInvitation(); saveAll(); };
+  reader.readAsDataURL(file);
+}
+
+function renderInvitation() {
+  if (_invitationDataUrl) {
+    el.invitationImage.innerHTML = '<img src="' + escapeHtml(_invitationDataUrl) + '" alt="Wedding Invitation">';
+  } else {
+    renderDefaultInvitationSVG();
+  }
+}
+
+function renderDefaultInvitationSVG() {
+  const groom   = _weddingInfo.groom   || (_currentLang === 'he' ? 'חתן' : 'Groom');
+  const bride   = _weddingInfo.bride   || (_currentLang === 'he' ? 'כלה' : 'Bride');
+  const groomEn = _weddingInfo.groomEn || 'Groom';
+  const brideEn = _weddingInfo.brideEn || 'Bride';
+  const showHebrew = _currentLang === 'he';
+  const groomDisplay = showHebrew ? groom : groomEn;
+  const brideDisplay = showHebrew ? bride : brideEn;
+  const dateDisp   = _weddingInfo.date ? formatDateHebrew(_weddingInfo.date) : (_currentLang === 'he' ? 'תאריך לא נקבע' : 'Date TBD');
+  const hebrewDate = _weddingInfo.hebrewDate || '';
+  const time       = _weddingInfo.time        || '18:00';
+  const venue      = _weddingInfo.venue       || (_currentLang === 'he' ? 'אולם האירועים' : 'Venue');
+  const address    = _weddingInfo.address     || '';
+
+  el.invitationImage.innerHTML =
+    '<svg viewBox="0 0 500 720" xmlns="http://www.w3.org/2000/svg" style="max-width:420px; width:100%;">' +
+      '<defs>' +
+        '<linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+          '<stop offset="0%" style="stop-color:#1a0a2e"/><stop offset="100%" style="stop-color:#2d1b4e"/></linearGradient>' +
+        '<linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">' +
+          '<stop offset="0%" style="stop-color:#b8864e"/><stop offset="50%" style="stop-color:#d4a574"/><stop offset="100%" style="stop-color:#b8864e"/></linearGradient>' +
+      '</defs>' +
+      '<rect width="500" height="720" rx="20" fill="url(#bgGrad)"/>' +
+      '<rect x="10" y="10" width="480" height="700" rx="16" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.5"/>' +
+      '<rect x="22" y="22" width="456" height="676" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="0.5" opacity="0.25"/>' +
+      '<path d="M150 80 Q200 50 250 80 Q300 50 350 80" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.7"/>' +
+      '<text x="250" y="62" text-anchor="middle" font-size="24" fill="#d4a574" opacity="0.7">✦</text>' +
+      '<circle cx="230" cy="145" r="24" fill="none" stroke="#d4a574" stroke-width="2.5" opacity="0.85"/>' +
+      '<circle cx="270" cy="145" r="24" fill="none" stroke="#d4a574" stroke-width="2.5" opacity="0.85"/>' +
+      '<text x="250" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="18" fill="#d4a574" opacity="0.75">' +
+        (_currentLang === 'he' ? 'בשעה טובה ומוצלחת' : 'With great joy') +
+      '</text>' +
+      '<text x="250" y="268" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#f0dcc4">' + escapeHtml(groomDisplay) + '</text>' +
+      '<text x="250" y="306" text-anchor="middle" font-size="26" fill="#d4a574">❤</text>' +
+      '<text x="250" y="346" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#f0dcc4">' + escapeHtml(brideDisplay) + '</text>' +
+      (hebrewDate ? '<text x="250" y="390" text-anchor="middle" font-size="16" fill="#e8c9a0" opacity="0.85">' + escapeHtml(hebrewDate) + '</text>' : '') +
+      '<line x1="130" y1="412" x2="370" y2="412" stroke="url(#goldGrad)" stroke-width="0.8" opacity="0.45"/>' +
+      '<text x="250" y="448" text-anchor="middle" font-size="15" fill="#e8c9a0">📅 ' + escapeHtml(dateDisp) + '</text>' +
+      '<text x="250" y="480" text-anchor="middle" font-size="15" fill="#e8c9a0">🕐 ' + escapeHtml(time) + '</text>' +
+      '<text x="250" y="512" text-anchor="middle" font-size="15" fill="#e8c9a0">📍 ' + escapeHtml(venue) + '</text>' +
+      (address ? '<text x="250" y="540" text-anchor="middle" font-size="12" fill="#e8c9a0" opacity="0.7">' + escapeHtml(address) + '</text>' : '') +
+      '<path d="M150 620 Q200 650 250 620 Q300 650 350 620" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.6"/>' +
+      '<text x="250" y="672" text-anchor="middle" font-size="13" fill="#d4a574" opacity="0.55">' +
+        (_currentLang === 'he' ? 'נשמח לראותכם! 💍' : 'We hope to see you! 💍') +
+      '</text>' +
+    '</svg>';
+}
+
+/* ── WhatsApp ── */
+function updateWaPreview() {
+  const msg = fillTemplate(el.waTemplate.value, {
+    name: _currentLang === 'he' ? 'ישראל כהן' : 'John Cohen',
+  });
+  el.waPreviewBubble.textContent = msg;
+  const now = new Date();
+  el.waPreviewTime.textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+}
+
+function fillTemplate(template, overrides) {
+  return template
+    .replace(/{name}/g,    overrides.name || '')
+    .replace(/{groom}/g,   _weddingInfo.groom  || '')
+    .replace(/{bride}/g,   _weddingInfo.bride  || '')
+    .replace(/{date}/g,    _weddingInfo.date   ? formatDateHebrew(_weddingInfo.date) : '')
+    .replace(/{hebrew_date}/g, _weddingInfo.hebrewDate || '')
+    .replace(/{time}/g,    _weddingInfo.time   || '')
+    .replace(/{ceremony}/g,_weddingInfo.ceremonyTime || '')
+    .replace(/{venue}/g,   _weddingInfo.venue  || '')
+    .replace(/{address}/g, _weddingInfo.address|| '')
+    .replace(/{waze}/g,    _weddingInfo.wazeLink|| '');
+}
+
+function sendWhatsAppSingle(guestId) {
+  const g = _guests.find(function(x) { return x.id === guestId; });
+  if (!g || !g.phone) return;
+  const msg   = fillTemplate(el.waTemplate.value, { name: g.firstName || guestFullName(g) });
+  const phone = cleanPhone(g.phone);
+  window.open('https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+  g.sent = true;
+  saveAll(); renderStats(); renderWaGuestList();
+  showToast(t('toast_wa_opening'), 'success');
+}
+
+function sendWhatsAppAll(filter) {
+  let list = _guests.filter(function(g) { return g.phone; });
+  if (filter === 'pending') list = list.filter(function(g) { return g.status === 'pending'; });
+  if (!list.length) return;
+  list.forEach(function(g) { g.sent = true; });
+  saveAll();
+  const first = list[0];
+  const msg   = fillTemplate(el.waTemplate.value, { name: first.firstName || guestFullName(first) });
+  window.open('https://wa.me/' + encodeURIComponent(cleanPhone(first.phone)) + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+  renderStats(); renderWaGuestList();
+  showToast(t('toast_wa_opening') + ' (' + list.length + ')', 'success');
+}
+
+function renderWaGuestList() {
+  const list = _guests.filter(function(g) { return g.phone; });
+  if (!list.length) {
+    el.waGuestList.innerHTML = '<span style="color:var(--text-muted);">' + (_currentLang === 'he' ? 'אין אורחים עם מספר טלפון.' : 'No guests with phone numbers.') + '</span>';
+    return;
+  }
+  el.waGuestList.innerHTML = '';
+  list.forEach(function(g) {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.03);';
+    row.innerHTML =
+      '<span>' + (g.sent ? '✅' : '⏳') + '</span>' +
+      '<span style="flex:1;font-size:0.9em;">' + escapeHtml(guestFullName(g)) + '</span>' +
+      '<span class="side-badge side-' + (g.side||'mutual') + '" style="font-size:0.72em;">' + t('side_' + (g.side||'mutual')) + '</span>' +
+      '<span style="font-size:0.8em;color:var(--text-muted);" dir="ltr">' + escapeHtml(g.phone) + '</span>' +
+      '<button class="btn btn-whatsapp btn-small" onclick="sendWhatsAppSingle(\'' + g.id + '\')">' + t('btn_wa_send') + '</button>';
+    el.waGuestList.appendChild(row);
+  });
+}
+
+/* ── RSVP ── */
+function submitRSVP() {
+  const firstName = document.getElementById('rsvpFirstName').value.trim();
+  if (!firstName) { document.getElementById('rsvpFirstName').focus(); return; }
+
+  const lastName     = document.getElementById('rsvpLastName').value.trim();
+  const phone        = document.getElementById('rsvpPhone').value.trim();
+  const side         = document.getElementById('rsvpSide').value;
+  const status       = document.getElementById('rsvpAttending').value;
+  const count        = parseInt(document.getElementById('rsvpGuests').value, 10)   || 1;
+  const children     = parseInt(document.getElementById('rsvpChildren').value, 10) || 0;
+  const meal         = document.getElementById('rsvpMeal').value;
+  const accessibility= document.getElementById('rsvpAccessibility').checked;
+  const notes        = document.getElementById('rsvpNotes').value.trim();
+  const now          = new Date().toISOString();
+
+  // Match by phone or full name
+  let existing = _guests.find(function(g) {
+    return (phone && g.phone === phone) ||
+      (guestFullName(g).toLowerCase() === (firstName + ' ' + lastName).trim().toLowerCase());
+  });
+
+  if (existing) {
+    existing.status       = status;
+    existing.count        = count;
+    existing.children     = children;
+    existing.meal         = meal;
+    existing.accessibility= accessibility;
+    if (notes) existing.notes = notes;
+    if (lastName && !existing.lastName) existing.lastName = lastName;
+    existing.rsvpDate = now;
+    existing.updatedAt= now;
+    showToast(t('toast_rsvp_updated'), 'success');
+  } else {
+    _guests.push({
+      id: uid(), firstName, lastName, phone, email: '',
+      count, children, status, side, group: 'other',
+      relationship: '', meal, mealNotes: '', accessibility,
+      tableId: '', notes, gift: '', sent: false,
+      rsvpDate: now, createdAt: now, updatedAt: now,
+    });
+    showToast(t('toast_rsvp_submitted'), 'success');
+  }
+
+  saveAll(); renderGuests(); renderStats();
+
+  // Reset RSVP form
+  ['rsvpFirstName','rsvpLastName','rsvpPhone','rsvpNotes'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('rsvpAttending').value = 'confirmed';
+  document.getElementById('rsvpGuests').value    = '1';
+  document.getElementById('rsvpChildren').value  = '0';
+  document.getElementById('rsvpMeal').value      = 'regular';
+  document.getElementById('rsvpAccessibility').checked = false;
+}
+
+/* ── Wedding Details ── */
+function updateWeddingDetails() {
+  _weddingInfo.groom       = document.getElementById('groomName').value.trim();
+  _weddingInfo.groomEn     = document.getElementById('groomNameEn').value.trim();
+  _weddingInfo.bride       = document.getElementById('brideName').value.trim();
+  _weddingInfo.brideEn     = document.getElementById('brideNameEn').value.trim();
+  _weddingInfo.date        = document.getElementById('weddingDate').value;
+  _weddingInfo.hebrewDate  = document.getElementById('weddingHebrewDate').value.trim();
+  _weddingInfo.time        = document.getElementById('weddingTime').value        || '18:00';
+  _weddingInfo.ceremonyTime= document.getElementById('weddingCeremonyTime').value|| '19:30';
+  _weddingInfo.venue       = document.getElementById('venueName').value.trim();
+  _weddingInfo.address     = document.getElementById('venueAddress').value.trim();
+  _weddingInfo.wazeLink    = document.getElementById('venueWaze').value.trim();
+
+  // Update header
+  if (_weddingInfo.groom || _weddingInfo.bride) {
+    el.coupleNames.textContent = (_weddingInfo.groom || '?') + ' ❤ ' + (_weddingInfo.bride || '?');
+  }
+  if (_weddingInfo.date) {
+    el.weddingDateDisplay.textContent = formatDateHebrew(_weddingInfo.date);
+  }
+  const hebrewEl = document.getElementById('hebrewDateDisplay');
+  if (hebrewEl && _weddingInfo.hebrewDate) hebrewEl.textContent = _weddingInfo.hebrewDate;
+
+  updateTopBar();
+  renderCountdown();
+  renderInvitation();
+  saveAll();
+}
+
+function loadWeddingDetailsToForm() {
+  document.getElementById('groomName').value          = _weddingInfo.groom        || '';
+  document.getElementById('groomNameEn').value        = _weddingInfo.groomEn      || '';
+  document.getElementById('brideName').value          = _weddingInfo.bride        || '';
+  document.getElementById('brideNameEn').value        = _weddingInfo.brideEn      || '';
+  document.getElementById('weddingDate').value        = _weddingInfo.date         || '';
+  document.getElementById('weddingHebrewDate').value  = _weddingInfo.hebrewDate   || '';
+  document.getElementById('weddingTime').value        = _weddingInfo.time         || '18:00';
+  document.getElementById('weddingCeremonyTime').value= _weddingInfo.ceremonyTime || '19:30';
+  document.getElementById('venueName').value          = _weddingInfo.venue        || '';
+  document.getElementById('venueAddress').value       = _weddingInfo.address      || '';
+  document.getElementById('venueWaze').value          = _weddingInfo.wazeLink     || '';
+
+  if (_weddingInfo.groom || _weddingInfo.bride) {
+    el.coupleNames.textContent = (_weddingInfo.groom || '?') + ' ❤ ' + (_weddingInfo.bride || '?');
+  }
+  if (_weddingInfo.date) {
+    el.weddingDateDisplay.textContent = formatDateHebrew(_weddingInfo.date);
+  }
+}
+
+/* ── Export / Import ── */
+function exportGuestsCSV() {
+  if (!_guests.length) return;
+  const BOM  = '\uFEFF';
+  const cols = [t('col_first_name'), t('col_last_name'), t('col_phone'), 'Email',
+                t('col_guests_count'), t('col_status'), t('col_side'), t('col_meal'),
+                'Accessibility', t('col_table'), 'Relationship', 'Notes'];
+  const header = cols.join(',');
+  const rows   = _guests.map(function(g) {
+    return [
+      '"' + (g.firstName || '').replace(/"/g,'""') + '"',
+      '"' + (g.lastName  || '').replace(/"/g,'""') + '"',
+      '"' + (g.phone     || '') + '"',
+      '"' + (g.email     || '') + '"',
+      g.count    || 1,
+      '"' + t('status_' + g.status) + '"',
+      '"' + t('side_'   + (g.side||'mutual'))   + '"',
+      '"' + t('meal_'   + (g.meal||'regular'))  + '"',
+      g.accessibility ? '1' : '0',
+      '"' + getTableName(g.tableId) + '"',
+      '"' + (g.relationship||'').replace(/"/g,'""') + '"',
+      '"' + (g.notes    ||'').replace(/"/g,'""') + '"',
+    ].join(',');
+  });
+  const csv  = BOM + header + '\n' + rows.join('\n');
+  const link = document.createElement('a');
+  link.href  = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  link.download = 'wedding_guests_' + (new Date().toISOString().slice(0,10)) + '.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+  showToast(t('toast_export_done'), 'success');
+}
+
+function exportJSON() {
+  const data = {
+    version: '1.1',
+    exported: new Date().toISOString(),
+    wedding:  _weddingInfo,
+    guests:   _guests,
+    tables:   _tables,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href  = URL.createObjectURL(blob);
+  link.download = 'wedding_backup_' + (new Date().toISOString().slice(0,10)) + '.json';
+  link.click();
+  URL.revokeObjectURL(link.href);
+  showToast(t('toast_backup_exported'), 'success');
+}
+
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!file.name.endsWith('.json')) { showToast(t('toast_invalid_file'), 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.guests || !Array.isArray(data.guests)) throw new Error('invalid');
+      _guests      = data.guests;
+      _tables      = data.tables || [];
+      _weddingInfo = { ..._weddingDefaults, ...(data.wedding || {}) };
+      migrateGuests();
+      saveAll();
+      loadWeddingDetailsToForm();
+      renderGuests(); renderTables(); renderStats(); updateTopBar();
+      showToast(t('toast_backup_imported'), 'success');
+    } catch (_err) {
+      showToast(t('toast_invalid_file'), 'error');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function downloadCSVTemplate() {
+  const BOM = '\uFEFF';
+  const header = 'שם פרטי,שם משפחה,טלפון,אימייל,מספר אורחים,צד (groom/bride/mutual),קבוצה (family/friends/work/other),ארוחה (regular/vegetarian/vegan/kosher/gluten_free),ילדים,נגישות (0/1),הערות\n';
+  const example = 'ישראל,כהן,0501234567,israel@example.com,2,groom,family,regular,0,0,\n';
+  const blob = new Blob([BOM + header + example], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href  = URL.createObjectURL(blob);
+  link.download = 'wedding_guests_template.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function importCSV(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const lines = ev.target.result.replace(/^\uFEFF/, '').split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) throw new Error('empty');
+      let imported = 0;
+      const now = new Date().toISOString();
+      // Skip header row (index 0)
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCsvLine(lines[i]);
+        if (!cols[0]) continue;
+        const firstName   = (cols[0] || '').trim();
+        const lastName    = (cols[1] || '').trim();
+        const phone       = (cols[2] || '').trim();
+        const email       = (cols[3] || '').trim();
+        const count       = parseInt(cols[4], 10) || 1;
+        const side        = ['groom','bride','mutual'].includes(cols[5]) ? cols[5] : 'mutual';
+        const group       = ['family','friends','work','neighbors','other'].includes(cols[6]) ? cols[6] : 'other';
+        const meal        = ['regular','vegetarian','vegan','kosher','gluten_free','other'].includes(cols[7]) ? cols[7] : 'regular';
+        const children    = parseInt(cols[8], 10) || 0;
+        const accessibility = cols[9] === '1' || cols[9] === 'true';
+        const notes       = (cols[10] || '').trim();
+
+        if (!firstName) continue;
+        // Check for duplicates by phone or full name
+        const dup = _guests.find(function(g) {
+          return (phone && g.phone === phone) ||
+            (guestFullName(g).toLowerCase() === (firstName + ' ' + lastName).trim().toLowerCase());
+        });
+        if (dup) {
+          Object.assign(dup, { lastName: dup.lastName || lastName, phone: dup.phone || phone,
+            email: dup.email || email, count, side, group, meal, children, accessibility, notes, updatedAt: now });
+        } else {
+          _guests.push({
+            id: uid(), firstName, lastName, phone, email, count, children,
+            status: 'pending', side, group, relationship: '', meal, mealNotes: '',
+            accessibility, tableId: '', notes, gift: '', sent: false,
+            rsvpDate: '', createdAt: now, updatedAt: now,
+          });
+        }
+        imported++;
+      }
+      saveAll(); renderGuests(); renderStats();
+      showToast(t('toast_csv_imported') + ' (' + imported + ')', 'success');
+    } catch (_err) {
+      showToast(t('toast_invalid_file'), 'error');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function parseCsvLine(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (ch === ',' && !inQ) {
+      result.push(cur); cur = '';
+    } else {
+      cur += ch;
+    }
+  }
+  result.push(cur);
+  return result;
+}
+
+function clearAllData() {
+  if (!confirm(t('confirm_clear'))) return;
+  if (!confirm(_currentLang === 'he' ? 'פעולה זו אינה ניתנת לביטול. האם אתה בטוח לחלוטין?' : 'This cannot be undone. Are you absolutely sure?')) return;
+  _guests = []; _tables = [];
+  saveAll();
+  renderGuests(); renderTables(); renderStats();
+  renderDataSummary();
+  showToast(t('toast_data_cleared'), 'error');
+}
+
+function renderDataSummary() {
+  if (!el.dataSummary) return;
+  const lines = [
+    '👥 ' + (_currentLang === 'he' ? 'אורחים' : 'Guests') + ': <strong>' + _guests.length + '</strong>',
+    '🪑 ' + (_currentLang === 'he' ? 'שולחנות' : 'Tables') + ': <strong>' + _tables.length + '</strong>',
+    '✅ ' + (_currentLang === 'he' ? 'אישורים' : 'Confirmed') + ': <strong>' + _guests.filter(function(g){return g.status==='confirmed';}).length + '</strong>',
+    '📱 ' + (_currentLang === 'he' ? 'נשלחו' : 'Sent') + ': <strong>' + _guests.filter(function(g){return g.sent;}).length + '</strong>',
+    'ℹ️ Wedding Manager v1.1.0',
+  ];
+  el.dataSummary.innerHTML = lines.join('<br>');
+}
+
+/* ── Modal ── */
+function openModal(id) {
+  const o = document.getElementById(id);
+  if (o) o.classList.add('active');
+}
+function closeModal(id) {
+  const o = document.getElementById(id);
+  if (o) o.classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach(function(m) { m.classList.remove('active'); });
+});
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.classList.remove('active'); });
+});
+
+/* ── Toast ── */
+function showToast(msg, type) {
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + (type || '');
+  toast.textContent = msg;
+  el.toastContainer.appendChild(toast);
+  setTimeout(function() { toast.remove(); }, 3000);
+}
+
+/* ── Print ── */
+function printGuests() { window.print(); }
+
+/* ── Utilities ── */
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function cleanPhone(phone) {
+  let p = phone.replace(/[\s\-()]/g, '');
+  if (p.startsWith('0'))   p = '972' + p.slice(1);
+  if (!p.startsWith('972') && !p.startsWith('+')) p = '972' + p;
+  return p.replace(/^\+/, '');
+}
+
+function formatDateHebrew(dateStr) {
+  try {
+    const d      = new Date(dateStr + 'T00:00:00');
+    const locale = _currentLang === 'he' ? 'he-IL' : 'en-US';
+    return d.toLocaleDateString(locale, { weekday:'long', year:'numeric', month:'long', day:'numeric',
+      timeZone: 'Asia/Jerusalem' });
+  } catch (_e) { return dateStr; }
+}
+
+/* ── Particles ── */
+function initParticles() {
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left              = Math.random() * 100 + '%';
+    p.style.animationDelay   = (Math.random() * 8) + 's';
+    p.style.animationDuration= (6 + Math.random() * 6) + 's';
+    const sz = (2 + Math.random() * 4) + 'px';
+    p.style.width = sz; p.style.height = sz;
+    el.particles.appendChild(p);
+  }
+}
+
+/* ── Init ── */
+function init() {
+  loadAll();
+  if (_currentTheme) document.body.className = _currentTheme;
+  applyLanguage();
+  loadWeddingDetailsToForm();
+  renderStats();
+  renderGuests();
+  renderTables();
+  renderInvitation();
+  renderCountdown();
+  updateWaPreview();
+  updateTopBar();
+  initParticles();
   setInterval(renderCountdown, 1000);
 }
 

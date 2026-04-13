@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.0.0
+// Wedding Manager — Test Suite v1.1.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -16,12 +16,12 @@ const PKG = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'u
 
 // ── Version ──
 describe('Version', function() {
-  it('HTML contains v1.0.0', function() {
-    assert.ok(HTML.includes('v1.0.0') || HTML.includes('Wedding Manager v1.0.0'));
+  it('HTML contains v1.1.0', function() {
+    assert.ok(HTML.includes('v1.1.0'));
   });
 
-  it('SW cache name contains v1.0.0', function() {
-    assert.ok(SW.includes('wedding-v1.0.0'));
+  it('SW cache name contains v1.1.0', function() {
+    assert.ok(SW.includes('wedding-v1.1.0'));
   });
 
   it('package.json version is 1.0.0', function() {
@@ -63,7 +63,7 @@ describe('HTML Structure', function() {
 
 // ── Sections ──
 describe('Sections', function() {
-  const sections = ['dashboard', 'guests', 'tables', 'invitation', 'whatsapp', 'rsvp'];
+  const sections = ['dashboard', 'guests', 'tables', 'invitation', 'whatsapp', 'rsvp', 'settings'];
   sections.forEach(function(sec) {
     it('has section: ' + sec, function() {
       assert.ok(HTML.includes('id="sec-' + sec + '"'));
@@ -164,6 +164,36 @@ describe('Guest Management', function() {
     assert.ok(HTML.includes('status-pending'));
     assert.ok(HTML.includes('status-declined'));
   });
+
+  it('has side filter (groom/bride/mutual)', function() {
+    assert.ok(HTML.includes('setSideFilter'));
+    assert.ok(HTML.includes('side-groom'));
+    assert.ok(HTML.includes('side-bride'));
+    assert.ok(HTML.includes('side-mutual'));
+  });
+
+  it('has meal preferences', function() {
+    assert.ok(HTML.includes('meal_regular'));
+    assert.ok(HTML.includes('meal_vegetarian'));
+    assert.ok(HTML.includes('meal_vegan'));
+  });
+
+  it('has expanded guest model (firstName, lastName, side, meal, children)', function() {
+    assert.ok(HTML.includes('guestFirstName'));
+    assert.ok(HTML.includes('guestLastName'));
+    assert.ok(HTML.includes('guestSide'));
+    assert.ok(HTML.includes('guestMeal'));
+    assert.ok(HTML.includes('guestChildren'));
+    assert.ok(HTML.includes('guestAccessibility'));
+  });
+
+  it('has sortGuestsBy function', function() {
+    assert.ok(HTML.includes('function sortGuestsBy'));
+  });
+
+  it('has data migration function', function() {
+    assert.ok(HTML.includes('function migrateGuests'));
+  });
 });
 
 // ── Table Seating ──
@@ -237,9 +267,15 @@ describe('WhatsApp Integration', function() {
 
 // ── RSVP ──
 describe('RSVP', function() {
-  it('has RSVP form', function() {
-    assert.ok(HTML.includes('id="rsvpName"'));
+  it('has RSVP first name field', function() {
+    assert.ok(HTML.includes('id="rsvpFirstName"'));
+  });
+
+  it('has RSVP phone field', function() {
     assert.ok(HTML.includes('id="rsvpPhone"'));
+  });
+
+  it('has RSVP attendance field', function() {
     assert.ok(HTML.includes('id="rsvpAttending"'));
   });
 
@@ -253,6 +289,22 @@ describe('RSVP', function() {
 
   it('has dietary notes field', function() {
     assert.ok(HTML.includes('id="rsvpNotes"'));
+  });
+
+  it('has side selection (groom/bride/mutual)', function() {
+    assert.ok(HTML.includes('id="rsvpSide"'));
+  });
+
+  it('has meal selection', function() {
+    assert.ok(HTML.includes('id="rsvpMeal"'));
+  });
+
+  it('has children field', function() {
+    assert.ok(HTML.includes('id="rsvpChildren"'));
+  });
+
+  it('has accessibility checkbox', function() {
+    assert.ok(HTML.includes('id="rsvpAccessibility"'));
   });
 });
 
@@ -342,6 +394,26 @@ describe('Export', function() {
   it('has print function', function() {
     assert.ok(HTML.includes('function printGuests'));
   });
+
+  it('has JSON backup export', function() {
+    assert.ok(HTML.includes('function exportJSON'));
+  });
+
+  it('has JSON backup import', function() {
+    assert.ok(HTML.includes('function importJSON'));
+  });
+
+  it('has CSV import', function() {
+    assert.ok(HTML.includes('function importCSV'));
+  });
+
+  it('has CSV template download', function() {
+    assert.ok(HTML.includes('function downloadCSVTemplate'));
+  });
+
+  it('has clearAllData function', function() {
+    assert.ok(HTML.includes('function clearAllData'));
+  });
 });
 
 // ── Security ──
@@ -427,7 +499,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes("CACHE_NAME = 'wedding-v1.0.0'"));
+    assert.ok(SW.includes("CACHE_NAME = 'wedding-v1.1.0'"));
   });
 
   it('pre-caches app shell', function() {

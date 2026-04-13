@@ -1,10 +1,10 @@
 // =============================================================================
-// Service Worker — Wedding Manager v1.0.0
+// Service Worker — Wedding Manager v1.1.0
 // APP_SHELL pre-cache + offline fallback
 // =============================================================================
 'use strict';
 
-const CACHE_NAME = 'wedding-v1.0.0';
+const CACHE_NAME = 'wedding-v1.1.0';
 const APP_SHELL = [
   './',
   './index.html',
