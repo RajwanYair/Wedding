@@ -83,7 +83,7 @@ export default [
             "^_|^load|^render|^init|^toggle|^update|^handle" +
             "|^show|^hide|^open|^close|^add|^remove|^save|^delete" +
             "|^export|^import|^send|^cycle|^filter|^set|^sort|^edit" +
-            "|^submit|^download|^clear|^print|^login|^sign",
+            "|^submit|^download|^clear|^print|^login|^sign|^sync",
           argsIgnorePattern: "^_|^e$|^k$",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",

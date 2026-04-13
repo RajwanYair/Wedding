@@ -1795,6 +1795,19 @@ body.guest-mode .nav-tabs { display: none !important; }
         <div class="card-header"><span class="icon">⚙️</span> <span data-i18n="settings_title">הגדרות ונתונים</span></div>
         <div class="settings-grid">
 
+          <!-- Google Sheets Sync -->
+          <div class="settings-card">
+            <h3>📊 <span data-i18n="sheets_title">Google Sheets סנכרון</span></h3>
+            <p data-i18n="sheets_desc">כל הנתונים נשמרים באופן אוטומטי ל-Google Sheets בעת התחברות כמנהל</p>
+            <div id="sheetsBadge" style="font-size:0.82em; margin-bottom:0.6rem; color:var(--text-muted);">&#x1F534; <span data-i18n="sheets_status_off">Google Sheets לא מחובר</span></div>
+            <button class="btn btn-secondary" onclick="syncSheetsNow()" data-i18n-tooltip="tip_sheets_sync">
+              🔄 <span data-i18n="sheets_sync_btn">סנכרן עם Google Sheets</span>
+            </button>
+            <p style="font-size:0.75em; color:var(--text-muted); margin-top:0.5rem; line-height:1.5;">
+              Sheet ID: <code style="font-size:0.9em; word-break:break-all;">1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA</code>
+            </p>
+          </div>
+
           <!-- Backup & Restore -->
           <div class="settings-card">
             <h3>🗄️ <span data-i18n="backup_title">גיבוי ושחזור</span></h3>
@@ -2099,8 +2112,26 @@ const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
 // ⚠️  This is a client-side check — appropriate for a personal wedding app only.
 const ADMIN_EMAILS = ['yair.rajwan@gmail.com'];
 
+/* ── Google Sheets Config ── */
+// Spreadsheet: https://docs.google.com/spreadsheets/d/1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA
+const SPREADSHEET_ID    = '1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA';
+const SHEETS_GUESTS_TAB = 'Attendees';  // Rename Sheet1 → Attendees in your spreadsheet
+const SHEETS_TABLES_TAB = 'Tables';     // Rename Sheet2 → Tables  in your spreadsheet
+// For guest RSVP without admin login: deploy .github/scripts/sheets-webapp.gs as a
+// Google Apps Script Web App (Execute as: Me | Who has access: Anyone), then paste URL:
+const SHEETS_WEBAPP_URL = '';
+const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
+const GUEST_COLS = [
+  'id', 'firstName', 'lastName', 'phone', 'email', 'count', 'children',
+  'status', 'side', 'group', 'relationship', 'meal', 'mealNotes', 'accessibility',
+  'tableId', 'gift', 'notes', 'sent', 'rsvpDate', 'createdAt', 'updatedAt',
+];
+const TABLE_COLS = ['id', 'name', 'capacity', 'shape'];
+
 /* ── Auth State ── */
 let _authUser = null; // null | { name, firstName, lastName, email, picture, isAdmin, provider }
+let _sheetsToken = null;       // OAuth2 access token for Sheets API (in-memory only)
+let _sheetsTokenClient = null; // google.accounts.oauth2 token client instance
 
 /* ── i18n Translations ── */
 const I18N = {
@@ -2346,6 +2377,17 @@ const I18N = {
     role_admin: 'מנהל',
     role_guest: 'אורח',
     tip_sign_out: 'התנתק מהמערכת',
+    /* sheets */
+    toast_sheets_loading: 'טוען נתונים מ-Google Sheets...',
+    toast_sheets_loaded: 'הנתונים נטענו מ-Google Sheets ✅',
+    toast_sheets_error: 'שגיאה בסנכרון עם Google Sheets ⚠️',
+    toast_sheets_saved: 'נשמר ב-Google Sheets 📊',
+    sheets_sync_btn: 'סנכרן עם Google Sheets',
+    sheets_status_on: 'Google Sheets מחובר',
+    sheets_status_off: 'Google Sheets לא מחובר',
+    tip_sheets_sync: 'טען מחדש את כל הנתונים מ-Google Sheets',
+    sheets_title: 'Google Sheets סנכרון',
+    sheets_desc: 'כל הנתונים נשמרים באופן אוטומטי ל-Google Sheets בעת התחברות כמנהל',
   },
   en: {
     app_title: 'Wedding Manager',
@@ -2589,6 +2631,17 @@ const I18N = {
     role_admin: 'Admin',
     role_guest: 'Guest',
     tip_sign_out: 'Sign out',
+    /* sheets */
+    toast_sheets_loading: 'Loading data from Google Sheets...',
+    toast_sheets_loaded: 'Data loaded from Google Sheets ✅',
+    toast_sheets_error: 'Google Sheets sync error ⚠️',
+    toast_sheets_saved: 'Saved to Google Sheets 📊',
+    sheets_sync_btn: 'Sync with Google Sheets',
+    sheets_status_on: 'Google Sheets connected',
+    sheets_status_off: 'Google Sheets not connected',
+    tip_sheets_sync: 'Reload all data from Google Sheets',
+    sheets_title: 'Google Sheets Sync',
+    sheets_desc: 'All data is automatically saved to Google Sheets when signed in as Admin',
   },
 };
 
@@ -2969,6 +3022,7 @@ function saveGuest() {
   }
 
   saveAll();
+  syncGuestsToSheets();
   closeModal('guestModal');
   renderGuests();
   renderStats();
@@ -2979,6 +3033,7 @@ function deleteGuest(id) {
   if (!confirm(t('confirm_delete'))) return;
   _guests = _guests.filter(function(g) { return g.id !== id; });
   saveAll();
+  syncGuestsToSheets();
   renderGuests();
   renderStats();
   showToast(t('toast_guest_deleted'), 'error');
@@ -3053,7 +3108,7 @@ function handleTableDrop(e, tableId) {
   const guestId = e.dataTransfer.getData('text/plain');
   if (!guestId) return;
   const g = _guests.find(function(x) { return x.id === guestId; });
-  if (g) { g.tableId = tableId; saveAll(); renderTables(); renderGuests(); renderStats(); }
+  if (g) { g.tableId = tableId; saveAll(); syncGuestsToSheets(); renderTables(); renderGuests(); renderStats(); }
 }
 
 function openAddTableModal() {
@@ -3089,7 +3144,7 @@ function saveTable() {
     _tables.push({ id: uid(), name, capacity, shape });
   }
 
-  saveAll(); closeModal('tableModal'); renderTables(); renderStats();
+  saveAll(); syncTablesToSheets(); closeModal('tableModal'); renderTables(); renderStats();
   showToast(t('toast_table_saved'), 'success');
 }
 
@@ -3097,7 +3152,7 @@ function deleteTable(id) {
   if (!confirm(t('confirm_delete'))) return;
   _guests.forEach(function(g) { if (g.tableId === id) g.tableId = ''; });
   _tables = _tables.filter(function(tbl) { return tbl.id !== id; });
-  saveAll(); renderTables(); renderGuests(); renderStats();
+  saveAll(); syncTablesToSheets(); syncGuestsToSheets(); renderTables(); renderGuests(); renderStats();
   showToast(t('toast_table_deleted'), 'error');
 }
 
@@ -3215,7 +3270,7 @@ function sendWhatsAppSingle(guestId) {
   const phone = cleanPhone(g.phone);
   window.open('https://wa.me/' + encodeURIComponent(phone) + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
   g.sent = true;
-  saveAll(); renderStats(); renderWaGuestList();
+  saveAll(); syncGuestsToSheets(); renderStats(); renderWaGuestList();
   showToast(t('toast_wa_opening'), 'success');
 }
 
@@ -3225,6 +3280,7 @@ function sendWhatsAppAll(filter) {
   if (!list.length) return;
   list.forEach(function(g) { g.sent = true; });
   saveAll();
+  syncGuestsToSheets();
   const first = list[0];
   const msg   = fillTemplate(el.waTemplate.value, { name: first.firstName || guestFullName(first) });
   window.open('https://wa.me/' + encodeURIComponent(cleanPhone(first.phone)) + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
@@ -3298,6 +3354,13 @@ function submitRSVP() {
   }
 
   saveAll(); renderGuests(); renderStats();
+  // Sync to Google Sheets
+  if (_authUser && _authUser.isAdmin) {
+    syncGuestsToSheets();
+  } else if (SHEETS_WEBAPP_URL) {
+    const rsvpGuest = existing || _guests[_guests.length - 1];
+    sheetsAppendRsvp(rsvpGuest);
+  }
 
   // Reset RSVP form
   ['rsvpFirstName','rsvpLastName','rsvpPhone','rsvpNotes'].forEach(function(id) {
@@ -3424,7 +3487,7 @@ function importJSON(e) {
       _tables      = data.tables || [];
       _weddingInfo = { ..._weddingDefaults, ...(data.wedding || {}) };
       migrateGuests();
-      saveAll();
+      saveAll(); syncGuestsToSheets(); syncTablesToSheets();
       loadWeddingDetailsToForm();
       renderGuests(); renderTables(); renderStats(); updateTopBar();
       showToast(t('toast_backup_imported'), 'success');
@@ -3493,7 +3556,7 @@ function importCSV(e) {
         }
         imported++;
       }
-      saveAll(); renderGuests(); renderStats();
+      saveAll(); syncGuestsToSheets(); renderGuests(); renderStats();
       showToast(t('toast_csv_imported') + ' (' + imported + ')', 'success');
     } catch (_err) {
       showToast(t('toast_invalid_file'), 'error');
@@ -3525,7 +3588,7 @@ function clearAllData() {
   if (!confirm(t('confirm_clear'))) return;
   if (!confirm(_currentLang === 'he' ? 'פעולה זו אינה ניתנת לביטול. האם אתה בטוח לחלוטין?' : 'This cannot be undone. Are you absolutely sure?')) return;
   _guests = []; _tables = [];
-  saveAll();
+  saveAll(); syncGuestsToSheets(); syncTablesToSheets();
   renderGuests(); renderTables(); renderStats();
   renderDataSummary();
   showToast(t('toast_data_cleared'), 'error');
@@ -3617,6 +3680,195 @@ function initParticles() {
   }
 }
 
+/* ── Google Sheets Integration ── */
+
+/** Initialize the OAuth2 token client for Sheets API scope */
+function initSheetsTokenClient() {
+  if (typeof window.google === 'undefined' || !window.google.accounts || !window.google.accounts.oauth2) return;
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.includes('YOUR_GOOGLE')) return;
+  _sheetsTokenClient = window.google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: SHEETS_SCOPE,
+    callback: function(tokenResponse) {
+      if (tokenResponse.error) { console.warn('Sheets token error:', tokenResponse.error); return; }
+      _sheetsToken = tokenResponse.access_token;
+      updateSheetsStatusBadge();
+      loadFromSheets();
+    },
+  });
+}
+
+/** Request (or refresh) a Sheets API access token */
+function requestSheetsAccess() {
+  if (_sheetsToken) { loadFromSheets(); return; }
+  if (!_sheetsTokenClient) initSheetsTokenClient();
+  if (_sheetsTokenClient) _sheetsTokenClient.requestAccessToken({ prompt: '' });
+}
+
+/** Low-level Sheets API v4 fetch helper */
+async function sheetsRequest(method, path, body) {
+  if (!_sheetsToken) return null;
+  const base = 'https://sheets.googleapis.com/v4/spreadsheets/' + SPREADSHEET_ID;
+  let resp;
+  try {
+    resp = await fetch(base + path, {
+      method: method,
+      headers: Object.assign(
+        { Authorization: 'Bearer ' + _sheetsToken },
+        body ? { 'Content-Type': 'application/json' } : {}
+      ),
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch (_e) { return null; }
+  if (resp.status === 401) { _sheetsToken = null; updateSheetsStatusBadge(); return null; }
+  if (!resp.ok) return null;
+  return resp.json();
+}
+
+/** Write header rows to empty sheets; safe to call every load */
+async function sheetsEnsureHeaders() {
+  const gData = await sheetsRequest('GET', '/values/' + encodeURIComponent(SHEETS_GUESTS_TAB + '!A1:A1'));
+  if (gData && !gData.values) {
+    await sheetsRequest('PUT',
+      '/values/' + encodeURIComponent(SHEETS_GUESTS_TAB + '!A1') + '?valueInputOption=RAW',
+      { values: [GUEST_COLS] });
+  }
+  const tData = await sheetsRequest('GET', '/values/' + encodeURIComponent(SHEETS_TABLES_TAB + '!A1:A1'));
+  if (tData && !tData.values) {
+    await sheetsRequest('PUT',
+      '/values/' + encodeURIComponent(SHEETS_TABLES_TAB + '!A1') + '?valueInputOption=RAW',
+      { values: [TABLE_COLS] });
+  }
+}
+
+/** Convert a guest object to a flat row array matching GUEST_COLS order */
+function guestToRow(g) {
+  return GUEST_COLS.map(function(k) {
+    const v = g[k];
+    return (v === undefined || v === null) ? '' : String(v);
+  });
+}
+
+/** Build a guest object from a header row + data row */
+function rowToGuest(headers, row) {
+  const g = {};
+  headers.forEach(function(h, i) { g[h] = row[i] !== undefined ? row[i] : ''; });
+  g.count        = parseInt(g.count, 10) || 1;
+  g.children     = parseInt(g.children, 10) || 0;
+  g.accessibility = g.accessibility === 'true' || g.accessibility === true;
+  g.sent          = g.sent === 'true' || g.sent === true;
+  return g;
+}
+
+/** Convert a table object to a flat row array matching TABLE_COLS order */
+function tableToRow(tbl) {
+  return TABLE_COLS.map(function(k) { return String(tbl[k] !== undefined ? tbl[k] : ''); });
+}
+
+/** Build a table object from a header row + data row */
+function rowToTable(headers, row) {
+  const tbl = {};
+  headers.forEach(function(h, i) { tbl[h] = row[i] !== undefined ? row[i] : ''; });
+  tbl.capacity = parseInt(tbl.capacity, 10) || 10;
+  return tbl;
+}
+
+/** Load all guests + tables from Sheets into in-memory state and localStorage */
+async function loadFromSheets() {
+  if (!_sheetsToken) return;
+  showToast(t('toast_sheets_loading'), 2500);
+  try {
+    await sheetsEnsureHeaders();
+
+    const gData = await sheetsRequest('GET', '/values/' + encodeURIComponent(SHEETS_GUESTS_TAB + '!A:U'));
+    if (gData && gData.values && gData.values.length > 1) {
+      const headers = gData.values[0];
+      _guests = gData.values.slice(1)
+        .filter(function(r) { return r[0]; })
+        .map(function(r) { return rowToGuest(headers, r); });
+      migrateGuests();
+      save('guests', _guests);
+    }
+
+    const tData = await sheetsRequest('GET', '/values/' + encodeURIComponent(SHEETS_TABLES_TAB + '!A:D'));
+    if (tData && tData.values && tData.values.length > 1) {
+      const headers = tData.values[0];
+      _tables = tData.values.slice(1)
+        .filter(function(r) { return r[0]; })
+        .map(function(r) { return rowToTable(headers, r); });
+      save('tables', _tables);
+    }
+
+    renderGuests(); renderTables(); renderStats();
+    if (document.getElementById('sec-settings').classList.contains('active')) renderDataSummary();
+    showToast(t('toast_sheets_loaded'));
+  } catch (_e) {
+    showToast(t('toast_sheets_error'));
+  }
+}
+
+/** Push all guests to Sheets (full replace). Fire-and-forget. */
+async function syncGuestsToSheets() {
+  save('guests', _guests);
+  if (!_sheetsToken) return;
+  try {
+    await sheetsRequest('POST', '/values/' + encodeURIComponent(SHEETS_GUESTS_TAB) + ':clear', {});
+    const rows = [GUEST_COLS].concat(_guests.map(guestToRow));
+    await sheetsRequest('PUT',
+      '/values/' + encodeURIComponent(SHEETS_GUESTS_TAB + '!A1') + '?valueInputOption=USER_ENTERED',
+      { values: rows });
+  } catch (_e) { /* offline — localStorage already saved */ }
+}
+
+/** Push all tables to Sheets (full replace). Fire-and-forget. */
+async function syncTablesToSheets() {
+  save('tables', _tables);
+  if (!_sheetsToken) return;
+  try {
+    await sheetsRequest('POST', '/values/' + encodeURIComponent(SHEETS_TABLES_TAB) + ':clear', {});
+    const rows = [TABLE_COLS].concat(_tables.map(tableToRow));
+    await sheetsRequest('PUT',
+      '/values/' + encodeURIComponent(SHEETS_TABLES_TAB + '!A1') + '?valueInputOption=USER_ENTERED',
+      { values: rows });
+  } catch (_e) {}
+}
+
+/**
+ * Append a single RSVP row to Sheets via the Apps Script Web App.
+ * Used for guest users who don't have an OAuth2 Sheets token.
+ * Set SHEETS_WEBAPP_URL to enable.
+ */
+async function sheetsAppendRsvp(guest) {
+  if (!SHEETS_WEBAPP_URL) return;
+  try {
+    await fetch(SHEETS_WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sheet: SHEETS_GUESTS_TAB, action: 'append', row: guestToRow(guest) }),
+    });
+  } catch (_e) {} // best-effort
+}
+
+/** Update the "Sheets: connected/disconnected" badge in the settings card */
+function updateSheetsStatusBadge() {
+  const badge = document.getElementById('sheetsBadge');
+  if (!badge) return;
+  const on = Boolean(_sheetsToken);
+  badge.textContent  = on ? ('🟢 ' + t('sheets_status_on')) : ('🔴 ' + t('sheets_status_off'));
+  badge.style.color  = on ? 'var(--positive)' : 'var(--text-muted)';
+}
+
+/** Called from the Sheets sync button in Settings */
+function syncSheetsNow() {
+  if (_sheetsToken) {
+    loadFromSheets();
+  } else if (_authUser && _authUser.isAdmin) {
+    requestSheetsAccess();
+  } else {
+    showToast(t('sheets_status_off'));
+  }
+}
+
 /* ── Auth Functions ── */
 
 /** Decode a JSON Web Token payload without a library (base64url → JSON) */
@@ -3686,6 +3938,12 @@ function loginGuest() {
 function signOut() {
   _authUser = null;
   save('auth', null);
+  // Revoke Sheets token
+  if (_sheetsToken && typeof window.google !== 'undefined' && window.google.accounts && window.google.accounts.oauth2) {
+    window.google.accounts.oauth2.revoke(_sheetsToken, function() {});
+  }
+  _sheetsToken = null;
+  _sheetsTokenClient = null;
   if (typeof window.google !== 'undefined' && window.google.accounts) {
     window.google.accounts.id.disableAutoSelect();
   }
@@ -3744,6 +4002,10 @@ function onAuthSuccess() {
   hideAuthOverlay();
   updateUserBar();
   applyUserLevel();
+  // Request Sheets OAuth2 token for admin users signed in with Google
+  if (_authUser && _authUser.isAdmin && _authUser.provider === 'google') {
+    requestSheetsAccess();
+  }
 }
 
 function initGoogleSignIn() {
