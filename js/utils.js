@@ -17,6 +17,29 @@ function escapeHtml(str) {
   return d.innerHTML;
 }
 
+/**
+ * Trim and length-clamp a user-supplied string.
+ * @param {string|*} str   Raw input value
+ * @param {number}   max   Maximum allowed character count (default 500)
+ * @returns {string}       Trimmed, clamped string
+ */
+function sanitizeInput(str, max) {
+  if (str === null || str === undefined) return '';
+  return String(str).trim().slice(0, max || 500);
+}
+
+/**
+ * Return true if the supplied value is a valid HTTPS URL or an empty string.
+ * Empty / absent values are considered valid (field is optional).
+ */
+function isValidHttpsUrl(url) {
+  if (!url) return true;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:';
+  } catch (_e) { return false; }
+}
+
 function cleanPhone(phone) {
   let p = phone.replace(/[\s\-()]/g, '');
   if (p.startsWith('0'))   p = '972' + p.slice(1);

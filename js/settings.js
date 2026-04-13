@@ -3,20 +3,23 @@
 /* ── Settings: Wedding Details, Export/Import, Data Management ── */
 /* ── Wedding Details ── */
 function updateWeddingDetails() {
-  _weddingInfo.groom = document.getElementById("groomName").value.trim();
-  _weddingInfo.groomEn = document.getElementById("groomNameEn").value.trim();
-  _weddingInfo.bride = document.getElementById("brideName").value.trim();
-  _weddingInfo.brideEn = document.getElementById("brideNameEn").value.trim();
-  _weddingInfo.date = document.getElementById("weddingDate").value;
-  _weddingInfo.hebrewDate = document
-    .getElementById("weddingHebrewDate")
-    .value.trim();
-  _weddingInfo.time = document.getElementById("weddingTime").value || "18:00";
-  _weddingInfo.ceremonyTime =
-    document.getElementById("weddingCeremonyTime").value || "19:30";
-  _weddingInfo.venue = document.getElementById("venueName").value.trim();
-  _weddingInfo.address = document.getElementById("venueAddress").value.trim();
-  _weddingInfo.wazeLink = document.getElementById("venueWaze").value.trim();
+  _weddingInfo.groom       = sanitizeInput(document.getElementById("groomName").value, 100);
+  _weddingInfo.groomEn     = sanitizeInput(document.getElementById("groomNameEn").value, 100);
+  _weddingInfo.bride       = sanitizeInput(document.getElementById("brideName").value, 100);
+  _weddingInfo.brideEn     = sanitizeInput(document.getElementById("brideNameEn").value, 100);
+  _weddingInfo.date        = document.getElementById("weddingDate").value;
+  _weddingInfo.hebrewDate  = sanitizeInput(document.getElementById("weddingHebrewDate").value, 100);
+  _weddingInfo.time        = document.getElementById("weddingTime").value || "18:00";
+  _weddingInfo.ceremonyTime = document.getElementById("weddingCeremonyTime").value || "19:30";
+  _weddingInfo.venue       = sanitizeInput(document.getElementById("venueName").value, 200);
+  _weddingInfo.address     = sanitizeInput(document.getElementById("venueAddress").value, 300);
+
+  /* Validate Waze / navigation link — must be a valid HTTPS URL if provided */
+  const rawWaze = sanitizeInput(document.getElementById("venueWaze").value, 2048);
+  if (rawWaze && !isValidHttpsUrl(rawWaze)) {
+    showToast(t('toast_invalid_url'), 'error'); return;
+  }
+  _weddingInfo.wazeLink = rawWaze;
 
   // Update header
   if (_weddingInfo.groom || _weddingInfo.bride) {
@@ -146,7 +149,34 @@ function importJSON(e) {
       const data = JSON.parse(ev.target.result);
       if (!data.guests || !Array.isArray(data.guests))
         throw new Error("invalid");
-      _guests = data.guests;
+      /* Scrub imported guest objects — only known keys, bounded lengths */
+      _guests = data.guests.filter(function(g) {
+        return g && typeof g === 'object' && typeof g.id === 'string' && g.firstName;
+      }).map(function(g) {
+        return {
+          id:           sanitizeInput(g.id, 20),
+          firstName:    sanitizeInput(g.firstName, 100),
+          lastName:     sanitizeInput(g.lastName, 100),
+          phone:        sanitizeInput(g.phone, 20),
+          email:        sanitizeInput(g.email, 254),
+          count:        parseInt(g.count, 10) || 1,
+          children:     parseInt(g.children, 10) || 0,
+          status:       ['pending','confirmed','declined','maybe'].includes(g.status) ? g.status : 'pending',
+          side:         ['groom','bride','mutual'].includes(g.side) ? g.side : 'mutual',
+          group:        ['family','friends','work','neighbors','other'].includes(g.group) ? g.group : 'other',
+          relationship: sanitizeInput(g.relationship, 100),
+          meal:         ['regular','vegetarian','vegan','gluten_free','kosher','other'].includes(g.meal) ? g.meal : 'regular',
+          mealNotes:    sanitizeInput(g.mealNotes, 300),
+          accessibility: Boolean(g.accessibility),
+          tableId:      sanitizeInput(g.tableId, 20),
+          gift:         sanitizeInput(g.gift, 300),
+          notes:        sanitizeInput(g.notes, 1000),
+          sent:         Boolean(g.sent),
+          rsvpDate:     sanitizeInput(g.rsvpDate, 30),
+          createdAt:    sanitizeInput(g.createdAt, 30),
+          updatedAt:    sanitizeInput(g.updatedAt, 30),
+        };
+      });
       _tables = data.tables || [];
       _weddingInfo = { ..._weddingDefaults, ...(data.wedding || {}) };
       migrateGuests();

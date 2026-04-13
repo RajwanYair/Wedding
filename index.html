@@ -2,6 +2,11 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <!-- ── Security headers (CSP via meta; frame-ancestors is enforced by JS below since meta CSP ignores it) ── -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://connect.facebook.net https://appleid.cdn-apple.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com; font-src 'self'; worker-src 'self'; frame-src https://accounts.google.com https://appleid.apple.com https://www.facebook.com https://staticxx.facebook.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <!-- Framebusting: prevent clickjacking in browsers that ignore CSP frame-ancestors in meta tags -->
+  <script>if(window.top!==window.self){try{window.top.location=window.self.location;}catch(e){document.documentElement.style.display='none';}}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="חתונת אליאור וטובה — כ׳ באייר התשפ״ו | ניהול אורחים, אישורי הגעה, סידורי שולחנות">
   <meta name="theme-color" content="#1a0a2e">
@@ -723,11 +728,11 @@
             <details style="margin-bottom:0.9rem;">
               <summary style="font-size:0.85rem; color:var(--text-secondary); cursor:pointer; user-select:none; padding:0.3rem 0;" data-i18n="user_mgr_provider_config">הגדרות ספק כניסה (Google / Facebook / Apple)</summary>
               <div style="margin-top:0.7rem; display:flex; flex-direction:column; gap:0.4rem;">
-                <label style="font-size:0.78rem; color:var(--text-muted);">Google Client ID <a href="https://console.cloud.google.com" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
+                <label style="font-size:0.78rem; color:var(--text-muted);">Google Client ID <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
                 <input type="text" id="settingsGoogleClientId" style="padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.82rem; width:100%;" data-i18n-placeholder="ph_google_client_id" placeholder="xxxx.apps.googleusercontent.com">
-                <label style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">Facebook App ID <a href="https://developers.facebook.com" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
+                <label style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">Facebook App ID <a href="https://developers.facebook.com" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
                 <input type="text" id="settingsFBAppId" style="padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.82rem; width:100%;" placeholder="123456789012345">
-                <label style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">Apple Service ID <a href="https://developer.apple.com" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
+                <label style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">Apple Service ID <a href="https://developer.apple.com" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem; color:var(--accent);">↗</a></label>
                 <input type="text" id="settingsAppleServiceId" style="padding:0.35rem 0.6rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.82rem; width:100%;" placeholder="com.example.wedding">
                 <button class="btn btn-secondary btn-small" onclick="saveProviderConfig()" style="align-self:flex-start; margin-top:0.4rem;">
                   💾 <span data-i18n="user_mgr_save_provider">שמור הגדרות ספק</span>

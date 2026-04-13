@@ -16,7 +16,12 @@ function handleInvitationUpload(e) {
 const DEFAULT_INVITATION_SRC = 'invitation.jpg';
 
 function renderInvitation() {
-  const src = _invitationDataUrl || DEFAULT_INVITATION_SRC;
+  let src = _invitationDataUrl || DEFAULT_INVITATION_SRC;
+  /* Safety: only allow known relative paths or trusted data:image/ URLs */
+  if (src !== DEFAULT_INVITATION_SRC && !src.startsWith('data:image/')) {
+    _invitationDataUrl = '';
+    src = DEFAULT_INVITATION_SRC;
+  }
   el.invitationImage.innerHTML = '<img src="' + escapeHtml(src) + '" alt="Wedding Invitation" style="max-width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.35);">';
 }
 

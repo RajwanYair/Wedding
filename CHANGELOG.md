@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.0] — 2025-08-01
+
+### Security
+
+- Added comprehensive Content-Security-Policy meta tag (restricts `script-src`, `connect-src`, `img-src`, `frame-src`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`)
+- Added JavaScript framebusting guard (`window.top !== window.self`) for clickjacking protection in browsers that ignore CSP `frame-ancestors` in meta tags
+- Added `Referrer-Policy: strict-origin-when-cross-origin` meta tag
+- Fixed three `rel="noopener"` links to include `noreferrer`
+- Added `sanitizeInput(str, maxLen)` utility — trims + length-clamps all free-text user inputs
+- Added `isValidHttpsUrl(url)` utility — rejects non-HTTPS and malformed URLs at system boundaries
+- RSVP rate-limiting: 90-second cooldown per browser for non-admin users (stored as `wedding_v1_lastRsvp`)
+- Validated `wazeLink` as a valid HTTPS URL before saving in `updateWeddingDetails()`; shows `toast_invalid_url` on rejection
+- Applied `sanitizeInput()` to all wedding-info fields (groom, bride, venue, address, etc.) and all RSVP text inputs
+- JSON import now scrubs and validates guest schema (known keys only, bounded lengths, allowlisted enum values) to prevent prototype pollution
+- `renderInvitation()` now rejects `_invitationDataUrl` values that do not start with `data:image/`
+- 9 new security tests added (163 total)
+
 ## [1.6.0] — 2026-04-13
 
 ### Added

@@ -102,6 +102,8 @@ export default [
         uid: "writable",
         guestFullName: "writable",
         escapeHtml: "writable",
+        sanitizeInput: "writable",
+        isValidHttpsUrl: "writable",
         cleanPhone: "writable",
         formatDateHebrew: "writable",
         initParticles: "writable",
@@ -264,7 +266,7 @@ export default [
             "|^show|^hide|^open|^close|^add|^remove|^save|^delete" +
             "|^export|^import|^send|^cycle|^filter|^set|^sort|^edit" +
             "|^submit|^download|^clear|^print|^login|^sign|^sync" +
-            "|^guest|^escape|^clean|^format|^parse|^fill|^row|^decode" +
+            "|^guest|^escape|^clean|^sanitize|^isValid|^format|^parse|^fill|^row|^decode" +
             "|^apply|^migrate|^sheets|^table|^popup|^get|^populate" +
             "|^start|^stop|^request|^create",
           argsIgnorePattern: "^_|^e$|^k$",

@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.6.0
+// Wedding Manager — Test Suite v1.7.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.6.0", function () {
-    assert.ok(SRC.includes("v1.6.0"));
+  it("HTML contains v1.7.0", function () {
+    assert.ok(SRC.includes("v1.7.0"));
   });
 
-  it("SW cache name contains v1.6.0", function () {
-    assert.ok(SW.includes("wedding-v1.6.0"));
+  it("SW cache name contains v1.7.0", function () {
+    assert.ok(SW.includes("wedding-v1.7.0"));
   });
 
-  it("package.json version is 1.5.0", function () {
-    assert.equal(PKG.version, "1.6.0");
+  it("package.json version is 1.7.0", function () {
+    assert.equal(PKG.version, "1.7.0");
   });
 });
 
@@ -559,7 +559,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.6.0'));
+    assert.ok(SW.includes('wedding-v1.7.0'));
   });
 
   it('pre-caches app shell', function() {
@@ -725,5 +725,59 @@ describe('Auth & User Access Management', function() {
     assert.ok(GS.includes("action === 'replaceAll'"));
     assert.ok(GS.includes("action === 'ensureSheets'"));
     assert.ok(GS.includes("'Config'"));
+  });
+});
+
+/* ── Security (v1.7.0) ── */
+describe('Security hardening', function() {
+  it('CSP meta tag present with required directives', function() {
+    assert.ok(HTML.includes('Content-Security-Policy'), 'CSP meta tag missing');
+    assert.ok(HTML.includes("object-src 'none'"), "object-src 'none' missing");
+    assert.ok(HTML.includes("base-uri 'self'"), "base-uri 'self' missing");
+    assert.ok(HTML.includes("frame-ancestors 'none'"), "frame-ancestors missing");
+    assert.ok(HTML.includes("form-action 'self'"), "form-action missing");
+  });
+
+  it('framebusting inline script present in HTML', function() {
+    assert.ok(HTML.includes('window.top!==window.self'), 'framebusting script missing');
+  });
+
+  it('referrer-policy meta tag present', function() {
+    assert.ok(HTML.includes('strict-origin-when-cross-origin'), 'referrer-policy missing');
+  });
+
+  it('sanitizeInput and isValidHttpsUrl defined in utils.js', function() {
+    assert.ok(JS.includes('function sanitizeInput'), 'sanitizeInput missing');
+    assert.ok(JS.includes('function isValidHttpsUrl'), 'isValidHttpsUrl missing');
+  });
+
+  it('RSVP rate-limiting present in rsvp.js', function() {
+    assert.ok(JS.includes('_RSVP_COOLDOWN_MS'), '_RSVP_COOLDOWN_MS missing');
+    assert.ok(JS.includes('_rsvpCooldownOk'), '_rsvpCooldownOk missing');
+    assert.ok(JS.includes("'lastRsvp'"), 'lastRsvp cooldown key missing');
+  });
+
+  it('invitation.js guards against non-image data URLs', function() {
+    assert.ok(JS.includes("data:image/"), 'data:image/ guard missing in invitation.js');
+  });
+
+  it('wazeLink validated against HTTPS-only in settings.js', function() {
+    assert.ok(JS.includes('isValidHttpsUrl'), 'isValidHttpsUrl not called in JS');
+    assert.ok(JS.includes('toast_invalid_url'), 'invalid URL toast key missing');
+  });
+
+  it('all target=_blank links have both noopener and noreferrer', function() {
+    const blankLinks = HTML.match(/target="_blank"[^>]*/g) || [];
+    blankLinks.forEach(function(link) {
+      assert.ok(
+        link.includes('noopener') && link.includes('noreferrer'),
+        'Missing noopener noreferrer on: ' + link
+      );
+    });
+  });
+
+  it('i18n keys toast_rsvp_cooldown and toast_invalid_url present in both languages', function() {
+    assert.ok(JS.includes('toast_rsvp_cooldown'), 'toast_rsvp_cooldown key missing');
+    assert.ok(JS.includes('toast_invalid_url'), 'toast_invalid_url key missing');
   });
 });

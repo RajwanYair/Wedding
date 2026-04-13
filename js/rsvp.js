@@ -1,20 +1,33 @@
 'use strict';
 
 /* ── RSVP ── */
-/* ── RSVP ── */
+
+/** 90-second cooldown between RSVP submissions (guest users only) */
+const _RSVP_COOLDOWN_MS = 90 * 1000;
+
+function _rsvpCooldownOk() {
+  const last = parseInt(localStorage.getItem(STORAGE_PREFIX + 'lastRsvp') || '0', 10);
+  return (Date.now() - last) >= _RSVP_COOLDOWN_MS;
+}
+
 function submitRSVP() {
-  const firstName = document.getElementById('rsvpFirstName').value.trim();
+  /* Rate-limit unauthenticated/guest users to prevent spam submissions */
+  if (!(_authUser && _authUser.isAdmin) && !_rsvpCooldownOk()) {
+    showToast(t('toast_rsvp_cooldown'), 'warning'); return;
+  }
+
+  const firstName = sanitizeInput(document.getElementById('rsvpFirstName').value, 100);
   if (!firstName) { document.getElementById('rsvpFirstName').focus(); return; }
 
-  const lastName     = document.getElementById('rsvpLastName').value.trim();
-  const phone        = document.getElementById('rsvpPhone').value.trim();
-  const side         = document.getElementById('rsvpSide').value;
+  const lastName     = sanitizeInput(document.getElementById('rsvpLastName').value, 100);
+  const phone        = sanitizeInput(document.getElementById('rsvpPhone').value, 20);
+  const notes        = sanitizeInput(document.getElementById('rsvpNotes').value, 1000);
   const status       = document.getElementById('rsvpAttending').value;
+  const side         = document.getElementById('rsvpSide').value;
   const count        = parseInt(document.getElementById('rsvpGuests').value, 10)   || 1;
   const children     = parseInt(document.getElementById('rsvpChildren').value, 10) || 0;
   const meal         = document.getElementById('rsvpMeal').value;
   const accessibility= document.getElementById('rsvpAccessibility').checked;
-  const notes        = document.getElementById('rsvpNotes').value.trim();
   const now          = new Date().toISOString();
 
   // Match by phone or full name
@@ -46,6 +59,10 @@ function submitRSVP() {
   }
 
   saveAll(); renderGuests(); renderStats();
+  /* Record submission timestamp for rate-limiting (guest users) */
+  if (!(_authUser && _authUser.isAdmin)) {
+    localStorage.setItem(STORAGE_PREFIX + 'lastRsvp', String(Date.now()));
+  }
   // Sync to Google Sheets
   if (_authUser && _authUser.isAdmin) {
     syncGuestsToSheets();
