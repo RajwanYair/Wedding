@@ -480,6 +480,31 @@ describe('RSVP', function() {
   it('has accessibility checkbox', function() {
     assert.ok(SRC.includes('id="rsvpAccessibility"'));
   });
+
+  it('phone-first: rsvpPhone appears before rsvpFirstName in HTML', function() {
+    assert.ok(HTML.indexOf('id="rsvpPhone"') < HTML.indexOf('id="rsvpFirstName"'),
+      'rsvpPhone should come before rsvpFirstName');
+  });
+
+  it('phone-first: rsvpDetails div exists and starts hidden', function() {
+    assert.ok(HTML.includes('id="rsvpDetails"'), 'rsvpDetails div missing');
+    assert.ok(HTML.includes('id="rsvpDetails"') && HTML.includes('display:none'), 'rsvpDetails should start hidden');
+  });
+
+  it('phone-first: lookupRsvpByPhone function exists', function() {
+    assert.ok(JS.includes('function lookupRsvpByPhone'), 'lookupRsvpByPhone missing');
+  });
+
+  it('phone-first: rsvpLookupStatus element exists', function() {
+    assert.ok(HTML.includes('id="rsvpLookupStatus"'), 'rsvpLookupStatus missing');
+  });
+
+  it('phone-first: i18n keys present', function() {
+    assert.ok(JS.includes('rsvp_phone_hint'),      'rsvp_phone_hint missing');
+    assert.ok(JS.includes('rsvp_lookup_found'),    'rsvp_lookup_found missing');
+    assert.ok(JS.includes('rsvp_lookup_new'),      'rsvp_lookup_new missing');
+    assert.ok(JS.includes('rsvp_lookup_searching'),'rsvp_lookup_searching missing');
+  });
 });
 
 // ── Invitation ──

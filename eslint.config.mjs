@@ -168,6 +168,7 @@ export default [
         renderWaGuestList: "writable",
         // rsvp.js
         submitRSVP: "writable",
+        lookupRsvpByPhone: "writable",
         // settings.js
         updateWeddingDetails: "writable",
         loadWeddingDetailsToForm: "writable",
@@ -291,7 +292,7 @@ export default [
             "|^submit|^download|^clear|^print|^login|^sign|^sync" +
             "|^guest|^escape|^clean|^sanitize|^isValid|^format|^parse|^fill|^row|^decode" +
             "|^apply|^migrate|^sheets|^table|^popup|^get|^populate" +
-            "|^start|^stop|^request|^create",
+            "|^start|^stop|^request|^create|^lookup",
           argsIgnorePattern: "^_|^e$|^k$",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",

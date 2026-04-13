@@ -10,6 +10,66 @@ function _rsvpCooldownOk() {
   return (Date.now() - last) >= _RSVP_COOLDOWN_MS;
 }
 
+/**
+ * Phone-first lookup: called on every input/blur of rsvpPhone.
+ * - If phone has ≥7 digits → search guests by cleaned phone number.
+ * - Found  → reveal form pre-filled with existing data, show "found" status.
+ * - Not found → reveal empty form, show "new guest" status.
+ * - Too short → hide form, show hint.
+ */
+function lookupRsvpByPhone() {
+  const raw    = document.getElementById('rsvpPhone').value;
+  const cleaned = cleanPhone(raw);
+  const status  = document.getElementById('rsvpLookupStatus');
+  const details = document.getElementById('rsvpDetails');
+
+  /* Need at least 7 digits */
+  if (cleaned.replace(/\D/g, '').length < 7) {
+    details.style.display = 'none';
+    status.style.display  = 'block';
+    status.style.color    = 'var(--text-secondary)';
+    status.textContent    = t('rsvp_phone_hint');
+    return;
+  }
+
+  /* Search in-memory guests by cleaned phone */
+  const match = _guests.find(function(g) {
+    return g.phone && cleanPhone(g.phone) === cleaned;
+  });
+
+  details.style.display = '';
+
+  if (match) {
+    /* Pre-fill form with existing guest data */
+    document.getElementById('rsvpFirstName').value          = match.firstName  || '';
+    document.getElementById('rsvpLastName').value           = match.lastName   || '';
+    document.getElementById('rsvpSide').value               = match.side       || 'groom';
+    document.getElementById('rsvpAttending').value          = match.status     || 'confirmed';
+    document.getElementById('rsvpGuests').value             = match.count      || 1;
+    document.getElementById('rsvpChildren').value           = match.children   || 0;
+    document.getElementById('rsvpMeal').value               = match.meal       || 'regular';
+    document.getElementById('rsvpAccessibility').checked    = !!match.accessibility;
+    document.getElementById('rsvpNotes').value              = match.notes      || '';
+    status.style.display = 'block';
+    status.style.color   = 'var(--positive, #34d399)';
+    status.textContent   = t('rsvp_lookup_found');
+  } else {
+    /* Clear form for new guest entry */
+    document.getElementById('rsvpFirstName').value       = '';
+    document.getElementById('rsvpLastName').value        = '';
+    document.getElementById('rsvpSide').value            = 'groom';
+    document.getElementById('rsvpAttending').value       = 'confirmed';
+    document.getElementById('rsvpGuests').value          = '1';
+    document.getElementById('rsvpChildren').value        = '0';
+    document.getElementById('rsvpMeal').value            = 'regular';
+    document.getElementById('rsvpAccessibility').checked = false;
+    document.getElementById('rsvpNotes').value           = '';
+    status.style.display = 'block';
+    status.style.color   = 'var(--text-secondary)';
+    status.textContent   = t('rsvp_lookup_new');
+  }
+}
+
 function submitRSVP() {
   /* Rate-limit unauthenticated/guest users to prevent spam submissions */
   if (!(_authUser && _authUser.isAdmin) && !_rsvpCooldownOk()) {
@@ -80,5 +140,11 @@ function submitRSVP() {
   document.getElementById('rsvpChildren').value  = '0';
   document.getElementById('rsvpMeal').value      = 'regular';
   document.getElementById('rsvpAccessibility').checked = false;
+  /* Hide details panel and reset lookup status */
+  document.getElementById('rsvpDetails').style.display      = 'none';
+  const st = document.getElementById('rsvpLookupStatus');
+  st.style.display = 'block';
+  st.style.color   = 'var(--text-secondary)';
+  st.textContent   = t('rsvp_phone_hint');
 }
 

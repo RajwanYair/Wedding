@@ -530,20 +530,29 @@
           <p style="color:var(--text-secondary); margin-bottom:2rem;" data-i18n="rsvp_subtitle">נשמח לדעת שאתם מגיעים!</p>
 
           <div class="rsvp-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label data-i18n="label_first_name">שם פרטי *</label>
-                <input type="text" id="rsvpFirstName" data-i18n-placeholder="ph_first_name" placeholder="שם פרטי" autocomplete="given-name">
+            <!-- ── Step 1: Phone lookup ── -->
+            <div class="form-group">
+              <label data-i18n="rsvp_phone">טלפון</label>
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="tel" id="rsvpPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr"
+                  style="flex:1;"
+                  oninput="lookupRsvpByPhone()"
+                  onblur="lookupRsvpByPhone()">
               </div>
-              <div class="form-group">
-                <label data-i18n="label_last_name">שם משפחה</label>
-                <input type="text" id="rsvpLastName" data-i18n-placeholder="ph_last_name" placeholder="שם משפחה" autocomplete="family-name">
-              </div>
+              <small id="rsvpLookupStatus" style="display:none; margin-top:0.35rem; font-size:0.82rem; color:var(--text-secondary);" data-i18n="rsvp_phone_hint">הזן מספר טלפון כדי להתחיל</small>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label data-i18n="rsvp_phone">טלפון</label>
-                <input type="tel" id="rsvpPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr">
+
+            <!-- ── Step 2: Rest of form (revealed after phone entered) ── -->
+            <div id="rsvpDetails" style="display:none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label data-i18n="label_first_name">שם פרטי *</label>
+                  <input type="text" id="rsvpFirstName" data-i18n-placeholder="ph_first_name" placeholder="שם פרטי" autocomplete="given-name">
+                </div>
+                <div class="form-group">
+                  <label data-i18n="label_last_name">שם משפחה</label>
+                  <input type="text" id="rsvpLastName" data-i18n-placeholder="ph_last_name" placeholder="שם משפחה" autocomplete="family-name">
+                </div>
               </div>
               <div class="form-group">
                 <label data-i18n="rsvp_side">בצד של</label>
@@ -553,49 +562,49 @@
                   <option value="mutual" data-i18n="side_mutual">משותף</option>
                 </select>
               </div>
-            </div>
-            <div class="form-group">
-              <label data-i18n="rsvp_attending">האם מגיע/ה?</label>
-              <select id="rsvpAttending">
-                <option value="confirmed" data-i18n="rsvp_yes">כן, מגיע/ה! 🎉</option>
-                <option value="maybe"     data-i18n="rsvp_maybe">אולי 🤔</option>
-                <option value="declined"  data-i18n="rsvp_no">לצערי לא 😢</option>
-              </select>
-            </div>
-            <div class="form-row">
               <div class="form-group">
-                <label data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
-                <input type="number" id="rsvpGuests" min="1" max="20" value="1">
+                <label data-i18n="rsvp_attending">האם מגיע/ה?</label>
+                <select id="rsvpAttending">
+                  <option value="confirmed" data-i18n="rsvp_yes">כן, מגיע/ה! 🎉</option>
+                  <option value="maybe"     data-i18n="rsvp_maybe">אולי 🤔</option>
+                  <option value="declined"  data-i18n="rsvp_no">לצערי לא 😢</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
+                  <input type="number" id="rsvpGuests" min="1" max="20" value="1">
+                </div>
+                <div class="form-group">
+                  <label data-i18n="rsvp_children">ילדים</label>
+                  <input type="number" id="rsvpChildren" min="0" max="20" value="0">
+                </div>
               </div>
               <div class="form-group">
-                <label data-i18n="rsvp_children">ילדים</label>
-                <input type="number" id="rsvpChildren" min="0" max="20" value="0">
+                <label data-i18n="rsvp_meal">סוג ארוחה</label>
+                <select id="rsvpMeal">
+                  <option value="regular"     data-i18n="meal_regular">רגיל</option>
+                  <option value="vegetarian"  data-i18n="meal_vegetarian">צמחוני</option>
+                  <option value="vegan"       data-i18n="meal_vegan">טבעוני</option>
+                  <option value="kosher"      data-i18n="meal_kosher">מהדרין</option>
+                  <option value="gluten_free" data-i18n="meal_gluten_free">ללא גלוטן</option>
+                  <option value="other"       data-i18n="meal_other">אחר</option>
+                </select>
               </div>
+              <div class="form-group">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="rsvpAccessibility">
+                  <span data-i18n="rsvp_accessibility">צרכי נגישות (כיסא גלגלים, מעלית, כניסה נגישה)</span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label data-i18n="rsvp_notes">הערות / מגבלות תזונה</label>
+                <textarea id="rsvpNotes" rows="3" data-i18n-placeholder="ph_rsvp_notes" placeholder="הערות מיוחדות, צמחוני, ללא גלוטן..."></textarea>
+              </div>
+              <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.8rem;" onclick="submitRSVP()">
+                <span>✅</span> <span data-i18n="rsvp_submit">שלח אישור</span>
+              </button>
             </div>
-            <div class="form-group">
-              <label data-i18n="rsvp_meal">סוג ארוחה</label>
-              <select id="rsvpMeal">
-                <option value="regular"     data-i18n="meal_regular">רגיל</option>
-                <option value="vegetarian"  data-i18n="meal_vegetarian">צמחוני</option>
-                <option value="vegan"       data-i18n="meal_vegan">טבעוני</option>
-                <option value="kosher"      data-i18n="meal_kosher">מהדרין</option>
-                <option value="gluten_free" data-i18n="meal_gluten_free">ללא גלוטן</option>
-                <option value="other"       data-i18n="meal_other">אחר</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-checkbox">
-                <input type="checkbox" id="rsvpAccessibility">
-                <span data-i18n="rsvp_accessibility">צרכי נגישות (כיסא גלגלים, מעלית, כניסה נגישה)</span>
-              </label>
-            </div>
-            <div class="form-group">
-              <label data-i18n="rsvp_notes">הערות / מגבלות תזונה</label>
-              <textarea id="rsvpNotes" rows="3" data-i18n-placeholder="ph_rsvp_notes" placeholder="הערות מיוחדות, צמחוני, ללא גלוטן..."></textarea>
-            </div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.8rem;" onclick="submitRSVP()">
-              <span>✅</span> <span data-i18n="rsvp_submit">שלח אישור</span>
-            </button>
           </div>
         </div>
       </div>
