@@ -44,7 +44,7 @@ let _themeIndex = 0;
 /* ── Auth Config ── */
 // Emails that receive full admin access to all app features.
 // ⚠️  This is a client-side check — appropriate for a personal wedding app only.
-const ADMIN_EMAILS = ["yair.rajwan@gmail.com"];
+const ADMIN_EMAILS = ["yair.rajwan@gmail.com", "ylipman@gmail.com"];
 
 // Google Client ID — required for Google Sign-In and optional Sheets API v4 OAuth.
 // Get from https://console.cloud.google.com → Credentials → OAuth 2.0 Client IDs
