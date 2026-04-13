@@ -325,9 +325,12 @@
       <div class="card">
         <div class="card-header">
           <span class="icon">🪑</span> <span data-i18n="tables_title">סידורי ישיבה</span>
-          <div style="margin-right:auto; margin-left:0;">
+          <div style="margin-right:auto; margin-left:0; display:flex; gap:0.5rem;">
             <button class="btn btn-primary btn-small" onclick="openAddTableModal()">
               <span>➕</span> <span data-i18n="action_add_table">הוסף שולחן</span>
+            </button>
+            <button class="btn btn-secondary btn-small" onclick="printSeatingChart()" data-i18n-tooltip="tip_print_seating">
+              <span>🖨️</span> <span data-i18n="action_print_seating">ייצוא תרשים ישיבה</span>
             </button>
           </div>
         </div>

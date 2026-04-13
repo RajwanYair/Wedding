@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.0] — 2026-04-13
+
+### Added
+
+- Seating Chart PDF export (`printSeatingChart()`): opens a print-ready window with wedding header, table grid (guest names, meal icons, occupancy), unassigned guests section; auto-triggers `window.print()` for PDF save — zero dependencies (Blob URL API)
+- `action_print_seating`, `seating_chart_title`, `toast_popup_blocked`, `tip_print_seating` i18n keys (he + en)
+- "Export Seating Chart" 🖨️ button in Tables section header
+- 2 new tests: `printSeatingChart` function presence, Blob URL export pattern
+
 ## [1.2.0] — 2026-04-13
 
 ### Added

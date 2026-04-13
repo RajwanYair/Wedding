@@ -13,7 +13,7 @@ npm run lint:js                      # ESLint → js/*.js
 npm run lint:md                      # markdownlint-cli2
 ```
 
-## Architecture (v1.2.0 — modular)
+## Architecture (v1.3.0 — modular)
 
 | Path | Role |
 | --- | --- |

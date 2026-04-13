@@ -134,3 +134,147 @@ function populateTableSelect() {
   });
 }
 
+/* ── Seating Chart Print / PDF Export ── */
+
+/**
+ * Opens a new browser window with a print-ready seating-chart layout and
+ * immediately triggers window.print() so the user can save as PDF or print.
+ *
+ * Zero dependencies — uses only the browser Print API.
+ */
+function printSeatingChart() {
+  const isHe    = _currentLang === 'he';
+  const dir     = isHe ? 'rtl' : 'ltr';
+  const wi      = _weddingInfo || {};
+
+  /* ── header strings (baked in at export time, no live i18n needed) ── */
+  const titleStr      = t('seating_chart_title');
+  const unassignedStr = t('unassigned_title');
+  const seatsStr      = t('seats');
+  const mealMap = {
+    regular:     isHe ? 'רגיל'      : 'Regular',
+    vegetarian:  isHe ? 'צמחוני'    : 'Vegetarian',
+    vegan:       isHe ? 'טבעוני'    : 'Vegan',
+    kosher:      isHe ? 'כשר'       : 'Kosher',
+    gluten_free: isHe ? 'ללא גלוטן' : 'Gluten-free',
+  };
+
+  /* ── build table cards HTML ── */
+  let tableCardsHtml = '';
+  _tables.forEach(function(tbl) {
+    const seated = _guests.filter(function(g) { return g.tableId === tbl.id; });
+    const totalSeated = seated.reduce(function(s, g) { return s + (g.count || 1); }, 0);
+    const full = totalSeated >= tbl.capacity;
+    const shapeIcon = tbl.shape === 'rect' ? '▬' : '⬤';
+    const shapeClass = tbl.shape === 'rect' ? 'shape-rect' : 'shape-round';
+
+    let guestRows = '';
+    seated.forEach(function(g) {
+      const sideIcon = g.side === 'groom' ? '🤵' : g.side === 'bride' ? '👰' : '🤝';
+      const mealIcon = g.meal === 'vegetarian' ? '🥗' :
+                       g.meal === 'vegan'       ? '🌿' :
+                       g.meal === 'kosher'      ? '✡️' :
+                       g.meal === 'gluten_free' ? '🚫' : '';
+      const mealLabel = mealMap[g.meal] ? mealMap[g.meal] : '';
+      const count     = g.count && g.count > 1 ? ' ×' + g.count : '';
+      guestRows +=
+        '<tr><td>' + sideIcon + ' ' + escapeHtml(guestFullName(g)) + count + '</td>' +
+        '<td style="text-align:center;">' + mealIcon + (mealIcon && mealLabel ? ' ' : '') + escapeHtml(mealLabel) + '</td></tr>';
+    });
+
+    tableCardsHtml +=
+      '<div class="table-card' + (full ? ' full' : '') + '">' +
+        '<div class="table-header">' +
+          '<span class="shape-badge ' + shapeClass + '">' + shapeIcon + '</span>' +
+          '<strong>' + escapeHtml(tbl.name) + '</strong>' +
+          '<span class="capacity">' + totalSeated + ' / ' + tbl.capacity + ' ' + escapeHtml(seatsStr) + '</span>' +
+        '</div>' +
+        '<table class="guest-list"><tbody>' + (guestRows || '<tr><td colspan="2" class="empty-table">—</td></tr>') + '</tbody></table>' +
+      '</div>';
+  });
+
+  /* ── unassigned guests ── */
+  const unassigned = _guests.filter(function(g) { return !g.tableId && g.status !== 'declined'; });
+  let unassignedHtml = '';
+  if (unassigned.length > 0) {
+    const chips = unassigned.map(function(g) {
+      return '<span class="chip">' + escapeHtml(guestFullName(g)) + ' (' + (g.count || 1) + ')</span>';
+    }).join('');
+    unassignedHtml =
+      '<div class="unassigned-section">' +
+        '<h2 class="section-heading">⚠ ' + escapeHtml(unassignedStr) + ' (' + unassigned.length + ')</h2>' +
+        '<div class="chip-group">' + chips + '</div>' +
+      '</div>';
+  }
+
+  /* ── wedding header ── */
+  const groomName  = escapeHtml((isHe ? wi.groom  : wi.groomEn)  || wi.groom  || '');
+  const brideName  = escapeHtml((isHe ? wi.bride  : wi.brideEn)  || wi.bride  || '');
+  const dateStr    = escapeHtml(wi.date    || '');
+  const hebrewDate = escapeHtml(wi.hebrewDate || '');
+  const venueName  = escapeHtml(wi.venue   || '');
+  const venueAddr  = escapeHtml(wi.address || '');
+  const coupleStr  = groomName && brideName ? groomName + ' & ' + brideName : groomName || brideName;
+
+  /* ── full HTML document (auto-print script embedded) ── */
+  const html =
+    '<!DOCTYPE html>' +
+    '<html dir="' + dir + '" lang="' + (isHe ? 'he' : 'en') + '">' +
+    '<head>' +
+      '<meta charset="UTF-8">' +
+      '<title>' + escapeHtml(titleStr) + ' \u2014 ' + coupleStr + '</title>' +
+      '<style>' +
+        '*{box-sizing:border-box;margin:0;padding:0;}' +
+        'body{font-family:"Segoe UI",tahoma,arial,sans-serif;font-size:11pt;color:#1a1a1a;background:#fff;padding:1.5cm 1.5cm;direction:' + dir + ';}' +
+        '.page-header{text-align:center;margin-bottom:1.2cm;border-bottom:2px solid #6d3a73;padding-bottom:0.6cm;}' +
+        '.page-title{font-size:22pt;font-weight:700;color:#6d3a73;letter-spacing:0.03em;}' +
+        '.couple-names{font-size:16pt;margin:0.2cm 0;}' +
+        '.wedding-meta{font-size:10pt;color:#555;margin-top:0.2cm;}' +
+        '.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(7cm,1fr));gap:0.6cm;margin-top:0.5cm;}' +
+        '.table-card{border:1px solid #ccc;border-radius:6px;padding:0.5cm;break-inside:avoid;}' +
+        '.table-card.full{border-color:#6d3a73;background:#fdf8f5;}' +
+        '.table-header{display:flex;align-items:center;gap:0.3cm;margin-bottom:0.3cm;flex-wrap:wrap;}' +
+        '.table-header strong{font-size:12pt;flex:1;}' +
+        '.capacity{font-size:9pt;color:#777;white-space:nowrap;}' +
+        '.shape-badge{font-size:14pt;color:#6d3a73;}' +
+        '.guest-list{width:100%;border-collapse:collapse;font-size:9.5pt;}' +
+        '.guest-list td{padding:0.08cm 0.1cm;border-bottom:1px solid #eee;vertical-align:middle;}' +
+        '.guest-list tr:last-child td{border-bottom:none;}' +
+        '.empty-table{color:#aaa;text-align:center;}' +
+        '.unassigned-section{margin-top:1cm;padding-top:0.8cm;border-top:1px dashed #ccc;break-inside:avoid;}' +
+        '.section-heading{font-size:12pt;font-weight:600;color:#b45309;margin-bottom:0.4cm;}' +
+        '.chip-group{display:flex;flex-wrap:wrap;gap:0.3cm;}' +
+        '.chip{border:1px solid #d1d5db;border-radius:4px;padding:0.05cm 0.25cm;font-size:9.5pt;background:#f9f9f9;}' +
+        '.footer{text-align:center;margin-top:1.2cm;padding-top:0.4cm;border-top:1px solid #eee;font-size:8.5pt;color:#aaa;}' +
+        '@media print{body{padding:1cm;}@page{margin:1.5cm;}}' +
+      '</style>' +
+      '<script>window.onload=function(){window.print();}<\/script>' +
+    '</head>' +
+    '<body>' +
+      '<div class="page-header">' +
+        '<div class="page-title">' + escapeHtml(titleStr) + '</div>' +
+        (coupleStr ? '<div class="couple-names">\ud83d\udc8d ' + coupleStr + '</div>' : '') +
+        '<div class="wedding-meta">' +
+          (dateStr ? dateStr : '') +
+          (hebrewDate ? '&nbsp;&nbsp;|&nbsp;&nbsp;' + hebrewDate : '') +
+          (venueName  ? '&nbsp;&nbsp;|&nbsp;&nbsp;' + venueName  : '') +
+          (venueAddr  ? ', ' + venueAddr : '') +
+        '</div>' +
+      '</div>' +
+      '<div class="grid">' + tableCardsHtml + '</div>' +
+      unassignedHtml +
+      '<div class="footer">Wedding Manager &nbsp;&middot;&nbsp; ' + new Date().toLocaleDateString() + '</div>' +
+    '</body></html>';
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  const w    = window.open(url, '_blank');
+  if (!w) {
+    URL.revokeObjectURL(url);
+    showToast(t('toast_popup_blocked'), 'error');
+    return;
+  }
+  /* Release the object URL after 2 minutes — plenty of time to print */
+  setTimeout(function() { URL.revokeObjectURL(url); }, 120000);
+}
+

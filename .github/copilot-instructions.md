@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v1.2.0
+# GitHub Copilot Instructions — Wedding Manager v1.3.0
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Zero Runtime Deps
 
@@ -6,7 +6,7 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v1.2.0** |
+| Version | **v1.3.0** |
 | Stack | HTML5 · vanilla CSS3 · vanilla JS (ES2020+) |
 | Runtime deps | Zero — devDeps for lint only |
 | Language | Hebrew RTL primary, English toggle |

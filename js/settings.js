@@ -395,7 +395,7 @@ function renderDataSummary() {
       }).length +
       "</strong>",
     '<hr style="border-color:rgba(255,255,255,0.05); margin:0.4rem 0;">',
-    "ℹ️ Wedding Manager v1.2.0",
+    "ℹ️ Wedding Manager v1.3.0",
   ];
   el.dataSummary.innerHTML = lines.join("<br>");
 }
