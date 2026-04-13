@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.4.0] — 2026-04-13
+
+### Added
+
+- **Budget & Gift Tracker** (`js/budget.js`): new admin-only section 🎁 to track per-guest gifts and total event budget
+  - Summary stats: gifts received, total ₪ amount, pending guests, expected budget, % of target
+  - Progress bar renders when a budget target is set
+  - Inline gift input per guest (throttled 600ms save) — leverages existing `gift` field on the Guest model
+  - Guests sorted by received-first then alphabetically; side icons (🤵👰🤝) and attendance multiplier shown
+  - `parseGiftAmount()` parses numeric gift strings (with ₪/NIS/commas) for totals; descriptions treated as non-monetary
+  - `saveBudgetTarget()` persists `_weddingInfo.giftBudget` via `saveAll()`
+- `budget` route added to admin-only nav guard in `nav.js`
+- `giftBudget: 0` default added to `_weddingDefaults` in `config.js`
+- Budget section i18n keys (he + en): `nav_budget`, `budget_title`, `budget_target_label`, `budget_save`, `budget_stat_*`, `budget_gift_placeholder`, `budget_empty`, `toast_budget_saved`, `tip_nav_budget`, `col_gift_status`, `col_gift`, `col_amount`
+- 9 new tests in *Budget & Gift Tracker* suite
+
 ## [1.3.0] — 2026-04-13
 
 ### Added

@@ -22,6 +22,7 @@ function init() {
   updateHeaderInfo();
   initParticles();
   setInterval(renderCountdown, 1000);
+  renderBudget();
   initAuth();
   initSW();
 }

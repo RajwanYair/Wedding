@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.3.0
+// Wedding Manager — Test Suite v1.4.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.3.0", function () {
-    assert.ok(SRC.includes("v1.3.0"));
+  it("HTML contains v1.4.0", function () {
+    assert.ok(SRC.includes("v1.4.0"));
   });
 
-  it("SW cache name contains v1.3.0", function () {
-    assert.ok(SW.includes("wedding-v1.3.0"));
+  it("SW cache name contains v1.4.0", function () {
+    assert.ok(SW.includes("wedding-v1.4.0"));
   });
 
-  it("package.json version is 1.3.0", function () {
-    assert.equal(PKG.version, "1.3.0");
+  it("package.json version is 1.4.0", function () {
+    assert.equal(PKG.version, "1.4.0");
   });
 });
 
@@ -246,6 +246,47 @@ describe('Table Seating', function() {
   it('seating chart uses Blob URL export (no document.write)', function() {
     assert.ok(JS.includes('new Blob([html]'));
     assert.ok(JS.includes('URL.createObjectURL'));
+  });
+});
+
+// ── Budget & Gifts ──
+describe('Budget & Gift Tracker', function() {
+  it('has budget section in HTML', function() {
+    assert.ok(HTML.includes('id="sec-budget"'));
+  });
+
+  it('has budget nav tab', function() {
+    assert.ok(HTML.includes('data-tab="budget"'));
+  });
+
+  it('has budget JS module', function() {
+    assert.ok(JS.includes('function renderBudget'));
+  });
+
+  it('has renderBudgetTable function', function() {
+    assert.ok(JS.includes('function renderBudgetTable'));
+  });
+
+  it('has saveBudgetTarget function', function() {
+    assert.ok(JS.includes('function saveBudgetTarget'));
+  });
+
+  it('has parseGiftAmount function', function() {
+    assert.ok(JS.includes('function parseGiftAmount'));
+  });
+
+  it('giftBudget default in config', function() {
+    assert.ok(JS.includes('giftBudget'));
+  });
+
+  it('budget uses gift field on guests', function() {
+    assert.ok(JS.includes("g.gift"));
+  });
+
+  it('budget stats elements present in HTML', function() {
+    assert.ok(HTML.includes('id="budgetStatGifts"'));
+    assert.ok(HTML.includes('id="budgetStatTotal"'));
+    assert.ok(HTML.includes('id="budgetStatPending"'));
   });
 });
 
@@ -518,7 +559,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.3.0'));
+    assert.ok(SW.includes('wedding-v1.4.0'));
   });
 
   it('pre-caches app shell', function() {

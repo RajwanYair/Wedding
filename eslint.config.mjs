@@ -182,6 +182,13 @@ export default [
         sheetsAppendRsvp: "writable",
         updateSheetsStatusBadge: "writable",
         syncSheetsNow: "writable",
+        // budget.js
+        parseGiftAmount: "writable",
+        giftReceived: "writable",
+        renderBudget: "writable",
+        renderBudgetTable: "writable",
+        throttledSaveGift: "writable",
+        saveBudgetTarget: "writable",
         // auth.js
         decodeJwt: "writable",
         handleGoogleCredential: "writable",

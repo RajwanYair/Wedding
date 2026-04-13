@@ -144,6 +144,9 @@
     <button class="nav-tab" data-tab="rsvp" onclick="showSection('rsvp')" data-i18n-tooltip="tip_nav_rsvp" data-tooltip-pos="down">
       <span>✅</span> <span data-i18n="nav_rsvp">אישור הגעה</span>
     </button>
+    <button class="nav-tab" data-tab="budget" onclick="showSection('budget')" data-i18n-tooltip="tip_nav_budget" data-tooltip-pos="down">
+      <span>🎁</span> <span data-i18n="nav_budget">מתנות</span>
+    </button>
     <button class="nav-tab" data-tab="settings" onclick="showSection('settings')" data-i18n-tooltip="tip_nav_settings" data-tooltip-pos="down">
       <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
     </button>
@@ -569,6 +572,76 @@
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Budget & Gifts
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-budget">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">🎁</span>
+          <span data-i18n="budget_title">מתנות ותקציב</span>
+          <div style="margin-right:auto; display:flex; gap:0.5rem; align-items:center;">
+            <label for="budgetTargetInput" data-i18n="budget_target_label" style="font-size:0.85rem; color:var(--text-muted);">תקציב מצופה ₪:</label>
+            <input type="number" id="budgetTargetInput" min="0" step="100"
+              style="width:120px; padding:0.3rem 0.5rem; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass); color:var(--text-primary); font-size:0.85rem;"
+              data-i18n-placeholder="budget_target_ph" placeholder="0"
+              onchange="saveBudgetTarget()" onkeydown="if(event.key==='Enter'){saveBudgetTarget();}">
+            <button class="btn btn-secondary btn-small" onclick="saveBudgetTarget()" data-i18n="budget_save">שמור</button>
+          </div>
+        </div>
+
+        <!-- Summary stats -->
+        <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+          <div class="stat-card" style="flex:1; min-width:120px; text-align:center;">
+            <div class="stat-value" id="budgetStatGifts">0</div>
+            <div class="stat-label" data-i18n="budget_stat_received">מתנות שהתקבלו</div>
+          </div>
+          <div class="stat-card" style="flex:1; min-width:120px; text-align:center;">
+            <div class="stat-value" id="budgetStatTotal">—</div>
+            <div class="stat-label" data-i18n="budget_stat_total">סה״כ שהתקבל</div>
+          </div>
+          <div class="stat-card" style="flex:1; min-width:120px; text-align:center;">
+            <div class="stat-value" id="budgetStatPending">0</div>
+            <div class="stat-label" data-i18n="budget_stat_pending">ממתינים למתנה</div>
+          </div>
+          <div class="stat-card" style="flex:1; min-width:120px; text-align:center;">
+            <div class="stat-value" id="budgetStatBudget">—</div>
+            <div class="stat-label" data-i18n="budget_stat_budget">תקציב מצופה</div>
+          </div>
+          <div class="stat-card" style="flex:1; min-width:120px; text-align:center;">
+            <div class="stat-value" id="budgetStatPct">—</div>
+            <div class="stat-label" data-i18n="budget_stat_pct">% מהיעד</div>
+          </div>
+        </div>
+
+        <!-- Progress bar (shown only when budget is set) -->
+        <div id="budgetProgressWrap" style="display:none; margin-bottom:1.2rem;">
+          <div style="background:var(--glass-border); border-radius:8px; height:10px; overflow:hidden;">
+            <div id="budgetProgressBar" style="height:100%; width:0%; border-radius:8px; transition:width 0.4s ease; background:var(--accent);"></div>
+          </div>
+        </div>
+
+        <!-- Gift table -->
+        <div style="overflow-x:auto;">
+          <table class="guest-table" style="width:100%;">
+            <thead>
+              <tr>
+                <th data-i18n="col_name">שם</th>
+                <th style="text-align:center;" data-i18n="col_gift_status">סטטוס</th>
+                <th data-i18n="col_gift">מתנה / סכום</th>
+                <th style="text-align:end;" data-i18n="col_amount">סכום ₪</th>
+              </tr>
+            </thead>
+            <tbody id="budgetTableBody"></tbody>
+          </table>
+        </div>
+        <div id="budgetEmpty" style="display:none; text-align:center; padding:2rem; color:var(--text-muted);">
+          <span style="font-size:2rem;">🎁</span>
+          <p data-i18n="budget_empty">עדיין אין אורחים שאישרו הגעה. לאחר קבלת אישורים תוכל לעקוב אחר המתנות כאן.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
          SECTION: Settings
          ══════════════════════════════════════════════════════════════════ -->
     <div class="section" id="sec-settings">
@@ -821,6 +894,7 @@
   <script src="./js/whatsapp.js"></script>
   <script src="./js/rsvp.js"></script>
   <script src="./js/settings.js"></script>
+  <script src="./js/budget.js"></script>
   <script src="./js/sheets.js"></script>
   <script src="./js/auth.js"></script>
   <script src="./js/app.js"></script>

@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.3.0 ── */
+/* ── Wedding Manager — Config & State v1.4.0 ── */
 
 /* ── State ── */
 /* ── State ── */
@@ -20,6 +20,7 @@ const _weddingDefaults = {
   venue: "",
   address: "",
   wazeLink: "",
+  giftBudget: 0,
 };
 let _weddingInfo = { ..._weddingDefaults };
 let _invitationDataUrl = "";
