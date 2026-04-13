@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.7.0 ── */
+/* ── Wedding Manager — Config & State v1.8.0 ── */
 
 /* ── State ── */
 /* ── State ── */
@@ -42,24 +42,13 @@ const THEMES = [
 let _themeIndex = 0;
 
 /* ── Auth Config ── */
-// Google — replace with your OAuth 2.0 Client ID from https://console.cloud.google.com
-//   APIs & Services → Credentials → Create OAuth 2.0 Client ID (Web application)
-//   Authorized origins: http://localhost, https://rajwanyair.github.io
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
-
-// Facebook — replace with your App ID from https://developers.facebook.com
-//   My Apps → Create App → Consumer → Facebook Login for Business
-//   Settings → Basic: App Domains = rajwanyair.github.io
-const FB_APP_ID = "";
-
-// Apple — replace with your Service ID from https://developer.apple.com
-//   Certificates, IDs & Profiles → Services IDs → Sign In with Apple
-//   Return URLs: https://rajwanyair.github.io/Wedding
-const APPLE_SERVICE_ID = "";
-
 // Emails that receive full admin access to all app features.
 // ⚠️  This is a client-side check — appropriate for a personal wedding app only.
 const ADMIN_EMAILS = ["yair.rajwan@gmail.com"];
+
+// Google Client ID — used by sheets.js for optional direct Sheets API v4 access (OAuth2).
+// Login no longer requires this; set only if you want direct Sheets API token refresh.
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
 /* ── Google Sheets Config ── */
 // Spreadsheet: https://docs.google.com/spreadsheets/d/1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA
@@ -104,5 +93,3 @@ let _sheetsToken = null; // OAuth2 access token for Sheets API (in-memory only)
 let _sheetsTokenClient = null; // google.accounts.oauth2 token client instance
 // Extra admin emails approved via Settings (stored in localStorage, merged with ADMIN_EMAILS)
 let _approvedEmails = [];
-// Runtime override for provider credentials (entered via Settings, stored in localStorage)
-let _runtimeAuthConfig = { googleClientId: '', fbAppId: '', appleServiceId: '' };

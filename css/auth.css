@@ -68,6 +68,24 @@
 }
 .auth-divider-line::before,
 .auth-divider-line::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+.auth-email-input {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  text-align: center;
+  direction: ltr;
+  transition: border-color 0.2s, background 0.2s;
+}
+.auth-email-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+}
 /* ── User Info in Top Bar ── */
 .user-chip { gap: 0.4rem !important; }
 .user-avatar-sm {

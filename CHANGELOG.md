@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.0] — 2026-04-13
+
+### Changed
+
+- **Auth completely simplified** — removed Google/Facebook/Apple OAuth flows entirely.
+  App now starts as guest automatically (no blocking login screen).
+- **Email-allowlist sign-in**: pressing 🔑 opens a modal where you type your email.
+  If it matches `ADMIN_EMAILS` (hardcoded: `yair.rajwan@gmail.com`) or the dynamic
+  approved-email list in Settings → you get full manager access instantly.
+- Any manager can add/remove approved emails in **Settings → User Access**.
+- Removed: Google Client ID / FB App ID / Apple Service ID provider-config UI from Settings.
+- Removed: Google GIS `onGoogleLibraryLoad` callback in `app.js` (GIS SDK still loaded for optional Sheets OAuth token path).
+- `sheets.js` `initSheetsTokenClient` now reads `GOOGLE_CLIENT_ID` directly (no runtime override needed).
+- i18n updated: new `auth_admin_login_sub`, `auth_sign_in_btn`, `auth_back_guest`, `auth_email_not_approved` keys; removed OAuth-only keys.
+- Auth overlay redesigned: email input + "Sign In as Manager" button + "Continue as Guest" fallback.
+- Added `.auth-email-input` CSS class for the styled email field.
+- 163/163 tests pass.
+
 ## [1.7.0] — 2025-08-01
 
 ### Security

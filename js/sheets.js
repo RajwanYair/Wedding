@@ -291,9 +291,7 @@ function stopSheetsAutoSync() {
 /* ── OAuth2 (legacy — kept as optional path for direct Sheets API access) ── */
 
 function initSheetsTokenClient() {
-  const clientId = (typeof getRuntimeClientId === 'function')
-    ? getRuntimeClientId()
-    : GOOGLE_CLIENT_ID;
+  const clientId = GOOGLE_CLIENT_ID;
   if (!clientId || clientId.includes('YOUR')) return;
   if (typeof window.google === 'undefined' || !window.google.accounts || !window.google.accounts.oauth2) return;
   _sheetsTokenClient = window.google.accounts.oauth2.initTokenClient({

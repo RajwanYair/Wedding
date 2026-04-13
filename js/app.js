@@ -96,8 +96,3 @@ function initSW() {
 
 init();
 
-// Called by Google Identity Services SDK once it finishes loading
-window.onGoogleLibraryLoad = function() {
-  initGoogleSignIn();
-};
-
