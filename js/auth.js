@@ -20,12 +20,49 @@ function saveAuthConfig() {
 
 /* ─── Email-based sign-in (no OAuth) ───────────────────────────────── */
 
+/** Admin sessions expire after 8 hours of inactivity */
+const _SESSION_TTL_MS = 8 * 60 * 60 * 1000;
+
+/** Max failed login attempts before a 5-minute lockout */
+const _MAX_LOGIN_ATTEMPTS = 5;
+const _LOGIN_LOCKOUT_MS   = 5 * 60 * 1000;
+
+function _loginAttemptOk() {
+  const raw = localStorage.getItem(STORAGE_PREFIX + 'loginFail') || '{}';
+  let rec;
+  try { rec = JSON.parse(raw); } catch (_e) { rec = {}; }
+  const now = Date.now();
+  /* Reset counter if lockout window has passed */
+  if ((now - (rec.since || 0)) >= _LOGIN_LOCKOUT_MS) return true;
+  return (rec.count || 0) < _MAX_LOGIN_ATTEMPTS;
+}
+
+function _recordLoginFailure() {
+  const raw = localStorage.getItem(STORAGE_PREFIX + 'loginFail') || '{}';
+  let rec;
+  try { rec = JSON.parse(raw); } catch (_e) { rec = {}; }
+  const now = Date.now();
+  if ((now - (rec.since || 0)) >= _LOGIN_LOCKOUT_MS) {
+    rec = { count: 1, since: now };
+  } else {
+    rec.count = (rec.count || 0) + 1;
+  }
+  localStorage.setItem(STORAGE_PREFIX + 'loginFail', JSON.stringify(rec));
+}
+
+function _clearLoginFailures() {
+  localStorage.removeItem(STORAGE_PREFIX + 'loginFail');
+}
+
 /**
  * Sign in via email allowlist check — no password, no OAuth.
  * The user enters their email; if it matches ADMIN_EMAILS or _approvedEmails
  * they receive full manager access immediately.
  */
 function submitEmailLogin() {
+  if (!_loginAttemptOk()) {
+    showToast(t('auth_login_locked'), 'error'); return;
+  }
   const inp = document.getElementById('adminLoginEmail');
   if (!inp) return;
   const email = sanitizeInput(inp.value, 254).toLowerCase();
@@ -33,8 +70,10 @@ function submitEmailLogin() {
     showToast(t('toast_email_invalid'), 'error'); return;
   }
   if (!isApprovedAdmin(email)) {
+    _recordLoginFailure();
     showToast(t('auth_email_not_approved'), 'warning'); return;
   }
+  _clearLoginFailures();
   const displayName = email.split('@')[0];
   _authUser = {
     name:      displayName,
@@ -44,8 +83,9 @@ function submitEmailLogin() {
     picture:   '',
     isAdmin:   true,
     provider:  'email',
+    expiresAt: Date.now() + _SESSION_TTL_MS,
   };
-  save('auth', { name: displayName, email: email, picture: '', isAdmin: true, provider: 'email' });
+  save('auth', { name: displayName, email: email, picture: '', isAdmin: true, provider: 'email', expiresAt: _authUser.expiresAt });
   inp.value = '';
   onAuthSuccess();
 }
@@ -128,6 +168,12 @@ function initAuth() {
 
   const saved = load('auth');
   if (saved && saved.email) {
+    /* Enforce session TTL: if the session has expired, log out silently */
+    if (saved.expiresAt && Date.now() > saved.expiresAt) {
+      save('auth', null);
+      loginGuest();
+      return;
+    }
     const parts = (saved.name || '').split(' ');
     /* Re-evaluate isAdmin against current approved list (may have changed since last login) */
     const isAdmin = isApprovedAdmin(saved.email);
@@ -139,9 +185,10 @@ function initAuth() {
       picture:   '',
       isAdmin:   isAdmin,
       provider:  saved.provider || 'email',
+      expiresAt: saved.expiresAt || (Date.now() + _SESSION_TTL_MS),
     };
     /* Persist corrected isAdmin so the next load is also correct */
-    save('auth', { name: _authUser.name, email: _authUser.email, picture: '', isAdmin: isAdmin, provider: _authUser.provider });
+    save('auth', { name: _authUser.name, email: _authUser.email, picture: '', isAdmin: isAdmin, provider: _authUser.provider, expiresAt: _authUser.expiresAt });
     hideAuthOverlay();
     updateUserBar();
     applyUserLevel();

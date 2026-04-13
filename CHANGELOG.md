@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.9.0] — 2026-04-13
+
+### Security
+
+- **Login brute-force protection** — 5 failed attempts triggers a 5-minute lockout
+  tracked in `localStorage` (`loginFail` key). New helpers: `_loginAttemptOk()`,
+  `_recordLoginFailure()`, `_clearLoginFailures()`.
+- **Admin session expiry** — sessions automatically expire after 8 hours of inactivity
+  (`_SESSION_TTL_MS`). `expiresAt` timestamp stored with the session; on load, expired
+  sessions are silently cleared and the user falls back to guest mode.
+- **CSV injection guard** — `exportGuestsCSV` now applies a `csvCell()` helper that
+  prefixes formula-injection characters (`=`, `+`, `-`, `@`, TAB, CR) with a tab so
+  spreadsheet apps do not execute them as formulas.
+- **Server-side mutation guards** — `saveGuest`, `deleteGuest`, `saveTable`, `deleteTable`,
+  `updateWeddingDetails`, `importJSON`, `clearAllData` all now verify `_authUser.isAdmin`
+  before executing, preventing console-based privilege escalation.
+- **Guest field length-clamping** — `saveGuest` now passes every text field through
+  `sanitizeInput()` with appropriate per-field limits instead of raw `.trim()`.
+- **New i18n key** — `auth_login_locked` in both `he` and `en`.
+
 ## [1.8.0] — 2026-04-13
 
 ### Changed

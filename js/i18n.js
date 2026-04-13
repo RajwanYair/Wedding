@@ -269,6 +269,8 @@ const I18N = {
     auth_sign_in: "🔑 כניסה",
     auth_email_not_approved:
       "האימייל אינו ברשימת המורשים. בקש ממנהל להוסיף אותך.",
+    auth_login_locked:
+      "יותר מדי ניסיונות כניסה. נסה שוב בעוד 5 דקות.",
     user_mgr_title: "ניהול גישה",
     user_mgr_desc:
       "הוסף כאן אימיילים שיקבלו גישה מלאה לניהול החתונה. הכניסה נעשית דרך כפתור 🔑 בפינה.",
@@ -575,6 +577,8 @@ const I18N = {
     auth_sign_in: "🔑 Sign In",
     auth_email_not_approved:
       "Email not in approved list. Ask a manager to add you.",
+    auth_login_locked:
+      "Too many failed sign-in attempts. Please try again in 5 minutes.",
     user_mgr_title: "User Access",
     user_mgr_desc:
       "Add emails here for full wedding management access. Sign-in is done via the 🔑 button in the taskbar.",

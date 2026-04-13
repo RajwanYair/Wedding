@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.8.0
+// Wedding Manager — Test Suite v1.9.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.8.0", function () {
-    assert.ok(SRC.includes("v1.8.0"));
+  it("HTML contains v1.9.0", function () {
+    assert.ok(SRC.includes("v1.9.0"));
   });
 
-  it("SW cache name contains v1.8.0", function () {
-    assert.ok(SW.includes("wedding-v1.8.0"));
+  it("SW cache name contains v1.9.0", function () {
+    assert.ok(SW.includes("wedding-v1.9.0"));
   });
 
-  it("package.json version is 1.8.0", function () {
-    assert.equal(PKG.version, "1.8.0");
+  it("package.json version is 1.9.0", function () {
+    assert.equal(PKG.version, "1.9.0");
   });
 });
 
@@ -559,7 +559,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.8.0'));
+    assert.ok(SW.includes('wedding-v1.9.0'));
   });
 
   it('pre-caches app shell', function() {
@@ -724,7 +724,7 @@ describe('Auth & User Access Management', function() {
   });
 });
 
-/* ── Security (v1.7.0) ── */
+/* ── Security (v1.7.0 + v1.9.0) ── */
 describe('Security hardening', function() {
   it('CSP meta tag present with required directives', function() {
     assert.ok(HTML.includes('Content-Security-Policy'), 'CSP meta tag missing');
@@ -775,5 +775,37 @@ describe('Security hardening', function() {
   it('i18n keys toast_rsvp_cooldown and toast_invalid_url present in both languages', function() {
     assert.ok(JS.includes('toast_rsvp_cooldown'), 'toast_rsvp_cooldown key missing');
     assert.ok(JS.includes('toast_invalid_url'), 'toast_invalid_url key missing');
+  });
+
+  /* v1.9.0 additions */
+  it('login attempt rate-limiting present in auth.js', function() {
+    assert.ok(JS.includes('_MAX_LOGIN_ATTEMPTS'), '_MAX_LOGIN_ATTEMPTS missing');
+    assert.ok(JS.includes('_LOGIN_LOCKOUT_MS'), '_LOGIN_LOCKOUT_MS missing');
+    assert.ok(JS.includes('_loginAttemptOk'), '_loginAttemptOk function missing');
+    assert.ok(JS.includes('_recordLoginFailure'), '_recordLoginFailure function missing');
+  });
+
+  it('admin session TTL enforced in auth.js', function() {
+    assert.ok(JS.includes('_SESSION_TTL_MS'), '_SESSION_TTL_MS missing');
+    assert.ok(JS.includes('expiresAt'), 'expiresAt field missing from session');
+  });
+
+  it('CSV injection guard (csvCell helper) present in settings.js', function() {
+    assert.ok(JS.includes('csvCell'), 'csvCell helper missing in settings.js');
+    assert.ok(JS.includes("'=+-@"), 'formula-injection character set missing');
+  });
+
+  it('admin guard on saveGuest in guests.js', function() {
+    assert.ok(JS.includes('function saveGuest'), 'saveGuest missing');
+    assert.ok(JS.includes('_authUser.isAdmin'), 'isAdmin guard missing');
+  });
+
+  it('admin guard on saveTable and deleteTable in tables.js', function() {
+    assert.ok(JS.includes('function saveTable'), 'saveTable missing');
+    assert.ok(JS.includes('function deleteTable'), 'deleteTable missing');
+  });
+
+  it('auth_login_locked i18n key present in both languages', function() {
+    assert.ok(JS.includes('auth_login_locked'), 'auth_login_locked key missing');
   });
 });

@@ -94,6 +94,7 @@ function editTable(id) {
 }
 
 function saveTable() {
+  if (!_authUser || !_authUser.isAdmin) return;
   const name = document.getElementById('tableName').value.trim();
   if (!name) return;
   const capacity = parseInt(document.getElementById('tableCapacity').value, 10) || 10;
@@ -111,6 +112,7 @@ function saveTable() {
 }
 
 function deleteTable(id) {
+  if (!_authUser || !_authUser.isAdmin) return;
   if (!confirm(t('confirm_delete'))) return;
   _guests.forEach(function(g) { if (g.tableId === id) g.tableId = ''; });
   _tables = _tables.filter(function(tbl) { return tbl.id !== id; });

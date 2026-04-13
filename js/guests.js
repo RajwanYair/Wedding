@@ -143,26 +143,27 @@ function editGuest(id) {
 }
 
 function saveGuest() {
-  const firstName = document.getElementById('guestFirstName').value.trim();
+  if (!_authUser || !_authUser.isAdmin) return;
+  const firstName = sanitizeInput(document.getElementById('guestFirstName').value, 100);
   if (!firstName) { document.getElementById('guestFirstName').focus(); return; }
 
   const data = {
     firstName:   firstName,
-    lastName:    document.getElementById('guestLastName').value.trim(),
-    phone:       document.getElementById('guestPhone').value.trim(),
-    email:       document.getElementById('guestEmail').value.trim(),
-    count:       parseInt(document.getElementById('guestCount2').value, 10) || 1,
-    children:    parseInt(document.getElementById('guestChildren').value, 10) || 0,
+    lastName:    sanitizeInput(document.getElementById('guestLastName').value, 100),
+    phone:       sanitizeInput(document.getElementById('guestPhone').value, 20),
+    email:       sanitizeInput(document.getElementById('guestEmail').value, 254),
+    count:       Math.max(1, Math.min(50, parseInt(document.getElementById('guestCount2').value, 10) || 1)),
+    children:    Math.max(0, Math.min(50, parseInt(document.getElementById('guestChildren').value, 10) || 0)),
     status:      document.getElementById('guestStatus').value,
     side:        document.getElementById('guestSide').value,
     group:       document.getElementById('guestGroup').value,
-    relationship:document.getElementById('guestRelationship').value.trim(),
+    relationship:sanitizeInput(document.getElementById('guestRelationship').value, 100),
     meal:        document.getElementById('guestMeal').value,
-    mealNotes:   document.getElementById('guestMealNotes').value.trim(),
+    mealNotes:   sanitizeInput(document.getElementById('guestMealNotes').value, 300),
     accessibility: document.getElementById('guestAccessibility').checked,
     tableId:     document.getElementById('guestTableSelect').value,
-    gift:        document.getElementById('guestGift').value.trim(),
-    notes:       document.getElementById('guestNotes').value.trim(),
+    gift:        sanitizeInput(document.getElementById('guestGift').value, 200),
+    notes:       sanitizeInput(document.getElementById('guestNotes').value, 500),
     updatedAt:   new Date().toISOString(),
   };
 
@@ -182,6 +183,7 @@ function saveGuest() {
 }
 
 function deleteGuest(id) {
+  if (!_authUser || !_authUser.isAdmin) return;
   if (!confirm(t('confirm_delete'))) return;
   _guests = _guests.filter(function(g) { return g.id !== id; });
   saveAll();

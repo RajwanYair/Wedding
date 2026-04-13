@@ -3,6 +3,7 @@
 /* ── Settings: Wedding Details, Export/Import, Data Management ── */
 /* ── Wedding Details ── */
 function updateWeddingDetails() {
+  if (!_authUser || !_authUser.isAdmin) return;
   _weddingInfo.groom       = sanitizeInput(document.getElementById("groomName").value, 100);
   _weddingInfo.groomEn     = sanitizeInput(document.getElementById("groomNameEn").value, 100);
   _weddingInfo.bride       = sanitizeInput(document.getElementById("brideName").value, 100);
@@ -73,6 +74,15 @@ function loadWeddingDetailsToForm() {
 function exportGuestsCSV() {
   if (!_guests.length) return;
   const BOM = "\uFEFF";
+  /** Escape a value for a CSV cell: wrap in quotes and escape internal quotes.
+   *  Also prefix formula-injection characters (=, +, -, @, TAB, CR) with a tab
+   *  so spreadsheet apps don't execute them as formulas. */
+  function csvCell(val) {
+    let s = (val === null || val === undefined) ? '' : String(val);
+    /* Strip formula-injection prefixes */
+    if (s.length > 0 && '=+-@\t\r'.indexOf(s[0]) !== -1) s = '\t' + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
   const cols = [
     t("col_first_name"),
     t("col_last_name"),
@@ -90,18 +100,18 @@ function exportGuestsCSV() {
   const header = cols.join(",");
   const rows = _guests.map(function (g) {
     return [
-      '"' + (g.firstName || "").replace(/"/g, '""') + '"',
-      '"' + (g.lastName || "").replace(/"/g, '""') + '"',
-      '"' + (g.phone || "") + '"',
-      '"' + (g.email || "") + '"',
+      csvCell(g.firstName),
+      csvCell(g.lastName),
+      csvCell(g.phone),
+      csvCell(g.email),
       g.count || 1,
-      '"' + t("status_" + g.status) + '"',
-      '"' + t("side_" + (g.side || "mutual")) + '"',
-      '"' + t("meal_" + (g.meal || "regular")) + '"',
+      csvCell(t("status_" + g.status)),
+      csvCell(t("side_" + (g.side || "mutual"))),
+      csvCell(t("meal_" + (g.meal || "regular"))),
       g.accessibility ? "1" : "0",
-      '"' + getTableName(g.tableId) + '"',
-      '"' + (g.relationship || "").replace(/"/g, '""') + '"',
-      '"' + (g.notes || "").replace(/"/g, '""') + '"',
+      csvCell(getTableName(g.tableId)),
+      csvCell(g.relationship),
+      csvCell(g.notes),
     ].join(",");
   });
   const csv = BOM + header + "\n" + rows.join("\n");
@@ -137,6 +147,7 @@ function exportJSON() {
 }
 
 function importJSON(e) {
+  if (!_authUser || !_authUser.isAdmin) return;
   const file = e.target.files[0];
   if (!file) return;
   if (!file.name.endsWith(".json")) {
@@ -347,6 +358,7 @@ function parseCsvLine(line) {
 }
 
 function clearAllData() {
+  if (!_authUser || !_authUser.isAdmin) return;
   if (!confirm(t("confirm_clear"))) return;
   if (
     !confirm(
