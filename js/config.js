@@ -41,12 +41,20 @@ const THEMES = [
 let _themeIndex = 0;
 
 /* ── Auth Config ── */
-// ⚠️  Replace 'YOUR_GOOGLE_CLIENT_ID' with your actual Google OAuth 2.0 Client ID:
-//    1. Go to https://console.cloud.google.com → APIs & Services → Credentials
-//    2. Create → OAuth 2.0 Client ID → Web application
-//    3. Authorized JavaScript origins: http://localhost  AND  https://<your-github-username>.github.io
-//    4. Copy the Client ID (format: xxxxxxxxxx.apps.googleusercontent.com) and paste below
+// Google — replace with your OAuth 2.0 Client ID from https://console.cloud.google.com
+//   APIs & Services → Credentials → Create OAuth 2.0 Client ID (Web application)
+//   Authorized origins: http://localhost, https://rajwanyair.github.io
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+// Facebook — replace with your App ID from https://developers.facebook.com
+//   My Apps → Create App → Consumer → Facebook Login for Business
+//   Settings → Basic: App Domains = rajwanyair.github.io
+const FB_APP_ID = "";
+
+// Apple — replace with your Service ID from https://developer.apple.com
+//   Certificates, IDs & Profiles → Services IDs → Sign In with Apple
+//   Return URLs: https://rajwanyair.github.io/Wedding
+const APPLE_SERVICE_ID = "";
 
 // Emails that receive full admin access to all app features.
 // ⚠️  This is a client-side check — appropriate for a personal wedding app only.

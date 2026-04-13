@@ -1,0 +1,72 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Lint: All",
+      "type": "npm",
+      "script": "lint",
+      "group": "test",
+      "problemMatcher": [
+        "$eslint-stylish",
+        "$stylelint"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Lint: JS",
+      "type": "npm",
+      "script": "lint:js",
+      "group": "test",
+      "problemMatcher": [
+        "$eslint-stylish"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Lint: CSS",
+      "type": "npm",
+      "script": "lint:css",
+      "group": "test",
+      "problemMatcher": [
+        "$stylelint"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Test: Unit (125 tests)",
+      "type": "shell",
+      "command": "node --test tests/wedding.test.mjs",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "CI: Lint + Test",
+      "dependsOn": [
+        "Lint: All",
+        "Test: Unit (125 tests)"
+      ],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

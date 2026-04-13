@@ -1,5 +1,5 @@
 # =============================================================================
-# CI — Wedding Manager
+# CI — Wedding Manager v1.2.0
 # Lint (HTML + CSS + JS + Markdown), unit tests, security scan
 # =============================================================================
 name: CI
@@ -15,39 +15,12 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint (HTML + CSS + JS + MD)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint HTML
-        run: npm run lint:html
-
-      - name: Lint CSS
-        run: npm run lint:css
-
-      - name: Lint JS
-        run: npm run lint:js
-
-      - name: Lint Markdown
-        run: npm run lint:md
-
-  unit-tests:
-    name: Unit Tests (Node ${{ matrix.node-version }})
+  lint-and-test:
+    name: Lint + Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ["20", "22"]
+        node-version: ["22", "24"]
     steps:
       - uses: actions/checkout@v4
 
@@ -55,8 +28,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-      - name: Run unit tests
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (HTML + CSS + JS + Markdown)
+        run: npm run lint
+
+      - name: Unit tests
         run: node --test tests/wedding.test.mjs
 
   security-scan:
@@ -65,26 +45,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for hardcoded secrets
+      - name: Check for dangerous JS patterns
         run: |
-          echo "Scanning for potential secrets..."
-          if grep -rn "api_key\|apiKey\|secret\|password\|token" index.html | grep -v "//.*api_key\|//.*secret"; then
-            echo "::warning::Potential secrets found in source code"
-          else
-            echo "No hardcoded secrets detected"
-          fi
-
-      - name: Check for dangerous patterns
-        run: |
-          echo "Scanning for dangerous JavaScript patterns..."
           FAILED=0
-          if grep -n "eval(" index.html; then
-            echo "::error::eval() usage detected"
-            FAILED=1
-          fi
-          if grep -n "document\.write(" index.html; then
-            echo "::error::document.write() detected"
-            FAILED=1
-          fi
-          if [ "$FAILED" -eq 1 ]; then exit 1; fi
-          echo "No dangerous patterns found"
+          for f in js/*.js index.html; do
+            if grep -n "eval(" "$f"; then
+              echo "::error file=$f::eval() usage detected"
+              FAILED=1
+            fi
+            if grep -n "document\.write(" "$f"; then
+              echo "::error file=$f::document.write() detected"
+              FAILED=1
+            fi
+          done
+          [ "$FAILED" -eq 0 ] && echo "Security scan passed."
+          exit $FAILED
+

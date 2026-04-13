@@ -1,29 +1,40 @@
 # Wedding Manager — Claude Project Config
 
-> Read `.github/copilot-instructions.md` for full project spec. This file provides the minimal fast-load context for Claude.
+> Full spec in `.github/copilot-instructions.md`. This file: minimal fast-load context.
 
 ## Commands
 
 ```bash
 node --test tests/wedding.test.mjs   # 125 tests — must all pass
 npm run lint                         # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
-npm run lint:html                    # HTMLHint
-npm run lint:css                     # Stylelint (extracts <style> block)
-npm run lint:js                      # ESLint   (extracts <script> block)
+npm run lint:html                    # HTMLHint → index.html
+npm run lint:css                     # Stylelint → css/*.css
+npm run lint:js                      # ESLint → js/*.js
 npm run lint:md                      # markdownlint-cli2
 ```
 
-## Architecture
+## Architecture (v1.2.0 — modular)
 
-Single file: `index.html` embeds all HTML, CSS, and JS. No build step, no runtime deps.
-
-| File                     | Role                                  |
-| ------------------------ | ------------------------------------- |
-| `index.html`             | Complete app                          |
-| `sw.js`                  | Offline cache (APP_SHELL)             |
-| `manifest.json`          | PWA manifest                          |
-| `invitation.jpg`         | Default invitation image              |
+| Path | Role |
+| --- | --- |
+| `index.html` | HTML shell — links `css/` + `js/` |
+| `css/` (6 files) | variables · base · layout · components · responsive · auth |
+| `js/` (17 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · app |
+| `sw.js` | Stale-while-revalidate + 5-min update polling |
+| `manifest.json` | PWA manifest |
 | `tests/wedding.test.mjs` | 125 unit tests (Node built-in runner) |
+
+## Auth Setup
+
+Credentials go in `js/config.js`:
+
+```js
+const GOOGLE_CLIENT_ID  = "YOUR_ID.apps.googleusercontent.com"; // console.cloud.google.com
+const FB_APP_ID         = "";   // developers.facebook.com
+const APPLE_SERVICE_ID  = "";   // developer.apple.com
+```
+
+SDKs must be loaded as `<script>` tags in `index.html` for Facebook and Apple.
 
 ## Mandatory Rules
 
@@ -34,35 +45,18 @@ Single file: `index.html` embeds all HTML, CSS, and JS. No build step, no runtim
 5. All data in `localStorage` with `wedding_v1_` prefix
 6. `npm run lint` must exit 0 after every change
 
-## Guest Model (v1.1.0)
-
-```text
-{ id, firstName, lastName, phone, email, count, children,
-  status: pending|confirmed|declined|maybe,
-  side: groom|bride|mutual,  group: family|friends|work|other,
-  meal: regular|vegetarian|vegan|gluten_free|kosher,
-  mealNotes, accessibility: boolean,
-  tableId, gift, notes, sent, rsvpDate, createdAt, updatedAt }
-```
-
 ## Version Bump Checklist
 
-1. `index.html`, `sw.js`, `CHANGELOG.md`, `README.md` (badge), `package.json`, `tests/wedding.test.mjs`
-2. `npm run lint && node --test tests/wedding.test.mjs` — 0 failures
-3. `git tag vX.Y.Z && git push --tags`
+1. `js/config.js`, `sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
+2. `CHANGELOG.md` — new entry; `README.md` — badge
+3. `npm run lint && node --test tests/wedding.test.mjs` — 0 failures
+4. `git tag vX.Y.Z && git push --tags`
 
 ## Key Patterns
 
 ```js
-// Phone normalization
-cleanPhone('054-123-4567')   // → '972541234567'  (wa.me ready)
-
-// i18n
-t('key')                     // JS string lookup
-data-i18n="key"              // HTML attribute
-data-i18n-placeholder="key"  // input placeholder
-data-i18n-tooltip="key"      // tooltip
-
-// Storage
-saveAll()                    // persists _guests, _tables, _weddingInfo
+t('key')                      // i18n lookup
+data-i18n="key"               // HTML binding
+saveAll()                     // persists guests + tables + weddingInfo
+cleanPhone('054-123-4567')    // → '972541234567'  (wa.me ready)
 ```

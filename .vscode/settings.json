@@ -64,6 +64,75 @@
         "glassmorphism",
         "whatsapp",
         "rsvp",
+        "weddingmanager",
+        "skyway",
+        "markdownlint",
+        "htmlhint",
+        "stylelint"
+    ],
+    // ── Search / Explorer ──
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.git": true
+    },
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    // ── Terminal ──
+    "terminal.integrated.gpuAcceleration": "on",
+    "terminal.integrated.shellIntegration.enabled": true,
+    // ── ESLint ──
+    "eslint.enable": true,
+    "eslint.run": "onType",
+    "eslint.validate": [
+        "javascript"
+    ],
+    "eslint.options": {
+        "overrideConfigFile": "eslint.config.mjs"
+    },
+    "eslint.useFlatConfig": true,
+    // ── Stylelint ──
+    "stylelint.enable": true,
+    "stylelint.validate": [
+        "css"
+    ],
+    "stylelint.snippet": [
+        "css"
+    ],
+    "stylelint.configFile": ".stylelintrc.json",
+    // ── markdownlint ──
+    "markdownlint.run": "onType",
+    "markdownlint.config": {
+        "extends": ".markdownlint.json"
+    },
+    // ── Code actions on save ──
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.stylelint": "explicit",
+        "source.fixAll.markdownlint": "explicit"
+    },
+    // ── Test Explorer (Node.js built-in runner) ──
+    "nodejs-testing.include": [
+        "tests/**/*.mjs"
+    ],
+    "testing.automaticallyOpenPeekView": "never"
+}
+},
+"chat.agent.enabled": true,
+"chat.instructionFilesLocations": {
+".github/instructions": true,
+".github/copilot-instructions.md": true
+},
+"chat.promptFilesLocations": {
+".github/prompts": true
+},
+
+    // ── Spell Check ──
+    "cSpell.words": [
+        "rajwan",
+        "glassmorphism",
+        "whatsapp",
+        "rsvp",
         "weddingmanager"
     ],
 

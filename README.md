@@ -2,14 +2,14 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v1.1.0-d4a574?style=flat-square)
-![HTML](https://img.shields.io/badge/Single_File-HTML-E34F26?style=flat-square&logo=html5&logoColor=white)
+![Version](https://img.shields.io/badge/version-v1.2.0-d4a574?style=flat-square)
+![Modular](https://img.shields.io/badge/Modular-17_JS_%2B_6_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
 
 **Wedding management app — RSVP, table seating, WhatsApp invitations.**
-**Single-file, zero-dependency, Hebrew RTL with English support.**
+**Modular (6 CSS + 17 JS), zero-dependency, Hebrew RTL with English support.**
 
 </div>
 
@@ -30,7 +30,8 @@
 | 📥 **Export** | CSV with UTF-8 BOM for Hebrew, print-friendly layout |
 | 🌐 **i18n** | Full Hebrew/English support with language toggle |
 | 🎨 **5 Themes** | Purple (default), Rose Gold, Classic Gold, Emerald, Royal Blue |
-| 📲 **PWA** | Installable, offline-capable via Service Worker |
+| 📲 **PWA** | Installable, offline-capable via Service Worker (stale-while-revalidate + 5-min update poll) |
+| 🔐 **Auth** | Google (active) · Facebook · Apple · Anonymous guest (all optional) |
 
 ## Quick Start
 
@@ -42,6 +43,18 @@ git clone https://github.com/RajwanYair/Wedding.git
 open index.html
 ```
 
+## Auth Setup (optional)
+
+Edit `js/config.js`:
+
+```js
+const GOOGLE_CLIENT_ID  = "YOUR_ID.apps.googleusercontent.com"; // console.cloud.google.com
+const FB_APP_ID         = "";   // developers.facebook.com → App ID
+const APPLE_SERVICE_ID  = "";   // developer.apple.com → Service ID
+```
+
+Add the SDK `<script>` tags for Facebook and Apple in `index.html` (see comments in that file).
+
 ## Development
 
 ```bash
@@ -50,9 +63,9 @@ node --test tests/wedding.test.mjs
 
 # Lint — all must exit 0 (0 errors, 0 warnings)
 npm run lint         # HTML + CSS + JS + Markdown
-npm run lint:html    # HTMLHint
-npm run lint:css     # Stylelint  (extracts <style>)
-npm run lint:js      # ESLint     (extracts <script>)
+npm run lint:html    # HTMLHint    → index.html
+npm run lint:css     # Stylelint   → css/*.css
+npm run lint:js      # ESLint      → js/*.js
 npm run lint:md      # markdownlint-cli2
 ```
 
@@ -60,10 +73,35 @@ npm run lint:md      # markdownlint-cli2
 
 ```text
 Wedding/
-├── index.html            # App — HTML + CSS + JS (single file)
-├── sw.js                 # Service Worker (offline cache)
+├── index.html            # HTML shell (links css/ and js/)
+├── css/                  # 6 CSS modules
+│   ├── variables.css     # Custom properties, theme colors
+│   ├── base.css          # Reset, typography
+│   ├── layout.css        # Grid, nav, panels
+│   ├── components.css    # Buttons, forms, cards, modals
+│   ├── responsive.css    # 768px + 480px breakpoints
+│   └── auth.css          # Auth overlay
+├── js/                   # 17 JS modules
+│   ├── config.js         # App constants, version, auth credentials
+│   ├── i18n.js           # Hebrew + English strings
+│   ├── dom.js            # Cached DOM refs (el object)
+│   ├── state.js          # App state (_guests, _tables, _weddingInfo)
+│   ├── utils.js          # cleanPhone, date helpers
+│   ├── ui.js             # Toast, modal, loading, i18n apply
+│   ├── nav.js            # Tab navigation
+│   ├── dashboard.js      # Stats, countdown, progress
+│   ├── guests.js         # Guest CRUD, filter, sort, export
+│   ├── tables.js         # Table floor plan, seating
+│   ├── invitation.js     # SVG invitation generator
+│   ├── whatsapp.js       # Message templates, wa.me bulk send
+│   ├── rsvp.js           # Public RSVP form
+│   ├── settings.js       # Wedding info, theme, language
+│   ├── sheets.js         # Google Sheets sync
+│   ├── auth.js           # Google / Facebook / Apple / Anonymous auth
+│   └── app.js            # Entry point, init, SW registration
+├── sw.js                 # Service Worker (stale-while-revalidate, 5-min update poll)
 ├── manifest.json         # PWA manifest
-├── icon.svg              # App icon (512×512 rings + heart)
+├── icon.svg              # App icon (512×512)
 ├── invitation.jpg        # Default invitation background
 ├── architecture.svg      # Architecture diagram
 ├── package.json          # devDeps: eslint, stylelint, htmlhint, markdownlint-cli2

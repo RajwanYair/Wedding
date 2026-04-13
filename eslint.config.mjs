@@ -48,11 +48,16 @@ export default [
         btoa: "readonly",
         atob: "readonly",
         structuredClone: "readonly",
+        // Third-party auth SDKs (loaded via <script> in index.html)
+        FB: "readonly",
+        AppleID: "readonly",
 
         /* ── Cross-file shared identifiers (multi-file global scope) ── */
         // config.js — constants & state variables
         STORAGE_PREFIX: "writable",
         GOOGLE_CLIENT_ID: "writable",
+        FB_APP_ID: "writable",
+        APPLE_SERVICE_ID: "writable",
         ADMIN_EMAILS: "writable",
         SPREADSHEET_ID: "writable",
         SHEETS_GUESTS_TAB: "writable",

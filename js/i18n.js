@@ -248,6 +248,7 @@ const I18N = {
       "כניסה עם Facebook טרם הוגדרה. צור קשר עם מנהל המערכת.",
     auth_apple_not_configured:
       "כניסה עם Apple טרם הוגדרה. צור קשר עם מנהל המערכת.",
+    auth_error: "שגיאה בהתחברות. נסה שוב.",
     role_admin: "מנהל",
     role_guest: "אורח",
     tip_sign_out: "התנתק מהמערכת",
@@ -511,6 +512,7 @@ const I18N = {
       "Facebook login is not configured yet. Contact the administrator.",
     auth_apple_not_configured:
       "Apple login is not configured yet. Contact the administrator.",
+    auth_error: "Sign-in error. Please try again.",
     role_admin: "Admin",
     role_guest: "Guest",
     tip_sign_out: "Sign out",
