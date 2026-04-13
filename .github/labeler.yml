@@ -1,0 +1,31 @@
+# =============================================================================
+# PR labeler config
+# =============================================================================
+
+wedding-app:
+  - changed-files:
+      - any-glob-to-any-file: "index.html"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "README.md"
+          - "CHANGELOG.md"
+          - ".github/*.md"
+          - ".github/instructions/**"
+
+copilot-config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/copilot-instructions.md"
+          - ".github/copilot/**"
+          - ".github/agents/**"
+          - ".github/prompts/**"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: "tests/**"

@@ -1,0 +1,14 @@
+{
+    "name": "wedding-manager",
+    "version": "1.0.0",
+    "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "test": "node --test tests/wedding.test.mjs",
+        "test:watch": "node --test --watch tests/wedding.test.mjs"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

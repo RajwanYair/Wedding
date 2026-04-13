@@ -1,0 +1,42 @@
+{
+    "version": "1.0.0",
+    "project": "WeddingManager",
+    "copilot": {
+        "enabled": true,
+        "features": {
+            "chat_modes": true,
+            "inline_suggestions": true,
+            "documentation_generation": true
+        }
+    },
+    "modes": {
+        "ui-mode": {
+            "enabled": true,
+            "aliases": ["design", "css", "layout", "theme"],
+            "priority": "high",
+            "context_files": ["index.html"],
+            "description": "UI/UX design and CSS styling specialist"
+        },
+        "guest-mode": {
+            "enabled": true,
+            "aliases": ["guests", "rsvp", "tables", "seating"],
+            "priority": "high",
+            "context_files": ["index.html"],
+            "description": "Guest management, RSVP, and table seating specialist"
+        },
+        "fix-mode": {
+            "enabled": true,
+            "aliases": ["debug", "troubleshoot", "error"],
+            "priority": "high",
+            "context_files": ["index.html"],
+            "description": "Debugging and error resolution specialist"
+        },
+        "docs-mode": {
+            "enabled": true,
+            "aliases": ["documentation", "readme"],
+            "priority": "medium",
+            "context_files": ["README.md", ".github/copilot-instructions.md"],
+            "description": "Documentation and README expert"
+        }
+    }
+}

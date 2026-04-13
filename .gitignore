@@ -1,0 +1,19 @@
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE (keep .vscode/ tracked for workspace config)
+*.swp
+*.swo
+*~
+
+# Node (zero-dependency project, but future-proof)
+node_modules/
+coverage/
+
+# Misc
+*.log
+*.bak
+*.tmp
+.extracted.*

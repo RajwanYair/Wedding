@@ -1,0 +1,7 @@
+# CODEOWNERS — Wedding Manager
+# =============================================================================
+* @RajwanYair
+
+/.github/ @RajwanYair
+/index.html @RajwanYair
+/README.md @RajwanYair
