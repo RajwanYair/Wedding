@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.0] — 2026-04-13
+
+### Added
+
+- **Dashboard donut charts** — three Canvas-based donut charts directly on the Dashboard:
+  - *RSVP Status*: confirmed / pending / maybe / declined (by head count)
+  - *Meal Preferences*: regular / vegetarian / vegan / kosher / gluten-free / other (by record)
+  - *Sides Distribution*: groom / bride / mutual (by head count)
+- `renderCharts()` in `dashboard.js` — called automatically from `renderStats()` on every data change.
+- `_drawDonut(canvas, segments, centerLabel)` — pure Canvas 2D helper; HiDPI-aware via `devicePixelRatio`; empty state shows dashed ring.
+- `_buildLegend(legendEl, segments)` — DOM-based color-dot legend (no `innerHTML`).
+- New CSS classes in `components.css`: `.charts-row`, `.chart-wrap`, `.chart-label`, `.chart-legend`, `.chart-legend-item`, `.chart-legend-dot`.
+- Responsive: charts stack naturally on 480 px mobile via `flex-wrap`.
+- 8 new tests (185 total).
+- New i18n keys: `charts_title`, `chart_rsvp_title`, `chart_meal_title`, `chart_side_title`, `chart_total`, `chart_guests` (both `he` + `en`).
+
 ## [1.9.0] — 2026-04-13
 
 ### Security

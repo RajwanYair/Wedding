@@ -780,4 +780,45 @@ th.sort-desc .sort-indicator { opacity: 1; }
   to   { transform: translateY(0);     opacity: 1; }
 }
 
+/* ── Dashboard Charts ── */
+.charts-row {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+  padding: 0.4rem 0;
+}
+.chart-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+.chart-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-align: center;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+  justify-content: center;
+  max-width: 170px;
+}
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+.chart-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
 

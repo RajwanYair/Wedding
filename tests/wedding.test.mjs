@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.9.0
+// Wedding Manager — Test Suite v1.10.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.9.0", function () {
-    assert.ok(SRC.includes("v1.9.0"));
+  it("HTML contains v1.10.0", function () {
+    assert.ok(SRC.includes("v1.10.0"));
   });
 
-  it("SW cache name contains v1.9.0", function () {
-    assert.ok(SW.includes("wedding-v1.9.0"));
+  it("SW cache name contains v1.10.0", function () {
+    assert.ok(SW.includes("wedding-v1.10.0"));
   });
 
-  it("package.json version is 1.9.0", function () {
-    assert.equal(PKG.version, "1.9.0");
+  it("package.json version is 1.10.0", function () {
+    assert.equal(PKG.version, "1.10.0");
   });
 });
 
@@ -287,6 +287,55 @@ describe('Budget & Gift Tracker', function() {
     assert.ok(HTML.includes('id="budgetStatGifts"'));
     assert.ok(HTML.includes('id="budgetStatTotal"'));
     assert.ok(HTML.includes('id="budgetStatPending"'));
+  });
+});
+
+// ── Charts (v1.10.0) ──
+describe('Dashboard Charts', function() {
+  it('has charts card in dashboard HTML', function() {
+    assert.ok(HTML.includes('id="sec-dashboard"'), 'dashboard section missing');
+    assert.ok(HTML.includes('id="chartRsvp"'),   'chartRsvp canvas missing');
+    assert.ok(HTML.includes('id="chartMeal"'),   'chartMeal canvas missing');
+    assert.ok(HTML.includes('id="chartSide"'),   'chartSide canvas missing');
+  });
+
+  it('has chart legend containers', function() {
+    assert.ok(HTML.includes('id="chartRsvpLegend"'), 'chartRsvpLegend missing');
+    assert.ok(HTML.includes('id="chartMealLegend"'), 'chartMealLegend missing');
+    assert.ok(HTML.includes('id="chartSideLegend"'), 'chartSideLegend missing');
+  });
+
+  it('has renderCharts function in dashboard.js', function() {
+    assert.ok(JS.includes('function renderCharts'), 'renderCharts missing');
+  });
+
+  it('has _drawDonut helper function', function() {
+    assert.ok(JS.includes('function _drawDonut'), '_drawDonut missing');
+  });
+
+  it('has _buildLegend helper function', function() {
+    assert.ok(JS.includes('function _buildLegend'), '_buildLegend missing');
+  });
+
+  it('renderCharts is called from renderStats', function() {
+    assert.ok(JS.includes('renderCharts()'), 'renderCharts() call missing');
+  });
+
+  it('chart i18n keys present in both languages', function() {
+    assert.ok(JS.includes('charts_title'),    'charts_title key missing');
+    assert.ok(JS.includes('chart_rsvp_title'),'chart_rsvp_title key missing');
+    assert.ok(JS.includes('chart_meal_title'),'chart_meal_title key missing');
+    assert.ok(JS.includes('chart_side_title'),'chart_side_title key missing');
+    assert.ok(JS.includes('chart_total'),     'chart_total key missing');
+    assert.ok(JS.includes('chart_guests'),    'chart_guests key missing');
+  });
+
+  it('chart CSS classes present in components.css', function() {
+    assert.ok(CSS.includes('.charts-row'),        '.charts-row missing');
+    assert.ok(CSS.includes('.chart-wrap'),         '.chart-wrap missing');
+    assert.ok(CSS.includes('.chart-legend'),       '.chart-legend missing');
+    assert.ok(CSS.includes('.chart-legend-item'),  '.chart-legend-item missing');
+    assert.ok(CSS.includes('.chart-legend-dot'),   '.chart-legend-dot missing');
   });
 });
 
@@ -559,7 +608,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.9.0'));
+    assert.ok(SW.includes('wedding-v1.10.0'));
   });
 
   it('pre-caches app shell', function() {

@@ -65,6 +65,8 @@
 /* — Phone portrait (≤ 480px) — */
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr; }
+  .charts-row { gap: 0.7rem; }
+  .chart-legend { max-width: 140px; }
   .top-bar { padding: 0.4rem 0.8rem; }
   .main-content { padding: 1rem 0.5rem; }
   .guests-toolbar { flex-direction: column; }
@@ -142,4 +144,4 @@
     transition-duration: 0.01ms !important;
   }
 }
-
+

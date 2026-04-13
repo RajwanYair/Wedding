@@ -131,6 +131,9 @@ export default [
         STATUS_ICON: "writable",
         SIDE_ICON: "writable",
         MEAL_ICON: "writable",
+        renderCharts: "writable",
+        _drawDonut: "writable",
+        _buildLegend: "writable",
         // guests.js
         renderGuests: "writable",
         filterGuests: "writable",
