@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.0] — 2026-04-13
+
+### Added
+
+- Google Sheet as primary backend database — public read via `gviz/tq` endpoint (no auth required)
+- Apps Script Web App for writes — `replaceAll` + `append` + `ensureSheets` actions
+- `Config` sheet tab for wedding info (key-value pairs: groom, bride, date, venue, etc.)
+- `loadFromSheetsOnInit()` — loads all three tabs on startup, overwrites localStorage
+- `startSheetsAutoSync()` — polls every 30 s for remote changes via fingerprint comparison
+- `syncConfigToSheets()` — syncs wedding info to the Config tab on every save
+- `saveWebAppUrl()` / `renderSheetsSettings()` — runtime Apps Script URL config in Settings
+- `createMissingSheetTabs()` — button to create Attendees / Tables / Config tabs via Apps Script
+- Sheets settings card redesign: Web App URL input, status badge (read-only vs read+write), direct link to spreadsheet
+- `SHEETS_CONFIG_TAB = "Config"`, `SHEETS_SYNC_INTERVAL_MS = 30000` in config
+
+### Changed
+
+- `syncGuestsToSheets` / `syncTablesToSheets` now use Apps Script Web App (no-cors POST); OAuth v4 kept as optional fallback
+- Settings nav tab now also calls `renderSheetsSettings()` on open
+- `updateWeddingDetails()` now calls `syncConfigToSheets()` after saving
+
+## [1.5.0] — 2026-04-14
+
+### Added
+
+- Full multi-provider auth support: Google (GIS), Facebook (JS SDK), Apple Sign-In — all SDKs loaded dynamically at runtime
+- User Access Management UI in Settings: approve additional admin emails, configure provider credentials (Client ID / App ID / Service ID) without redeploying
+- `isApprovedAdmin()` — checks both hardcoded `ADMIN_EMAILS` and runtime-approved list from localStorage
+- `addApprovedEmail()` / `removeApprovedEmail()` — manage runtime admin list
+- `saveProviderConfig()` / `renderUserManager()` — Settings card to configure SDKs and approved users
+- `loadAuthConfig()` / `saveAuthConfig()` — persist auth config under `wedding_v1_authConfig`
+- `loadFBSDK()` / `loadAppleSDK()` — dynamic SDK injection (no hard-wired `<script>` tags needed)
+- Setup hint rendered in Google button area when no Client ID is configured
+- Root admin `yair.rajwan@gmail.com` has full access (hardcoded, cannot be removed)
+
+### Changed
+
+- `initGoogleSignIn()` now uses runtime Client ID from Settings, not hardcoded placeholder
+- `initAuth()` loads auth config and re-evaluates `isAdmin` against current approved list on every startup
+- Facebook and Apple login use runtime App ID / Service ID respectively
+
 ## [1.4.0] — 2026-04-13
 
 ### Added

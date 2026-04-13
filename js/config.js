@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.5.0 ── */
+/* ── Wedding Manager — Config & State v1.6.0 ── */
 
 /* ── State ── */
 /* ── State ── */
@@ -64,12 +64,15 @@ const ADMIN_EMAILS = ["yair.rajwan@gmail.com"];
 /* ── Google Sheets Config ── */
 // Spreadsheet: https://docs.google.com/spreadsheets/d/1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA
 const SPREADSHEET_ID = "1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA";
-const SHEETS_GUESTS_TAB = "Attendees"; // Rename Sheet1 → Attendees in your spreadsheet
-const SHEETS_TABLES_TAB = "Tables"; // Rename Sheet2 → Tables  in your spreadsheet
-// For guest RSVP without admin login: deploy .github/scripts/sheets-webapp.gs as a
-// Google Apps Script Web App (Execute as: Me | Who has access: Anyone), then paste URL:
-const SHEETS_WEBAPP_URL = "";
-const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
+const SHEETS_GUESTS_TAB  = "Attendees"; // Sheet tab for guests
+const SHEETS_TABLES_TAB  = "Tables";    // Sheet tab for seating tables
+const SHEETS_CONFIG_TAB  = "Config";    // Sheet tab for wedding info (key-value)
+// Deploy .github/scripts/sheets-webapp.gs as a Google Apps Script Web App
+// (Execute as: Me | Who has access: Anyone), then paste the Web App URL here
+// or enter it at runtime in the Settings → Google Sheets card:
+const SHEETS_WEBAPP_URL  = "";
+const SHEETS_SCOPE       = "https://www.googleapis.com/auth/spreadsheets";
+const SHEETS_SYNC_INTERVAL_MS = 30000; // auto-reload interval in milliseconds
 const GUEST_COLS = [
   "id",
   "firstName",

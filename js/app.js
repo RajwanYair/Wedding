@@ -25,6 +25,10 @@ function init() {
   renderBudget();
   initAuth();
   initSW();
+  /* Load primary data from Google Sheets (public read, no auth) */
+  loadFromSheetsOnInit();
+  /* Start 30-second auto-sync polling for remote changes */
+  startSheetsAutoSync();
 }
 
 /** Applies the queued update: tells the waiting SW to skip waiting (which

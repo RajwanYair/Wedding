@@ -20,6 +20,7 @@ function showSection(name) {
   if (name === "settings") {
     renderDataSummary();
     renderUserManager();
+    renderSheetsSettings();
   }
 }
 

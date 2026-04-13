@@ -35,6 +35,7 @@ function updateWeddingDetails() {
   renderCountdown();
   renderInvitation();
   saveAll();
+  syncConfigToSheets();
 }
 
 function loadWeddingDetailsToForm() {

@@ -652,13 +652,31 @@
           <!-- Google Sheets Sync -->
           <div class="settings-card">
             <h3>📊 <span data-i18n="sheets_title">Google Sheets סנכרון</span></h3>
-            <p data-i18n="sheets_desc">כל הנתונים נשמרים באופן אוטומטי ל-Google Sheets בעת התחברות כמנהל</p>
+            <p data-i18n="sheets_desc">הגיליון המשותף הוא מסד הנתונים הראשי — נטען ומסונכרן אוטומטית בכל 30 שניות</p>
             <div id="sheetsBadge" style="font-size:0.82em; margin-bottom:0.6rem; color:var(--text-muted);">&#x1F534; <span data-i18n="sheets_status_off">Google Sheets לא מחובר</span></div>
-            <button class="btn btn-secondary" onclick="syncSheetsNow()" data-i18n-tooltip="tip_sheets_sync">
-              🔄 <span data-i18n="sheets_sync_btn">סנכרן עם Google Sheets</span>
-            </button>
-            <p style="font-size:0.75em; color:var(--text-muted); margin-top:0.5rem; line-height:1.5;">
-              Sheet ID: <code style="font-size:0.9em; word-break:break-all;">1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA</code>
+
+            <!-- Apps Script Web App URL -->
+            <label for="sheetsWebAppUrl" style="font-size:0.82em; color:var(--text-secondary); display:block; margin-bottom:0.25rem;" data-i18n="sheets_webapp_label">כתובת Apps Script Web App</label>
+            <div style="display:flex; gap:0.4rem; margin-bottom:0.6rem;">
+              <input id="sheetsWebAppUrl" type="url" class="form-input" style="flex:1; font-size:0.8em;" data-i18n-placeholder="ph_sheets_webapp_url" placeholder="https://script.google.com/macros/s/...">
+              <button class="btn btn-secondary" onclick="saveWebAppUrl()" data-i18n="sheets_webapp_save">שמור</button>
+            </div>
+            <p style="font-size:0.72em; color:var(--text-muted); margin-bottom:0.8rem; line-height:1.5;" data-i18n="sheets_webapp_hint">פרוס את <code>.github/scripts/sheets-webapp.gs</code> כ-Web App ב-Google Apps Script, ולאחר מכן הדבק כאן את ה-URL</p>
+
+            <!-- Action buttons -->
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button class="btn btn-secondary" onclick="syncSheetsNow()" data-i18n-tooltip="tip_sheets_sync">
+                🔄 <span data-i18n="sheets_sync_btn">סנכרן עכשיו</span>
+              </button>
+              <button class="btn btn-secondary" onclick="createMissingSheetTabs()">
+                ➕ <span data-i18n="sheets_create_tabs">צור טאבים חסרים</span>
+              </button>
+            </div>
+
+            <!-- Sheet info -->
+            <p style="font-size:0.73em; color:var(--text-muted); margin-top:0.8rem; line-height:1.6;">
+              Sheet ID: <code style="font-size:0.9em; word-break:break-all;">1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA</code><br>
+              <a href="https://docs.google.com/spreadsheets/d/1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA" target="_blank" rel="noopener noreferrer" data-i18n="sheets_open_link">פתח ב-Google Sheets ↗</a>
             </p>
           </div>
 

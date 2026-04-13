@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.5.0
+// Wedding Manager — Test Suite v1.6.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
@@ -26,16 +26,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.5.0", function () {
-    assert.ok(SRC.includes("v1.5.0"));
+  it("HTML contains v1.6.0", function () {
+    assert.ok(SRC.includes("v1.6.0"));
   });
 
-  it("SW cache name contains v1.5.0", function () {
-    assert.ok(SW.includes("wedding-v1.5.0"));
+  it("SW cache name contains v1.6.0", function () {
+    assert.ok(SW.includes("wedding-v1.6.0"));
   });
 
   it("package.json version is 1.5.0", function () {
-    assert.equal(PKG.version, "1.5.0");
+    assert.equal(PKG.version, "1.6.0");
   });
 });
 
@@ -559,7 +559,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.5.0'));
+    assert.ok(SW.includes('wedding-v1.6.0'));
   });
 
   it('pre-caches app shell', function() {
@@ -685,5 +685,45 @@ describe('Auth & User Access Management', function() {
   it('_approvedEmails and _runtimeAuthConfig declared in config', function() {
     assert.ok(JS.includes('_approvedEmails'));
     assert.ok(JS.includes('_runtimeAuthConfig'));
+  });
+
+  /* ── Google Sheets (v1.6.0) ── */
+  it('config has SHEETS_CONFIG_TAB and SHEETS_SYNC_INTERVAL_MS', function() {
+    assert.ok(JS.includes('SHEETS_CONFIG_TAB'));
+    assert.ok(JS.includes('SHEETS_SYNC_INTERVAL_MS'));
+  });
+
+  it('sheets.js has sheetsGvizRead function', function() {
+    assert.ok(JS.includes('function sheetsGvizRead'));
+  });
+
+  it('sheets.js has loadFromSheetsOnInit function', function() {
+    assert.ok(JS.includes('function loadFromSheetsOnInit'));
+  });
+
+  it('sheets.js has syncConfigToSheets function', function() {
+    assert.ok(JS.includes('function syncConfigToSheets'));
+  });
+
+  it('sheets.js has startSheetsAutoSync / stopSheetsAutoSync', function() {
+    assert.ok(JS.includes('function startSheetsAutoSync'));
+    assert.ok(JS.includes('function stopSheetsAutoSync'));
+  });
+
+  it('sheets.js has saveWebAppUrl / renderSheetsSettings', function() {
+    assert.ok(JS.includes('function saveWebAppUrl'));
+    assert.ok(JS.includes('function renderSheetsSettings'));
+  });
+
+  it('Sheets settings card has sheetsWebAppUrl input and open link', function() {
+    assert.ok(HTML.includes('id="sheetsWebAppUrl"'));
+    assert.ok(HTML.includes('docs.google.com/spreadsheets/d/'));
+  });
+
+  it('apps script supports replaceAll and ensureSheets', function() {
+    const GS = readFileSync(resolve(__dirname, '..', '.github', 'scripts', 'sheets-webapp.gs'), 'utf8');
+    assert.ok(GS.includes("action === 'replaceAll'"));
+    assert.ok(GS.includes("action === 'ensureSheets'"));
+    assert.ok(GS.includes("'Config'"));
   });
 });

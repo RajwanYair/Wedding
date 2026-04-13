@@ -1,10 +1,10 @@
 // =============================================================================
-// Service Worker — Wedding Manager v1.5.0
+// Service Worker — Wedding Manager v1.6.0
 // Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
 'use strict';
 
-const CACHE_NAME = "wedding-v1.5.0";
+const CACHE_NAME = "wedding-v1.6.0";
 const APP_SHELL = [
   "./",
   "./index.html",
