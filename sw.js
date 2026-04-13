@@ -10,6 +10,7 @@ const APP_SHELL = [
   './index.html',
   './icon.svg',
   './manifest.json',
+  './invitation.jpg',
 ];
 
 // Install: pre-cache app shell
