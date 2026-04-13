@@ -4,6 +4,7 @@ export default [
       ecmaVersion: "latest",
       sourceType: "script",
       globals: {
+        /* ── Browser APIs ── */
         window: "readonly",
         document: "readonly",
         navigator: "readonly",
@@ -47,6 +48,147 @@ export default [
         btoa: "readonly",
         atob: "readonly",
         structuredClone: "readonly",
+
+        /* ── Cross-file shared identifiers (multi-file global scope) ── */
+        // config.js — constants & state variables
+        STORAGE_PREFIX: "writable",
+        GOOGLE_CLIENT_ID: "writable",
+        ADMIN_EMAILS: "writable",
+        SPREADSHEET_ID: "writable",
+        SHEETS_GUESTS_TAB: "writable",
+        SHEETS_TABLES_TAB: "writable",
+        SHEETS_WEBAPP_URL: "writable",
+        SHEETS_SCOPE: "writable",
+        GUEST_COLS: "writable",
+        TABLE_COLS: "writable",
+        THEMES: "writable",
+        _guests: "writable",
+        _tables: "writable",
+        _weddingDefaults: "writable",
+        _weddingInfo: "writable",
+        _invitationDataUrl: "writable",
+        _currentFilter: "writable",
+        _sideFilter: "writable",
+        _sortCol: "writable",
+        _sortAsc: "writable",
+        _editingGuestId: "writable",
+        _editingTableId: "writable",
+        _currentLang: "writable",
+        _currentTheme: "writable",
+        _themeIndex: "writable",
+        _authUser: "writable",
+        _sheetsToken: "writable",
+        _sheetsTokenClient: "writable",
+        // i18n.js
+        I18N: "writable",
+        // dom.js
+        el: "writable",
+        // state.js
+        save: "writable",
+        load: "writable",
+        saveAll: "writable",
+        loadAll: "writable",
+        migrateGuests: "writable",
+        // utils.js
+        uid: "writable",
+        guestFullName: "writable",
+        escapeHtml: "writable",
+        cleanPhone: "writable",
+        formatDateHebrew: "writable",
+        initParticles: "writable",
+        // ui.js
+        t: "writable",
+        applyLanguage: "writable",
+        toggleLanguage: "writable",
+        cycleTheme: "writable",
+        openModal: "writable",
+        closeModal: "writable",
+        showToast: "writable",
+        printGuests: "writable",
+        // nav.js
+        showSection: "writable",
+        // dashboard.js
+        updateTopBar: "writable",
+        updateHeaderInfo: "writable",
+        renderStats: "writable",
+        renderCountdown: "writable",
+        cdItem: "writable",
+        STATUS_ICON: "writable",
+        SIDE_ICON: "writable",
+        MEAL_ICON: "writable",
+        // guests.js
+        renderGuests: "writable",
+        filterGuests: "writable",
+        setFilter: "writable",
+        setSideFilter: "writable",
+        sortGuestsBy: "writable",
+        openAddGuestModal: "writable",
+        editGuest: "writable",
+        saveGuest: "writable",
+        deleteGuest: "writable",
+        // tables.js
+        renderTables: "writable",
+        renderUnassignedGuests: "writable",
+        handleTableDrop: "writable",
+        openAddTableModal: "writable",
+        editTable: "writable",
+        saveTable: "writable",
+        deleteTable: "writable",
+        getTableName: "writable",
+        populateTableSelect: "writable",
+        // invitation.js
+        handleInvitationUpload: "writable",
+        renderInvitation: "writable",
+        renderDefaultInvitationSVG: "writable",
+        DEFAULT_INVITATION_SRC: "writable",
+        // whatsapp.js
+        updateWaPreview: "writable",
+        fillTemplate: "writable",
+        sendWhatsAppSingle: "writable",
+        sendWhatsAppAll: "writable",
+        renderWaGuestList: "writable",
+        // rsvp.js
+        submitRSVP: "writable",
+        // settings.js
+        updateWeddingDetails: "writable",
+        loadWeddingDetailsToForm: "writable",
+        exportGuestsCSV: "writable",
+        exportJSON: "writable",
+        importJSON: "writable",
+        downloadCSVTemplate: "writable",
+        importCSV: "writable",
+        parseCsvLine: "writable",
+        clearAllData: "writable",
+        renderDataSummary: "writable",
+        // sheets.js
+        initSheetsTokenClient: "writable",
+        requestSheetsAccess: "writable",
+        sheetsRequest: "writable",
+        sheetsEnsureHeaders: "writable",
+        guestToRow: "writable",
+        rowToGuest: "writable",
+        tableToRow: "writable",
+        rowToTable: "writable",
+        loadFromSheets: "writable",
+        syncGuestsToSheets: "writable",
+        syncTablesToSheets: "writable",
+        sheetsAppendRsvp: "writable",
+        updateSheetsStatusBadge: "writable",
+        syncSheetsNow: "writable",
+        // auth.js
+        decodeJwt: "writable",
+        handleGoogleCredential: "writable",
+        loginFacebook: "writable",
+        loginApple: "writable",
+        loginGuest: "writable",
+        signOut: "writable",
+        showAuthOverlay: "writable",
+        hideAuthOverlay: "writable",
+        updateUserBar: "writable",
+        applyUserLevel: "writable",
+        onAuthSuccess: "writable",
+        initGoogleSignIn: "writable",
+        initAuth: "writable",
       },
     },
     rules: {
@@ -64,7 +206,7 @@ export default [
       "use-isnan": "error",
       "valid-typeof": "error",
       "no-constant-condition": ["error", { checkLoops: false }],
-      "no-redeclare": "error",
+      "no-redeclare": ["error", { builtinGlobals: false }],
       "no-empty": ["error", { allowEmptyCatch: true }],
       eqeqeq: ["error", "smart"],
 
@@ -73,17 +215,20 @@ export default [
       "prefer-const": "error",
 
       // ── Unused variables ──────────────────────────────────────────
-      // Functions used as HTML inline event handlers (onclick, oninput…)
-      // are never "called" from JS so ESLint marks them unused.
-      // Each prefix corresponds to a naming convention in index.html.
+      // Multi-file architecture: each file declares functions & constants
+      // that are consumed by other files via shared global scope.
+      // The pattern covers all naming conventions used across modules.
       "no-unused-vars": [
         "error",
         {
           varsIgnorePattern:
-            "^_|^load|^render|^init|^toggle|^update|^handle" +
+            "^_|^[A-Z]|^el$|^t$|^uid$|^cd" +
+            "|^load|^render|^init|^toggle|^update|^handle" +
             "|^show|^hide|^open|^close|^add|^remove|^save|^delete" +
             "|^export|^import|^send|^cycle|^filter|^set|^sort|^edit" +
-            "|^submit|^download|^clear|^print|^login|^sign|^sync",
+            "|^submit|^download|^clear|^print|^login|^sign|^sync" +
+            "|^guest|^escape|^clean|^format|^parse|^fill|^row|^decode" +
+            "|^apply|^migrate|^sheets|^table|^popup|^get|^populate",
           argsIgnorePattern: "^_|^e$|^k$",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",

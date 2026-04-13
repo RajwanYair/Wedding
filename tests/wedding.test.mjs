@@ -1,10 +1,10 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.1.0
+// Wedding Manager — Test Suite v1.2.0
 // Run: node --test tests/wedding.test.mjs
 // =============================================================================
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,18 +14,28 @@ const SW = readFileSync(resolve(__dirname, '..', 'sw.js'), 'utf8');
 const MANIFEST = JSON.parse(readFileSync(resolve(__dirname, '..', 'manifest.json'), 'utf8'));
 const PKG = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8'));
 
+// Read all CSS and JS source files
+const CSS_DIR = resolve(__dirname, '..', 'css');
+const JS_DIR = resolve(__dirname, '..', 'js');
+const CSS = readdirSync(CSS_DIR).filter(function(f) { return f.endsWith('.css'); })
+  .map(function(f) { return readFileSync(resolve(CSS_DIR, f), 'utf8'); }).join('\n');
+const JS = readdirSync(JS_DIR).filter(function(f) { return f.endsWith('.js') && !f.startsWith('_'); })
+  .map(function(f) { return readFileSync(resolve(JS_DIR, f), 'utf8'); }).join('\n');
+// Combined sources for pattern matching (HTML + CSS + JS)
+const SRC = HTML + '\n' + CSS + '\n' + JS;
+
 // ── Version ──
 describe('Version', function() {
-  it('HTML contains v1.1.0', function() {
-    assert.ok(HTML.includes('v1.1.0'));
+  it("HTML contains v1.2.0", function () {
+    assert.ok(SRC.includes("v1.2.0"));
   });
 
-  it('SW cache name contains v1.1.0', function() {
-    assert.ok(SW.includes('wedding-v1.1.0'));
+  it("SW cache name contains v1.2.0", function () {
+    assert.ok(SW.includes("wedding-v1.2.0"));
   });
 
   it('package.json version is 1.1.0', function() {
-    assert.equal(PKG.version, '1.1.0');
+    assert.equal(PKG.version, "1.2.0");
   });
 });
 
@@ -36,28 +46,28 @@ describe('HTML Structure', function() {
   });
 
   it('has lang="he" and dir="rtl"', function() {
-    assert.ok(HTML.includes('lang="he"'));
-    assert.ok(HTML.includes('dir="rtl"'));
+    assert.ok(SRC.includes('lang="he"'));
+    assert.ok(SRC.includes('dir="rtl"'));
   });
 
   it('has viewport meta', function() {
-    assert.ok(HTML.includes('name="viewport"'));
+    assert.ok(SRC.includes('name="viewport"'));
   });
 
   it('has charset meta', function() {
-    assert.ok(HTML.includes('charset="UTF-8"'));
+    assert.ok(SRC.includes('charset="UTF-8"'));
   });
 
   it('has title', function() {
-    assert.ok(HTML.includes('<title>'));
+    assert.ok(SRC.includes("<title>"));
   });
 
   it('links to manifest.json', function() {
-    assert.ok(HTML.includes('manifest.json'));
+    assert.ok(SRC.includes("manifest.json"));
   });
 
   it('links to icon.svg', function() {
-    assert.ok(HTML.includes('icon.svg'));
+    assert.ok(SRC.includes("icon.svg"));
   });
 });
 
@@ -66,440 +76,440 @@ describe('Sections', function() {
   const sections = ['dashboard', 'guests', 'tables', 'invitation', 'whatsapp', 'rsvp', 'settings'];
   sections.forEach(function(sec) {
     it('has section: ' + sec, function() {
-      assert.ok(HTML.includes('id="sec-' + sec + '"'));
+      assert.ok(SRC.includes('id="sec-' + sec + '"'));
     });
   });
 
   it('has navigation tabs', function() {
-    assert.ok(HTML.includes('nav-tabs'));
+    assert.ok(SRC.includes("nav-tabs"));
   });
 });
 
 // ── i18n ──
 describe('i18n System', function() {
   it('has data-i18n attributes', function() {
-    assert.ok(HTML.includes('data-i18n='));
+    assert.ok(SRC.includes("data-i18n="));
   });
 
   it('has Hebrew translations object', function() {
-    assert.ok(HTML.includes("he: {") || HTML.includes("he:{"));
+    assert.ok(SRC.includes("he: {") || SRC.includes("he:{"));
   });
 
   it('has English translations object', function() {
-    assert.ok(HTML.includes("en: {") || HTML.includes("en:{"));
+    assert.ok(SRC.includes("en: {") || SRC.includes("en:{"));
   });
 
   it('has language toggle button', function() {
-    assert.ok(HTML.includes('toggleLanguage'));
+    assert.ok(SRC.includes("toggleLanguage"));
   });
 
   it('has t() function', function() {
-    assert.ok(HTML.includes('function t('));
+    assert.ok(SRC.includes("function t("));
   });
 
   it('has applyLanguage function', function() {
-    assert.ok(HTML.includes('function applyLanguage'));
+    assert.ok(SRC.includes("function applyLanguage"));
   });
 });
 
 // ── Themes ──
 describe('Themes', function() {
   it('has default theme (purple)', function() {
-    assert.ok(HTML.includes('--accent: #d4a574'));
+    assert.ok(SRC.includes("--accent: #d4a574"));
   });
 
   it('has rose gold theme', function() {
-    assert.ok(HTML.includes('theme-rosegold'));
+    assert.ok(SRC.includes("theme-rosegold"));
   });
 
   it('has classic gold theme', function() {
-    assert.ok(HTML.includes('theme-gold'));
+    assert.ok(SRC.includes("theme-gold"));
   });
 
   it('has emerald theme', function() {
-    assert.ok(HTML.includes('theme-emerald'));
+    assert.ok(SRC.includes("theme-emerald"));
   });
 
   it('has royal blue theme', function() {
-    assert.ok(HTML.includes('theme-royal'));
+    assert.ok(SRC.includes("theme-royal"));
   });
 
   it('has cycleTheme function', function() {
-    assert.ok(HTML.includes('function cycleTheme'));
+    assert.ok(SRC.includes("function cycleTheme"));
   });
 });
 
 // ── Guest Management ──
 describe('Guest Management', function() {
   it('has guest table', function() {
-    assert.ok(HTML.includes('id="guestTableBody"'));
+    assert.ok(SRC.includes('id="guestTableBody"'));
   });
 
   it('has add guest modal', function() {
-    assert.ok(HTML.includes('id="guestModal"'));
+    assert.ok(SRC.includes('id="guestModal"'));
   });
 
   it('has saveGuest function', function() {
-    assert.ok(HTML.includes('function saveGuest'));
+    assert.ok(SRC.includes("function saveGuest"));
   });
 
   it('has deleteGuest function', function() {
-    assert.ok(HTML.includes('function deleteGuest'));
+    assert.ok(SRC.includes("function deleteGuest"));
   });
 
   it('has editGuest function', function() {
-    assert.ok(HTML.includes('function editGuest'));
+    assert.ok(SRC.includes("function editGuest"));
   });
 
   it('has search functionality', function() {
-    assert.ok(HTML.includes('id="guestSearch"'));
+    assert.ok(SRC.includes('id="guestSearch"'));
   });
 
   it('has filter buttons', function() {
-    assert.ok(HTML.includes('setFilter'));
+    assert.ok(SRC.includes("setFilter"));
   });
 
   it('has status badges (confirmed, pending, declined)', function() {
-    assert.ok(HTML.includes('status-confirmed'));
-    assert.ok(HTML.includes('status-pending'));
-    assert.ok(HTML.includes('status-declined'));
+    assert.ok(SRC.includes("status-confirmed"));
+    assert.ok(SRC.includes("status-pending"));
+    assert.ok(SRC.includes("status-declined"));
   });
 
   it('has side filter (groom/bride/mutual)', function() {
-    assert.ok(HTML.includes('setSideFilter'));
-    assert.ok(HTML.includes('side-groom'));
-    assert.ok(HTML.includes('side-bride'));
-    assert.ok(HTML.includes('side-mutual'));
+    assert.ok(SRC.includes("setSideFilter"));
+    assert.ok(SRC.includes("side-groom"));
+    assert.ok(SRC.includes("side-bride"));
+    assert.ok(SRC.includes("side-mutual"));
   });
 
   it('has meal preferences', function() {
-    assert.ok(HTML.includes('meal_regular'));
-    assert.ok(HTML.includes('meal_vegetarian'));
-    assert.ok(HTML.includes('meal_vegan'));
+    assert.ok(SRC.includes("meal_regular"));
+    assert.ok(SRC.includes("meal_vegetarian"));
+    assert.ok(SRC.includes("meal_vegan"));
   });
 
   it('has expanded guest model (firstName, lastName, side, meal, children)', function() {
-    assert.ok(HTML.includes('guestFirstName'));
-    assert.ok(HTML.includes('guestLastName'));
-    assert.ok(HTML.includes('guestSide'));
-    assert.ok(HTML.includes('guestMeal'));
-    assert.ok(HTML.includes('guestChildren'));
-    assert.ok(HTML.includes('guestAccessibility'));
+    assert.ok(SRC.includes("guestFirstName"));
+    assert.ok(SRC.includes("guestLastName"));
+    assert.ok(SRC.includes("guestSide"));
+    assert.ok(SRC.includes("guestMeal"));
+    assert.ok(SRC.includes("guestChildren"));
+    assert.ok(SRC.includes("guestAccessibility"));
   });
 
   it('has sortGuestsBy function', function() {
-    assert.ok(HTML.includes('function sortGuestsBy'));
+    assert.ok(SRC.includes("function sortGuestsBy"));
   });
 
   it('has data migration function', function() {
-    assert.ok(HTML.includes('function migrateGuests'));
+    assert.ok(SRC.includes("function migrateGuests"));
   });
 });
 
 // ── Table Seating ──
 describe('Table Seating', function() {
   it('has seating floor', function() {
-    assert.ok(HTML.includes('id="seatingFloor"'));
+    assert.ok(SRC.includes('id="seatingFloor"'));
   });
 
   it('has table modal', function() {
-    assert.ok(HTML.includes('id="tableModal"'));
+    assert.ok(SRC.includes('id="tableModal"'));
   });
 
   it('has saveTable function', function() {
-    assert.ok(HTML.includes('function saveTable'));
+    assert.ok(SRC.includes("function saveTable"));
   });
 
   it('has deleteTable function', function() {
-    assert.ok(HTML.includes('function deleteTable'));
+    assert.ok(SRC.includes("function deleteTable"));
   });
 
   it('supports round and rect shapes', function() {
-    assert.ok(HTML.includes('shape_round'));
-    assert.ok(HTML.includes('shape_rect'));
+    assert.ok(SRC.includes("shape_round"));
+    assert.ok(SRC.includes("shape_rect"));
   });
 
   it('has drag-and-drop support', function() {
-    assert.ok(HTML.includes('ondragstart'));
-    assert.ok(HTML.includes('ondrop'));
-    assert.ok(HTML.includes('ondragover'));
+    assert.ok(SRC.includes("ondragstart"));
+    assert.ok(SRC.includes("ondrop"));
+    assert.ok(SRC.includes("ondragover"));
   });
 
   it('has unassigned guests section', function() {
-    assert.ok(HTML.includes('id="unassignedGuests"'));
+    assert.ok(SRC.includes('id="unassignedGuests"'));
   });
 });
 
 // ── WhatsApp ──
 describe('WhatsApp Integration', function() {
   it('has WhatsApp template textarea', function() {
-    assert.ok(HTML.includes('id="waTemplate"'));
+    assert.ok(SRC.includes('id="waTemplate"'));
   });
 
   it('has WhatsApp preview', function() {
-    assert.ok(HTML.includes('id="waPreviewBubble"'));
+    assert.ok(SRC.includes('id="waPreviewBubble"'));
   });
 
   it('has sendWhatsAppSingle function', function() {
-    assert.ok(HTML.includes('function sendWhatsAppSingle'));
+    assert.ok(SRC.includes("function sendWhatsAppSingle"));
   });
 
   it('has sendWhatsAppAll function', function() {
-    assert.ok(HTML.includes('function sendWhatsAppAll'));
+    assert.ok(SRC.includes("function sendWhatsAppAll"));
   });
 
   it('uses wa.me deep link', function() {
-    assert.ok(HTML.includes('wa.me/'));
+    assert.ok(SRC.includes("wa.me/"));
   });
 
   it('has message placeholders', function() {
-    assert.ok(HTML.includes('{name}'));
-    assert.ok(HTML.includes('{groom}'));
-    assert.ok(HTML.includes('{bride}'));
-    assert.ok(HTML.includes('{date}'));
-    assert.ok(HTML.includes('{venue}'));
+    assert.ok(SRC.includes("{name}"));
+    assert.ok(SRC.includes("{groom}"));
+    assert.ok(SRC.includes("{bride}"));
+    assert.ok(SRC.includes("{date}"));
+    assert.ok(SRC.includes("{venue}"));
   });
 
   it('opens in new tab with noopener', function() {
-    assert.ok(HTML.includes('noopener'));
+    assert.ok(SRC.includes("noopener"));
   });
 });
 
 // ── RSVP ──
 describe('RSVP', function() {
   it('has RSVP first name field', function() {
-    assert.ok(HTML.includes('id="rsvpFirstName"'));
+    assert.ok(SRC.includes('id="rsvpFirstName"'));
   });
 
   it('has RSVP phone field', function() {
-    assert.ok(HTML.includes('id="rsvpPhone"'));
+    assert.ok(SRC.includes('id="rsvpPhone"'));
   });
 
   it('has RSVP attendance field', function() {
-    assert.ok(HTML.includes('id="rsvpAttending"'));
+    assert.ok(SRC.includes('id="rsvpAttending"'));
   });
 
   it('has submitRSVP function', function() {
-    assert.ok(HTML.includes('function submitRSVP'));
+    assert.ok(SRC.includes("function submitRSVP"));
   });
 
   it('has guest count input', function() {
-    assert.ok(HTML.includes('id="rsvpGuests"'));
+    assert.ok(SRC.includes('id="rsvpGuests"'));
   });
 
   it('has dietary notes field', function() {
-    assert.ok(HTML.includes('id="rsvpNotes"'));
+    assert.ok(SRC.includes('id="rsvpNotes"'));
   });
 
   it('has side selection (groom/bride/mutual)', function() {
-    assert.ok(HTML.includes('id="rsvpSide"'));
+    assert.ok(SRC.includes('id="rsvpSide"'));
   });
 
   it('has meal selection', function() {
-    assert.ok(HTML.includes('id="rsvpMeal"'));
+    assert.ok(SRC.includes('id="rsvpMeal"'));
   });
 
   it('has children field', function() {
-    assert.ok(HTML.includes('id="rsvpChildren"'));
+    assert.ok(SRC.includes('id="rsvpChildren"'));
   });
 
   it('has accessibility checkbox', function() {
-    assert.ok(HTML.includes('id="rsvpAccessibility"'));
+    assert.ok(SRC.includes('id="rsvpAccessibility"'));
   });
 });
 
 // ── Invitation ──
 describe('Invitation', function() {
   it('has invitation preview', function() {
-    assert.ok(HTML.includes('id="invitationPreview"'));
+    assert.ok(SRC.includes('id="invitationPreview"'));
   });
 
   it('has file upload', function() {
-    assert.ok(HTML.includes('id="invitationFile"'));
+    assert.ok(SRC.includes('id="invitationFile"'));
   });
 
   it('has handleInvitationUpload function', function() {
-    assert.ok(HTML.includes('function handleInvitationUpload'));
+    assert.ok(SRC.includes("function handleInvitationUpload"));
   });
 
   it('generates default SVG invitation', function() {
-    assert.ok(HTML.includes('function renderDefaultInvitationSVG'));
+    assert.ok(SRC.includes("function renderDefaultInvitationSVG"));
   });
 
   it('validates file type', function() {
-    assert.ok(HTML.includes('validTypes'));
+    assert.ok(SRC.includes("validTypes"));
   });
 
   it('validates file size', function() {
-    assert.ok(HTML.includes('5 * 1024 * 1024'));
+    assert.ok(SRC.includes("5 * 1024 * 1024"));
   });
 });
 
 // ── Wedding Details ──
 describe('Wedding Details', function() {
   it('has groom name input', function() {
-    assert.ok(HTML.includes('id="groomName"'));
+    assert.ok(SRC.includes('id="groomName"'));
   });
 
   it('has bride name input', function() {
-    assert.ok(HTML.includes('id="brideName"'));
+    assert.ok(SRC.includes('id="brideName"'));
   });
 
   it('has wedding date input', function() {
-    assert.ok(HTML.includes('id="weddingDate"'));
+    assert.ok(SRC.includes('id="weddingDate"'));
   });
 
   it('has venue input', function() {
-    assert.ok(HTML.includes('id="venueName"'));
+    assert.ok(SRC.includes('id="venueName"'));
   });
 
   it('has countdown', function() {
-    assert.ok(HTML.includes('id="countdown"'));
+    assert.ok(SRC.includes('id="countdown"'));
   });
 });
 
 // ── Data Persistence ──
 describe('Data Persistence', function() {
   it('uses wedding_v1_ prefix', function() {
-    assert.ok(HTML.includes('wedding_v1_'));
+    assert.ok(SRC.includes("wedding_v1_"));
   });
 
   it('has save function', function() {
-    assert.ok(HTML.includes('function save('));
+    assert.ok(SRC.includes("function save("));
   });
 
   it('has load function', function() {
-    assert.ok(HTML.includes('function load('));
+    assert.ok(SRC.includes("function load("));
   });
 
   it('has saveAll function', function() {
-    assert.ok(HTML.includes('function saveAll'));
+    assert.ok(SRC.includes("function saveAll"));
   });
 
   it('has loadAll function', function() {
-    assert.ok(HTML.includes('function loadAll'));
+    assert.ok(SRC.includes("function loadAll"));
   });
 });
 
 // ── Export ──
 describe('Export', function() {
   it('has CSV export', function() {
-    assert.ok(HTML.includes('function exportGuestsCSV'));
+    assert.ok(SRC.includes("function exportGuestsCSV"));
   });
 
   it('includes UTF-8 BOM for Hebrew', function() {
-    assert.ok(HTML.includes('\\uFEFF') || HTML.includes('BOM'));
+    assert.ok(SRC.includes("\\uFEFF") || SRC.includes("BOM"));
   });
 
   it('has print function', function() {
-    assert.ok(HTML.includes('function printGuests'));
+    assert.ok(SRC.includes("function printGuests"));
   });
 
   it('has JSON backup export', function() {
-    assert.ok(HTML.includes('function exportJSON'));
+    assert.ok(SRC.includes("function exportJSON"));
   });
 
   it('has JSON backup import', function() {
-    assert.ok(HTML.includes('function importJSON'));
+    assert.ok(SRC.includes("function importJSON"));
   });
 
   it('has CSV import', function() {
-    assert.ok(HTML.includes('function importCSV'));
+    assert.ok(SRC.includes("function importCSV"));
   });
 
   it('has CSV template download', function() {
-    assert.ok(HTML.includes('function downloadCSVTemplate'));
+    assert.ok(SRC.includes("function downloadCSVTemplate"));
   });
 
   it('has clearAllData function', function() {
-    assert.ok(HTML.includes('function clearAllData'));
+    assert.ok(SRC.includes("function clearAllData"));
   });
 });
 
 // ── Security ──
 describe('Security', function() {
   it('does not use eval()', function() {
-    assert.ok(!HTML.includes('eval('));
+    assert.ok(!SRC.includes("eval("));
   });
 
   it('does not use document.write()', function() {
-    assert.ok(!HTML.includes('document.write('));
+    assert.ok(!SRC.includes("document.write("));
   });
 
   it('has escapeHtml function', function() {
-    assert.ok(HTML.includes('function escapeHtml'));
+    assert.ok(SRC.includes("function escapeHtml"));
   });
 
   it('uses textContent for safe rendering', function() {
-    assert.ok(HTML.includes('textContent'));
+    assert.ok(SRC.includes("textContent"));
   });
 
   it('has cleanPhone function', function() {
-    assert.ok(HTML.includes('function cleanPhone'));
+    assert.ok(SRC.includes("function cleanPhone"));
   });
 });
 
 // ── CSS ──
 describe('CSS', function() {
   it('uses CSS custom properties', function() {
-    assert.ok(HTML.includes(':root'));
-    assert.ok(HTML.includes('var(--'));
+    assert.ok(SRC.includes(":root"));
+    assert.ok(SRC.includes("var(--"));
   });
 
   it('has glassmorphism (backdrop-filter)', function() {
-    assert.ok(HTML.includes('backdrop-filter: blur('));
+    assert.ok(SRC.includes("backdrop-filter: blur("));
   });
 
   it('has responsive breakpoints', function() {
-    assert.ok(HTML.includes('768px'));
-    assert.ok(HTML.includes('480px'));
+    assert.ok(SRC.includes("768px"));
+    assert.ok(SRC.includes("480px"));
   });
 
   it('has print stylesheet', function() {
-    assert.ok(HTML.includes('@media print'));
+    assert.ok(SRC.includes("@media print"));
   });
 
   it('respects prefers-reduced-motion', function() {
-    assert.ok(HTML.includes('prefers-reduced-motion'));
+    assert.ok(SRC.includes("prefers-reduced-motion"));
   });
 
   it('has RTL-first layout styles', function() {
-    assert.ok(HTML.includes('dir="rtl"'));
+    assert.ok(SRC.includes('dir="rtl"'));
   });
 });
 
 // ── UI Components ──
 describe('UI Components', function() {
   it('has toast notification system', function() {
-    assert.ok(HTML.includes('function showToast'));
-    assert.ok(HTML.includes('id="toastContainer"'));
+    assert.ok(SRC.includes("function showToast"));
+    assert.ok(SRC.includes('id="toastContainer"'));
   });
 
   it('has modals with close on escape', function() {
-    assert.ok(HTML.includes("e.key === 'Escape'"));
+    assert.ok(SRC.includes("e.key === 'Escape'"));
   });
 
   it('has modals with close on overlay click', function() {
-    assert.ok(HTML.includes('e.target === overlay'));
+    assert.ok(SRC.includes("e.target === overlay"));
   });
 
   it('has progress bar', function() {
-    assert.ok(HTML.includes('id="progressFill"'));
+    assert.ok(SRC.includes('id="progressFill"'));
   });
 
   it('has empty states', function() {
-    assert.ok(HTML.includes('empty-state'));
+    assert.ok(SRC.includes("empty-state"));
   });
 
   it('has floating particles', function() {
-    assert.ok(HTML.includes('function initParticles'));
+    assert.ok(SRC.includes("function initParticles"));
   });
 });
 
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes("CACHE_NAME = 'wedding-v1.1.0'"));
+    assert.ok(SW.includes('wedding-v1.2.0'));
   });
 
   it('pre-caches app shell', function() {

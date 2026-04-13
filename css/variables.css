@@ -1,0 +1,71 @@
+/* ── CSS Custom Properties ── */
+:root {
+  /* Colors — elegant wedding palette */
+  --bg-primary: #0f0520;
+  --bg-secondary: #1a0a2e;
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --bg-card-hover: rgba(255, 255, 255, 0.10);
+  --bg-gradient: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+  --accent: #d4a574;
+  --accent-light: #e8c9a0;
+  --accent-dark: #b8864e;
+  --gold: #d4a574;
+  --gold-light: #f0dcc4;
+  --rose: #e8a0b4;
+  --rose-dark: #c77a92;
+  --text-primary: #f0e6d6;
+  --text-secondary: rgba(240, 230, 214, 0.7);
+  --text-muted: rgba(240, 230, 214, 0.4);
+  --positive: #6ee7b7;
+  --negative: #fca5a5;
+  --warning: #fcd34d;
+  --border-radius: 16px;
+  --card-border: 1px solid rgba(212, 165, 116, 0.15);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --font-main: 'Segoe UI', tahoma, arial, sans-serif;
+  --font-decorative: georgia, 'Times New Roman', serif;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* ── Theme: Rose Gold ── */
+body.theme-rosegold {
+  --bg-primary: #1a0f0f;
+  --bg-secondary: #2d1a1a;
+  --accent: #e8a0b4;
+  --accent-light: #f0c0d0;
+  --accent-dark: #c77a92;
+  --gold: #e8a0b4;
+}
+
+/* ── Theme: Classic Gold ── */
+body.theme-gold {
+  --bg-primary: #0f0a00;
+  --bg-secondary: #1a1400;
+  --accent: #d4a030;
+  --accent-light: #e8c060;
+  --accent-dark: #b08020;
+  --gold: #d4a030;
+}
+
+/* ── Theme: Emerald ── */
+body.theme-emerald {
+  --bg-primary: #0a1a0f;
+  --bg-secondary: #0f2d1a;
+  --accent: #6ee7b7;
+  --accent-light: #a0f0d4;
+  --accent-dark: #34d399;
+  --gold: #6ee7b7;
+}
+
+/* ── Theme: Royal Blue ── */
+body.theme-royal {
+  --bg-primary: #0a0f1a;
+  --bg-secondary: #0f1a2d;
+  --accent: #60a5fa;
+  --accent-light: #93c5fd;
+  --accent-dark: #3b82f6;
+  --gold: #60a5fa;
+}
+

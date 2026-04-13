@@ -1,16 +1,39 @@
 // =============================================================================
-// Service Worker — Wedding Manager v1.1.0
+// Service Worker — Wedding Manager v1.2.0
 // APP_SHELL pre-cache + offline fallback
 // =============================================================================
 'use strict';
 
-const CACHE_NAME = 'wedding-v1.1.0';
+const CACHE_NAME = "wedding-v1.2.0";
 const APP_SHELL = [
-  './',
-  './index.html',
-  './icon.svg',
-  './manifest.json',
-  './invitation.jpg',
+  "./",
+  "./index.html",
+  "./icon.svg",
+  "./manifest.json",
+  "./invitation.jpg",
+  "./css/variables.css",
+  "./css/base.css",
+  "./css/layout.css",
+  "./css/components.css",
+  "./css/responsive.css",
+  "./css/auth.css",
+  "./js/config.js",
+  "./js/i18n.js",
+  "./js/dom.js",
+  "./js/state.js",
+  "./js/utils.js",
+  "./js/ui.js",
+  "./js/nav.js",
+  "./js/dashboard.js",
+  "./js/guests.js",
+  "./js/tables.js",
+  "./js/invitation.js",
+  "./js/whatsapp.js",
+  "./js/rsvp.js",
+  "./js/settings.js",
+  "./js/sheets.js",
+  "./js/auth.js",
+  "./js/app.js",
 ];
 
 // Install: pre-cache app shell
