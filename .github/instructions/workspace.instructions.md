@@ -42,6 +42,7 @@ Wedding/
 │   ├── settings.js       # Wedding details, export/import, CSV, data management
 │   ├── sheets.js         # Google Sheets API sync
 │   ├── auth.js           # Google/Facebook/Apple/Guest auth
+│   ├── analytics.js      # SVG donut + bar charts analytics section (admin-only)
 │   └── app.js            # init() entry point
 ├── sw.js                 # ServiceWorker (offline cache, APP_SHELL)
 ├── manifest.json         # PWA manifest
@@ -55,7 +56,7 @@ Wedding/
 ├── .markdownlint-cli2.jsonc  # Ignore node_modules
 ├── .editorconfig / .gitignore / .gitattributes
 ├── tests/
-│   └── wedding.test.mjs  # Node built-in test runner (177 tests)
+│   └── wedding.test.mjs  # Node built-in test runner (192 tests)
 ├── .github/
 │   ├── copilot-instructions.md   ← master project spec (always loaded)
 │   ├── AGENTS.md                 ← agent/prompt discovery index

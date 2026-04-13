@@ -1,16 +1,16 @@
-# GitHub Copilot Instructions — Wedding Manager v1.11.0
+# GitHub Copilot Instructions — Wedding Manager v1.12.0
 
-> Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Zero Runtime Deps
+> Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
 ## Quick Facts
 
 | Key | Value |
 | --- | --- |
-| Version | **v1.11.0** |
+| Version | **v1.12.0** |
 | Stack | HTML5 · vanilla CSS3 · vanilla JS (ES2020+) |
 | Runtime deps | Zero — devDeps for lint only |
 | Language | Hebrew RTL primary, English toggle |
-| Tests | `node --test tests/wedding.test.mjs` — 177 pass |
+| Tests | `node --test tests/wedding.test.mjs` — 192 pass |
 | Lint | `npm run lint` → 0 errors · 0 warnings |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 
@@ -19,10 +19,10 @@
 ```text
 index.html          # HTML shell (links css/ + js/)
 css/                # 6 modules: variables · base · layout · components · responsive · auth
-js/                 # 17 modules: config · i18n · dom · state · utils · ui · nav · dashboard
-                    #   guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · app
+js/                 # 18 modules: config · i18n · dom · state · utils · ui · nav · dashboard
+                    #   guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app
 sw.js               # Service Worker — stale-while-revalidate + update banner (5-min poll)
-tests/wedding.test.mjs  # 177 unit tests
+tests/wedding.test.mjs  # 192 unit tests
 .github/workflows/  # ci.yml · deploy.yml · release.yml
 .vscode/            # settings · extensions · tasks · mcp
 ```
@@ -45,7 +45,7 @@ tests/wedding.test.mjs  # 177 unit tests
 Guest: { id, firstName, lastName, phone, email, count, children,
   status: pending|confirmed|declined|maybe,
   side: groom|bride|mutual,  group: family|friends|work|other,
-  meal: regular|vegetarian|vegan|gluten_free|kosher,
+  meal: regular|vegetarian|vegan|gluten_free|kosher,  ← data value; displays as "מהדרין/Mehadrin"
   mealNotes, accessibility: bool, tableId, gift, notes, sent: bool,
   rsvpDate, createdAt, updatedAt }
 Table: { id, name, capacity, shape: round|rect }
@@ -81,12 +81,14 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 
 | Area | Rule |
 | --- | --- |
-| ESLint `varsIgnorePattern` | onclick= handlers use `varsIgnorePattern` — do not remove it |
+| ESLint `varsIgnorePattern` | onclick= handlers use `varsIgnorePattern` — do not remove it; prefixes include `^lookup` |
 | Stylelint font keywords | lowercase: `tahoma` ✅ `Tahoma` ❌; multi-word: `"Segoe UI"` ✅ |
 | markdownlint MD024 | `.markdownlint.json` sets `"MD024": { "siblings_only": true }` — do not remove |
 | Instructions `applyTo` | Never `"**"` — always scope to a glob (`**/*.html`, `**/*.yml`) |
 | GH Actions versions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v3` · `deploy-pages@v4` |
 | OAuth globals | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs` |
+| RSVP phone-first | `lookupRsvpByPhone()` fires on phone input; reveals rest of form; pre-fills from guest list |
+| Google Sheets sync | `SHEETS_WEBAPP_URL` in config.js — Apps Script Web App URL required for writes; reads use gviz/tq |
 
 ## Key Patterns
 
@@ -97,4 +99,6 @@ saveAll()                     // persist guests + tables + weddingInfo
 cleanPhone('054-123-4567')    // → '972541234567'
 const x = obj?.prop ?? def;  // ES2020+ preferred
 _oauthLogin(email, name, pic, provider)  // central OAuth success handler
+lookupRsvpByPhone()           // phone-first RSVP: search → pre-fill or reveal empty form
+renderAnalytics()             // render SVG donut + bar charts for analytics section
 ```

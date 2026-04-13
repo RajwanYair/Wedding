@@ -5,22 +5,22 @@
 ## Commands
 
 ```bash
-node --test tests/wedding.test.mjs   # 177 tests — must all pass
+node --test tests/wedding.test.mjs   # 192 tests — must all pass
 npm run lint                         # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run lint:fix                     # Auto-fix CSS + JS
 npm run ci                           # lint + test (same as CI)
 ```
 
-## Architecture (v1.11.0 — modular)
+## Architecture (v1.12.0 — modular)
 
 | Path | Role |
 | --- | --- |
 | `index.html` | HTML shell — links `css/` + `js/` |
 | `css/` (6 files) | variables · base · layout · components · responsive · auth |
-| `js/` (17 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · app |
+| `js/` (18 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app |
 | `sw.js` | Stale-while-revalidate + 5-min update polling |
 | `manifest.json` | PWA manifest |
-| `tests/wedding.test.mjs` | 177 unit tests (Node built-in runner) |
+| `tests/wedding.test.mjs` | 192 unit tests (Node built-in runner) |
 
 ## Auth Setup
 
@@ -30,6 +30,7 @@ Credentials go in `js/config.js`:
 const GOOGLE_CLIENT_ID  = "YOUR_ID.apps.googleusercontent.com"; // console.cloud.google.com
 const FB_APP_ID         = "";   // developers.facebook.com
 const APPLE_SERVICE_ID  = "";   // developer.apple.com
+const SHEETS_WEBAPP_URL = "";   // Apps Script Web App URL — required for sheet writes
 ```
 
 Google GIS SDK is loaded as `<script>` in `index.html`. Facebook and Apple SDKs are loaded dynamically by `loadFBSDK()` / `loadAppleSDK()` in `auth.js` when their App ID / Service ID is set. All OAuth providers check `isApprovedAdmin(email)` — the email allowlist is the single authorization source.
@@ -58,4 +59,6 @@ data-i18n="key"                       // HTML binding
 saveAll()                             // persists guests + tables + weddingInfo
 cleanPhone('054-123-4567')            // → '972541234567'  (wa.me ready)
 _oauthLogin(email, name, pic, prov)   // central OAuth success handler
+lookupRsvpByPhone()                   // phone-first RSVP: fired oninput; pre-fills or reveals form
+renderAnalytics()                     // SVG donut + bar chart analytics section
 ```

@@ -75,7 +75,7 @@ const x = obj?.prop ?? defaultVal;
   side:   'groom'|'bride'|'mutual',
   group:  'family'|'friends'|'work'|'other',
   relationship,
-  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',
+  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',  // data value 'kosher'; label 'מהדרין/Mehadrin'
   mealNotes, accessibility: boolean,
   tableId, gift, notes, sent: boolean,
   rsvpDate, createdAt, updatedAt
