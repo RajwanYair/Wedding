@@ -89,3 +89,35 @@ WeddingInfo: { groom, bride, date, time, venue, address }
 6. `tests/wedding.test.mjs` — version assertion
 7. Run: `node --test tests/wedding.test.mjs` + `npm run lint` — 0 fail, 0 warn
 8. `git tag vX.Y.Z` + push
+
+## Known Gotchas (AI Reference)
+
+### ESLint — `varsIgnorePattern`
+
+`index.html` onclick= handlers call functions defined in `<script>` scope. ESLint sees them as unused. The `eslint.config.mjs` uses `varsIgnorePattern` — do not remove it.
+
+### Stylelint — Font Keywords
+
+Font family keywords must be lowercase: `tahoma` ✅ `Tahoma` ❌. Multi-word names must be quoted: `"Segoe UI"` ✅.
+
+### GitHub Actions Versions
+
+Only these versions are verified to exist:
+
+| Action | Version |
+| --- | --- |
+| `actions/checkout` | `@v4` |
+| `actions/setup-node` | `@v4` |
+| `actions/upload-pages-artifact` | `@v3` |
+| `actions/deploy-pages` | `@v4` |
+| `actions/upload-artifact` | `@v4` |
+
+Do NOT use `@v5` or `@v6` — they do not exist for most actions.
+
+### markdownlint — CHANGELOG
+
+`CHANGELOG.md` uses `### Added` in multiple versions. This triggers `MD024` (duplicate headings). The `.markdownlint.json` sets `"MD024": { "siblings_only": true }` — do not remove it.
+
+### Instructions `applyTo`
+
+Never set `applyTo: "**"` — this loads the instruction on every file type and wastes AI context tokens. Always scope to a specific file glob (`**/*.html`, `**/*.yml`).
