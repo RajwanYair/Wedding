@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 168" role="img" aria-label="RSVP User Journey Flow">
+  <rect width="860" height="168" rx="14" fill="#0d0b18"/>
+  <text x="430" y="22" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#d4a574" text-anchor="middle" letter-spacing="1">RSVP USER JOURNEY</text>
+  <!-- Step boxes y=38 h=36 -->
+  <!-- Step 1: Guest opens link -->
+  <rect x="20" y="38" width="118" height="36" rx="7" fill="#151026" stroke="#a89cf7" stroke-width="1.5"/>
+  <text x="79" y="54" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#a89cf7" text-anchor="middle">Guest Opens</text>
+  <text x="79" y="67" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">shares link / QR</text>
+  <!-- Arrow 1->2 -->
+  <line x1="138" y1="56" x2="158" y2="56" stroke="#3a3068" stroke-width="1.5"/>
+  <polygon points="158,52 166,56 158,60" fill="#3a3068"/>
+  <!-- Step 2: Phone Entry -->
+  <rect x="166" y="38" width="118" height="36" rx="7" fill="#151026" stroke="#d4a574" stroke-width="1.5"/>
+  <text x="225" y="54" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#d4a574" text-anchor="middle">Phone Input</text>
+  <text x="225" y="67" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">oninput lookup</text>
+  <!-- Arrow 2->3 -->
+  <line x1="284" y1="56" x2="304" y2="56" stroke="#3a3068" stroke-width="1.5"/>
+  <polygon points="304,52 312,56 304,60" fill="#3a3068"/>
+  <!-- Step 3: Fuzzy Match -->
+  <rect x="312" y="38" width="118" height="36" rx="7" fill="#151026" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="371" y="54" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#60a5fa" text-anchor="middle">Fuzzy Match</text>
+  <text x="371" y="67" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">search guest list</text>
+  <!-- Branch arrow down from Step 3 -->
+  <line x1="371" y1="74" x2="371" y2="92" stroke="#3a3068" stroke-width="1.5"/>
+  <polygon points="367,92 371,100 375,92" fill="#3a3068"/>
+  <!-- Decision diamond -->
+  <polygon points="371,100 410,120 371,140 332,120" fill="#151026" stroke="#d4a574" stroke-width="1.5"/>
+  <text x="371" y="117" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#d4a574" text-anchor="middle">Found?</text>
+  <!-- Yes branch left -->
+  <line x1="332" y1="120" x2="272" y2="120" stroke="#4ade80" stroke-width="1.5"/>
+  <polygon points="272,116 264,120 272,124" fill="#4ade80"/>
+  <text x="300" y="113" font-family="ui-monospace,monospace" font-size="8" fill="#4ade80" text-anchor="middle">YES</text>
+  <rect x="166" y="104" width="98" height="32" rx="6" fill="#0a1e10" stroke="#4ade80" stroke-width="1"/>
+  <text x="215" y="118" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="#4ade80" text-anchor="middle">Pre-fill Form</text>
+  <text x="215" y="130" font-family="ui-monospace,monospace" font-size="7.5" fill="#534e7e" text-anchor="middle">name, count, meal</text>
+  <!-- No branch right -->
+  <line x1="410" y1="120" x2="470" y2="120" stroke="#e8a0b4" stroke-width="1.5"/>
+  <polygon points="470,116 478,120 470,124" fill="#e8a0b4"/>
+  <text x="442" y="113" font-family="ui-monospace,monospace" font-size="8" fill="#e8a0b4" text-anchor="middle">NO</text>
+  <rect x="478" y="104" width="98" height="32" rx="6" fill="#1f0a14" stroke="#e8a0b4" stroke-width="1"/>
+  <text x="527" y="118" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="#e8a0b4" text-anchor="middle">Empty Form</text>
+  <text x="527" y="130" font-family="ui-monospace,monospace" font-size="7.5" fill="#534e7e" text-anchor="middle">new guest entry</text>
+  <!-- Both converge to Submit -->
+  <line x1="215" y1="136" x2="215" y2="148" stroke="#3a3068" stroke-width="1"/>
+  <line x1="527" y1="136" x2="527" y2="148" stroke="#3a3068" stroke-width="1"/>
+  <line x1="215" y1="148" x2="623" y2="148" stroke="#3a3068" stroke-width="1"/>
+  <line x1="623" y1="148" x2="623" y2="136" stroke="#3a3068" stroke-width="1"/>
+  <polygon points="619,136 623,128 627,136" fill="#3a3068"/>
+  <!-- Step 4: Submit -->
+  <rect x="576" y="38" width="110" height="36" rx="7" fill="#151026" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="631" y="54" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#4ade80" text-anchor="middle">Submit RSVP</text>
+  <text x="631" y="67" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">confirm + notes</text>
+  <!-- Arrow 4->5 -->
+  <line x1="686" y1="56" x2="706" y2="56" stroke="#3a3068" stroke-width="1.5"/>
+  <polygon points="706,52 714,56 706,60" fill="#3a3068"/>
+  <!-- Step 5: Sheets -->
+  <rect x="714" y="38" width="126" height="36" rx="7" fill="#151026" stroke="#d4a574" stroke-width="1.5"/>
+  <text x="777" y="54" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#d4a574" text-anchor="middle">Sheets Sync</text>
+  <text x="777" y="67" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">saved + WhatsApp</text>
+</svg>

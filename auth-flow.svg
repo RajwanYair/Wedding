@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 200" role="img" aria-label="Authentication Flow">
+  <rect width="860" height="200" rx="14" fill="#0d0b18"/>
+  <text x="430" y="22" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#d4a574" text-anchor="middle" letter-spacing="1">AUTHENTICATION FLOW</text>
+  <!-- Provider boxes (row 1) -->
+  <!-- Anonymous / Guest -->
+  <rect x="20" y="36" width="118" height="48" rx="7" fill="#151026" stroke="#534e7e" stroke-width="1.5"/>
+  <text x="79" y="57" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#7b6cbf" text-anchor="middle">Anonymous</text>
+  <text x="79" y="72" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">auto-enter, no login</text>
+  <!-- Google -->
+  <rect x="160" y="36" width="118" height="48" rx="7" fill="#151026" stroke="#d4a574" stroke-width="1.5"/>
+  <text x="219" y="57" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#d4a574" text-anchor="middle">Google</text>
+  <text x="219" y="72" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">GIS SDK, popup</text>
+  <!-- Facebook -->
+  <rect x="300" y="36" width="118" height="48" rx="7" fill="#151026" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="359" y="57" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#60a5fa" text-anchor="middle">Facebook</text>
+  <text x="359" y="72" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">FB SDK, dynamic load</text>
+  <!-- Apple -->
+  <rect x="440" y="36" width="118" height="48" rx="7" fill="#151026" stroke="#e8e8e8" stroke-width="1.5"/>
+  <text x="499" y="57" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#e8e8e8" text-anchor="middle">Apple</text>
+  <text x="499" y="72" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">AppleID SDK, dynamic</text>
+  <!-- Arrows down from Google/Facebook/Apple to gate -->
+  <line x1="219" y1="84" x2="219" y2="110" stroke="#3a3068" stroke-width="1.5"/>
+  <line x1="359" y1="84" x2="359" y2="110" stroke="#3a3068" stroke-width="1.5"/>
+  <line x1="499" y1="84" x2="499" y2="110" stroke="#3a3068" stroke-width="1.5"/>
+  <line x1="219" y1="110" x2="499" y2="110" stroke="#3a3068" stroke-width="1.5"/>
+  <line x1="359" y1="110" x2="359" y2="120" stroke="#3a3068" stroke-width="1.5"/>
+  <polygon points="355,120 359,128 363,120" fill="#3a3068"/>
+  <!-- Anonymous direct arrow -->
+  <line x1="79" y1="84" x2="79" y2="170" stroke="#534e7e" stroke-width="1" stroke-dasharray="5,3"/>
+  <polygon points="75,165 79,173 83,165" fill="#534e7e"/>
+  <!-- Gate: isApprovedAdmin -->
+  <rect x="270" y="128" width="178" height="36" rx="7" fill="#251a0d" stroke="#d4a574" stroke-width="2"/>
+  <text x="359" y="143" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#d4a574" text-anchor="middle">isApprovedAdmin(email)</text>
+  <text x="359" y="157" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">email allowlist check</text>
+  <!-- YES branch right -->
+  <line x1="448" y1="146" x2="540" y2="146" stroke="#4ade80" stroke-width="1.5"/>
+  <polygon points="540,142 548,146 540,150" fill="#4ade80"/>
+  <text x="494" y="140" font-family="ui-monospace,monospace" font-size="8" fill="#4ade80" text-anchor="middle">APPROVED</text>
+  <rect x="548" y="128" width="130" height="36" rx="7" fill="#0a1e10" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="613" y="143" font-family="ui-monospace,monospace" font-size="9" font-weight="700" fill="#4ade80" text-anchor="middle">Admin Role</text>
+  <text x="613" y="157" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">full dashboard access</text>
+  <!-- NO branch below gate -->
+  <line x1="359" y1="164" x2="359" y2="173" stroke="#e8a0b4" stroke-width="1.5"/>
+  <polygon points="355,173 359,181 363,173" fill="#e8a0b4"/>
+  <text x="392" y="173" font-family="ui-monospace,monospace" font-size="8" fill="#e8a0b4">DENIED</text>
+  <!-- Guest Role box (shared by Anonymous and denied OAuth) -->
+  <rect x="20" y="173" width="670" height="24" rx="6" fill="#1a1430" stroke="#a89cf7" stroke-width="1"/>
+  <text x="355" y="188" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="#7b6cbf" text-anchor="middle">Guest Role — RSVP form only (read-only public view)</text>
+</svg>

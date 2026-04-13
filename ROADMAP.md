@@ -1,4 +1,4 @@
-# Wedding Manager v2 — Refactoring Roadmap
+﻿# Wedding Manager v2 — Refactoring Roadmap
 
 > Full restructure from global-scope SPA to modern ES-module architecture.
 > Constraints: GitHub Pages deploy, Google Sheets sync, zero backend cost.
@@ -41,34 +41,7 @@
 
 ## Competitor Feature Comparison
 
-| Feature                         | Zola | TheKnot | WithJoy | RSVPify |        **Ours**         |
-| ------------------------------- | :--: | :-----: | :-----: | :-----: | :---------------------: |
-| Free wedding website            |  Y   |    Y    |    Y    |    Y    |          **Y**          |
-| Guest list management           |  Y   |    Y    |    Y    |    Y    |          **Y**          |
-| RSVP collection                 |  Y   |    Y    |    Y    |    Y    |          **Y**          |
-| Seating chart                   |  Y   |    N    |    N    |    Y    |          **Y**          |
-| WhatsApp integration            |  N   |    N    |    N    |    N    |     **Y** (unique!)     |
-| Google Sheets sync              |  N   |    N    |    N    |    Y    |     **Y** (unique!)     |
-| Budget/gift tracker             |  Y   |    Y    |    Y    |    N    |          **Y**          |
-| Analytics dashboard             |  Y   |    Y    |    Y    |    Y    |          **Y**          |
-| Hebrew RTL + i18n               |  N   |    N    |    N    |    N    |     **Y** (unique!)     |
-| Custom invitation designer      |  Y   |    Y    |    Y    |    Y    |          **Y**          |
-| Email invitations               |  Y   |    Y    |    Y    |    Y    |     **Y** (v1.18.0)     |
-| SMS / push notifications        |  Y   |    Y    |    N    |    Y    |     **Y** (v1.19.0)     |
-| Photo gallery                   |  Y   |    Y    |    Y    |    N    |     **Y** (v1.16.0)     |
-| Timeline / schedule page        |  Y   |    Y    |    Y    |    N    |     **Y** (v1.14.0)     |
-| Registry / gift wishlist links  |  Y   |    Y    |    Y    |    N    |     **Y** (v1.16.0)     |
-| Venue map (embedded)            |  Y   |    Y    |    Y    |    N    |     **Y** (v1.15.0)     |
-| QR code for RSVP                |  N   |    N    |    N    |    Y    |     **Y** (v1.14.0)     |
-| Guest-facing mobile app         |  Y   |    Y    |    Y    |    N    |     **Y** (v1.15.0)     |
-| Expense budget (not just gifts) |  Y   |    Y    |    Y    |    N    |     **Y** (v1.15.0)     |
-| Event check-in / badge          |  N   |    N    |    N    |    Y    |     **Y** (v1.16.0)     |
-| Contact collector link          |  N   |    N    |    Y    |    N    |     **Y** (v1.17.0)     |
-| Custom domain                   |  Y   |    Y    |    Y    |    Y    |          **N**          |
-| Dark + light mode               |  N   |    N    |    N    |    N    | **Y** (unique!) v1.13.0 |
-| Multi-event support             |  Y   |    Y    |    Y    |    Y    |          **N**          |
-| Offline RSVP queue              |  N   |    N    |    N    |    N    | **Y** (unique!) v1.17.0 |
-| Undo/redo                       |  N   |    N    |    N    |    N    |          **N**          |
+![Competitor Comparison](competitor-chart.svg)
 
 ### Our Unique Advantages (keep & enhance)
 

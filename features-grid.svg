@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 348" role="img" aria-label="Wedding Manager Feature Grid">
+  <rect width="860" height="348" rx="14" fill="#0d0b18"/>
+  <text x="430" y="24" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#d4a574" text-anchor="middle" letter-spacing="1">FEATURES AT A GLANCE</text>
+  <!-- Row 0 – gold: Dashboard | Guest List | Table Seating -->
+  <rect x="20" y="36" width="265" height="70" rx="7" fill="#151026" stroke="#d4a574" stroke-width="1"/>
+  <rect x="20" y="36" width="4" height="70" rx="2" fill="#d4a574"/>
+  <rect x="30" y="48" width="34" height="16" rx="3" fill="#251a0d"/>
+  <text x="47" y="60" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#d4a574" text-anchor="middle">DASH</text>
+  <text x="74" y="62" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#d4a574">Dashboard</text>
+  <text x="70" y="78" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Stats, countdown, progress bars</text>
+  <rect x="297" y="36" width="265" height="70" rx="7" fill="#151026" stroke="#d4a574" stroke-width="1"/>
+  <rect x="297" y="36" width="4" height="70" rx="2" fill="#d4a574"/>
+  <rect x="307" y="48" width="34" height="16" rx="3" fill="#251a0d"/>
+  <text x="324" y="60" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#d4a574" text-anchor="middle">GRST</text>
+  <text x="351" y="62" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#d4a574">Guest List</text>
+  <text x="347" y="78" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">CRUD, filter, side groups, CSV export</text>
+  <rect x="574" y="36" width="265" height="70" rx="7" fill="#151026" stroke="#d4a574" stroke-width="1"/>
+  <rect x="574" y="36" width="4" height="70" rx="2" fill="#d4a574"/>
+  <rect x="584" y="48" width="34" height="16" rx="3" fill="#251a0d"/>
+  <text x="601" y="60" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#d4a574" text-anchor="middle">TBL</text>
+  <text x="628" y="62" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#d4a574">Table Seating</text>
+  <text x="624" y="78" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Visual floor plan, drag-assign</text>
+  <!-- Row 1 – purple: Invitations | WhatsApp | RSVP -->
+  <rect x="20" y="116" width="265" height="70" rx="7" fill="#151026" stroke="#a89cf7" stroke-width="1"/>
+  <rect x="20" y="116" width="4" height="70" rx="2" fill="#a89cf7"/>
+  <rect x="30" y="128" width="34" height="16" rx="3" fill="#1a163a"/>
+  <text x="47" y="140" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#a89cf7" text-anchor="middle">INV</text>
+  <text x="74" y="142" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#a89cf7">Invitations</text>
+  <text x="70" y="158" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">SVG designer + custom upload</text>
+  <rect x="297" y="116" width="265" height="70" rx="7" fill="#151026" stroke="#a89cf7" stroke-width="1"/>
+  <rect x="297" y="116" width="4" height="70" rx="2" fill="#a89cf7"/>
+  <rect x="307" y="128" width="34" height="16" rx="3" fill="#1a163a"/>
+  <text x="324" y="140" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#a89cf7" text-anchor="middle">WA</text>
+  <text x="351" y="142" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#a89cf7">WhatsApp</text>
+  <text x="347" y="158" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Bulk wa.me, templated messages</text>
+  <rect x="574" y="116" width="265" height="70" rx="7" fill="#151026" stroke="#a89cf7" stroke-width="1"/>
+  <rect x="574" y="116" width="4" height="70" rx="2" fill="#a89cf7"/>
+  <rect x="584" y="128" width="34" height="16" rx="3" fill="#1a163a"/>
+  <text x="601" y="140" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#a89cf7" text-anchor="middle">RSVP</text>
+  <text x="628" y="142" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#a89cf7">RSVP</text>
+  <text x="624" y="158" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Phone-first, public form + QR code</text>
+  <!-- Row 2 – blue: Analytics | Hebrew i18n | 5 Themes -->
+  <rect x="20" y="196" width="265" height="70" rx="7" fill="#151026" stroke="#60a5fa" stroke-width="1"/>
+  <rect x="20" y="196" width="4" height="70" rx="2" fill="#60a5fa"/>
+  <rect x="30" y="208" width="34" height="16" rx="3" fill="#0a1428"/>
+  <text x="47" y="220" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#60a5fa" text-anchor="middle">ANLY</text>
+  <text x="74" y="222" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#60a5fa">Analytics</text>
+  <text x="70" y="238" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">SVG donut + bar charts</text>
+  <rect x="297" y="196" width="265" height="70" rx="7" fill="#151026" stroke="#60a5fa" stroke-width="1"/>
+  <rect x="297" y="196" width="4" height="70" rx="2" fill="#60a5fa"/>
+  <rect x="307" y="208" width="34" height="16" rx="3" fill="#0a1428"/>
+  <text x="324" y="220" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#60a5fa" text-anchor="middle">I18N</text>
+  <text x="351" y="222" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#60a5fa">Hebrew i18n</text>
+  <text x="347" y="238" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">RTL + English, runtime toggle</text>
+  <rect x="574" y="196" width="265" height="70" rx="7" fill="#151026" stroke="#60a5fa" stroke-width="1"/>
+  <rect x="574" y="196" width="4" height="70" rx="2" fill="#60a5fa"/>
+  <rect x="584" y="208" width="34" height="16" rx="3" fill="#0a1428"/>
+  <text x="601" y="220" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#60a5fa" text-anchor="middle">THME</text>
+  <text x="628" y="222" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#60a5fa">5 Themes</text>
+  <text x="624" y="238" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Glassmorphism dark + light mode</text>
+  <!-- Row 3 – green: PWA+Push | Auth | Check-in -->
+  <rect x="20" y="276" width="265" height="70" rx="7" fill="#151026" stroke="#4ade80" stroke-width="1"/>
+  <rect x="20" y="276" width="4" height="70" rx="2" fill="#4ade80"/>
+  <rect x="30" y="288" width="34" height="16" rx="3" fill="#0a1e10"/>
+  <text x="47" y="300" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#4ade80" text-anchor="middle">PWA</text>
+  <text x="74" y="302" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#4ade80">PWA + Push</text>
+  <text x="70" y="318" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Offline, VAPID push notifications</text>
+  <rect x="297" y="276" width="265" height="70" rx="7" fill="#151026" stroke="#4ade80" stroke-width="1"/>
+  <rect x="297" y="276" width="4" height="70" rx="2" fill="#4ade80"/>
+  <rect x="307" y="288" width="34" height="16" rx="3" fill="#0a1e10"/>
+  <text x="324" y="300" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#4ade80" text-anchor="middle">AUTH</text>
+  <text x="351" y="302" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#4ade80">Auth</text>
+  <text x="347" y="318" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Google, Facebook, Apple + Guest</text>
+  <rect x="574" y="276" width="265" height="70" rx="7" fill="#151026" stroke="#4ade80" stroke-width="1"/>
+  <rect x="574" y="276" width="4" height="70" rx="2" fill="#4ade80"/>
+  <rect x="584" y="288" width="34" height="16" rx="3" fill="#0a1e10"/>
+  <text x="601" y="300" font-family="ui-monospace,monospace" font-size="8" font-weight="700" fill="#4ade80" text-anchor="middle">CHK</text>
+  <text x="628" y="302" font-family="ui-monospace,monospace" font-size="10" font-weight="700" fill="#4ade80">Check-in</text>
+  <text x="624" y="318" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">Event day mode, table finder</text>
+</svg>

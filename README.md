@@ -19,19 +19,11 @@
 
 ## Features
 
-| Feature | Description |
-| --- | --- |
-| 📊 **Dashboard** | Stats overview, countdown timer, progress bars, quick actions |
-| 👥 **Guest List** | CRUD with side (groom/bride/mutual), meal preferences, accessibility, children |
-| 🪑 **Table Seating** | Visual floor plan with round/rectangular tables, drag-and-drop assignment |
-| 💌 **Invitation** | Auto-generated SVG invitation + custom JPG/PNG/SVG upload |
-| 📱 **WhatsApp** | Templated messages with placeholders, bulk/individual send via wa.me |
-| ✅ **RSVP** | Public-facing form for guest self-registration, auto-match existing |
-| 📥 **Export** | CSV with UTF-8 BOM for Hebrew, print-friendly layout |
-| 🌐 **i18n** | Full Hebrew/English support with language toggle |
-| 🎨 **5 Themes** | Purple (default), Rose Gold, Classic Gold, Emerald, Royal Blue |
-| 📲 **PWA** | Installable, offline-capable via Service Worker (stale-while-revalidate + 5-min update poll) |
-| 🔐 **Auth** | Google (active) · Facebook · Apple · Anonymous guest (all optional) |
+![Features](features-grid.svg)
+
+## RSVP Journey
+
+![RSVP Flow](rsvp-flow.svg)
 
 ## Quick Start
 
@@ -45,6 +37,8 @@ open index.html
 
 ## Auth Setup (optional)
 
+![Auth Flow](auth-flow.svg)
+
 Edit `js/config.js`:
 
 ```js
@@ -53,7 +47,7 @@ const FB_APP_ID         = "";   // developers.facebook.com → App ID
 const APPLE_SERVICE_ID  = "";   // developer.apple.com → Service ID
 ```
 
-Add the SDK `<script>` tags for Facebook and Apple in `index.html` (see comments in that file).
+Add SDK `<script>` tags for Facebook and Apple in `index.html` (see comments).
 
 ## Development
 
@@ -124,13 +118,7 @@ Wedding/
 
 ## Themes
 
-| Theme | Accent Color |
-| --- | --- |
-| Default Purple | `#d4a574` — elegant gold on dark purple |
-| Rose Gold | `#e8a0b4` — warm pink tones |
-| Classic Gold | `#d4a030` — traditional gold |
-| Emerald | `#6ee7b7` — fresh green |
-| Royal Blue | `#60a5fa` — cool blue |
+![Themes](themes-swatches.svg)
 
 ## License
 
