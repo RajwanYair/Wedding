@@ -1,13 +1,13 @@
-# GitHub Copilot Instructions — Wedding Manager v1.1.0
+# GitHub Copilot Instructions — Wedding Manager v1.2.0
 
-> Single-file wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Zero Runtime Dependencies
+> Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Zero Runtime Dependencies
 
 ## Quick Facts
 
 | Key | Value |
 | --- | --- |
-| Main file | `index.html` (HTML + CSS + JS — one file) |
-| Version | **v1.1.0** |
+| Main file | `index.html` (HTML shell) + `css/` (6 files) + `js/` (17 files) |
+| Version | **v1.2.0** |
 | Stack | HTML5, vanilla CSS3, vanilla JS (ES2020+) |
 | Runtime deps | Zero — devDeps for lint only |
 | Language | Hebrew RTL (primary), English (toggle) |
@@ -19,7 +19,10 @@
 
 ```text
 Wedding/
-├── index.html            # App (HTML + CSS + JS)
+├── index.html            # HTML shell (links CSS + JS)
+├── css/                  # 6 CSS modules (variables, base, layout, components, responsive, auth)
+├── js/                   # 17 JS modules (config, i18n, dom, state, utils, ui, nav, dashboard,
+│                         #   guests, tables, invitation, whatsapp, rsvp, settings, sheets, auth, app)
 ├── sw.js / manifest.json / icon.svg / invitation.jpg
 ├── package.json          # devDeps: eslint, stylelint, htmlhint, markdownlint-cli2
 ├── eslint.config.mjs / .stylelintrc.json / .htmlhintrc / .markdownlint.json

@@ -17,13 +17,38 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 
 ```text
 Wedding/
-├── index.html            # App (HTML + CSS + JS — single file)
+├── index.html            # HTML shell (825 lines — links CSS + JS)
+├── css/
+│   ├── variables.css     # CSS custom properties + 4 theme overrides
+│   ├── base.css          # Reset, body, scrollbar, particles
+│   ├── layout.css        # Header, top-bar, nav, main content, animations
+│   ├── components.css    # Cards, stats, buttons, forms, modals, toasts, badges, tooltips
+│   ├── responsive.css    # Media queries, print, prefers-reduced-motion
+│   └── auth.css          # Auth overlay, user bar
+├── js/
+│   ├── config.js         # Constants, state variables, auth/sheets config
+│   ├── i18n.js           # I18N translations (he + en)
+│   ├── dom.js            # DOM element cache (el object)
+│   ├── state.js          # Persistence (save/load/saveAll/loadAll, migration)
+│   ├── utils.js          # uid, escapeHtml, cleanPhone, formatDateHebrew, initParticles
+│   ├── ui.js             # i18n engine (t, applyLanguage), theme, modal, toast
+│   ├── nav.js            # Section navigation with admin guard
+│   ├── dashboard.js      # Stats, countdown, top bar, header info, badge maps
+│   ├── guests.js         # Guest CRUD, filter, sort, search
+│   ├── tables.js         # Table CRUD, drag-drop seating
+│   ├── invitation.js     # Invitation rendering (SVG + image upload)
+│   ├── whatsapp.js       # WhatsApp template + send
+│   ├── rsvp.js           # Public RSVP form
+│   ├── settings.js       # Wedding details, export/import, CSV, data management
+│   ├── sheets.js         # Google Sheets API sync
+│   ├── auth.js           # Google/Facebook/Apple/Guest auth
+│   └── app.js            # init() entry point
 ├── sw.js                 # ServiceWorker (offline cache, APP_SHELL)
 ├── manifest.json         # PWA manifest
 ├── icon.svg              # 512×512 app icon (rings + heart)
 ├── invitation.jpg        # Default invitation background image
 ├── package.json          # devDeps: eslint, stylelint, htmlhint, markdownlint-cli2
-├── eslint.config.mjs     # JS lint — ecmaVersion: latest, all rules: error
+├── eslint.config.mjs     # JS lint — cross-file globals, ecmaVersion: latest
 ├── .stylelintrc.json     # CSS lint — extends stylelint-config-standard
 ├── .htmlhintrc           # HTML lint
 ├── .markdownlint.json    # Markdown lint rules
