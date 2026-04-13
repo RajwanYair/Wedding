@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 230" role="img" aria-label="Wedding Manager Architecture">
+  <rect width="760" height="230" rx="12" fill="#161121"/>
+
+  <!-- Connector lines (behind boxes) -->
+  <g opacity="0.45" stroke-width="1.5" fill="none">
+    <line x1="380" y1="77" x2="90" y2="124" stroke="#60a5fa"/>
+    <line x1="380" y1="77" x2="232" y2="124" stroke="#6ee7b7"/>
+    <line x1="380" y1="77" x2="380" y2="124" stroke="#e8a0b4" opacity="0.8" stroke-width="2"/>
+    <line x1="380" y1="77" x2="522" y2="124" stroke="#4ade80"/>
+    <line x1="380" y1="77" x2="664" y2="124" stroke="#a78bfa"/>
+  </g>
+
+  <!-- index.html — central node -->
+  <rect x="285" y="18" width="190" height="59" rx="9" fill="#221a35" stroke="#d4a574" stroke-width="2"/>
+  <text x="380" y="43" font-family="ui-monospace,monospace" font-size="14" font-weight="700" fill="#d4a574" text-anchor="middle">index.html</text>
+  <text x="380" y="62" font-family="ui-monospace,monospace" font-size="10" fill="#7d6f95" text-anchor="middle">HTML · CSS · JS — single file</text>
+
+  <!-- sw.js -->
+  <rect x="30" y="124" width="120" height="46" rx="7" fill="#162038" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="90" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#60a5fa" text-anchor="middle">sw.js</text>
+  <text x="90" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#6e7f9a" text-anchor="middle">offline · PWA cache</text>
+
+  <!-- manifest.json -->
+  <rect x="162" y="124" width="140" height="46" rx="7" fill="#162416" stroke="#6ee7b7" stroke-width="1.5"/>
+  <text x="232" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#6ee7b7" text-anchor="middle">manifest.json</text>
+  <text x="232" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#6e9a80" text-anchor="middle">PWA install</text>
+
+  <!-- localStorage -->
+  <rect x="314" y="124" width="132" height="46" rx="7" fill="#28172a" stroke="#e8a0b4" stroke-width="1.5"/>
+  <text x="380" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#e8a0b4" text-anchor="middle">localStorage</text>
+  <text x="380" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#9a7a8a" text-anchor="middle">wedding_v1_* · JSON</text>
+
+  <!-- wa.me -->
+  <rect x="458" y="124" width="128" height="46" rx="7" fill="#162416" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="522" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#4ade80" text-anchor="middle">wa.me</text>
+  <text x="522" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#6e9a80" text-anchor="middle">WhatsApp links</text>
+
+  <!-- GitHub Pages -->
+  <rect x="598" y="124" width="132" height="46" rx="7" fill="#1c162e" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="664" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#a78bfa" text-anchor="middle">GitHub Pages</text>
+  <text x="664" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#8a7ab0" text-anchor="middle">live deployment</text>
+
+  <!-- Build pipeline row -->
+  <rect x="162" y="196" width="436" height="24" rx="5" fill="#1c1830" stroke="#3f3560" stroke-width="1"/>
+  <text x="380" y="212" font-family="ui-monospace,monospace" font-size="10" fill="#5c5080" text-anchor="middle">CI: htmlhint → stylelint → eslint → markdownlint → node --test → deploy</text>
+</svg>

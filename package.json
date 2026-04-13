@@ -1,6 +1,6 @@
 {
     "name": "wedding-manager",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
     "type": "module",
     "private": true,
@@ -10,7 +10,7 @@
         "lint:html": "htmlhint --config .htmlhintrc index.html",
         "lint:css": "node -e \"const fs=require('fs'),h=fs.readFileSync('index.html','utf8');fs.writeFileSync('.extracted.css',h.slice(h.indexOf('<style>')+7,h.indexOf('</style>')))\" && stylelint --config .stylelintrc.json --max-warnings 0 .extracted.css",
         "lint:js": "node -e \"const fs=require('fs'),h=fs.readFileSync('index.html','utf8');fs.writeFileSync('.extracted.js',h.slice(h.indexOf('<script>')+8,h.indexOf('</script>')))\" && eslint --config eslint.config.mjs --max-warnings 0 .extracted.js",
-        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md \".github/**/*.md\"",
+        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md CLAUDE.md \".github/**/*.md\"",
         "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md"
     },
     "engines": {

@@ -18,5 +18,6 @@
 - [ ] Responsive at 768px and 480px
 - [ ] i18n: all new text has Hebrew + English translations
 - [ ] No `innerHTML` with unsanitized data
-- [ ] `node --test tests/wedding.test.mjs` passes
+- [ ] `npm run lint` passes (0 errors, 0 warnings)
+- [ ] `node --test tests/wedding.test.mjs` passes (125 tests)
 - [ ] No hardcoded colors — CSS custom properties only
