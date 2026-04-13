@@ -143,47 +143,131 @@ body::before {
   100% { opacity: 0; transform: translateY(-10vh) scale(1); }
 }
 
+/* ── Header Animations ── */
+@keyframes shimmerColor {
+  0%, 100% { color: var(--accent-light); }
+  50%       { color: var(--gold-light); }
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1; }
+}
+@keyframes sparkleFloat {
+  0%   { opacity: 0; transform: translateY(6px) scale(0.4) rotate(0deg); }
+  30%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-44px) scale(1.3) rotate(200deg); }
+}
+@keyframes diamondPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+  50%       { opacity: 0.9; transform: scale(1.1); }
+}
+@keyframes countdownGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(212, 165, 116, 0.2); }
+  50%       { text-shadow: 0 0 25px rgba(212, 165, 116, 0.6), 0 0 50px rgba(212, 165, 116, 0.2); }
+}
+@keyframes headerFadeIn {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Header ── */
 .header {
   position: relative;
   z-index: 10;
   text-align: center;
-  padding: 2rem 1rem 1rem;
-  background: linear-gradient(180deg, rgba(26, 10, 46, 0.9) 0%, transparent 100%);
+  padding: 2.5rem 1rem 1.5rem;
+  background: linear-gradient(180deg, rgba(26, 10, 46, 0.95) 0%, transparent 100%);
+  overflow: hidden;
 }
+.header-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hdr-spark {
+  position: absolute;
+  font-size: 0.85em;
+  color: var(--gold);
+  animation: sparkleFloat 5.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.hdr-spark-lg { font-size: 1.1em; }
 .header-ornament {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  gap: 1.2rem;
+  margin-bottom: 0.6rem;
+  animation: headerFadeIn 0.65s ease backwards;
 }
-.header-ornament svg { width: 80px; height: 20px; opacity: 0.6; }
+.hdr-wave { width: 110px; height: 22px; color: var(--gold); opacity: 0.5; animation: glowPulse 3s ease-in-out infinite; }
+.hdr-rings-icon { font-size: 2em; line-height: 1; animation: glowPulse 2.5s ease-in-out infinite; }
 .header h1 {
-  font-family: var(--font-decorative);
-  font-size: 2.8em;
-  font-weight: 300;
-  color: var(--gold);
-  letter-spacing: 0.05em;
-  text-shadow: 0 2px 20px rgba(212, 165, 116, 0.3);
-  margin-bottom: 0.2rem;
-}
-.header .subtitle {
-  font-size: 1.1em;
-  color: var(--text-secondary);
-  font-weight: 300;
-}
-.header .couple-names {
-  font-family: var(--font-decorative);
-  font-size: 1.8em;
-  color: var(--accent-light);
-  margin: 0.5rem 0;
+  font-family: var(--font-main);
+  font-size: 0.82em;
   font-weight: 400;
-}
-.header .wedding-date {
-  font-size: 1em;
   color: var(--text-muted);
-  margin-top: 0.3rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem;
+  animation: headerFadeIn 0.65s 0.1s ease backwards;
+}
+.couple-names {
+  font-family: var(--font-decorative);
+  font-size: 2.5em;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin: 0.15rem 0 0.45rem;
+  animation: shimmerColor 3.5s ease-in-out infinite, headerFadeIn 0.7s 0.2s ease backwards;
+  text-shadow: 0 2px 30px rgba(212, 165, 116, 0.25);
+}
+.header-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin: 0.2rem 0 0.4rem;
+}
+.hdr-diamond {
+  font-size: 0.6em;
+  color: var(--gold);
+  animation: diamondPulse 2.2s ease-in-out infinite;
+}
+.header-hebrew-date {
+  font-size: 0.98em;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  margin: 0.3rem 0 0.5rem;
+  animation: headerFadeIn 0.65s 0.3s ease backwards;
+}
+.header-info-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.4rem auto 0;
+  animation: headerFadeIn 0.65s 0.45s ease backwards;
+}
+.header-info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 165, 116, 0.18);
+  border-radius: 2rem;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.header-info-chip:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(212, 165, 116, 0.35);
 }
 
 /* ── Top Bar (Language + Theme) ── */
@@ -692,12 +776,25 @@ body::before {
 .countdown {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin: 1.5rem 0;
+  gap: 1rem;
+  margin: 1.2rem 0;
   flex-wrap: wrap;
+  animation: headerFadeIn 0.65s 0.6s ease backwards;
 }
 .countdown-item {
   text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 165, 116, 0.18);
+  border-radius: 14px;
+  padding: 0.65rem 1.1rem;
+  min-width: 66px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.countdown-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.15);
 }
 .countdown-number {
   font-size: 2.2em;
@@ -705,11 +802,13 @@ body::before {
   color: var(--gold);
   line-height: 1;
   font-family: var(--font-decorative);
+  animation: countdownGlow 2s ease-in-out infinite;
 }
 .countdown-label {
-  font-size: 0.75em;
+  font-size: 0.7em;
   color: var(--text-muted);
-  margin-top: 0.2rem;
+  margin-top: 0.25rem;
+  letter-spacing: 0.06em;
 }
 
 /* ── Progress Bar ── */
@@ -826,8 +925,8 @@ body::before {
 
 /* — Tablet portrait / small landscape (601px – 768px) — */
 @media (max-width: 768px) {
-  .header h1 { font-size: 2em; }
-  .header .couple-names { font-size: 1.3em; }
+  .header h1 { font-size: 0.8em; }
+  .header .couple-names { font-size: 1.8em; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .form-row { grid-template-columns: 1fr; }
   .seating-floor { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
@@ -843,10 +942,11 @@ body::before {
 /* — Phone landscape (short + wide viewport) — */
 @media (max-height: 500px) and (orientation: landscape) {
   .header { padding: 0.8rem 1rem 0.5rem; }
-  .header h1 { font-size: 1.6em; }
-  .header .couple-names { font-size: 1.1em; }
-  .header .subtitle, .header .wedding-date { font-size: 0.85em; }
-  .header-ornament svg { width: 50px; }
+  .header h1 { font-size: 0.78em; }
+  .header .couple-names { font-size: 1.2em; }
+  .header-info-bar { gap: 0.35rem; }
+  .header-info-chip { font-size: 0.78em; padding: 0.22rem 0.6rem; }
+  .hdr-wave { width: 70px; }
   .countdown { gap: 0.8rem; margin: 0.8rem 0; }
   .countdown-number { font-size: 1.4em; }
   .nav-tabs {
@@ -877,9 +977,10 @@ body::before {
   .main-content { padding: 1rem 0.5rem; }
   .guests-toolbar { flex-direction: column; }
   .guests-toolbar .search-box { min-width: auto; }
-  .header h1 { font-size: 1.7em; }
-  .header .couple-names { font-size: 1.2em; }
+  .header h1 { font-size: 0.78em; }
+  .header .couple-names { font-size: 1.5em; }
   .header { padding: 1.5rem 0.8rem 0.8rem; }
+  .header-info-chip { font-size: 0.8em; padding: 0.25rem 0.65rem; }
   .countdown { gap: 0.8rem; }
   .countdown-number { font-size: 1.4em; }
   .countdown-label { font-size: 0.65em; }
@@ -920,8 +1021,9 @@ body::before {
 
 /* — Very small phones (≤ 360px) — */
 @media (max-width: 360px) {
-  .header h1 { font-size: 1.4em; }
-  .header .couple-names { font-size: 1em; }
+  .header h1 { font-size: 0.72em; }
+  .header .couple-names { font-size: 1.1em; }
+  .header-info-chip { font-size: 0.75em; padding: 0.2rem 0.55rem; }
   .top-bar { padding: 0.3rem 0.5rem; }
   .btn-lang { padding: 0.2rem 0.5rem; font-size: 0.75em; }
   .btn-icon { width: 32px; height: 32px; font-size: 0.95em; }
@@ -1331,17 +1433,57 @@ body.guest-mode .nav-tabs { display: none !important; }
 
   <!-- ── Header ── -->
   <header class="header" style="margin-top: 38px;">
-    <div class="header-ornament">
-      <svg viewBox="0 0 80 20" fill="none"><path d="M0 10 Q20 0 40 10 Q60 20 80 10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4" style="color:var(--gold)"/></svg>
-      <span style="font-size:1.5em">💍</span>
-      <svg viewBox="0 0 80 20" fill="none"><path d="M0 10 Q20 20 40 10 Q60 0 80 10" stroke="currentColor" stroke-width="1" fill="none" opacity="0.4" style="color:var(--gold)"/></svg>
+    <!-- Floating sparkle accents -->
+    <div class="header-sparkles" aria-hidden="true">
+      <span class="hdr-spark" style="left:7%;top:28%;animation-delay:0s">✦</span>
+      <span class="hdr-spark" style="left:91%;top:20%;animation-delay:1.4s">✦</span>
+      <span class="hdr-spark" style="left:18%;top:72%;animation-delay:0.7s">✦</span>
+      <span class="hdr-spark" style="left:82%;top:68%;animation-delay:2.1s">✦</span>
+      <span class="hdr-spark hdr-spark-lg" style="left:50%;top:8%;animation-delay:0.4s">💎</span>
+      <span class="hdr-spark" style="left:37%;top:85%;animation-delay:1.8s">✦</span>
+      <span class="hdr-spark" style="left:63%;top:42%;animation-delay:3.1s">✦</span>
     </div>
-    <h1 data-i18n="app_title">ניהול חתונה</h1>
-    <div class="couple-names" id="coupleNames" contenteditable="false">שם חתן ❤ שם כלה</div>
-    <div class="subtitle" data-i18n="app_subtitle">מערכת ניהול אירוע חתונה</div>
-    <div class="wedding-date" id="weddingDateDisplay"></div>
 
-    <!-- Countdown -->
+    <!-- Animated wave ornament -->
+    <div class="header-ornament">
+      <svg class="hdr-wave" viewBox="0 0 120 22" fill="none"><path d="M0 11 Q15 1 30 11 Q45 21 60 11 Q75 1 90 11 Q105 21 120 11" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      <span class="hdr-rings-icon">💍</span>
+      <svg class="hdr-wave" viewBox="0 0 120 22" fill="none"><path d="M0 11 Q15 21 30 11 Q45 1 60 11 Q75 21 90 11 Q105 1 120 11" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    </div>
+
+    <!-- App label (h1 kept for semantics) -->
+    <h1 data-i18n="app_title">ניהול חתונה</h1>
+
+    <!-- Couple names — visual hero with shimmer animation -->
+    <div class="couple-names" id="coupleNames" contenteditable="false">שם חתן ❤ שם כלה</div>
+
+    <!-- Animated gold divider -->
+    <div class="header-divider" aria-hidden="true">
+      <span class="hdr-diamond">◆</span>
+      <span class="hdr-diamond" style="animation-delay:0.35s">◆</span>
+      <span class="hdr-diamond" style="animation-delay:0.7s">◆</span>
+    </div>
+
+    <!-- Hebrew date badge -->
+    <div class="header-hebrew-date" id="hebrewDateDisplay"></div>
+
+    <!-- Wedding details chips -->
+    <div class="header-info-bar">
+      <div class="header-info-chip">
+        <span>📅</span>
+        <span id="weddingDateDisplay"></span>
+      </div>
+      <div class="header-info-chip">
+        <span>🕐</span>
+        <span id="headerReception"></span>
+      </div>
+      <div class="header-info-chip" id="headerVenueChip" style="display:none;">
+        <span>📍</span>
+        <span id="headerVenueText"></span>
+      </div>
+    </div>
+
+    <!-- Live countdown -->
     <div class="countdown" id="countdown"></div>
   </header>
 
@@ -2776,6 +2918,18 @@ function updateTopBar() {
   el.topBarCouple.textContent = g + ' & ' + b + dateStr;
 }
 
+function updateHeaderInfo() {
+  const rec       = document.getElementById('headerReception');
+  const venueText = document.getElementById('headerVenueText');
+  const venueChip = document.getElementById('headerVenueChip');
+  if (rec) rec.textContent = _weddingInfo.time || '';
+  if (venueText && venueChip) {
+    const v = _weddingInfo.venue || '';
+    venueText.textContent = v;
+    venueChip.style.display = v ? '' : 'none';
+  }
+}
+
 /* ── Unique ID ── */
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -3397,6 +3551,7 @@ function updateWeddingDetails() {
   const hebrewEl = document.getElementById('hebrewDateDisplay');
   if (hebrewEl && _weddingInfo.hebrewDate) hebrewEl.textContent = _weddingInfo.hebrewDate;
 
+  updateHeaderInfo();
   updateTopBar();
   renderCountdown();
   renderInvitation();
@@ -3422,6 +3577,9 @@ function loadWeddingDetailsToForm() {
   if (_weddingInfo.date) {
     el.weddingDateDisplay.textContent = formatDateHebrew(_weddingInfo.date);
   }
+  const hebrewEl3 = document.getElementById('hebrewDateDisplay');
+  if (hebrewEl3 && _weddingInfo.hebrewDate) hebrewEl3.textContent = _weddingInfo.hebrewDate;
+  updateHeaderInfo();
 }
 
 /* ── Export / Import ── */
@@ -4068,6 +4226,7 @@ function init() {
   renderCountdown();
   updateWaPreview();
   updateTopBar();
+  updateHeaderInfo();
   initParticles();
   setInterval(renderCountdown, 1000);
   initAuth();
