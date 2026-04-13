@@ -24,8 +24,8 @@ describe('Version', function() {
     assert.ok(SW.includes('wedding-v1.1.0'));
   });
 
-  it('package.json version is 1.0.0', function() {
-    assert.equal(PKG.version, '1.0.0');
+  it('package.json version is 1.1.0', function() {
+    assert.equal(PKG.version, '1.1.0');
   });
 });
 

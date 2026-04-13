@@ -1164,9 +1164,150 @@ th.sort-desc .sort-indicator { opacity: 1; }
   transform: translateX(-50%) translateY(0);
 }
 [dir="rtl"] [data-tooltip]::after { direction: rtl; }
+
+/* ── Auth Overlay ── */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10, 5, 20, 0.93);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.4s ease;
+}
+.auth-overlay.auth-hidden { display: none; }
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  width: min(90vw, 400px);
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+.auth-logo-icon { font-size: 2.8rem; line-height: 1; margin-bottom: 0.4rem; }
+.auth-card-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem;
+}
+.auth-card-sub { color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 1.8rem; }
+.auth-providers { display: flex; flex-direction: column; align-items: center; gap: 0.65rem; }
+.google-btn-host { width: 100%; max-width: 280px; min-height: 44px; }
+.google-btn-host > div { width: 100% !important; }
+.auth-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 280px;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.auth-social-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+.auth-social-btn.btn-fb { color: rgb(123, 158, 222); border-color: rgba(66, 103, 178, 0.35); }
+.auth-social-btn.btn-fb:hover { background: rgba(66, 103, 178, 0.14); }
+.auth-social-btn.btn-guest {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.auth-divider-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 280px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+.auth-divider-line::before,
+.auth-divider-line::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+/* ── User Info in Top Bar ── */
+.user-chip { gap: 0.4rem !important; }
+.user-avatar-sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  object-fit: cover;
+}
+.user-display-name {
+  font-size: 0.78em;
+  color: var(--text-secondary);
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-role-chip {
+  font-size: 0.68em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.8rem;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.user-role-chip.role-admin { color: var(--gold); }
+.user-role-chip.role-guest { color: var(--text-muted); }
+.user-signout-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  font-size: 0.78em;
+  width: auto;
+  height: auto;
+  padding: 0.18rem 0.45rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.user-signout-btn:hover { color: var(--text-primary); border-color: rgba(255, 255, 255, 0.3); }
+/* Guest mode: only RSVP visible */
+body.guest-mode .nav-tabs { display: none !important; }
   </style>
+  <!-- Google Identity Services — Sign In with Google -->
+  <!-- Setup: https://console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0 Client ID (Web application) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+  <!-- ── Auth Overlay ── -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-logo-icon">💍</div>
+      <h2 class="auth-card-title" data-i18n="auth_title">ניהול חתונה</h2>
+      <p class="auth-card-sub" data-i18n="auth_subtitle">כנס כדי להמשיך</p>
+      <div class="auth-providers">
+        <!-- Google Sign-In renders here. Requires GOOGLE_CLIENT_ID to be set in index.html -->
+        <div id="googleSignInBtn" class="google-btn-host"></div>
+        <div class="auth-divider-line"><span data-i18n="auth_or">או</span></div>
+        <button class="auth-social-btn btn-fb" onclick="loginFacebook()">
+          <span style="font-weight:700; font-size:1.1em; font-family:serif;">f</span>
+          <span data-i18n="auth_continue_fb">המשך עם Facebook</span>
+        </button>
+        <button class="auth-social-btn btn-apple" onclick="loginApple()">
+          <span>🍎</span>
+          <span data-i18n="auth_continue_apple">המשך עם Apple</span>
+        </button>
+        <div class="auth-divider-line"><span data-i18n="auth_or">או</span></div>
+        <button class="auth-social-btn btn-guest" onclick="loginGuest()">
+          <span data-i18n="auth_guest_continue">👤 המשך כאורח (אישור הגעה בלבד)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Decorative Particles ── -->
   <div class="particles" id="particles"></div>
 
@@ -1175,6 +1316,13 @@ th.sort-desc .sort-indicator { opacity: 1; }
     <div class="top-bar-group">
       <button class="btn-lang" id="btnLang" title="Switch Language" onclick="toggleLanguage()" data-i18n-tooltip="tip_btn_lang" data-tooltip-pos="down">EN</button>
       <button class="btn-icon" id="btnTheme" title="Change Theme" onclick="cycleTheme()" data-i18n-tooltip="tip_btn_theme" data-tooltip-pos="down">🎨</button>
+    </div>
+    <!-- User info shown when logged in -->
+    <div class="top-bar-group user-chip" id="userBarGroup" style="display:none;">
+      <img id="userAvatar" class="user-avatar-sm" alt="" style="display:none;">
+      <span id="userDisplayName" class="user-display-name"></span>
+      <span id="userRoleBadge" class="user-role-chip"></span>
+      <button class="user-signout-btn" onclick="signOut()" data-i18n-tooltip="tip_sign_out" data-tooltip-pos="down">↩</button>
     </div>
     <div class="top-bar-group">
       <span id="topBarCouple" style="font-size:0.82em; color:var(--gold); font-weight:600; letter-spacing:0.02em;"></span>
@@ -1939,6 +2087,21 @@ let _currentTheme    = '';
 const THEMES = ['', 'theme-rosegold', 'theme-gold', 'theme-emerald', 'theme-royal'];
 let _themeIndex = 0;
 
+/* ── Auth Config ── */
+// ⚠️  Replace 'YOUR_GOOGLE_CLIENT_ID' with your actual Google OAuth 2.0 Client ID:
+//    1. Go to https://console.cloud.google.com → APIs & Services → Credentials
+//    2. Create → OAuth 2.0 Client ID → Web application
+//    3. Authorized JavaScript origins: http://localhost  AND  https://<your-github-username>.github.io
+//    4. Copy the Client ID (format: xxxxxxxxxx.apps.googleusercontent.com) and paste below
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+
+// Emails that receive full admin access to all app features.
+// ⚠️  This is a client-side check — appropriate for a personal wedding app only.
+const ADMIN_EMAILS = ['yair.rajwan@gmail.com'];
+
+/* ── Auth State ── */
+let _authUser = null; // null | { name, firstName, lastName, email, picture, isAdmin, provider }
+
 /* ── i18n Translations ── */
 const I18N = {
   he: {
@@ -2171,6 +2334,18 @@ const I18N = {
     tip_unassigned: 'גרור שמות מכאן לתוך שולחן כדי לשבץ ישיבה',
     tip_table_shape: 'עגול = שולחן עגול | מלבני = שולחן מלבני ארוך',
     tip_search_guests: 'חפש לפי שם פרטי, שם משפחה או מספר טלפון',
+    /* auth */
+    auth_title: 'ניהול חתונה',
+    auth_subtitle: 'כנס כדי להמשיך',
+    auth_or: 'או',
+    auth_continue_fb: 'המשך עם Facebook',
+    auth_continue_apple: 'המשך עם Apple',
+    auth_guest_continue: '👤 המשך כאורח (אישור הגעה בלבד)',
+    auth_fb_not_configured: 'כניסה עם Facebook טרם הוגדרה. צור קשר עם מנהל המערכת.',
+    auth_apple_not_configured: 'כניסה עם Apple טרם הוגדרה. צור קשר עם מנהל המערכת.',
+    role_admin: 'מנהל',
+    role_guest: 'אורח',
+    tip_sign_out: 'התנתק מהמערכת',
   },
   en: {
     app_title: 'Wedding Manager',
@@ -2402,6 +2577,18 @@ const I18N = {
     tip_unassigned: 'Drag guest chips onto a table card to assign seating',
     tip_table_shape: 'Round = circular table | Rect = long rectangular table',
     tip_search_guests: 'Search by first name, last name or phone number',
+    /* auth */
+    auth_title: 'Wedding Manager',
+    auth_subtitle: 'Sign in to continue',
+    auth_or: 'or',
+    auth_continue_fb: 'Continue with Facebook',
+    auth_continue_apple: 'Continue with Apple',
+    auth_guest_continue: '👤 Continue as Guest (RSVP only)',
+    auth_fb_not_configured: 'Facebook login is not configured yet. Contact the administrator.',
+    auth_apple_not_configured: 'Apple login is not configured yet. Contact the administrator.',
+    role_admin: 'Admin',
+    role_guest: 'Guest',
+    tip_sign_out: 'Sign out',
   },
 };
 
@@ -2511,6 +2698,9 @@ function cycleTheme() {
 
 /* ── Navigation ── */
 function showSection(name) {
+  // Block non-admin users from accessing admin-only sections (security guard)
+  const adminOnly = ['dashboard', 'guests', 'tables', 'invitation', 'whatsapp', 'settings'];
+  if (_authUser && !_authUser.isAdmin && adminOnly.includes(name)) return;
   document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
   const sec = document.getElementById('sec-' + name);
   if (sec) sec.classList.add('active');
@@ -3427,6 +3617,182 @@ function initParticles() {
   }
 }
 
+/* ── Auth Functions ── */
+
+/** Decode a JSON Web Token payload without a library (base64url → JSON) */
+function decodeJwt(token) {
+  try {
+    let b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    const bytes = atob(b64);
+    const pct = bytes.split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join('');
+    return JSON.parse(decodeURIComponent(pct));
+  } catch (_e) { return null; }
+}
+
+/** Called by Google Identity Services after the user selects their Google account */
+function handleGoogleCredential(response) {
+  const payload = decodeJwt(response.credential);
+  if (!payload || !payload.email) { showToast(t('auth_subtitle')); return; }
+  _authUser = {
+    name:      payload.name        || '',
+    firstName: payload.given_name  || '',
+    lastName:  payload.family_name || '',
+    email:     payload.email,
+    picture:   payload.picture     || '',
+    isAdmin:   ADMIN_EMAILS.includes(payload.email),
+    provider:  'google',
+  };
+  save('auth', {
+    name: _authUser.name, email: _authUser.email,
+    picture: _authUser.picture, isAdmin: _authUser.isAdmin, provider: 'google',
+  });
+  onAuthSuccess();
+}
+
+/**
+ * Facebook Sign-In — requires setup:
+ *   1. https://developers.facebook.com → My Apps → Create App → Consumer
+ *   2. Add "Facebook Login" product; set Valid OAuth Redirect URIs to your domain
+ *   3. Load Facebook SDK in HTML (see Facebook JS SDK docs)
+ *   4. FB.init({ appId: 'YOUR_APP_ID', version: 'v19.0', cookie: true })
+ *   5. Replace alert below with FB.login(cb, { scope: 'public_profile,email' })
+ */
+function loginFacebook() {
+  alert(t('auth_fb_not_configured'));
+}
+
+/**
+ * Apple Sign-In — requires setup:
+ *   1. Apple Developer account → Certificates, IDs & Profiles → Services IDs
+ *   2. Register Service ID, enable Sign In with Apple, set Return URLs
+ *   3. Load Apple Sign-In JS SDK in HTML (see Apple developer docs)
+ *   4. AppleID.auth.init({ clientId: 'YOUR_SERVICE_ID', scope: 'name email', ... })
+ *   5. Replace alert below with AppleID.auth.signIn()
+ */
+function loginApple() {
+  alert(t('auth_apple_not_configured'));
+}
+
+/** Continue as a guest: shows RSVP only, no pre-fill */
+function loginGuest() {
+  _authUser = { name: '', firstName: '', lastName: '', email: '', picture: '', isAdmin: false, provider: 'guest' };
+  onAuthSuccess();
+}
+
+/** Sign out and return to the login screen */
+function signOut() {
+  _authUser = null;
+  save('auth', null);
+  if (typeof window.google !== 'undefined' && window.google.accounts) {
+    window.google.accounts.id.disableAutoSelect();
+  }
+  document.body.classList.remove('guest-mode');
+  document.getElementById('userBarGroup').style.display = 'none';
+  showAuthOverlay();
+}
+
+function showAuthOverlay() {
+  const overlay = document.getElementById('authOverlay');
+  if (overlay) overlay.classList.remove('auth-hidden');
+  if (typeof window.google !== 'undefined' && window.google.accounts) {
+    initGoogleSignIn();
+  }
+}
+
+function hideAuthOverlay() {
+  const overlay = document.getElementById('authOverlay');
+  if (overlay) overlay.classList.add('auth-hidden');
+}
+
+function updateUserBar() {
+  const group  = document.getElementById('userBarGroup');
+  const nameEl = document.getElementById('userDisplayName');
+  const avatar = document.getElementById('userAvatar');
+  const badge  = document.getElementById('userRoleBadge');
+  if (!group || !_authUser) return;
+  group.style.display = 'flex';
+  if (_authUser.picture) {
+    avatar.src = _authUser.picture;
+    avatar.style.display = 'inline';
+  } else {
+    avatar.style.display = 'none';
+  }
+  nameEl.textContent = _authUser.name || t('role_guest');
+  badge.textContent  = _authUser.isAdmin ? ('\ud83d\udc51 ' + t('role_admin')) : t('role_guest');
+  badge.className    = 'user-role-chip ' + (_authUser.isAdmin ? 'role-admin' : 'role-guest');
+}
+
+function applyUserLevel() {
+  if (!_authUser) return;
+  if (_authUser.isAdmin) {
+    document.body.classList.remove('guest-mode');
+    showSection('dashboard');
+  } else {
+    document.body.classList.add('guest-mode');
+    const fn = document.getElementById('rsvpFirstName');
+    const ln = document.getElementById('rsvpLastName');
+    if (fn && !fn.value && _authUser.firstName) fn.value = _authUser.firstName;
+    if (ln && !ln.value && _authUser.lastName)  ln.value = _authUser.lastName;
+    showSection('rsvp');
+  }
+}
+
+function onAuthSuccess() {
+  hideAuthOverlay();
+  updateUserBar();
+  applyUserLevel();
+}
+
+function initGoogleSignIn() {
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.includes('YOUR_GOOGLE')) {
+    console.warn('Wedding Manager: Set GOOGLE_CLIENT_ID in index.html to enable Google Sign-In. See comments for setup steps.');
+    return;
+  }
+  window.google.accounts.id.initialize({
+    client_id:             GOOGLE_CLIENT_ID,
+    callback:              handleGoogleCredential,
+    auto_select:           false,
+    cancel_on_tap_outside: false,
+  });
+  const btnEl = document.getElementById('googleSignInBtn');
+  if (btnEl) {
+    window.google.accounts.id.renderButton(btnEl, {
+      theme:  'filled_black',
+      size:   'large',
+      shape:  'rectangular',
+      width:  280,
+      locale: _currentLang === 'he' ? 'iw' : 'en',
+    });
+  }
+  if (!_authUser) window.google.accounts.id.prompt();
+}
+
+function initAuth() {
+  const saved = load('auth');
+  if (saved && saved.email) {
+    const parts = (saved.name || '').split(' ');
+    _authUser = {
+      name:      saved.name      || '',
+      firstName: parts[0]        || '',
+      lastName:  parts.slice(1).join(' ') || '',
+      email:     saved.email,
+      picture:   saved.picture   || '',
+      isAdmin:   saved.isAdmin   || false,
+      provider:  saved.provider  || 'google',
+    };
+    hideAuthOverlay();
+    updateUserBar();
+    applyUserLevel();
+  }
+  if (typeof window.google !== 'undefined' && window.google.accounts) {
+    initGoogleSignIn();
+  }
+  // If GIS script not yet loaded, window.onGoogleLibraryLoad (below) handles it
+}
+
 /* ── Init ── */
 function init() {
   loadAll();
@@ -3442,9 +3808,15 @@ function init() {
   updateTopBar();
   initParticles();
   setInterval(renderCountdown, 1000);
+  initAuth();
 }
 
 init();
+
+// Called by Google Identity Services SDK once it finishes loading
+window.onGoogleLibraryLoad = function() {
+  initGoogleSignIn();
+};
   </script>
 </body>
 </html>JSON backup/restore, CSV import/export, data clear
