@@ -29,6 +29,9 @@
   .guest-table { font-size: 0.8em; }
   .guest-table th, .guest-table td { padding: 0.4rem 0.5rem; }
   .modal { width: 95%; padding: 1.5rem; }
+  .bottom-nav { display: flex; }
+  .main-content { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+  .nav-tabs.mobile-nav-open { display: flex !important; }
 }
 
 /* — Phone landscape (short + wide viewport) — */

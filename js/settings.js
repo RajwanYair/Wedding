@@ -442,3 +442,41 @@ function renderDataSummary() {
   ];
   el.dataSummary.innerHTML = lines.join("<br>");
 }
+/* ── QR Code for RSVP ── */
+function renderRsvpQr() {
+  const img  = document.getElementById('rsvpQrImage');
+  const link = document.getElementById('rsvpQrLink');
+  if (!img) return;
+  const url = window.location.href.split('#')[0];
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=256x256&margin=4&data=' + encodeURIComponent(url);
+  if (link) { link.href = url; link.textContent = url; }
+}
+
+function printRsvpQr() {
+  const img = document.getElementById('rsvpQrImage');
+  if (!img || !img.src) return;
+  const g    = escapeHtml(_weddingInfo.groom || '');
+  const b    = escapeHtml(_weddingInfo.bride || '');
+  const d    = escapeHtml(_weddingInfo.date  || '');
+  const src  = escapeHtml(img.src);
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>QR RSVP</title>' +
+    '<style>body{font-family:sans-serif;text-align:center;padding:2rem;}</style></head><body>' +
+    '<h2>' + g + ' \u2665 ' + b + '</h2><p style="color:#666">' + d + '</p>' +
+    '<img src="' + src + '" width="240" height="240" alt="QR Code">' +
+    '<p style="font-size:.85em;color:#666">' + t('qr_scan_to_rsvp') + '</p>' +
+    '<script>window.onload=function(){window.print();};<\/script>' +
+    '</body></html>';
+  const blob = new Blob([html], { type: 'text/html' });
+  const burl = URL.createObjectURL(blob);
+  const win  = window.open(burl, '_blank', 'width=440,height=560');
+  if (win) win.addEventListener('load', function() { URL.revokeObjectURL(burl); });
+}
+
+function copyRsvpLink() {
+  const url = window.location.href.split('#')[0];
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      showToast(t('qr_copied'), 'success');
+    });
+  }
+}

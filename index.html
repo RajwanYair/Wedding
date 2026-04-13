@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- ── Security headers (CSP via meta; frame-ancestors is enforced by JS below since meta CSP ignores it) ── -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://connect.facebook.net https://appleid.cdn-apple.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com; font-src 'self'; worker-src 'self'; frame-src https://accounts.google.com https://appleid.apple.com https://www.facebook.com https://staticxx.facebook.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com https://connect.facebook.net https://appleid.cdn-apple.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org; font-src 'self'; worker-src 'self'; frame-src https://accounts.google.com https://appleid.apple.com https://www.facebook.com https://staticxx.facebook.com https://www.openstreetmap.org; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <!-- Framebusting: prevent clickjacking in browsers that ignore CSP frame-ancestors in meta tags -->
   <script>if(window.top!==window.self){try{window.top.location=window.self.location;}catch(e){document.documentElement.style.display='none';}}</script>
@@ -12,18 +12,36 @@
   <meta name="theme-color" content="#1a0a2e">
   <title>אליאור &amp; טובה | ניהול חתונה</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Wedding">
   <link rel="manifest" href="./manifest.json">
+  <!-- Preconnect to external origins used at startup -->
+  <link rel="preconnect" href="https://accounts.google.com" crossorigin>
+  <link rel="dns-prefetch" href="//api.qrserver.com">
+  <link rel="dns-prefetch" href="//script.google.com">
+  <!-- Preload critical CSS (parsed before body) -->
+  <link rel="preload" as="style" href="./css/variables.css">
+  <link rel="preload" as="style" href="./css/components.css">
+  <!-- Preload critical JS (defer still applied via script tags below) -->
+  <link rel="preload" as="script" href="./js/config.js">
+  <link rel="preload" as="script" href="./js/i18n.js">
+  <link rel="preload" as="script" href="./js/app.js">
   <link rel="stylesheet" href="./css/variables.css">
   <link rel="stylesheet" href="./css/base.css">
   <link rel="stylesheet" href="./css/layout.css">
   <link rel="stylesheet" href="./css/components.css">
   <link rel="stylesheet" href="./css/responsive.css">
   <link rel="stylesheet" href="./css/auth.css">
+  <link rel="stylesheet" href="./css/print.css" media="print">
   <!-- Google Identity Services — Sign In with Google -->
   <!-- Setup: https://console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0 Client ID (Web application) -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer crossorigin="anonymous"></script>
 </head>
 <body>
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main-content" class="skip-link" data-i18n="skip_to_content">דלג לתוכן</a>
   <!-- ── Admin Sign-In Modal ── -->
   <div class="auth-overlay auth-hidden" id="authOverlay">
     <div class="auth-card">
@@ -57,7 +75,8 @@
   <div class="top-bar">
     <div class="top-bar-group">
       <button class="btn-lang" id="btnLang" title="Switch Language" onclick="toggleLanguage()" data-i18n-tooltip="tip_btn_lang" data-tooltip-pos="down">EN</button>
-      <button class="btn-icon" id="btnTheme" title="Change Theme" onclick="cycleTheme()" data-i18n-tooltip="tip_btn_theme" data-tooltip-pos="down">🎨</button>
+      <button class="btn-icon" id="btnTheme" title="Change Theme" onclick="cycleTheme()" aria-label="החלף ערכת צבעים" data-i18n-tooltip="tip_btn_theme" data-tooltip-pos="down">🎨</button>
+      <button class="btn-icon" id="btnDarkLight" title="Toggle Light/Dark Mode" onclick="toggleLightMode()" aria-label="החלף מצב בהיר/כהה" data-i18n-tooltip="tip_btn_dark_light" data-tooltip-pos="down">☀️</button>
     </div>
     <!-- User info shown when logged in -->
     <div class="top-bar-group user-chip" id="userBarGroup" style="display:none;">
@@ -69,6 +88,7 @@
     </div>
     <div class="top-bar-group">
       <span id="topBarCouple" style="font-size:0.82em; color:var(--gold); font-weight:600; letter-spacing:0.02em;"></span>
+      <span id="offlineBadge" class="offline-badge" style="display:none;"></span>
     </div>
   </div>
 
@@ -129,7 +149,7 @@
   </header>
 
   <!-- ── Navigation ── -->
-  <nav class="nav-tabs" id="navTabs">
+  <nav class="nav-tabs" id="navTabs" role="navigation" aria-label="ניווט ראשי">
     <button class="nav-tab active" data-tab="dashboard" onclick="showSection('dashboard')" data-i18n-tooltip="tip_nav_dashboard" data-tooltip-pos="down">
       <span>📊</span> <span data-i18n="nav_dashboard">לוח בקרה</span>
     </button>
@@ -155,13 +175,106 @@
     <button class="nav-tab" data-tab="analytics" onclick="showSection('analytics')" data-i18n-tooltip="tip_nav_analytics" data-tooltip-pos="down">
       <span>📈</span> <span data-i18n="nav_analytics">ניתוחים</span>
     </button>
+    <button class="nav-tab" data-tab="timeline" onclick="showSection('timeline')" data-i18n-tooltip="tip_nav_timeline" data-tooltip-pos="down">
+      <span>📅</span> <span data-i18n="nav_timeline">לוח זמנים</span>
+    </button>
+    <button class="nav-tab" data-tab="checkin" onclick="showSection('checkin')" data-i18n-tooltip="tip_nav_checkin" data-tooltip-pos="down">
+      <span>✅</span> <span data-i18n="nav_checkin">ציון נכחים</span>
+    </button>
+    <button class="nav-tab" data-tab="gallery" onclick="showSection('gallery')" data-i18n-tooltip="tip_nav_gallery" data-tooltip-pos="down">
+      <span>📸</span> <span data-i18n="nav_gallery">גלריה</span>
+    </button>
     <button class="nav-tab" data-tab="settings" onclick="showSection('settings')" data-i18n-tooltip="tip_nav_settings" data-tooltip-pos="down">
       <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
     </button>
   </nav>
 
-  <!-- ── Main Content ── -->
-  <main class="main-content">
+  <!-- ── Mobile Bottom Navigation ── -->
+  <nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="ניווט תחתון">
+    <button class="bottom-nav-item active" data-tab="dashboard" onclick="showSection('dashboard')">
+      <span class="bn-icon" aria-hidden="true">📊</span>
+      <span data-i18n="nav_dashboard">לוח בקרה</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="guests" onclick="showSection('guests')">
+      <span class="bn-icon" aria-hidden="true">👥</span>
+      <span data-i18n="nav_guests">אורחים</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="timeline" onclick="showSection('timeline')">
+      <span class="bn-icon" aria-hidden="true">📅</span>
+      <span data-i18n="nav_timeline">לוח זמנים</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="rsvp" onclick="showSection('rsvp')">
+      <span class="bn-icon" aria-hidden="true">✅</span>
+      <span data-i18n="nav_rsvp">אישור הגעה</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="settings" onclick="showSection('settings')">
+      <span class="bn-icon" aria-hidden="true">⚙️</span>
+      <span data-i18n="nav_settings">הגדרות</span>
+    </button>
+    <button class="bottom-nav-item" id="btnMobileMore" onclick="toggleMobileNav()" aria-expanded="false">
+      <span class="bn-icon" aria-hidden="true">≡</span>
+      <span data-i18n="nav_more">עוד</span>
+    </button>
+  </nav>
+  <main class="main-content" id="main-content" role="main">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Guest Landing (public-facing home for non-admin guests)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-landing">
+      <!-- Hero: couple names + date + venue -->
+      <div class="guest-landing-hero card">
+        <div class="landing-couple-name" id="landingCoupleName">חתן &amp; כלה</div>
+        <div class="landing-hebrew-date" id="landingHebrewDate"></div>
+        <div class="landing-date" id="landingDate"></div>
+        <div class="landing-venue" id="landingVenue"></div>
+        <div class="landing-address" id="landingAddress"></div>
+        <div class="landing-actions">
+          <button class="btn btn-primary" onclick="showSection('rsvp')">
+            💌 <span data-i18n="landing_rsvp_cta">אשר הגעתך</span>
+          </button>
+          <a id="landingWazeLink" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
+            <span data-i18n="landing_waze_btn">נווט בוויז 📍</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Timeline (read-only) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">📅</span>
+          <span data-i18n="landing_timeline_title">לוח האירוע</span>
+        </div>
+        <div class="timeline-list" id="landingTimeline"></div>
+      </div>
+
+      <!-- Registry Links (guest-facing) -->
+      <div class="card" id="landingRegistrySection" style="display:none; margin-top:1rem;">
+        <div class="card-header">
+          <span class="icon">🎁</span> <span data-i18n="registry_title">אתרי מתנות</span>
+        </div>
+        <div id="landingRegistryList" class="registry-cards-list"></div>
+      </div>
+
+      <!-- Table Finder (inline on landing for guests) -->
+      <div class="card" style="margin-top:1rem;">
+        <div class="card-header">
+          <span class="icon">🪑</span> <span data-i18n="tablefinder_title">צור את השולחן שלך</span>
+        </div>
+        <p class="card-subtitle" data-i18n="tablefinder_subtitle">הזן שמך / טלפון לעיל ונבדוק איפה השולחן שלך</p>
+        <div class="form-row" style="margin-top:0.6rem;">
+          <div class="form-group" style="flex:1;">
+            <input type="text" id="tablefinderInput" data-i18n-placeholder="tablefinder_ph"
+              placeholder="הזן שם או טלפון..."
+              oninput="findTable()" style="width:100%;">
+          </div>
+          <div style="align-self:flex-end; padding-bottom:1rem;">
+            <button class="btn btn-primary" onclick="findTable()" data-i18n="tablefinder_btn">חפש</button>
+          </div>
+        </div>
+        <div id="tablefinderResult" class="tablefinder-result" style="display:none;"></div>
+      </div>
+    </div>
 
     <!-- ══════════════════════════════════════════════════════════════════
          SECTION: Dashboard
@@ -468,6 +581,17 @@
           <input type="url" id="venueWaze" data-i18n-placeholder="ph_waze" placeholder="https://waze.com/ul/..." dir="ltr" oninput="updateWeddingDetails()">
         </div>
       </div>
+
+      <!-- Venue Map (auto-generated from address via OpenStreetMap) -->
+      <div class="card" id="venueMapContainer" style="display:none;">
+        <div class="card-header"><span class="icon">📍</span> <span data-i18n="map_title">מפת האירוע</span></div>
+        <iframe id="venueMapFrame" width="100%" height="280" loading="lazy"
+          style="border:none; border-radius:8px;" title="Venue map"
+          referrerpolicy="no-referrer"></iframe>
+        <a id="venueMapFallback" href="#" target="_blank" rel="noopener noreferrer"
+          style="display:none; font-size:0.85em; color:var(--accent); display:none;"
+          data-i18n="map_fallback_link">פתח ב-Google Maps ↗</a>
+      </div>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════════
@@ -678,6 +802,47 @@
           <p data-i18n="budget_empty">עדיין אין אורחים שאישרו הגעה. לאחר קבלת אישורים תוכל לעקוב אחר המתנות כאן.</p>
         </div>
       </div>
+
+      <!-- Expense Tracker Card -->
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header">
+          <span class="icon">💸</span>
+          <span data-i18n="budget_expenses_title">הוצאות האירוע</span>
+          <div id="expenseAdminBar" style="display:none; margin-right:auto; margin-left:0;">
+            <button class="btn btn-primary btn-small" onclick="openAddExpenseModal()">
+              ➕ <span data-i18n="expense_add">הוסף הוצאה</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Expense total stat -->
+        <div style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+          <div class="stat-card" style="flex:1; min-width:140px; text-align:center;">
+            <div class="stat-value" id="expenseStatTotal">—</div>
+            <div class="stat-label" data-i18n="expense_total">סה"כ הוצאות</div>
+          </div>
+        </div>
+
+        <!-- Expense table -->
+        <div style="overflow-x:auto;">
+          <table class="guest-table" style="width:100%;">
+            <thead>
+              <tr>
+                <th data-i18n="col_expense_category">קטגוריה</th>
+                <th data-i18n="col_expense_desc">תיאור</th>
+                <th data-i18n="col_expense_date">תאריך</th>
+                <th style="text-align:end;" data-i18n="col_expense_amount">סכום</th>
+                <th id="expenseActionsHeader" style="text-align:center; display:none;">פעולות</th>
+              </tr>
+            </thead>
+            <tbody id="expenseList"></tbody>
+          </table>
+        </div>
+        <div id="expenseEmpty" style="text-align:center; padding:2rem; color:var(--text-muted);">
+          <span style="font-size:2rem;">💸</span>
+          <p data-i18n="expense_empty">אין הוצאות עדיין. הוסף את הוצאות האירוע כאן.</p>
+        </div>
+      </div>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════════
@@ -736,6 +901,161 @@
         <div id="analyticsSentChart"></div>
       </div>
 
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Timeline (Wedding Day Schedule)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-timeline">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">📅</span> <span data-i18n="timeline_title">לוח זמנים</span>
+          <div id="timelineAdminBar" style="display:none; margin-right:auto; margin-left:0;">
+            <button class="btn btn-primary btn-small" onclick="openAddTimelineModal()">
+              ➕ <span data-i18n="timeline_add_btn">הוסף</span>
+            </button>
+          </div>
+        </div>
+        <p style="font-size:0.85em; color:var(--text-secondary); margin-bottom:1.2rem;" data-i18n="timeline_desc">לוח זמנים של יום החתונה</p>
+        <div class="timeline-list" id="timelineList"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Check-in (admin)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-checkin">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">✅</span> <span data-i18n="checkin_title">ציון אורחים</span>
+        </div>
+        <!-- Stats bar -->
+        <div class="checkin-stats">
+          <div class="checkin-stat">
+            <span class="checkin-stat-num" id="checkinArrived">0</span>
+            <span class="checkin-stat-label" data-i18n="checkin_arrived">הגיעו</span>
+          </div>
+          <div class="checkin-stat">
+            <span class="checkin-stat-num" id="checkinConfirmed">0</span>
+            <span class="checkin-stat-label" data-i18n="checkin_confirmed">אישרו הגעה</span>
+          </div>
+          <div class="checkin-stat">
+            <span class="checkin-stat-num" id="checkinTotal">0</span>
+            <span class="checkin-stat-label" data-i18n="checkin_total">סה"כ מוזמנים</span>
+          </div>
+          <div class="checkin-stat">
+            <span class="checkin-stat-num" id="checkinPct">0%</span>
+            <span class="checkin-stat-label">%</span>
+          </div>
+        </div>
+        <!-- Progress bar -->
+        <div class="checkin-progress-track">
+          <div class="checkin-progress-fill" id="checkinProgressBar" style="width:0%;"></div>
+        </div>
+        <!-- Search -->
+        <div class="form-group" style="margin:1rem 0 0.5rem;">
+          <input type="search" id="checkinSearch" data-i18n-placeholder="checkin_search_ph"
+            placeholder="חפש לפי שם או טלפון..." oninput="searchCheckin()" style="width:100%;">
+        </div>
+        <!-- Guest table -->
+        <div style="overflow-x:auto;">
+          <table class="guest-table" style="width:100%;">
+            <thead>
+              <tr>
+                <th data-i18n="col_name">שם</th>
+                <th data-i18n="col_phone">טלפון</th>
+                <th data-i18n="col_count">מוזמנים</th>
+                <th data-i18n="col_table">שולחן</th>
+                <th data-i18n="col_arrived">הגיע?</th>
+              </tr>
+            </thead>
+            <tbody id="checkinList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Photo Gallery
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-gallery">
+      <div class="card">
+        <div class="card-header">
+          <span class="icon">📸</span> <span data-i18n="gallery_title">גלריית תמונות</span>
+          <div id="galleryAdminBar" style="display:none; margin-right:auto;">
+            <label class="btn btn-primary btn-small" style="cursor:pointer;">
+              📤 <span data-i18n="gallery_upload">העלה תמונות</span>
+              <input type="file" id="galleryFileInput" accept="image/*" multiple
+                style="display:none;" onchange="handleGalleryUpload(this)">
+            </label>
+          </div>
+        </div>
+        <div id="galleryEmpty" style="text-align:center; padding:2rem; color:var(--text-muted);">
+          <span style="font-size:2.5rem;">📷</span>
+          <p data-i18n="gallery_empty">אין תמונות עדיין. העלה תמונות האירוע.</p>
+        </div>
+        <div id="galleryGrid" class="gallery-grid"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Contact Collector (public shareable form)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-contact-form">
+      <div class="card" style="max-width:520px; margin:0 auto;">
+        <div class="card-header">
+          <span class="icon">📋</span> <span data-i18n="contact_title">שלחו לנו את הפרטים שלכם</span>
+        </div>
+        <p style="font-size:0.9em; color:var(--text-secondary); margin-bottom:1.2rem;" data-i18n="contact_subtitle">מלאו את הפרטים למטה ונוסיף אתכם לרשימת האורחים שלנו</p>
+
+        <!-- Success state (hidden by default) -->
+        <div id="contactFormSuccess" style="display:none; text-align:center; padding:1.5rem 0;">
+          <div style="font-size:3em; margin-bottom:0.5rem;">🎉</div>
+          <p style="font-size:1.1em; font-weight:600; color:var(--gold);" data-i18n="contact_success_title">תודה רבה!</p>
+          <p style="font-size:0.9em; color:var(--text-secondary);" data-i18n="contact_success_sub">הפרטים שלכם נשלחו בהצלחה. נשמח לראותכם!</p>
+        </div>
+
+        <!-- Form fields -->
+        <div id="contactFormFields">
+          <div style="text-align:center; margin-bottom:1rem;">
+            <span style="font-size:1.2em; font-weight:700; color:var(--gold);" id="contactFormCoupleName"></span>
+            <br>
+            <span style="font-size:0.85em; color:var(--text-secondary);" id="contactFormDate"></span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="label_first_name">שם פרטי *</label>
+              <input type="text" id="ccFirstName" data-i18n-placeholder="ph_first_name" placeholder="שם פרטי" autocomplete="given-name">
+            </div>
+            <div class="form-group">
+              <label data-i18n="label_last_name">שם משפחה</label>
+              <input type="text" id="ccLastName" data-i18n-placeholder="ph_last_name" placeholder="שם משפחה" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_guest_phone">טלפון</label>
+            <input type="tel" id="ccPhone" data-i18n-placeholder="ph_phone" placeholder="050-0000000" dir="ltr" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_email">אימייל</label>
+            <input type="email" id="ccEmail" data-i18n-placeholder="ph_email" placeholder="example@email.com" dir="ltr" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_side">צד</label>
+            <select id="ccSide">
+              <option value="groom"  data-i18n="side_groom">צד חתן</option>
+              <option value="bride"  data-i18n="side_bride">צד כלה</option>
+              <option value="mutual" data-i18n="side_mutual">משותף</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:0.5rem;"
+            onclick="submitContactForm()">
+            💌 <span data-i18n="contact_submit">שלח פרטים</span>
+          </button>
+          <p style="font-size:0.75em; color:var(--text-muted); margin-top:0.75rem; text-align:center;"
+            data-i18n="contact_privacy">הפרטים ישמשו לניהול האירוע בלבד ולא יועברו לצד שלישי</p>
+        </div>
+      </div>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════════
@@ -806,10 +1126,63 @@
             </button>
           </div>
 
+          <!-- QR Code for RSVP -->
+          <div class="settings-card">
+            <h3>📲 <span data-i18n="qr_title">QR Code לאישור הגעה</span></h3>
+            <p style="font-size:0.82em; color:var(--text-secondary); margin-bottom:0.8rem;" data-i18n="qr_desc">שתף את הקוד עם האורחים לאישור הגעה מהיר מהנייד</p>
+            <div style="text-align:center; margin-bottom:0.6rem;">
+              <img id="rsvpQrImage" alt="QR Code for RSVP" loading="lazy"
+                style="width:180px; height:180px; border-radius:8px; background:#fff; padding:6px; display:block; margin:0 auto;">
+            </div>
+            <p style="font-size:0.75em; color:var(--text-muted); text-align:center; margin-bottom:0.8rem; word-break:break-all;">
+              <a id="rsvpQrLink" href="" target="_blank" rel="noopener noreferrer" style="color:var(--accent);"></a>
+            </p>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
+              <button class="btn btn-secondary" onclick="printRsvpQr()">
+                🖨️ <span data-i18n="qr_print">הדפס QR</span>
+              </button>
+              <button class="btn btn-secondary" onclick="copyRsvpLink()">
+                📋 <span data-i18n="qr_copy_link">העתק קישור</span>
+              </button>
+            </div>
+          </div>
+
           <!-- App Info -->
           <div class="settings-card">
             <h3>ℹ️ <span>מידע</span></h3>
             <div id="dataSummary" style="font-size:0.85em; color:var(--text-secondary); line-height:2;"></div>
+          </div>
+
+          <!-- Registry Links -->
+          <div class="settings-card">
+            <h3>🎁 <span data-i18n="registry_title">אתרי מתנות</span></h3>
+            <div id="registrySettingsList"></div>
+            <div class="form-row" style="margin-top:0.8rem;">
+              <div class="form-group" style="flex:1;">
+                <label for="registryInputName" data-i18n="registry_name">שם הרשימה</label>
+                <input type="text" id="registryInputName" placeholder="Amazon, Zola..." maxlength="60">
+              </div>
+              <div class="form-group" style="flex:2;">
+                <label for="registryInputUrl" data-i18n="registry_url">קישור (https://...)</label>
+                <input type="url" id="registryInputUrl" placeholder="https://" dir="ltr">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-small" onclick="addRegistryLink()">
+              ➕ <span data-i18n="registry_add">הוסף אתר</span>
+            </button>
+          </div>
+
+          <!-- Print Materials -->
+          <div class="settings-card">
+            <h3>🖨️ <span data-i18n="print_place_cards">הדפסת כרטיסיות שיבוש</span></h3>
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.5rem;">
+              <button class="btn btn-secondary" onclick="printPlaceCards()">
+                🪑 <span data-i18n="print_place_cards">הדפסת כרטיסיות</span>
+              </button>
+              <button class="btn btn-secondary" onclick="printTableSigns()">
+                📋 <span data-i18n="print_table_signs">הדפסת שלטי שולחנות</span>
+              </button>
+            </div>
           </div>
 
           <!-- User Access Management -->
@@ -825,6 +1198,75 @@
                 ➕ <span data-i18n="user_mgr_add">אשר גישה</span>
               </button>
             </div>
+          </div>
+
+          <!-- Contact Collector -->
+          <div class="settings-card">
+            <h3>📋 <span data-i18n="contact_settings_title">אסיפת פרטי קשר</span></h3>
+            <p style="font-size:0.82em; color:var(--text-muted); margin-bottom:0.6rem;" data-i18n="contact_settings_desc">שתף קישור זה עם אורחים שמידע שלהם חסר — הם ימלאו טופס קצר</p>
+            <p style="font-size:0.75em; word-break:break-all; margin-bottom:0.6rem;">
+              <a id="contactCollectorLink" href="#contact-form" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">#contact-form</a>
+            </p>
+            <button class="btn btn-secondary btn-small" onclick="copyContactLink()">
+              📋 <span data-i18n="contact_copy_link">העתק קישור</span>
+            </button>
+          </div>
+
+          <!-- Push Notifications -->
+          <div class="settings-card">
+            <h3>🔔 <span data-i18n="push_card_title">התראות Push</span></h3>
+            <p style="font-size:0.82em; color:var(--text-muted); margin-bottom:0.6rem;" data-i18n="push_card_desc">קבל התראת דפדפן כאשר אורח שולח RSVP</p>
+            <div id="pushSettingsCard"></div>
+          </div>
+
+          <!-- Email Notifications -->
+          <div class="settings-card">
+            <h3>📧 <span data-i18n="email_card_title">התראות אימייל</span></h3>
+            <p style="font-size:0.82em; color:var(--text-muted); margin-bottom:0.6rem;" data-i18n="email_card_desc">שלח אישורי הגעה לאורחים והתראות למנהל/ת</p>
+            <div id="emailSettingsCard"></div>
+          </div>
+
+          <!-- Audit Log -->
+          <div class="settings-card" style="grid-column:1/-1;">
+            <h3>📜 <span data-i18n="audit_title">יומן פעולות</span></h3>
+            <p style="font-size:0.82em; color:var(--text-muted); margin-bottom:0.6rem;" data-i18n="audit_desc">רשימת כל הפעולות האחרונות שבוצעו במערכת (עד 200 פעולות)</p>
+            <div style="overflow-x:auto; margin-bottom:0.6rem;">
+              <table class="guest-table" style="font-size:0.8em;">
+                <thead>
+                  <tr>
+                    <th data-i18n="audit_col_time">זמן</th>
+                    <th data-i18n="audit_col_action">פעולה</th>
+                    <th data-i18n="audit_col_detail">פרט</th>
+                    <th data-i18n="audit_col_user">משתמש</th>
+                  </tr>
+                </thead>
+                <tbody id="auditLogBody"></tbody>
+              </table>
+            </div>
+            <button class="btn btn-danger btn-small" onclick="clearAuditLog()">
+              🗑️ <span data-i18n="audit_clear_btn">נקה יומן</span>
+            </button>
+          </div>
+
+          <!-- Error Monitor -->
+          <div class="settings-card" style="grid-column:1/-1;">
+            <h3>🐛 <span data-i18n="errors_title">יומן שגיאות</span></h3>
+            <p style="font-size:0.82em; color:var(--text-muted); margin-bottom:0.6rem;" data-i18n="errors_desc">שגיאות JavaScript שנלכדו בדפדפן (עד 50 שגיאות)</p>
+            <div style="overflow-x:auto; margin-bottom:0.6rem;">
+              <table class="guest-table" style="font-size:0.78em;">
+                <thead>
+                  <tr>
+                    <th data-i18n="audit_col_time">זמן</th>
+                    <th data-i18n="errors_col_message">הודעה</th>
+                    <th data-i18n="errors_col_location">מיקום</th>
+                  </tr>
+                </thead>
+                <tbody id="errorLogBody"></tbody>
+              </table>
+            </div>
+            <button class="btn btn-secondary btn-small" onclick="clearErrorLog()">
+              🗑️ <span data-i18n="errors_clear_btn">נקה שגיאות</span>
+            </button>
           </div>
 
           <!-- Danger Zone -->
@@ -846,7 +1288,7 @@
        ══════════════════════════════════════════════════════════════════ -->
 
   <!-- Add/Edit Guest Modal -->
-  <div class="modal-overlay" id="guestModal">
+  <div class="modal-overlay" id="guestModal" role="dialog" aria-modal="true" aria-labelledby="guestModalTitle">
     <div class="modal" style="max-width:680px;">
       <div class="modal-header">
         <h2 id="guestModalTitle" data-i18n="modal_add_guest">הוסף אורח</h2>
@@ -977,7 +1419,7 @@
   </div>
 
   <!-- Add/Edit Table Modal -->
-  <div class="modal-overlay" id="tableModal">
+  <div class="modal-overlay" id="tableModal" role="dialog" aria-modal="true" aria-labelledby="tableModalTitle">
     <div class="modal">
       <div class="modal-header">
         <h2 id="tableModalTitle" data-i18n="modal_add_table">הוסף שולחן</h2>
@@ -1007,8 +1449,89 @@
     </div>
   </div>
 
+  <!-- Gallery Lightbox -->
+  <div class="modal-overlay" id="galleryLightbox" role="dialog" aria-modal="true"
+    aria-label="תמונה מוגדלת" aria-hidden="true"
+    onclick="if(event.target===this) closeGalleryLightbox()">
+    <div class="gallery-lightbox-inner">
+      <button class="modal-close gallery-lightbox-close" onclick="closeGalleryLightbox()"
+        aria-label="סגור">&times;</button>
+      <img id="galleryLightboxImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="gallery-lightbox-img">
+      <div id="galleryLightboxCaption" class="gallery-lightbox-caption"></div>
+    </div>
+  </div>
+
+  <!-- Print grids (hidden on screen, visible in print) -->
+  <div id="placeCardsGrid" class="place-cards-grid" aria-hidden="true"></div>
+  <div id="tableSignsGrid" class="table-signs-grid" aria-hidden="true"></div>
+
+  <!-- Expense Modal -->
+  <div class="modal-overlay" id="expenseModal" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h2 id="expenseModalTitle" data-i18n="expense_add">הוסף הוצאה</h2>
+        <button class="modal-close" onclick="closeModal('expenseModal')" aria-label="סגור">&times;</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="expenseCategory" data-i18n="label_expense_category">קטגוריה</label>
+          <select id="expenseCategory"></select>
+        </div>
+        <div class="form-group">
+          <label for="expenseAmount" data-i18n="label_expense_amount">סכום (₪)</label>
+          <input type="number" id="expenseAmount" min="0" step="1" placeholder="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="expenseDescription" data-i18n="label_expense_description">תיאור</label>
+        <input type="text" id="expenseDescription" placeholder="הערות...">
+      </div>
+      <div class="form-group">
+        <label for="expenseDate" data-i18n="label_expense_date">תאריך</label>
+        <input type="date" id="expenseDate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('expenseModal')" data-i18n="btn_cancel">ביטול</button>
+        <button class="btn btn-primary" onclick="saveExpense()" data-i18n="btn_save">שמור</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Item Modal -->
+  <div class="modal-overlay" id="timelineModal" role="dialog" aria-modal="true" aria-labelledby="timelineModalTitle">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h2 id="timelineModalTitle" data-i18n="timeline_add">הוסף אירוע</h2>
+        <button class="modal-close" onclick="closeModal('timelineModal')" aria-label="סגור">&times;</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="timelineTime" data-i18n="label_timeline_time">שעה</label>
+          <input type="time" id="timelineTime" required>
+        </div>
+        <div class="form-group">
+          <label for="timelineIcon" data-i18n="label_timeline_icon">אמוג׳י</label>
+          <input type="text" id="timelineIcon" placeholder="📌" maxlength="2"
+            style="width:4.5rem; text-align:center; font-size:1.4em;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="timelineTitle" data-i18n="label_timeline_title">כותרת</label>
+        <input type="text" id="timelineTitle" data-i18n-placeholder="ph_timeline_title" placeholder="קבלת פנים..." required>
+      </div>
+      <div class="form-group">
+        <label for="timelineDesc" data-i18n="label_timeline_desc">תיאור (אופציונלי)</label>
+        <input type="text" id="timelineDesc" data-i18n-placeholder="ph_timeline_desc" placeholder="פרטים נוספים...">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('timelineModal')" data-i18n="btn_cancel">ביטול</button>
+        <button class="btn btn-primary" onclick="saveTimelineItem()" data-i18n="btn_save">שמור</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
+  <div class="toast-container" id="toastContainer" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <script src="./js/config.js"></script>
   <script src="./js/i18n.js"></script>
@@ -1026,6 +1549,19 @@
   <script src="./js/settings.js"></script>
   <script src="./js/budget.js"></script>
   <script src="./js/analytics.js"></script>
+  <script src="./js/timeline.js"></script>
+  <script src="./js/router.js"></script>
+  <script src="./js/guest-landing.js"></script>
+  <script src="./js/expenses.js"></script>
+  <script src="./js/registry.js"></script>
+  <script src="./js/checkin.js"></script>
+  <script src="./js/gallery.js"></script>
+  <script src="./js/contact-collector.js"></script>
+  <script src="./js/offline-queue.js"></script>
+  <script src="./js/audit.js"></script>
+  <script src="./js/error-monitor.js"></script>
+  <script src="./js/push.js"></script>
+  <script src="./js/email.js"></script>
   <script src="./js/sheets.js"></script>
   <script src="./js/auth.js"></script>
   <script src="./js/app.js"></script>

@@ -144,52 +144,101 @@ function editGuest(id) {
 
 function saveGuest() {
   if (!_authUser || !_authUser.isAdmin) return;
-  const firstName = sanitizeInput(document.getElementById('guestFirstName').value, 100);
-  if (!firstName) { document.getElementById('guestFirstName').focus(); return; }
+  const firstName = sanitizeInput(
+    document.getElementById("guestFirstName").value,
+    100,
+  );
+  if (!firstName) {
+    document.getElementById("guestFirstName").focus();
+    return;
+  }
 
   const data = {
-    firstName:   firstName,
-    lastName:    sanitizeInput(document.getElementById('guestLastName').value, 100),
-    phone:       sanitizeInput(document.getElementById('guestPhone').value, 20),
-    email:       sanitizeInput(document.getElementById('guestEmail').value, 254),
-    count:       Math.max(1, Math.min(50, parseInt(document.getElementById('guestCount2').value, 10) || 1)),
-    children:    Math.max(0, Math.min(50, parseInt(document.getElementById('guestChildren').value, 10) || 0)),
-    status:      document.getElementById('guestStatus').value,
-    side:        document.getElementById('guestSide').value,
-    group:       document.getElementById('guestGroup').value,
-    relationship:sanitizeInput(document.getElementById('guestRelationship').value, 100),
-    meal:        document.getElementById('guestMeal').value,
-    mealNotes:   sanitizeInput(document.getElementById('guestMealNotes').value, 300),
-    accessibility: document.getElementById('guestAccessibility').checked,
-    tableId:     document.getElementById('guestTableSelect').value,
-    gift:        sanitizeInput(document.getElementById('guestGift').value, 200),
-    notes:       sanitizeInput(document.getElementById('guestNotes').value, 500),
-    updatedAt:   new Date().toISOString(),
+    firstName: firstName,
+    lastName: sanitizeInput(
+      document.getElementById("guestLastName").value,
+      100,
+    ),
+    phone: sanitizeInput(document.getElementById("guestPhone").value, 20),
+    email: sanitizeInput(document.getElementById("guestEmail").value, 254),
+    count: Math.max(
+      1,
+      Math.min(
+        50,
+        parseInt(document.getElementById("guestCount2").value, 10) || 1,
+      ),
+    ),
+    children: Math.max(
+      0,
+      Math.min(
+        50,
+        parseInt(document.getElementById("guestChildren").value, 10) || 0,
+      ),
+    ),
+    status: document.getElementById("guestStatus").value,
+    side: document.getElementById("guestSide").value,
+    group: document.getElementById("guestGroup").value,
+    relationship: sanitizeInput(
+      document.getElementById("guestRelationship").value,
+      100,
+    ),
+    meal: document.getElementById("guestMeal").value,
+    mealNotes: sanitizeInput(
+      document.getElementById("guestMealNotes").value,
+      300,
+    ),
+    accessibility: document.getElementById("guestAccessibility").checked,
+    tableId: document.getElementById("guestTableSelect").value,
+    gift: sanitizeInput(document.getElementById("guestGift").value, 200),
+    notes: sanitizeInput(document.getElementById("guestNotes").value, 500),
+    updatedAt: new Date().toISOString(),
   };
 
   if (_editingGuestId) {
-    const g = _guests.find(function(x) { return x.id === _editingGuestId; });
+    const g = _guests.find(function (x) {
+      return x.id === _editingGuestId;
+    });
     if (g) Object.assign(g, data);
   } else {
-    _guests.push(Object.assign({ id: uid(), sent: false, rsvpDate: '', createdAt: new Date().toISOString() }, data));
+    _guests.push(
+      Object.assign(
+        {
+          id: uid(),
+          sent: false,
+          rsvpDate: "",
+          createdAt: new Date().toISOString(),
+        },
+        data,
+      ),
+    );
   }
 
   saveAll();
   syncGuestsToSheets();
-  closeModal('guestModal');
+  closeModal("guestModal");
   renderGuests();
   renderStats();
-  showToast(t('toast_guest_saved'), 'success');
+  showToast(t("toast_guest_saved"), "success");
+  logAudit(
+    _editingGuestId ? "guest_edit" : "guest_add",
+    data.firstName + " " + data.lastName,
+  );
 }
 
 function deleteGuest(id) {
   if (!_authUser || !_authUser.isAdmin) return;
-  if (!confirm(t('confirm_delete'))) return;
-  _guests = _guests.filter(function(g) { return g.id !== id; });
+  if (!confirm(t("confirm_delete"))) return;
+  const gone = _guests.find(function (g) {
+    return g.id === id;
+  });
+  _guests = _guests.filter(function (g) {
+    return g.id !== id;
+  });
   saveAll();
   syncGuestsToSheets();
   renderGuests();
   renderStats();
-  showToast(t('toast_guest_deleted'), 'error');
+  showToast(t("toast_guest_deleted"), "error");
+  if (gone)
+    logAudit("guest_delete", gone.firstName + " " + (gone.lastName || ""));
 }
-

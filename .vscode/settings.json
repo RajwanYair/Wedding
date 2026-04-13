@@ -68,7 +68,14 @@
         "skyway",
         "markdownlint",
         "htmlhint",
-        "stylelint"
+        "stylelint",
+        "vapid",
+        "webpush",
+        "notificationclick",
+        "serviceworker",
+        "lighthouserc",
+        "playwright",
+        "chromium"
     ],
     // ── Search / Explorer ──
     "search.exclude": {
@@ -115,6 +122,9 @@
     "nodejs-testing.include": [
         "tests/**/*.mjs"
     ],
-    "testing.automaticallyOpenPeekView": "never"
+    "testing.automaticallyOpenPeekView": "never",
+    // ── Playwright ──
+    "playwright.reuseBrowser": false,
+    "playwright.showTrace": false
 }
 

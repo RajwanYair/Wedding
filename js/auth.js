@@ -96,22 +96,36 @@ function submitEmailLogin() {
    ─────────────────────────────────────────────────────────────────── */
 
 function _oauthLogin(email, name, picture, provider) {
-  if (!email) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+  if (!email) {
+    showToast(t("auth_oauth_no_email"), "error");
+    return;
+  }
   const lc = email.toLowerCase();
-  if (!isApprovedAdmin(lc)) { showToast(t('auth_email_not_approved'), 'warning'); return; }
+  if (!isApprovedAdmin(lc)) {
+    showToast(t("auth_email_not_approved"), "warning");
+    return;
+  }
   _clearLoginFailures();
-  const parts = (name || lc.split('@')[0]).split(' ');
+  const parts = (name || lc.split("@")[0]).split(" ");
   _authUser = {
-    name:      name || parts[0],
-    firstName: parts[0] || '',
-    lastName:  parts.slice(1).join(' ') || '',
-    email:     lc,
-    picture:   picture || '',
-    isAdmin:   true,
-    provider:  provider,
+    name: name || parts[0],
+    firstName: parts[0] || "",
+    lastName: parts.slice(1).join(" ") || "",
+    email: lc,
+    picture: picture || "",
+    isAdmin: true,
+    provider: provider,
     expiresAt: Date.now() + _SESSION_TTL_MS,
   };
-  save('auth', { name: _authUser.name, email: lc, picture: _authUser.picture, isAdmin: true, provider: provider, expiresAt: _authUser.expiresAt });
+  save("auth", {
+    name: _authUser.name,
+    email: lc,
+    picture: _authUser.picture,
+    isAdmin: true,
+    provider: provider,
+    expiresAt: _authUser.expiresAt,
+  });
+  logAudit("login", lc + " (" + provider + ")");
   onAuthSuccess();
 }
 
@@ -119,162 +133,227 @@ function _oauthLogin(email, name, picture, provider) {
 
 /** Called by the GIS library after load (set on window) */
 function handleGoogleCredential(response) {
-  if (!response || !response.credential) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+  if (!response || !response.credential) {
+    showToast(t("auth_oauth_no_email"), "error");
+    return;
+  }
   /* Decode the JWT payload — no verification needed (server side not applicable here) */
-  const parts = response.credential.split('.');
-  if (parts.length < 2) { showToast(t('auth_oauth_no_email'), 'error'); return; }
+  const parts = response.credential.split(".");
+  if (parts.length < 2) {
+    showToast(t("auth_oauth_no_email"), "error");
+    return;
+  }
   let payload;
   try {
-    payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
   } catch (_e) {
-    showToast(t('auth_oauth_no_email'), 'error'); return;
+    showToast(t("auth_oauth_no_email"), "error");
+    return;
   }
-  _oauthLogin(payload.email, payload.name || '', payload.picture || '', 'google');
+  _oauthLogin(
+    payload.email,
+    payload.name || "",
+    payload.picture || "",
+    "google",
+  );
 }
 
 function initGoogleSignIn() {
-  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.startsWith('YOUR_')) return;
+  if (!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.startsWith("YOUR_")) return;
   /* google.accounts.id available after GIS SDK loads */
-  if (typeof google === 'undefined' || !google.accounts) return;
+  if (typeof google === "undefined" || !google.accounts) return;
   google.accounts.id.initialize({
-    client_id:        GOOGLE_CLIENT_ID,
-    callback:         handleGoogleCredential,
-    auto_select:      false,
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    auto_select: false,
     cancel_on_tap_outside: true,
   });
-  const btn = document.getElementById('googleSignInBtn');
+  const btn = document.getElementById("googleSignInBtn");
   if (btn) {
-    google.accounts.id.renderButton(btn, { theme: 'outline', size: 'large', width: 280, locale: _currentLang === 'he' ? 'he' : 'en' });
+    google.accounts.id.renderButton(btn, {
+      theme: "outline",
+      size: "large",
+      width: 280,
+      locale: _currentLang === "he" ? "he" : "en",
+    });
   }
 }
 
 /* ── Facebook Sign-In (FB JS SDK) ── */
 
 function loadFBSDK() {
-  if (!FB_APP_ID || document.getElementById('fb-jssdk')) return;
-  window.fbAsyncInit = function() {
+  if (!FB_APP_ID || document.getElementById("fb-jssdk")) return;
+  window.fbAsyncInit = function () {
     /* global FB */
-    FB.init({ appId: FB_APP_ID, cookie: true, xfbml: false, version: 'v20.0' });
+    FB.init({ appId: FB_APP_ID, cookie: true, xfbml: false, version: "v20.0" });
   };
-  const s  = document.createElement('script');
-  s.id     = 'fb-jssdk';
-  s.src    = 'https://connect.facebook.net/en_US/sdk.js';
-  s.defer  = true;
+  const s = document.createElement("script");
+  s.id = "fb-jssdk";
+  s.src = "https://connect.facebook.net/en_US/sdk.js";
+  s.defer = true;
   document.head.appendChild(s);
 }
 
 function loginFacebook() {
-  if (!FB_APP_ID) { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
-  if (typeof FB === 'undefined') { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
-  FB.login(function(resp) {
-    if (resp.authResponse) {
-      FB.api('/me', { fields: 'name,email,picture' }, function(user) {
-        _oauthLogin(user.email, user.name, user.picture && user.picture.data ? user.picture.data.url : '', 'facebook');
-      });
-    }
-  }, { scope: 'public_profile,email' });
+  if (!FB_APP_ID) {
+    showToast(t("auth_oauth_not_configured"), "warning");
+    return;
+  }
+  if (typeof FB === "undefined") {
+    showToast(t("auth_oauth_not_configured"), "warning");
+    return;
+  }
+  FB.login(
+    function (resp) {
+      if (resp.authResponse) {
+        FB.api("/me", { fields: "name,email,picture" }, function (user) {
+          _oauthLogin(
+            user.email,
+            user.name,
+            user.picture && user.picture.data ? user.picture.data.url : "",
+            "facebook",
+          );
+        });
+      }
+    },
+    { scope: "public_profile,email" },
+  );
 }
 
 /* ── Apple Sign-In ── */
 
 function loadAppleSDK() {
-  if (!APPLE_SERVICE_ID || document.getElementById('apple-signin-sdk')) return;
-  const s  = document.createElement('script');
-  s.id     = 'apple-signin-sdk';
-  s.src    = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
-  s.defer  = true;
+  if (!APPLE_SERVICE_ID || document.getElementById("apple-signin-sdk")) return;
+  const s = document.createElement("script");
+  s.id = "apple-signin-sdk";
+  s.src =
+    "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
+  s.defer = true;
   document.head.appendChild(s);
 }
 
 function loginApple() {
-  if (!APPLE_SERVICE_ID) { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
-  if (typeof AppleID === 'undefined') { showToast(t('auth_oauth_not_configured'), 'warning'); return; }
+  if (!APPLE_SERVICE_ID) {
+    showToast(t("auth_oauth_not_configured"), "warning");
+    return;
+  }
+  if (typeof AppleID === "undefined") {
+    showToast(t("auth_oauth_not_configured"), "warning");
+    return;
+  }
   AppleID.auth.init({
-    clientId:    APPLE_SERVICE_ID,
-    scope:       'name email',
+    clientId: APPLE_SERVICE_ID,
+    scope: "name email",
     redirectURI: location.origin + location.pathname,
-    usePopup:    true,
+    usePopup: true,
   });
-  AppleID.auth.signIn().then(function(data) {
-    const id = data.authorization && data.authorization.id_token;
-    if (!id) { showToast(t('auth_oauth_no_email'), 'error'); return; }
-    let payload;
-    try {
-      payload = JSON.parse(atob(id.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-    } catch (_e) {
-      showToast(t('auth_oauth_no_email'), 'error'); return;
-    }
-    const nameObj = data.user && data.user.name;
-    const name    = nameObj ? ((nameObj.firstName || '') + ' ' + (nameObj.lastName || '')).trim() : '';
-    _oauthLogin(payload.email, name, '', 'apple');
-  }).catch(function(_err) {
-    /* User closed popup — silently ignore */
-  });
+  AppleID.auth
+    .signIn()
+    .then(function (data) {
+      const id = data.authorization && data.authorization.id_token;
+      if (!id) {
+        showToast(t("auth_oauth_no_email"), "error");
+        return;
+      }
+      let payload;
+      try {
+        payload = JSON.parse(
+          atob(id.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+        );
+      } catch (_e) {
+        showToast(t("auth_oauth_no_email"), "error");
+        return;
+      }
+      const nameObj = data.user && data.user.name;
+      const name = nameObj
+        ? ((nameObj.firstName || "") + " " + (nameObj.lastName || "")).trim()
+        : "";
+      _oauthLogin(payload.email, name, "", "apple");
+    })
+    .catch(function (_err) {
+      /* User closed popup — silently ignore */
+    });
 }
 
 /** Continue anonymously: shows RSVP only */
 function loginGuest() {
-  _authUser = { name: '', firstName: '', lastName: '', email: '', picture: '', isAdmin: false, provider: 'guest' };
+  _authUser = {
+    name: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    picture: "",
+    isAdmin: false,
+    provider: "guest",
+  };
   onAuthSuccess();
 }
 
 /** Sign out — return to guest mode */
 function signOut() {
+  const wasEmail = _authUser ? _authUser.email || "" : "";
   _authUser = null;
-  save('auth', null);
-  document.body.classList.remove('guest-mode');
-  document.getElementById('userBarGroup').style.display = 'none';
+  save("auth", null);
+  if (wasEmail) logAudit("logout", wasEmail);
+  document.body.classList.remove("guest-mode");
+  document.getElementById("userBarGroup").style.display = "none";
   loginGuest();
 }
 
 function showAuthOverlay() {
-  const overlay = document.getElementById('authOverlay');
-  if (overlay) overlay.classList.remove('auth-hidden');
+  const overlay = document.getElementById("authOverlay");
+  if (overlay) overlay.classList.remove("auth-hidden");
   /* Auto-focus the email input */
-  const inp = document.getElementById('adminLoginEmail');
-  if (inp) setTimeout(function() { inp.focus(); }, 50);
+  const inp = document.getElementById("adminLoginEmail");
+  if (inp)
+    setTimeout(function () {
+      inp.focus();
+    }, 50);
 }
 
 function hideAuthOverlay() {
-  const overlay = document.getElementById('authOverlay');
-  if (overlay) overlay.classList.add('auth-hidden');
+  const overlay = document.getElementById("authOverlay");
+  if (overlay) overlay.classList.add("auth-hidden");
 }
 
 function updateUserBar() {
-  const group  = document.getElementById('userBarGroup');
-  const nameEl = document.getElementById('userDisplayName');
-  const avatar = document.getElementById('userAvatar');
-  const badge  = document.getElementById('userRoleBadge');
-  const btnOut = document.getElementById('btnSignOut');
-  const btnIn  = document.getElementById('btnSignIn');
+  const group = document.getElementById("userBarGroup");
+  const nameEl = document.getElementById("userDisplayName");
+  const avatar = document.getElementById("userAvatar");
+  const badge = document.getElementById("userRoleBadge");
+  const btnOut = document.getElementById("btnSignOut");
+  const btnIn = document.getElementById("btnSignIn");
   if (!group || !_authUser) return;
-  group.style.display = 'flex';
-  const isAnon = _authUser.provider === 'guest';
+  group.style.display = "flex";
+  const isAnon = _authUser.provider === "guest";
   if (_authUser.picture) {
     avatar.src = _authUser.picture;
-    avatar.style.display = 'inline';
+    avatar.style.display = "inline";
   } else {
-    avatar.style.display = 'none';
+    avatar.style.display = "none";
   }
-  nameEl.textContent = _authUser.name || t('role_guest');
-  badge.textContent  = _authUser.isAdmin ? ('\ud83d\udc51 ' + t('role_admin')) : t('role_guest');
-  badge.className    = 'user-role-chip ' + (_authUser.isAdmin ? 'role-admin' : 'role-guest');
-  if (btnOut) btnOut.style.display = isAnon ? 'none' : '';
-  if (btnIn)  btnIn.style.display  = isAnon ? '' : 'none';
+  nameEl.textContent = _authUser.name || t("role_guest");
+  badge.textContent = _authUser.isAdmin
+    ? "\ud83d\udc51 " + t("role_admin")
+    : t("role_guest");
+  badge.className =
+    "user-role-chip " + (_authUser.isAdmin ? "role-admin" : "role-guest");
+  if (btnOut) btnOut.style.display = isAnon ? "none" : "";
+  if (btnIn) btnIn.style.display = isAnon ? "" : "none";
 }
 
 function applyUserLevel() {
   if (!_authUser) return;
   if (_authUser.isAdmin) {
-    document.body.classList.remove('guest-mode');
-    showSection('dashboard');
+    document.body.classList.remove("guest-mode");
+    showSection("dashboard");
   } else {
-    document.body.classList.add('guest-mode');
-    const fn = document.getElementById('rsvpFirstName');
-    const ln = document.getElementById('rsvpLastName');
+    document.body.classList.add("guest-mode");
+    const fn = document.getElementById("rsvpFirstName");
+    const ln = document.getElementById("rsvpLastName");
     if (fn && !fn.value && _authUser.firstName) fn.value = _authUser.firstName;
-    if (ln && !ln.value && _authUser.lastName)  ln.value = _authUser.lastName;
-    showSection('rsvp');
+    if (ln && !ln.value && _authUser.lastName) ln.value = _authUser.lastName;
+    showSection("landing");
   }
 }
 

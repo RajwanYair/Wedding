@@ -277,10 +277,37 @@ async function _checkSheetsForChanges() {
   }
 }
 
-/** Start the auto-sync polling loop */
+/** Start the auto-sync polling loop with Page Visibility API (smart polling) */
 function startSheetsAutoSync() {
   if (_sheetsSyncTimer) clearInterval(_sheetsSyncTimer);
-  _sheetsSyncTimer = setInterval(_checkSheetsForChanges, SHEETS_SYNC_INTERVAL_MS);
+  _sheetsSyncTimer = setInterval(
+    _checkSheetsForChanges,
+    SHEETS_SYNC_INTERVAL_MS,
+  );
+
+  /* Smart polling: pause when tab is hidden, resume immediately on refocus */
+  document.removeEventListener("visibilitychange", _sheetsVisibilityHandler);
+  document.addEventListener("visibilitychange", _sheetsVisibilityHandler);
+}
+
+/** Visibility change handler — pause/resume polling with the tab */
+function _sheetsVisibilityHandler() {
+  if (document.hidden) {
+    /* Tab hidden — stop polling to save bandwidth */
+    if (_sheetsSyncTimer) {
+      clearInterval(_sheetsSyncTimer);
+      _sheetsSyncTimer = null;
+    }
+  } else {
+    /* Tab visible again — check immediately, then restart regular polling */
+    _checkSheetsForChanges();
+    if (!_sheetsSyncTimer) {
+      _sheetsSyncTimer = setInterval(
+        _checkSheetsForChanges,
+        SHEETS_SYNC_INTERVAL_MS,
+      );
+    }
+  }
 }
 
 /** Stop the auto-sync polling loop */

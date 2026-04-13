@@ -22,35 +22,56 @@ function giftReceived(g) {
 /** Render the full Budget & Gift section */
 function renderBudget() {
   const totalBudget = _weddingInfo.giftBudget || 0;
-  const recipients  = _guests.filter(function(g) { return g.status !== 'declined'; });
-  const withGift    = _guests.filter(giftReceived);
-  const totalAmount = withGift.reduce(function(s, g) { return s + parseGiftAmount(g.gift); }, 0);
-  const pending     = recipients.filter(function(g) { return !giftReceived(g); });
-  const pct         = totalBudget > 0 ? Math.min(100, Math.round((totalAmount / totalBudget) * 100)) : 0;
+  const recipients = _guests.filter(function (g) {
+    return g.status !== "declined";
+  });
+  const withGift = _guests.filter(giftReceived);
+  const totalAmount = withGift.reduce(function (s, g) {
+    return s + parseGiftAmount(g.gift);
+  }, 0);
+  const pending = recipients.filter(function (g) {
+    return !giftReceived(g);
+  });
+  const pct =
+    totalBudget > 0
+      ? Math.min(100, Math.round((totalAmount / totalBudget) * 100))
+      : 0;
 
   /* ── summary bar ── */
-  const fillColor = totalAmount >= totalBudget && totalBudget > 0 ? 'var(--positive)' : 'var(--accent)';
-  const budgetInput = document.getElementById('budgetTargetInput');
-  if (budgetInput && !budgetInput.matches(':focus')) budgetInput.value = totalBudget || '';
+  const fillColor =
+    totalAmount >= totalBudget && totalBudget > 0
+      ? "var(--positive)"
+      : "var(--accent)";
+  const budgetInput = document.getElementById("budgetTargetInput");
+  if (budgetInput && !budgetInput.matches(":focus"))
+    budgetInput.value = totalBudget || "";
 
-  const statGifts  = document.getElementById('budgetStatGifts');
-  const statTotal  = document.getElementById('budgetStatTotal');
-  const statPend   = document.getElementById('budgetStatPending');
-  const statBudget = document.getElementById('budgetStatBudget');
-  const statPct    = document.getElementById('budgetStatPct');
-  const bar        = document.getElementById('budgetProgressBar');
-  const barWrap    = document.getElementById('budgetProgressWrap');
+  const statGifts = document.getElementById("budgetStatGifts");
+  const statTotal = document.getElementById("budgetStatTotal");
+  const statPend = document.getElementById("budgetStatPending");
+  const statBudget = document.getElementById("budgetStatBudget");
+  const statPct = document.getElementById("budgetStatPct");
+  const bar = document.getElementById("budgetProgressBar");
+  const barWrap = document.getElementById("budgetProgressWrap");
 
-  if (statGifts)  statGifts.textContent  = withGift.length;
-  if (statTotal)  statTotal.textContent  = totalAmount > 0 ? '₪' + totalAmount.toLocaleString() : '—';
-  if (statPend)   statPend.textContent   = pending.length;
-  if (statBudget) statBudget.textContent = totalBudget > 0 ? '₪' + totalBudget.toLocaleString() : '—';
-  if (statPct)    statPct.textContent    = totalBudget > 0 ? pct + '%' : '—';
-  if (bar)        { bar.style.width = pct + '%'; bar.style.background = fillColor; }
-  if (barWrap)    barWrap.style.display = totalBudget > 0 ? 'block' : 'none';
+  if (statGifts) statGifts.textContent = withGift.length;
+  if (statTotal)
+    statTotal.textContent =
+      totalAmount > 0 ? "₪" + totalAmount.toLocaleString() : "—";
+  if (statPend) statPend.textContent = pending.length;
+  if (statBudget)
+    statBudget.textContent =
+      totalBudget > 0 ? "₪" + totalBudget.toLocaleString() : "—";
+  if (statPct) statPct.textContent = totalBudget > 0 ? pct + "%" : "—";
+  if (bar) {
+    bar.style.width = pct + "%";
+    bar.style.background = fillColor;
+  }
+  if (barWrap) barWrap.style.display = totalBudget > 0 ? "block" : "none";
 
   /* ── gift table rows ── */
-  renderBudgetTable();
+  renderBudgetTable(); /* ── expense tracker ── */
+  renderExpenses();
 }
 
 function renderBudgetTable() {

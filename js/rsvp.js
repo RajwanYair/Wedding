@@ -128,8 +128,22 @@ function submitRSVP() {
     syncGuestsToSheets();
   } else if (SHEETS_WEBAPP_URL) {
     const rsvpGuest = existing || _guests[_guests.length - 1];
-    sheetsAppendRsvp(rsvpGuest);
+    if (navigator.onLine) {
+      sheetsAppendRsvp(rsvpGuest);
+    } else {
+      /* Device is offline — queue for later */
+      const row =
+        typeof guestToRow === "function" ? guestToRow(rsvpGuest) : null;
+      if (row) enqueueOfflineRsvp("rsvp", { action: "appendRsvp", row: row });
+    }
   }
+
+  logAudit("rsvp_submit", firstName + " " + lastName);
+
+  /* Email notifications (Sprint 3.6) */
+  const notifyGuest = existing || _guests[_guests.length - 1];
+  sendRsvpConfirmation(notifyGuest);
+  sendAdminRsvpNotify(notifyGuest);
 
   // Reset RSVP form
   ['rsvpFirstName','rsvpLastName','rsvpPhone','rsvpNotes'].forEach(function(id) {

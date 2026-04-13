@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v1.12.0 ── */
+/* ── Wedding Manager — Config & State v1.19.0 ── */
 
 /* ── State ── */
 /* ── State ── */
@@ -40,6 +40,14 @@ const THEMES = [
   "theme-royal",
 ];
 let _themeIndex = 0;
+let _isLightMode = false;
+let _timeline = [];
+let _editingTimelineId = null;
+let _expenses = [];
+let _editingExpenseId = null;
+let _gallery = [];
+let _auditLog = [];
+let _clientErrors = [];
 
 /* ── Auth Config ── */
 // Emails that receive full admin access to all app features.
@@ -102,3 +110,9 @@ let _sheetsToken = null; // OAuth2 access token for Sheets API (in-memory only)
 let _sheetsTokenClient = null; // google.accounts.oauth2 token client instance
 // Extra admin emails approved via Settings (stored in localStorage, merged with ADMIN_EMAILS)
 let _approvedEmails = [];
+
+/* ── Web Push (Sprint 5.4) ── */
+// VAPID public key for Web Push subscriptions.
+// Generate a key pair once with: node -e "const c=require('crypto');const {pk}=c.generateKeyPairSync('ec',{namedCurve:'prime256v1',publicKeyEncoding:{type:'spki',format:'der'},privateKeyEncoding:{type:'pkcs8',format:'der'}});console.log(Buffer.from(pk).slice(-65).toString('base64url'));"
+// Store the matching private key in the GAS Script Properties as VAPID_PRIVATE_KEY.
+const VAPID_PUBLIC_KEY = "BENRJjMYCrikYTpaSsKJanxxLDB3_S-3NRzItZz8E_H-gkjsWl2qTeF3yFhJdPo7-XUckwGniggULBfOmU93vPQ";

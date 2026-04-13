@@ -1,46 +1,71 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 230" role="img" aria-label="Wedding Manager Architecture">
-  <rect width="760" height="230" rx="12" fill="#161121"/>
-
-  <!-- Connector lines (behind boxes) -->
-  <g opacity="0.45" stroke-width="1.5" fill="none">
-    <line x1="380" y1="77" x2="90" y2="124" stroke="#60a5fa"/>
-    <line x1="380" y1="77" x2="232" y2="124" stroke="#6ee7b7"/>
-    <line x1="380" y1="77" x2="380" y2="124" stroke="#e8a0b4" opacity="0.8" stroke-width="2"/>
-    <line x1="380" y1="77" x2="522" y2="124" stroke="#4ade80"/>
-    <line x1="380" y1="77" x2="664" y2="124" stroke="#a78bfa"/>
-  </g>
-
-  <!-- index.html — central node -->
-  <rect x="285" y="18" width="190" height="59" rx="9" fill="#221a35" stroke="#d4a574" stroke-width="2"/>
-  <text x="380" y="43" font-family="ui-monospace,monospace" font-size="14" font-weight="700" fill="#d4a574" text-anchor="middle">index.html</text>
-  <text x="380" y="62" font-family="ui-monospace,monospace" font-size="10" fill="#7d6f95" text-anchor="middle">HTML · CSS · JS — single file</text>
-
-  <!-- sw.js -->
-  <rect x="30" y="124" width="120" height="46" rx="7" fill="#162038" stroke="#60a5fa" stroke-width="1.5"/>
-  <text x="90" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#60a5fa" text-anchor="middle">sw.js</text>
-  <text x="90" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#6e7f9a" text-anchor="middle">offline · PWA cache</text>
-
-  <!-- manifest.json -->
-  <rect x="162" y="124" width="140" height="46" rx="7" fill="#162416" stroke="#6ee7b7" stroke-width="1.5"/>
-  <text x="232" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#6ee7b7" text-anchor="middle">manifest.json</text>
-  <text x="232" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#6e9a80" text-anchor="middle">PWA install</text>
-
-  <!-- localStorage -->
-  <rect x="314" y="124" width="132" height="46" rx="7" fill="#28172a" stroke="#e8a0b4" stroke-width="1.5"/>
-  <text x="380" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#e8a0b4" text-anchor="middle">localStorage</text>
-  <text x="380" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#9a7a8a" text-anchor="middle">wedding_v1_* · JSON</text>
-
-  <!-- wa.me -->
-  <rect x="458" y="124" width="128" height="46" rx="7" fill="#162416" stroke="#4ade80" stroke-width="1.5"/>
-  <text x="522" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#4ade80" text-anchor="middle">wa.me</text>
-  <text x="522" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#6e9a80" text-anchor="middle">WhatsApp links</text>
-
-  <!-- GitHub Pages -->
-  <rect x="598" y="124" width="132" height="46" rx="7" fill="#1c162e" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="664" y="145" font-family="ui-monospace,monospace" font-size="12" font-weight="600" fill="#a78bfa" text-anchor="middle">GitHub Pages</text>
-  <text x="664" y="159" font-family="ui-monospace,monospace" font-size="9" fill="#8a7ab0" text-anchor="middle">live deployment</text>
-
-  <!-- Build pipeline row -->
-  <rect x="162" y="196" width="436" height="24" rx="5" fill="#1c1830" stroke="#3f3560" stroke-width="1"/>
-  <text x="380" y="212" font-family="ui-monospace,monospace" font-size="10" fill="#5c5080" text-anchor="middle">CI: htmlhint → stylelint → eslint → markdownlint → node --test → deploy</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 460" role="img" aria-label="Wedding Manager v1.19.0 Architecture Diagram">
+  <rect width="860" height="460" rx="14" fill="#0d0b18"/>
+  <text x="430" y="30" font-family="ui-monospace,monospace" font-size="13" font-weight="700" fill="#d4a574" text-anchor="middle">WEDDING MANAGER v1.19.0 — ARCHITECTURE</text>
+  <!-- Browser Layer -->
+  <rect x="20" y="50" width="560" height="270" rx="10" fill="#151026" stroke="#2a2660" stroke-width="1.5"/>
+  <text x="300" y="72" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#7b6cbf" text-anchor="middle">BROWSER</text>
+  <rect x="40" y="82" width="120" height="32" rx="6" fill="#1e1844" stroke="#4a3fa0" stroke-width="1"/>
+  <text x="100" y="103" font-family="ui-monospace,monospace" font-size="10" fill="#a89cf7" text-anchor="middle">index.html</text>
+  <rect x="175" y="82" width="120" height="32" rx="6" fill="#1e1844" stroke="#4a3fa0" stroke-width="1"/>
+  <text x="235" y="103" font-family="ui-monospace,monospace" font-size="10" fill="#a89cf7" text-anchor="middle">css/ (6 files)</text>
+  <rect x="310" y="82" width="250" height="32" rx="6" fill="#1e1844" stroke="#d4a574" stroke-width="1.5"/>
+  <text x="435" y="103" font-family="ui-monospace,monospace" font-size="10" fill="#d4a574" text-anchor="middle">js/ (32 modules)</text>
+  <rect x="40" y="128" width="100" height="26" rx="5" fill="#251a0d" stroke="#d4a574" stroke-width="1"/>
+  <text x="90" y="145" font-family="ui-monospace,monospace" font-size="9" fill="#d4a574" text-anchor="middle">auth.js (OAuth)</text>
+  <rect x="148" y="128" width="86" height="26" rx="5" fill="#0d1f0d" stroke="#4caf50" stroke-width="1"/>
+  <text x="191" y="145" font-family="ui-monospace,monospace" font-size="9" fill="#4caf50" text-anchor="middle">push.js (VAPID)</text>
+  <rect x="242" y="128" width="90" height="26" rx="5" fill="#0d1520" stroke="#5090c0" stroke-width="1"/>
+  <text x="287" y="145" font-family="ui-monospace,monospace" font-size="9" fill="#5090c0" text-anchor="middle">sheets.js (sync)</text>
+  <rect x="340" y="128" width="88" height="26" rx="5" fill="#1f0d1f" stroke="#c06080" stroke-width="1"/>
+  <text x="384" y="145" font-family="ui-monospace,monospace" font-size="9" fill="#c06080" text-anchor="middle">rsvp.js (queue)</text>
+  <rect x="436" y="128" width="88" height="26" rx="5" fill="#0d1520" stroke="#5090c0" stroke-width="1"/>
+  <text x="480" y="145" font-family="ui-monospace,monospace" font-size="9" fill="#5090c0" text-anchor="middle">router.js (hash)</text>
+  <text x="40" y="175" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">guests · tables · dashboard · analytics · whatsapp · timeline · gallery · budget · expenses</text>
+  <text x="40" y="186" font-family="ui-monospace,monospace" font-size="8.5" fill="#534e7e">checkin · registry · audit · error-monitor · email · contact-collector · offline-queue · guest-landing</text>
+  <rect x="40" y="196" width="140" height="36" rx="6" fill="#0d0b18" stroke="#3a3068" stroke-width="1"/>
+  <text x="110" y="214" font-family="ui-monospace,monospace" font-size="9" fill="#7b6cbf" text-anchor="middle">localStorage</text>
+  <text x="110" y="226" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">wedding_v1_ prefix</text>
+  <rect x="196" y="196" width="140" height="36" rx="6" fill="#0d0b18" stroke="#3a3068" stroke-width="1"/>
+  <text x="266" y="214" font-family="ui-monospace,monospace" font-size="9" fill="#7b6cbf" text-anchor="middle">sw.js (Service Worker)</text>
+  <text x="266" y="226" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">stale-revalidate + push</text>
+  <rect x="352" y="196" width="140" height="36" rx="6" fill="#0d0b18" stroke="#3a3068" stroke-width="1"/>
+  <text x="422" y="214" font-family="ui-monospace,monospace" font-size="9" fill="#7b6cbf" text-anchor="middle">manifest.json (PWA)</text>
+  <text x="422" y="226" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">icons · standalone</text>
+  <rect x="40" y="248" width="520" height="32" rx="6" fill="#0d1520" stroke="#5090c0" stroke-width="1"/>
+  <text x="300" y="265" font-family="ui-monospace,monospace" font-size="9" fill="#5090c0" text-anchor="middle">535 unit tests (71 suites) · Node built-in runner · Playwright E2E smoke tests</text>
+  <!-- External Services -->
+  <rect x="600" y="50" width="242" height="270" rx="10" fill="#0d110d" stroke="#2a3a2a" stroke-width="1.5"/>
+  <text x="721" y="72" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#4caf50" text-anchor="middle">EXTERNAL SERVICES</text>
+  <rect x="618" y="82" width="206" height="36" rx="6" fill="#0d1f0d" stroke="#4caf50" stroke-width="1"/>
+  <text x="721" y="99" font-family="ui-monospace,monospace" font-size="9" fill="#4caf50" text-anchor="middle">Google Apps Script (Web App)</text>
+  <text x="721" y="111" font-family="ui-monospace,monospace" font-size="8" fill="#2a5a2a" text-anchor="middle">read · replaceAll · pushSub · sendEmail · rateLimiting</text>
+  <rect x="618" y="130" width="206" height="28" rx="6" fill="#0d1a25" stroke="#5090c0" stroke-width="1"/>
+  <text x="721" y="148" font-family="ui-monospace,monospace" font-size="9" fill="#5090c0" text-anchor="middle">Google Sheets (primary backend)</text>
+  <rect x="618" y="170" width="206" height="28" rx="6" fill="#251a0d" stroke="#d4a574" stroke-width="1"/>
+  <text x="721" y="188" font-family="ui-monospace,monospace" font-size="9" fill="#d4a574" text-anchor="middle">Google Identity Services (OAuth)</text>
+  <rect x="618" y="210" width="98" height="28" rx="6" fill="#1a0d25" stroke="#9060c0" stroke-width="1"/>
+  <text x="667" y="228" font-family="ui-monospace,monospace" font-size="9" fill="#9060c0" text-anchor="middle">Facebook SDK</text>
+  <rect x="726" y="210" width="98" height="28" rx="6" fill="#1a0d25" stroke="#9060c0" stroke-width="1"/>
+  <text x="775" y="228" font-family="ui-monospace,monospace" font-size="9" fill="#9060c0" text-anchor="middle">Apple SDK</text>
+  <rect x="618" y="250" width="206" height="28" rx="6" fill="#1f0d0d" stroke="#c04040" stroke-width="1"/>
+  <text x="721" y="268" font-family="ui-monospace,monospace" font-size="9" fill="#c04040" text-anchor="middle">wa.me deep links (WhatsApp)</text>
+  <line x1="570" y1="113" x2="610" y2="100" stroke="#2a3a2a" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="570" y1="157" x2="610" y2="144" stroke="#2a3a2a" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="570" y1="188" x2="610" y2="184" stroke="#2a3a2a" stroke-width="1" stroke-dasharray="4,3"/>
+  <!-- CI/CD Layer -->
+  <rect x="20" y="340" width="820" height="105" rx="10" fill="#0d0b18" stroke="#2a2660" stroke-width="1.5"/>
+  <text x="430" y="358" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#7b6cbf" text-anchor="middle">CI/CD — GitHub Actions</text>
+  <rect x="38" y="368" width="168" height="30" rx="6" fill="#151026" stroke="#4a3fa0" stroke-width="1"/>
+  <text x="122" y="381" font-family="ui-monospace,monospace" font-size="9" fill="#a89cf7" text-anchor="middle">ci.yml</text>
+  <text x="122" y="392" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">lint · test · lighthouse · size · e2e</text>
+  <rect x="216" y="368" width="168" height="30" rx="6" fill="#151026" stroke="#4a3fa0" stroke-width="1"/>
+  <text x="300" y="381" font-family="ui-monospace,monospace" font-size="9" fill="#a89cf7" text-anchor="middle">deploy.yml</text>
+  <text x="300" y="392" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">inject-secrets → Pages artifact</text>
+  <rect x="394" y="368" width="168" height="30" rx="6" fill="#151026" stroke="#4a3fa0" stroke-width="1"/>
+  <text x="478" y="381" font-family="ui-monospace,monospace" font-size="9" fill="#a89cf7" text-anchor="middle">release.yml</text>
+  <text x="478" y="392" font-family="ui-monospace,monospace" font-size="8" fill="#534e7e" text-anchor="middle">tag → GitHub Release notes</text>
+  <rect x="572" y="368" width="260" height="30" rx="6" fill="#0d1520" stroke="#5090c0" stroke-width="1"/>
+  <text x="702" y="381" font-family="ui-monospace,monospace" font-size="9" fill="#5090c0" text-anchor="middle">scripts/</text>
+  <text x="702" y="392" font-family="ui-monospace,monospace" font-size="8" fill="#3a6080" text-anchor="middle">sri-check · inject-config · size-report · send-push · generate-icons</text>
+  <text x="430" y="433" font-family="ui-monospace,monospace" font-size="8" fill="#3a3068" text-anchor="middle">Deploy: rajwanyair.github.io/Wedding · Node ≥20 · ESLint 10 · Stylelint 17 · Playwright 1.51</text>
 </svg>

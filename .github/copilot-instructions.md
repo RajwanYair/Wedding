@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v1.12.0
+# GitHub Copilot Instructions — Wedding Manager v1.19.0
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
@@ -6,25 +6,31 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v1.12.0** |
+| Version | **v1.19.0** |
 | Stack | HTML5 · vanilla CSS3 · vanilla JS (ES2020+) |
-| Runtime deps | Zero — devDeps for lint only |
+| Runtime deps | Zero — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Playwright) |
 | Language | Hebrew RTL primary, English toggle |
-| Tests | `node --test tests/wedding.test.mjs` — 291 pass |
+| Tests | `npm test` — 535 pass (71 suites) |
 | Lint | `npm run lint` → 0 errors · 0 warnings |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 
 ## File Structure
 
 ```text
-index.html          # HTML shell (links css/ + js/)
-css/                # 6 modules: variables · base · layout · components · responsive · auth
-js/                 # 18 modules: config · i18n · dom · state · utils · ui · nav · dashboard
-                    #   guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app
-sw.js               # Service Worker — stale-while-revalidate + update banner (5-min poll)
-tests/wedding.test.mjs  # 291 unit tests
-.github/workflows/  # ci.yml · deploy.yml · release.yml
-.vscode/            # settings · extensions · tasks · mcp
+index.html           # HTML shell (links css/ + js/)
+css/                 # 6 modules: variables · base · layout · components · responsive · print
+js/                  # 32 modules: config · i18n · dom · state · utils · ui · nav · dashboard
+                     #   guests · tables · invitation · whatsapp · rsvp · settings · sheets
+                     #   auth · analytics · app · timeline · gallery · checkin · registry
+                     #   expenses · contact-collector · offline-queue · audit · error-monitor
+                     #   email · push · router · guest-landing
+sw.js                # Service Worker — stale-while-revalidate + push + notificationclick
+scripts/             # sri-check.mjs · inject-config.mjs · size-report.mjs · send-push.mjs
+tests/wedding.test.mjs   # 535 unit tests (71 suites)
+tests/e2e/           # Playwright smoke tests (smoke.spec.mjs)
+playwright.config.mjs
+.github/workflows/   # ci.yml · deploy.yml · release.yml
+.vscode/             # settings · extensions · tasks · mcp
 ```
 
 ## Mandatory Rules

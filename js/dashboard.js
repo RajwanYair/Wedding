@@ -1,6 +1,22 @@
 'use strict';
 
 /* ── Dashboard: Stats, Countdown, Header ── */
+
+/* ── Animated Counter ── */
+function animateCounter(domEl, target) {
+  if (!domEl) return;
+  const prev = parseInt(domEl.textContent, 10) || 0;
+  if (prev === target) return;
+  const duration = 500;
+  const startTime = performance.now();
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased    = 1 - Math.pow(1 - progress, 3);
+    domEl.textContent = Math.round(prev + (target - prev) * eased);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 /* ── Top Bar ── */
 function updateTopBar() {
   if (!el.topBarCouple) return;
@@ -36,18 +52,18 @@ function renderStats() {
   const vegCount  = _guests.filter(function(g) { return g.meal === 'vegetarian' || g.meal === 'vegan'; }).length;
   const accCount  = _guests.filter(function(g) { return g.accessibility; }).length;
 
-  el.statTotal.textContent        = total;
-  el.statConfirmed.textContent    = confirmed;
-  el.statPending.textContent      = pending;
-  el.statDeclined.textContent     = declined;
-  el.statTables.textContent       = _tables.length;
-  el.statSeated.textContent       = seated;
+  animateCounter(el.statTotal, total);
+  animateCounter(el.statConfirmed, confirmed);
+  animateCounter(el.statPending, pending);
+  animateCounter(el.statDeclined, declined);
+  animateCounter(el.statTables, _tables.length);
+  animateCounter(el.statSeated, seated);
   el.statSent.textContent         = sent;
   el.statUnsent.textContent       = _guests.length - sent;
-  el.statGroomSide.textContent    = groomSide;
-  el.statBrideSide.textContent    = brideSide;
-  el.statVeg.textContent          = vegCount;
-  el.statAccessibility.textContent= accCount;
+  animateCounter(el.statGroomSide, groomSide);
+  animateCounter(el.statBrideSide, brideSide);
+  animateCounter(el.statVeg, vegCount);
+  animateCounter(el.statAccessibility, accCount);
   el.guestCount.textContent       = _guests.length;
 
   const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;

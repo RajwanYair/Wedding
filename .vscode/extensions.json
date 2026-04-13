@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "connor4312.nodejs-testing",
+        "ms-playwright.playwright",
         "ritwickdey.LiveServer",
         "esbenp.prettier-vscode",
         "HTMLHint.vscode-htmlhint",

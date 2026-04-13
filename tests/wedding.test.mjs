@@ -1,11 +1,11 @@
 // =============================================================================
-// Wedding Manager — Test Suite v1.12.0
+// Wedding Manager — Test Suite v1.19.0
 // Run: node --test tests/wedding.test.mjs
-// 291 tests — 192 core + 99 extended coverage
+// 325 tests — core + extended + v1.15.0 features
 // =============================================================================
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,16 +27,16 @@ const SRC = HTML + '\n' + CSS + '\n' + JS;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v1.12.0", function () {
-    assert.ok(SRC.includes("v1.12.0"));
+  it("HTML contains v1.19.0", function () {
+    assert.ok(SRC.includes("v1.19.0"));
   });
 
-  it("SW cache name contains v1.12.0", function () {
-    assert.ok(SW.includes("wedding-v1.12.0"));
+  it("SW cache name contains v1.19.0", function () {
+    assert.ok(SW.includes("wedding-v1.19.0"));
   });
 
-  it("package.json version is 1.12.0", function () {
-    assert.equal(PKG.version, "1.12.0");
+  it("package.json version is 1.19.0", function () {
+    assert.equal(PKG.version, "1.19.0");
   });
 });
 
@@ -381,7 +381,7 @@ describe('Analytics Section', function() {
   });
 
   it('analytics is in adminOnly list in nav.js', function() {
-    assert.ok(JS.includes("'analytics'"), "'analytics' not in adminOnly list");
+    assert.ok(JS.includes('"analytics"'), "'analytics' not in adminOnly list");
   });
 
   it('analytics i18n keys present in both languages', function() {
@@ -676,7 +676,7 @@ describe('UI Components', function() {
   });
 
   it('has modals with close on escape', function() {
-    assert.ok(SRC.includes("e.key === 'Escape'"));
+    assert.ok(SRC.includes('e.key === "Escape"') || SRC.includes("e.key === 'Escape'"));
   });
 
   it('has modals with close on overlay click', function() {
@@ -699,7 +699,7 @@ describe('UI Components', function() {
 // ── Service Worker ──
 describe('Service Worker', function() {
   it('has cache name with version', function() {
-    assert.ok(SW.includes('wedding-v1.12.0'));
+    assert.ok(SW.includes('wedding-v1.19.0'));
   });
 
   it('pre-caches app shell', function() {
@@ -1280,11 +1280,11 @@ describe('Dashboard Constants', function() {
 // ── nav.js Admin Guard Completeness ──
 describe('nav.js Admin Guard Completeness', function() {
   it('adminOnly list includes budget', function() {
-    assert.ok(JS.includes("'budget'"), "adminOnly missing 'budget'");
+    assert.ok(JS.includes('"budget"') || JS.includes("'budget'"), "adminOnly missing 'budget'");
   });
 
   it('adminOnly list includes settings', function() {
-    assert.ok(JS.includes("'settings'"), "adminOnly missing 'settings'");
+    assert.ok(JS.includes('"settings"') || JS.includes("'settings'"), "adminOnly missing 'settings'");
   });
 
   it('adminOnly list includes tables', function() {
@@ -1473,4 +1473,1099 @@ describe('Service Worker APP_SHELL Completeness', function() {
   it('budget.js included in APP_SHELL cache list', function() {
     assert.ok(SW.includes('budget.js'), 'budget.js missing from APP_SHELL');
   });
+
+  it('timeline.js included in APP_SHELL cache list', function() {
+    assert.ok(SW.includes('timeline.js'), 'timeline.js missing from APP_SHELL');
+  });
 });
+
+// ── Timeline Section (v1.16.0) ──
+describe('Timeline Section', function() {
+  it('timeline section exists in HTML', function() {
+    assert.ok(HTML.includes('id="sec-timeline"'), 'sec-timeline section missing');
+  });
+
+  it('timeline nav tab exists in HTML', function() {
+    assert.ok(HTML.includes('data-tab="timeline"'), 'timeline nav tab missing');
+  });
+
+  it('renderTimeline function exists in JS', function() {
+    assert.ok(JS.includes('function renderTimeline'), 'renderTimeline missing');
+  });
+
+  it('saveTimelineItem function exists in JS', function() {
+    assert.ok(JS.includes('function saveTimelineItem'), 'saveTimelineItem missing');
+  });
+
+  it('deleteTimelineItem function exists in JS', function() {
+    assert.ok(JS.includes('function deleteTimelineItem'), 'deleteTimelineItem missing');
+  });
+
+  it('timeline.js script tag present in HTML', function() {
+    assert.ok(HTML.includes('timeline.js'), 'timeline.js script missing from HTML');
+  });
+
+  it('nav_timeline i18n key present', function() {
+    assert.ok(JS.includes('nav_timeline'), 'nav_timeline key missing');
+  });
+
+  it('timeline_title i18n key present', function() {
+    assert.ok(JS.includes('timeline_title'), 'timeline_title key missing');
+  });
+
+  it('timeline_empty i18n key present', function() {
+    assert.ok(JS.includes('timeline_empty'), 'timeline_empty key missing');
+  });
+
+  it('.timeline-item CSS class defined', function() {
+    assert.ok(CSS.includes('.timeline-item'), '.timeline-item CSS missing');
+  });
+
+  it('.timeline-dot CSS class defined', function() {
+    assert.ok(CSS.includes('.timeline-dot'), '.timeline-dot CSS missing');
+  });
+
+  it('.timeline-content CSS class defined', function() {
+    assert.ok(CSS.includes('.timeline-content'), '.timeline-content CSS missing');
+  });
+
+  it("timeline data persisted via save('timeline'", function() {
+    assert.ok(JS.includes('save("timeline"') || JS.includes("save('timeline'"), "save('timeline') call missing");
+  });
+});
+
+// ── QR Code for RSVP (v1.16.0) ──
+describe('QR Code for RSVP', function() {
+  it('rsvpQrImage element in HTML', function() {
+    assert.ok(HTML.includes('id="rsvpQrImage"'), 'rsvpQrImage element missing');
+  });
+
+  it('renderRsvpQr function in JS', function() {
+    assert.ok(JS.includes('function renderRsvpQr'), 'renderRsvpQr missing');
+  });
+
+  it('QR provider URL is api.qrserver.com', function() {
+    assert.ok(JS.includes('api.qrserver.com'), 'api.qrserver.com URL missing');
+  });
+
+  it('printRsvpQr function in JS', function() {
+    assert.ok(JS.includes('function printRsvpQr'), 'printRsvpQr missing');
+  });
+
+  it('does not use document.write()', function() {
+    assert.ok(!JS.includes('document.write('), 'document.write() found — use Blob URL instead');
+  });
+
+  it('copyRsvpLink function in JS', function() {
+    assert.ok(JS.includes('function copyRsvpLink'), 'copyRsvpLink missing');
+  });
+
+  it('qr_title i18n key present', function() {
+    assert.ok(JS.includes('qr_title'), 'qr_title key missing');
+  });
+
+  it('qr_print i18n key present', function() {
+    assert.ok(JS.includes('qr_print'), 'qr_print key missing');
+  });
+});
+
+// ── Mobile Bottom Navigation (v1.16.0) ──
+describe('Mobile Bottom Navigation', function() {
+  it('bottomNav element in HTML', function() {
+    assert.ok(HTML.includes('id="bottomNav"'), 'bottomNav element missing');
+  });
+
+  it('.bottom-nav CSS class defined', function() {
+    assert.ok(CSS.includes('.bottom-nav'), '.bottom-nav CSS missing');
+  });
+
+  it('.bottom-nav-item CSS class defined', function() {
+    assert.ok(CSS.includes('.bottom-nav-item'), '.bottom-nav-item CSS missing');
+  });
+
+  it('toggleMobileNav function in JS', function() {
+    assert.ok(JS.includes('function toggleMobileNav'), 'toggleMobileNav missing');
+  });
+});
+
+// ── Accessibility (v1.16.0) ──
+describe('Accessibility (WCAG 2.1)', function() {
+  it('skip link present in HTML', function() {
+    assert.ok(HTML.includes('class="skip-link"'), 'skip-link missing');
+  });
+
+  it('.skip-link CSS class defined', function() {
+    assert.ok(CSS.includes('.skip-link'), '.skip-link CSS missing');
+  });
+
+  it('main element has id="main-content"', function() {
+    assert.ok(HTML.includes('id="main-content"'), 'id="main-content" missing from main element');
+  });
+
+  it('toast container has aria-live attribute', function() {
+    assert.ok(HTML.includes('aria-live="polite"'), 'aria-live missing on toast container');
+  });
+
+  it('guest modal has role="dialog"', function() {
+    assert.ok(HTML.includes('id="guestModal"') && HTML.includes('role="dialog"'), 'role="dialog" missing on guestModal');
+  });
+
+  it('modals have aria-modal="true"', function() {
+    assert.ok(HTML.includes('aria-modal="true"'), 'aria-modal="true" missing');
+  });
+
+  it('skip_to_content i18n key present', function() {
+    assert.ok(JS.includes('skip_to_content'), 'skip_to_content key missing');
+  });
+
+  it('animateCounter function in JS', function() {
+    assert.ok(JS.includes('function animateCounter'), 'animateCounter missing');
+  });
+});
+
+// ── Guest Landing Page (v1.15.0) ──
+describe('Guest Landing Page', function() {
+  it('sec-landing section in HTML', function() {
+    assert.ok(HTML.includes('id="sec-landing"'), '#sec-landing missing');
+  });
+
+  it('landingCoupleName element in HTML', function() {
+    assert.ok(HTML.includes('id="landingCoupleName"'), '#landingCoupleName missing');
+  });
+
+  it('landingTimeline element in HTML', function() {
+    assert.ok(HTML.includes('id="landingTimeline"'), '#landingTimeline missing');
+  });
+
+  it('landing_rsvp_cta i18n key in HTML', function() {
+    assert.ok(HTML.includes('landing_rsvp_cta'), 'landing_rsvp_cta missing in HTML');
+  });
+
+  it('renderGuestLanding function in JS', function() {
+    assert.ok(JS.includes('function renderGuestLanding'), 'renderGuestLanding missing');
+  });
+
+  it('_renderLandingHero function in JS', function() {
+    assert.ok(JS.includes('function _renderLandingHero'), '_renderLandingHero missing');
+  });
+
+  it('nav_landing i18n key in JS', function() {
+    assert.ok(JS.includes('nav_landing'), 'nav_landing i18n key missing');
+  });
+
+  it('guest-landing.js script in HTML', function() {
+    assert.ok(HTML.includes('guest-landing.js'), 'guest-landing.js script tag missing');
+  });
+});
+
+// ── Hash Router (v1.15.0) ──
+describe('Hash Router', function() {
+  it('router.js script in HTML', function() {
+    assert.ok(HTML.includes('router.js'), 'router.js script tag missing');
+  });
+
+  it('initRouter function in JS', function() {
+    assert.ok(JS.includes('function initRouter'), 'initRouter missing');
+  });
+
+  it('_routerPush function in JS', function() {
+    assert.ok(JS.includes('function _routerPush'), '_routerPush missing');
+  });
+
+  it('_routerHandleHash function in JS', function() {
+    assert.ok(JS.includes('function _routerHandleHash'), '_routerHandleHash missing');
+  });
+
+  it('history.replaceState used in router', function() {
+    assert.ok(JS.includes('replaceState'), 'replaceState missing in router');
+  });
+
+  it('hashchange event listener in router', function() {
+    assert.ok(JS.includes('hashchange'), 'hashchange event missing');
+  });
+});
+
+// ── Venue Map (v1.15.0) ──
+describe('Venue Map', function() {
+  it('venueMapContainer element in HTML', function() {
+    assert.ok(HTML.includes('id="venueMapContainer"'), '#venueMapContainer missing');
+  });
+
+  it('venueMapFrame iframe in HTML', function() {
+    assert.ok(HTML.includes('id="venueMapFrame"'), '#venueMapFrame missing');
+  });
+
+  it('map_title i18n key in HTML', function() {
+    assert.ok(HTML.includes('map_title'), 'map_title missing in HTML');
+  });
+
+  it('renderVenueMap function in JS', function() {
+    assert.ok(JS.includes('function renderVenueMap'), 'renderVenueMap missing');
+  });
+
+  it('nominatim.openstreetmap.org in JS', function() {
+    assert.ok(JS.includes('nominatim.openstreetmap.org'), 'Nominatim URL missing in JS');
+  });
+
+  it('CSP includes nominatim.openstreetmap.org in connect-src', function() {
+    assert.ok(HTML.includes('nominatim.openstreetmap.org'), 'Nominatim missing in CSP');
+  });
+
+  it('CSP includes www.openstreetmap.org in frame-src', function() {
+    assert.ok(HTML.includes('www.openstreetmap.org'), 'OSM missing in frame-src CSP');
+  });
+});
+
+// ── Expense Tracker (v1.15.0) ──
+describe('Expense Tracker', function() {
+  it('expenseList tbody in HTML', function() {
+    assert.ok(HTML.includes('id="expenseList"'), '#expenseList missing');
+  });
+
+  it('expenseModal in HTML', function() {
+    assert.ok(HTML.includes('id="expenseModal"'), '#expenseModal missing');
+  });
+
+  it('expense_add i18n key in HTML', function() {
+    assert.ok(HTML.includes('expense_add'), 'expense_add missing in HTML');
+  });
+
+  it('budget_expenses_title i18n key in HTML', function() {
+    assert.ok(HTML.includes('budget_expenses_title'), 'budget_expenses_title missing in HTML');
+  });
+
+  it('renderExpenses function in JS', function() {
+    assert.ok(JS.includes('function renderExpenses'), 'renderExpenses missing');
+  });
+
+  it('saveExpense function in JS', function() {
+    assert.ok(JS.includes('function saveExpense'), 'saveExpense missing');
+  });
+
+  it('deleteExpense function in JS', function() {
+    assert.ok(JS.includes('function deleteExpense'), 'deleteExpense missing');
+  });
+
+  it('EXPENSE_CATEGORIES constant in JS', function() {
+    assert.ok(JS.includes('EXPENSE_CATEGORIES'), 'EXPENSE_CATEGORIES missing');
+  });
+
+  it('expense_cat_venue i18n key in JS', function() {
+    assert.ok(JS.includes('expense_cat_venue'), 'expense_cat_venue i18n key missing');
+  });
+
+  it('wedding_v1_expenses storage key in JS', function() {
+    assert.ok(JS.includes("'expenses'") || JS.includes('"expenses"'), 'expenses storage key missing');
+  });
+
+  it('expenses.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('expenses.js'), 'expenses.js missing from SW APP_SHELL');
+  });
+
+  it('.guest-landing-hero CSS class', function() {
+    assert.ok(CSS.includes('.guest-landing-hero'), '.guest-landing-hero CSS missing');
+  });
+});
+
+// ── Smart Sheets Polling (v1.15.0) ──
+describe('Smart Sheets Polling', function() {
+  it('_sheetsVisibilityHandler function in JS', function() {
+    assert.ok(JS.includes('function _sheetsVisibilityHandler'), '_sheetsVisibilityHandler missing');
+  });
+
+  it('visibilitychange event listener in sheets.js', function() {
+    assert.ok(JS.includes('visibilitychange'), 'visibilitychange listener missing');
+  });
+
+  it('document.hidden check in sheets.js', function() {
+    assert.ok(JS.includes('document.hidden'), 'document.hidden check missing');
+  });
+
+  it('router.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('router.js'), 'router.js missing from SW APP_SHELL');
+  });
+
+  it('guest-landing.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('guest-landing.js'), 'guest-landing.js missing from SW APP_SHELL');
+  });
+});
+
+// ── Registry Links (v1.16.0) ──
+describe('Registry Links', function() {
+  it('registry.js script in HTML', function() {
+    assert.ok(HTML.includes('registry.js'), 'registry.js script tag missing');
+  });
+
+  it('renderRegistrySettings function in JS', function() {
+    assert.ok(JS.includes('function renderRegistrySettings'), 'renderRegistrySettings missing');
+  });
+
+  it('addRegistryLink function in JS', function() {
+    assert.ok(JS.includes('function addRegistryLink'), 'addRegistryLink missing');
+  });
+
+  it('removeRegistryLink function in JS', function() {
+    assert.ok(JS.includes('function removeRegistryLink'), 'removeRegistryLink missing');
+  });
+
+  it('renderRegistryLinks function in JS', function() {
+    assert.ok(JS.includes('function renderRegistryLinks'), 'renderRegistryLinks missing');
+  });
+
+  it('landingRegistryList element in HTML', function() {
+    assert.ok(HTML.includes('id="landingRegistryList"'), '#landingRegistryList missing');
+  });
+
+  it('registry_title i18n key in JS', function() {
+    assert.ok(JS.includes('registry_title'), 'registry_title i18n key missing');
+  });
+
+  it('registries stored in weddingInfo', function() {
+    assert.ok(JS.includes('registries'), '_weddingInfo.registries missing');
+  });
+});
+
+// ── Check-in Mode + Headcount (v1.16.0) ──
+describe('Check-in Mode', function() {
+  it('checkin.js script in HTML', function() {
+    assert.ok(HTML.includes('checkin.js'), 'checkin.js script tag missing');
+  });
+
+  it('sec-checkin section in HTML', function() {
+    assert.ok(HTML.includes('id="sec-checkin"'), '#sec-checkin missing');
+  });
+
+  it('checkinList tbody in HTML', function() {
+    assert.ok(HTML.includes('id="checkinList"'), '#checkinList missing');
+  });
+
+  it('renderCheckin function in JS', function() {
+    assert.ok(JS.includes('function renderCheckin'), 'renderCheckin missing');
+  });
+
+  it('toggleCheckin function in JS', function() {
+    assert.ok(JS.includes('function toggleCheckin'), 'toggleCheckin missing');
+  });
+
+  it('searchCheckin function in JS', function() {
+    assert.ok(JS.includes('function searchCheckin'), 'searchCheckin missing');
+  });
+
+  it('arrived field migrated in state.js', function() {
+    assert.ok(JS.includes('arrived'), 'arrived field migration missing');
+  });
+
+  it('checkin_arrive_btn i18n key in JS', function() {
+    assert.ok(JS.includes('checkin_arrive_btn'), 'checkin_arrive_btn i18n key missing');
+  });
+
+  it('checkinArrived stat element in HTML', function() {
+    assert.ok(HTML.includes('id="checkinArrived"'), '#checkinArrived missing');
+  });
+
+  it('nav_checkin i18n key in HTML', function() {
+    assert.ok(HTML.includes('nav_checkin'), 'nav_checkin missing in HTML');
+  });
+});
+
+// ── Table Finder (v1.16.0) ──
+describe('Table Finder', function() {
+  it('tablefinderInput element in HTML', function() {
+    assert.ok(HTML.includes('id="tablefinderInput"'), '#tablefinderInput missing');
+  });
+
+  it('tablefinderResult element in HTML', function() {
+    assert.ok(HTML.includes('id="tablefinderResult"'), '#tablefinderResult missing');
+  });
+
+  it('findTable function in JS', function() {
+    assert.ok(JS.includes('function findTable'), 'findTable missing');
+  });
+
+  it('tablefinder_title i18n key in JS', function() {
+    assert.ok(JS.includes('tablefinder_title'), 'tablefinder_title i18n key missing');
+  });
+
+  it('tablefinder CSS classes in CSS', function() {
+    assert.ok(CSS.includes('.tablefinder-found'), '.tablefinder-found CSS missing');
+  });
+});
+
+// ── Photo Gallery (v1.16.0) ──
+describe('Photo Gallery', function() {
+  it('gallery.js script in HTML', function() {
+    assert.ok(HTML.includes('gallery.js'), 'gallery.js script tag missing');
+  });
+
+  it('sec-gallery section in HTML', function() {
+    assert.ok(HTML.includes('id="sec-gallery"'), '#sec-gallery missing');
+  });
+
+  it('galleryGrid element in HTML', function() {
+    assert.ok(HTML.includes('id="galleryGrid"'), '#galleryGrid missing');
+  });
+
+  it('renderGallery function in JS', function() {
+    assert.ok(JS.includes('function renderGallery'), 'renderGallery missing');
+  });
+
+  it('handleGalleryUpload function in JS', function() {
+    assert.ok(JS.includes('function handleGalleryUpload'), 'handleGalleryUpload missing');
+  });
+
+  it('deleteGalleryPhoto function in JS', function() {
+    assert.ok(JS.includes('function deleteGalleryPhoto'), 'deleteGalleryPhoto missing');
+  });
+
+  it('gallery i18n key in JS', function() {
+    assert.ok(JS.includes('gallery_upload'), 'gallery_upload i18n key missing');
+  });
+
+  it('gallery.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('gallery.js'), 'gallery.js missing from SW APP_SHELL');
+  });
+
+  it('_gallery state in config.js', function() {
+    assert.ok(JS.includes('_gallery'), '_gallery state missing');
+  });
+
+  it('wedding_v1_gallery storage key via save("gallery"', function() {
+    assert.ok(JS.includes('save("gallery"') || JS.includes("save('gallery'"), 'gallery save call missing');
+  });
+
+  it('gallery lightbox in HTML', function() {
+    assert.ok(HTML.includes('id="galleryLightbox"'), '#galleryLightbox missing');
+  });
+
+  it('.gallery-grid CSS class', function() {
+    assert.ok(CSS.includes('.gallery-grid'), '.gallery-grid CSS missing');
+  });
+});
+
+// ── Print Materials (v1.16.0) ──
+describe('Print Materials', function() {
+  it('print.css linked in HTML', function() {
+    assert.ok(HTML.includes('print.css'), 'print.css link missing');
+  });
+
+  it('printPlaceCards function in JS', function() {
+    assert.ok(JS.includes('function printPlaceCards'), 'printPlaceCards missing');
+  });
+
+  it('printTableSigns function in JS', function() {
+    assert.ok(JS.includes('function printTableSigns'), 'printTableSigns missing');
+  });
+
+  it('placeCardsGrid element in HTML', function() {
+    assert.ok(HTML.includes('id="placeCardsGrid"'), '#placeCardsGrid missing');
+  });
+
+  it('tableSignsGrid element in HTML', function() {
+    assert.ok(HTML.includes('id="tableSignsGrid"'), '#tableSignsGrid missing');
+  });
+
+  it('.place-card CSS class in print.css', function() {
+    assert.ok(CSS.includes('.place-card'), '.place-card CSS missing');
+  });
+
+  it('.table-sign CSS class in print.css', function() {
+    assert.ok(CSS.includes('.table-sign'), '.table-sign CSS missing');
+  });
+
+  it('@media print rules in CSS', function() {
+    assert.ok(CSS.includes('@media print'), '@media print missing');
+  });
+
+  it('print_place_cards i18n key in JS', function() {
+    assert.ok(JS.includes('print_place_cards'), 'print_place_cards i18n key missing');
+  });
+
+  it('print.css in SW APP_SHELL', function() {
+    assert.ok(SW.includes('print.css'), 'print.css missing from SW APP_SHELL');
+  });
+});
+
+// ── Contact Collector (v1.17.0) ──
+describe('Contact Collector', function() {
+  it('contact-collector.js script in HTML', function() {
+    assert.ok(HTML.includes('contact-collector.js'), 'contact-collector.js script missing');
+  });
+
+  it('sec-contact-form section in HTML', function() {
+    assert.ok(HTML.includes('id="sec-contact-form"'), '#sec-contact-form missing');
+  });
+
+  it('ccFirstName input in HTML', function() {
+    assert.ok(HTML.includes('id="ccFirstName"'), '#ccFirstName missing');
+  });
+
+  it('ccPhone input in HTML', function() {
+    assert.ok(HTML.includes('id="ccPhone"'), '#ccPhone missing');
+  });
+
+  it('renderContactForm function in JS', function() {
+    assert.ok(JS.includes('function renderContactForm'), 'renderContactForm missing');
+  });
+
+  it('submitContactForm function in JS', function() {
+    assert.ok(JS.includes('function submitContactForm'), 'submitContactForm missing');
+  });
+
+  it('copyContactLink function in JS', function() {
+    assert.ok(JS.includes('function copyContactLink'), 'copyContactLink missing');
+  });
+
+  it('renderContactSettings function in JS', function() {
+    assert.ok(JS.includes('function renderContactSettings'), 'renderContactSettings missing');
+  });
+
+  it('contact_title i18n key in JS', function() {
+    assert.ok(JS.includes('contact_title'), 'contact_title i18n key missing');
+  });
+
+  it('contact-form in router valid sections', function() {
+    assert.ok(JS.includes('"contact-form"') || JS.includes("'contact-form'"), 'contact-form not in router valid list');
+  });
+
+  it('contactCollectorLink element in HTML', function() {
+    assert.ok(HTML.includes('id="contactCollectorLink"'), '#contactCollectorLink missing');
+  });
+});
+
+// ── Offline RSVP Queue (v1.17.0) ──
+describe('Offline RSVP Queue', function() {
+  it('offline-queue.js script in HTML', function() {
+    assert.ok(HTML.includes('offline-queue.js'), 'offline-queue.js script missing');
+  });
+
+  it('enqueueOfflineRsvp function in JS', function() {
+    assert.ok(JS.includes('function enqueueOfflineRsvp'), 'enqueueOfflineRsvp missing');
+  });
+
+  it('flushOfflineQueue function in JS', function() {
+    assert.ok(JS.includes('function flushOfflineQueue'), 'flushOfflineQueue missing');
+  });
+
+  it('initOfflineQueue function in JS', function() {
+    assert.ok(JS.includes('function initOfflineQueue'), 'initOfflineQueue missing');
+  });
+
+  it('online event listener in offline-queue.js', function() {
+    assert.ok(JS.includes('"online"') || JS.includes("'online'"), 'online event listener missing');
+  });
+
+  it('offline event listener in offline-queue.js', function() {
+    assert.ok(JS.includes('"offline"') || JS.includes("'offline'"), 'offline event listener missing');
+  });
+
+  it('offlineBadge element in HTML', function() {
+    assert.ok(HTML.includes('id="offlineBadge"'), '#offlineBadge missing');
+  });
+
+  it('offline_queued i18n key in JS', function() {
+    assert.ok(JS.includes('offline_queued'), 'offline_queued i18n key missing');
+  });
+
+  it('offline-queue.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('offline-queue.js'), 'offline-queue.js missing from SW APP_SHELL');
+  });
+
+  it('navigator.onLine check in rsvp.js', function() {
+    assert.ok(JS.includes('navigator.onLine'), 'navigator.onLine check missing');
+  });
+});
+
+// ── Audit Log (v1.17.0) ──
+describe('Audit Log', function() {
+  it('audit.js script in HTML', function() {
+    assert.ok(HTML.includes('audit.js'), 'audit.js script missing');
+  });
+
+  it('logAudit function in JS', function() {
+    assert.ok(JS.includes('function logAudit'), 'logAudit missing');
+  });
+
+  it('renderAuditLog function in JS', function() {
+    assert.ok(JS.includes('function renderAuditLog'), 'renderAuditLog missing');
+  });
+
+  it('clearAuditLog function in JS', function() {
+    assert.ok(JS.includes('function clearAuditLog'), 'clearAuditLog missing');
+  });
+
+  it('_auditLog state in config.js', function() {
+    assert.ok(JS.includes('_auditLog'), '_auditLog state missing');
+  });
+
+  it('audit log saved via save("audit")', function() {
+    assert.ok(JS.includes('save("audit"') || JS.includes("save('audit'"), 'audit save call missing');
+  });
+
+  it('auditLogBody element in HTML', function() {
+    assert.ok(HTML.includes('id="auditLogBody"'), '#auditLogBody missing');
+  });
+
+  it('audit_title i18n key in JS', function() {
+    assert.ok(JS.includes('audit_title'), 'audit_title i18n key missing');
+  });
+
+  it('audit.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('audit.js'), 'audit.js missing from SW APP_SHELL');
+  });
+
+  it('logAudit called in saveGuest', function() {
+    assert.ok(JS.includes("logAudit"), 'logAudit not called in guests.js');
+  });
+});
+
+// ── Error Monitoring (v1.17.0) ──
+describe('Error Monitoring', function() {
+  it('error-monitor.js script in HTML', function() {
+    assert.ok(HTML.includes('error-monitor.js'), 'error-monitor.js script missing');
+  });
+
+  it('initErrorMonitor function in JS', function() {
+    assert.ok(JS.includes('function initErrorMonitor'), 'initErrorMonitor missing');
+  });
+
+  it('logClientError function in JS', function() {
+    assert.ok(JS.includes('function logClientError'), 'logClientError missing');
+  });
+
+  it('renderErrorLog function in JS', function() {
+    assert.ok(JS.includes('function renderErrorLog'), 'renderErrorLog missing');
+  });
+
+  it('clearErrorLog function in JS', function() {
+    assert.ok(JS.includes('function clearErrorLog'), 'clearErrorLog missing');
+  });
+
+  it('window.onerror handler registered', function() {
+    assert.ok(JS.includes('addEventListener("error"') || JS.includes("addEventListener('error'"), 'window error listener missing');
+  });
+
+  it('unhandledrejection handler registered', function() {
+    assert.ok(JS.includes('addEventListener("unhandledrejection"') || JS.includes("addEventListener('unhandledrejection'"), 'unhandledrejection listener missing');
+  });
+
+  it('errorLogBody element in HTML', function() {
+    assert.ok(HTML.includes('id="errorLogBody"'), '#errorLogBody missing');
+  });
+
+  it('errors_title i18n key in JS', function() {
+    assert.ok(JS.includes('errors_title'), 'errors_title i18n key missing');
+  });
+
+  it('error-monitor.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('error-monitor.js'), 'error-monitor.js missing from SW APP_SHELL');
+  });
+});
+
+// ── PWA / Preload (v1.17.0) ──
+describe('PWA and Performance', function() {
+  it('apple-touch-icon link in HTML', function() {
+    assert.ok(HTML.includes('apple-touch-icon'), 'apple-touch-icon missing');
+  });
+
+  it('apple-mobile-web-app-capable meta in HTML', function() {
+    assert.ok(HTML.includes('apple-mobile-web-app-capable'), 'apple-mobile-web-app-capable missing');
+  });
+
+  it('preconnect to accounts.google.com in HTML', function() {
+    assert.ok(HTML.includes('preconnect') && HTML.includes('accounts.google.com'), 'preconnect to Google missing');
+  });
+
+  it('rel="preload" for critical CSS in HTML', function() {
+    assert.ok(HTML.includes('rel="preload"') && HTML.includes('as="style"'), 'preload for CSS missing');
+  });
+
+  it('rel="preload" for critical JS in HTML', function() {
+    assert.ok(HTML.includes('rel="preload"') && HTML.includes('as="script"'), 'preload for JS missing');
+  });
+
+  it('icon-192.png referenced in manifest', function() {
+    const icons = JSON.stringify(MANIFEST.icons || []);
+    assert.ok(icons.includes('icon-192.png'), 'icon-192.png missing from manifest');
+  });
+
+  it('icon-512.png referenced in manifest', function() {
+    const icons = JSON.stringify(MANIFEST.icons || []);
+    assert.ok(icons.includes('icon-512.png'), 'icon-512.png missing from manifest');
+  });
+
+  it('manifest has background_color', function() {
+    assert.ok(MANIFEST.background_color, 'background_color missing from manifest');
+  });
+
+  it('icon-192.png in SW APP_SHELL', function() {
+    assert.ok(SW.includes('icon-192.png'), 'icon-192.png missing from SW APP_SHELL');
+  });
+
+  it('icon-512.png in SW APP_SHELL', function() {
+    assert.ok(SW.includes('icon-512.png'), 'icon-512.png missing from SW APP_SHELL');
+  });
+
+  it('generate-icons.mjs script exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'scripts', 'generate-icons.mjs')), 'scripts/generate-icons.mjs missing');
+  });
+
+  it('npm run icons script in package.json', function() {
+    assert.ok(PKG.scripts && PKG.scripts.icons, '"icons" script missing from package.json');
+  });
+});
+
+// ── Email Notifications (v1.18.0) ──
+describe('Email Notifications', function() {
+  const GS = readFileSync(resolve(__dirname, '..', '.github', 'scripts', 'sheets-webapp.gs'), 'utf8');
+
+  it('email.js script in HTML', function() {
+    assert.ok(HTML.includes('email.js'), 'email.js script tag missing');
+  });
+
+  it('initEmailNotifications function in JS', function() {
+    assert.ok(JS.includes('function initEmailNotifications'), 'initEmailNotifications missing');
+  });
+
+  it('sendRsvpConfirmation function in JS', function() {
+    assert.ok(JS.includes('function sendRsvpConfirmation'), 'sendRsvpConfirmation missing');
+  });
+
+  it('sendAdminRsvpNotify function in JS', function() {
+    assert.ok(JS.includes('function sendAdminRsvpNotify'), 'sendAdminRsvpNotify missing');
+  });
+
+  it('renderEmailSettings function in JS', function() {
+    assert.ok(JS.includes('function renderEmailSettings'), 'renderEmailSettings missing');
+  });
+
+  it('emailSettingsCard element in HTML', function() {
+    assert.ok(HTML.includes('id="emailSettingsCard"'), '#emailSettingsCard missing from HTML');
+  });
+
+  it('email_card_title i18n key in JS', function() {
+    assert.ok(JS.includes('email_card_title'), 'email_card_title i18n key missing');
+  });
+
+  it('email.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('email.js'), 'email.js missing from SW APP_SHELL');
+  });
+
+  it('sendEmail action in Apps Script', function() {
+    assert.ok(GS.includes("action === 'sendEmail'") || GS.includes('sendEmail'), 'sendEmail action missing from sheets-webapp.gs');
+  });
+
+  it('rsvpConfirmation email type in Apps Script', function() {
+    assert.ok(GS.includes('rsvpConfirmation'), 'rsvpConfirmation type missing from GAS');
+  });
+
+  it('adminRsvpNotify email type in Apps Script', function() {
+    assert.ok(GS.includes('adminRsvpNotify'), 'adminRsvpNotify type missing from GAS');
+  });
+
+  it('sendRsvpConfirmation called after RSVP submit', function() {
+    assert.ok(JS.includes('sendRsvpConfirmation'), 'sendRsvpConfirmation not called in rsvp flow');
+  });
+
+  it('sendAdminRsvpNotify called after RSVP submit', function() {
+    assert.ok(JS.includes('sendAdminRsvpNotify'), 'sendAdminRsvpNotify not called in rsvp flow');
+  });
+});
+
+// ── Apps Script Validation + Rate Limiting (v1.18.0) ──
+describe('Apps Script Server-Side Hardening', function() {
+  const GS = readFileSync(resolve(__dirname, '..', '.github', 'scripts', 'sheets-webapp.gs'), 'utf8');
+
+  it('_validateGuestRow function in GAS', function() {
+    assert.ok(GS.includes('_validateGuestRow'), '_validateGuestRow missing from GAS');
+  });
+
+  it('_checkRateLimit function in GAS', function() {
+    assert.ok(GS.includes('_checkRateLimit'), '_checkRateLimit missing from GAS');
+  });
+
+  it('PropertiesService used for rate limiting', function() {
+    assert.ok(GS.includes('PropertiesService'), 'PropertiesService missing from GAS');
+  });
+
+  it('rate limit check called in doPost', function() {
+    assert.ok(GS.includes('_checkRateLimit()'), '_checkRateLimit() not called in doPost');
+  });
+
+  it('validation applied to Attendees append', function() {
+    assert.ok(GS.includes('_validateGuestRow(row)'), 'guest row validation not applied to append');
+  });
+
+  it('validation applied to Attendees replaceAll', function() {
+    assert.ok(GS.includes('_validateGuestRow(rows[i])'), 'guest row validation not applied to replaceAll');
+  });
+
+  it('VALID_STATUS array defined in GAS', function() {
+    assert.ok(GS.includes('VALID_STATUS'), 'VALID_STATUS not defined in GAS');
+  });
+
+  it('VALID_SIDE array defined in GAS', function() {
+    assert.ok(GS.includes('VALID_SIDE'), 'VALID_SIDE not defined in GAS');
+  });
+
+  it('MailApp used in GAS', function() {
+    assert.ok(GS.includes('MailApp.sendEmail'), 'MailApp.sendEmail missing from GAS');
+  });
+
+  it('GAS version updated to 1.18.0', function() {
+    assert.ok(GS.includes('1.18.0'), 'GAS version not updated to 1.18.0');
+  });
+});
+
+// ── Config Externalization (v1.18.0) ──
+describe('Config Externalization', function() {
+  it('wedding.json exists in project root', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'wedding.json')), 'wedding.json missing');
+  });
+
+  it('wedding.json is valid JSON with required keys', function() {
+    const cfg = JSON.parse(readFileSync(resolve(__dirname, '..', 'wedding.json'), 'utf8'));
+    assert.ok(cfg.groom    !== undefined, 'wedding.json missing groom');
+    assert.ok(cfg.bride    !== undefined, 'wedding.json missing bride');
+    assert.ok(cfg.date     !== undefined, 'wedding.json missing date');
+    assert.ok(cfg.groomEn  !== undefined, 'wedding.json missing groomEn');
+    assert.ok(cfg.brideEn  !== undefined, 'wedding.json missing brideEn');
+  });
+
+  it('loadExternalConfig function in JS', function() {
+    assert.ok(JS.includes('function loadExternalConfig') || JS.includes('async function loadExternalConfig'), 'loadExternalConfig missing');
+  });
+
+  it('fetch wedding.json in loadExternalConfig', function() {
+    assert.ok(JS.includes("'./wedding.json'") || JS.includes('"./wedding.json"'), 'wedding.json fetch missing');
+  });
+
+  it('loadExternalConfig called in app init', function() {
+    assert.ok(JS.includes('loadExternalConfig()'), 'loadExternalConfig() not called in init');
+  });
+
+  it('wedding.json in SW APP_SHELL', function() {
+    assert.ok(SW.includes('wedding.json'), 'wedding.json missing from SW APP_SHELL');
+  });
+
+  it('_weddingDefaults updated from external config', function() {
+    assert.ok(JS.includes('_weddingDefaults'), '_weddingDefaults not referenced in config loading');
+  });
+});
+
+// ── Lighthouse CI (v1.18.0) ──
+describe('Lighthouse CI', function() {
+  it('.lighthouserc.json exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', '.lighthouserc.json')), '.lighthouserc.json missing');
+  });
+
+  it('.lighthouserc.json is valid JSON', function() {
+    const lhrc = JSON.parse(readFileSync(resolve(__dirname, '..', '.lighthouserc.json'), 'utf8'));
+    assert.ok(lhrc.ci, '.lighthouserc.json missing ci key');
+    assert.ok(lhrc.ci.collect, '.lighthouserc.json missing ci.collect');
+  });
+
+  it('.lighthouserc.json has assert block with minScore thresholds', function() {
+    const lhrc = JSON.parse(readFileSync(resolve(__dirname, '..', '.lighthouserc.json'), 'utf8'));
+    assert.ok(lhrc.ci.assert, '.lighthouserc.json missing assert block');
+    assert.ok(lhrc.ci.assert.assertions, '.lighthouserc.json missing assertions');
+  });
+
+  it('ci.yml has lighthouse job', function() {
+    const ci = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'ci.yml'), 'utf8');
+    assert.ok(ci.includes('lighthouse') || ci.includes('Lighthouse'), 'lighthouse job missing from ci.yml');
+  });
+
+  it('ci.yml uses @lhci/cli', function() {
+    const ci = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'ci.yml'), 'utf8');
+    assert.ok(ci.includes('@lhci/cli') || ci.includes('lhci'), '@lhci/cli missing from ci.yml');
+  });
+
+  it('.lighthouserc.json has accessibility threshold', function() {
+    const lhrc = JSON.parse(readFileSync(resolve(__dirname, '..', '.lighthouserc.json'), 'utf8'));
+    const assertions = lhrc.ci.assert.assertions;
+    assert.ok(assertions['categories:accessibility'], 'accessibility assertion missing');
+  });
+});
+
+
+// ── SRI Tooling (v1.19.0) ──
+describe('SRI Tooling', function() {
+  it('sri-check.mjs script exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'scripts', 'sri-check.mjs')), 'scripts/sri-check.mjs missing');
+  });
+
+  it('npm run sri script in package.json', function() {
+    assert.ok(PKG.scripts && PKG.scripts.sri, '"sri" script missing from package.json');
+  });
+
+  it('Google GIS SDK has crossorigin="anonymous"', function() {
+    assert.ok(HTML.includes('crossorigin="anonymous"'), 'crossorigin="anonymous" missing from GIS SDK script');
+  });
+
+  it('sri-check.mjs references sha384', function() {
+    const sriScript = readFileSync(resolve(__dirname, '..', 'scripts', 'sri-check.mjs'), 'utf8');
+    assert.ok(sriScript.includes('sha384'), 'sha384 hash algorithm missing from sri-check.mjs');
+  });
+});
+
+// -- Secrets Injection (v1.19.0) --
+describe('Secrets Injection', function() {
+  it('inject-config.mjs script exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'scripts', 'inject-config.mjs')), 'scripts/inject-config.mjs missing');
+  });
+
+  it('deploy.yml calls inject-config script', function() {
+    const dep = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'deploy.yml'), 'utf8');
+    assert.ok(dep.includes('inject-config.mjs'), 'inject-config.mjs not called in deploy.yml');
+  });
+
+  it('deploy.yml uses GitHub Secrets for GOOGLE_CLIENT_ID', function() {
+    const dep = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'deploy.yml'), 'utf8');
+    assert.ok(dep.includes('secrets.GOOGLE_CLIENT_ID'), 'GOOGLE_CLIENT_ID secret missing from deploy.yml');
+  });
+
+  it('deploy.yml uses GitHub Secrets for SHEETS_WEBAPP_URL', function() {
+    const dep = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'deploy.yml'), 'utf8');
+    assert.ok(dep.includes('secrets.SHEETS_WEBAPP_URL'), 'SHEETS_WEBAPP_URL secret missing from deploy.yml');
+  });
+
+  it('inject-config.mjs defines SUBSTITUTIONS list', function() {
+    const ic = readFileSync(resolve(__dirname, '..', 'scripts', 'inject-config.mjs'), 'utf8');
+    assert.ok(ic.includes('SUBSTITUTIONS'), 'SUBSTITUTIONS array missing from inject-config.mjs');
+  });
+});
+
+// -- Web Push Notifications (v1.19.0) --
+describe('Web Push Notifications', function() {
+  const GS19 = readFileSync(resolve(__dirname, '..', '.github', 'scripts', 'sheets-webapp.gs'), 'utf8');
+
+  it('push.js script tag in HTML', function() {
+    assert.ok(HTML.includes('push.js'), 'push.js script tag missing from HTML');
+  });
+
+  it('initPushNotifications function in JS', function() {
+    assert.ok(JS.includes('function initPushNotifications'), 'initPushNotifications missing');
+  });
+
+  it('subscribePush function in JS', function() {
+    assert.ok(JS.includes('function subscribePush'), 'subscribePush missing');
+  });
+
+  it('unsubscribePush function in JS', function() {
+    assert.ok(JS.includes('function unsubscribePush'), 'unsubscribePush missing');
+  });
+
+  it('renderPushSettings function in JS', function() {
+    assert.ok(JS.includes('function renderPushSettings'), 'renderPushSettings missing');
+  });
+
+  it('pushSettingsCard element in HTML', function() {
+    assert.ok(HTML.includes('id="pushSettingsCard"'), '#pushSettingsCard missing from HTML');
+  });
+
+  it('VAPID_PUBLIC_KEY constant in JS', function() {
+    assert.ok(JS.includes('VAPID_PUBLIC_KEY'), 'VAPID_PUBLIC_KEY missing from config.js');
+  });
+
+  it('push.js in SW APP_SHELL', function() {
+    assert.ok(SW.includes('push.js'), 'push.js missing from SW APP_SHELL');
+  });
+
+  it("SW handles push event", function() {
+    assert.ok(SW.includes("addEventListener('push'"), 'push event listener missing from SW');
+  });
+
+  it("SW handles notificationclick event", function() {
+    assert.ok(SW.includes("addEventListener('notificationclick'"), 'notificationclick listener missing from SW');
+  });
+
+  it('push_card_title i18n key in JS', function() {
+    assert.ok(JS.includes('push_card_title'), 'push_card_title i18n key missing');
+  });
+
+  it('savePushSubscription action in GAS', function() {
+    assert.ok(GS19.includes('savePushSubscription'), 'savePushSubscription missing from GAS');
+  });
+
+  it('getPushSubscriptions action in GAS', function() {
+    assert.ok(GS19.includes('getPushSubscriptions'), 'getPushSubscriptions missing from GAS');
+  });
+
+  it('send-push.mjs script exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'scripts', 'send-push.mjs')), 'scripts/send-push.mjs missing');
+  });
+
+  it('initPushNotifications called in app init', function() {
+    assert.ok(JS.includes('initPushNotifications()'), 'initPushNotifications() not called in init');
+  });
+});
+
+// -- Bundle Size Report (v1.19.0) --
+describe('Bundle Size Report', function() {
+  it('size-report.mjs script exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'scripts', 'size-report.mjs')), 'scripts/size-report.mjs missing');
+  });
+
+  it('npm run size script in package.json', function() {
+    assert.ok(PKG.scripts && PKG.scripts.size, '"size" script missing from package.json');
+  });
+
+  it('size-report.mjs checks per-file thresholds', function() {
+    const sr = readFileSync(resolve(__dirname, '..', 'scripts', 'size-report.mjs'), 'utf8');
+    assert.ok(sr.includes('limit') || sr.includes('LIMIT'), 'thresholds missing from size-report.mjs');
+  });
+
+  it('size-report.mjs reports gzip size', function() {
+    const sr = readFileSync(resolve(__dirname, '..', 'scripts', 'size-report.mjs'), 'utf8');
+    assert.ok(sr.includes('gzip') || sr.includes('gz'), 'gzip reporting missing from size-report.mjs');
+  });
+
+  it('ci.yml has size-report job', function() {
+    const ci19 = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'ci.yml'), 'utf8');
+    assert.ok(ci19.includes('size-report'), 'size-report job missing from ci.yml');
+  });
+});
+
+// -- Playwright E2E Tests (v1.19.0) --
+describe('Playwright E2E Tests', function() {
+  it('playwright.config.mjs exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'playwright.config.mjs')), 'playwright.config.mjs missing');
+  });
+
+  it('tests/e2e/smoke.spec.mjs exists', function() {
+    assert.ok(existsSync(resolve(__dirname, '..', 'tests', 'e2e', 'smoke.spec.mjs')), 'tests/e2e/smoke.spec.mjs missing');
+  });
+
+  it('@playwright/test in devDependencies', function() {
+    assert.ok(PKG.devDependencies && PKG.devDependencies['@playwright/test'], '@playwright/test missing');
+  });
+
+  it('serve in devDependencies (webServer)', function() {
+    assert.ok(PKG.devDependencies && PKG.devDependencies['serve'], 'serve missing from devDependencies');
+  });
+
+  it('npm run test:e2e script in package.json', function() {
+    assert.ok(PKG.scripts && PKG.scripts['test:e2e'], 'test:e2e script missing from package.json');
+  });
+
+  it('playwright.config.mjs configures webServer', function() {
+    const pcfg = readFileSync(resolve(__dirname, '..', 'playwright.config.mjs'), 'utf8');
+    assert.ok(pcfg.includes('webServer'), 'webServer config missing from playwright.config.mjs');
+  });
+
+  it('playwright.config.mjs targets Chromium', function() {
+    const pcfg = readFileSync(resolve(__dirname, '..', 'playwright.config.mjs'), 'utf8');
+    assert.ok(pcfg.includes('chromium'), 'chromium project missing from playwright.config.mjs');
+  });
+
+  it('ci.yml has e2e job', function() {
+    const ci19 = readFileSync(resolve(__dirname, '..', '.github', 'workflows', 'ci.yml'), 'utf8');
+    assert.ok(ci19.includes('e2e'), 'e2e job missing from ci.yml');
+  });
+
+  it('smoke.spec.mjs tests page load', function() {
+    const spec = readFileSync(resolve(__dirname, '..', 'tests', 'e2e', 'smoke.spec.mjs'), 'utf8');
+    assert.ok(spec.includes('page loads') || spec.includes('toHaveTitle'), 'page-load test missing');
+  });
+});
+

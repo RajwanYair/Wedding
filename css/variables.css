@@ -6,6 +6,7 @@
   --bg-card: rgba(255, 255, 255, 0.06);
   --bg-card-hover: rgba(255, 255, 255, 0.10);
   --bg-gradient: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+  --header-bg: rgba(26, 10, 46, 0.95);
   --accent: #d4a574;
   --accent-light: #e8c9a0;
   --accent-dark: #b8864e;
@@ -68,4 +69,59 @@ body.theme-royal {
   --accent-dark: #3b82f6;
   --gold: #60a5fa;
 }
-
+
+/* ── Light Mode (base — default purple accent) ── */
+body.light-mode {
+  --header-bg: rgba(253, 247, 240, 0.96);
+  --bg-primary: #faf7f4;
+  --bg-secondary: #f3ede5;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --bg-gradient: linear-gradient(135deg, #fdf9f5 0%, #f5ede0 50%, #fdf9f5 100%);
+  --text-primary: #2d1a0d;
+  --text-secondary: rgba(45, 26, 13, 0.68);
+  --text-muted: rgba(45, 26, 13, 0.38);
+  --card-border: 1px solid rgba(212, 165, 116, 0.28);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.09);
+}
+
+/* ── Light Mode: Rose Gold ── */
+body.light-mode.theme-rosegold {
+  --bg-primary: #fdf5f7;
+  --bg-secondary: #f9ecf0;
+  --bg-gradient: linear-gradient(135deg, #fdf5f7 0%, #f5e0e8 50%, #fdf5f7 100%);
+  --text-primary: #2d0f1a;
+  --text-secondary: rgba(45, 15, 26, 0.68);
+  --text-muted: rgba(45, 15, 26, 0.38);
+}
+
+/* ── Light Mode: Classic Gold ── */
+body.light-mode.theme-gold {
+  --bg-primary: #fdf8f0;
+  --bg-secondary: #f7eed8;
+  --bg-gradient: linear-gradient(135deg, #fdf8f0 0%, #f5e6c0 50%, #fdf8f0 100%);
+  --text-primary: #2d1e00;
+  --text-secondary: rgba(45, 30, 0, 0.68);
+  --text-muted: rgba(45, 30, 0, 0.38);
+}
+
+/* ── Light Mode: Emerald ── */
+body.light-mode.theme-emerald {
+  --bg-primary: #f4fdf8;
+  --bg-secondary: #e8f9f0;
+  --bg-gradient: linear-gradient(135deg, #f4fdf8 0%, #d0f5e5 50%, #f4fdf8 100%);
+  --text-primary: #0a2d1a;
+  --text-secondary: rgba(10, 45, 26, 0.68);
+  --text-muted: rgba(10, 45, 26, 0.38);
+}
+
+/* ── Light Mode: Royal Blue ── */
+body.light-mode.theme-royal {
+  --bg-primary: #f4f7fd;
+  --bg-secondary: #e8eef9;
+  --bg-gradient: linear-gradient(135deg, #f4f7fd 0%, #d0def5 50%, #f4f7fd 100%);
+  --text-primary: #0a1530;
+  --text-secondary: rgba(10, 21, 48, 0.68);
+  --text-muted: rgba(10, 21, 48, 0.38);
+}
+

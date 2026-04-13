@@ -42,7 +42,7 @@
       }
     },
     {
-      "label": "Test: Unit (291 tests)",
+      "label": "Test: Unit (535 tests)",
       "type": "shell",
       "command": "node --test tests/wedding.test.mjs",
       "group": {
@@ -68,6 +68,39 @@
         "$eslint-stylish",
         "$stylelint"
       ]
+    },
+    {
+      "label": "Test: E2E (Playwright)",
+      "type": "npm",
+      "script": "test:e2e",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Size: Bundle Report",
+      "type": "npm",
+      "script": "size",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "SRI: Hash Check",
+      "type": "npm",
+      "script": "sri",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
     }
   ]
 }

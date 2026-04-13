@@ -73,3 +73,51 @@ function renderDefaultInvitationSVG() {
     '</svg>';
 }
 
+/* ── Venue Map (OpenStreetMap via Nominatim geocoding) ── */
+
+/**
+ * Geocode the wedding venue address via Nominatim and show an OSM embed iframe.
+ * Falls back to a Google Maps search link if geocoding fails or no address is set.
+ */
+async function renderVenueMap() {
+  const container = document.getElementById('venueMapContainer');
+  if (!container) return;
+  const addr = (_weddingInfo.address || '').trim();
+  if (!addr) { container.style.display = 'none'; return; }
+  container.style.display = '';
+
+  const iframe   = document.getElementById('venueMapFrame');
+  const fallback = document.getElementById('venueMapFallback');
+
+  try {
+    const geocodeUrl =
+      'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' +
+      encodeURIComponent(addr);
+    const resp = await fetch(geocodeUrl, {
+      headers: { 'Accept-Language': 'he,en;q=0.8', 'Accept': 'application/json' },
+      cache: 'no-store',
+    });
+    if (!resp.ok) throw new Error('geocode_http');
+    const results = await resp.json();
+    if (!Array.isArray(results) || !results.length) throw new Error('geocode_noresult');
+
+    const lat    = parseFloat(results[0].lat);
+    const lon    = parseFloat(results[0].lon);
+    const margin = 0.008;
+    const bbox   = (lon - margin) + ',' + (lat - margin) + ',' +
+                   (lon + margin) + ',' + (lat + margin);
+
+    if (iframe) {
+      iframe.src           = 'https://www.openstreetmap.org/export/embed.html?bbox=' + bbox +
+                             '&layer=mapnik&marker=' + lat + ',' + lon;
+      iframe.style.display = '';
+    }
+    if (fallback) fallback.style.display = 'none';
+  } catch (_err) {
+    if (iframe)   iframe.style.display   = 'none';
+    if (fallback) {
+      fallback.href         = 'https://www.google.com/maps/search/' + encodeURIComponent(addr);
+      fallback.style.display = '';
+    }
+  }
+}

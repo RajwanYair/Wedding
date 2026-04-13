@@ -1,10 +1,10 @@
 // =============================================================================
-// Service Worker — Wedding Manager v1.12.0
+// Service Worker — Wedding Manager v1.19.0
 // Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
 'use strict';
 
-const CACHE_NAME = "wedding-v1.12.0";
+const CACHE_NAME = "wedding-v1.19.0";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -17,6 +17,10 @@ const APP_SHELL = [
   "./css/components.css",
   "./css/responsive.css",
   "./css/auth.css",
+  "./css/print.css",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./wedding.json",
   "./js/config.js",
   "./js/i18n.js",
   "./js/dom.js",
@@ -33,6 +37,19 @@ const APP_SHELL = [
   "./js/settings.js",
   "./js/budget.js",
   "./js/analytics.js",
+  "./js/timeline.js",
+  "./js/router.js",
+  "./js/guest-landing.js",
+  "./js/expenses.js",
+  "./js/registry.js",
+  "./js/checkin.js",
+  "./js/gallery.js",
+  "./js/contact-collector.js",
+  "./js/offline-queue.js",
+  "./js/audit.js",
+  "./js/error-monitor.js",
+  "./js/push.js",
+  "./js/email.js",
   "./js/sheets.js",
   "./js/auth.js",
   "./js/app.js",
@@ -145,4 +162,33 @@ self.addEventListener('fetch', function(e) {
 self.addEventListener('message', function(e) {
   if (e.data === 'SKIP_WAITING') self.skipWaiting();
 });
+// ── Push: show notification to admin ────────────────────────────────────────────
+self.addEventListener('push', function(e) {
+  var data = {};
+  if (e.data) {
+    try { data = e.data.json(); } catch (_) { data = { body: e.data.text() }; }
+  }
+  var title   = data.title   || 'Wedding Manager';
+  var options = {
+    body:  data.body  || '',
+    icon:  data.icon  || './icon-192.png',
+    badge: './icon-192.png',
+    tag:   'wedding-push',
+    data:  data,
+  };
+  e.waitUntil(self.registration.showNotification(title, options));
+});
 
+// ── Notification click: focus or open window ────────────────────────────────
+self.addEventListener('notificationclick', function(e) {
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clients) {
+      for (var i = 0; i < clients.length; i++) {
+        var c = clients[i];
+        if (c.url && 'focus' in c) return c.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow('./');
+    })
+  );
+});

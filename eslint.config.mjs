@@ -9,6 +9,7 @@ export default [
         document: "readonly",
         navigator: "readonly",
         localStorage: "readonly",
+        sessionStorage: "readonly",
         fetch: "readonly",
         AbortController: "readonly",
         setTimeout: "readonly",
@@ -87,6 +88,7 @@ export default [
         _currentLang: "writable",
         _currentTheme: "writable",
         _themeIndex: "writable",
+        _isLightMode: "writable",
         _authUser: "writable",
         _sheetsToken: "writable",
         _sheetsTokenClient: "writable",
@@ -115,6 +117,8 @@ export default [
         applyLanguage: "writable",
         toggleLanguage: "writable",
         cycleTheme: "writable",
+        toggleLightMode: "writable",
+        _applyThemeClasses: "writable",
         openModal: "writable",
         closeModal: "writable",
         showToast: "writable",
@@ -252,6 +256,117 @@ export default [
         loginFacebook: "writable",
         loadAppleSDK: "writable",
         loginApple: "writable",
+        // timeline.js
+        _timeline: "writable",
+        _editingTimelineId: "writable",
+        renderTimeline: "writable",
+        openAddTimelineModal: "writable",
+        openEditTimelineModal: "writable",
+        saveTimelineItem: "writable",
+        deleteTimelineItem: "writable",
+        // settings.js QR
+        renderRsvpQr: "writable",
+        printRsvpQr: "writable",
+        copyRsvpLink: "writable",
+        // nav.js
+        toggleMobileNav: "writable",
+        // dashboard.js
+        animateCounter: "writable",
+        // router.js
+        initRouter: "writable",
+        _routerPush: "writable",
+        _routerHandleHash: "writable",
+        _ROUTER_VALID: "writable",
+        // guest-landing.js
+        renderGuestLanding: "writable",
+        _renderLandingHero: "writable",
+        _renderLandingTimeline: "writable",
+        // expenses.js
+        _expenses: "writable",
+        _editingExpenseId: "writable",
+        EXPENSE_CATEGORIES: "writable",
+        renderExpenses: "writable",
+        openAddExpenseModal: "writable",
+        openEditExpenseModal: "writable",
+        saveExpense: "writable",
+        deleteExpense: "writable",
+        getTotalExpenses: "writable",
+        _buildExpenseCategoryOptions: "writable",
+        // invitation.js — venue map
+        renderVenueMap: "writable",
+        // sheets.js — smart polling
+        _sheetsVisibilityHandler: "writable",
+        // registry.js
+        renderRegistrySettings: "writable",
+        addRegistryLink: "writable",
+        removeRegistryLink: "writable",
+        renderRegistryLinks: "writable",
+        // checkin.js
+        renderCheckin: "writable",
+        _renderCheckinStats: "writable",
+        _renderCheckinList: "writable",
+        toggleCheckin: "writable",
+        searchCheckin: "writable",
+        findTable: "writable",
+        // gallery.js
+        _gallery: "writable",
+        GALLERY_MAX_PX: "writable",
+        GALLERY_QUALITY: "writable",
+        renderGallery: "writable",
+        openGalleryUpload: "writable",
+        handleGalleryUpload: "writable",
+        deleteGalleryPhoto: "writable",
+        _compressGalleryImage: "writable",
+        _galleryLightboxPhoto: "writable",
+        _openGalleryLightbox: "writable",
+        _closeGalleryLightbox: "writable",
+        closeGalleryLightbox: "writable",
+        // ui.js — print functions
+        printPlaceCards: "writable",
+        printTableSigns: "writable",
+        // contact-collector.js
+        renderContactForm: "writable",
+        submitContactForm: "writable",
+        copyContactLink: "writable",
+        renderContactSettings: "writable",
+        // offline-queue.js
+        _offlineQueue: "writable",
+        enqueueOfflineRsvp: "writable",
+        flushOfflineQueue: "writable",
+        initOfflineQueue: "writable",
+        getOfflineQueueCount: "writable",
+        _updateOfflineBadge: "writable",
+        // audit.js
+        _auditLog: "writable",
+        logAudit: "writable",
+        renderAuditLog: "writable",
+        clearAuditLog: "writable",
+        // error-monitor.js
+        _clientErrors: "writable",
+        logClientError: "writable",
+        renderErrorLog: "writable",
+        clearErrorLog: "writable",
+        initErrorMonitor: "writable",
+        // sheets.js cross-file helper (used in offline-queue/contact-collector/error-monitor)
+        _sheetsWebAppPost: "readonly",
+        // email.js
+        _emailSettings: "writable",
+        loadEmailSettings: "writable",
+        saveEmailSettings: "writable",
+        sendRsvpConfirmation: "writable",
+        sendAdminRsvpNotify: "writable",
+        renderEmailSettings: "writable",
+        initEmailNotifications: "writable",
+        // push.js
+        VAPID_PUBLIC_KEY: "writable",
+        _pushEnabled: "writable",
+        _pushSubscription: "writable",
+        subscribePush: "writable",
+        unsubscribePush: "writable",
+        renderPushSettings: "writable",
+        initPushNotifications: "writable",
+        // state.js — external config loader
+        loadExternalConfig: "writable",
       },
     },
     rules: {
@@ -292,7 +407,8 @@ export default [
             "|^submit|^download|^clear|^print|^login|^sign|^sync" +
             "|^guest|^escape|^clean|^sanitize|^isValid|^format|^parse|^fill|^row|^decode" +
             "|^apply|^migrate|^sheets|^table|^popup|^get|^populate" +
-            "|^start|^stop|^request|^create|^lookup",
+            "|^start|^stop|^request|^create|^lookup|^copy|^animate|^search|^find" +
+            "|^log|^enqueue|^flush|^queue",
           argsIgnorePattern: "^_|^e$|^k$",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",

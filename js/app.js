@@ -17,7 +17,15 @@ const _AUTO_REFRESH_AFTER_MS = 5 * 60 * 1000;
 
 function init() {
   loadAll();
-  if (_currentTheme) document.body.className = _currentTheme;
+  /* Load wedding.json external config in the background — updates defaults if
+     the user has never customised wedding info, otherwise silently ignored. */
+  loadExternalConfig().then(function () {
+    loadWeddingDetailsToForm();
+    updateHeaderInfo();
+  });
+  _applyThemeClasses();
+  const btnDL = document.getElementById("btnDarkLight");
+  if (btnDL) btnDL.textContent = _isLightMode ? "🌙" : "☀️";
   applyLanguage();
   loadWeddingDetailsToForm();
   renderStats();
@@ -36,10 +44,16 @@ function init() {
   loadFBSDK();
   loadAppleSDK();
   initSW();
+  initOfflineQueue();
+  initErrorMonitor();
+  initPushNotifications();
+  initEmailNotifications();
   /* Load primary data from Google Sheets (public read, no auth) */
   loadFromSheetsOnInit();
   /* Start 30-second auto-sync polling for remote changes */
   startSheetsAutoSync();
+  /* Hash router — read initial URL hash after auth determines default section */
+  initRouter();
 }
 
 /** Applies the queued update: tells the waiting SW to skip waiting (which

@@ -5,22 +5,28 @@
 ## Commands
 
 ```bash
-node --test tests/wedding.test.mjs   # 291 tests — must all pass
+npm test                             # 535 tests (71 suites) — must all pass
 npm run lint                         # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run lint:fix                     # Auto-fix CSS + JS
 npm run ci                           # lint + test (same as CI)
+npm run test:e2e                     # Playwright smoke tests (Chromium)
+npm run size                         # Bundle size report with gzip
+npm run sri                          # SHA-384 integrity hashes for local assets
 ```
 
-## Architecture (v1.12.0 — modular)
+## Architecture (v1.19.0 — modular)
 
 | Path | Role |
 | --- | --- |
 | `index.html` | HTML shell — links `css/` + `js/` |
-| `css/` (6 files) | variables · base · layout · components · responsive · auth |
-| `js/` (18 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app |
-| `sw.js` | Stale-while-revalidate + 5-min update polling |
+| `css/` (6 files) | variables · base · layout · components · responsive · print |
+| `js/` (32 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app · timeline · gallery · checkin · registry · expenses · contact-collector · offline-queue · audit · error-monitor · email · push · router · guest-landing |
+| `sw.js` | Stale-while-revalidate + push + notificationclick handlers |
+| `scripts/` | sri-check · inject-config · size-report · send-push · generate-icons |
 | `manifest.json` | PWA manifest |
-| `tests/wedding.test.mjs` | 291 unit tests (Node built-in runner) |
+| `tests/wedding.test.mjs` | 535 unit tests — 71 suites (Node built-in runner) |
+| `tests/e2e/` | Playwright smoke tests |
+| `playwright.config.mjs` | Playwright config with Chromium + `serve` webServer |
 
 ## Auth Setup
 

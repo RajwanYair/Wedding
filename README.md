@@ -2,14 +2,14 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v1.12.0-d4a574?style=flat-square)
-![Modular](https://img.shields.io/badge/Modular-17_JS_%2B_6_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
+![Version](https://img.shields.io/badge/version-v1.19.0-d4a574?style=flat-square)
+![Modular](https://img.shields.io/badge/Modular-32_JS_%2B_6_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
 
-**Wedding management app — RSVP, table seating, WhatsApp invitations.**
-**Modular (6 CSS + 17 JS), zero-dependency, Hebrew RTL with English support.**
+**Wedding management app — RSVP, table seating, WhatsApp invitations, push notifications, E2E tests.**
+**Modular (6 CSS + 32 JS), zero-dependency, Hebrew RTL with English support.**
 
 </div>
 
