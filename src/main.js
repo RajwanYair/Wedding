@@ -47,6 +47,7 @@ import {
   onSyncStatus,
   initOnlineSync,
   pullFromSheets,
+  sheetsPost,
 } from "./services/sheets.js";
 
 // ── Section modules (lifecycle) ───────────────────────────────────────────
@@ -789,6 +790,23 @@ function _registerHandlers() {
       showToast(t("sheets_pull_success"), "success");
     } catch {
       showToast(t("sheets_pull_error"), "error");
+    }
+  });
+  on("cleanConfigDuplicates", async () => {
+    showToast(t("sheets_testing"), "info");
+    try {
+      const result = /** @type {any} */ (
+        await sheetsPost({ action: "cleanConfig" })
+      );
+      const removed = result?.removed ?? 0;
+      showToast(
+        removed > 0
+          ? t("sheets_clean_config_done").replace("{n}", String(removed))
+          : t("sheets_clean_config_none"),
+        removed > 0 ? "success" : "info",
+      );
+    } catch {
+      showToast(t("toast_sheets_error"), "error");
     }
   });
   on("saveWebAppUrl", (_el, e) => {

@@ -1,5 +1,5 @@
 /**
- * Wedding Manager — Google Apps Script Web App  v2.0.0
+ * Wedding Manager — Google Apps Script Web App  v2.1.0
  * Handles all write operations from the Wedding Manager app.
  *
  * SETUP (one-time):
@@ -17,9 +17,15 @@
  *   { action: 'replaceAll',    sheet: 'Attendees', rows: [[...], ...] }
  *   { action: 'append',        sheet: 'Attendees', row: [...] }
  *   { action: 'deleteRow',     sheet: 'Attendees', id: 'guest-id' }
- *   { action: 'ensureSheets' } — create Attendees, Tables, Config, Vendors, Expenses, RSVP_Log
+ *   { action: 'cleanConfig' }  — deduplicate Config sheet keys in-place (one-time fix)
+ *   { action: 'ensureSheets' } — create Attendees, Tables, Config, Vendors, Expenses, RSVP_Log, Timeline
  *   { action: 'sendEmail',     type: 'rsvpConfirmation'|'adminRsvpNotify', to, name, ... }
  *   { action: 'savePushSubscription', subscription: {...} }
+ *
+ * NEW in v2.1.0:
+ *   • cleanConfig action: deduplicate Config sheet by key (one-time cleanup for accumulated rows)
+ *   • replaceAll for Config: always deduplicates incoming rows by key before writing
+ *   • Timeline sheet tab added to ALLOWED_SHEETS
  *
  * NEW in v2.0.0:
  *   • Vendors, Expenses, RSVP_Log sheet tabs supported (S3.7/S3.8)
@@ -275,6 +281,31 @@ function doPost(e) {
 
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
 
+    /* ── cleanConfig: deduplicate Config sheet in-place (one-time fix) ── */
+    if (action === 'cleanConfig') {
+      var cfgSheet = getOrCreateSheet(ss, 'Config');
+      var cfgLastRow = cfgSheet.getLastRow();
+      if (cfgLastRow < 2) {
+        return jsonResponse({ ok: true, action: 'cleanConfig', removed: 0, remaining: cfgLastRow });
+      }
+      var allVals = cfgSheet.getDataRange().getValues();
+      var cfgMap = {};
+      var cfgKeys = [];
+      allVals.forEach(function(row) {
+        var key = String(row[0] || '').trim();
+        if (!key) return;
+        if (!cfgMap.hasOwnProperty(key)) cfgKeys.push(key);
+        cfgMap[key] = row; // last-wins: keeps last occurrence of each key
+      });
+      var cleanRows = cfgKeys.map(function(k) { return cfgMap[k]; });
+      var removed = allVals.length - cleanRows.length;
+      cfgSheet.clearContents();
+      if (cleanRows.length > 0) {
+        cfgSheet.getRange(1, 1, cleanRows.length, cleanRows[0].length).setValues(cleanRows);
+      }
+      return jsonResponse({ ok: true, action: 'cleanConfig', removed: removed, remaining: cleanRows.length });
+    }
+
     /* ── ensureSheets: create any missing tabs ───────────────────────── */
     if (action === 'ensureSheets') {
       /* Core tabs + new S3.7 tabs */
@@ -304,6 +335,19 @@ function doPost(e) {
             return jsonResponse({ ok: false, error: 'Row ' + i + ': ' + rowErr });
           }
         }
+      }
+      /* For Config: deduplicate rows by key (first column) so the sheet never
+         accumulates duplicate keys, even if replaceAll is called multiple times */
+      if (sheetName === 'Config') {
+        var cfgMap2 = {};
+        var cfgKeys2 = [];
+        rows.forEach(function(row) {
+          var k = String(row[0] || '').trim();
+          if (!k) return;
+          if (!cfgMap2.hasOwnProperty(k)) cfgKeys2.push(k);
+          cfgMap2[k] = row; // last-wins
+        });
+        rows = cfgKeys2.map(function(k) { return cfgMap2[k]; });
       }
       sheet.clearContents();
       sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
