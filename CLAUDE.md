@@ -1,6 +1,6 @@
 # Wedding Manager — Claude Config
 
-> Full spec: `.github/copilot-instructions.md` · v3.8.2
+> Full spec: `.github/copilot-instructions.md` · v3.8.3
 
 ## Commands
 

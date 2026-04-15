@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.8.3] — 2026-04-15
+
+### Added
+
+- **Two-way Google Sheets sync** — `pullAllFromSheetsImpl()` reads all 6 tabs via GViz and merges into local store; `pullFromSheets()` button added to Settings under Google Sheets actions.
+- **Timeline tab synced** — `src/sections/timeline.js` now calls `enqueueWrite("timeline", ...)` on save/delete; `SHEETS_TIMELINE_TAB` added to `src/core/config.js`.
+- **Config sheet key uniqueness** — GAS v2.1.0: `replaceAll` deduplicates incoming Config rows by key; new `cleanConfig` action deduplicates the sheet in-place. Button “🧹 נקה מפתחות כפולים” added to Settings.
+- **Config sheet always complete** — `_WEDDING_INFO_KEYS` canonical list in `sheets-impl.js` guarantees all 14 `weddingInfo` keys are pushed to the Config tab with empty strings for unset fields; `_defaultWeddingInfo` in `main.js` expanded accordingly.
+- **Push All to Sheets** — `pushAllToSheetsImpl()` force-syncs all 6 stores (header row + data) regardless of write queue; button “📤 שלח הכל ל-Google Sheets” added to Settings.
+- **PWA install prompt** — `initInstallPrompt()` in `src/core/ui.js` listens for `beforeinstallprompt`, defers it, and shows a slide-up banner after 30 s inviting browser users to install the app; dismissal snoozed 30 days in `localStorage`.
+
+### Changed
+
+- `js/config.js`, `src/core/config.js`, `public/sw.js` — version bumped to v3.8.3.
+- Cache bust: `CACHE_NAME` bumped to `wedding-v3.8.3` in `public/sw.js`.
+
 ## [3.8.2] — 2026-04-15
 
 ### Added
