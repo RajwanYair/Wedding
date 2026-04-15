@@ -9,7 +9,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -54,7 +54,7 @@ export function saveBudgetEntry(data, existingId = null) {
   }
 
   storeSet("budget", entries);
-  enqueueWrite("budget", () => Promise.resolve());
+  enqueueWrite("budget", () => syncStoreKeyToSheets("budget"));
   return { ok: true };
 }
 
@@ -66,7 +66,7 @@ export function deleteBudgetEntry(id) {
     (e) => e.id !== id,
   );
   storeSet("budget", entries);
-  enqueueWrite("budget", () => Promise.resolve());
+  enqueueWrite("budget", () => syncStoreKeyToSheets("budget"));
 }
 
 export function renderBudget() {

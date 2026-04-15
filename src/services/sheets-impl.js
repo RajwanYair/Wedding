@@ -25,6 +25,7 @@ const _SHEET_NAMES = {
   tables: "Tables",
   vendors: "Vendors",
   expenses: "Expenses",
+  budget: "Budget",
   timeline: "Timeline",
   weddingInfo: "Config",
 };
@@ -77,6 +78,7 @@ const _COL_ORDER = {
     "gift",
     "notes",
     "sent",
+    "checkedIn",
     "rsvpDate",
     "createdAt",
     "updatedAt",
@@ -95,6 +97,7 @@ const _COL_ORDER = {
     "createdAt",
   ],
   expenses: ["id", "category", "description", "amount", "date", "createdAt"],
+  budget: ["id", "name", "amount", "note", "createdAt", "updatedAt"],
   timeline: ["id", "time", "title", "note", "icon"],
 };
 
@@ -257,12 +260,13 @@ const _NUM_FIELDS = {
   tables: ["capacity"],
   vendors: ["price", "paid"],
   expenses: ["amount"],
+  budget: ["amount"],
   timeline: [],
 };
 
 /** @type {Record<string, string[]>} */
 const _BOOL_FIELDS = {
-  guests: ["sent", "accessibility"],
+  guests: ["sent", "accessibility", "checkedIn"],
 };
 
 /**
