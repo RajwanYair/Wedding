@@ -200,14 +200,15 @@ let _activeSection = null;
 
   // Default timeline items — seeded once when localStorage is empty
   const _defaultTimeline = [
-    { id: "tl_invite",  time: "18:00", title: "קבלת פנים" },
+    { id: "tl_invite", time: "18:00", title: "קבלת פנים" },
     { id: "tl_bedeken", time: "18:40", title: "כיסוי כלה בהינומה" },
     { id: "tl_chuppah", time: "18:50", title: "חופה" },
   ];
   const savedTimeline = load("timeline", null);
-  const timeline = (savedTimeline && /** @type {any[]} */ (savedTimeline).length > 0)
-    ? savedTimeline
-    : _defaultTimeline;
+  const timeline =
+    savedTimeline && /** @type {any[]} */ (savedTimeline).length > 0
+      ? savedTimeline
+      : _defaultTimeline;
 
   initStore({
     guests: { value: load("guests", []), storageKey: "guests" },
