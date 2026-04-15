@@ -33,7 +33,7 @@ Node.js ≥ 22 (`engines.node` in `package.json`); CI runs on 22 + 24
 
 ## Commit Convention
 
-`feat:` | `fix:` | `style:` | `docs:` | `ci:` | `chore:`  
+`feat:` | `fix:` | `style:` | `docs:` | `ci:` | `chore:`
 Commit after **every Copilot chat session** or sprint with a clear summary message.
 
 ## Security

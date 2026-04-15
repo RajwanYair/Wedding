@@ -6572,7 +6572,7 @@ describe("v3.6.0: version stamps consistent", function () {
   });
   it("CLAUDE.md references a current version", function () {
     const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
-    assert.ok(src.includes("3.7.0") || src.includes("3.6.0") || src.includes("3.8.0"), "CLAUDE.md missing version reference");
+    assert.ok(src.includes("3.7.0") || src.includes("3.6.0") || src.includes("3.8.0") || src.includes("3.8.1"), "CLAUDE.md missing version reference");
   });
   it("README.md version badge exists", function () {
     const src = readFileSync(resolve(__dirname, "..", "README.md"), "utf8");

@@ -292,7 +292,7 @@ function _registerHandlers() {
     );
     const email =
       /** @type {HTMLInputElement|null} */ (
-        form?.querySelector("[name='email'], #authEmailInput")
+        form?.querySelector("[name='email'], #authEmailInput, #adminLoginEmail")
       )?.value?.trim() ?? "";
     const result = loginOAuth(email, email, "", "email");
     if (!result) showToast(t("auth_email_not_approved"), "error");
