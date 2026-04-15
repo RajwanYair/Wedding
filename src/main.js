@@ -8,10 +8,20 @@
 
 // ── Foundation layer ──────────────────────────────────────────────────────
 import { APP_VERSION } from "./core/config.js";
-import { initStore, storeGet, storeSet } from "./core/store.js";
+import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import { loadLocale, applyI18n, t } from "./core/i18n.js";
-import { load } from "./core/state.js";
+import {
+  load,
+  save,
+  restoreActiveEvent,
+  setActiveEvent,
+  getActiveEventId,
+  listEvents,
+  addEvent,
+  removeEvent,
+  clearEventData,
+} from "./core/state.js";
 import {
   initRouter,
   initSwipe,
@@ -42,6 +52,7 @@ import {
   onAuthChange,
   currentUser,
 } from "./services/auth.js";
+import { startPresence, onPresenceChange } from "./services/presence.js";
 import {
   syncSheetsNow,
   sheetsCheckConnection,
@@ -51,6 +62,8 @@ import {
   pullFromSheets,
   pushAllToSheets,
   sheetsPost,
+  startLiveSync,
+  stopLiveSync,
 } from "./services/sheets.js";
 
 // ── Section modules (lifecycle) ───────────────────────────────────────────
@@ -185,55 +198,49 @@ const SECTIONS = {
 /** @type {string|null} currently mounted section name */
 let _activeSection = null;
 
-// ── Bootstrap ─────────────────────────────────────────────────────────────
-(async function bootstrap() {
-  // 1. Language
-  const lang = load("lang", "he") === "en" ? "en" : "he";
-  await loadLocale(lang);
+// ── Default data factories ────────────────────────────────────────────────
 
-  // 2. Apply i18n bindings
-  applyI18n();
+/** @type {Record<string,string>} */
+const _defaultWeddingInfo = {
+  groom: "",
+  bride: "",
+  groomEn: "",
+  brideEn: "",
+  date: "",
+  hebrewDate: "",
+  time: "18:00",
+  ceremonyTime: "19:30",
+  rsvpDeadline: "",
+  venue: "",
+  venueAddress: "",
+  venueWaze: "",
+  venueMapLink: "",
+  budgetTarget: "",
+};
 
-  // 3. Reactive store — seed with persisted data from localStorage
-  /** @type {Record<string,string>} */
-  const _defaultWeddingInfo = {
-    // Core names
-    groom: "אליאור",
-    bride: "טובה",
-    groomEn: "",
-    brideEn: "",
-    // Date & time
-    date: "2026-05-07",
-    hebrewDate: "",
-    time: "18:00",
-    ceremonyTime: "19:30",
-    rsvpDeadline: "",
-    // Venue
-    venue: "נוף הירדן",
-    venueAddress: "מצפה יריחו",
-    venueWaze: "",
-    venueMapLink: "",
-    // Budget
-    budgetTarget: "",
-  };
+const _defaultTimeline = [
+  { id: "tl_invite", time: "18:00", title: "קבלת פנים" },
+  { id: "tl_bedeken", time: "18:40", title: "כיסוי כלה בהינומה" },
+  { id: "tl_chuppah", time: "18:50", title: "חופה" },
+];
+
+/**
+ * Build store definitions from the CURRENT event's localStorage.
+ * @returns {Record<string, { value: unknown, storageKey?: string }>}
+ */
+function _buildStoreDefs() {
   const savedInfo = /** @type {Record<string,string>} */ (
     load("weddingInfo", {})
   );
   const weddingInfo = { ..._defaultWeddingInfo, ...savedInfo };
 
-  // Default timeline items — seeded once when localStorage is empty
-  const _defaultTimeline = [
-    { id: "tl_invite", time: "18:00", title: "קבלת פנים" },
-    { id: "tl_bedeken", time: "18:40", title: "כיסוי כלה בהינומה" },
-    { id: "tl_chuppah", time: "18:50", title: "חופה" },
-  ];
   const savedTimeline = load("timeline", null);
   const timeline =
     savedTimeline && /** @type {any[]} */ (savedTimeline).length > 0
       ? savedTimeline
       : _defaultTimeline;
 
-  initStore({
+  return {
     guests: { value: load("guests", []), storageKey: "guests" },
     tables: { value: load("tables", []), storageKey: "tables" },
     vendors: { value: load("vendors", []), storageKey: "vendors" },
@@ -243,7 +250,42 @@ let _activeSection = null;
     timeline: { value: timeline, storageKey: "timeline" },
     contacts: { value: load("contacts", []), storageKey: "contacts" },
     budget: { value: load("budget", []), storageKey: "budget" },
-  });
+  };
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────
+(async function bootstrap() {
+  // 1. Language
+  const lang = load("lang", "he") === "en" ? "en" : "he";
+  await loadLocale(lang);
+
+  // 2. Apply i18n bindings
+  applyI18n();
+
+  // 2a. Restore active event (S9.1) — must be before initStore
+  restoreActiveEvent();
+
+  // 3. Reactive store — seed with persisted data from localStorage
+  initStore(_buildStoreDefs());
+
+  // 3a. Seed default weddingInfo for the "default" event if empty
+  if (getActiveEventId() === "default") {
+    const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+    if (!info.groom) {
+      storeSet("weddingInfo", {
+        ..._defaultWeddingInfo,
+        groom: "אליאור",
+        bride: "טובה",
+        date: "2026-05-07",
+        venue: "נוף הירדן",
+        venueAddress: "מצפה יריחו",
+        ...info,
+      });
+    }
+  }
+
+  // 3b. Populate event switcher UI (S9.2)
+  _renderEventSwitcher();
 
   // 4. Theme restore (before paint to avoid flash)
   restoreTheme();
@@ -256,6 +298,21 @@ let _activeSection = null;
   onAuthChange(_updateNavForAuth); // register BEFORE any login call
   const user = loadSession();
   if (!user) loginAnonymous(); // fires onAuthChange immediately
+
+  // 5a. S10.3 — Presence indicator for admins
+  if (currentUser()?.isAdmin) startPresence();
+  onPresenceChange((users) => {
+    const badge = document.getElementById("presenceBadge");
+    if (!badge) return;
+    const others = users.filter((u) => u.email !== currentUser()?.email);
+    if (others.length === 0) {
+      badge.classList.add("u-hidden");
+    } else {
+      badge.classList.remove("u-hidden");
+      badge.textContent = `👥 ${others.length}`;
+      badge.title = others.map((u) => u.name).join(", ");
+    }
+  });
 
   // 6. Event delegation hub
   initEvents();
@@ -303,6 +360,11 @@ let _activeSection = null;
   // 11c. S3.9 — Resume queued writes when back online
   initOnlineSync();
 
+  // 11c2. S10.1 — Restore live sync if it was active
+  if (load("liveSync", false)) {
+    startLiveSync();
+  }
+
   // 11d. Service Worker — update detection + refresh banner
   initSW();
 
@@ -312,6 +374,129 @@ let _activeSection = null;
   // 11f. Fetch GAS version for status bar (fire-and-forget)
   _fetchGasVersion();
 })();
+
+// ── S9.2 Event Switcher ──────────────────────────────────────────────────
+
+/**
+ * Render the event switcher dropdown.
+ */
+function _renderEventSwitcher() {
+  const select = document.getElementById("eventSelect");
+  if (!select) return;
+  const events = listEvents();
+  const activeId = getActiveEventId();
+  select.textContent = "";
+  events.forEach((evt) => {
+    const opt = document.createElement("option");
+    opt.value = evt.id;
+    opt.textContent =
+      evt.label || (evt.id === "default" ? t("event_default") : evt.id);
+    if (evt.id === activeId) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+/**
+ * Switch to a different event — reloads all store data from localStorage.
+ * @param {string} eventId
+ */
+async function _doSwitchEvent(eventId) {
+  if (eventId === getActiveEventId()) return;
+  // unmount active section
+  if (_activeSection && SECTIONS[_activeSection]?.unmount) {
+    SECTIONS[_activeSection].unmount();
+  }
+  // switch
+  setActiveEvent(eventId);
+  reinitStore(_buildStoreDefs());
+  // refresh UI
+  dashboardSection.updateTopBar();
+  dashboardSection.updateCountdown();
+  _renderEventSwitcher();
+  // navigate to dashboard (or landing if guest)
+  const target = currentUser()?.isAdmin ? "dashboard" : "landing";
+  await _switchSection(target);
+  showToast(t("event_switched"));
+}
+
+/**
+ * Create a new event.
+ */
+function _doAddEvent() {
+  const id = `evt_${Date.now().toString(36)}`;
+  const label = prompt(t("event_name_prompt")) ?? "";
+  if (!label.trim()) return;
+  addEvent(id, label.trim());
+  _doSwitchEvent(id);
+}
+
+/**
+ * Delete the current event (if not "default").
+ */
+async function _doDeleteEvent() {
+  const eid = getActiveEventId();
+  if (eid === "default") {
+    showToast(t("event_cannot_delete_default"));
+    return;
+  }
+  const ok = await showConfirmDialog(t("event_delete_confirm"));
+  if (!ok) return;
+  clearEventData(eid);
+  removeEvent(eid);
+  await _doSwitchEvent("default");
+}
+
+// ── S10.2 Conflict Resolution State ──────────────────────────────────────
+
+/** @type {Array<{ id: string, field: string, localVal: unknown, remoteVal: unknown }>} */
+let _pendingConflicts = [];
+
+/**
+ * Show the conflict resolution modal with the given conflicts.
+ * @param {Array<{ id: string, field: string, localVal: unknown, remoteVal: unknown }>} conflicts
+ */
+async function _showConflictModal(conflicts) {
+  _pendingConflicts = conflicts;
+  await openModal("conflictModal");
+  const list = document.getElementById("conflictList");
+  if (!list) return;
+  list.textContent = "";
+  conflicts.forEach((c, i) => {
+    const row = document.createElement("div");
+    row.className = "conflict-row";
+    row.innerHTML = `
+      <strong>${_escHtml(c.id)} → ${_escHtml(c.field)}</strong>
+      <label><input type="radio" name="conflict_${i}" value="local" checked>
+        ${t("conflict_local")}: <code>${_escHtml(String(c.localVal ?? ""))}</code></label>
+      <label><input type="radio" name="conflict_${i}" value="remote">
+        ${t("conflict_remote")}: <code>${_escHtml(String(c.remoteVal ?? ""))}</code></label>`;
+    list.appendChild(row);
+  });
+}
+
+/**
+ * Apply conflict resolutions. Each choice is "local" or "remote".
+ * @param {string[]} choices
+ */
+function _applyConflictResolutions(choices) {
+  const guests = /** @type {any[]} */ ([...(storeGet("guests") ?? [])]);
+  for (let i = 0; i < _pendingConflicts.length; i++) {
+    if (choices[i] === "remote") {
+      const c = _pendingConflicts[i];
+      const guest = guests.find((g) => String(g.id) === c.id);
+      if (guest) guest[c.field] = c.remoteVal;
+    }
+  }
+  storeSet("guests", guests);
+  _pendingConflicts = [];
+}
+
+/** @param {string} s */
+function _escHtml(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
 
 // ── Handler registration ──────────────────────────────────────────────────
 
@@ -324,6 +509,14 @@ function _registerHandlers() {
   on("showSection", (el) =>
     _switchSection(el.dataset.actionArg || "dashboard"),
   );
+
+  // ── S9.2 Event switcher ──
+  on("switchEvent", (el) => {
+    const val = /** @type {HTMLSelectElement} */ (el).value;
+    _doSwitchEvent(val);
+  });
+  on("addNewEvent", () => _doAddEvent());
+  on("deleteEvent", () => _doDeleteEvent());
 
   // ── Auth ──
   on("submitEmailLogin", () => {
@@ -824,6 +1017,44 @@ function _registerHandlers() {
       showToast(t("sheets_pull_error"), "error");
     }
   });
+
+  // S10.1 Live sync toggle
+  on("toggleLiveSync", (el) => {
+    const checked = /** @type {HTMLInputElement} */ (el).checked;
+    if (checked) {
+      startLiveSync();
+      save("liveSync", true);
+      showToast(t("live_sync_started"), "success");
+    } else {
+      stopLiveSync();
+      save("liveSync", false);
+      showToast(t("live_sync_stopped"), "info");
+    }
+  });
+
+  // S10.2 Conflict resolution
+  on("conflictAcceptAllLocal", () => {
+    closeModal();
+    showToast(t("conflict_kept_local"), "info");
+  });
+  on("conflictAcceptAllRemote", () => {
+    // Apply all pending remote values
+    if (_pendingConflicts.length > 0) {
+      _applyConflictResolutions(_pendingConflicts.map(() => "remote"));
+    }
+    closeModal();
+  });
+  on("conflictApplySelected", () => {
+    const list = document.getElementById("conflictList");
+    if (!list) return;
+    const radios = list.querySelectorAll('input[type="radio"]:checked');
+    const choices = /** @type {string[]} */ ([]);
+    radios.forEach((r) => choices.push(/** @type {HTMLInputElement} */ (r).value));
+    _applyConflictResolutions(choices);
+    closeModal();
+    showToast(t("conflict_resolved"), "success");
+  });
+
   on("pushAllToSheets", async () => {
     showToast(t("sheets_push_all_loading"), "info");
     try {

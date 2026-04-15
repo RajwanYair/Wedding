@@ -5,17 +5,26 @@
  * without circular dependencies. NOT imported by sections directly.
  */
 
-import { SHEETS_WEBAPP_URL as _CONFIG_URL, SPREADSHEET_ID } from "../core/config.js";
+import { SHEETS_WEBAPP_URL as _CONFIG_URL, SPREADSHEET_ID as _CONFIG_SID } from "../core/config.js";
 import { load } from "../core/state.js";
 import { storeGet, storeSet } from "../core/store.js";
 
 /**
- * Runtime-overridable Sheets Web App URL.
+ * Runtime-overridable Sheets Web App URL (S9.3: per-event scoped).
  * @returns {string}
  */
 function _getWebAppUrl() {
   const stored = load("sheetsWebAppUrl", "");
   return (stored && String(stored).trim()) || _CONFIG_URL || "";
+}
+
+/**
+ * Runtime-overridable Spreadsheet ID (S9.3: per-event scoped).
+ * @returns {string}
+ */
+function _getSpreadsheetId() {
+  const stored = load("sheetsSpreadsheetId", "");
+  return (stored && String(stored).trim()) || _CONFIG_SID || "";
 }
 
 // ── Sheet name mapping ──────────────────────────────────────────────────
@@ -309,7 +318,7 @@ export async function pullAllFromSheetsImpl() {
     Object.entries(_SHEET_NAMES).filter(([k]) => k !== "weddingInfo")
   );
   for (const [storeKey, sheetName] of arraySheets) {
-    const rows = await sheetsReadImpl(SPREADSHEET_ID, sheetName);
+    const rows = await sheetsReadImpl(_getSpreadsheetId(), sheetName);
     const valid = rows.filter((r) => r.id != null && String(r.id).trim() !== "");
     const coerced = valid.map((r) => _coerceRecord(r, storeKey));
     // Merge: keep local-only fields (e.g. arrived, checkedIn) for matching IDs
@@ -324,7 +333,7 @@ export async function pullAllFromSheetsImpl() {
   }
 
   // Config sheet: key-value rows → weddingInfo object
-  const configRows = await sheetsReadImpl(SPREADSHEET_ID, _SHEET_NAMES.weddingInfo);
+  const configRows = await sheetsReadImpl(_getSpreadsheetId(), _SHEET_NAMES.weddingInfo);
   /** @type {Record<string, unknown>} */
   const info = {};
   configRows.forEach((row) => {

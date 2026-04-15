@@ -125,7 +125,13 @@
     </div>
     <div class="top-bar-group">
       <span id="topBarCouple"></span>
+      <!-- S9.2 Event switcher (admin only) -->
+      <div class="event-switcher u-hidden" id="eventSwitcher" data-admin-only>
+        <select id="eventSelect" data-action="switchEvent" aria-label="בחר אירוע"></select>
+        <button class="btn-icon btn-xs" id="btnAddEvent" data-action="addNewEvent" title="אירוע חדש">+</button>
+      </div>
       <span id="syncStatusBadge" class="sync-badge" hidden aria-live="polite"></span>
+      <span id="presenceBadge" class="presence-badge u-hidden" data-admin-only title="" aria-live="polite"></span>
       <span id="offlineBadge" class="offline-badge u-hidden"></span>
     </div>
   </div>

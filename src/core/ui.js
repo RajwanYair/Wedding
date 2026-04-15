@@ -78,6 +78,7 @@ const _modalLoaders = {
   expenseModal: () => import("../../src/modals/expenseModal.html?raw"),
   timelineModal: () => import("../../src/modals/timelineModal.html?raw"),
   galleryLightbox: () => import("../../src/modals/galleryLightbox.html?raw"),
+  conflictModal: () => import("../../src/modals/conflictModal.html?raw"),
 };
 
 /**

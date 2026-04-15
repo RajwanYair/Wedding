@@ -3,8 +3,11 @@
  *
  * ES module version of js/store.js. Provides a Proxy-based reactive store
  * with debounced localStorage persistence and subscriber notifications.
+ * Supports multi-event namespacing (S9.1) via dynamic prefix from state.js.
  * No window.* side effects — consumers import and call directly.
  */
+
+import { getActiveEventId } from "./state.js";
 
 /** @type {Map<string, Set<Function>>} */
 const _subs = new Map();
@@ -24,8 +27,17 @@ let _saveTimer = null;
 /** @type {Record<string, unknown>} */
 const _state = {};
 
-/** Storage key prefix */
-const PREFIX = "wedding_v1_";
+/** Base prefix */
+const _BASE_PREFIX = "wedding_v1_";
+
+/**
+ * Get the current storage prefix scoped to the active event.
+ * @returns {string}
+ */
+function _prefix() {
+  const eid = getActiveEventId();
+  return eid === "default" ? _BASE_PREFIX : `${_BASE_PREFIX}evt_${eid}_`;
+}
 
 // ── Subscribers ───────────────────────────────────────────────────────────
 
@@ -73,11 +85,12 @@ function _scheduleSave(key) {
 }
 
 function _flush() {
+  const pfx = _prefix();
   _dirty.forEach((key) => {
     const storageKey = _persistMap.get(key);
     if (!storageKey) return;
     try {
-      localStorage.setItem(PREFIX + storageKey, JSON.stringify(_state[key]));
+      localStorage.setItem(pfx + storageKey, JSON.stringify(_state[key]));
     } catch {}
   });
   _dirty.clear();
@@ -147,4 +160,29 @@ export function storeSet(key, value) {
  */
 export function storeFlush() {
   _flush();
+}
+
+/**
+ * Re-initialise the store with new definitions (S9.1 event switch).
+ * Flushes pending writes for the OLD event, then reloads all keys.
+ * @param {Record<string, { value: unknown, storageKey?: string }>} defs
+ */
+export function reinitStore(defs) {
+  // flush any pending writes to the OLD event before switching
+  _flush();
+  // clear subscriptions and state — subscribers will re-register on section mount
+  for (const key of Object.keys(_state)) {
+    delete _state[key];
+  }
+  _persistMap.clear();
+  _dirty.clear();
+  // reinitialise with new data
+  for (const [key, { value, storageKey }] of Object.entries(defs)) {
+    _state[key] = _reactive(key, value);
+    if (storageKey) _persistMap.set(key, storageKey);
+  }
+  // notify all subscribers that data has changed
+  for (const key of Object.keys(_state)) {
+    _scheduleNotify(key);
+  }
 }

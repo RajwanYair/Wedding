@@ -2,7 +2,7 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v3.9.0-d4a574?style=flat-square)
+![Version](https://img.shields.io/badge/version-v4.0.0-d4a574?style=flat-square)
 ![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
 ![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
 ![Tests](https://img.shields.io/badge/tests-1733%2B_passing-brightgreen?style=flat-square)

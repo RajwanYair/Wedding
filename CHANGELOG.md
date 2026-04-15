@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.0.0] — 2025-07-14
+
+### Added
+
+- **S9 — Multi-Event Support**: event namespace in localStorage, event switcher UI, per-event Google Sheet binding, per-event import/export.
+- **S10 — Real-time Collaboration**: polling-based live sync (30 s interval), conflict resolution modal with field-level diffs, presence indicator (heartbeat system).
+- **Event namespace**: `wedding_v1_evt_{id}_` prefix per event; "default" event preserves backward compat with original `wedding_v1_` prefix.
+- **Event switcher**: dropdown + add/delete buttons in top-bar; section unmount/remount on switch.
+- **Per-event Sheets**: each event can bind its own Spreadsheet ID via localStorage.
+- **Live sync toggle**: checkbox in Settings; preference persisted in localStorage; auto-restores on reload.
+- **Conflict modal**: shows field-level local vs. remote diffs; accept all local/remote or cherry-pick per field.
+- **Presence system**: 60 s heartbeat, 120 s stale threshold; badge shows count of other active users.
+- **`reinitStore()`**: flush + reinitialize store for event switching without page reload.
+- 19 new i18n keys (he + en) for events, conflicts, live sync, and presence.
+
 ## [3.9.0] — 2026-04-15
 
 ### Added

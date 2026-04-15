@@ -28,6 +28,9 @@
 | S5 — GitHub DevOps | Issue/PR templates, Dependabot, branch protection, auto-release | v3.0.0-rc.1 | ✅ Done |
 | S6 — Quality | Coverage-v8, 1407+ tests (106+ suites), coverage gate 80%/70% | v3.0.0-rc.2 | ✅ Done |
 | S7 — Docs + Polish | Instruction files, GUIDE.md v3.8.0, ARCHITECTURE.md mermaid diagrams | v3.8.0 | ✅ Done |
+| S8 — Analytics | Heatmap, funnel, vendor timeline, PDF/CSV export, delivery rate | v3.9.0 | ✅ Done |
+| S9 — Multi-Event | Event namespace, switcher UI, per-event Sheets, import/export | v4.0.0 | ✅ Done |
+| S10 — Real-time | Polling live sync, conflict resolution, presence indicator | v4.0.0 | ✅ Done |
 
 ### Current State (v3.8.0)
 
@@ -93,9 +96,8 @@ Live updates between multiple admin devices.
 | Version | Sprint | Status |
 | --- | --- | --- |
 | v3.0.0–v3.8.0 | S0–S7 | ✅ Released |
-| v3.9.0 | S8 | Planned |
-| v4.0.0 | S9 | Planned |
-| v4.1.0 | S10 | Planned |
+| v3.9.0 | S8 | ✅ Released |
+| v4.0.0 | S9 + S10 | ✅ Released |
 
 ---
 

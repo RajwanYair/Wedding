@@ -157,6 +157,42 @@
   border-bottom: 1px solid rgba(212, 165, 116, 0.1);
 }
 .top-bar-group { display: flex; gap: 0.5rem; align-items: center; }
+
+/* S9.2 Event switcher */
+.event-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  & select {
+    background: var(--bg-card);
+    border: var(--card-border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.82rem;
+    max-width: 150px;
+    cursor: pointer;
+  }
+}
+.btn-xs {
+  width: 26px;
+  height: 26px;
+  font-size: 1rem;
+  padding: 0;
+  line-height: 1;
+}
+
+/* S10.3 Presence badge */
+.presence-badge {
+  background: var(--success);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 10px;
+  cursor: default;
+}
+
 .btn-icon {
   background: var(--bg-card);
   border: var(--card-border);

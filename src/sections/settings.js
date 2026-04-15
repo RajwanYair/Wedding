@@ -8,7 +8,7 @@
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n } from "../core/i18n.js";
-import { save, load } from "../core/state.js";
+import { save, load, getActiveEventId } from "../core/state.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
@@ -134,17 +134,24 @@ export function clearAllData() {
  */
 export function exportJSON() {
   const data = {
+    eventId: getActiveEventId(),
     guests: storeGet("guests") ?? [],
     tables: storeGet("tables") ?? [],
     vendors: storeGet("vendors") ?? [],
     expenses: storeGet("expenses") ?? [],
     weddingInfo: storeGet("weddingInfo") ?? {},
+    gallery: storeGet("gallery") ?? [],
+    timeline: storeGet("timeline") ?? [],
+    contacts: storeGet("contacts") ?? [],
+    budget: storeGet("budget") ?? [],
     exportedAt: new Date().toISOString(),
   };
+  const eid = getActiveEventId();
+  const name = eid === "default" ? "wedding" : eid;
   const blob = new Blob([JSON.stringify(data, null, 2)], {
     type: "application/json",
   });
-  _downloadBlob(blob, "wedding-backup.json");
+  _downloadBlob(blob, `${name}-backup.json`);
 }
 
 /**
@@ -185,6 +192,10 @@ function _readJsonFile(input) {
       if (data.vendors) storeSet("vendors", data.vendors);
       if (data.expenses) storeSet("expenses", data.expenses);
       if (data.weddingInfo) storeSet("weddingInfo", data.weddingInfo);
+      if (data.gallery) storeSet("gallery", data.gallery);
+      if (data.timeline) storeSet("timeline", data.timeline);
+      if (data.contacts) storeSet("contacts", data.contacts);
+      if (data.budget) storeSet("budget", data.budget);
     } catch {
       alert(t("error_invalid_json") || "Invalid JSON file");
     }

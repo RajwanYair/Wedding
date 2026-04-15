@@ -122,6 +122,36 @@ export function mergeLastWriteWins(local, remote) {
   return [...localMap.values()];
 }
 
+/**
+ * S10.2 — Detect conflicts between local and remote arrays.
+ * Returns an array of conflict descriptions where local and remote differ.
+ * @param {any[]} local
+ * @param {any[]} remote
+ * @returns {Array<{ id: string, field: string, localVal: unknown, remoteVal: unknown }>}
+ */
+export function detectConflicts(local, remote) {
+  /** @type {Array<{ id: string, field: string, localVal: unknown, remoteVal: unknown }>} */
+  const conflicts = [];
+  const remoteMap = new Map(remote.map((r) => [String(r.id), r]));
+  for (const localRec of local) {
+    const remoteRec = remoteMap.get(String(localRec.id));
+    if (!remoteRec) continue;
+    const localTs = localRec.updatedAt ?? localRec.createdAt ?? "";
+    const remoteTs = remoteRec.updatedAt ?? remoteRec.createdAt ?? "";
+    // Only flag if both sides changed (different timestamps)
+    if (localTs === remoteTs) continue;
+    for (const key of Object.keys(remoteRec)) {
+      if (key === "updatedAt" || key === "createdAt") continue;
+      const lv = localRec[key];
+      const rv = remoteRec[key];
+      if (JSON.stringify(lv) !== JSON.stringify(rv)) {
+        conflicts.push({ id: String(localRec.id), field: key, localVal: lv, remoteVal: rv });
+      }
+    }
+  }
+  return conflicts;
+}
+
 // ── Backend-delegated sync functions ────────────────────────────────────
 // These keep the same names so that all section imports stay unchanged.
 
@@ -239,3 +269,48 @@ export async function pushAllToSheets() {
  * Re-export for callers that need the current backend type.
  */
 export { getBackendType };
+
+// ── S10.1 Polling-based live sync ─────────────────────────────────────────
+
+/** @type {ReturnType<typeof setInterval> | null} */
+let _pollTimer = null;
+
+/** Default poll interval: 30 seconds */
+const _DEFAULT_POLL_MS = 30_000;
+
+/**
+ * Start polling for remote changes at a configurable interval.
+ * Calls pullFromSheets() silently at each interval.
+ * @param {number} [intervalMs] Poll interval in milliseconds (default 30 000)
+ * @returns {() => void} Stop function
+ */
+export function startLiveSync(intervalMs = _DEFAULT_POLL_MS) {
+  stopLiveSync();
+  _pollTimer = setInterval(async () => {
+    if (!navigator.onLine) return;
+    try {
+      await pullAll();
+    } catch {
+      // silent — next tick will retry
+    }
+  }, intervalMs);
+  return stopLiveSync;
+}
+
+/**
+ * Stop the live sync polling.
+ */
+export function stopLiveSync() {
+  if (_pollTimer !== null) {
+    clearInterval(_pollTimer);
+    _pollTimer = null;
+  }
+}
+
+/**
+ * Check whether live sync is currently active.
+ * @returns {boolean}
+ */
+export function isLiveSyncActive() {
+  return _pollTimer !== null;
+}
