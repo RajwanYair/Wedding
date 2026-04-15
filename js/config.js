@@ -81,7 +81,7 @@ const _weddingDefaults = {
   date: "2026-05-07",
   hebrewDate: "כ' באייר התשפ\"ו",
   time: "18:00",
-  ceremonyTime: "19:30",
+  ceremonyTime: "18:50",
   venue: "",
   address: "",
   wazeLink: "",
