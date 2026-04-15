@@ -231,6 +231,9 @@
     <button class="nav-tab u-hidden" data-tab="settings" data-admin-only data-action="showSection" data-action-arg="settings" data-i18n-tooltip="tip_nav_settings" data-tooltip-pos="down">
       <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
     </button>
+    <button class="nav-tab" data-tab="changelog" data-action="showSection" data-action-arg="changelog" data-i18n-tooltip="tip_nav_changelog" data-tooltip-pos="down">
+      <span>📋</span> <span data-i18n="nav_changelog">עדכונים</span>
+    </button>
   </nav>
 
   <!-- ── Mobile Bottom Navigation ── -->
@@ -262,6 +265,10 @@
     <button class="bottom-nav-item u-hidden" data-tab="vendors" data-admin-only data-action="showSection" data-action-arg="vendors">
       <span class="bn-icon" aria-hidden="true">🏪</span>
       <span data-i18n="nav_vendors">ספקים</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="changelog" data-action="showSection" data-action-arg="changelog">
+      <span class="bn-icon" aria-hidden="true">📋</span>
+      <span data-i18n="nav_changelog">עדכונים</span>
     </button>
     <button class="bottom-nav-item u-hidden" id="btnMobileMore" data-admin-only data-action="toggleMobileNav" aria-expanded="false">
       <span class="bn-icon" aria-hidden="true">≡</span>
@@ -398,6 +405,14 @@
     <div class="section-skeleton" aria-hidden="true"></div>
   </div>
 
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Changelog
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-changelog" role="region" aria-label="שינויים ועדכונים" data-i18n-aria="nav_changelog" data-template="changelog">
+    <!-- S1: content loaded lazily — src/templates/changelog.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
   </main>
 
   <!-- ══════════════════════════════════════════════════════════════════
@@ -434,6 +449,13 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer" role="region" aria-live="polite" aria-atomic="false" aria-label="Notifications"></div>
+
+  <!-- ── Status Bar ── -->
+  <footer class="status-bar" id="statusBar" role="contentinfo">
+    <span id="statusVersion" class="status-bar-item"></span>
+    <span id="statusGas" class="status-bar-item"></span>
+    <span id="statusRole" class="status-bar-item"></span>
+  </footer>
 
   <script type="module" src="./src/main.js"></script>
 </body>

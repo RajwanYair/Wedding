@@ -7,6 +7,7 @@
  */
 
 // ── Foundation layer ──────────────────────────────────────────────────────
+import { APP_VERSION } from "./core/config.js";
 import { initStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import { loadLocale, applyI18n, t } from "./core/i18n.js";
@@ -71,6 +72,7 @@ import * as landingSection from "./sections/landing.js";
 import * as contactSection from "./sections/contact-collector.js";
 import * as registrySection from "./sections/registry.js";
 import * as guestLandingSection from "./sections/guest-landing.js";
+import * as changelogSection from "./sections/changelog.js";
 
 // ── Named imports for event handlers ─────────────────────────────────────
 import {
@@ -173,6 +175,7 @@ const SECTIONS = {
   "contact-form": contactSection,
   registry: registrySection,
   "guest-landing": guestLandingSection,
+  changelog: changelogSection,
 };
 
 /** @type {string|null} currently mounted section name */
@@ -301,6 +304,9 @@ let _activeSection = null;
 
   // 11e. PWA install prompt — invite browser users to install the app
   initInstallPrompt();
+
+  // 11f. Fetch GAS version for status bar (fire-and-forget)
+  _fetchGasVersion();
 })();
 
 // ── Handler registration ──────────────────────────────────────────────────
@@ -974,6 +980,113 @@ function _registerHandlers() {
   });
 }
 
+// ── Status Bar ────────────────────────────────────────────────────────────
+
+/** @type {string} */
+let _gasVersion = "";
+
+/**
+ * Fetch the GAS version once (fire-and-forget) and update the status bar.
+ */
+async function _fetchGasVersion() {
+  try {
+    const url =
+      load("sheetsWebAppUrl", "") ||
+      (await import("./core/config.js")).SHEETS_WEBAPP_URL;
+    if (!url) return;
+    const resp = await fetch(/** @type {string} */ (url), { method: "GET", cache: "no-store" });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    _gasVersion = data?.version ?? "";
+  } catch {
+    _gasVersion = "";
+  }
+  _updateStatusBar(currentUser());
+}
+
+/**
+ * Populate the footer status bar with app version, GAS version and user role.
+ * @param {import('./services/auth.js').AuthUser | null} user
+ */
+function _updateStatusBar(user) {
+  const verEl = document.getElementById("statusVersion");
+  const gasEl = document.getElementById("statusGas");
+  const roleEl = document.getElementById("statusRole");
+  if (verEl) verEl.textContent = `v${APP_VERSION}`;
+  if (gasEl) gasEl.textContent = _gasVersion ? `GAS v${_gasVersion}` : "";
+  if (roleEl) {
+    roleEl.textContent = user?.isAdmin
+      ? `\u2705 ${t("role_admin")}`
+      : `\uD83D\uDC64 ${t("role_guest") || "Guest"}`;
+  }
+}
+
+// ── What's New popup ──────────────────────────────────────────────────────
+
+/** Storage key for last-seen version */
+const _LAST_SEEN_KEY = "wedding_v1_lastSeenVersion";
+
+/**
+ * Show What's New dialog if the user hasn't seen the current version.
+ * Only shown for admin users.
+ * @param {import('./services/auth.js').AuthUser | null} user
+ */
+function _maybeShowWhatsNew(user) {
+  if (!user?.isAdmin) return;
+  const lastSeen = localStorage.getItem(_LAST_SEEN_KEY) ?? "";
+  if (lastSeen === APP_VERSION) return;
+
+  // Build content from the latest changelog entries
+  const items = [
+    "\uD83D\uDCCA Budget sync to Google Sheets (two-way)",
+    "\u2705 Check-in status synced to Sheets",
+    "\uD83D\uDCF1 Richer WhatsApp templates (Hebrew + English)",
+    "\uD83D\uDCCB Status bar with version & GAS info",
+    "\uD83C\uDD95 What's New popup on login",
+    "\uD83D\uDCC4 Changelog tab for all users",
+  ];
+
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.style.cssText = "display:flex;z-index:10000;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)";
+  const card = document.createElement("div");
+  card.className = "card";
+  card.style.cssText = "max-width:420px;width:90%;padding:1.5rem;max-height:80vh;overflow-y:auto";
+  card.innerHTML = "";
+
+  const title = document.createElement("h3");
+  title.style.cssText = "margin:0 0 0.75rem;text-align:center";
+  title.textContent = `\uD83C\uDD95 ${t("whats_new_title") || "What's New"} \u2014 v${APP_VERSION}`;
+  card.appendChild(title);
+
+  const list = document.createElement("ul");
+  list.style.cssText = "padding-inline-start:1.2rem;margin:0 0 1rem;line-height:1.8";
+  items.forEach((txt) => {
+    const li = document.createElement("li");
+    li.textContent = txt;
+    list.appendChild(li);
+  });
+  card.appendChild(list);
+
+  const btn = document.createElement("button");
+  btn.className = "btn btn-primary";
+  btn.style.cssText = "display:block;margin:0 auto";
+  btn.textContent = t("whats_new_dismiss") || "Got it!";
+  btn.addEventListener("click", () => {
+    localStorage.setItem(_LAST_SEEN_KEY, APP_VERSION);
+    overlay.remove();
+  });
+  card.appendChild(btn);
+  overlay.appendChild(card);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      localStorage.setItem(_LAST_SEEN_KEY, APP_VERSION);
+      overlay.remove();
+    }
+  });
+  document.body.appendChild(overlay);
+}
+
 // ── Section lifecycle ─────────────────────────────────────────────────────
 
 // Public-facing sections (no auth required)
@@ -983,6 +1096,7 @@ const PUBLIC_SECTIONS = new Set([
   "contact-form",
   "registry",
   "guest-landing",
+  "changelog",
 ]);
 
 /**
@@ -1017,6 +1131,10 @@ function _updateNavForAuth(user) {
     userAvatar.classList.toggle("u-hidden", !hasPic);
     if (hasPic) userAvatar.src = user?.picture ?? "";
   }
+
+  // Update footer status bar and show What's New on admin login
+  _updateStatusBar(user);
+  _maybeShowWhatsNew(user);
 }
 
 /**

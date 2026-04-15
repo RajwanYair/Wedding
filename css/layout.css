@@ -250,5 +250,30 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Status Bar (footer) ── */
+.status-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0.3rem 1rem;
+  font-size: 0.7rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  background: var(--glass-bg, rgba(10, 5, 30, 0.85));
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  user-select: none;
+
+  & .status-bar-item {
+    white-space: nowrap;
+  }
+}
+/* Push bottom-nav above status bar */
+.bottom-nav { bottom: 1.5rem; }
+
 
 } /* end @layer layout */

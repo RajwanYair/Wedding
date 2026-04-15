@@ -24,3 +24,4 @@ export * as landingSection from "./landing.js";
 export * as contactSection from "./contact-collector.js";
 export * as registrySection from "./registry.js";
 export * as guestLandingSection from "./guest-landing.js";
+export * as changelogSection from "./changelog.js";

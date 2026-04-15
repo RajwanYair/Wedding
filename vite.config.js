@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { copyFileSync } from "node:fs";
 
 // Suppress Node.js '--localstorage-file' warning emitted in Vitest worker forks.
 // NODE_NO_WARNINGS is inherited by child_process.fork() workers.
@@ -10,9 +11,19 @@ if (process.env.VITEST !== undefined) {
 
 const TEMP_BASE = join(tmpdir(), "wedding-dev");
 
+/** Simple Vite plugin to copy CHANGELOG.md into dist/ for runtime fetch. */
+function copyChangelog() {
+  return {
+    name: "copy-changelog",
+    closeBundle() {
+      copyFileSync("CHANGELOG.md", join("dist", "CHANGELOG.md"));
+    },
+  };
+}
+
 export default defineConfig({
   base: "/Wedding/",
-  plugins: [],
+  plugins: [copyChangelog()],
   cacheDir: join(TEMP_BASE, "vite-cache"),
   build: {
     outDir: "dist",

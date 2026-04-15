@@ -1922,5 +1922,30 @@ body.ptr--refreshing::before {
   }
 }
 
+/* ── Changelog content ── */
+.changelog-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  text-align: left;
+
+  & h2, & h3, & h4, & h5 {
+    margin: 1rem 0 0.4rem;
+    color: var(--accent);
+  }
+  & ul {
+    padding-inline-start: 1.4rem;
+    margin: 0.3rem 0;
+  }
+  & li { margin-bottom: 0.15rem; }
+  & code {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    font-size: 0.85em;
+  }
+}
+
 } /* end @layer components */
 

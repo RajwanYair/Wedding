@@ -139,7 +139,9 @@ function _interpolate(template, guest, info) {
 function _defaultTemplate(info) {
   return t("wa_default_template")
     .replace(/\{date\}/g, info.date || "")
-    .replace(/\{venue\}/g, info.venue || "");
+    .replace(/\{venue\}/g, info.venue || "")
+    .replace(/\{groom\}/g, info.groom || "")
+    .replace(/\{bride\}/g, info.bride || "");
 }
 
 /**

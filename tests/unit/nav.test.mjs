@@ -176,12 +176,12 @@ describe("initSwipe", () => {
   });
 
   it("stays on last section when swiping left at end", () => {
-    navigateTo("settings"); // last section
+    navigateTo("changelog"); // last section
     fireTouchEvent(container, "touchstart", 200, 100);
     fireTouchEvent(container, "touchend", 100, 100);
     return new Promise((resolve) => {
       setTimeout(() => {
-        expect(activeSection()).toBe("settings");
+        expect(activeSection()).toBe("changelog");
         resolve();
       }, 50);
     });

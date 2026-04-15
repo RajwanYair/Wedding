@@ -27,6 +27,7 @@ const _sections = [
   "gallery",
   "checkin",
   "settings",
+  "changelog",
 ];
 
 /** @type {string} */
