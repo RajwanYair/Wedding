@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v3.8.0
+# GitHub Copilot Instructions — Wedding Manager v3.8.1
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
@@ -6,7 +6,7 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v3.8.0** |
+| Version | **v3.8.1** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
@@ -15,6 +15,8 @@
 | Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 | Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |
+| Commit rule | After every Copilot chat session **or** completed sprint: `git commit` with clear message + `git push` |
+| Auth providers | Google · Facebook · Apple OAuth + email allowlist + anonymous guest |
 
 ## File Structure
 
@@ -91,6 +93,25 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 4. `npm run lint && npm test` — 0 fail, 0 warn, 0 Node warnings
 5. `git tag vX.Y.Z && git push --tags`
 
+## Pre-Release Checklist
+
+Run before every version tag / GitHub Pages deploy. All items must be green.
+
+| # | Check | Command / Action |
+| --- | --- | --- |
+| 1 | **Zero lint errors/warnings** | `npm run lint` — 0 errors, 0 warnings, 0 Node warnings |
+| 2 | **Zero test failures** | `npm test` — all 1407+ pass, 0 skipped |
+| 3 | **Zero deprecation notices** | No `npm WARN deprecated` in `npm ci` output |
+| 4 | **No dead code/files** | No unused exports, no orphaned templates or JS modules |
+| 5 | **No eval/innerHTML** | CI security scan passes (`js/*.js`, `index.html`) |
+| 6 | **Vite build succeeds** | `npm run build` exits 0; check `dist/` size with `npm run size` |
+| 7 | **SW cache name bumped** | `public/sw.js` `CACHE_NAME` matches new `vX.Y.Z` |
+| 8 | **Docs current** | `CHANGELOG.md` has entry; `README.md` badge matches `package.json` |
+| 9 | **Auth providers confirmed** | Google · Facebook · Apple secrets in GitHub Secrets; email allowlist current |
+| 10 | **Commit + push** | `git commit -m "vX.Y.Z — ..."` + `git push` + `git tag vX.Y.Z && git push --tags` |
+| 11 | **GH issues closed** | Link each resolved issue to commit hash in its closing comment |
+| 12 | **i18n complete** | Every new `t('key')` has both `he` + `en` entries in `js/i18n/*.json` |
+
 ## Known Gotchas
 
 | Area | Rule |
@@ -105,6 +126,9 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 | Vitest | `npm test` only — `pool: "forks"` with `--no-warnings` suppresses happy-dom noise |
 | Lint cache | ESLint + Stylelint use `node_modules/.cache/` — no manual cache files in repo root |
 | node_modules | Shared at `../MyScripts/node_modules/`; CI runs its own `npm ci` |
+| SW update | `initSW()` in `src/core/ui.js` — detects new deployments; shows banner or auto-reloads |
+| Guest default | Guests land on `landing` section; `PUBLIC_SECTIONS` controls no-auth access |
+| Session commit | After every Copilot chat session or sprint: commit with clear message and push |
 
 ## Key Patterns
 

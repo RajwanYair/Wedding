@@ -1,6 +1,6 @@
 # Wedding Manager — Claude Config
 
-> Full spec: `.github/copilot-instructions.md` · v3.8.0
+> Full spec: `.github/copilot-instructions.md` · v3.8.1
 
 ## Commands
 
@@ -18,6 +18,26 @@ npm run build             # Vite build → dist/ (postbuild runs generate-precac
 cd ../MyScripts && npm install
 ```
 
+## Session Commit Rule
+
+After every Copilot chat session or completed sprint:
+```bash
+git add -A && git commit -m "<type>: <summary>" && git push
+```
+- Use conventional commit prefixes: `feat:` `fix:` `chore:` `docs:` `ci:` `style:`
+- Message must reference what changed and why (not just "update files")
+- Pre-release: also `git tag vX.Y.Z && git push --tags`
+
+## Pre-Release Gate (all must be green before tagging)
+
+1. `npm run lint` — 0 errors, 0 warnings, 0 Node warnings
+2. `npm test` — 1407+ pass, 0 fail, 0 skip
+3. `npm run build` — exits 0; `dist/sw.js` CACHE_NAME matches new version
+4. `npm audit --audit-level=high` — 0 high/critical vulnerabilities
+5. All version strings bumped: `package.json`, `src/core/config.js`, `public/sw.js`, `js/config.js`, `tests/wedding.test.mjs`, `CHANGELOG.md`
+6. Both `he` + `en` i18n entries for every new `t('key')`
+7. No dead code, orphaned templates, or stale `eslint-disable` comments
+
 ## Critical Gotchas
 
 | Area | Rule |
@@ -29,6 +49,7 @@ cd ../MyScripts && npm install
 | `vite build` | `npm run build` only — never `npx vite build` |
 | node_modules | Shared at `../MyScripts/node_modules/` — no local copy; CI does its own `npm ci` |
 | Auth credentials | `GOOGLE_CLIENT_ID`, `FB_APP_ID`, `APPLE_SERVICE_ID`, `SHEETS_WEBAPP_URL` in `js/config.js` |
+| Auth (ESM) | `src/core/config.js` `ADMIN_EMAILS` must match `js/config.js` — both are source of truth |
 | GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v3` · `deploy-pages@v4` |
 | `sanitize(input,schema)` | Use for all user input validation — returns `{ value, errors }` |
 | `enqueueWrite(key,fn)` | Use instead of direct `syncStoreKeyToSheets()` calls — debounces at 1.5 s |
@@ -43,3 +64,5 @@ cd ../MyScripts && npm install
 | `postbuild` hook | `generate-precache.mjs` auto-runs after `npm run build` — patches `dist/sw.js` APP_SHELL (S4.4) |
 | Lint cache | ESLint + Stylelint use `node_modules/.cache/` via `--cache-location` flag |
 | Unit test environment | `@vitest-environment happy-dom` required for tests that use DOM APIs |
+| SW update | `initSW()` in `src/core/ui.js` — detects new deployments; shows banner or auto-reloads |
+| Guest default | Guests land on `landing` section; `PUBLIC_SECTIONS` controls no-auth access |

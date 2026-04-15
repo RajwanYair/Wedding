@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v3.8.0
+# Workspace — Wedding Manager v3.8.1
 
 ## Available Resources
 
@@ -13,13 +13,19 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | Instructions | `wedding` (*.html) — HTML patterns; `cicd` (*.yml) — CI/CD standards |
 | MCP | `filesystem` — scoped project read/write; `fetch` — test endpoints |
 
-## Sprint 1 Status (S1.3 complete)
+## Sprint Summary (completed)
 
-- `index.html` reduced from 1773 → **~425 lines** (shell only; sections lazy-loaded)
-- Section HTML extracted to `src/templates/*.html` (15 files)
-- Modal HTML extracted to `src/modals/*.html` (6 files)
-- `js/dom.js` → lazy Proxy (enables runtime template injection)
-- `js/nav.js` → `showSection()` is now `async`; calls `_loadSectionTemplate()` on first visit
+| Sprint | What shipped |
+| --- | --- |
+| S0–1 | HTML shell, lazy templates/modals, ESM nav, Proxy store, section extractions |
+| S2 | Swipe gestures, pull-to-refresh, offline queue, keyboard shortcuts |
+| S3 | Google Sheets sync (`enqueueWrite`/`syncStoreKeyToSheets`), RSVP_Log tab, online resume |
+| S4 | Vite 8 build, SW update banner (`initSW`), coverage gate, Lighthouse CI, SRI |
+| S5 | Auth overlay, Facebook + Apple OAuth, anonymous guest mode, email allowlist |
+| S6 | Visual regression, coverage CI gate, analytics SVG, a11y live regions |
+| S7 | Docs (GUIDE, ARCHITECTURE, CONTRIBUTING), copilot instructions, Supabase backend |
+| S8 | `src/` ESM entry (`src/main.js`), 18 section modules, admin-only nav, landing page, 1407+ tests |
+| Post-S8 | SW update prompt + auto-reload, guest → landing redirect, `anat.rajwan` admin email fix |
 
 ## Detailed File Structure
 
@@ -103,7 +109,7 @@ Wedding/
 │   └── icons/             # Generated PWA icons
 ├── scripts/              # sri-check, inject-config, size-report, send-push, generate-icons
 ├── tests/
-│   ├── wedding.test.mjs   # 1392+ unit tests (106+ suites, Vitest)
+│   ├── wedding.test.mjs   # 1407+ unit tests (106+ suites, Vitest)
 │   └── e2e/smoke.spec.mjs # Playwright smoke tests
 ├── .github/
 │   ├── copilot-instructions.md   # master project spec (always loaded by Copilot)
@@ -149,3 +155,8 @@ Run `npm install` from `../MyScripts` to provision once.
 - No `innerHTML` with unsanitized data
 - No visible text without `data-i18n` / `t()`
 - Never `npx vitest run` — use `npm test` (avoids DEPRECATED cache warning)
+
+## Session Commit Rule
+
+After every Copilot chat session or sprint: `git add -A && git commit -m "<type>: <summary>" && git push`
+Tags for releases: `git tag vX.Y.Z && git push --tags`

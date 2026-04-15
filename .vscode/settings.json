@@ -99,7 +99,7 @@
     "terminal.integrated.shellIntegration.enabled": true,
     // ── ESLint ──
     "eslint.enable": true,
-    "eslint.run": "onType",
+    "eslint.run": "onSave",
     "eslint.validate": [
         "javascript"
     ],
@@ -108,6 +108,7 @@
     },
     "eslint.useFlatConfig": true,
     "eslint.lintTask.enable": true,
+    "eslint.onIgnoredFiles": "off",
     // ── Stylelint ──
     "stylelint.enable": true,
     "stylelint.validate": [
@@ -118,15 +119,15 @@
     ],
     "stylelint.configFile": ".stylelintrc.json",
     // ── markdownlint ──
-    "markdownlint.run": "onType",
+    "markdownlint.run": "onSave",
     "markdownlint.config": {
         "extends": ".markdownlint.json"
     },
     // ── Code actions on save ──
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit",
-        "source.fixAll.stylelint": "explicit",
-        "source.fixAll.markdownlint": "explicit"
+        "source.fixAll.eslint": "always",
+        "source.fixAll.stylelint": "always",
+        "source.fixAll.markdownlint": "always"
     },
     // ── Test Explorer (Vitest) ──
     "vitest.enable": true,
