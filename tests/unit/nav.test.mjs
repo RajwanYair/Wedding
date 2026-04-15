@@ -257,13 +257,13 @@ describe("initKeyboardShortcuts", () => {
   it("navigates to first section on Alt+1", () => {
     const e = new KeyboardEvent("keydown", { key: "1", altKey: true, bubbles: true, cancelable: true });
     document.dispatchEvent(e);
-    expect(activeSection()).toBe("dashboard");
+    expect(activeSection()).toBe("landing");
   });
 
   it("navigates to second section on Alt+2", () => {
     const e = new KeyboardEvent("keydown", { key: "2", altKey: true, bubbles: true, cancelable: true });
     document.dispatchEvent(e);
-    expect(activeSection()).toBe("guests");
+    expect(activeSection()).toBe("dashboard");
   });
 
   it("does not navigate when altKey is false", () => {

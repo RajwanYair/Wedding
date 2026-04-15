@@ -420,5 +420,5 @@ function doGet(e) {
       return jsonResponse({ ok: false, error: err.toString() });
     }
   }
-  return jsonResponse({ ok: true, service: 'Wedding Manager', version: '2.0.0' });
+  return jsonResponse({ ok: true, service: 'Wedding Manager', version: '2.1.0' });
 }

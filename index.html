@@ -188,6 +188,9 @@
 
   <!-- ── Navigation ── -->
   <nav class="nav-tabs" id="navTabs" role="navigation" aria-label="ניווט ראשי">
+    <button class="nav-tab" data-tab="landing" data-action="showSection" data-action-arg="landing" data-i18n-tooltip="tip_nav_landing" data-tooltip-pos="down">
+      <span>🏠</span> <span data-i18n="nav_landing">בית</span>
+    </button>
     <button class="nav-tab u-hidden" data-tab="dashboard" data-admin-only data-action="showSection" data-action-arg="dashboard" data-i18n-tooltip="tip_nav_dashboard" data-tooltip-pos="down">
       <span>📊</span> <span data-i18n="nav_dashboard">לוח בקרה</span>
     </button>
@@ -204,7 +207,7 @@
     <button class="nav-tab u-hidden" data-tab="whatsapp" data-admin-only data-action="showSection" data-action-arg="whatsapp" data-i18n-tooltip="tip_nav_whatsapp" data-tooltip-pos="down">
       <span>📱</span> <span data-i18n="nav_whatsapp">וואטסאפ</span>
     </button>
-    <button class="nav-tab active" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp" data-i18n-tooltip="tip_nav_rsvp" data-tooltip-pos="down">
+    <button class="nav-tab" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp" data-i18n-tooltip="tip_nav_rsvp" data-tooltip-pos="down">
       <span>✅</span> <span data-i18n="nav_rsvp">אישור הגעה</span>
     </button>
     <button class="nav-tab u-hidden" data-tab="budget" data-admin-only data-action="showSection" data-action-arg="budget" data-i18n-tooltip="tip_nav_budget" data-tooltip-pos="down">
@@ -232,6 +235,10 @@
 
   <!-- ── Mobile Bottom Navigation ── -->
   <nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="ניווט תחתון">
+    <button class="bottom-nav-item" data-tab="landing" data-action="showSection" data-action-arg="landing">
+      <span class="bn-icon" aria-hidden="true">🏠</span>
+      <span data-i18n="nav_landing">בית</span>
+    </button>
     <button class="bottom-nav-item u-hidden" data-tab="dashboard" data-admin-only data-action="showSection" data-action-arg="dashboard">
       <span class="bn-icon" aria-hidden="true">📊</span>
       <span data-i18n="nav_dashboard">לוח בקרה</span>
@@ -244,7 +251,7 @@
       <span class="bn-icon" aria-hidden="true">📅</span>
       <span data-i18n="nav_timeline">לוח זמנים</span>
     </button>
-    <button class="bottom-nav-item active" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp">
+    <button class="bottom-nav-item" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp">
       <span class="bn-icon" aria-hidden="true">✅</span>
       <span data-i18n="nav_rsvp">אישור הגעה</span>
     </button>
@@ -268,6 +275,14 @@
          ══════════════════════════════════════════════════════════════════ -->
     <div class="section" id="sec-landing" role="region" aria-label="בית" data-i18n-aria="nav_landing" data-template="landing">
     <!-- S1: content loaded lazily — src/templates/landing.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Guest Personalised Landing (?guestId=xxx invitation link)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-guest-landing" role="region" aria-label="ההזמנה שלך" data-i18n-aria="guest_landing_title" data-template="guest-landing">
+    <!-- S1: content loaded lazily — src/templates/guest-landing.html -->
     <div class="section-skeleton" aria-hidden="true"></div>
   </div>
 

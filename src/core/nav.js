@@ -14,6 +14,7 @@
  * @type {string[]}
  */
 const _sections = [
+  "landing",
   "dashboard",
   "guests",
   "tables",
