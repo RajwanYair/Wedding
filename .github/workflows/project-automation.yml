@@ -65,7 +65,7 @@ jobs:
     if: github.event_name == 'issues' || github.event_name == 'pull_request'
     steps:
       - name: Mark and close stale issues/PRs
-        uses: actions/stale@v9
+        uses: actions/stale@v10
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: >

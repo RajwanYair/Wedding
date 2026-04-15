@@ -52,7 +52,7 @@ git add -A && git commit -m "<type>: <summary>" && git push
 | node_modules | Shared at `../MyScripts/node_modules/` — no local copy; CI does its own `npm ci` |
 | Auth credentials | `GOOGLE_CLIENT_ID`, `FB_APP_ID`, `APPLE_SERVICE_ID`, `SHEETS_WEBAPP_URL` in `js/config.js` |
 | Auth (ESM) | `src/core/config.js` `ADMIN_EMAILS` must match `js/config.js` — both are source of truth |
-| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v3` · `deploy-pages@v4` |
+| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
 | `sanitize(input,schema)` | Use for all user input validation — returns `{ value, errors }` |
 | `enqueueWrite(key,fn)` | Use instead of direct `syncStoreKeyToSheets()` calls — debounces at 1.5 s |
 | Tests count | 1407+ tests, 106+ suites — update header comment in `wedding.test.mjs` when adding |

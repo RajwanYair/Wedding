@@ -118,7 +118,7 @@ Run before every version tag / GitHub Pages deploy. All items must be green.
 | --- | --- |
 | ESLint scope | `js/` excluded from linting; `src/` uses `^_` varsIgnorePattern |
 | Stylelint fonts | lowercase: `tahoma` ✅; multi-word: `"Segoe UI"` ✅ |
-| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v3` · `deploy-pages@v4` |
+| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
 | OAuth globals | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs` |
 | RSVP flow | `lookupRsvpByPhone()` fires on phone input; phone-first lookup |
 | Sheets sync | `enqueueWrite(key, fn)` only — never call `syncStoreKeyToSheets` directly |
