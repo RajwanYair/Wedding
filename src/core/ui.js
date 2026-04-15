@@ -70,13 +70,45 @@ export function showToast(message, type = "info", duration = _TOAST_DURATION) {
 
 let _modalOpener = /** @type {HTMLElement | null} */ (null);
 
+/** @type {Record<string, () => Promise<{ default: string }>>} */
+const _modalLoaders = {
+  guestModal: () => import("../../src/modals/guestModal.html?raw"),
+  tableModal: () => import("../../src/modals/tableModal.html?raw"),
+  vendorModal: () => import("../../src/modals/vendorModal.html?raw"),
+  expenseModal: () => import("../../src/modals/expenseModal.html?raw"),
+  timelineModal: () => import("../../src/modals/timelineModal.html?raw"),
+  galleryLightbox: () => import("../../src/modals/galleryLightbox.html?raw"),
+};
+
 /**
- * Open a modal by ID, trapping focus inside it.
+ * Lazy-load modal HTML into an empty shell div on first open.
+ * @param {HTMLElement} modal
  * @param {string} modalId
  */
-export function openModal(modalId) {
+async function _ensureModalLoaded(modal, modalId) {
+  if (modal.dataset.loaded === "1") return;
+  const loader = _modalLoaders[modalId];
+  if (!loader) return;
+  try {
+    const { default: html } = await loader();
+    modal.innerHTML = html; // safe: templates from src/modals/ (no user input)
+    modal.dataset.loaded = "1";
+    const { applyI18n } = await import("./i18n.js");
+    applyI18n(modal);
+  } catch {
+    // template unavailable — modal will remain empty
+  }
+}
+
+/**
+ * Open a modal by ID, trapping focus inside it.
+ * Lazy-loads modal HTML template on first open.
+ * @param {string} modalId
+ */
+export async function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (!modal) return;
+  await _ensureModalLoaded(modal, modalId);
   _modalOpener = /** @type {HTMLElement | null} */ (document.activeElement);
   modal.hidden = false;
   modal.classList.remove("auth-hidden");

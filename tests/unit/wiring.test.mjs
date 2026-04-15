@@ -31,6 +31,7 @@ const HTML = readFileSync(resolve(root, "index.html"), "utf8");
 const TEMPLATE_LOADER = readFileSync(resolve(root, "src", "core", "template-loader.js"), "utf8");
 const NAV_JS = readFileSync(resolve(root, "src", "core", "nav.js"), "utf8");
 const MAIN_JS = readFileSync(resolve(root, "src", "main.js"), "utf8");
+const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
 const BARREL = readFileSync(resolve(root, "src", "sections", "index.js"), "utf8");
 const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets-impl.js"), "utf8");
 const I18N_HE = JSON.parse(readFileSync(resolve(root, "js", "i18n", "he.json"), "utf8"));
@@ -282,5 +283,88 @@ describe("Wiring: no orphaned templates", () => {
     it(`template file "${name}.html" has a sec-${name} container in HTML`, () => {
       expect(htmlContainers).toContain(name);
     });
+  });
+});
+
+// ── Extract additional data ───────────────────────────────────────────────────
+
+/** Extract all unique data-action values from a source string */
+function extractDataActions(src) {
+  return [...new Set([...src.matchAll(/data-action="([a-zA-Z]+)"/g)].map((m) => m[1]))];
+}
+
+/** Extract all on("X", ...) handler registrations from main.js */
+function extractHandlers() {
+  return [...new Set([...MAIN_JS.matchAll(/on\("([a-zA-Z]+)"/g)].map((m) => m[1]))];
+}
+
+/** Extract _modalLoaders keys from ui.js */
+function extractModalLoaderKeys() {
+  const block = UI_JS.match(/const _modalLoaders\s*=\s*\{([\s\S]*?)\};/);
+  if (!block) return [];
+  return [...block[1].matchAll(/([a-zA-Z]+)\s*:/g)].map((m) => m[1]);
+}
+
+const registeredHandlers = extractHandlers();
+const modalLoaderKeys = extractModalLoaderKeys();
+
+// Collect data-actions from all template + modal HTML files
+const allTemplateHtml = readdirSync(resolve(root, "src", "templates"))
+  .filter((f) => f.endsWith(".html"))
+  .map((f) => readFileSync(resolve(root, "src", "templates", f), "utf8"))
+  .join("\n");
+const allModalHtml = readdirSync(resolve(root, "src", "modals"))
+  .filter((f) => f.endsWith(".html"))
+  .map((f) => readFileSync(resolve(root, "src", "modals", f), "utf8"))
+  .join("\n");
+
+describe("Wiring: data-action handlers registered", () => {
+  // Every data-action in index.html needs a handler
+  const htmlActions = extractDataActions(HTML);
+  htmlActions.forEach((action) => {
+    it(`main.js has on("${action}") for index.html`, () => {
+      expect(registeredHandlers).toContain(action);
+    });
+  });
+
+  // Every data-action in section templates needs a handler
+  const templateActions = extractDataActions(allTemplateHtml);
+  templateActions.forEach((action) => {
+    it(`main.js has on("${action}") for section templates`, () => {
+      expect(registeredHandlers).toContain(action);
+    });
+  });
+
+  // Every data-action in modal templates needs a handler
+  const modalActions = extractDataActions(allModalHtml);
+  modalActions.forEach((action) => {
+    it(`main.js has on("${action}") for modal templates`, () => {
+      expect(registeredHandlers).toContain(action);
+    });
+  });
+});
+
+describe("Wiring: modal lazy-loading", () => {
+  // Every modal shell in index.html with data-modal should have a loader
+  const modalShells = [...HTML.matchAll(/data-modal="([a-zA-Z]+)"/g)].map((m) => m[1]);
+
+  modalShells.forEach((modalId) => {
+    it(`_modalLoaders has entry for data-modal="${modalId}"`, () => {
+      expect(modalLoaderKeys).toContain(modalId);
+    });
+    it(`src/modals/${modalId}.html exists on disk`, () => {
+      expect(existsSync(resolve(root, "src", "modals", `${modalId}.html`))).toBe(true);
+    });
+  });
+});
+
+describe("Wiring: embedded sub-sections", () => {
+  it("budget mount also mounts expenses sub-section", () => {
+    expect(MAIN_JS).toContain('name === "budget"');
+    expect(MAIN_JS).toContain("SECTIONS.expenses?.mount");
+  });
+  it("budget unmount also unmounts expenses sub-section", () => {
+    expect(MAIN_JS).toContain('_activeSection === "budget"');
+    expect(MAIN_JS).toContain("SECTIONS.expenses?.unmount");
   });
 });

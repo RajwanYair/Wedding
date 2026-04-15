@@ -396,6 +396,11 @@ function _registerHandlers() {
   on("toggleMobileNav", () => toggleMobileNav());
 
   // ── Modals ──
+  on("closeModal", (el) => closeModal(el.dataset.actionArg ?? ""));
+  on("closeGalleryLightbox", () => {
+    const lb = document.getElementById("galleryLightbox");
+    if (lb) lb.remove();
+  });
   on("openAddGuestModal", () => {
     const idEl = /** @type {HTMLInputElement|null} */ (
       document.getElementById("guestModalId")
@@ -1156,6 +1161,10 @@ async function _switchSection(name) {
 
   if (_activeSection && _activeSection !== name) {
     SECTIONS[_activeSection]?.unmount?.();
+    // Expenses is embedded in budget — unmount alongside it
+    if (_activeSection === "budget") {
+      SECTIONS.expenses?.unmount?.();
+    }
   }
   _activeSection = name;
 
@@ -1186,5 +1195,11 @@ async function _switchSection(name) {
 
   // Mount section module
   SECTIONS[name]?.mount?.(container);
+
+  // Expenses is a sub-section embedded inside budget — mount alongside it
+  if (name === "budget") {
+    SECTIONS.expenses?.mount?.(container);
+  }
+
   storeSet("activeSection", name);
 }

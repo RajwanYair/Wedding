@@ -5381,7 +5381,7 @@ describe("Sprint 0: src/core named exports", function () {
       "utf8",
     );
     assert.ok(src.includes("export function showToast"));
-    assert.ok(src.includes("export function openModal"));
+    assert.ok(src.includes("export async function openModal"));
   });
   it("src/core/nav.js exports navigateTo and initRouter", function () {
     const src = readFileSync(
