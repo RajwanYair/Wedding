@@ -46,6 +46,7 @@ import {
   createMissingSheetTabs,
   onSyncStatus,
   initOnlineSync,
+  pullFromSheets,
 } from "./services/sheets.js";
 
 // ── Section modules (lifecycle) ───────────────────────────────────────────
@@ -779,6 +780,16 @@ function _registerHandlers() {
   on("createMissingSheetTabs", async () => {
     await createMissingSheetTabs();
     showToast(t("sheets_tabs_created"), "success");
+  });
+  on("pullFromSheets", async () => {
+    if (!confirm(t("sheets_pull_confirm"))) return;
+    showToast(t("toast_sheets_loading"), "info");
+    try {
+      await pullFromSheets();
+      showToast(t("sheets_pull_success"), "success");
+    } catch {
+      showToast(t("sheets_pull_error"), "error");
+    }
   });
   on("saveWebAppUrl", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (

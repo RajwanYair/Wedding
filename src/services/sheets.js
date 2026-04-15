@@ -14,6 +14,7 @@ import {
   appendRsvpLog,
   checkConnection,
   createMissingTabs,
+  pullAll,
   getBackendType,
 } from "./backend.js";
 
@@ -213,6 +214,14 @@ export async function createMissingSheetTabs() {
  */
 export async function appendToRsvpLog(entry) {
   return appendRsvpLog(entry);
+}
+
+/**
+ * Pull all sheets data into the local store (two-way sync: Sheets → App).
+ * @returns {Promise<Record<string, number>>}  counts per store key
+ */
+export async function pullFromSheets() {
+  return pullAll();
 }
 
 /**

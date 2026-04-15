@@ -21,6 +21,8 @@ let _sheetLog = null;
 let _sheetCheck = null;
 /** @type {typeof import('./sheets.js').createMissingSheetTabs | null} */
 let _sheetCreate = null;
+/** @type {typeof import('./sheets-impl.js').pullAllFromSheetsImpl | null} */
+let _sheetPull = null;
 
 /** @type {typeof import('./supabase.js').syncStoreKeyToSupabase | null} */
 let _sbSync = null;
@@ -50,6 +52,7 @@ async function _loadSheetsModule() {
   _sheetLog = m.appendToRsvpLogImpl;
   _sheetCheck = m.sheetsCheckConnectionImpl;
   _sheetCreate = m.createMissingSheetTabsImpl;
+  _sheetPull = m.pullAllFromSheetsImpl;
 }
 
 async function _loadSupabaseModule() {
@@ -120,4 +123,15 @@ export async function createMissingTabs() {
     return _sheetCreate?.();
   }
   return undefined;
+}
+
+/**
+ * Pull all data from the active backend into the local store.
+ * Sheets-only — no-op for Supabase or none.
+ * @returns {Promise<Record<string, number>>}
+ */
+export async function pullAll() {
+  if (getBackendType() !== "sheets") return {};
+  await _loadSheetsModule();
+  return _sheetPull?.() ?? {};
 }

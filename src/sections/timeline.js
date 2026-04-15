@@ -9,6 +9,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -45,6 +46,7 @@ export function saveTimelineItem(data, existingId = null) {
   }
   items.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
   storeSet("timeline", items);
+  enqueueWrite("timeline", () => syncStoreKeyToSheets("timeline"));
   return { ok: true };
 }
 
@@ -56,6 +58,7 @@ export function deleteTimelineItem(id) {
       (i) => i.id !== id,
     ),
   );
+  enqueueWrite("timeline", () => syncStoreKeyToSheets("timeline"));
 }
 
 export function renderTimeline() {

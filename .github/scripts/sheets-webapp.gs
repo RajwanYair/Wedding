@@ -47,7 +47,7 @@
 
 const SPREADSHEET_ID = '1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA';
 
-const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log'];
+const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log', 'Timeline'];
 
 /* ── Index constants for Attendees columns (must match GUEST_COLS in config.js) ── */
 var COL = {

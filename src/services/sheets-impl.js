@@ -5,9 +5,9 @@
  * without circular dependencies. NOT imported by sections directly.
  */
 
-import { SHEETS_WEBAPP_URL as _CONFIG_URL } from "../core/config.js";
+import { SHEETS_WEBAPP_URL as _CONFIG_URL, SPREADSHEET_ID } from "../core/config.js";
 import { load } from "../core/state.js";
-import { storeGet } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
 
 /**
  * Runtime-overridable Sheets Web App URL.
@@ -25,6 +25,7 @@ const _SHEET_NAMES = {
   tables: "Tables",
   vendors: "Vendors",
   expenses: "Expenses",
+  timeline: "Timeline",
   weddingInfo: "Config",
 };
 
@@ -72,6 +73,7 @@ const _COL_ORDER = {
     "createdAt",
   ],
   expenses: ["id", "category", "description", "amount", "date", "createdAt"],
+  timeline: ["id", "time", "title", "note", "icon"],
 };
 
 /**
@@ -113,8 +115,19 @@ export async function syncStoreKeyToSheetsImpl(storeKey) {
   if (!_getWebAppUrl()) return;
   const sheetName = _SHEET_NAMES[storeKey];
   if (!sheetName) return;
-  const records = /** @type {any[]} */ (storeGet(storeKey) ?? []);
-  const rows = records.map((r) => _recordToRow(r, storeKey));
+  let rows;
+  if (storeKey === "weddingInfo") {
+    // Single config object → key-value rows with header (enables GViz pull)
+    const obj = /** @type {Record<string, unknown>} */ (storeGet(storeKey) ?? {});
+    rows = [["key", "value"], ...Object.entries(obj).map(([k, v]) => [k, v ?? ""])];
+  } else {
+    const cols = _COL_ORDER[storeKey];
+    const records = /** @type {any[]} */ (storeGet(storeKey) ?? []);
+    // Prepend header row so GViz can map column names when pulling
+    rows = cols
+      ? [cols, ...records.map((r) => _recordToRow(r, storeKey))]
+      : records.map((r) => _recordToRow(r, storeKey));
+  }
   await sheetsPostImpl({ action: "replaceAll", sheet: sheetName, rows });
 }
 
@@ -196,4 +209,86 @@ function _gvizToRows(data) {
     });
     return obj;
   });
+}
+
+// ── Pull from Sheets (two-way sync) ────────────────────────────────────────
+
+/** @type {Record<string, string[]>} */
+const _NUM_FIELDS = {
+  guests: ["count", "children"],
+  tables: ["capacity"],
+  vendors: ["price", "paid"],
+  expenses: ["amount"],
+  timeline: [],
+};
+
+/** @type {Record<string, string[]>} */
+const _BOOL_FIELDS = {
+  guests: ["sent", "accessibility"],
+};
+
+/**
+ * Coerce GViz-returned field types to their expected JS types.
+ * @param {Record<string, unknown>} row
+ * @param {string} storeKey
+ * @returns {Record<string, unknown>}
+ */
+function _coerceRecord(row, storeKey) {
+  const out = { ...row };
+  (_NUM_FIELDS[storeKey] ?? []).forEach((f) => {
+    if (out[f] != null && out[f] !== "") out[f] = Number(out[f]) || 0;
+  });
+  (_BOOL_FIELDS[storeKey] ?? []).forEach((f) => {
+    if (typeof out[f] === "string") {
+      out[f] = out[f].toLowerCase() === "true" || out[f] === "1";
+    }
+  });
+  return out;
+}
+
+/**
+ * Pull all data from Google Sheets via GViz and merge into the local store.
+ * Requires the spreadsheet to be shared ("Anyone with the link can view").
+ * Sheets must have been pushed at least once (to establish column header rows).
+ * @returns {Promise<Record<string, number>>}  counts of records per store key
+ */
+export async function pullAllFromSheetsImpl() {
+  /** @type {Record<string, number>} */
+  const results = {};
+
+  // Array sheets: pull each tab and merge by id
+  const arraySheets = /** @type {Array<[string, string]>} */ (
+    Object.entries(_SHEET_NAMES).filter(([k]) => k !== "weddingInfo")
+  );
+  for (const [storeKey, sheetName] of arraySheets) {
+    const rows = await sheetsReadImpl(SPREADSHEET_ID, sheetName);
+    const valid = rows.filter((r) => r.id != null && String(r.id).trim() !== "");
+    const coerced = valid.map((r) => _coerceRecord(r, storeKey));
+    // Merge: keep local-only fields (e.g. arrived, checkedIn) for matching IDs
+    const existing = /** @type {any[]} */ (storeGet(storeKey) ?? []);
+    const localMap = new Map(existing.map((r) => [String(r.id), r]));
+    const merged = coerced.map((sheetRow) => {
+      const local = localMap.get(String(sheetRow.id));
+      return local ? { ...local, ...sheetRow } : sheetRow;
+    });
+    storeSet(storeKey, merged);
+    results[storeKey] = merged.length;
+  }
+
+  // Config sheet: key-value rows → weddingInfo object
+  const configRows = await sheetsReadImpl(SPREADSHEET_ID, _SHEET_NAMES.weddingInfo);
+  /** @type {Record<string, unknown>} */
+  const info = {};
+  configRows.forEach((row) => {
+    const key = String(row.key ?? "").trim();
+    const val = row.value ?? "";
+    if (key) info[key] = val;
+  });
+  if (Object.keys(info).length > 0) {
+    const current = /** @type {Record<string, unknown>} */ (storeGet("weddingInfo") ?? {});
+    storeSet("weddingInfo", { ...current, ...info });
+    results.weddingInfo = Object.keys(info).length;
+  }
+
+  return results;
 }
