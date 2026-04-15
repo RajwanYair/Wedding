@@ -8,6 +8,14 @@
  * Node's built-in fetch (undici) does not forward system proxy env vars.
  * JSON bodies are written to temp files to avoid shell quoting issues on Windows.
  *
+ * ⚠ On Intel corporate machines (proxy-dmz.intel.com:912), curl POST to
+ *   script.google.com may be blocked ("Access is denied").
+ *   Use the PowerShell companion instead — it uses Invoke-RestMethod which
+ *   honours the Windows system proxy and is confirmed to work:
+ *
+ *     .\scripts\test-sheets.ps1             # run all tests
+ *     .\scripts\test-sheets.ps1 -Cleanup   # also remove test rows after run
+ *
  * Usage:  node scripts/test-sheets.mjs
  */
 
