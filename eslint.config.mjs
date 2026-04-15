@@ -1,10 +1,16 @@
+import js from "@eslint/js";
+
 export default [
+  { ignores: ["js/"] },
+  js.configs.recommended,
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: "error",
+    },
     languageOptions: {
       ecmaVersion: 2025,
-      sourceType: "script",
+      sourceType: "module",
       globals: {
-        /* ── Browser APIs ── */
         window: "readonly",
         document: "readonly",
         navigator: "readonly",
@@ -29,6 +35,7 @@ export default [
         HTMLElement: "readonly",
         KeyboardEvent: "readonly",
         Event: "readonly",
+        MouseEvent: "readonly",
         CustomEvent: "readonly",
         DOMParser: "readonly",
         location: "readonly",
@@ -49,333 +56,15 @@ export default [
         btoa: "readonly",
         atob: "readonly",
         structuredClone: "readonly",
-        // Third-party auth SDKs (loaded via <script> in index.html)
         FB: "readonly",
         AppleID: "readonly",
         google: "readonly",
-
-        /* ── Cross-file shared identifiers (multi-file global scope) ── */
-        // config.js — constants & state variables
-        STORAGE_PREFIX: "writable",
-        GOOGLE_CLIENT_ID: "writable",
-        FB_APP_ID: "writable",
-        APPLE_SERVICE_ID: "writable",
-        ADMIN_EMAILS: "writable",
-        _SESSION_TTL_MS: "writable",
-        _MAX_LOGIN_ATTEMPTS: "writable",
-        _LOGIN_LOCKOUT_MS: "writable",
-        SPREADSHEET_ID: "writable",
-        SHEETS_GUESTS_TAB: "writable",
-        SHEETS_TABLES_TAB: "writable",
-        SHEETS_CONFIG_TAB: "writable",
-        SHEETS_WEBAPP_URL: "writable",
-        SHEETS_SYNC_INTERVAL_MS: "writable",
-        SHEETS_SCOPE: "writable",
-        GUEST_COLS: "writable",
-        TABLE_COLS: "writable",
-        THEMES: "writable",
-        _guests: "writable",
-        _tables: "writable",
-        _weddingDefaults: "writable",
-        _weddingInfo: "writable",
-        _invitationDataUrl: "writable",
-        _currentFilter: "writable",
-        _sideFilter: "writable",
-        _sortCol: "writable",
-        _sortAsc: "writable",
-        _editingGuestId: "writable",
-        _editingTableId: "writable",
-        _currentLang: "writable",
-        _currentTheme: "writable",
-        _themeIndex: "writable",
-        _isLightMode: "writable",
-        _authUser: "writable",
-        _sheetsToken: "writable",
-        _sheetsTokenClient: "writable",
-        _approvedEmails: "writable",
-        // i18n.js
-        I18N: "writable",
-        // dom.js
-        el: "writable",
-        // state.js
-        save: "writable",
-        load: "writable",
-        saveAll: "writable",
-        loadAll: "writable",
-        migrateGuests: "writable",
-        // utils.js
-        uid: "writable",
-        guestFullName: "writable",
-        escapeHtml: "writable",
-        sanitizeInput: "writable",
-        isValidHttpsUrl: "writable",
-        cleanPhone: "writable",
-        formatDateHebrew: "writable",
-        initParticles: "writable",
-        // ui.js
-        t: "writable",
-        applyLanguage: "writable",
-        toggleLanguage: "writable",
-        cycleTheme: "writable",
-        toggleLightMode: "writable",
-        _applyThemeClasses: "writable",
-        openModal: "writable",
-        closeModal: "writable",
-        showToast: "writable",
-        printGuests: "writable",
-        showUpdateBanner: "writable",
-        applyUpdate: "writable",
-        // nav.js
-        showSection: "writable",
-        // dashboard.js
-        updateTopBar: "writable",
-        updateHeaderInfo: "writable",
-        renderStats: "writable",
-        renderCountdown: "writable",
-        cdItem: "writable",
-        STATUS_ICON: "writable",
-        SIDE_ICON: "writable",
-        MEAL_ICON: "writable",
-        renderCharts: "writable",
-        _drawDonut: "writable",
-        _buildLegend: "writable",
-        // guests.js
-        renderGuests: "writable",
-        filterGuests: "writable",
-        setFilter: "writable",
-        setSideFilter: "writable",
-        sortGuestsBy: "writable",
-        openAddGuestModal: "writable",
-        editGuest: "writable",
-        saveGuest: "writable",
-        deleteGuest: "writable",
-        // tables.js
-        renderTables: "writable",
-        renderUnassignedGuests: "writable",
-        handleTableDrop: "writable",
-        openAddTableModal: "writable",
-        editTable: "writable",
-        saveTable: "writable",
-        deleteTable: "writable",
-        getTableName: "writable",
-        populateTableSelect: "writable",
-        // invitation.js
-        handleInvitationUpload: "writable",
-        renderInvitation: "writable",
-        renderDefaultInvitationSVG: "writable",
-        DEFAULT_INVITATION_SRC: "writable",
-        // whatsapp.js
-        updateWaPreview: "writable",
-        fillTemplate: "writable",
-        sendWhatsAppSingle: "writable",
-        sendWhatsAppAll: "writable",
-        renderWaGuestList: "writable",
-        // rsvp.js
-        submitRSVP: "writable",
-        lookupRsvpByPhone: "writable",
-        // settings.js
-        updateWeddingDetails: "writable",
-        loadWeddingDetailsToForm: "writable",
-        exportGuestsCSV: "writable",
-        exportJSON: "writable",
-        importJSON: "writable",
-        downloadCSVTemplate: "writable",
-        importCSV: "writable",
-        parseCsvLine: "writable",
-        clearAllData: "writable",
-        renderDataSummary: "writable",
-        // sheets.js
-        initSheetsTokenClient: "writable",
-        requestSheetsAccess: "writable",
-        sheetsRequest: "writable",
-        sheetsGvizRead: "writable",
-        guestToRow: "writable",
-        rowToGuest: "writable",
-        tableToRow: "writable",
-        rowToTable: "writable",
-        loadFromSheetsOnInit: "writable",
-        startSheetsAutoSync: "writable",
-        stopSheetsAutoSync: "writable",
-        syncGuestsToSheets: "writable",
-        syncTablesToSheets: "writable",
-        syncConfigToSheets: "writable",
-        sheetsAppendRsvp: "writable",
-        updateSheetsStatusBadge: "writable",
-        saveWebAppUrl: "writable",
-        renderSheetsSettings: "writable",
-        createMissingSheetTabs: "writable",
-        syncSheetsNow: "writable",
-        // budget.js
-        parseGiftAmount: "writable",
-        giftReceived: "writable",
-        renderBudget: "writable",
-        renderBudgetTable: "writable",
-        throttledSaveGift: "writable",
-        saveBudgetTarget: "writable",
-        // auth.js
-        isApprovedAdmin: "writable",
-        loadAuthConfig: "writable",
-        saveAuthConfig: "writable",
-        submitEmailLogin: "writable",
-        _loginAttemptOk: "writable",
-        _recordLoginFailure: "writable",
-        _clearLoginFailures: "writable",
-        addApprovedEmail: "writable",
-        removeApprovedEmail: "writable",
-        renderUserManager: "writable",
-        _buildEmailRow: "writable",
-        loginGuest: "writable",
-        signOut: "writable",
-        showAuthOverlay: "writable",
-        hideAuthOverlay: "writable",
-        updateUserBar: "writable",
-        applyUserLevel: "writable",
-        onAuthSuccess: "writable",
-        initAuth: "writable",
-        // app.js — SW helpers
-        _handleUpdateDetected: "writable",
-        _pageOpenedAt: "writable",
-        _hiddenAt: "writable",
-        _swReg: "writable",
-        _AUTO_REFRESH_AFTER_MS: "writable",
-        // analytics.js
-        renderAnalytics: "writable",
-        polarToXY: "writable",
-        arcPath: "writable",
-        buildDonutSVG: "writable",
-        buildBarRow: "writable",
-        buildLegend: "writable",
-        _renderRsvpDonut: "writable",
-        _renderSideChart: "writable",
-        _renderMealChart: "writable",
-        _renderSentChart: "writable",
-        _renderHeadcountSummary: "writable",
-        handleGoogleCredential: "writable",
-        initGoogleSignIn: "writable",
-        loadFBSDK: "writable",
-        loginFacebook: "writable",
-        loadAppleSDK: "writable",
-        loginApple: "writable",
-        // timeline.js
-        _timeline: "writable",
-        _editingTimelineId: "writable",
-        renderTimeline: "writable",
-        openAddTimelineModal: "writable",
-        openEditTimelineModal: "writable",
-        saveTimelineItem: "writable",
-        deleteTimelineItem: "writable",
-        // settings.js QR
-        renderRsvpQr: "writable",
-        printRsvpQr: "writable",
-        copyRsvpLink: "writable",
-        // nav.js
-        toggleMobileNav: "writable",
-        // dashboard.js
-        animateCounter: "writable",
-        // router.js
-        initRouter: "writable",
-        _routerPush: "writable",
-        _routerHandleHash: "writable",
-        _ROUTER_VALID: "writable",
-        // guest-landing.js
-        renderGuestLanding: "writable",
-        _renderLandingHero: "writable",
-        _renderLandingTimeline: "writable",
-        // expenses.js
-        _expenses: "writable",
-        _editingExpenseId: "writable",
-        EXPENSE_CATEGORIES: "writable",
-        renderExpenses: "writable",
-        openAddExpenseModal: "writable",
-        openEditExpenseModal: "writable",
-        saveExpense: "writable",
-        deleteExpense: "writable",
-        getTotalExpenses: "writable",
-        _buildExpenseCategoryOptions: "writable",
-        // invitation.js — venue map
-        renderVenueMap: "writable",
-        // sheets.js — smart polling
-        _sheetsVisibilityHandler: "writable",
-        // registry.js
-        renderRegistrySettings: "writable",
-        addRegistryLink: "writable",
-        removeRegistryLink: "writable",
-        renderRegistryLinks: "writable",
-        // checkin.js
-        renderCheckin: "writable",
-        _renderCheckinStats: "writable",
-        _renderCheckinList: "writable",
-        toggleCheckin: "writable",
-        searchCheckin: "writable",
-        findTable: "writable",
-        // gallery.js
-        _gallery: "writable",
-        GALLERY_MAX_PX: "writable",
-        GALLERY_QUALITY: "writable",
-        renderGallery: "writable",
-        openGalleryUpload: "writable",
-        handleGalleryUpload: "writable",
-        deleteGalleryPhoto: "writable",
-        _compressGalleryImage: "writable",
-        _galleryLightboxPhoto: "writable",
-        _openGalleryLightbox: "writable",
-        _closeGalleryLightbox: "writable",
-        closeGalleryLightbox: "writable",
-        // ui.js — print functions
-        printPlaceCards: "writable",
-        printTableSigns: "writable",
-        // contact-collector.js
-        renderContactForm: "writable",
-        submitContactForm: "writable",
-        copyContactLink: "writable",
-        renderContactSettings: "writable",
-        // offline-queue.js
-        _offlineQueue: "writable",
-        enqueueOfflineRsvp: "writable",
-        flushOfflineQueue: "writable",
-        initOfflineQueue: "writable",
-        getOfflineQueueCount: "writable",
-        _updateOfflineBadge: "writable",
-        // audit.js
-        _auditLog: "writable",
-        logAudit: "writable",
-        renderAuditLog: "writable",
-        clearAuditLog: "writable",
-        // error-monitor.js
-        _clientErrors: "writable",
-        logClientError: "writable",
-        renderErrorLog: "writable",
-        clearErrorLog: "writable",
-        initErrorMonitor: "writable",
-        // sheets.js cross-file helper (used in offline-queue/contact-collector/error-monitor)
-        _sheetsWebAppPost: "readonly",
-        // email.js
-        _emailSettings: "writable",
-        loadEmailSettings: "writable",
-        saveEmailSettings: "writable",
-        sendRsvpConfirmation: "writable",
-        sendAdminRsvpNotify: "writable",
-        renderEmailSettings: "writable",
-        initEmailNotifications: "writable",
-        // push.js
-        VAPID_PUBLIC_KEY: "writable",
-        _pushEnabled: "writable",
-        _pushSubscription: "writable",
-        subscribePush: "writable",
-        unsubscribePush: "writable",
-        renderPushSettings: "writable",
-        initPushNotifications: "writable",
-        // state.js — external config loader
-        loadExternalConfig: "writable",
       },
     },
     rules: {
-      // ── Security ──────────────────────────────────────────────────
       "no-eval": "error",
       "no-implied-eval": "error",
       "no-new-func": "error",
-
-      // ── Correctness ───────────────────────────────────────────────
       "no-undef": "error",
       "no-dupe-args": "error",
       "no-dupe-keys": "error",
@@ -387,35 +76,21 @@ export default [
       "no-redeclare": ["error", { builtinGlobals: false }],
       "no-empty": ["error", { allowEmptyCatch: true }],
       eqeqeq: ["error", "smart"],
-
-      // ── Modernisation ─────────────────────────────────────────────
       "no-var": "error",
       "prefer-const": "error",
-
-      // ── Unused variables ──────────────────────────────────────────
-      // Multi-file architecture: each file declares functions & constants
-      // that are consumed by other files via shared global scope.
-      // The pattern covers all naming conventions used across modules.
+      "prefer-template": "error",
+      "object-shorthand": ["error", "always"],
+      "no-console": ["warn", { allow: ["error", "warn"] }],
+      // src/ uses ^_ convention for intentionally unused identifiers (S0.12)
       "no-unused-vars": [
         "error",
         {
-          varsIgnorePattern:
-            "^_|^[A-Z]|^el$|^t$|^uid$|^cd" +
-            "|^load|^render|^init|^toggle|^update|^handle" +
-            "|^show|^hide|^open|^close|^add|^remove|^save|^delete" +
-            "|^export|^import|^send|^cycle|^filter|^set|^sort|^edit" +
-            "|^submit|^download|^clear|^print|^login|^sign|^sync" +
-            "|^guest|^escape|^clean|^sanitize|^isValid|^format|^parse|^fill|^row|^decode" +
-            "|^apply|^migrate|^sheets|^table|^popup|^get|^populate" +
-            "|^start|^stop|^request|^create|^lookup|^copy|^animate|^search|^find" +
-            "|^log|^enqueue|^flush|^queue",
+          varsIgnorePattern: "^_",
           argsIgnorePattern: "^_|^e$|^k$",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",
         },
       ],
-
-      // ── Style ─────────────────────────────────────────────────────
       "no-prototype-builtins": "error",
       "no-inner-declarations": "error",
       "no-throw-literal": "error",
@@ -425,8 +100,19 @@ export default [
       "no-useless-return": "error",
       "no-lone-blocks": "error",
       "no-lonely-if": "error",
-      "prefer-template": "off",
-      "object-shorthand": "off",
     },
+  },
+  // Build/utility scripts + vite config — Node environment, console and process allowed
+  {
+    files: ["scripts/**", "vite.config.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        Buffer: "readonly",
+      },
+    },
+    rules: { "no-console": "off" },
   },
 ];

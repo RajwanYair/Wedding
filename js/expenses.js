@@ -1,3 +1,4 @@
+// @ts-check
 "use strict";
 
 /* ── Expense Tracker (v1.15.0) ───────────────────────────────────────────────
@@ -19,18 +20,18 @@ const EXPENSE_CATEGORIES = [
 /** Populate the category <select> with translated options */
 function _buildExpenseCategoryOptions(selectEl) {
   if (!selectEl) return;
-  selectEl.innerHTML = "";
+  selectEl.replaceChildren();
   EXPENSE_CATEGORIES.forEach(function (cat) {
     const opt = document.createElement("option");
     opt.value = cat;
-    opt.textContent = t("expense_cat_" + cat);
+    opt.textContent = window.t(`expense_cat_${  cat}`);
     selectEl.appendChild(opt);
   });
 }
 
 /** Sum of all expense amounts */
 function getTotalExpenses() {
-  return _expenses.reduce(function (s, e) {
+  return window._expenses.reduce(function (s, e) {
     return s + (parseFloat(e.amount) || 0);
   }, 0);
 }
@@ -46,22 +47,23 @@ function renderExpenses() {
 
   /* Show/hide admin controls */
   if (adminBar)
-    adminBar.style.display = _authUser && _authUser.isAdmin ? "" : "none";
+    adminBar.style.display =
+      window._authUser && window._authUser.isAdmin ? "" : "none";
 
   const total = getTotalExpenses();
   if (totalEl)
     totalEl.textContent =
-      total > 0 ? "\u20aa" + total.toLocaleString() : "\u2014";
+      total > 0 ? `\u20aa${  total.toLocaleString()}` : "\u2014";
 
-  container.innerHTML = "";
+  container.replaceChildren();
 
-  if (!_expenses.length) {
+  if (!window._expenses.length) {
     if (emptyMsg) emptyMsg.style.display = "";
     return;
   }
   if (emptyMsg) emptyMsg.style.display = "none";
 
-  const sorted = _expenses.slice().sort(function (a, b) {
+  const sorted = window._expenses.slice().sort(function (a, b) {
     return (b.date || "").localeCompare(a.date || "");
   });
 
@@ -69,7 +71,7 @@ function renderExpenses() {
     const row = document.createElement("tr");
 
     const catTd = document.createElement("td");
-    catTd.textContent = t("expense_cat_" + (exp.category || "misc"));
+    catTd.textContent = window.t(`expense_cat_${  exp.category || "misc"}`);
     row.appendChild(catTd);
 
     const descTd = document.createElement("td");
@@ -84,18 +86,18 @@ function renderExpenses() {
     const amtTd = document.createElement("td");
     amtTd.style.textAlign = "end";
     amtTd.textContent = exp.amount
-      ? "\u20aa" + parseFloat(exp.amount).toLocaleString()
+      ? `\u20aa${  parseFloat(exp.amount).toLocaleString()}`
       : "\u2014";
     row.appendChild(amtTd);
 
-    if (_authUser && _authUser.isAdmin) {
+    if (window._authUser && window._authUser.isAdmin) {
       const actTd = document.createElement("td");
       actTd.style.textAlign = "center";
 
       const editBtn = document.createElement("button");
       editBtn.className = "btn-icon-sm";
       editBtn.textContent = "\u270f\ufe0f";
-      editBtn.setAttribute("aria-label", t("btn_edit"));
+      editBtn.setAttribute("aria-label", window.t("btn_edit"));
       const expId = exp.id;
       editBtn.onclick = function () {
         openEditExpenseModal(expId);
@@ -105,7 +107,7 @@ function renderExpenses() {
       const delBtn = document.createElement("button");
       delBtn.className = "btn-icon-sm";
       delBtn.textContent = "\ud83d\uddd1\ufe0f";
-      delBtn.setAttribute("aria-label", t("btn_delete"));
+      delBtn.setAttribute("aria-label", window.t("btn_delete"));
       delBtn.onclick = function () {
         deleteExpense(expId);
       };
@@ -119,12 +121,12 @@ function renderExpenses() {
 }
 
 function openAddExpenseModal() {
-  _editingExpenseId = null;
+  window._editingExpenseId = null;
 
   const titleEl = document.getElementById("expenseModalTitle");
   if (titleEl) {
     titleEl.setAttribute("data-i18n", "expense_add");
-    titleEl.textContent = t("expense_add");
+    titleEl.textContent = window.t("expense_add");
   }
 
   const catEl = document.getElementById("expenseCategory");
@@ -138,20 +140,20 @@ function openAddExpenseModal() {
   if (amtEl) amtEl.value = "";
   if (dateEl) dateEl.value = new Date().toISOString().slice(0, 10);
 
-  openModal("expenseModal");
+  window.openModal("expenseModal");
 }
 
 function openEditExpenseModal(id) {
-  const exp = _expenses.find(function (e) {
+  const exp = window._expenses.find(function (e) {
     return e.id === id;
   });
   if (!exp) return;
-  _editingExpenseId = id;
+  window._editingExpenseId = id;
 
   const titleEl = document.getElementById("expenseModalTitle");
   if (titleEl) {
     titleEl.setAttribute("data-i18n", "expense_edit");
-    titleEl.textContent = t("expense_edit");
+    titleEl.textContent = window.t("expense_edit");
   }
 
   const catEl = document.getElementById("expenseCategory");
@@ -165,7 +167,7 @@ function openEditExpenseModal(id) {
   if (amtEl) amtEl.value = exp.amount != null ? String(exp.amount) : "";
   if (dateEl) dateEl.value = exp.date || "";
 
-  openModal("expenseModal");
+  window.openModal("expenseModal");
 }
 
 function saveExpense() {
@@ -176,43 +178,43 @@ function saveExpense() {
 
   const amount = parseFloat((amtEl ? amtEl.value : "") || "0");
   if (!amount || amount <= 0) {
-    showToast(t("expense_required"), "error");
+    window.showToast(window.t("expense_required"), "error");
     return;
   }
 
-  if (_editingExpenseId) {
-    const idx = _expenses.findIndex(function (e) {
-      return e.id === _editingExpenseId;
+  if (window._editingExpenseId) {
+    const idx = window._expenses.findIndex(function (e) {
+      return e.id === window._editingExpenseId;
     });
     if (idx >= 0) {
-      _expenses[idx].category = catEl ? catEl.value : "misc";
-      _expenses[idx].description = descEl
-        ? sanitizeInput(descEl.value, 100)
+      window._expenses[idx].category = catEl ? catEl.value : "misc";
+      window._expenses[idx].description = descEl
+        ? window.sanitizeInput(descEl.value, 100)
         : "";
-      _expenses[idx].amount = amount;
-      _expenses[idx].date = dateEl ? dateEl.value : "";
+      window._expenses[idx].amount = amount;
+      window._expenses[idx].date = dateEl ? dateEl.value : "";
     }
   } else {
-    _expenses.push({
-      id: uid(),
+    window._expenses.push({
+      id: window.uid(),
       category: catEl ? catEl.value : "misc",
-      description: descEl ? sanitizeInput(descEl.value, 100) : "",
-      amount: amount,
+      description: descEl ? window.sanitizeInput(descEl.value, 100) : "",
+      amount,
       date: dateEl ? dateEl.value : "",
     });
   }
 
-  saveAll();
-  closeModal("expenseModal");
+  window.saveAll();
+  window.closeModal("expenseModal");
   renderExpenses();
-  showToast(t("expense_saved"));
+  window.showToast(window.t("expense_saved"));
 }
 
 function deleteExpense(id) {
-  _expenses = _expenses.filter(function (e) {
+  window._expenses = window._expenses.filter(function (e) {
     return e.id !== id;
   });
-  saveAll();
+  window.saveAll();
   renderExpenses();
-  showToast(t("expense_deleted"));
+  window.showToast(window.t("expense_deleted"));
 }

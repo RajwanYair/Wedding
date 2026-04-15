@@ -1,0 +1,88 @@
+# =============================================================================
+# GitHub Projects v2 Automation (S5.6)
+# Auto-labels issues/PRs and moves project cards based on activity.
+# Requires: `GH_PROJECT_TOKEN` secret with `project` + `read:org` scopes,
+#           and `PROJECT_ID` variable (numeric node-id of the board).
+#           Without secrets the labeling steps still run with GITHUB_TOKEN.
+# =============================================================================
+
+name: Project Automation
+
+on:
+  issues:
+    types: [opened, closed, reopened, labeled]
+  pull_request:
+    types:
+      [opened, closed, reopened, ready_for_review, converted_to_draft, labeled]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Auto-label by content keywords
+  # ---------------------------------------------------------------------------
+  label:
+    name: Auto-label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label issues and PRs
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          sync-labels: false
+        continue-on-error: true
+
+  # ---------------------------------------------------------------------------
+  # Auto-add to project board (requires GH_PROJECT_TOKEN + PROJECT_NUMBER var)
+  # ---------------------------------------------------------------------------
+  add-to-project:
+    name: Add to Project Board
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'issues' && github.event.action == 'opened') ||
+      (github.event_name == 'pull_request' && github.event.action == 'opened')
+    steps:
+      - name: Add issue/PR to project
+        if: vars.PROJECT_NUMBER != ''
+        uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/projects/${{ vars.PROJECT_NUMBER }}
+          github-token: ${{ secrets.GH_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+  # ---------------------------------------------------------------------------
+  # Stale issue / PR management
+  # ---------------------------------------------------------------------------
+  stale:
+    name: Mark Stale Items
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' || github.event_name == 'pull_request'
+    steps:
+      - name: Mark and close stale issues/PRs
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: >
+            This issue has been open for 60 days with no activity. It will be
+            closed in 7 days unless updated. If this issue is still relevant,
+            please comment or remove the `stale` label.
+          stale-pr-message: >
+            This pull request has been open for 30 days with no activity. It will
+            be closed in 7 days unless updated.
+          close-issue-message: "Closing due to inactivity. Reopen if still relevant."
+          close-pr-message: "Closing due to inactivity. Reopen if still relevant."
+          days-before-stale: 60
+          days-before-pr-stale: 30
+          days-before-close: 7
+          stale-issue-label: stale
+          stale-pr-label: stale
+          exempt-issue-labels: "pinned,security,blocked"
+          exempt-pr-labels: "pinned,security,blocked"
+          operations-per-run: 50
+        continue-on-error: true

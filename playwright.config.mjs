@@ -1,5 +1,9 @@
 // @ts-check
 import { defineConfig, devices } from "@playwright/test";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+
+const TEMP_BASE = join(tmpdir(), "wedding-dev");
 
 /**
  * Wedding Manager — Playwright E2E configuration.
@@ -12,6 +16,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests/e2e",
+  outputDir: join(TEMP_BASE, "playwright-results"),
 
   /* One minute per test; generous for slow CI containers */
   timeout: 60_000,
@@ -38,8 +43,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    /* npx serve is available since serve is a devDependency */
-    command: "npx serve . --listen 3000 --no-clipboard",
+    /* Serve the Vite build output */
+    command: "npx vite preview --port 3000",
     url: "http://localhost:3000",
     /* Reuse an existing server in local dev; always start fresh in CI */
     reuseExistingServer: !process.env.CI,

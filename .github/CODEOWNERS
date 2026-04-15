@@ -1,7 +1,21 @@
 # CODEOWNERS — Wedding Manager
 # =============================================================================
+# Default owner for everything
 * @RajwanYair
 
+# GitHub workflows & config — always requires review
 /.github/ @RajwanYair
+
+# Security-critical JS modules
+/js/auth.js @RajwanYair
+/js/config.js @RajwanYair
+/js/rsvp.js @RajwanYair
+/js/state.js @RajwanYair
+
+# Core CSS variables — theme changes need careful review
+/css/variables.css @RajwanYair
+
+# Entry points & docs
 /index.html @RajwanYair
 /README.md @RajwanYair
+/CHANGELOG.md @RajwanYair

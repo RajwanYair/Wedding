@@ -1,70 +1,45 @@
-# Wedding Manager — Claude Project Config
+# Wedding Manager — Claude Config
 
-> Full spec in `.github/copilot-instructions.md`. This file: minimal fast-load context.
+> Full spec: `.github/copilot-instructions.md` · v3.8.0
 
 ## Commands
 
 ```bash
-npm test                             # 535 tests (71 suites) — must all pass
-npm run lint                         # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
-npm run lint:fix                     # Auto-fix CSS + JS
-npm run ci                           # lint + test (same as CI)
-npm run test:e2e                     # Playwright smoke tests (Chromium)
-npm run size                         # Bundle size report with gzip
-npm run sri                          # SHA-384 integrity hashes for local assets
+npm test                  # 1407+ tests (106+ suites) — must all pass · 0 Node warnings
+npm run lint              # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
+npm run lint:fix          # Auto-fix CSS + JS
+npm run ci                # lint + test (same as CI)
+npm run test:e2e          # Playwright smoke + visual regression (Chromium)
+npm run test:coverage     # Vitest with V8 coverage (gates enforced in CI — S6.11)
+npm run size              # Bundle size report with gzip
+npm run sri               # SHA-384 integrity hashes for local assets
+npm run build             # Vite build → dist/ (postbuild runs generate-precache)
+# Provision shared node_modules (one-time):
+cd ../MyScripts && npm install
 ```
 
-## Architecture (v1.19.0 — modular)
+## Critical Gotchas
 
-| Path | Role |
+| Area | Rule |
 | --- | --- |
-| `index.html` | HTML shell — links `css/` + `js/` |
-| `css/` (6 files) | variables · base · layout · components · responsive · print |
-| `js/` (32 files) | config · i18n · dom · state · utils · ui · nav · dashboard · guests · tables · invitation · whatsapp · rsvp · settings · sheets · auth · analytics · app · timeline · gallery · checkin · registry · expenses · contact-collector · offline-queue · audit · error-monitor · email · push · router · guest-landing |
-| `sw.js` | Stale-while-revalidate + push + notificationclick handlers |
-| `scripts/` | sri-check · inject-config · size-report · send-push · generate-icons |
-| `manifest.json` | PWA manifest |
-| `tests/wedding.test.mjs` | 535 unit tests — 71 suites (Node built-in runner) |
-| `tests/e2e/` | Playwright smoke tests |
-| `playwright.config.mjs` | Playwright config with Chromium + `serve` webServer |
-
-## Auth Setup
-
-Credentials go in `js/config.js`:
-
-```js
-const GOOGLE_CLIENT_ID  = "YOUR_ID.apps.googleusercontent.com"; // console.cloud.google.com
-const FB_APP_ID         = "";   // developers.facebook.com
-const APPLE_SERVICE_ID  = "";   // developer.apple.com
-const SHEETS_WEBAPP_URL = "";   // Apps Script Web App URL — required for sheet writes
-```
-
-Google GIS SDK is loaded as `<script>` in `index.html`. Facebook and Apple SDKs are loaded dynamically by `loadFBSDK()` / `loadAppleSDK()` in `auth.js` when their App ID / Service ID is set. All OAuth providers check `isApprovedAdmin(email)` — the email allowlist is the single authorization source.
-
-## Mandatory Rules
-
-1. `textContent` only — never `innerHTML` with dynamic data
-2. Every new visible string: `data-i18n="key"` on HTML, `t('key')` in JS — both `he`+`en` required
-3. All colors via CSS custom properties — never hardcode
-4. All DOM refs via `el` object — no inline `getElementById`
-5. All data in `localStorage` with `wedding_v1_` prefix
-6. `npm run lint` must exit 0 after every change
-
-## Version Bump Checklist
-
-1. `js/config.js`, `sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
-2. `CHANGELOG.md` — new entry; `README.md` — badge
-3. `npm run lint && node --test tests/wedding.test.mjs` — 0 failures
-4. `git tag vX.Y.Z && git push --tags`
-
-## Key Patterns
-
-```js
-t('key')                              // i18n lookup
-data-i18n="key"                       // HTML binding
-saveAll()                             // persists guests + tables + weddingInfo
-cleanPhone('054-123-4567')            // → '972541234567'  (wa.me ready)
-_oauthLogin(email, name, pic, prov)   // central OAuth success handler
-lookupRsvpByPhone()                   // phone-first RSVP: fired oninput; pre-fills or reveals form
-renderAnalytics()                     // SVG donut + bar chart analytics section
-```
+| Vite entry | **`src/main.js`** is the entry point — `js/main.js` is legacy; `vite-plugin-legacy-globals.mjs` is removed |
+| ESLint scope | `js/` excluded from linting; `src/` uses `^_` varsIgnorePattern only |
+| Font keywords | Stylelint: lowercase `tahoma` ✅ `Tahoma` ❌; multi-word `"Segoe UI"` ✅ |
+| Vitest | `npm test` only — `pool: "forks"` + `--no-warnings` in vite.config.js |
+| `vite build` | `npm run build` only — never `npx vite build` |
+| node_modules | Shared at `../MyScripts/node_modules/` — no local copy; CI does its own `npm ci` |
+| Auth credentials | `GOOGLE_CLIENT_ID`, `FB_APP_ID`, `APPLE_SERVICE_ID`, `SHEETS_WEBAPP_URL` in `js/config.js` |
+| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v3` · `deploy-pages@v4` |
+| `sanitize(input,schema)` | Use for all user input validation — returns `{ value, errors }` |
+| `enqueueWrite(key,fn)` | Use instead of direct `syncStoreKeyToSheets()` calls — debounces at 1.5 s |
+| Tests count | 1407+ tests, 106+ suites — update header comment in `wedding.test.mjs` when adding |
+| ESLint disable | Any `// eslint-disable` must reference a real violation — stale ones error (`reportUnusedDisableDirectives`) |
+| Offline queue retries | `_MAX_RETRIES = 5`, `_RETRY_BASE_MS = 10_000` in `js/offline-queue.js` (S3.9) |
+| GAS backend | `sheets-webapp.gs` v2.0.0 — `ALLOWED_SHEETS` includes Vendors/Expenses/RSVP_Log (S3.5) |
+| Lighthouse | `.lighthouserc.json` — performance/a11y/seo/best-practices at `error`/0.90+ (S4.9) |
+| Coverage gate | `continue-on-error` removed from CI coverage step — failures block CI (S6.11) |
+| Visual regression | `tests/e2e/visual.spec.mjs` — run `--update-snapshots` first time (S6.9) |
+| Quote style | Source uses double-quotes; test `JS.includes()` calls must match — use `'case "string"'` not `"case 'string'"` |
+| `postbuild` hook | `generate-precache.mjs` auto-runs after `npm run build` — patches `dist/sw.js` APP_SHELL (S4.4) |
+| Lint cache | ESLint + Stylelint use `node_modules/.cache/` via `--cache-location` flag |
+| Unit test environment | `@vitest-environment happy-dom` required for tests that use DOM APIs |

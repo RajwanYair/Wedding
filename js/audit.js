@@ -1,3 +1,4 @@
+// @ts-check
 "use strict";
 
 /* ── Audit Log (Sprint 4.3) ───────────────────────────────────────────────────
@@ -18,11 +19,14 @@ function logAudit(action, detail) {
     ts: new Date().toISOString(),
     action: String(action).slice(0, 50),
     detail: String(detail || "").slice(0, 200),
-    user: _authUser ? _authUser.email || _authUser.name || "admin" : "guest",
+    user: window._authUser
+      ? window._authUser.email || window._authUser.name || "admin"
+      : "guest",
   };
-  _auditLog.unshift(entry); /* newest first */
-  if (_auditLog.length > _AUDIT_MAX) _auditLog.length = _AUDIT_MAX;
-  save("audit", _auditLog);
+  window._auditLog.unshift(entry); /* newest first */
+  if (window._auditLog.length > _AUDIT_MAX)
+    window._auditLog.length = _AUDIT_MAX;
+  window.save("audit", window._auditLog);
 }
 
 /**
@@ -32,22 +36,22 @@ function renderAuditLog() {
   const tbody = document.getElementById("auditLogBody");
   if (!tbody) return;
 
-  if (_auditLog.length === 0) {
-    tbody.innerHTML = "";
+  if (window._auditLog.length === 0) {
+    tbody.replaceChildren();
     const tr = document.createElement("tr");
     const td = document.createElement("td");
     td.colSpan = 4;
     td.className = "empty-state";
     td.style.padding = "1rem";
     td.setAttribute("data-i18n", "audit_empty");
-    td.textContent = t("audit_empty");
+    td.textContent = window.t("audit_empty");
     tr.appendChild(td);
     tbody.appendChild(tr);
     return;
   }
 
-  tbody.innerHTML = "";
-  _auditLog.slice(0, 100).forEach(function (entry) {
+  tbody.replaceChildren();
+  window._auditLog.slice(0, 100).forEach(function (entry) {
     const tr = document.createElement("tr");
 
     /* Timestamp */
@@ -56,17 +60,18 @@ function renderAuditLog() {
       "font-size:0.75em; white-space:nowrap; direction:ltr; color:var(--text-muted);";
     const d = new Date(entry.ts);
     tdTs.textContent =
-      d.toLocaleDateString("he-IL") +
-      " " +
-      d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
+      `${d.toLocaleDateString("he-IL") 
+      } ${ 
+      d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })}`;
 
     /* Action badge */
     const tdAction = document.createElement("td");
     const badge = document.createElement("span");
     badge.className =
-      "audit-action-badge audit-" +
-      (entry.action || "other").replace(/_/g, "-");
-    badge.textContent = t("audit_action_" + entry.action) || entry.action;
+      `audit-action-badge audit-${ 
+      (entry.action || "other").replace(/_/g, "-")}`;
+    badge.textContent =
+      window.t(`audit_action_${  entry.action}`) || entry.action;
     tdAction.appendChild(badge);
 
     /* Detail */
@@ -87,10 +92,10 @@ function renderAuditLog() {
 
 /** Clear all audit entries (admin only). */
 function clearAuditLog() {
-  if (!_authUser || !_authUser.isAdmin) return;
-  if (!confirm(t("audit_clear_confirm"))) return;
-  _auditLog = [];
-  save("audit", _auditLog);
+  if (!window._authUser || !window._authUser.isAdmin) return;
+  if (!confirm(window.t("audit_clear_confirm"))) return;
+  window._auditLog = [];
+  window.save("audit", window._auditLog);
   renderAuditLog();
-  showToast(t("audit_cleared"), "success");
+  window.showToast(window.t("audit_cleared"), "success");
 }

@@ -1,5 +1,12 @@
+/* ── CSS Layer Order Declaration ── */
+@layer variables, base, layout, components, auth, responsive, print;
+
 /* ── CSS Custom Properties ── */
+@layer variables {
+
 :root {
+  color-scheme: dark light;
+
   /* Colors — elegant wedding palette */
   --bg-primary: #0f0520;
   --bg-secondary: #1a0a2e;
@@ -124,4 +131,6 @@ body.light-mode.theme-royal {
   --text-secondary: rgba(10, 21, 48, 0.68);
   --text-muted: rgba(10, 21, 48, 0.38);
 }
+
+} /* end @layer variables */
 

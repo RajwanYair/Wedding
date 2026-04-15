@@ -1,3 +1,5 @@
+@layer print {
+
 /* ── Print Styles (v1.16.0) ──────────────────────────────────────────────────
    Optimised print layouts for: guest list, place cards, table signs.
    Load order: after components.css and before auth.css.
@@ -170,3 +172,6 @@
     display: none;
   }
 }
+
+
+} /* end @layer print */

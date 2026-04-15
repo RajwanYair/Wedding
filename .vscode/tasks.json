@@ -42,9 +42,9 @@
       }
     },
     {
-      "label": "Test: Unit (535 tests)",
-      "type": "shell",
-      "command": "node --test tests/wedding.test.mjs",
+      "label": "Test: Unit (1407+ tests)",
+      "type": "npm",
+      "script": "test",
       "group": {
         "kind": "test",
         "isDefault": true

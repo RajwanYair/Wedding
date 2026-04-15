@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 /* ── Budget & Gift Tracker ── */
@@ -21,11 +22,11 @@ function giftReceived(g) {
 
 /** Render the full Budget & Gift section */
 function renderBudget() {
-  const totalBudget = _weddingInfo.giftBudget || 0;
-  const recipients = _guests.filter(function (g) {
+  const totalBudget = window._weddingInfo.giftBudget || 0;
+  const recipients = window._guests.filter(function (g) {
     return g.status !== "declined";
   });
-  const withGift = _guests.filter(giftReceived);
+  const withGift = window._guests.filter(giftReceived);
   const totalAmount = withGift.reduce(function (s, g) {
     return s + parseGiftAmount(g.gift);
   }, 0);
@@ -57,21 +58,21 @@ function renderBudget() {
   if (statGifts) statGifts.textContent = withGift.length;
   if (statTotal)
     statTotal.textContent =
-      totalAmount > 0 ? "₪" + totalAmount.toLocaleString() : "—";
+      totalAmount > 0 ? `₪${  totalAmount.toLocaleString()}` : "—";
   if (statPend) statPend.textContent = pending.length;
   if (statBudget)
     statBudget.textContent =
-      totalBudget > 0 ? "₪" + totalBudget.toLocaleString() : "—";
-  if (statPct) statPct.textContent = totalBudget > 0 ? pct + "%" : "—";
+      totalBudget > 0 ? `₪${  totalBudget.toLocaleString()}` : "—";
+  if (statPct) statPct.textContent = totalBudget > 0 ? `${pct  }%` : "—";
   if (bar) {
-    bar.style.width = pct + "%";
+    bar.style.width = `${pct  }%`;
     bar.style.background = fillColor;
   }
   if (barWrap) barWrap.style.display = totalBudget > 0 ? "block" : "none";
 
   /* ── gift table rows ── */
   renderBudgetTable(); /* ── expense tracker ── */
-  renderExpenses();
+  window.renderExpenses();
 }
 
 function renderBudgetTable() {
@@ -79,17 +80,19 @@ function renderBudgetTable() {
   const empty    = document.getElementById('budgetEmpty');
   if (!tbody) return;
 
-  const rows = _guests
-    .filter(function(g) { return g.status !== 'declined'; })
-    .sort(function(a, b) {
+  const rows = window._guests
+    .filter(function (g) {
+      return g.status !== "declined";
+    })
+    .sort(function (a, b) {
       /* received first, then alphabetical */
       const ar = giftReceived(a) ? 0 : 1;
       const br = giftReceived(b) ? 0 : 1;
       if (ar !== br) return ar - br;
-      return guestFullName(a).localeCompare(guestFullName(b));
+      return window.guestFullName(a).localeCompare(window.guestFullName(b));
     });
 
-  tbody.innerHTML = '';
+  tbody.replaceChildren();
   if (rows.length === 0) {
     if (empty) empty.style.display = 'block';
     return;
@@ -108,10 +111,10 @@ function renderBudgetTable() {
 
     /* Name cell */
     const tdName = document.createElement('td');
-    tdName.innerHTML = sideIcon + ' ' + escapeHtml(guestFullName(g));
+    tdName.textContent = `${sideIcon  } ${  window.guestFullName(g)}`;
     if (g.count && g.count > 1) {
       const sup = document.createElement('sup');
-      sup.textContent = ' ×' + g.count;
+      sup.textContent = ` ×${  g.count}`;
       sup.style.cssText = 'font-size:0.7em; color:var(--text-muted);';
       tdName.appendChild(sup);
     }
@@ -128,8 +131,8 @@ function renderBudgetTable() {
     inp.className = 'gift-input';
     inp.value = g.gift || '';
     inp.setAttribute('data-i18n-placeholder', 'budget_gift_placeholder');
-    inp.placeholder = t('budget_gift_placeholder');
-    inp.setAttribute('aria-label', t('budget_gift_placeholder'));
+    inp.placeholder = window.t("budget_gift_placeholder");
+    inp.setAttribute("aria-label", window.t("budget_gift_placeholder"));
     inp.dataset.guestId = g.id;
     inp.oninput = function() { throttledSaveGift(g.id, inp.value); };
     tdGift.appendChild(inp);
@@ -137,7 +140,7 @@ function renderBudgetTable() {
     /* Amount cell */
     const tdAmt = document.createElement('td');
     tdAmt.style.textAlign = 'end';
-    tdAmt.textContent = amount > 0 ? '₪' + amount.toLocaleString() : '';
+    tdAmt.textContent = amount > 0 ? `₪${  amount.toLocaleString()}` : '';
     tdAmt.style.color = amount > 0 ? 'var(--positive)' : 'var(--text-muted)';
 
     tr.appendChild(tdName);
@@ -154,13 +157,15 @@ let _giftSaveTimer = null;
 function throttledSaveGift(guestId, value) {
   if (_giftSaveTimer) clearTimeout(_giftSaveTimer);
   _giftSaveTimer = setTimeout(function() {
-    const g = _guests.find(function(x) { return x.id === guestId; });
+    const g = window._guests.find(function (x) {
+      return x.id === guestId;
+    });
     if (g) {
       g.gift = value;
       g.updatedAt = new Date().toISOString();
-      saveAll();
+      window.saveAll();
       renderBudget();
-      renderStats();
+      window.renderStats();
     }
   }, 600);
 }
@@ -170,8 +175,8 @@ function saveBudgetTarget() {
   const inp = document.getElementById('budgetTargetInput');
   if (!inp) return;
   const val = parseFloat(inp.value.replace(/[₪,\s]/g, '')) || 0;
-  _weddingInfo.giftBudget = val;
-  saveAll();
+  window._weddingInfo.giftBudget = val;
+  window.saveAll();
   renderBudget();
-  showToast(t('toast_budget_saved'), 'success');
+  window.showToast(window.t("toast_budget_saved"), "success");
 }

@@ -1,51 +1,60 @@
-'use strict';
+// @ts-check
+"use strict";
 
-/* ── DOM Cache ── */
-/* ── DOM Cache ── */
-const el = {
-  particles: document.getElementById("particles"),
-  coupleNames: document.getElementById("coupleNames"),
-  weddingDateDisplay: document.getElementById("weddingDateDisplay"),
-  countdown: document.getElementById("countdown"),
-  statTotal: document.getElementById("statTotal"),
-  statConfirmed: document.getElementById("statConfirmed"),
-  statPending: document.getElementById("statPending"),
-  statDeclined: document.getElementById("statDeclined"),
-  statTables: document.getElementById("statTables"),
-  statSeated: document.getElementById("statSeated"),
-  statSent: document.getElementById("statSent"),
-  statUnsent: document.getElementById("statUnsent"),
-  statGroomSide: document.getElementById("statGroomSide"),
-  statBrideSide: document.getElementById("statBrideSide"),
-  statVeg: document.getElementById("statVeg"),
-  statAccessibility: document.getElementById("statAccessibility"),
-  progressFill: document.getElementById("progressFill"),
-  progressPercent: document.getElementById("progressPercent"),
-  guestCount: document.getElementById("guestCount"),
-  guestTableBody: document.getElementById("guestTableBody"),
-  guestsEmpty: document.getElementById("guestsEmpty"),
-  guestSearch: document.getElementById("guestSearch"),
-  seatingFloor: document.getElementById("seatingFloor"),
-  tablesEmpty: document.getElementById("tablesEmpty"),
-  unassignedGuests: document.getElementById("unassignedGuests"),
-  invitationImage: document.getElementById("invitationImage"),
-  waTemplate: document.getElementById("waTemplate"),
-  waPreviewBubble: document.getElementById("waPreviewBubble"),
-  waPreviewTime: document.getElementById("waPreviewTime"),
-  waGuestList: document.getElementById("waGuestList"),
-  toastContainer: document.getElementById("toastContainer"),
-  guestModal: document.getElementById("guestModal"),
-  tableModal: document.getElementById("tableModal"),
-  topBarCouple: document.getElementById("topBarCouple"),
-  dataSummary: document.getElementById("dataSummary"),
-  timelineList: document.getElementById("timelineList"),
-  timelineAdminBar: document.getElementById("timelineAdminBar"),
-  expenseList: document.getElementById("expenseList"),
-  expenseAdminBar: document.getElementById("expenseAdminBar"),
-  venueMapContainer: document.getElementById("venueMapContainer"),
-  checkinList: document.getElementById("checkinList"),
-  checkinSearch: document.getElementById("checkinSearch"),
-  galleryGrid: document.getElementById("galleryGrid"),
-  galleryAdminBar: document.getElementById("galleryAdminBar"),
-};
+/* ── DOM Cache (S1 — lazy Proxy for template-based rendering) ──
+ *
+ * Replaced eager getElementById() calls with a Proxy that looks up
+ * elements on first access and caches the result. This is the ENABLING
+ * CHANGE for Sprint 1: section HTML templates can be injected lazily
+ * into the DOM after page load, and `el.xxx` will still resolve correctly
+ * because the lookup is deferred until the first property access.
+ *
+ * The public API is identical to the old eager object — all existing
+ * code using `el.guestTableBody`, `el.countdown`, etc. continues to work.
+ *
+ * Use `refreshDomCache()` after injecting a template to force re-lookup
+ * of specific element IDs.
+ */
 
+/** @type {Record<string, HTMLElement | null>} */
+const _domCache = {};
+
+/**
+ * Lazy DOM reference map.
+ *
+ * Access via `el.guestTableBody`, `el.countdown`, etc.
+ * On first access, `document.getElementById(propName)` is called and
+ * the result is stored in `_domCache`. Subsequent accesses return the
+ * cached element without re-querying the DOM.
+ *
+ * @type {Record<string, HTMLElement | null>}
+ */
+const el = new Proxy(_domCache, {
+  get(target, prop) {
+    if (typeof prop !== "string") return undefined;
+    if (Object.prototype.hasOwnProperty.call(target, prop)) return target[prop];
+    const found = document.getElementById(prop);
+    target[prop] = found;
+    return found;
+  },
+  set(target, prop, value) {
+    if (typeof prop === "string") target[prop] = value;
+    return true;
+  },
+});
+
+/**
+ * Invalidate cached DOM references for the given element IDs.
+ * Call this after injecting a section template so the next access
+ * re-queries the freshly-injected DOM.
+ *
+ * @param {...string} ids  Element IDs to remove from the cache.
+ */
+function refreshDomCache(...ids) {
+  if (ids.length === 0) {
+    // Invalidate everything
+    Object.keys(_domCache).forEach((k) => delete _domCache[k]);
+  } else {
+    ids.forEach((id) => delete _domCache[id]);
+  }
+}

@@ -1,3 +1,5 @@
+@layer responsive {
+
 /* ── Responsive ── */
 
 /* — Desktop / wide landscape (1200px+) — */
@@ -148,3 +150,6 @@
   }
 }
 
+
+
+} /* end @layer responsive */

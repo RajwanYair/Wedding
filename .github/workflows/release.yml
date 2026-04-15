@@ -1,5 +1,5 @@
 # =============================================================================
-# Release — Auto-create GitHub Releases on version tags
+# Release — Auto-create GitHub Releases on version tags (vX.Y.Z)
 # =============================================================================
 name: Release
 
@@ -19,6 +19,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run CI checks
+        run: npm run ci
+
       - name: Generate changelog
         id: changelog
         run: |
@@ -32,20 +42,24 @@ jobs:
           echo "$COMMITS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Extract version from tag
+        id: version
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          name: "Wedding Manager ${{ steps.version.outputs.tag }}"
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') || contains(github.ref, 'rc') }}
           generate_release_notes: true
           body: |
             ## What's Changed
             ${{ steps.changelog.outputs.CHANGELOG }}
 
             ## Quick Start
-            ```
-            Open index.html in your browser
-            ```
+            Open [index.html](https://rajwanyair.github.io/Wedding) in your browser — no installation required.
           files: |
             index.html
             sw.js
             manifest.json
-            icon.svg
+

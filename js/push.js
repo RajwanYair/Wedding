@@ -1,7 +1,8 @@
+// @ts-check
 "use strict";
 
 /* ── Web Push Notifications (Sprint 5.4) ── */
-/* Requires VAPID_PUBLIC_KEY in js/config.js                              */
+/* Requires window.VAPID_PUBLIC_KEY in js/config.js                              */
 /* Server-side push sender: scripts/send-push.mjs (uses web-push package) */
 
 let _pushEnabled = false;
@@ -12,7 +13,7 @@ let _pushSubscription = null; // JSON representation of the PushSubscription
 function initPushNotifications() {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
   _pushEnabled =
-    localStorage.getItem(STORAGE_PREFIX + "pushEnabled") === "true";
+    localStorage.getItem(`${window.STORAGE_PREFIX  }pushEnabled`) === "true";
   if (_pushEnabled) _resubscribePush();
 }
 
@@ -37,7 +38,7 @@ async function _resubscribePush() {
       _pushSubscription = sub.toJSON();
     } else {
       _pushEnabled = false;
-      localStorage.removeItem(STORAGE_PREFIX + "pushEnabled");
+      localStorage.removeItem(`${window.STORAGE_PREFIX  }pushEnabled`);
     }
   } catch (_) {
     /* ignore — SW not yet ready */
@@ -52,18 +53,18 @@ async function _resubscribePush() {
  */
 async function subscribePush() {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    showToast(t("push_not_supported"));
+    window.showToast(window.t("push_not_supported"));
     return;
   }
-  const key = typeof VAPID_PUBLIC_KEY !== "undefined" ? VAPID_PUBLIC_KEY : "";
+  const key = typeof window.VAPID_PUBLIC_KEY !== "undefined" ? window.VAPID_PUBLIC_KEY : "";
   if (!key || key === "YOUR_VAPID_PUBLIC_KEY") {
-    showToast(t("push_no_vapid"));
+    window.showToast(window.t("push_no_vapid"));
     return;
   }
   try {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
-      showToast(t("push_permission_denied"));
+      window.showToast(window.t("push_permission_denied"));
       return;
     }
     const reg = await navigator.serviceWorker.ready;
@@ -73,22 +74,22 @@ async function subscribePush() {
     });
     _pushSubscription = sub.toJSON();
     _pushEnabled = true;
-    localStorage.setItem(STORAGE_PREFIX + "pushEnabled", "true");
+    localStorage.setItem(`${window.STORAGE_PREFIX  }pushEnabled`, "true");
     /* Persist subscription on the server for later sending */
-    if (SHEETS_WEBAPP_URL) {
-      _sheetsWebAppPost({
+    if (window.SHEETS_WEBAPP_URL) {
+      window._sheetsWebAppPost({
         action: "savePushSubscription",
         subscription: _pushSubscription,
       }).catch(function () {
         /* non-fatal */
       });
     }
-    logAudit("push_subscribe", "Web Push subscription created");
-    showToast(t("push_subscribed"));
+    window.logAudit("push_subscribe", "Web Push subscription created");
+    window.showToast(window.t("push_subscribed"));
     renderPushSettings();
   } catch (err) {
-    showToast(t("push_error"));
-    logClientError("subscribePush", err);
+    window.showToast(window.t("push_error"));
+    window.logClientError("subscribePush", err);
   }
 }
 
@@ -100,12 +101,12 @@ async function unsubscribePush() {
     if (sub) await sub.unsubscribe();
     _pushSubscription = null;
     _pushEnabled = false;
-    localStorage.removeItem(STORAGE_PREFIX + "pushEnabled");
-    logAudit("push_unsubscribe", "Web Push subscription removed");
-    showToast(t("push_unsubscribed"));
+    localStorage.removeItem(`${window.STORAGE_PREFIX  }pushEnabled`);
+    window.logAudit("push_unsubscribe", "Web Push subscription removed");
+    window.showToast(window.t("push_unsubscribed"));
     renderPushSettings();
   } catch (err) {
-    logClientError("unsubscribePush", err);
+    window.logClientError("unsubscribePush", err);
   }
 }
 
@@ -115,18 +116,18 @@ async function unsubscribePush() {
 function renderPushSettings() {
   const container = document.getElementById("pushSettingsCard");
   if (!container) return;
-  if (!_authUser || !_authUser.isAdmin) {
+  if (!window._authUser || !window._authUser.isAdmin) {
     container.textContent = "";
     return;
   }
 
   const supported = "serviceWorker" in navigator && "PushManager" in window;
-  const key = typeof VAPID_PUBLIC_KEY !== "undefined" ? VAPID_PUBLIC_KEY : "";
+  const key = typeof window.VAPID_PUBLIC_KEY !== "undefined" ? window.VAPID_PUBLIC_KEY : "";
   const hasVapid = Boolean(key) && key !== "YOUR_VAPID_PUBLIC_KEY";
 
   if (!supported || !hasVapid) {
     const note = document.createElement("p");
-    note.textContent = t(supported ? "push_no_vapid" : "push_not_supported");
+    note.textContent = window.t(supported ? "push_no_vapid" : "push_not_supported");
     note.style.cssText = "font-size:0.8em;color:var(--text-muted);margin:0";
     container.replaceChildren(note);
     return;
@@ -139,17 +140,17 @@ function renderPushSettings() {
   if (_pushEnabled) {
     const btn = document.createElement("button");
     btn.className = "btn btn-secondary btn-small";
-    btn.textContent = t("push_unsubscribe_btn");
+    btn.textContent = window.t("push_unsubscribe_btn");
     btn.onclick = unsubscribePush;
 
     const status = document.createElement("span");
     status.style.cssText = "font-size:0.8em;color:var(--success-color)";
-    status.textContent = "✅ " + t("push_active");
+    status.textContent = `✅ ${  window.t("push_active")}`;
     wrap.append(btn, status);
   } else {
     const btn = document.createElement("button");
     btn.className = "btn btn-primary btn-small";
-    btn.textContent = t("push_subscribe_btn");
+    btn.textContent = window.t("push_subscribe_btn");
     btn.onclick = subscribePush;
     wrap.append(btn);
   }

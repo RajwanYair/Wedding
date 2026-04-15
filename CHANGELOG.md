@@ -4,347 +4,430 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.19.0] — 2026-04-13
+## [3.8.1] — 2026-04-15
+
+### Added
+- **SW update prompt** — `initSW()` in `src/core/ui.js` registers the service worker and detects new deployments via `updatefound`, `UPDATE_AVAILABLE` postMessage, and tab-refocus polling. Shows a dismissible top banner (`showUpdateBanner()`) prompting users to refresh; auto-reloads silently if the page has been open ≥ 5 minutes.
+- **`showUpdateBanner()` / `applyUpdate()`** — New exports in `src/core/ui.js`; wired in `src/main.js` bootstrap.
+- Cache bust: `CACHE_NAME` bumped to `wedding-v3.8.1` in `public/sw.js`.
+
+### Fixed
+- **Guest landing page** — Guests now land on the `landing` section (couple names, date, venue) instead of the bare RSVP form. `updateTopBar()` + `updateCountdown()` called at bootstrap so header shows wedding info immediately before any section mounts.
+- **Sign-out** — Signs out to `landing` (was `rsvp`); unreachable non-public sections silently redirect to `landing`.
+- **Admin emails** — Added `anat.rajwan@gmail.com` to default `ADMIN_EMAILS` in both `src/core/config.js` and `js/config.js` (was misspelled as `anar`).
+
+## [3.8.0] — 2026-08-04
 
 ### Added
 
-- **SRI tooling** (Sprint 4.5) — `scripts/sri-check.mjs` computes SHA-384 integrity
-  hashes for all local `js/` and `css/` assets and prints ready-to-paste `integrity=`
-  attributes. Adds `npm run sri` script. Added `crossorigin="anonymous"` to the Google
-  GIS SDK `<script>` tag (required prerequisite for future SRI pinning; note that the SDK
-  itself cannot have a hash because it is not version-pinned by Google).
+- **`appendToRsvpLog(entry)`** — New export in `src/services/sheets.js`; posts an RSVP submission row (timestamp, phone, name, status, count) to the `RSVP_Log` sheet tab, replacing the previous no-op `() => Promise.resolve()` placeholder.
+- **`getVendorStats()`** — New export in `src/sections/vendors.js` returning `{ total, totalCost, totalPaid, outstanding, paymentRate }`.
+- **`getCheckinStats()`** — New export in `src/sections/checkin.js` returning `{ total, checkedIn, checkinRate, remaining }` based on confirmed guests and their seat counts.
+- **`getExpenseSummary()`** — New export in `src/sections/expenses.js` returning `{ total, byCategory: Record<string, number> }`.
+- **`filterGuestsByStatus(status?)`** — New export in `src/sections/guests.js`; returns guests matching the given status, or all guests when status is omitted or `"all"`.
+- **`announce(message, politeness?)`** — New a11y export in `src/core/ui.js`; creates/updates a `#ariaLiveRegion` div with `aria-live` for screen reader announcements. Uses `requestAnimationFrame` to force re-announcement of identical messages.
+- **WhatsApp char counter** — `updateWaPreview()` in `src/sections/whatsapp.js` now updates a `#waCharCount` element with current length / 4096 and characters remaining. Adds CSS class `wa-char-warn` when fewer than 200 characters remain.
+- **RSVP log sync** — `submitRsvp()` in `src/sections/rsvp.js` now calls `enqueueWrite("rsvp_log", () => appendToRsvpLog(...))` with the submitted data, activating the RSVP_Log sheet tab sync.
+- **5 new i18n keys** — Added to both `js/i18n/he.json` and `js/i18n/en.json`: `vendor_total_cost`, `vendor_paid`, `vendor_outstanding`, `vendor_payment_rate`, `checkin_checked_in`, `checkin_rate`, `expense_by_category`, `wa_chars_left`, `filter_by_status`, `filter_all`.
+- **`@vitest/coverage-v8`** — Added to `devDependencies`; required for `npm run test:coverage` to function in CI.
+- **5 new test files** (58 new tests):
+  - `tests/unit/rsvp.test.mjs` (10 tests) — `happy-dom`; covers `lookupRsvpByPhone`, `submitRsvp`.
+  - `tests/unit/checkin.integration.test.mjs` (11 tests) — `happy-dom`; covers `checkInGuest`, `exportCheckinReport`, `resetAllCheckins`, `getCheckinStats`.
+  - `tests/unit/expenses.integration.test.mjs` (14 tests) — `happy-dom`; covers `saveExpense`, `deleteExpense`, `getExpenseSummary`.
+  - Extended `tests/unit/vendors.integration.test.mjs` (5 new tests) — `getVendorStats` scenarios.
+  - Extended `tests/unit/guests.integration.test.mjs` (11 new tests) — `getGuestStats`, duplicate phone detection, `filterGuestsByStatus`.
+  - Extended `tests/unit/nav.test.mjs` (7 new tests) — `initKeyboardShortcuts` alt-key routing, INPUT guard, cleanup.
+- **Regression tests in `tests/wedding.test.mjs`** — 7 new describe blocks covering all v3.8.0 source-level changes.
 
-- **Secrets injection via CI** (Sprint 4.6) — `scripts/inject-config.mjs` reads five
-  environment variables (`GH_GOOGLE_CLIENT_ID`, `GH_FB_APP_ID`, `GH_APPLE_SERVICE_ID`,
-  `GH_SHEETS_WEBAPP_URL`, `GH_SPREADSHEET_ID`) and patches the corresponding `const`
-  declarations in `js/config.js` before the Pages artifact is assembled. Updated
-  `deploy.yml` with a new "Inject GitHub Secrets into config" step that calls the script
-  with secrets from the repository's Secrets store. Local dev is unaffected — the script
-  is a no-op when env vars are absent.
+### Fixed
 
-- **Web Push notifications** (Sprint 5.4) — `js/push.js` provides full
-  `PushManager.subscribe` / `unsubscribe` flows with VAPID authentication.
-  - `initPushNotifications()` restores an existing subscription on load.
-  - `subscribePush()` requests `Notification` permission, creates a push subscription
-    using `VAPID_PUBLIC_KEY` from `config.js`, and posts the subscription to GAS.
-  - `renderPushSettings()` draws the admin-only Enable / Disable button in Settings.
-  - `sw.js` gains `push` and `notificationclick` event handlers.
-  - `sheets-webapp.gs` gains `_savePushSubscription()` (stores up to ten subscriptions
-    in Script Properties) and `_getPushSubscriptions()` (returned via `doGet`).
-  - `scripts/send-push.mjs` — Node.js CLI script using the `web-push` devDep to fan out
-    a push notification to all stored subscriptions. Intended for manual use or scheduled
-    GitHub Actions jobs.
-  - `VAPID_PUBLIC_KEY` constant added to `config.js`. Matching private key belongs in GAS
-    Script Properties as `VAPID_PRIVATE_KEY`.
+- RSVP log write was a no-op (`enqueueWrite("rsvp", () => Promise.resolve())`). Fixed to call `appendToRsvpLog` with real RSVP data.
+- Stale version in `GUIDE.md` (was v2.1.0), `workspace.instructions.md` (was v3.0.0), and `cicd.instructions.md` (was 689 tests).
 
-- **Bundle size report** (Sprint 6.2) — `scripts/size-report.mjs` walks `js/` and `css/`
-  and prints a table of raw + gzip byte sizes with per-file thresholds (JS: 100 KB, CSS:
-  30 KB). `--check` flag exits 1 if any file exceeds its limit. `npm run size` script
-  added. `ci.yml` gains a `size-report` job that uploads the report as a 30-day artifact
-  on every push.
+## [3.7.0] — 2026-08-03
 
-- **Playwright E2E smoke tests** (Sprint 6.3) — `playwright.config.mjs` configures
-  Chromium-only testing against a local `serve` static server. `tests/e2e/smoke.spec.mjs`
-  contains 9 smoke tests: page load, RTL direction, navigation bar, hash routing, language
-  toggle, theme toggle, and no-console-errors-on-load. `npm run test:e2e` script added.
-  `ci.yml` gains an `e2e` job (main branch push only) that installs Chromium, runs the
-  suite, and uploads the Playwright HTML report as a 7-day artifact.
-  New devDependencies: `@playwright/test`, `serve`, `web-push`.
+### Added
+
+- **`getGuestStats()`** — New export in `src/sections/guests.js` returning aggregate guest metrics (total, confirmed/pending/declined/maybe, totalSeats/confirmedSeats, groom/bride/mutual, seated/unseated, vegetarian/vegan/glutenFree/kosher).
+- **`getBudgetSummary()`** — New export in `src/sections/budget.js` returning `{ total, gifts, expenses, balance }` by aggregating budget entries + guest gifts + vendor prices.
+- **`getTableStats()`** — New export in `src/sections/tables.js` returning `{ totalTables, totalCapacity, totalSeated, available }`.
+- **`AUTH_SESSION_DURATION_MS`** — New named export in `src/core/config.js` (`2 * 60 * 60 * 1000` = 2 h), replacing the hardcoded constant in `auth.js`.
+- **Duplicate phone detection** — `saveGuest()` in `src/sections/guests.js` now rejects a save if another guest already has the same normalized phone number, returning `{ ok: false, errors: ["error_duplicate_phone"] }`.
+- **`initKeyboardShortcuts()`** — New export in `src/core/nav.js`; registers `Alt+1` through `Alt+9` keyboard shortcuts to jump between sections. Returns a cleanup function. Ignored when focus is in an `INPUT`, `TEXTAREA`, `SELECT`, or `contenteditable` element. Called automatically from `src/main.js` bootstrap.
+- **Mermaid diagrams** — `ARCHITECTURE.md` v3.7.0: added Auth Flow `sequenceDiagram`, RSVP Data Flow `sequenceDiagram`, and Offline Sync `flowchart` under new titled sections.
+- **6 new unit/integration test files** (107 new tests):
+  - `tests/unit/state.test.mjs` (16 tests) — Node env with `vi.stubGlobal` localStorage mock; covers `load`, `save`, `saveAll`, `clearAll`.
+  - `tests/unit/i18n.test.mjs` (17 tests) — `happy-dom`; covers `t()`, `loadLocale` with fetch mock, `applyI18n`, `currentLang`.
+  - `tests/unit/config.test.mjs` (22 tests) — Node env; verifies all config exports exist and have correct types.
+  - `tests/unit/tables.integration.test.mjs` (19 tests) — `happy-dom`; covers `saveTable`, `deleteTable`, `autoAssignTables`, `getTableStats`.
+  - `tests/unit/budget.integration.test.mjs` (17 tests) — `happy-dom`; covers budget CRUD + `getBudgetSummary`.
+  - `tests/unit/vendors.integration.test.mjs` (16 tests) — `happy-dom`; covers vendor CRUD + payment tracking.
+- **E2E: Guest CRUD + Tables flows** — `tests/e2e/smoke.spec.mjs` extended with "Guest Management" and "Tables Section" describe blocks.
+- **`v3.7.0` regression tests** — 33 new tests in `tests/wedding.test.mjs` covering all new features.
 
 ### Changed
 
-- `index.html` — Push notifications card added before Email Notifications card in Settings.
-  `push.js` script tag added.
-- `js/config.js` — Added `VAPID_PUBLIC_KEY` constant (v1.19.0 header).
-- `js/app.js` — `initPushNotifications()` called after `initErrorMonitor()`.
-- `js/nav.js` — Settings handler now calls `renderPushSettings()` after
-  `renderEmailSettings()`.
-- `js/i18n.js` — Push notification keys added to both `he` and `en` locales.
-- `sw.js` — Bumped to `wedding-v1.19.0`; `push.js` added to APP_SHELL; `push` and
-  `notificationclick` handlers added.
-- `eslint.config.mjs` — Push globals declared (`VAPID_PUBLIC_KEY`, `_pushEnabled`,
-  `_pushSubscription`, `subscribePush`, `unsubscribePush`, `renderPushSettings`,
-  `initPushNotifications`).
-- `.github/workflows/ci.yml` — Updated to v1.19.0; `size-report` and `e2e` jobs added.
-- `.github/workflows/deploy.yml` — Inject-secrets step added; Node.js setup step added.
-- `sheets-webapp.gs` — Version bumped to `1.19.0`; push subscription helpers added.
+- **`package.json`** — version `3.6.0` → `3.7.0`.
+- **`public/sw.js`** — `CACHE_NAME` updated from `wedding-v3.6.0` to `wedding-v3.7.0`.
+- **`js/config.js`** — version comment updated to v3.7.0.
+- **`src/core/config.js`** — `APP_VERSION` updated from `"3.6.0"` to `"3.7.0"`.
+- **`ARCHITECTURE.md`** — version in h1 updated from `v3.0.0` to `v3.7.0`.
+
+## [3.6.0] — 2026-08-02
+
+### Added
+
+- **S3.9 — Offline-to-online sync** — `initOnlineSync()` exported from `src/services/sheets.js`; registers `window "online"` listener that flushes the write queue via `syncSheetsNow()` whenever the browser regains network connectivity. Called in `src/main.js` bootstrap. Also registers `"offline"` listener that resets sync status to idle.
+- **S4.4 — Prebuild precache auto-injection** — `generate-precache.mjs` now also patches `dist/sw.js` APP_SHELL with the full list of Vite-built assets (excluding `.map` and `sw.js` itself). Added `"postbuild"` npm script so this runs automatically after every `npm run build`.
+- **S6.4 — nav.js unit tests** — `tests/unit/nav.test.mjs` (20 tests, `happy-dom`): covers `navigateTo`, `activeSection`, `initRouter` (hash parsing, hashchange events), `initSwipe` (directional, short/vertical swipe ignored), and `initPullToRefresh` (threshold, callback, CSS class cleanup).
+- **S6.7 — Guests section integration tests** — `tests/unit/guests.integration.test.mjs` (20 tests, `happy-dom`): mounts the guests section against real DOM, tests `saveGuest` CRUD (validation, phone normalization, unique IDs, DOM updates), `deleteGuest`, `setFilter`, `setSearchQuery`, `setSortField`, `renderGuests` idempotency.
+- **S7.9 — A11y toast improvements** — `src/core/ui.js` now uses `role="alert"` + `aria-live="assertive"` for `error`/`warning` toasts; `role="status"` + `aria-live="polite"` for `success`/`info`. `index.html` `#toastContainer` updated to `role="region"` + `aria-atomic="false"` + `aria-label="Notifications"`.
+- **SECURITY.md** — Security policy: supported versions, vulnerability reporting instructions, security measures (input sanitization, no innerHTML with user data, OAuth allowlist, session rotation, `npm audit`).
+- **CONTRIBUTING.md** — Developer guide: quick start, project structure, development rules, feature checklist, commit convention, PR checklist.
+- **README.md** — Version badge updated to v3.6.0; tests badge (1176+) added.
+- **CLAUDE.md** — Updated to v3.6.0: test count (1176+), build command note (`postbuild`), new gotchas for `initOnlineSync`, unit test environment.
+- **v3.6.0 regression tests** — 29 new tests in `tests/wedding.test.mjs` covering all new features.
+
+### Changed
+
+- **`package.json`** — version `3.5.0` → `3.6.0`; added `"postbuild": "node scripts/generate-precache.mjs"`.
+- **`public/sw.js`** — `CACHE_NAME` updated from `wedding-v3.5.0` to `wedding-v3.6.0`.
+- **`js/config.js`** — version comment updated to v3.6.0.
+
+## [3.5.0] — 2026-08-01
+
+### Added
+
+- **S2.6 IntersectionObserver stat counters** — `initStatCounterObserver()` in `src/sections/dashboard.js` animates `.stat-value` / `.stat-number` elements from 0 to their current value when they scroll into view (600ms ease-out cubic). Disconnects on section unmount.
+- **S2.8 Pull-to-refresh** — `initPullToRefresh(onRefresh)` in `src/core/nav.js`; CSS body classes `ptr--pulling` / `ptr--refreshing` with animated indicator; wired to `syncSheetsNow()` in `src/main.js` bootstrap.
+- **S3.4 Conflict resolution** — `mergeLastWriteWins(local, remote)` exported from `src/services/sheets.js`; last `updatedAt` wins; local-only records are preserved.
+- **S3.8 Vendor/Expense/Guest/Table/Settings sync** — replaced no-op `() => Promise.resolve()` callbacks in all data sections with `() => syncStoreKeyToSheets(key)`. Also added `syncStoreKeyToSheets(storeKey)` helper to `sheets.js` that POSTs `replaceAll` action to the GAS backend.
+- **S4.6 Gallery lazy loading** — gallery thumbnail images already had `loading="lazy"` + `decoding="async"`; lightbox image now also uses `decoding="async"` for off-main-thread decode.
+- **A11y skip-to-main link (S7.9)** — first child of `<body>` in `index.html`; keyboard-visible only (offscreen by default, shown on focus); `data-i18n="skip_to_main"`.
+- **i18n: new keys** — `rsvp_deadline_soon`, `rsvp_deadline_passed`, `skip_to_main`, `ptr_release_to_refresh`, `ptr_refreshing` in both `he.json` and `en.json`.
+- **CSS: `.skip-to-main`** — accessible skip link styles in `components.css`.
+- **CSS: pull-to-refresh indicator** — `body.ptr--pulling::before` / `body.ptr--refreshing::before` pseudoelement spinner; `@keyframes spinCW`.
+- **Unit tests (S6.2–S6.6)** — 4 new test files: `tests/unit/utils.test.mjs`, `tests/unit/store.test.mjs`, `tests/unit/sheets.test.mjs`, `tests/unit/auth.test.mjs` covering phone/date/sanitize/misc utils, reactive store, sheets sync + conflict resolution, and auth session logic.
+- **v3.5.0 regression tests** — 28 new tests in `tests/wedding.test.mjs` covering all new features.
+- **CI version updated** to v3.5.0.
+
+## [3.4.0] — 2026-07-31
+
+### Fixed (Critical Bug Fixes)
+
+- **WhatsApp bulk-send ignores filter arg**: `sendWhatsAppAll()` now accepts `filter` parameter (`"pending"` sends only un-sent pending guests, `"all"` sends everyone except declined). Both `window.open` and Green API paths respect the filter.
+- **WhatsApp sent state not tracked**: Added `markGuestSent(id)` — sets `guest.sent = true` + `sentAt` timestamp in the store. Called on every link click and API send. Sent badge shown in guest row.
+- **`updateWaPreview` not wired**: Added `export function updateWaPreview(template, guest)` to whatsapp.js; wires template textarea changes to the preview bubble and time display.
+- **`saveTransportSettings` used FormData**: Rewrote to read each transport input by element ID (`transportEnabled`, `transportTefachotTime`, etc.) directly — no `<form>` wrapper required.
+- **`addApprovedEmail` used wrong ID**: Fixed typo `approvedEmail` → `newApproveEmail` (the actual input ID in settings.html).
+- **`addRegistryLink` used form.querySelector**: Fixed to read `registryInputUrl` and `registryInputName` by ID — template uses IDs, not `name` attributes.
+- **Gallery upload never fired**: Added `data-on-change` delegation to `src/core/events.js` — file inputs with `data-on-change="handleGalleryUpload"` now reliably dispatch through the event hub.
+- **`data-on-enter` never fired**: Added `keydown` Enter delegation to `src/core/events.js` — inputs with `data-on-enter="addApprovedEmail"` (etc.) now fire on Enter.
+- **Gallery admin bar never shown**: `gallery.js mount()` now reads auth session and shows `#galleryAdminBar` for authenticated, non-anonymous users.
+- **Gallery missing delete buttons**: `renderGallery()` now appends a delete button per photo for admin users (calls `deleteGalleryPhoto` handler).
+- **Gallery missing lightbox**: Added `openLightbox(id)` — creates fullscreen overlay with keyboard ESC + click-outside dismissal.
+- **Green API status element missing**: Added `<p id="greenApiStatus">` to `settings.html` after the "Test Connection" button.
+- **`template-loader.js` missing registry/guest-landing**: Added loaders for `registry.html` and `guest-landing.html` so lazy template injection works for those sections.
+
+### Added
+
+- **`updateRsvpDeadlineBanner()`** in `dashboard.js` — reads `weddingInfo.rsvpDeadline`, shows amber banner when ≤ 7 days remain, red banner when deadline has passed.
+- **Sync status badge** — `#syncStatusBadge` span added to the top bar in `index.html`; wired to `onSyncStatus()` callback from `src/services/sheets.js`; shows Syncing / Synced / Error states with appropriate colors.
+- **Exponential backoff for Sheets writes** — `src/services/sheets.js` `_flush()` now retries failed writes up to `_MAX_RETRIES = 4` times with jittered exponential delay (base `_BACKOFF_BASE_MS = 2000 ms`). Gives up and sets status `"error"` after all retries exhausted. Resets to `"idle"` 3 seconds after a successful sync.
+- **`color-scheme: dark light`** declared in `css/variables.css :root` for better system-theme integration.
+- **`.sync-badge` CSS** with `--syncing`, `--synced`, `--error` modifier classes (amber/green/red).
+- **`.rsvp-deadline-banner--late` / `--soon` CSS** modifiers for deadline banner coloring.
+- **45 new regression tests** for all v3.4.0 fixes (events delegation, gallery, WhatsApp, settings, sheets backoff, dashboard deadline, sync badge, CSS, template-loader).
+
+## [3.3.0] — 2026-07-30
+
+### Fixed (Critical Bug Fixes)
+
+- **RSVP form never populated**: `_prefillForm()` used wrong element IDs (`rsvp-phone` → `rsvpPhone`, `rsvp-count` → `rsvpGuests`, etc.) and revealed wrong element (`rsvpFormBody` → `rsvpDetails`)
+- **RSVP confirmation never shown**: `_showConfirmation()` targeted `rsvpConfirmMessage` which didn't exist; replaced with new `#rsvpConfirm` div added to `rsvp.html`; `"maybe"` status now handled
+- **Analytics charts blank**: Template had `analyticsSideChart`/`analyticsMealChart` but JS rendered to `analyticsSideDonut`/`analyticsMealBar` — IDs unified across template and JS
+- **Dashboard groom/bride/transport stats always 0**: Added the three missing calculations and `_setText` calls
+- **Language toggle broken**: `switchLanguage()` called with no argument — now passes the toggled locale string
+- **Invitation form changes never saved**: `on("updateWeddingDetails", ...)` was not registered; `renderInvitation()` now populates all form fields from store on mount
+- **Contact form always failed**: Wrong show/hide element IDs (`contactForm` → `contactFormFields`, `contactSuccess` → `contactFormSuccess`); `on("submitContactForm", ...)` was not registered
+- **Budget target save broken**: `saveBudgetTarget` handler passed the `<form>` element to `saveBudgetEntry()` instead of reading input value
+- **Budget stat boxes always 0**: Stat elements (`budgetStatGifts`, `budgetStatTotal`, etc.) were never populated
+- **Budget progress bar always hidden**: Progress wrap never shown even when budget target was set
+- **Tables unassigned-guests list empty**: `renderTables()` never wrote into `#unassignedGuests`
+- **Settings `populateSettings()` broken**: Used `setting-groom` / `setting-bride` IDs that don't exist; rewritten to call `updateDataSummary()` + `sheetsWebAppUrl` + approved-emails render
+- **Settings CSV import never fired**: Template used `data-on-change="importCSV"` but handler is `importGuestsCSV`
+- **Settings `saveWebAppUrl` wrong ID**: Looked for `settingWebAppUrl` — corrected to `sheetsWebAppUrl`
+- **Landing couple-name wrong ID**: `landingCouple` → `landingCoupleName`; also wired `landingHebrewDate`, `landingAddress`, `landingVenue`, `landingWazeLink`, `landingTimeline`, `landingRegistrySection`
+- **Check-in showed raw UUID for table**: `renderCheckin()` now resolves `g.tableId` to `table.name` from the tables store
+
+### Added
+
+- **`wa_default_template` i18n key** — default WhatsApp message template (Hebrew + English)
+- **30+ missing i18n keys**: `rsvp_confirmed`, `rsvp_declined`, `language_switched`, `contact_sent`, `error_green_api_config`, `green_api_connected`, `green_api_not_connected`, `error_network`, `analytics_meal_summary_title`, `no_approved_emails`, `all_guests_seated`, `count`, `your_table`, `error_invalid_amount`, `chart`, `send_whatsapp`, `other`, `groom_placeholder`, `bride_placeholder`, `wedding_past`, `wedding_today`, `days_until_wedding`, `registry_subtitle`, `registry_empty`, `guest_landing_title`, `guest_landing_greeting`, `rsvp_status_label`, `table_tbd` (both `he.json` and `en.json`)
+- **`src/templates/registry.html`** — guest-facing registry links template
+- **`src/templates/guest-landing.html`** — personalised guest invitation landing template
+- **Analytics headcount stats + meal summary**: `renderAnalytics()` now fills `analyticsHeadAdults/Children/Total/Confirmed/Access`, renders sent/unsent donut, and renders catering meal summary
+
+## [3.2.0] — 2026-07-29
+
+### Fixed (Critical Bug Fixes)
+
+- **Modal saves never worked**: All 5 modal HTML files lacked `<form>` tags so `FormData` always returned empty. Rewrote all save handlers in `src/main.js` to read values from DOM element IDs directly (`saveGuest`, `saveTable`, `saveVendor`, `saveExpense`, `saveTimelineItem`)
+- **Hebrew i18n always empty**: `src/main.js` bootstrap only called `loadLocale()` for English — Hebrew users saw raw key names everywhere. Fixed to always `await loadLocale(lang)`
+- **`sortGuestsBy` never worked**: Handler read `el.dataset.field` but template uses `data-action-arg`. Fixed to `el.dataset.actionArg`
+- **Table/div rendering in `<tbody>`**: `renderVendors()`, `renderExpenses()`, `renderCheckin()` were appending `<div>` elements into `<tbody>` — browsers silently discard invalid HTML. Rewrote all three to generate `<tr><td>` rows
+- **budget.js subscriptions missing**: `mount()` never subscribed to `expenses`/`vendors` store changes, so `renderBudgetProgress()` never updated automatically
+- **QR code element ID mismatch**: `settings.js` targeted `#rsvpQrCode` but template has `#rsvpQrImage`
+- **SW install failure**: `invitation.jpg` in APP_SHELL caused SW to fail offline install if the file was missing. Removed; kept `icon-192.png` + `icon-512.png`
+- **`input` events never delegated**: `src/core/events.js` had no `data-on-input` delegation. Added listener
+- **Event name mismatches**: `data-on-input="filterGuests"` → `searchGuests`; `data-on-input="searchCheckin"` → `checkinSearch`
+
+### Added
+
+- **Edit modals for all entities**: `openGuestForEdit()`, `openVendorForEdit()`, `openExpenseForEdit()`, `openTableForEdit()`, `openTimelineForEdit()` — pre-fill modal fields for in-place editing
+- **Delete handlers for tables + timeline**: `on("deleteTable", ...)` and `on("deleteTimelineItem", ...)` with confirmation dialog
+- **`lookupRsvpByPhone` handler**: Wired phone input `data-on-input` to RSVP phone-first lookup flow
+- **Hidden ID fields in all modals**: Added `<input type="hidden" id="xxxModalId">` to all 5 modal HTML files to track create vs. edit mode
+- **Edit/delete buttons in all list renders**: `renderGuests()`, `renderVendors()`, `renderExpenses()`, `renderTimeline()`, `renderTables()` now include per-row/per-card action buttons
+- **`analyticsBudgetBar` container**: Added missing `<div id="analyticsBudgetBar">` to `analytics.html` for `renderBudgetChart()` to target
+- **`budgetProgressLabel`**: Added `<span id="budgetProgressLabel">` to `budget.html`; budget.js auto-generates QR on `mount()`
+- **40+ new i18n keys**: Added `saved`, `syncing`, `synced`, `error_save`, `guest_saved`, `table_saved`, `vendor_saved`, `expense_saved`, `confirm_clear_all`, `auth_welcome`, `auth_signed_out`, `sheets_connected`, `sheets_not_connected`, `settings_saved`, and more to both `he.json` and `en.json`
+- **`openAddXModal` clears hidden ID**: All "Add New" modal openers now reset the hidden `id` field so saves create new records instead of overwriting
+
+### Tests
+
+- Version checks updated to v3.2.0 — **965 tests, 97+ suites**
+
+## [3.1.0] — 2026-07-28
+
+### Added
+
+- `importGuestsCSV()` in `src/sections/guests.js` — parse and bulk-import guests from CSV (columns: FirstName/LastName/Phone/Email/Count/Children/Status/Side/Group/Meal/Notes); updates existing guests by phone
+- `exportExpensesCSV()` + `filterExpensesByCategory()` in `expenses.js`
+- `exportVendorsCSV()` + `filterVendorsByCategory()` in `vendors.js`
+- `exportCheckinReport()` + `resetAllCheckins()` in `checkin.js`
+- `renderBudgetChart()` in `analytics.js` — SVG bar chart of expenses by category + vendor total; auto-updates on expenses/vendors store changes
+- `renderBudgetProgress()` in `budget.js` — progress bar showing spent vs. `weddingInfo.budgetTarget`
+- `buildWhatsAppMessage(guestId, template?)` in `whatsapp.js` — returns `{ message, link }` preview without opening a window
+- `generateRsvpQrCode()` in `settings.js` — renders QR code via qrserver.com API into `#rsvpQrCode` img element
+- `showConfirmDialog(message, onConfirm)` in `src/core/ui.js` — callback-based confirm wrapper
+
+### Changed
+
+- `src/main.js` — registered 11 new data-action handlers: `deleteGuest`, `deleteVendor`, `deleteExpense`, `deleteBudgetEntry`, `checkInGuest`, `checkinSearch`, `importGuestsCSV`, `exportExpensesCSV`, `exportVendorsCSV`, `exportCheckinReport`, `resetAllCheckins`, `generateRsvpQrCode`
+- `analytics.js` mount now subscribes to `expenses` + `vendors` store changes for budget chart
+- Coverage thresholds raised: lines/functions/statements 70→80%, branches 60→70%
+- Coverage `include` expanded to `src/**` (previously only `js/**`)
+- CI workflow header updated to v3.1.0
+
+### i18n
+
+- Added keys: `guests_imported`, `confirm_delete`, `confirm_reset_checkins`, `export_expenses_csv`, `export_vendors_csv`, `export_checkin_report`, `reset_checkins`, `filter_by_category`, `budget_progress`, `budget_chart`, `import_guests_csv` (Hebrew + English)
+
+### Tests
+
+- Added 57 new tests in 2 new suites: **v3.1.0 New section exports** + **v3.1.0 src/utils pure functions** — total: **961 tests, 97+ suites**
+
+## [3.0.0] — 2026-07-27
+
+### Breaking: ESM Entry Point Switch (S0.11 + S0.12)
+
+- **S0.11 — Vite entry switched to `src/main.js`**: `index.html` now loads `src/main.js` instead of `js/main.js`. `vite-plugin-legacy-globals.mjs` plugin removed from `vite.config.js`. All `window.*` side-effect registrations eliminated.
+- **S0.12 — ESLint simplified**: `varsIgnorePattern` reduced from 70+ prefix list to `^_` only. `js/` directory excluded from ESLint scope (legacy code). `lint:js` now covers `src/**/*.js`, `scripts/`, `vite.config.js`, `eslint.config.mjs`. `scripts/` override added for Node globals (`process`, `Buffer`) and `console.log`.
+- **S0.11 — `src/main.js` rewrite**: Central bootstrap wires all ~50 `data-action` handlers via `on()` from `src/core/events.js`. Auth guard in `_switchSection` (public sections: rsvp, landing, contact-form, registry, guest-landing). Session rotation every 15 min.
+
+### New Modules
+
+- **`src/services/sheets.js`**: Added `syncSheetsNow()`, `sheetsCheckConnection()`, `createMissingSheetTabs()`.
+- **`src/core/ui.js`**: Added `cycleTheme()`, `toggleLightMode()`, `toggleMobileNav()`, `restoreTheme()`.
+- **`src/sections/settings.js`**: Added `clearAllData()`, `exportJSON()`, `importJSON()`, `copyRsvpLink()`, `copyContactLink()`, `saveWebAppUrl()`, `saveTransportSettings()`, `addApprovedEmail()`, `clearAuditLog()`, `clearErrorLog()`, `switchLanguage()`.
+- **`src/sections/guests.js`**: Added `exportGuestsCSV()`, `setSideFilter()`, `printGuests()`, `downloadCSVTemplate()`.
+- **`src/sections/tables.js`**: Added `printSeatingChart()`, `printPlaceCards()`, `printTableSigns()`, `findTable()`.
+- **`src/sections/whatsapp.js`**: Added `sendWhatsAppAll()`, `sendWhatsAppAllViaApi()`, `checkGreenApiConnection()`, `saveGreenApiConfig()`.
+- **`src/sections/registry.js`**: Added `addLink()` for registry URL management.
+
+### Documentation
+
+- **S7.5 — ARCHITECTURE.md**: Mermaid dependency graph showing all module relationships and data flow.
+- **904 tests** (up from 899) — 5 new S0.11/S0.12 compliance tests verifying entry-point switch, ESLint ignores, and handler registration.
+
+## [2.1.0] — 2026-07-26
+
+### Sprint 3 — Sync & Offline Resilience
+
+- **S3.3 — Optimistic UI**: `_guestPendingSync` Set in `guests.js`; `renderGuests()` marks rows with `data-sync-pending`; amber left-border + reduced opacity CSS in `components.css`; `clearGuestPendingSync()` called by `sheets.js` after successful flush.
+- **S3.5 — Apps Script v2.0.0**: `sheets-webapp.gs` updated to v2.0.0 — `ALLOWED_SHEETS` now includes Vendors, Expenses, RSVP_Log; `deleteRow` action added; structured `{ ok, error, code }` error responses; `ensureSheets` creates all 6 tabs.
+- **S3.9 — Offline-queue backoff**: `_MAX_RETRIES = 5`, `_RETRY_BASE_MS = 10_000`; failed items retried with exponential backoff (`2^retries × 10 s`, capped at 5 min); items exceeding retry limit are dropped silently.
+
+### Sprint 4 — Quality Gates
+
+- **S4.9 — Lighthouse thresholds**: `.lighthouserc.json` — severity upgraded from `warn` to `error`; performance raised to 0.90, accessibility to 0.95; `numberOfRuns: 2`, `throttlingMethod: simulate`, `preset: lighthouse:no-pwa`.
+
+### Sprint 5 — DevOps & Protection
+
+- **S5.4 — Branch protection**: `branch-protection.yml` workflow — weekly scheduled drift detection + manual apply job; uses `gh api` to verify required status checks, enforce_admins, disallow deletions.
+- **S5.6 — Projects v2 automation**: `project-automation.yml` — auto-label via `actions/labeler`, auto-add to project board via `actions/add-to-project`, stale issue/PR management via `actions/stale`.
+- **S5.10 — Deploy verification**: `deploy.yml` — post-deploy HTTP health check with 6 retries (exponential sleep); fails CI if site returns non-200 after all retries.
+
+### Sprint 6 — Testing
+
+- **S6.7 — Integration tests (DOM interaction)**: 57 new unit tests across 5 suites — offline-queue module, guest pending-sync, S3.3 CSS, branch-protection workflow, deploy verification, Lighthouse config assertions.
+- **S6.9 — Visual regression**: `tests/e2e/visual.spec.mjs` — Playwright `toHaveScreenshot()` coverage for desktop (1280×720), mobile (390×844), and all 4 themes; 2% pixel-ratio tolerance.
+- **S6.11 — CI coverage gate**: Removed `continue-on-error: true` from CI coverage step — failing thresholds now block CI.
+
+### Sprint 7 — Documentation & Release
+
+- **S7.2 — CLAUDE.md v3**: Updated test count (804+), commands (`test:e2e` includes visual), critical gotchas for S3.3/S3.5/S3.9/S4.9/S6.9/S6.11 + quote-style gotcha.
+- **S7.3 — copilot-instructions.md v3**: Version bump to 2.1.0; test count to 804+; E2E note includes visual regression (S6.9).
+- **S7.6 — GUIDE.md**: End-user guide (Markdown) covering all tabs, RSVP flow, WhatsApp, offline mode, admin login, troubleshooting.
+- **S7.7 — CHANGELOG v2.1.0**: This entry.
+
+### Sprint 0 — ESM Migration Scaffold
+
+- **src/utils/**: Named-export ES modules — `phone.js` (cleanPhone, isValidPhone), `date.js` (formatDateHebrew, daysUntil), `sanitize.js` (sanitize, sanitizeInput), `misc.js` (uid, guestFullName), `index.js` barrel.
+- **src/core/**: `store.js` (storeSubscribe, storeSet, storeGet, initStore), `events.js` (initEvents, on, off), `config.js` (app constants), `i18n.js` (t, applyI18n, loadLocale), `state.js` (save/load/remove/clearAll), `dom.js` (el Proxy), `ui.js` (showToast, openModal, closeModal), `nav.js` (navigateTo, initRouter, initSwipe).
+- **src/services/**: `sheets.js` (enqueueWrite, sheetsPost, sheetsRead), `auth.js` (loginOAuth, loginAnonymous, isApprovedAdmin, maybeRotateSession).
+- **src/main.js**: Bootstrap entry skeleton (not yet Vite entry — migration ongoing).
+- **Tests**: 33 new tests across 4 `src/` structure suites (837 total).
+
+### Sprint 3–7 (batch 2) — Security, Testing, DevOps, Docs
+
+- **JS: utils.js** — `sanitize(input, schema)` (S4.2): schema-driven validation for string/number/boolean/phone/email/url types; drops script injection patterns; returns `{ value, errors }`.
+- **JS: nav.js** — `_initSwipe()` (S2.7): touchstart/touchend-based swipe navigation across the main section list; ignores vertical scroll intent.
+- **JS: sheets.js** — `enqueueSheetWrite(key, fn)` (S3.2): last-write-wins debounced write queue (1.5 s debounce, coalesces per key); `_mergeGuest()` (S3.4) last-write-wins conflict resolution via `updatedAt`; `syncVendorsToSheets()` + `syncExpensesToSheets()` (S3.8); RSVP log append to `SHEETS_RSVP_LOG_TAB` (S3.7); pull-to-refresh (S2.8): 80 px touch drag triggers Sheets sync.
+- **JS: config.js** — Added `SHEETS_VENDORS_TAB`, `SHEETS_EXPENSES_TAB`, `SHEETS_RSVP_LOG_TAB` constants (S3.7).
+- **JS: guests.js** — `syncGuestsToSheets()` routed through `enqueueSheetWrite()` (optimistic UI S3.3).
+- **JS: gallery.js** — `decoding="async"`, explicit width/height on gallery images for CLS prevention (S4.6).
+- **JS: ui.js** — `openModal()` sets `aria-modal=true`, clears `aria-hidden`, stores `_modalOpener`; `closeModal()` restores focus to opener (S7.9 a11y).
+- **Vite** — Manual chunk splitting (S4.5): `locale-en`, `chunk-analytics`, `chunk-gallery`, `chunk-services` via `rollupOptions.output.manualChunks`; stable asset filenames with hashes.
+- **Scripts** — `generate-precache.mjs` (S4.4): scans `dist/` after build, writes `precache-manifest.json`, outputs ready-to-paste `APP_SHELL` array for `sw.js`.
+- **Scripts** — `sri-check.mjs` (S4.3): enhanced to also scan `dist/assets/` and print SRI hashes for built output.
+- **Workflows** — `preview.yml` (S5.7): PR preview deploys to `/preview/pr-{n}/`; auto-cleans on PR close; sticky PR comment with preview URL.
+- **Tests** — 82 new tests (772 total, 83+ suites): utils (S6.2), store (S6.3), router (S6.4), sheets (S6.5), auth (S6.6), sanitize (S4.2), swipe (S2.7), sheets tabs (S3.7), bundle chunks (S4.5), PR preview workflow (S5.7).
+- **E2E** — Playwright expanded (S6.8): RSVP flow, navigation flow, a11y smoke (3 new describe groups, 11 new tests).
+- **Coverage gate** — Raised to 70% lines/functions/statements, 60% branches (S6.10).
+- **README** — Architecture `mermaid` diagram (S7.1/S7.5); updated project structure; themes table; test count 772+.
+- **copilot-instructions.md** — Updated test count, file list, key patterns (S7.4).
+- **package.json** — Added `precache` script.
+
+### Sprint 2-6 (batch 1) — UI Modernization, Backend hardening, DevOps, Testing, Security
+
+- **JS: nav.js** — `_withViewTransition()` helper; section switches use View Transitions API with graceful fallback.
+- **JS: ui.js** — `showToast()` rewritten with icon/message spans, `toast-progress` bar with CSS animation, click-to-dismiss, `toast-out` exit animation.
+- **JS: dashboard.js** — `IntersectionObserver`-based stat card reveal (`stat-hidden` → `stat-visible`) via `_observeStatCards()`.
+- **JS: sheets.js** — Polling replaced `setInterval` with `setTimeout` + exponential backoff (30/60/120/300 s) + ±10 % jitter; `updateSyncStatus(state)` drives `.sync-status` indicator; `stopSheetsAutoSync` and visibility handler updated to `clearTimeout`.
+- **JS: auth.js** — Session rotation every 2 h via `_maybeRotateSession()` + 15-min `setInterval` on admin login; `_SESSION_ROTATION_MS` constant added.
+- **GitHub DevOps** — Bug report + feature request issue templates; `config.yml` disables blank issues; enhanced PR template with subsection checklists; Dependabot npm weekly; CODEOWNERS expanded with security-critical files; CI release workflow now runs `npm run ci` before release + `prerelease` flag for beta/alpha tags.
+- **Security** — `public/_headers` for GitHub Pages: security headers + immutable cache for assets + no-cache for SW/manifest; `npm audit` step in CI security-scan job.
+- **Testing** — Vitest v8 coverage (`test:coverage`); thresholds: 60 % lines/functions/statements, 50 % branches; coverage step in CI.
+- **README** — CI + deploy live status badges added.
+
+## [2.0.0-beta.2] — 2026-07-12
+
+### Changed — Architecture & SEO
+
+- **CSS `@layer` cascade management** — 7 named layers (`variables`, `base`, `layout`,
+  `components`, `auth`, `responsive`, `print`) with explicit order declaration in `variables.css`.
+- **CSS native nesting** — Converted 7 selector families in `components.css` to `&`-based nesting
+  (card, stat-card, search-box, guest-table, form-group, empty-state, bottom-nav).
+- **SEO meta tags** — Open Graph (`og:title/description/url/image/locale/site_name`), Twitter Card,
+  canonical link, robots directive, and JSON-LD `Event` structured data.
+- **Lighthouse CI thresholds raised** — perf ≥ 0.85, a11y ≥ 0.9, BP ≥ 0.9, SEO ≥ 0.9, PWA ≥ 0.6.
+- **Removed stale preload hints** — Dropped 5 JS + 2 CSS `<link rel="preload">` tags that target
+  source files (useless after Vite bundling).
+
+## [2.0.0-beta.1] — 2026-07-11
+
+### Changed — v2.0 Migration (Sprints 0–1)
+
+- **Sprint 0 — Vite 8 build** — ES module entry (`js/main.js`), `vite-plugin-legacy-globals.mjs`
+  auto-registers top-level declarations on `window`, `base: '/Wedding/'`, deploy `dist/`.
+  Vitest 4 test runner (537 tests), ESLint flat config (`sourceType: "module"`).
+
+- **Sprint 1.1 — Reactive store** — `js/store.js` Proxy-based store with debounced
+  auto-persist to localStorage and `storeSubscribe(key, fn)` API.
+
+- **Sprint 1.2 — Event delegation** — `js/events.js` replaces 110 inline `onclick=`
+  handlers with `data-action` / `data-on-input` / `data-on-change` / `data-on-enter`.
+
+- **Sprint 1.3 — Kill innerHTML** — 35/36 innerHTML calls replaced with
+  `document.createElement` / `textContent` / `DocumentFragment`.
+
+- **Sprint 1.4 — Tighten CSP** — `script-src 'self' 'sha256-...'` (no `unsafe-inline`).
+
+- **Sprint 1.5 — i18n split to JSON** — Hebrew and English translations moved from JS
+  objects to `js/i18n/he.json` and `js/i18n/en.json`. Hebrew loaded eagerly via Vite
+  static import; English lazy-loaded on first language toggle via dynamic `import()`.
+  Separate 35 KB async chunk for English locale.
+
+- **Sprint 1.6 — JSDoc @ts-check** — `// @ts-check` added to all 37 JS files.
+  `tsconfig.json` with `checkJs: true` for IDE type checking. `@typedef` for Guest,
+  SeatingTable, WeddingInfo, and enum types in `js/config.js`.
+
+### Fixed
+
+- **Vite plugin async function support** — `vite-plugin-legacy-globals.mjs` now matches
+  `async function` declarations (previously only `function`). Fixes tree-shaking of async
+  functions like `loadExternalConfig`, `subscribePush`, and all Sheets API functions in
+  production builds.
+
+### Infrastructure
+
+- **Bundle**: 45 KB gzip main + 12 KB gzip English locale (lazy)
+- **Tests**: 537 pass (71 suites)
+- **Lint**: 0 errors, 0 warnings
+
+## [1.20.0] — 2026-04-14
+
+Transportation option (bus pickup from 2 points), i18n locale split to separate files (`i18n.he.js` / `i18n.en.js`), JSDoc `@typedef` for Guest/Table/WeddingInfo, safer DOM writes (3 more innerHTML replaced).
+
+## [1.19.0] — 2026-04-13
+
+SRI tooling (`scripts/sri-check.mjs`), CI secrets injection (`scripts/inject-config.mjs`), Web Push notifications (`js/push.js`, VAPID, SW handlers, GAS helpers), bundle size report (`scripts/size-report.mjs`), Playwright E2E smoke tests (9 tests).
 
 ## [1.18.0] — 2026-04-13
 
-### Added
-
-- **Email notifications** (Sprint 3.6) — `js/email.js` sends RSVP confirmation emails to
-  guests (if they provided an email address) and admin alerts on new RSVPs, both via the
-  Apps Script `MailApp`. Admin toggle in Settings → Email Notifications card.
-  Features: enable/disable master toggle, per-event checkboxes (guest confirmation,
-  admin notify). Settings persisted as `wedding_v1_emailSettings`.
-- **Apps Script server-side validation** (Sprint 4.1) — `sheets-webapp.gs` now validates
-  every Attendees row before writing: firstName required ≤100 chars, phone ≤30 chars, email
-  format + ≤254 chars, count 0–200, status/side/meal/group against enums. Returns
-  `{ok:false, error:"..."}` on invalid data. Column index constants `COL.*` defined for
-  maintainability.
-- **Server-side rate limiting** (Sprint 4.2) — `_checkRateLimit()` in `sheets-webapp.gs`
-  uses `PropertiesService` to track request counts per UTC minute (key `rl_YYYYMMDDHHMM`).
-  Hard limit 30 req/min; returns 429-style error when exceeded. Auto-purges keys older
-  than 10 minutes.
-- **Config externalization** (Sprint 4.4) — `wedding.json` in project root holds public
-  event defaults (couple names, date, venue, etc.). `loadExternalConfig()` in `state.js`
-  fetches it asynchronously at startup and merges into `_weddingDefaults`. User-saved
-  localStorage settings always take precedence. Silent fallback to hardcoded defaults on
-  any error. `wedding.json` added to SW APP_SHELL for offline serving.
-- **Lighthouse CI** (Sprint 6.1) — `.lighthouserc.json` configures `@lhci/cli` with
-  mobile emulation and warn-level score thresholds (performance ≥0.65, accessibility ≥0.80,
-  best-practices ≥0.80, SEO ≥0.70, PWA ≥0.50). New `lighthouse` job in `ci.yml` runs on
-  every push to `main`, after lint+test passes, using `lhci autorun` against the static
-  dist served locally.
-
-### Changed
-
-- `sheets-webapp.gs` — refactored to use plain `var` declarations (ES3-compatible Apps
-  Script runtime); `const` → `var` throughout; `Array.includes` → `indexOf` for compat.
-  Version bumped to `1.18.0` in `doGet`.
-- `js/app.js` — `loadExternalConfig().then(...)` called early in `init()` to refresh
-  wedding details form after external config loads.
-- `js/rsvp.js` — calls `sendRsvpConfirmation()` and `sendAdminRsvpNotify()` after every
-  successful RSVP submission.
-- `js/nav.js` — Settings section now also calls `renderEmailSettings()`.
-- `sw.js` — bumped to `wedding-v1.18.0`; added `email.js` + `wedding.json` to APP_SHELL.
-- `eslint.config.mjs` — added email.js + state.js globals; `loadExternalConfig` declared.
-- `.github/workflows/ci.yml` — comment updated; `lighthouse` job added.
+Email notifications (`js/email.js`, GAS `MailApp`), Apps Script server-side validation + rate limiting (30 req/min), config externalization (`wedding.json`), Lighthouse CI (thresholds: perf ≥0.65, a11y ≥0.80, BP ≥0.80, SEO ≥0.70, PWA ≥0.50).
 
 ## [1.17.0] — 2025-07-18
 
-### Added
-
-- **Contact collector** (Sprint 3.4) — Shareable public link (`#contact-form`) lets missing
-  guests submit their own name, phone, email, and address. Submissions create a guest record
-  automatically. Admins copy the collector URL from a new Settings card.
-- **Offline RSVP queue** (Sprint 3.8) — When a guest submits an RSVP without internet, the
-  payload is queued in `localStorage` and automatically synced when connectivity is restored.
-  An animated `#offlineBadge` in the top-bar shows pending count while offline.
-- **Audit log** (Sprint 4.3) — Ring-buffer (max 200 entries) records guest add/edit/delete,
-  RSVP submissions, contact submissions, and admin login/logout. Viewable in a paginated table
-  in Settings. Persisted as `wedding_v1_audit`. UI buttons to export CSV or clear the log.
-- **Error monitoring** (Sprint 6.4) — `initErrorMonitor()` hooks `window.onerror` and
-  `window.onunhandledrejection`, storing up to 50 session errors. Admin-only Error Log card in
-  Settings shows message, file, and line. Session-only (not persisted).
-- **PNG PWA icons** (Sprint 6.5) — `icon-192.png` and `icon-512.png` generated via
-  `npm run icons` (Node canvas script). Manifest and SW APP_SHELL updated. Passes Chrome
-  installability requirements.
-- **Performance preloads** (Sprint 6.6) — `<link rel="preload">` for critical CSS and JS;
-  `apple-touch-icon`; Apple PWA meta tags added to `<head>`.
-
-### Changed
-
-- `js/guests.js` — `saveGuest` and `deleteGuest` call `logAudit`
-- `js/rsvp.js` — `submitRSVP` checks `navigator.onLine` and queues payload offline if needed
-- `js/auth.js` — `_oauthLogin` and `signOut` call `logAudit`
-- `js/nav.js` — Settings section now renders audit log, error log, contact settings, and offline status
-- `js/router.js` — `contact-form` added to `_ROUTER_VALID`
-- `js/app.js` — `initOfflineQueue()` and `initErrorMonitor()` called on startup
-- `js/state.js` — audit log persisted in `saveAll`/`loadAll`
-- `sw.js` — bumped to `wedding-v1.17.0`; added 4 JS files + 2 PNG icons to APP_SHELL
-- `eslint.config.mjs` — `^log|^enqueue|^flush|^queue` added to `varsIgnorePattern`;
-  `sessionStorage`, `_sheetsWebAppPost` declared as globals
+Contact collector (`#contact-form`), offline RSVP queue + `#offlineBadge`, audit log (ring-buffer 200 entries, CSV export), error monitoring (`window.onerror` hook), PNG PWA icons (192/512), performance preloads + Apple PWA meta.
 
 ## [1.16.0] — 2025-07-17
 
-### Added
-
-- **Registry links** (Sprint 3.5) — Settings card lets admins add external gift-registry URLs
-  (name + URL). All registered links appear as clickable cards on the guest-facing landing page
-  (`#landingRegistryList`). Data stored in `_weddingInfo.registries`.
-- **Check-in mode + live headcount** (Sprint 5.1 + 5.3) — New admin-only `#sec-checkin` section.
-  Real-time stats bar shows arrived / confirmed / total counts plus a progress bar. Admins search
-  guests by name or phone and toggle their `arrived` status with a single click. `arrivedAt`
-  timestamp is saved per guest. Existing guests are migrated automatically.
-- **Table finder** (Sprint 5.2) — Guest-facing search embedded in the landing page. Guest types
-  their name or phone; the app looks up their table assignment and displays it inline with a
-  colour-coded result card (found / not found / no table assigned).
-- **Print materials** (Sprint 5.5) — New `css/print.css` loaded with `media="print"` (zero
-  screen impact). `printPlaceCards()` builds a 3-per-row grid of place cards (3.5 × 2 in) and
-  calls `window.print()`. `printTableSigns()` builds a 2-per-row grid of table signs (5 × 3 in)
-  and calls `window.print()`. Print buttons added to the Settings page.
-- **Photo gallery** (Sprint 3.1) — New public `#sec-gallery` section. Admins upload JPEG/PNG/WebP
-  photos (max 20 per batch); images are compressed to max 480 px / JPEG 0.82 quality via Canvas
-  before storage. Guests view a responsive CSS grid gallery with click-to-lightbox. Photos stored
-  as `wedding_v1_gallery` in localStorage.
-
-### Changed
-
-- ESLint `varsIgnorePattern` extended with `^search|^find` prefixes.
-- Service Worker cache bumped to `wedding-v1.16.0`; `APP_SHELL` expanded with
-  `registry.js`, `checkin.js`, `gallery.js`, `css/print.css`.
+Registry links (gift registry URLs on landing page), check-in mode + live headcount (`#sec-checkin`), table finder on landing page, print materials (`printPlaceCards` / `printTableSigns`), photo gallery (`#sec-gallery`, Canvas compression, lightbox).
 
 ## [1.15.0] — 2025-07-16
 
-### Added
-
-- **Guest-facing landing page** (Sprint 2.7) — Non-admin users land on `#sec-landing` instead
-  of the RSVP form. Shows couple names (Hebrew + English), wedding date, Hebrew date, venue,
-  address, Waze navigation link, and a read-only event timeline. Large RSVP CTA button.
-- **Hash router** (Sprint 2.1) — `js/router.js` syncs URL hash with the active section via
-  `history.replaceState`. Deep links (`?#guests`, `#budget`, etc.) are restored on page load.
-  `initRouter()` is called last in `init()` so auth-determined defaults are not overridden
-  unless an explicit hash is present.
-- **Embedded venue map** (Sprint 3.2) — `renderVenueMap()` in `js/invitation.js` geocodes the
-  venue address via Nominatim (OpenStreetMap) and embeds an OSM iframe with auto-centred marker.
-  Falls back to a Google Maps search link when geocoding fails. Loaded lazily on
-  `showSection('invitation')`. CSP updated with `nominatim.openstreetmap.org` in `connect-src`
-  and `www.openstreetmap.org` in `frame-src`.
-- **Expense budget tracker** (Sprint 3.3) — `js/expenses.js` adds a full CRUD expense list to
-  the budget section. 8 translated categories (venue, catering, photography, flowers, music,
-  transport, clothing, misc). Data persisted as `wedding_v1_expenses` in localStorage. Admin-only
-  add/edit/delete; total display visible to all.
-- **Smart Sheets polling** (Sprint 3.7) — `startSheetsAutoSync()` now pauses the polling
-  interval when the browser tab is hidden (`document.hidden`) and resumes with an immediate
-  `_checkSheetsForChanges()` call when the tab becomes visible again. Prevents wasted background
-  API calls and catches up immediately on tab focus.
-
-### Changed
-
-- `applyUserLevel()` — non-admin guests now start on `#landing` instead of `#rsvp`.
-- `showSection()` — calls `renderVenueMap()` when navigating to invitation; calls
-  `renderGuestLanding()` when navigating to landing; calls `_routerPush(name)` to update URL.
-- `renderBudget()` — also calls `renderExpenses()` so the expense table refreshes on budget renders.
-- SW cache version bumped to `wedding-v1.15.0`; three new JS files added to `APP_SHELL`.
+Guest-facing landing page (`#sec-landing`), hash router (`js/router.js`, `history.replaceState`), embedded venue map (Nominatim/OSM iframe), expense budget tracker (`js/expenses.js`, 8 categories), smart Sheets polling (pause on tab hidden/resume on focus).
 
 ## [1.14.0] — 2025-07-15
 
-### Added
-
-- **Mobile-first bottom navigation** (Sprint 2.3) — Fixed 5-tab bottom bar (dashboard, guests,
-  timeline, RSVP, settings) shown on ≤768px via `css/responsive.css`. Syncs active state with
-  the top nav. A "More" button (`toggleMobileNav()`) toggles the full top nav on mobile.
-  `role="navigation"` and `aria-label` added to both navs.
-
-- **Animated stat counters** (Sprint 2.4) — `animateCounter(el, target)` in `js/dashboard.js`
-  uses `requestAnimationFrame` with an ease-out cubic curve (500 ms) for all 10 dashboard stat
-  cards.
-
-- **Timeline section** (Sprint 2.5) — New wedding-day schedule section (`#sec-timeline`) with
-  full admin CRUD (`js/timeline.js`). Data model `{ id, time, icon, title, description }` sorted
-  by time; persisted to `localStorage: wedding_v1_timeline`. Guests see a read-only view; admins
-  get add/edit/delete controls. New modal `#timelineModal`.
-
-- **QR Code for RSVP** (Sprint 2.6) — Settings card with a live QR image from
-  `api.qrserver.com` (CSP `img-src https:` already covers it). `renderRsvpQr()`,
-  `printRsvpQr()` (Blob URL, no `document.write`), `copyRsvpLink()` (Clipboard API).
-
-- **Accessibility improvements** (Sprint 2.8) — Skip link (`.skip-link`) with `id="main-content"`
-  target; `role="dialog" aria-modal="true"` on all modals; `aria-live="polite" aria-atomic="true"`
-  on toast container; `aria-label` on theme/dark-light icon buttons; focus management in
-  `openModal()` (first focusable element) / `closeModal()` (`body.overflow` restored).
-
-### Changed
-
-- `sw.js`: version → `wedding-v1.14.0`; `timeline.js` added to `APP_SHELL`.
-- `eslint.config.mjs`: new globals for `timeline.js` + QR + mobile nav + animated counters;
-  `varsIgnorePattern` extended with `^copy|^animate`.
-- 34 new tests added (325 total, 0 failures).
+Mobile-first bottom navigation (5 tabs, ≤768px), animated stat counters, timeline section (`js/timeline.js`, CRUD, sorted), RSVP QR code (Settings card), accessibility (skip link, ARIA roles, focus management).
 
 ## [1.13.0] — 2025-07-14
 
-### Added
-
-- **Dark / Light mode toggle** — ☀️/🌙 button in top bar switches between dark and light UI.
-  - `body.light-mode` CSS class controls the mode; combined with existing `body.theme-*` class for **10 total theme combinations** (5 colors × 2 modes).
-  - `css/variables.css`: `--header-bg` variable; full `body.light-mode` palette block (bg, text, card, border, shadow); per-theme light variants for rose gold, classic gold, emerald, royal blue.
-  - `css/layout.css`: `.header` background uses `var(--header-bg)` (was hardcoded).
-  - `css/components.css`: `body.light-mode` overrides for top-bar, nav-tabs, countdown items, progress bar, guest table cells, modal overlay, tooltips, analytics stat boxes.
-  - `js/ui.js`: `toggleLightMode()` and `_applyThemeClasses()` added; `cycleTheme()` updated to preserve `light-mode` class when cycling colour themes.
-  - `js/config.js`: `_isLightMode` state variable.
-  - `js/state.js`: `saveAll()` / `loadAll()` persist `_isLightMode`; first-visit default respects `prefers-color-scheme` media query.
-  - `js/app.js`: `init()` calls `_applyThemeClasses()` and restores button icon from saved state.
-  - `index.html`: `#btnDarkLight` button added to `.top-bar`.
-  - `js/i18n.js`: `tip_btn_dark_light` key in both `he` and `en`.
-  - `eslint.config.mjs`: `_isLightMode`, `toggleLightMode`, `_applyThemeClasses` declared as cross-file globals.
-- **ROADMAP.md**: Sprint 2.2 (Light mode) marked complete with implementation summary; competitor table updated (Dark + light mode → **Y** unique).
+Dark/light mode toggle (5 themes × 2 modes), `--header-bg` variable, `body.light-mode` palette, `toggleLightMode()` / `_applyThemeClasses()`, persisted with `prefers-color-scheme` fallback.
 
 ## [1.12.0] — 2025-07-13
 
-### Added
-
-- **Analytics section** — new dedicated analytics page (📈 nav tab) wired from the pre-existing `analytics.js` module (SVG-based donut + bar charts).
-  - 5 chart cards: RSVP status donut, side distribution bars, meal preference bars, invitation sent/unsent bars, headcount summary grid.
-  - 9 new DOM IDs: `analyticsRsvpDonut`, `analyticsSideChart`, `analyticsMealChart`, `analyticsSentChart`, `analyticsHeadAdults`, `analyticsHeadChildren`, `analyticsHeadTotal`, `analyticsHeadConfirmed`, `analyticsHeadAccess`.
-  - 7 new CSS classes in `components.css`: `.analytics-row`, `.analytics-card`, `.analytics-headcount-grid`, `.analytics-stat-box`, `.analytics-stat-num`, `.analytics-stat-lbl`, `.analytics-stat-highlight`.
-  - 17 new i18n keys (he + en): `nav_analytics`, `tip_nav_analytics`, `stat_maybe`, `stat_guests`, `analytics_title`, `analytics_rsvp_title`, `analytics_side_title`, `analytics_meal_title`, `analytics_sent_title`, `analytics_headcount_title`, `analytics_confirmed_heads`, `analytics_total_guests`, `analytics_adults`, `analytics_children`, `analytics_total_heads`, `analytics_confirmed_count`, `analytics_access_count`.
-  - Analytics section is admin-only (added to `adminOnly` array in `nav.js`).
-  - `renderAnalytics()` called on section show and on init.
-  - 10 new tests (187 total).
+Analytics section (`#sec-analytics`, admin-only): SVG donut (RSVP status), bar charts (side/meal/invitation), headcount grid — 5 cards, 9 DOM IDs, 7 CSS classes, 17 i18n keys.
 
 ## [1.11.0] — 2026-04-14
 
-### Added
-
-- **OAuth re-added** — Google (GIS), Facebook (JS SDK), Apple Sign-In as supplementary login paths alongside email allowlist. All providers call `isApprovedAdmin(email)` — the allowlist remains the single authorization source. `handleGoogleCredential`, `loadFBSDK`, `loginFacebook`, `loadAppleSDK`, `loginApple`, `_oauthLogin` added to `auth.js`. `window.onGoogleLibraryLoad` callback in `app.js`. `FB_APP_ID`, `APPLE_SERVICE_ID` constants in `config.js`. New CSS classes: `.btn-facebook`, `.btn-apple` in `auth.css`.
-- New i18n keys: `auth_or_social`, `auth_continue_google`, `auth_continue_fb`, `auth_continue_apple`, `auth_oauth_no_email`, `auth_oauth_not_configured` (both `he`+`en`).
-- `npm run lint:fix` and `npm run ci` script aliases in `package.json`.
-
-### Changed
-
-- `eslint.config.mjs`: upgraded `ecmaVersion` to `2025`; added `no-throw-literal`, `no-self-compare`, `no-sequences`, `no-useless-concat`, `no-useless-return`, `no-lone-blocks`, `no-lonely-if` rules; declared `google` readonly global.
-- `.vscode/tasks.json`: updated test label to "177 tests"; CI task now runs `npm run ci` directly.
-- `.vscode/extensions.json`: added `GitHub.copilot` recommendation.
-- `.vscode/settings.json`: removed corrupted duplicate block.
-- `.github/workflows/ci.yml`: updated header comment to v1.11.0.
-- `copilot-instructions.md` + `CLAUDE.md`: updated to v1.11.0, 177 tests, correct auth table.
-- `CHANGELOG.md`: collapsed v1.3.0–v1.7.0 to one-liners.
+OAuth re-added (Google GIS, Facebook JS SDK, Apple Sign-In) — all check `isApprovedAdmin(email)`; ESLint upgraded to `ecmaVersion: 2025`; 6 new lint rules; `npm run lint:fix` + `npm run ci` aliases.
 
 ## [1.10.0] — 2026-04-13
 
-### Added
-
-- **Dashboard donut charts** — three Canvas-based donut charts directly on the Dashboard:
-  - *RSVP Status*: confirmed / pending / maybe / declined (by head count)
-  - *Meal Preferences*: regular / vegetarian / vegan / kosher / gluten-free / other (by record)
-  - *Sides Distribution*: groom / bride / mutual (by head count)
-- `renderCharts()` in `dashboard.js` — called automatically from `renderStats()` on every data change.
-- `_drawDonut(canvas, segments, centerLabel)` — pure Canvas 2D helper; HiDPI-aware via `devicePixelRatio`; empty state shows dashed ring.
-- `_buildLegend(legendEl, segments)` — DOM-based color-dot legend (no `innerHTML`).
-- New CSS classes in `components.css`: `.charts-row`, `.chart-wrap`, `.chart-label`, `.chart-legend`, `.chart-legend-item`, `.chart-legend-dot`.
-- Responsive: charts stack naturally on 480 px mobile via `flex-wrap`.
-- 8 new tests (185 total).
-- New i18n keys: `charts_title`, `chart_rsvp_title`, `chart_meal_title`, `chart_side_title`, `chart_total`, `chart_guests` (both `he` + `en`).
+Dashboard donut charts (RSVP status / meal preferences / sides) via Canvas 2D `renderCharts()` + HiDPI-aware `_drawDonut()`; DOM legend; 8 new tests (185 total); 6 i18n keys.
 
 ## [1.9.0] — 2026-04-13
 
-### Security
-
-- **Login brute-force protection** — 5 failed attempts triggers a 5-minute lockout
-  tracked in `localStorage` (`loginFail` key). New helpers: `_loginAttemptOk()`,
-  `_recordLoginFailure()`, `_clearLoginFailures()`.
-- **Admin session expiry** — sessions automatically expire after 8 hours of inactivity
-  (`_SESSION_TTL_MS`). `expiresAt` timestamp stored with the session; on load, expired
-  sessions are silently cleared and the user falls back to guest mode.
-- **CSV injection guard** — `exportGuestsCSV` now applies a `csvCell()` helper that
-  prefixes formula-injection characters (`=`, `+`, `-`, `@`, TAB, CR) with a tab so
-  spreadsheet apps do not execute them as formulas.
-- **Server-side mutation guards** — `saveGuest`, `deleteGuest`, `saveTable`, `deleteTable`,
-  `updateWeddingDetails`, `importJSON`, `clearAllData` all now verify `_authUser.isAdmin`
-  before executing, preventing console-based privilege escalation.
-- **Guest field length-clamping** — `saveGuest` now passes every text field through
-  `sanitizeInput()` with appropriate per-field limits instead of raw `.trim()`.
-- **New i18n key** — `auth_login_locked` in both `he` and `en`.
+Security hardening: brute-force lockout (5 attempts / 5 min), 8-hour session expiry, CSV injection guard (`csvCell()`), server-side admin mutation guards, guest field length-clamping via `sanitizeInput()`.
 
 ## [1.8.0] — 2026-04-13
 
-### Changed
-
-- **Auth completely simplified** — removed Google/Facebook/Apple OAuth flows entirely.
-  App now starts as guest automatically (no blocking login screen).
-- **Email-allowlist sign-in**: pressing 🔑 opens a modal where you type your email.
-  If it matches `ADMIN_EMAILS` (hardcoded: `yair.rajwan@gmail.com`) or the dynamic
-  approved-email list in Settings → you get full manager access instantly.
-- Any manager can add/remove approved emails in **Settings → User Access**.
-- Removed: Google Client ID / FB App ID / Apple Service ID provider-config UI from Settings.
-- Removed: Google GIS `onGoogleLibraryLoad` callback in `app.js` (GIS SDK still loaded for optional Sheets OAuth token path).
-- `sheets.js` `initSheetsTokenClient` now reads `GOOGLE_CLIENT_ID` directly (no runtime override needed).
-- i18n updated: new `auth_admin_login_sub`, `auth_sign_in_btn`, `auth_back_guest`, `auth_email_not_approved` keys; removed OAuth-only keys.
-- Auth overlay redesigned: email input + "Sign In as Manager" button + "Continue as Guest" fallback.
-- Added `.auth-email-input` CSS class for the styled email field.
-- 163/163 tests pass.
+Auth simplified to email-allowlist only (OAuth removed); guest auto-login; email modal sign-in; Settings → User Access for dynamic approved emails; auth overlay redesigned.
 
 ## [1.7.0] — 2025-08-01
 
@@ -360,7 +443,7 @@ Multi-provider OAuth: Google GIS, Facebook JS SDK, Apple Sign-In — all dynamic
 
 ## [1.4.0] — 2026-04-13
 
-**Budget & Gift Tracker** (`budget.js`): gift totals, progress bar, inline per-guest gift input, `parseGiftAmount()`, `saveBudgetTarget()`, 9 new tests.
+Budget & Gift Tracker (`budget.js`): gift totals, progress bar, inline per-guest gift input, `parseGiftAmount()`, `saveBudgetTarget()`, 9 new tests.
 
 ## [1.3.0] — 2026-04-13
 
@@ -368,27 +451,7 @@ Seating chart PDF export (`printSeatingChart()`): print-ready popup, table grid 
 
 ## [1.2.0] — 2026-04-13
 
-### Added
-
-- Modular architecture: `index.html` shell + `css/` (6 files) + `js/` (17 files) — no build step
-- Anonymous guest mode: users auto-enter without login; admins sign in via Google
-- Service Worker: stale-while-revalidate cache + 5-minute background update polling + "New version" banner
-- Real Facebook auth: `FB.login()` → `/me` API; graceful degradation when SDK not loaded
-- Real Apple auth: `AppleID.auth.signIn()` → JWT decode for email; silent popup-closed handling
-- `FB_APP_ID` + `APPLE_SERVICE_ID` constants in `js/config.js` with setup comments
-- `auth_error` i18n key (he + en) for failed sign-in toast
-- ESLint globals for `FB`, `AppleID`, `FB_APP_ID`, `APPLE_SERVICE_ID`
-- `.vscode/tasks.json` — one-click Lint: All, Lint: JS, Lint: CSS, Test, CI: Lint+Test
-- CI: combined lint+test matrix job on Node 22 and 24; security scan covers `js/*.js` + `index.html`
-
-### Changed
-
-- CI jobs merged from 3 (lint · unit-tests · security-scan) to 2 (lint-and-test matrix · security-scan)
-- CI Node matrix updated from `["20","22"]` to `["22","24"]` (LTS + current LTS)
-- `README.md`: version badge v1.1.0 → v1.2.0; project structure updated to reflect modular layout; auth setup section added
-- `CLAUDE.md`: rewritten to reflect modular file structure, updated lint commands, auth setup notes
-- `.github/copilot-instructions.md`: deduplicated; single Quick Facts table, no stale single-file references
-- `.vscode/settings.json`: added `chat.instructionFilesLocations`, `chat.promptFilesLocations`, `eslint.useFlatConfig`, `stylelint.configFile`, `nodejs-testing.include`; codeActionsOnSave for ESLint/Stylelint/markdownlint
+Modular architecture (`index.html` + `css/` + `js/`), real Facebook/Apple OAuth, Service Worker banner, ESLint globals for FB/AppleID, `.vscode/tasks.json`, CI Node matrix 22+24, `CLAUDE.md` rewritten.
 
 ## [1.1.0] — 2026-04-13
 

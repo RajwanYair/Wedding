@@ -1,10 +1,10 @@
 // =============================================================================
-// Service Worker — Wedding Manager v1.19.0
+// Service Worker — Wedding Manager v1.20.0
 // Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
-'use strict';
+"use strict";
 
-const CACHE_NAME = "wedding-v1.19.0";
+const CACHE_NAME = "wedding-v1.20.0";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -21,7 +21,10 @@ const APP_SHELL = [
   "./icon-192.png",
   "./icon-512.png",
   "./wedding.json",
+  "./js/main.js",
   "./js/config.js",
+  "./js/i18n.he.js",
+  "./js/i18n.en.js",
   "./js/i18n.js",
   "./js/dom.js",
   "./js/state.js",
@@ -60,7 +63,11 @@ let _shellUrls = null;
 function getShellUrls() {
   if (!_shellUrls) {
     const base = self.registration.scope;
-    _shellUrls = new Set(APP_SHELL.map(function(p) { return new URL(p, base).href; }));
+    _shellUrls = new Set(
+      APP_SHELL.map(function (p) {
+        return new URL(p, base).href;
+      }),
+    );
   }
   return _shellUrls;
 }
@@ -70,46 +77,62 @@ let _updateNotified = false;
 function notifyClients() {
   if (_updateNotified) return;
   _updateNotified = true;
-  self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clients) {
-    clients.forEach(function(c) { c.postMessage({ type: 'UPDATE_AVAILABLE' }); });
-  });
+  self.clients
+    .matchAll({ type: "window", includeUncontrolled: true })
+    .then(function (clients) {
+      clients.forEach(function (c) {
+        c.postMessage({ type: "UPDATE_AVAILABLE" });
+      });
+    });
 }
 
 /** Extract the best available freshness token from a Response */
 function freshnessToken(response) {
-  return response.headers.get('ETag') ||
-         response.headers.get('Last-Modified') ||
-         response.headers.get('Date') ||
-         '';
+  return (
+    response.headers.get("ETag") ||
+    response.headers.get("Last-Modified") ||
+    response.headers.get("Date") ||
+    ""
+  );
 }
 
 // ── Install: pre-cache app shell ─────────────────────────────────────────────
-self.addEventListener('install', function(e) {
+self.addEventListener("install", function (e) {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
+    caches.open(CACHE_NAME).then(function (cache) {
       return cache.addAll(APP_SHELL);
-    })
+    }),
   );
 });
 
 // ── Activate: remove stale caches, claim all clients ─────────────────────────
-self.addEventListener('activate', function(e) {
+self.addEventListener("activate", function (e) {
   e.waitUntil(
-    caches.keys().then(function(keys) {
-      return Promise.all(
-        keys.filter(function(k) { return k !== CACHE_NAME; })
-          .map(function(k) { return caches.delete(k); })
-      );
-    }).then(function() { return self.clients.claim(); })
+    caches
+      .keys()
+      .then(function (keys) {
+        return Promise.all(
+          keys
+            .filter(function (k) {
+              return k !== CACHE_NAME;
+            })
+            .map(function (k) {
+              return caches.delete(k);
+            }),
+        );
+      })
+      .then(function () {
+        return self.clients.claim();
+      }),
   );
 });
 
 // ── Fetch: stale-while-revalidate for app shell ───────────────────────────────
-self.addEventListener('fetch', function(e) {
+self.addEventListener("fetch", function (e) {
   const url = new URL(e.request.url);
 
   // Only handle same-origin GETs
-  if (e.request.method !== 'GET') return;
+  if (e.request.method !== "GET") return;
   if (url.origin !== self.location.origin) return;
 
   const isShell = getShellUrls().has(url.href);
@@ -118,77 +141,90 @@ self.addEventListener('fetch', function(e) {
     // Stale-while-revalidate: respond from cache instantly; refresh cache in background.
     // If the server signals new content (ETag/Last-Modified changed), notify all clients.
     e.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return cache.match(e.request).then(function(cached) {
-          const networkUpdate = fetch(e.request).then(function(response) {
-            if (response.status === 200) {
-              const newV = freshnessToken(response);
-              const oldV = cached ? freshnessToken(cached) : '';
-              // Notify when: no previous cache (first fetch), or freshness token changed.
-              // 'Date' always differs on each response so we only use it as a fallback
-              // when ETag and Last-Modified are both absent, meaning we signal once.
-              if (!cached || (newV && newV !== oldV)) notifyClients();
-              cache.put(e.request, response.clone());
-            }
-            return response;
-          }).catch(function() {
-            return cached || caches.match('./index.html');
-          });
+      caches.open(CACHE_NAME).then(function (cache) {
+        return cache.match(e.request).then(function (cached) {
+          const networkUpdate = fetch(e.request)
+            .then(function (response) {
+              if (response.status === 200) {
+                const newV = freshnessToken(response);
+                const oldV = cached ? freshnessToken(cached) : "";
+                // Notify when: no previous cache (first fetch), or freshness token changed.
+                // 'Date' always differs on each response so we only use it as a fallback
+                // when ETag and Last-Modified are both absent, meaning we signal once.
+                if (!cached || (newV && newV !== oldV)) notifyClients();
+                cache.put(e.request, response.clone());
+              }
+              return response;
+            })
+            .catch(function () {
+              return cached || caches.match("./index.html");
+            });
           // Serve stale cache immediately; background revalidation runs regardless
           return cached || networkUpdate;
         });
-      })
+      }),
     );
   } else {
     // Non-shell resources: cache-first, fetch on miss
     e.respondWith(
-      caches.match(e.request).then(function(cached) {
-        if (cached) return cached;
-        return fetch(e.request).then(function(response) {
-          if (response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });
-          }
-          return response;
-        });
-      }).catch(function() {
-        return caches.match('./index.html');
-      })
+      caches
+        .match(e.request)
+        .then(function (cached) {
+          if (cached) return cached;
+          return fetch(e.request).then(function (response) {
+            if (response.status === 200) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then(function (cache) {
+                cache.put(e.request, clone);
+              });
+            }
+            return response;
+          });
+        })
+        .catch(function () {
+          return caches.match("./index.html");
+        }),
     );
   }
 });
 
 // ── Message: SKIP_WAITING — new SW takes over immediately ────────────────────
-self.addEventListener('message', function(e) {
-  if (e.data === 'SKIP_WAITING') self.skipWaiting();
+self.addEventListener("message", function (e) {
+  if (e.data === "SKIP_WAITING") self.skipWaiting();
 });
 // ── Push: show notification to admin ────────────────────────────────────────────
-self.addEventListener('push', function(e) {
-  var data = {};
+self.addEventListener("push", function (e) {
+  let data = {};
   if (e.data) {
-    try { data = e.data.json(); } catch (_) { data = { body: e.data.text() }; }
+    try {
+      data = e.data.json();
+    } catch (_) {
+      data = { body: e.data.text() };
+    }
   }
-  var title   = data.title   || 'Wedding Manager';
-  var options = {
-    body:  data.body  || '',
-    icon:  data.icon  || './icon-192.png',
-    badge: './icon-192.png',
-    tag:   'wedding-push',
-    data:  data,
+  const title = data.title || "Wedding Manager";
+  const options = {
+    body: data.body || "",
+    icon: data.icon || "./icon-192.png",
+    badge: "./icon-192.png",
+    tag: "wedding-push",
+    data: data,
   };
   e.waitUntil(self.registration.showNotification(title, options));
 });
 
 // ── Notification click: focus or open window ────────────────────────────────
-self.addEventListener('notificationclick', function(e) {
+self.addEventListener("notificationclick", function (e) {
   e.notification.close();
   e.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clients) {
-      for (var i = 0; i < clients.length; i++) {
-        var c = clients[i];
-        if (c.url && 'focus' in c) return c.focus();
-      }
-      if (self.clients.openWindow) return self.clients.openWindow('./');
-    })
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then(function (clients) {
+        for (let i = 0; i < clients.length; i++) {
+          const c = clients[i];
+          if (c.url && "focus" in c) return c.focus();
+        }
+        if (self.clients.openWindow) return self.clients.openWindow("./");
+      }),
   );
 });

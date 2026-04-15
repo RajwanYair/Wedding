@@ -49,6 +49,12 @@
         "yaml": true,
         "json": true
     },
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "github.copilot.chat.reviewSelection.instructions": [
+        {
+            "file": ".github/instructions/wedding.instructions.md"
+        }
+    ],
     "chat.agent.enabled": true,
     "chat.instructionFilesLocations": {
         ".github/instructions": true,
@@ -56,6 +62,9 @@
     },
     "chat.promptFilesLocations": {
         ".github/prompts": true
+    },
+    "chat.agent.agentDescriptionFiles": {
+        ".github/agents": true
     },
 
     // ── Spell Check ──
@@ -98,6 +107,7 @@
         "overrideConfigFile": "eslint.config.mjs"
     },
     "eslint.useFlatConfig": true,
+    "eslint.lintTask.enable": true,
     // ── Stylelint ──
     "stylelint.enable": true,
     "stylelint.validate": [
@@ -118,11 +128,21 @@
         "source.fixAll.stylelint": "explicit",
         "source.fixAll.markdownlint": "explicit"
     },
-    // ── Test Explorer (Node.js built-in runner) ──
+    // ── Test Explorer (Vitest) ──
+    "vitest.enable": true,
+    "vitest.include": [
+        "tests/**/*.mjs"
+    ],
+    "vitest.rerunOnSave": true,
     "nodejs-testing.include": [
         "tests/**/*.mjs"
     ],
     "testing.automaticallyOpenPeekView": "never",
+    "testing.coverageBarThresholds": {
+        "red": 0,
+        "yellow": 70,
+        "green": 80
+    },
     // ── Playwright ──
     "playwright.reuseBrowser": false,
     "playwright.showTrace": false

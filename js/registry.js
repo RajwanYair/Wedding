@@ -1,23 +1,24 @@
+// @ts-check
 "use strict";
 
 /* ── Registry Links (v1.16.0) ────────────────────────────────────────────────
    Admin adds external gift registry URLs (Amazon, Zola, etc.).
    Displayed on the guest-facing landing page as clickable cards.
-   Stored inside _weddingInfo.registries = [{id, name, url}]
+   Stored inside window._weddingInfo.registries = [{id, name, url}]
    ─────────────────────────────────────────────────────────────────────────── */
 
 /** Render the settings UI for managing registry links */
 function renderRegistrySettings() {
   const container = document.getElementById("registrySettingsList");
   if (!container) return;
-  const list = _weddingInfo.registries || [];
-  container.innerHTML = "";
+  const list = window._weddingInfo.registries || [];
+  container.replaceChildren();
 
   if (!list.length) {
     const p = document.createElement("p");
     p.className = "empty-hint";
     p.setAttribute("data-i18n", "registry_settings_empty");
-    p.textContent = t("registry_settings_empty");
+    p.textContent = window.t("registry_settings_empty");
     container.appendChild(p);
     return;
   }
@@ -39,9 +40,9 @@ function renderRegistrySettings() {
 
     const delBtn = document.createElement("button");
     delBtn.className = "btn btn-danger btn-small";
-    delBtn.setAttribute("onclick", 'removeRegistryLink("' + reg.id + '")');
+    delBtn.setAttribute("onclick", `removeRegistryLink("${  reg.id  }")`);
     delBtn.textContent = "🗑";
-    delBtn.setAttribute("aria-label", t("registry_remove"));
+    delBtn.setAttribute("aria-label", window.t("registry_remove"));
 
     row.appendChild(nameSpan);
     row.appendChild(urlA);
@@ -56,48 +57,50 @@ function addRegistryLink() {
   const urlEl = document.getElementById("registryInputUrl");
   if (!nameEl || !urlEl) return;
 
-  const name = sanitizeInput(nameEl.value.trim());
+  const name = window.sanitizeInput(nameEl.value.trim());
   const url = urlEl.value.trim();
 
   if (!name || !url) {
-    showToast(t("registry_required"), "error");
+    window.showToast(window.t("registry_required"), "error");
     return;
   }
-  if (!isValidHttpsUrl(url)) {
-    showToast(t("invalid_url"), "error");
+  if (!window.isValidHttpsUrl(url)) {
+    window.showToast(window.t("invalid_url"), "error");
     return;
   }
 
-  if (!_weddingInfo.registries) _weddingInfo.registries = [];
-  _weddingInfo.registries.push({ id: uid(), name, url });
-  saveAll();
+  if (!window._weddingInfo.registries) window._weddingInfo.registries = [];
+  window._weddingInfo.registries.push({ id: window.uid(), name, url });
+  window.saveAll();
   nameEl.value = "";
   urlEl.value = "";
   renderRegistrySettings();
-  showToast(t("registry_added"), "success");
+  window.showToast(window.t("registry_added"), "success");
 }
 
 /** Remove a registry link by id */
 function removeRegistryLink(id) {
-  if (!_weddingInfo.registries) return;
-  _weddingInfo.registries = _weddingInfo.registries.filter(function (r) {
-    return r.id !== id;
-  });
-  saveAll();
+  if (!window._weddingInfo.registries) return;
+  window._weddingInfo.registries = window._weddingInfo.registries.filter(
+    function (r) {
+      return r.id !== id;
+    },
+  );
+  window.saveAll();
   renderRegistrySettings();
-  showToast(t("registry_removed"), "success");
+  window.showToast(window.t("registry_removed"), "success");
 }
 
 /** Render registry cards on the guest-facing landing page */
 function renderRegistryLinks() {
   const container = document.getElementById("landingRegistryList");
   if (!container) return;
-  const list = _weddingInfo.registries || [];
+  const list = window._weddingInfo.registries || [];
 
   const section = document.getElementById("landingRegistrySection");
   if (section) section.style.display = list.length ? "" : "none";
 
-  container.innerHTML = "";
+  container.replaceChildren();
   list.forEach(function (reg) {
     const a = document.createElement("a");
     a.className = "registry-card";

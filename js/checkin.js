@@ -1,3 +1,4 @@
+// @ts-check
 "use strict";
 
 /* ── Check-in Mode + Live Headcount + Table Finder (v1.16.0) ─────────────────
@@ -19,29 +20,29 @@ function renderCheckin() {
 
 /** Update arriving count and percentage */
 function _renderCheckinStats() {
-  const confirmed = _guests.filter(function (g) {
+  const confirmed = window._guests.filter(function (g) {
     return g.status === "confirmed";
   });
-  const arrived = _guests.filter(function (g) {
+  const arrived = window._guests.filter(function (g) {
     return g.arrived;
   });
 
   const setEl = function (id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = val;
+    if (el) window.el.textContent = val;
   };
 
   setEl("checkinArrived", arrived.length);
   setEl("checkinConfirmed", confirmed.length);
-  setEl("checkinTotal", _guests.length);
+  setEl("checkinTotal", window._guests.length);
 
   const pct = confirmed.length
     ? Math.round((arrived.length / confirmed.length) * 100)
     : 0;
-  setEl("checkinPct", pct + "%");
+  setEl("checkinPct", `${pct  }%`);
 
   const bar = document.getElementById("checkinProgressBar");
-  if (bar) bar.style.width = pct + "%";
+  if (bar) bar.style.width = `${pct  }%`;
 }
 
 /** Render (filtered) guest list for check-in */
@@ -50,22 +51,24 @@ function _renderCheckinList(query) {
   if (!tbody) return;
 
   const q = (query || "").trim().toLowerCase();
-  const candidates = _guests.filter(function (g) {
+  const candidates = window._guests.filter(function (g) {
     if (g.status === "declined") return false;
     if (!q) return true;
-    const fullName = (guestFullName(g) || "").toLowerCase();
+    const fullName = (window.guestFullName(g) || "").toLowerCase();
     const phone = (g.phone || "").toLowerCase();
     return fullName.includes(q) || phone.includes(q);
   });
 
-  tbody.innerHTML = "";
+  tbody.replaceChildren();
 
   if (!candidates.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
     td.colSpan = 5;
     td.className = "empty-row";
-    td.textContent = q ? t("checkin_no_results") : t("checkin_empty");
+    td.textContent = q
+      ? window.t("checkin_no_results")
+      : window.t("checkin_empty");
     tr.appendChild(td);
     tbody.appendChild(tr);
     return;
@@ -77,14 +80,14 @@ function _renderCheckinList(query) {
       // Arrived guests sorted last so pending are at top
       if (a.arrived && !b.arrived) return 1;
       if (!a.arrived && b.arrived) return -1;
-      return guestFullName(a).localeCompare(guestFullName(b));
+      return window.guestFullName(a).localeCompare(window.guestFullName(b));
     })
     .forEach(function (g) {
       const tr = document.createElement("tr");
       if (g.arrived) tr.className = "row-arrived";
 
       const tdName = document.createElement("td");
-      tdName.textContent = guestFullName(g);
+      tdName.textContent = window.guestFullName(g);
 
       const tdPhone = document.createElement("td");
       tdPhone.textContent = g.phone || "—";
@@ -92,18 +95,20 @@ function _renderCheckinList(query) {
 
       const tdCount = document.createElement("td");
       tdCount.textContent =
-        (g.count || 1) + (g.children ? " +" + g.children : "");
+        (g.count || 1) + (g.children ? ` +${  g.children}` : "");
 
       const tdTable = document.createElement("td");
-      tdTable.textContent = g.tableId ? getTableName(g.tableId) : "—";
+      tdTable.textContent = g.tableId ? window.getTableName(g.tableId) : "—";
 
       const tdAction = document.createElement("td");
       const btn = document.createElement("button");
       btn.className = g.arrived
         ? "btn btn-secondary btn-small"
         : "btn btn-primary btn-small";
-      btn.textContent = g.arrived ? t("checkin_undo") : t("checkin_arrive_btn");
-      btn.setAttribute("onclick", 'toggleCheckin("' + g.id + '")');
+      btn.textContent = g.arrived
+        ? window.t("checkin_undo")
+        : window.t("checkin_arrive_btn");
+      btn.setAttribute("onclick", `toggleCheckin("${  g.id  }")`);
       tdAction.appendChild(btn);
 
       tr.appendChild(tdName);
@@ -117,16 +122,18 @@ function _renderCheckinList(query) {
 
 /** Toggle arrived status for a guest */
 function toggleCheckin(id) {
-  const g = _guests.find(function (x) {
+  const g = window._guests.find(function (x) {
     return x.id === id;
   });
   if (!g) return;
   g.arrived = !g.arrived;
   g.arrivedAt = g.arrived ? new Date().toISOString() : null;
-  saveAll();
+  window.saveAll();
   renderCheckin();
-  showToast(
-    g.arrived ? t("checkin_marked_arrived") : t("checkin_marked_undone"),
+  window.showToast(
+    g.arrived
+      ? window.t("checkin_marked_arrived")
+      : window.t("checkin_marked_undone"),
     g.arrived ? "success" : "info",
   );
 }
@@ -149,36 +156,36 @@ function findTable() {
 
   const q = inputEl.value.trim().toLowerCase();
   if (!q) {
-    resultEl.textContent = t("tablefinder_enter_name");
+    resultEl.textContent = window.t("tablefinder_enter_name");
     return;
   }
 
-  const match = _guests.find(function (g) {
-    const fn = (guestFullName(g) || "").toLowerCase();
-    const ph = cleanPhone(g.phone || "");
+  const match = window._guests.find(function (g) {
+    const fn = (window.guestFullName(g) || "").toLowerCase();
+    const ph = window.cleanPhone(g.phone || "");
     const phRaw = (g.phone || "").toLowerCase();
     return fn.includes(q) || ph.includes(q) || phRaw.includes(q);
   });
 
   if (!match) {
     resultEl.className = "tablefinder-result tablefinder-notfound";
-    resultEl.textContent = t("tablefinder_not_found");
+    resultEl.textContent = window.t("tablefinder_not_found");
     return;
   }
 
   if (!match.tableId) {
     resultEl.className = "tablefinder-result tablefinder-notable";
     resultEl.textContent =
-      guestFullName(match) + " — " + t("tablefinder_no_table");
+      `${window.guestFullName(match)  } — ${  window.t("tablefinder_no_table")}`;
     return;
   }
 
-  const tableName = getTableName(match.tableId);
+  const tableName = window.getTableName(match.tableId);
   resultEl.className = "tablefinder-result tablefinder-found";
   resultEl.textContent =
-    guestFullName(match) +
-    " — " +
-    t("tablefinder_table_label") +
-    " " +
-    tableName;
+    `${window.guestFullName(match) 
+    } — ${ 
+    window.t("tablefinder_table_label") 
+    } ${ 
+    tableName}`;
 }

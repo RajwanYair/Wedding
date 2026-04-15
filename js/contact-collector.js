@@ -1,3 +1,4 @@
+// @ts-check
 "use strict";
 
 /* ── Contact Collector (Sprint 3.4) ──────────────────────────────────────────
@@ -8,22 +9,22 @@
 
 /**
  * Render the contact form in #sec-contact-form.
- * Called by showSection('contact-form').
+ * Called by window.showSection('contact-form').
  */
 function renderContactForm() {
   const nameEl = document.getElementById("contactFormCoupleName");
   const dateEl = document.getElementById("contactFormDate");
   if (nameEl)
     nameEl.textContent =
-      guestFullName({ firstName: _weddingInfo.groom, lastName: "" }) +
-      " & " +
-      (_weddingInfo.bride || "");
+      `${window.guestFullName({ firstName: window._weddingInfo.groom, lastName: "" }) 
+      } & ${ 
+      window._weddingInfo.bride || ""}`;
   if (dateEl) {
-    dateEl.textContent = _weddingInfo.hebrewDate || "";
+    dateEl.textContent = window._weddingInfo.hebrewDate || "";
   }
   /* If already submitted this session, show success state */
   const submitted = sessionStorage.getItem(
-    STORAGE_PREFIX + "contact_submitted",
+    `${window.STORAGE_PREFIX  }contact_submitted`,
   );
   const form = document.getElementById("contactFormFields");
   const success = document.getElementById("contactFormSuccess");
@@ -37,23 +38,23 @@ function renderContactForm() {
  * Submit the contact collection form.
  * Validates inputs, builds a guest object, and:
  *  1. POSTs to Apps Script WebApp (if configured).
- *  2. Upserts into local _guests (admin only — avoids polluting other guests' local data).
+ *  2. Upserts into local window._guests (admin only — avoids polluting other guests' local data).
  *  3. Marks session as submitted.
  */
 function submitContactForm() {
-  const firstName = sanitizeInput(
+  const firstName = window.sanitizeInput(
     (document.getElementById("ccFirstName").value || "").trim(),
     100,
   );
-  const lastName = sanitizeInput(
+  const lastName = window.sanitizeInput(
     (document.getElementById("ccLastName").value || "").trim(),
     100,
   );
-  const phone = sanitizeInput(
+  const phone = window.sanitizeInput(
     (document.getElementById("ccPhone").value || "").trim(),
     20,
   );
-  const email = sanitizeInput(
+  const email = window.sanitizeInput(
     (document.getElementById("ccEmail").value || "").trim(),
     254,
   );
@@ -61,28 +62,28 @@ function submitContactForm() {
 
   if (!firstName) {
     document.getElementById("ccFirstName").focus();
-    showToast(t("contact_required"), "error");
+    window.showToast(window.t("contact_required"), "error");
     return;
   }
   if (!phone && !email) {
-    showToast(t("contact_phone_or_email"), "error");
+    window.showToast(window.t("contact_phone_or_email"), "error");
     return;
   }
-  if (phone && cleanPhone(phone).replace(/\D/g, "").length < 7) {
-    showToast(t("contact_invalid_phone"), "error");
+  if (phone && window.cleanPhone(phone).replace(/\D/g, "").length < 7) {
+    window.showToast(window.t("contact_invalid_phone"), "error");
     return;
   }
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast(t("contact_invalid_email"), "error");
+    window.showToast(window.t("contact_invalid_email"), "error");
     return;
   }
 
   const now = new Date().toISOString();
   const guestData = {
-    id: uid(),
+    id: window.uid(),
     firstName,
     lastName,
-    phone: phone ? cleanPhone(phone) : "",
+    phone: phone ? window.cleanPhone(phone) : "",
     email,
     count: 1,
     children: 0,
@@ -105,10 +106,10 @@ function submitContactForm() {
   };
 
   /* 1. If admin is logged in: upsert into local guest list */
-  if (_authUser && _authUser.isAdmin) {
-    const existing = _guests.find(function (g) {
+  if (window._authUser && window._authUser.isAdmin) {
+    const existing = window._guests.find(function (g) {
       return (
-        (phone && cleanPhone(g.phone || "") === cleanPhone(phone)) ||
+        (phone && window.cleanPhone(g.phone || "") === window.cleanPhone(phone)) ||
         (email && g.email === email)
       );
     });
@@ -122,18 +123,18 @@ function submitContactForm() {
         updatedAt: now,
       });
     } else {
-      _guests.push(guestData);
+      window._guests.push(guestData);
     }
-    saveAll();
-    renderGuests();
-    renderStats();
+    window.saveAll();
+    window.renderGuests();
+    window.renderStats();
   }
 
   /* 2. Send to Sheets WebApp (primary channel — reaches admin's data) */
-  if (SHEETS_WEBAPP_URL) {
-    const row = typeof guestToRow === "function" ? guestToRow(guestData) : null;
+  if (window.SHEETS_WEBAPP_URL) {
+    const row = typeof guestToRow === "function" ? window.guestToRow(guestData) : null;
     if (row) {
-      _sheetsWebAppPost({ action: "appendContact", row: row }).catch(
+      window._sheetsWebAppPost({ action: "appendContact", row }).catch(
         function () {
           /* network failure is silent — guest sees success anyway */
         },
@@ -142,9 +143,9 @@ function submitContactForm() {
   }
 
   /* 3. Mark submitted and update UI */
-  sessionStorage.setItem(STORAGE_PREFIX + "contact_submitted", "1");
-  logAudit("contact_submit", firstName + " " + lastName);
-  showToast(t("contact_submitted"), "success");
+  sessionStorage.setItem(`${window.STORAGE_PREFIX  }contact_submitted`, "1");
+  window.logAudit("contact_submit", `${firstName  } ${  lastName}`);
+  window.showToast(window.t("contact_submitted"), "success");
 
   const form = document.getElementById("contactFormFields");
   const success = document.getElementById("contactFormSuccess");
@@ -158,10 +159,10 @@ function submitContactForm() {
  */
 function copyContactLink() {
   const url =
-    window.location.origin + window.location.pathname + "#contact-form";
+    `${window.location.origin + window.location.pathname  }#contact-form`;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(function () {
-      showToast(t("contact_link_copied"), "success");
+      window.showToast(window.t("contact_link_copied"), "success");
     });
   } else {
     const ta = document.createElement("textarea");
@@ -170,7 +171,7 @@ function copyContactLink() {
     ta.select();
     document.execCommand("copy");
     document.body.removeChild(ta);
-    showToast(t("contact_link_copied"), "success");
+    window.showToast(window.t("contact_link_copied"), "success");
   }
 }
 
@@ -181,7 +182,7 @@ function renderContactSettings() {
   const linkEl = document.getElementById("contactCollectorLink");
   if (linkEl) {
     const url =
-      window.location.origin + window.location.pathname + "#contact-form";
+      `${window.location.origin + window.location.pathname  }#contact-form`;
     linkEl.href = url;
     linkEl.textContent = url;
   }

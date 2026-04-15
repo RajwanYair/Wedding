@@ -9,7 +9,7 @@
  * Output: icon-192.png and icon-512.png in the project root.
  */
 import { deflateSync } from "node:zlib";
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 

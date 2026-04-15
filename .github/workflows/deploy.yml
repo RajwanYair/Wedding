@@ -45,14 +45,37 @@ jobs:
           GH_SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: node scripts/inject-config.mjs
 
+      - name: Build with Vite
+        run: npx vite build
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "dist"
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # S5.10: Post-deploy verification ─────────────────────────────────────
+      - name: Verify deployment health
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          echo "Checking ${PAGE_URL} ..."
+          # Retry up to 6 times (0s, 5s, 10s, 20s, 40s, 80s) — Pages can take ~1 min
+          for i in 1 2 3 4 5 6; do
+            STATUS=$(curl -sSo /dev/null -w "%{http_code}" \
+              --max-time 15 --retry 0 "${PAGE_URL}" || echo "000")
+            echo "  attempt ${i}: HTTP ${STATUS}"
+            if [ "$STATUS" = "200" ]; then
+              echo "Deployment verified — ${PAGE_URL} returned HTTP 200."
+              exit 0
+            fi
+            [ "$i" -lt 6 ] && sleep $((5 * 2**(i-1)))
+          done
+          echo "::error::Deployment health check failed — ${PAGE_URL} did not return HTTP 200 after 6 attempts."
+          exit 1

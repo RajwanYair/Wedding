@@ -11,7 +11,7 @@
  *   CSS files:  30 KB each (raw)
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzip as gzipCb } from "node:zlib";
@@ -74,8 +74,8 @@ async function main() {
   console.log("-".repeat(W.path + W.num * 2 + 10));
 
   for (const r of rows) {
-    const rawStr = (r.raw / 1024).toFixed(1) + " KB";
-    const gzStr = (r.gz / 1024).toFixed(1) + " KB";
+    const rawStr = `${(r.raw / 1024).toFixed(1)} KB`;
+    const gzStr = `${(r.gz / 1024).toFixed(1)} KB`;
     const status = r.over ? "⚠ OVER LIMIT" : "✓";
     console.log(
       r.path.padEnd(W.path),
@@ -89,8 +89,8 @@ async function main() {
   console.log("-".repeat(W.path + W.num * 2 + 10));
   console.log(
     "Total".padEnd(W.path),
-    ((totalRaw / 1024).toFixed(1) + " KB").padStart(W.num),
-    ((totalGz / 1024).toFixed(1) + " KB").padStart(W.num),
+    `${(totalRaw / 1024).toFixed(1)} KB`.padStart(W.num),
+    `${(totalGz / 1024).toFixed(1)} KB`.padStart(W.num),
   );
 
   const overLimit = rows.filter((r) => r.over);

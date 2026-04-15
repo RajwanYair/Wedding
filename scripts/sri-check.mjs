@@ -60,7 +60,7 @@ console.log("-".repeat(COL_PATH + COL_SZ + 80));
 for (const { path, sri, sizeKB } of rows) {
   console.log(
     path.padEnd(COL_PATH),
-    (sizeKB + " KB").padStart(COL_SZ),
+    (`${sizeKB  } KB`).padStart(COL_SZ),
     " ",
     sri,
   );
@@ -81,3 +81,23 @@ console.log(
 console.log(
   "  https://appleid.cdn-apple.com/…/auth.js  → loaded dynamically by auth.js\n",
 );
+
+/* ── S4.3: Also scan dist/ build output if it exists ── */
+import { existsSync } from "node:fs";
+const DIST = resolve(ROOT, "dist", "assets");
+if (existsSync(DIST)) {
+  const distFiles = readdirSync(DIST).filter(function (f) {
+    return f.endsWith(".js") || f.endsWith(".css");
+  });
+  if (distFiles.length) {
+    console.log("\nBuild Output SRI (dist/assets/)\n");
+    console.log("File".padEnd(50), "Size".padStart(10), "  integrity");
+    console.log("-".repeat(120));
+    for (const file of distFiles) {
+      const fp = resolve(DIST, file);
+      const sri = computeSri(fp);
+      const sizeKB = (statSync(fp).size / 1024).toFixed(1);
+      console.log(file.padEnd(50), (`${sizeKB  } KB`).padStart(10), " ", sri);
+    }
+  }
+}

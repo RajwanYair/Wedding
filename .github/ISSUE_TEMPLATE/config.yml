@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/RajwanYair/Wedding/discussions
+    about: Ask questions and share ideas
+  - name: 📖 Roadmap
+    url: https://github.com/RajwanYair/Wedding/blob/main/ROADMAP.md
+    about: See what is planned for upcoming sprints

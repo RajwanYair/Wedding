@@ -1,3 +1,5 @@
+@layer layout {
+
 /* ── Header Animations ── */
 @keyframes shimmerColor {
   0%, 100% { color: var(--accent-light); }
@@ -33,7 +35,20 @@
   padding: 2.5rem 1rem 1.5rem;
   background: linear-gradient(180deg, var(--header-bg) 0%, transparent 100%);
   overflow: hidden;
+  margin-top: 38px;
 }
+/* Individual sparkle positions (CSP: replaces inline styles) */
+.header-sparkles > :nth-child(1) { left: 7%; top: 28%; animation-delay: 0s; }
+.header-sparkles > :nth-child(2) { left: 91%; top: 20%; animation-delay: 1.4s; }
+.header-sparkles > :nth-child(3) { left: 18%; top: 72%; animation-delay: 0.7s; }
+.header-sparkles > :nth-child(4) { left: 82%; top: 68%; animation-delay: 2.1s; }
+.header-sparkles > :nth-child(5) { left: 50%; top: 8%; animation-delay: 0.4s; }
+.header-sparkles > :nth-child(6) { left: 37%; top: 85%; animation-delay: 1.8s; }
+.header-sparkles > :nth-child(7) { left: 63%; top: 42%; animation-delay: 3.1s; }
+.header-divider > .hdr-diamond:nth-child(2) { animation-delay: 0.35s; }
+.header-divider > .hdr-diamond:nth-child(3) { animation-delay: 0.7s; }
+/* Top-bar element styles (CSP) */
+[id="topBarCouple"] { font-size: 0.82em; color: var(--gold); font-weight: 600; letter-spacing: 0.02em; }
 .header-sparkles {
   position: absolute;
   inset: 0;
@@ -229,8 +244,11 @@
 
 /* ── Section (page) ── */
 .section { display: none; animation: fadeIn 0.4s ease; }
-.section.active { display: block; }
+.section.active { display: block; contain: layout style; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+} /* end @layer layout */

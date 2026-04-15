@@ -1,10 +1,11 @@
+// @ts-check
 "use strict";
 
 /* ── Photo Gallery (v1.16.0) ─────────────────────────────────────────────────
    Admin uploads event photos (compressed to ≤400px, stored as data URLs).
    All users (guests + admins) can view the gallery.
    Data stored as wedding_v1_gallery in localStorage.
-   _gallery = [{id, dataUrl, caption, createdAt}]
+   window._gallery = [{id, dataUrl, caption, createdAt}]
    ─────────────────────────────────────────────────────────────────────────── */
 
 /** Max dimension when resizing uploaded images */
@@ -20,19 +21,19 @@ function renderGallery() {
 
   if (!grid) return;
 
-  const isAdmin = _authUser && _authUser.isAdmin;
+  const isAdmin = window._authUser && window._authUser.isAdmin;
   if (adminBar) adminBar.style.display = isAdmin ? "" : "none";
 
-  if (!_gallery || !_gallery.length) {
-    grid.innerHTML = "";
+  if (!window._gallery || !window._gallery.length) {
+    grid.replaceChildren();
     if (empty) empty.style.display = "";
     return;
   }
 
   if (empty) empty.style.display = "none";
-  grid.innerHTML = "";
+  grid.replaceChildren();
 
-  _gallery
+  window._gallery
     .slice()
     .reverse()
     .forEach(function (photo) {
@@ -41,9 +42,12 @@ function renderGallery() {
 
       const img = document.createElement("img");
       img.src = photo.dataUrl;
-      img.alt = photo.caption || t("gallery_photo_alt");
+      img.alt = photo.caption || window.t("gallery_photo_alt");
       img.loading = "lazy";
+      img.decoding = "async";
       img.className = "gallery-img";
+      img.width = GALLERY_MAX_PX;
+      img.height = GALLERY_MAX_PX;
       img.onclick = function () {
         _openGalleryLightbox(photo);
       };
@@ -61,8 +65,8 @@ function renderGallery() {
         const del = document.createElement("button");
         del.className = "gallery-delete-btn";
         del.textContent = "✕";
-        del.setAttribute("aria-label", t("gallery_delete"));
-        del.setAttribute("onclick", 'deleteGalleryPhoto("' + photo.id + '")');
+        del.setAttribute("aria-label", window.t("gallery_delete"));
+        del.setAttribute("onclick", `deleteGalleryPhoto("${photo.id}")`);
         figure.appendChild(del);
       }
 
@@ -77,7 +81,8 @@ function openGalleryUpload() {
 }
 
 /** Handle file selection — compress and store each image */
-function handleGalleryUpload(input) {
+function handleGalleryUpload(e) {
+  const input = e && e.target ? e.target : e;
   if (!input || !input.files || !input.files.length) return;
   const files = Array.prototype.slice.call(input.files);
   let processed = 0;
@@ -87,17 +92,17 @@ function handleGalleryUpload(input) {
     const reader = new FileReader();
     reader.onload = function (e) {
       _compressGalleryImage(e.target.result, function (dataUrl) {
-        _gallery.push({
-          id: uid(),
-          dataUrl: dataUrl,
+        window._gallery.push({
+          id: window.uid(),
+          dataUrl,
           caption: "",
           createdAt: new Date().toISOString(),
         });
         processed++;
         if (processed === files.length || processed >= 20) {
-          saveAll();
+          window.saveAll();
           renderGallery();
-          showToast(t("gallery_uploaded"), "success");
+          window.showToast(window.t("gallery_uploaded"), "success");
         }
       });
     };
@@ -109,13 +114,13 @@ function handleGalleryUpload(input) {
 
 /** Delete a photo from the gallery by id */
 function deleteGalleryPhoto(id) {
-  _gallery = _gallery.filter(function (p) {
+  window._gallery = window._gallery.filter(function (p) {
     return p.id !== id;
   });
-  saveAll();
+  window.saveAll();
   _closeGalleryLightbox();
   renderGallery();
-  showToast(t("gallery_deleted"), "success");
+  window.showToast(window.t("gallery_deleted"), "success");
 }
 
 /** Compress an image data URL to max dimensions, returning compressed data URL */

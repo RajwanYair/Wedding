@@ -11,6 +11,11 @@ Desktop.ini
 # Node (zero-dependency project, but future-proof)
 node_modules/
 coverage/
+dist/
+
+# Lint caches (stored in node_modules/.cache — already ignored, but explicit)
+.eslintcache
+.stylelintcache
 
 # Misc
 *.log

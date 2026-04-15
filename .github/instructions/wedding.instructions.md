@@ -28,11 +28,26 @@ Root variables in `:root` — never hardcode colors:
 ## Modal Pattern
 
 ```html
-<div class="modal-overlay" id="{name}Modal" onclick="closeModal('{name}Modal')">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <span class="modal-close" onclick="closeModal('{name}Modal')">×</span>
+<!-- Prefer data-action event delegation over inline onclick -->
+<button data-action="openModal" data-modal="{name}Modal" data-i18n="btn_open">open</button>
+
+<div class="modal-overlay" id="{name}Modal">
+  <div class="modal-content">
+    <button class="modal-close" data-action="closeModal" data-modal="{name}Modal">&#x2715;</button>
   </div>
 </div>
+```
+
+## Event Delegation Pattern
+
+```js
+// js/events.js handles all data-action clicks globally
+// Use data-action="actionName" + data-* params — never inline onclick
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  handlers[el.dataset.action]?.(el, e);
+});
 ```
 
 ## JS Patterns
@@ -48,7 +63,7 @@ data-i18n-placeholder="key"       // input placeholder
 data-i18n-tooltip="key"           // tooltip text
 
 // Storage
-saveAll()                         // persists _guests, _tables, _weddingInfo
+saveAll()                         // persists _guests, _tables, _weddingInfo, _vendors
 const g = _guests.find(x => x.id === id);
 
 // Phone
@@ -65,7 +80,9 @@ const x = obj?.prop ?? defaultVal;
 - Both `he` and `en` entries required in the `I18N` object
 - Language and theme both persisted in `localStorage`
 
-## Guest Data Model (v1.1.0)
+## Data Models
+
+### Guest (v1.1.0)
 
 ```text
 {
@@ -75,9 +92,25 @@ const x = obj?.prop ?? defaultVal;
   side:   'groom'|'bride'|'mutual',
   group:  'family'|'friends'|'work'|'other',
   relationship,
-  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',  // data value 'kosher'; label 'מהדרין/Mehadrin'
+  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',  // label 'מהדרין/Mehadrin'
   mealNotes, accessibility: boolean,
   tableId, gift, notes, sent: boolean,
   rsvpDate, createdAt, updatedAt
 }
+```
+
+### Vendor
+
+```text
+{
+  id, category, name, contact, phone,
+  price: number, paid: number,
+  notes, updatedAt, createdAt
+}
+```
+
+### Table
+
+```text
+{ id, name, capacity, shape: 'round'|'rect' }
 ```

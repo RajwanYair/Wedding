@@ -1,0 +1,75 @@
+# =============================================================================
+# PR Preview — Deploy to /preview/{pr-number} on each pull-request push
+# =============================================================================
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_target:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # ── Deploy preview on open/sync ──────────────────────────────────────────
+  deploy-preview:
+    if: github.event_name == 'pull_request'
+    name: Deploy PR Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with preview base
+        run: npm run build
+        env:
+          VITE_BASE: /Wedding/preview/pr-${{ github.event.pull_request.number }}/
+
+      - name: Deploy preview to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
+          target-folder: preview/pr-${{ github.event.pull_request.number }}
+          clean: false
+
+      - name: Comment preview URL on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: preview
+          message: |
+            ## Preview deployed
+
+            | | |
+            |---|---|
+            | **URL** | https://rajwanyair.github.io/Wedding/preview/pr-${{ github.event.pull_request.number }}/ |
+            | **Updated** | ${{ github.event.pull_request.updated_at }} |
+            | **Commit** | ${{ github.sha }} |
+
+  # ── Clean up preview on PR close ─────────────────────────────────────────
+  cleanup-preview:
+    if: github.event_name == 'pull_request_target' && github.event.action == 'closed'
+    name: Cleanup PR Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Remove preview folder
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git rm -rf --ignore-unmatch "preview/pr-${{ github.event.pull_request.number }}" || true
+          git diff --staged --quiet || git commit -m "chore: remove preview for PR #${{ github.event.pull_request.number }}"
+          git push || true

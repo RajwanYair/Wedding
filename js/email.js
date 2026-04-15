@@ -1,3 +1,4 @@
+// @ts-check
 "use strict";
 
 /* ── Email Notifications (Sprint 3.6) ── */
@@ -18,7 +19,7 @@ let _emailSettings = { ..._EMAIL_DEFAULTS };
 
 function loadEmailSettings() {
   try {
-    const raw = localStorage.getItem(STORAGE_PREFIX + "emailSettings");
+    const raw = localStorage.getItem(`${window.STORAGE_PREFIX  }emailSettings`);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === "object") {
@@ -33,7 +34,7 @@ function loadEmailSettings() {
 function saveEmailSettings() {
   try {
     localStorage.setItem(
-      STORAGE_PREFIX + "emailSettings",
+      `${window.STORAGE_PREFIX  }emailSettings`,
       JSON.stringify(_emailSettings),
     );
   } catch (_e) {
@@ -51,13 +52,13 @@ function saveEmailSettings() {
 function sendRsvpConfirmation(guest) {
   if (!_emailSettings.enabled || !_emailSettings.rsvpConfirmation) return;
   if (!guest || !guest.email) return;
-  if (!SHEETS_WEBAPP_URL) return;
-  _sheetsWebAppPost({
+  if (!window.SHEETS_WEBAPP_URL) return;
+  window._sheetsWebAppPost({
     action: "sendEmail",
     type: "rsvpConfirmation",
-    to: sanitizeInput(guest.email, 254),
-    name: sanitizeInput(guest.firstName || "", 100),
-    status: sanitizeInput(guest.status || "confirmed", 20),
+    to: window.sanitizeInput(guest.email, 254),
+    name: window.sanitizeInput(guest.firstName || "", 100),
+    status: window.sanitizeInput(guest.status || "confirmed", 20),
   }).catch(function () {
     /* non-fatal */
   });
@@ -70,15 +71,15 @@ function sendRsvpConfirmation(guest) {
  */
 function sendAdminRsvpNotify(guest) {
   if (!_emailSettings.enabled || !_emailSettings.adminNotify) return;
-  if (!_authUser || !_authUser.isAdmin || !_authUser.email) return;
-  if (!SHEETS_WEBAPP_URL) return;
-  _sheetsWebAppPost({
+  if (!window._authUser || !window._authUser.isAdmin || !window._authUser.email) return;
+  if (!window.SHEETS_WEBAPP_URL) return;
+  window._sheetsWebAppPost({
     action: "sendEmail",
     type: "adminRsvpNotify",
-    to: sanitizeInput(_authUser.email, 254),
-    name: sanitizeInput(guest.firstName || "", 100),
-    phone: sanitizeInput(guest.phone || "", 30),
-    status: sanitizeInput(guest.status || "", 20),
+    to: window.sanitizeInput(window._authUser.email, 254),
+    name: window.sanitizeInput(guest.firstName || "", 100),
+    phone: window.sanitizeInput(guest.phone || "", 30),
+    status: window.sanitizeInput(guest.status || "", 20),
   }).catch(function () {
     /* non-fatal */
   });
@@ -112,7 +113,7 @@ function renderEmailSettings() {
 
   const lblEnabled = document.createElement("span");
   lblEnabled.setAttribute("data-i18n", "email_enable_label");
-  lblEnabled.textContent = t("email_enable_label");
+  lblEnabled.textContent = window.t("email_enable_label");
 
   toggleRow.appendChild(chkEnabled);
   toggleRow.appendChild(lblEnabled);
@@ -122,7 +123,7 @@ function renderEmailSettings() {
     const note = document.createElement("p");
     note.style.cssText = "font-size:0.82em; color:var(--text-muted); margin:0;";
     note.setAttribute("data-i18n", "email_disabled_note");
-    note.textContent = t("email_disabled_note");
+    note.textContent = window.t("email_disabled_note");
     card.appendChild(note);
     return;
   }
@@ -147,7 +148,7 @@ function renderEmailSettings() {
 
     const sp = document.createElement("span");
     sp.setAttribute("data-i18n", opt.i18n);
-    sp.textContent = t(opt.i18n);
+    sp.textContent = window.t(opt.i18n);
 
     row.appendChild(cb);
     row.appendChild(sp);
@@ -159,7 +160,7 @@ function renderEmailSettings() {
   hint.style.cssText =
     "font-size:0.76em; color:var(--text-muted); margin-top:0.6rem; padding-top:0.5rem; border-top:1px solid var(--glass-border); line-height:1.5;";
   hint.setAttribute("data-i18n", "email_webapp_hint");
-  hint.textContent = t("email_webapp_hint");
+  hint.textContent = window.t("email_webapp_hint");
   card.appendChild(hint);
 }
 

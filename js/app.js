@@ -1,4 +1,5 @@
-'use strict';
+// @ts-check
+"use strict";
 
 /* ── App Init ── */
 
@@ -16,51 +17,55 @@ let _swReg = null;
 const _AUTO_REFRESH_AFTER_MS = 5 * 60 * 1000;
 
 function init() {
-  loadAll();
+  window.loadAll();
+  window.initStore();
+  /* Populate Settings UI inputs from persisted state */
+  window.loadGreenApiSettingsUi();
   /* Load wedding.json external config in the background — updates defaults if
      the user has never customised wedding info, otherwise silently ignored. */
-  loadExternalConfig().then(function () {
-    loadWeddingDetailsToForm();
-    updateHeaderInfo();
+  window.loadExternalConfig().then(function () {
+    window.loadWeddingDetailsToForm();
+    window.updateHeaderInfo();
   });
-  _applyThemeClasses();
+  window._applyThemeClasses();
   const btnDL = document.getElementById("btnDarkLight");
-  if (btnDL) btnDL.textContent = _isLightMode ? "🌙" : "☀️";
-  applyLanguage();
-  loadWeddingDetailsToForm();
-  renderStats();
-  renderGuests();
-  renderTables();
-  renderInvitation();
-  renderCountdown();
-  updateWaPreview();
-  updateTopBar();
-  updateHeaderInfo();
-  initParticles();
-  setInterval(renderCountdown, 1000);
-  renderBudget();
-  renderAnalytics();
-  initAuth();
-  loadFBSDK();
-  loadAppleSDK();
+  if (btnDL) btnDL.textContent = window._isLightMode ? "🌙" : "☀️";
+  window.applyLanguage();
+  window.loadWeddingDetailsToForm();
+  window.renderStats();
+  window.renderGuests();
+  window.renderTables();
+  window.renderInvitation();
+  window.renderCountdown();
+  window.updateWaPreview();
+  window.updateTopBar();
+  window.updateHeaderInfo();
+  window.initParticles();
+  setInterval(window.renderCountdown, 1000);
+  window.renderBudget();
+  window.renderAnalytics();
+  window.renderVendors();
+  window.initAuth();
+  window.loadFBSDK();
+  window.loadAppleSDK();
   initSW();
-  initOfflineQueue();
-  initErrorMonitor();
-  initPushNotifications();
-  initEmailNotifications();
+  window.initOfflineQueue();
+  window.initErrorMonitor();
+  window.initPushNotifications();
+  window.initEmailNotifications();
   /* Load primary data from Google Sheets (public read, no auth) */
-  loadFromSheetsOnInit();
+  window.loadFromSheetsOnInit();
   /* Start 30-second auto-sync polling for remote changes */
-  startSheetsAutoSync();
+  window.startSheetsAutoSync();
   /* Hash router — read initial URL hash after auth determines default section */
-  initRouter();
+  window.initRouter();
 }
 
 /** Applies the queued update: tells the waiting SW to skip waiting (which
  *  triggers controllerchange → page reload), or falls back to a hard reload. */
 function applyUpdate() {
   if (_pendingSW) {
-    _pendingSW.postMessage('SKIP_WAITING');
+    _pendingSW.postMessage("SKIP_WAITING");
     // controllerchange listener below will reload the page
   } else {
     window.location.reload();
@@ -75,64 +80,69 @@ function applyUpdate() {
  */
 function _handleUpdateDetected() {
   if (Date.now() - _pageOpenedAt >= _AUTO_REFRESH_AFTER_MS) {
-    applyUpdate();
+    window.applyUpdate();
   } else {
-    showUpdateBanner();
+    window.showUpdateBanner();
   }
 }
 
 /** Register the service worker, show an update banner when a new version is
  *  detected, and poll for updates every 5 minutes while the page is open. */
 function initSW() {
-  if (!('serviceWorker' in navigator)) return;
+  if (!("serviceWorker" in navigator)) return;
 
-  navigator.serviceWorker.register('./sw.js').then(function(reg) {
-    _swReg = reg;
+  navigator.serviceWorker
+    .register("./sw.js")
+    .then(function (reg) {
+      _swReg = reg;
 
-    // A new SW may already be waiting (e.g. user had the page open during deploy)
-    if (reg.waiting) {
-      _pendingSW = reg.waiting;
-      _handleUpdateDetected();
-    }
+      // A new SW may already be waiting (e.g. user had the page open during deploy)
+      if (reg.waiting) {
+        _pendingSW = reg.waiting;
+        _handleUpdateDetected();
+      }
 
-    // Watch for a new SW being installed
-    reg.addEventListener('updatefound', function() {
-      const sw = reg.installing;
-      if (!sw) return;
-      sw.addEventListener('statechange', function() {
-        // New SW finished installing and is waiting to activate
-        if (sw.state === 'installed' && navigator.serviceWorker.controller) {
-          _pendingSW = sw;
-          _handleUpdateDetected();
-        }
+      // Watch for a new SW being installed
+      reg.addEventListener("updatefound", function () {
+        const sw = reg.installing;
+        if (!sw) return;
+        sw.addEventListener("statechange", function () {
+          // New SW finished installing and is waiting to activate
+          if (sw.state === "installed" && navigator.serviceWorker.controller) {
+            _pendingSW = sw;
+            _handleUpdateDetected();
+          }
+        });
       });
+
+      // Poll for a new SW every 5 minutes (triggers browser re-fetch of sw.js)
+      setInterval(function () {
+        reg.update().catch(function () {});
+      }, _AUTO_REFRESH_AFTER_MS);
+    })
+    .catch(function (err) {
+      console.warn("SW registration failed:", err);
     });
 
-    // Poll for a new SW every 5 minutes (triggers browser re-fetch of sw.js)
-    setInterval(function() { reg.update().catch(function() {}); }, _AUTO_REFRESH_AFTER_MS);
-  }).catch(function(err) {
-    console.warn('SW registration failed:', err);
-  });
-
   // SW signals a content-level change detected during background revalidation
-  navigator.serviceWorker.addEventListener('message', function(e) {
-    if (e.data && e.data.type === 'UPDATE_AVAILABLE') {
+  navigator.serviceWorker.addEventListener("message", function (e) {
+    if (e.data && e.data.type === "UPDATE_AVAILABLE") {
       _handleUpdateDetected();
     }
   });
 
   // When the tab regains focus after being hidden for ≥ 5 minutes, immediately
   // ask the SW to re-check for updates so stale-open tabs refresh quickly.
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'hidden') {
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") {
       _hiddenAt = Date.now();
-    } else if (_hiddenAt && (Date.now() - _hiddenAt) >= _AUTO_REFRESH_AFTER_MS) {
-      if (_swReg) _swReg.update().catch(function() {});
+    } else if (_hiddenAt && Date.now() - _hiddenAt >= _AUTO_REFRESH_AFTER_MS) {
+      if (_swReg) _swReg.update().catch(function () {});
     }
   });
 
   // Once the new SW has taken control, reload to serve fresh files
-  navigator.serviceWorker.addEventListener('controllerchange', function() {
+  navigator.serviceWorker.addEventListener("controllerchange", function () {
     if (_swRefreshing) return;
     _swRefreshing = true;
     window.location.reload();
@@ -142,5 +152,6 @@ function initSW() {
 init();
 
 /* Google Identity Services calls this after its SDK loads */
-window.onGoogleLibraryLoad = function() { initGoogleSignIn(); };
-
+window.onGoogleLibraryLoad = function () {
+  window.initGoogleSignIn();
+};

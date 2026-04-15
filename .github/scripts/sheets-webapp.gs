@@ -1,5 +1,5 @@
 /**
- * Wedding Manager — Google Apps Script Web App  v1.19.0
+ * Wedding Manager — Google Apps Script Web App  v2.0.0
  * Handles all write operations from the Wedding Manager app.
  *
  * SETUP (one-time):
@@ -16,8 +16,20 @@
  * SUPPORTED ACTIONS (POST body is JSON):
  *   { action: 'replaceAll',    sheet: 'Attendees', rows: [[...], ...] }
  *   { action: 'append',        sheet: 'Attendees', row: [...] }
- *   { action: 'ensureSheets' } — create Attendees, Tables, Config if missing
+ *   { action: 'deleteRow',     sheet: 'Attendees', id: 'guest-id' }
+ *   { action: 'ensureSheets' } — create Attendees, Tables, Config, Vendors, Expenses, RSVP_Log
  *   { action: 'sendEmail',     type: 'rsvpConfirmation'|'adminRsvpNotify', to, name, ... }
+ *   { action: 'savePushSubscription', subscription: {...} }
+ *
+ * NEW in v2.0.0:
+ *   • Vendors, Expenses, RSVP_Log sheet tabs supported (S3.7/S3.8)
+ *   • deleteRow action: remove a row by id column (S3.3 optimistic delete)
+ *   • Structured error objects: { ok, error, code } for client handling
+ *   • getPushSubscriptions also available as POST action
+ *
+ * NEW in v1.20.0:
+ *   • transport column (index 14) added to COL map and guest row validation
+ *   • doGet ?action=getRowCount&sheet=X — used by the app to verify writes succeeded
  *
  * NEW in v1.18.0:
  *   • Server-side field validation (Sprint 4.1) — rejects malformed guest/RSVP data
@@ -28,11 +40,14 @@
  *   Attendees  — guest data (one guest per row, header = GUEST_COLS)
  *   Tables     — seating table data
  *   Config     — wedding info as key | value rows
+ *   Vendors    — vendor/supplier data (S3.7)
+ *   Expenses   — expense tracking (S3.7)
+ *   RSVP_Log   — append-only RSVP audit trail (S3.7)
  */
 
 const SPREADSHEET_ID = '1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA';
 
-const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config'];
+const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log'];
 
 /* ── Index constants for Attendees columns (must match GUEST_COLS in config.js) ── */
 var COL = {
@@ -48,12 +63,16 @@ var COL = {
   GROUP:        9,
   RELATIONSHIP: 10,
   MEAL:         11,
+  MEAL_NOTES:   12,
+  ACCESSIBILITY:13,
+  TRANSPORT:    14,  // added v1.20.0
 };
 
-var VALID_STATUS = ['pending', 'confirmed', 'declined', 'maybe', ''];
-var VALID_SIDE   = ['groom', 'bride', 'mutual', ''];
-var VALID_MEAL   = ['regular', 'vegetarian', 'vegan', 'gluten_free', 'kosher', ''];
-var VALID_GROUP  = ['family', 'friends', 'work', 'other', ''];
+var VALID_STATUS    = ['pending', 'confirmed', 'declined', 'maybe', ''];
+var VALID_SIDE      = ['groom', 'bride', 'mutual', ''];
+var VALID_MEAL      = ['regular', 'vegetarian', 'vegan', 'gluten_free', 'kosher', ''];
+var VALID_GROUP     = ['family', 'friends', 'work', 'other', ''];
+var VALID_TRANSPORT = ['tefachot', 'jerusalem', '', null, undefined];
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
@@ -134,6 +153,8 @@ function _validateGuestRow(row) {
   if (VALID_MEAL.indexOf(ml) === -1)   { return 'invalid meal: ' + ml; }
   var gr = String(row[COL.GROUP] || '');
   if (VALID_GROUP.indexOf(gr) === -1)  { return 'invalid group: ' + gr; }
+  var tr = row.length > COL.TRANSPORT ? (row[COL.TRANSPORT] || '') : '';
+  if (VALID_TRANSPORT.indexOf(tr) === -1) { return 'invalid transport: ' + tr; }
   return null;
 }
 
@@ -256,8 +277,10 @@ function doPost(e) {
 
     /* ── ensureSheets: create any missing tabs ───────────────────────── */
     if (action === 'ensureSheets') {
-      ALLOWED_SHEETS.forEach(function(name) { getOrCreateSheet(ss, name); });
-      return jsonResponse({ ok: true, action: 'ensureSheets' });
+      /* Core tabs + new S3.7 tabs */
+      var ensureList = ALLOWED_SHEETS;
+      ensureList.forEach(function(name) { getOrCreateSheet(ss, name); });
+      return jsonResponse({ ok: true, action: 'ensureSheets', sheets: ensureList });
     }
 
     /* Validate sheet name for all other actions */
@@ -291,23 +314,43 @@ function doPost(e) {
     if (action === 'append') {
       var row = data.row;
       if (!Array.isArray(row)) {
-        return jsonResponse({ ok: false, error: 'row is not an array' });
+        return jsonResponse({ ok: false, error: 'row is not an array', code: 'INVALID_ROW' });
       }
       /* Validate guest row when appending to Attendees */
       if (sheetName === 'Attendees') {
         var appendErr = _validateGuestRow(row);
         if (appendErr) {
-          return jsonResponse({ ok: false, error: appendErr });
+          return jsonResponse({ ok: false, error: appendErr, code: 'VALIDATION_ERROR' });
         }
       }
       sheet.appendRow(row);
       return jsonResponse({ ok: true, action: 'append' });
     }
 
-    return jsonResponse({ ok: false, error: 'Unknown action: ' + action });
+    /* ── deleteRow: remove the first row where column 0 == id ──────── */
+    if (action === 'deleteRow') {
+      var targetId = String(data.id || '').trim();
+      if (!targetId) {
+        return jsonResponse({ ok: false, error: 'id is required for deleteRow', code: 'MISSING_ID' });
+      }
+      var lastRow = sheet.getLastRow();
+      var deleted = 0;
+      /* Iterate from bottom to top so row indices stay stable */
+      for (var r = lastRow; r >= 2; r--) {
+        var cellVal = String(sheet.getRange(r, 1).getValue() || '');
+        if (cellVal === targetId) {
+          sheet.deleteRow(r);
+          deleted++;
+          break; /* IDs are unique — stop after first match */
+        }
+      }
+      return jsonResponse({ ok: true, action: 'deleteRow', deleted: deleted });
+    }
+
+    return jsonResponse({ ok: false, error: 'Unknown action: ' + action, code: 'UNKNOWN_ACTION' });
 
   } catch (err) {
-    return jsonResponse({ ok: false, error: err.toString() });
+    return jsonResponse({ ok: false, error: err.toString(), code: 'INTERNAL_ERROR' });
   }
 }
 
@@ -318,5 +361,20 @@ function doGet(e) {
   if (params.action === 'getPushSubscriptions') {
     return _getPushSubscriptions();
   }
-  return jsonResponse({ ok: true, service: 'Wedding Manager', version: '1.19.0' });
+  /* Return row count for a sheet tab — used by the app to verify writes succeeded */
+  if (params.action === 'getRowCount') {
+    var sheetName = String(params.sheet || '');
+    if (ALLOWED_SHEETS.indexOf(sheetName) === -1) {
+      return jsonResponse({ ok: false, error: 'Sheet not allowed: ' + sheetName });
+    }
+    try {
+      var ss2 = SpreadsheetApp.openById(SPREADSHEET_ID);
+      var sh2 = ss2.getSheetByName(sheetName);
+      var cnt = sh2 ? Math.max(0, sh2.getLastRow() - 1) : -1; // −1 for header
+      return jsonResponse({ ok: true, sheet: sheetName, count: cnt });
+    } catch (err) {
+      return jsonResponse({ ok: false, error: err.toString() });
+    }
+  }
+  return jsonResponse({ ok: true, service: 'Wedding Manager', version: '2.0.0' });
 }

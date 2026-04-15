@@ -2,14 +2,17 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v1.19.0-d4a574?style=flat-square)
-![Modular](https://img.shields.io/badge/Modular-32_JS_%2B_6_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
+![Version](https://img.shields.io/badge/version-v3.8.0-d4a574?style=flat-square)
+![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
+![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-1420%2B_passing-brightgreen?style=flat-square)
+![Modular](https://img.shields.io/badge/Modular-38_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
 
 **Wedding management app — RSVP, table seating, WhatsApp invitations, push notifications, E2E tests.**
-**Modular (6 CSS + 32 JS), zero-dependency, Hebrew RTL with English support.**
+**Modular (7 CSS + 38 JS), zero-dependency, Hebrew RTL with English support.**
 
 </div>
 
@@ -30,6 +33,9 @@
 ```bash
 # Clone
 git clone https://github.com/RajwanYair/Wedding.git
+
+# Install shared dependencies (from parent directory)
+cd .. && npm install && cd Wedding
 
 # Open in browser (no build step needed!)
 open index.html
@@ -53,7 +59,7 @@ Add SDK `<script>` tags for Facebook and Apple in `index.html` (see comments).
 
 ```bash
 # Tests
-node --test tests/wedding.test.mjs
+npm test
 
 # Lint — all must exit 0 (0 errors, 0 warnings)
 npm run lint         # HTML + CSS + JS + Markdown
@@ -68,40 +74,93 @@ npm run lint:md      # markdownlint-cli2
 ```text
 Wedding/
 ├── index.html            # HTML shell (links css/ and js/)
-├── css/                  # 6 CSS modules
+├── css/                  # 7 CSS modules
 │   ├── variables.css     # Custom properties, theme colors
 │   ├── base.css          # Reset, typography
 │   ├── layout.css        # Grid, nav, panels
 │   ├── components.css    # Buttons, forms, cards, modals
 │   ├── responsive.css    # 768px + 480px breakpoints
+│   ├── print.css         # Print styles
 │   └── auth.css          # Auth overlay
-├── js/                   # 17 JS modules
+├── js/                   # 38 JS modules
 │   ├── config.js         # App constants, version, auth credentials
 │   ├── i18n.js           # Hebrew + English strings
 │   ├── dom.js            # Cached DOM refs (el object)
+│   ├── store.js          # Proxy-based reactive store with debounced persist
 │   ├── state.js          # App state (_guests, _tables, _weddingInfo)
-│   ├── utils.js          # cleanPhone, date helpers
-│   ├── ui.js             # Toast, modal, loading, i18n apply
-│   ├── nav.js            # Tab navigation
-│   ├── dashboard.js      # Stats, countdown, progress
+│   ├── utils.js          # cleanPhone, sanitize(), date helpers
+│   ├── ui.js             # Toast (stacking+progress), modal, loading, i18n apply
+│   ├── nav.js            # Tab navigation + swipe gestures + View Transitions
+│   ├── router.js         # Hash router (replaceState, back/forward)
+│   ├── dashboard.js      # Stats (IntersectionObserver), countdown, progress
 │   ├── guests.js         # Guest CRUD, filter, sort, export
 │   ├── tables.js         # Table floor plan, seating
 │   ├── invitation.js     # SVG invitation generator
 │   ├── whatsapp.js       # Message templates, wa.me bulk send
-│   ├── rsvp.js           # Public RSVP form
+│   ├── rsvp.js           # Public RSVP form (phone-first lookup)
 │   ├── settings.js       # Wedding info, theme, language
-│   ├── sheets.js         # Google Sheets sync
+│   ├── sheets.js         # Google Sheets sync (exp. backoff, write queue)
 │   ├── auth.js           # Google / Facebook / Apple / Anonymous auth
+│   ├── vendors.js        # Vendor CRUD + payment tracking
+│   ├── expenses.js       # Expense tracking
+│   ├── budget.js         # Budget overview
+│   ├── analytics.js      # SVG donut + bar charts
+│   ├── audit.js          # Audit log
+│   ├── error-monitor.js  # Client error capture
+│   ├── push.js           # Web Push notifications
+│   ├── email.js          # Email notifications via Apps Script
 │   └── app.js            # Entry point, init, SW registration
 ├── sw.js                 # Service Worker (stale-while-revalidate, 5-min update poll)
 ├── manifest.json         # PWA manifest
-├── icon.svg              # App icon (512×512)
-├── invitation.jpg        # Default invitation background
-├── architecture.svg      # Architecture diagram
-├── package.json          # devDeps: eslint, stylelint, htmlhint, markdownlint-cli2
+├── package.json          # devDeps; shared node_modules in ../MyScripts/
 ├── tests/
-│   └── wedding.test.mjs  # 125 unit tests (Node built-in runner)
-└── .github/              # Copilot instructions, agents, prompts, CI/CD workflows
+│   ├── wedding.test.mjs  # 772+ unit tests (Vitest — 83+ suites)
+│   └── e2e/              # Playwright smoke + RSVP + navigation + a11y
+└── .github/              # Copilot instructions, agents, CI/CD workflows
+
+```
+
+## Architecture
+
+```mermaid
+graph TD
+    subgraph "Entry"
+        A[index.html] --> B[js/main.js]
+    end
+    subgraph "Core"
+        B --> C[config.js]
+        B --> D[store.js\nProxy reactive]
+        B --> E[state.js\nlocalStorage]
+        B --> F[router.js\nhash nav]
+        B --> G[i18n.js\nhe eager / en lazy]
+        B --> H[dom.js\ncached refs]
+        B --> I[events.js\ndata-action delegation]
+    end
+    subgraph "Sections"
+        B --> J[dashboard.js]
+        B --> K[guests.js]
+        B --> L[tables.js]
+        B --> M[rsvp.js]
+        B --> N[analytics.js]
+        B --> O[settings.js]
+        B --> P[...]
+    end
+    subgraph "Services"
+        B --> Q[sheets.js\nexp. backoff + write queue]
+        B --> R[auth.js\nGoogle/FB/Apple/Email]
+        B --> S[push.js]
+        B --> T[email.js]
+        B --> U[offline-queue.js]
+    end
+    subgraph "Data Store"
+        Q -- read/write --> V[(Google Sheets\nApps Script)]
+        E -- persist --> W[(localStorage\nwedding_v1_*)]
+    end
+    subgraph "CI/CD"
+        X[git push] --> Y[ci.yml\nlint+test+LH]
+        X --> Z[deploy.yml\nGH Pages]
+        X --> AA[release.yml\non vX.Y.Z tag]
+    end
 ```
 
 ## Guest Model (v1.1.0)
@@ -118,7 +177,13 @@ Wedding/
 
 ## Themes
 
-![Themes](themes-swatches.svg)
+| Name | CSS class | Primary color |
+|------|-----------|---------------|
+| Default | (none) | Purple `#8b5cf6` |
+| Rose Gold | `theme-rosegold` | `#d4a574` |
+| Gold | `theme-gold` | `#f59e0b` |
+| Emerald | `theme-emerald` | `#10b981` |
+| Royal Blue | `theme-royal` | `#3b82f6` |
 
 ## License
 

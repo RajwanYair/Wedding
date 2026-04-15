@@ -1,3 +1,5 @@
+@layer auth {
+
 /* ── Auth Overlay ── */
 .auth-overlay {
   position: fixed;
@@ -131,3 +133,6 @@
 .user-signout-btn:hover { color: var(--text-primary); border-color: rgba(255, 255, 255, 0.3); }
 /* Guest mode: only RSVP visible */
 body.guest-mode .nav-tabs { display: none !important; }
+
+
+} /* end @layer auth */

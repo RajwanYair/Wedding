@@ -1,0 +1,221 @@
+/**
+ * src/services/sheets.js — Sync facade (S3.10 backend-agnostic)
+ *
+ * Public API consumed by all section modules.
+ * Owns the write queue, debounce, retry, and status management.
+ * Actual backend I/O is delegated to backend.js → sheets-impl / supabase.
+ *
+ * Sections continue to `import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js"`.
+ */
+
+import { DEBOUNCE_MS } from "../core/config.js";
+import {
+  syncStoreKey,
+  appendRsvpLog,
+  checkConnection,
+  createMissingTabs,
+  getBackendType,
+} from "./backend.js";
+
+/** @type {Map<string, { syncFn: () => Promise<void>, timer: ReturnType<typeof setTimeout> | null }>} */
+const _queue = new Map();
+
+/** @type {'idle'|'syncing'|'synced'|'error'} */
+let _syncStatus = "idle";
+
+/** @type {((status: 'idle'|'syncing'|'synced'|'error') => void) | null} */
+let _onStatusChange = null;
+
+/**
+ * Register a status-change listener.
+ * @param {(status: 'idle'|'syncing'|'synced'|'error') => void} fn
+ */
+export function onSyncStatus(fn) {
+  _onStatusChange = fn;
+}
+
+function _setStatus(s) {
+  _syncStatus = s;
+  _onStatusChange?.(s);
+}
+
+/**
+ * Return current sync status.
+ * @returns {'idle'|'syncing'|'synced'|'error'}
+ */
+export function syncStatus() {
+  return _syncStatus;
+}
+
+/**
+ * Enqueue a debounced write operation. Coalesces per `key`.
+ * @param {string} key       Unique key per data type (e.g. 'guests', 'vendors')
+ * @param {() => Promise<void>} syncFn  Async function that performs the actual POST
+ */
+export function enqueueWrite(key, syncFn) {
+  const existing = _queue.get(key);
+  if (existing?.timer) clearTimeout(existing.timer);
+  const timer = setTimeout(() => _flush(key), DEBOUNCE_MS);
+  _queue.set(key, { syncFn, timer });
+}
+
+/** @type {Map<string, number>} track retry count per key */
+const _retryCount = new Map();
+
+/** Maximum retry attempts before giving up */
+const _MAX_RETRIES = 4;
+/** Base delay in ms for exponential backoff */
+const _BACKOFF_BASE_MS = 2000;
+
+async function _flush(key) {
+  const entry = _queue.get(key);
+  if (!entry) return;
+  _queue.delete(key);
+  _setStatus("syncing");
+  try {
+    await entry.syncFn();
+    _retryCount.delete(key);
+    _setStatus("synced");
+    // Reset to idle after a short confirmation window
+    setTimeout(() => {
+      if (_syncStatus === "synced" && _queue.size === 0) _setStatus("idle");
+    }, 3000);
+  } catch {
+    const attempt = (_retryCount.get(key) ?? 0) + 1;
+    if (attempt <= _MAX_RETRIES) {
+      _retryCount.set(key, attempt);
+      const delay = _BACKOFF_BASE_MS * 2 ** (attempt - 1) + Math.random() * 500;
+      const timer = setTimeout(() => _flush(key), delay);
+      _queue.set(key, { syncFn: entry.syncFn, timer });
+      _setStatus("syncing");
+    } else {
+      _retryCount.delete(key);
+      _setStatus("error");
+    }
+  }
+}
+
+// ── Sheet name mapping ──────────────────────────────────────────────────
+// (kept for mergeLastWriteWins — still used by legacy pull-refresh)
+
+/**
+ * Last-write-wins conflict resolution (S3.4).
+ * @param {any[]} local
+ * @param {any[]} remote
+ * @returns {any[]}
+ */
+export function mergeLastWriteWins(local, remote) {
+  const localMap = new Map(local.map((r) => [r.id, r]));
+  const remoteMap = new Map(remote.map((r) => [r.id, r]));
+  remoteMap.forEach((remoteRecord, id) => {
+    const localRecord = localMap.get(id);
+    if (!localRecord) {
+      localMap.set(id, remoteRecord);
+    } else {
+      const localTs = localRecord.updatedAt ?? localRecord.createdAt ?? 0;
+      const remoteTs = remoteRecord.updatedAt ?? remoteRecord.createdAt ?? 0;
+      if (remoteTs > localTs) localMap.set(id, remoteRecord);
+    }
+  });
+  return [...localMap.values()];
+}
+
+// ── Backend-delegated sync functions ────────────────────────────────────
+// These keep the same names so that all section imports stay unchanged.
+
+/**
+ * Sync all records of a store key to the active backend.
+ * @param {string} storeKey   e.g. "guests", "vendors", "expenses"
+ * @returns {Promise<void>}
+ */
+export async function syncStoreKeyToSheets(storeKey) {
+  return syncStoreKey(storeKey);
+}
+
+/**
+ * POST to the active backend (Sheets-specific — delegates via backend.js).
+ * Kept for backward compat with direct callers; prefers backend dispatcher.
+ * @param {Record<string, unknown>} payload
+ * @returns {Promise<unknown>}
+ */
+export async function sheetsPost(payload) {
+  const { sheetsPostImpl } = await import("./sheets-impl.js");
+  return sheetsPostImpl(payload);
+}
+
+/**
+ * Read data from Google Sheets via GViz query (Sheets-specific).
+ * @param {string} spreadsheetId
+ * @param {string} sheetName
+ * @returns {Promise<Array<Record<string, unknown>>>}
+ */
+export async function sheetsRead(spreadsheetId, sheetName) {
+  const { sheetsReadImpl } = await import("./sheets-impl.js");
+  return sheetsReadImpl(spreadsheetId, sheetName);
+}
+
+/**
+ * Flush all queued writes immediately (e.g. triggered by "Sync Now" button).
+ * @returns {Promise<void>}
+ */
+export async function syncSheetsNow() {
+  const keys = [..._queue.keys()];
+  await Promise.allSettled(keys.map((k) => _flush(k)));
+}
+
+/**
+ * S3.9 — Offline-to-online sync.
+ * Registers a window "online" listener that flushes the write queue
+ * whenever the browser regains network connectivity.
+ * Also sets up an "offline" listener to update sync status.
+ */
+export function initOnlineSync() {
+  window.addEventListener(
+    "online",
+    () => {
+      if (_queue.size > 0) {
+        syncSheetsNow();
+      }
+    },
+    { passive: true },
+  );
+
+  window.addEventListener(
+    "offline",
+    () => {
+      _setStatus("idle");
+    },
+    { passive: true },
+  );
+}
+
+/**
+ * Verify the active backend is reachable.
+ * @returns {Promise<boolean>}
+ */
+export async function sheetsCheckConnection() {
+  return checkConnection();
+}
+
+/**
+ * Create missing tables/tabs on the active backend.
+ * @returns {Promise<unknown>}
+ */
+export async function createMissingSheetTabs() {
+  return createMissingTabs();
+}
+
+/**
+ * Append a single RSVP log entry to the active backend.
+ * Delegates to backend.js → sheets-impl (RSVP_Log sheet) or supabase (rsvp_log table).
+ * @param {{ phone: string, firstName: string, lastName: string, status: string, count: number, timestamp: string }} entry
+ * @returns {Promise<void>}
+ */
+export async function appendToRsvpLog(entry) {
+  return appendRsvpLog(entry);
+}
+
+/**
+ * Re-export for callers that need the current backend type.
+ */
+export { getBackendType };

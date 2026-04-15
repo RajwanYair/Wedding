@@ -1,3 +1,4 @@
+// @ts-check
 "use strict";
 
 /* ── Client Error Monitoring (Sprint 6.4) ────────────────────────────────────
@@ -26,21 +27,22 @@ function logClientError(errInfo) {
     page: window.location.hash || "/",
     ua: navigator.userAgent.slice(0, 100),
   };
-  _clientErrors.unshift(entry); /* newest first */
-  if (_clientErrors.length > _ERROR_MAX) _clientErrors.length = _ERROR_MAX;
+  window._clientErrors.unshift(entry); /* newest first */
+  if (window._clientErrors.length > _ERROR_MAX)
+    window._clientErrors.length = _ERROR_MAX;
   try {
     localStorage.setItem(
-      STORAGE_PREFIX + "errors",
-      JSON.stringify(_clientErrors),
+      `${window.STORAGE_PREFIX  }errors`,
+      JSON.stringify(window._clientErrors),
     );
   } catch (_e) {}
 
   /* Optional: report to Apps Script (fire-and-forget) */
-  if (SHEETS_WEBAPP_URL && navigator.onLine) {
+  if (window.SHEETS_WEBAPP_URL && navigator.onLine) {
     try {
-      _sheetsWebAppPost({ action: "logError", error: entry }).catch(
-        function () {},
-      );
+      window
+        ._sheetsWebAppPost({ action: "logError", error: entry })
+        .catch(function () {});
     } catch (_e) {}
   }
 }
@@ -52,22 +54,22 @@ function renderErrorLog() {
   const tbody = document.getElementById("errorLogBody");
   if (!tbody) return;
 
-  if (_clientErrors.length === 0) {
-    tbody.innerHTML = "";
+  if (window._clientErrors.length === 0) {
+    tbody.replaceChildren();
     const tr = document.createElement("tr");
     const td = document.createElement("td");
     td.colSpan = 3;
     td.style.cssText =
       "text-align:center; padding:1rem; font-size:0.85em; color:var(--text-muted);";
     td.setAttribute("data-i18n", "errors_empty");
-    td.textContent = t("errors_empty");
+    td.textContent = window.t("errors_empty");
     tr.appendChild(td);
     tbody.appendChild(tr);
     return;
   }
 
-  tbody.innerHTML = "";
-  _clientErrors.slice(0, 30).forEach(function (entry) {
+  tbody.replaceChildren();
+  window._clientErrors.slice(0, 30).forEach(function (entry) {
     const tr = document.createElement("tr");
     tr.style.cssText = "font-size:0.78em;";
 
@@ -76,9 +78,9 @@ function renderErrorLog() {
       "white-space:nowrap; color:var(--text-muted); direction:ltr;";
     const d = new Date(entry.ts);
     tdTs.textContent =
-      d.toLocaleDateString("he-IL") +
-      " " +
-      d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
+      `${d.toLocaleDateString("he-IL") 
+      } ${ 
+      d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })}`;
 
     const tdMsg = document.createElement("td");
     tdMsg.style.cssText =
@@ -90,8 +92,8 @@ function renderErrorLog() {
     tdSrc.style.cssText =
       "color:var(--text-muted); direction:ltr; font-size:0.9em;";
     const loc = entry.source
-      ? entry.source + ":" + entry.lineno
-      : "line " + entry.lineno;
+      ? `${entry.source  }:${  entry.lineno}`
+      : `line ${  entry.lineno}`;
     tdSrc.textContent = loc;
 
     tr.append(tdTs, tdMsg, tdSrc);
@@ -101,13 +103,13 @@ function renderErrorLog() {
 
 /** Clear all stored errors (admin only). */
 function clearErrorLog() {
-  if (!_authUser || !_authUser.isAdmin) return;
-  _clientErrors = [];
+  if (!window._authUser || !window._authUser.isAdmin) return;
+  window._clientErrors = [];
   try {
-    localStorage.removeItem(STORAGE_PREFIX + "errors");
+    localStorage.removeItem(`${window.STORAGE_PREFIX  }errors`);
   } catch (_e) {}
   renderErrorLog();
-  showToast(t("errors_cleared"), "success");
+  window.showToast(window.t("errors_cleared"), "success");
 }
 
 /**
@@ -116,10 +118,10 @@ function clearErrorLog() {
 function initErrorMonitor() {
   /* Load persisted errors */
   try {
-    const stored = localStorage.getItem(STORAGE_PREFIX + "errors");
-    if (stored) _clientErrors = JSON.parse(stored) || [];
+    const stored = localStorage.getItem(`${window.STORAGE_PREFIX  }errors`);
+    if (stored) window._clientErrors = JSON.parse(stored) || [];
   } catch (_e) {
-    _clientErrors = [];
+    window._clientErrors = [];
   }
 
   window.addEventListener("error", function (e) {

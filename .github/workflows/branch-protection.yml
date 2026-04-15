@@ -1,0 +1,95 @@
+# =============================================================================
+# Branch Protection Enforcement (S5.4)
+# Verifies that required branch-protection rules are enabled on `main`.
+# Run manually (workflow_dispatch) or once per week to drift-detect.
+# Requires: GH_TOKEN with `repo` scope (Settings → Secrets → Actions).
+# =============================================================================
+
+name: Branch Protection
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every Monday at 07:00 UTC
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify Branch Protection on main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check protection rules via GitHub API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+
+          echo "Checking branch protection for ${OWNER}/${REPO}:main …"
+
+          PROTECTION=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            repos/${OWNER}/${REPO}/branches/main/protection \
+            2>/dev/null || echo "NOT_SET")
+
+          if [ "$PROTECTION" = "NOT_SET" ]; then
+            echo "::warning::Branch protection is NOT configured on main. See CONTRIBUTING.md for setup instructions."
+            exit 0
+          fi
+
+          # Parse key settings (jq is pre-installed on ubuntu-latest)
+          REQUIRED_CHECKS=$(echo "$PROTECTION" | jq -r '.required_status_checks.contexts // [] | length')
+          ENFORCE_ADMINS=$(echo "$PROTECTION" | jq -r '.enforce_admins.enabled // false')
+          DELETE_PROTECTED=$(echo "$PROTECTION" | jq -r '.allow_deletions.enabled // false')
+
+          echo "Required status checks : ${REQUIRED_CHECKS}"
+          echo "Enforce admins         : ${ENFORCE_ADMINS}"
+          echo "Allow deletions        : ${DELETE_PROTECTED}"
+
+          FAIL=0
+          if [ "$REQUIRED_CHECKS" -lt 1 ]; then
+            echo "::error::No required status checks are configured — add the CI job"
+            FAIL=1
+          fi
+          if [ "$ENFORCE_ADMINS" != "true" ]; then
+            echo "::warning::enforce_admins is false — consider enabling it"
+          fi
+          if [ "$DELETE_PROTECTED" = "true" ]; then
+            echo "::error::allow_deletions is true — main branch should be protected"
+            FAIL=1
+          fi
+
+          [ "$FAIL" -eq 0 ] && echo "Branch protection looks good." || exit 1
+
+  # ---------------------------------------------------------------------------
+  # apply-defaults: idempotently set minimum recommended rules
+  # Only runs when manually triggered from the Actions UI
+  # ---------------------------------------------------------------------------
+  apply:
+    name: Apply Default Protection Rules
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    needs: verify
+    continue-on-error: true
+    steps:
+      - name: Set minimum branch protection via GitHub API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+
+          gh api --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            repos/${OWNER}/${REPO}/branches/main/protection \
+            --field required_status_checks='{"strict":true,"contexts":["Lint + Test (Node 22)"]}' \
+            --field enforce_admins=true \
+            --field required_pull_request_reviews=null \
+            --field restrictions=null \
+            --field allow_deletions=false \
+            --field allow_force_pushes=false \
+            && echo "Protection rules applied successfully." \
+            || echo "::warning::Could not apply rules — may need admin token (PAT) instead of GITHUB_TOKEN"

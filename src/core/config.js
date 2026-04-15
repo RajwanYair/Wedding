@@ -1,0 +1,73 @@
+/**
+ * src/core/config.js — App constants (S0 named-export module)
+ *
+ * Mirrors js/config.js constants. Values may be overridden by
+ * scripts/inject-config.mjs at build time for production credentials.
+ * No window.* side effects.
+ */
+
+// ── Version ───────────────────────────────────────────────────────────────
+export const APP_VERSION = "3.8.1";
+
+// ── LocalStorage ─────────────────────────────────────────────────────────
+export const STORAGE_PREFIX = "wedding_v1_";
+
+// ── Sheets ───────────────────────────────────────────────────────────────
+export const SHEETS_WEBAPP_URL =
+  "https://script.google.com/macros/s/AKfycbxGYuciHXLurYbZn9s-Gx8uMmBSn1dZ20xOFoZkk3JXg3RrzR741jz2tsIKgLtN8cHQ/exec";
+export const SPREADSHEET_ID = "1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA";
+export const SHEETS_GUESTS_TAB = "Attendees";
+export const SHEETS_TABLES_TAB = "Tables";
+export const SHEETS_CONFIG_TAB = "Config";
+export const SHEETS_VENDORS_TAB = "Vendors";
+export const SHEETS_EXPENSES_TAB = "Expenses";
+export const SHEETS_RSVP_LOG_TAB = "RSVP_Log";
+
+// ── Supabase ─────────────────────────────────────────────────────────────
+export const SUPABASE_URL = "";
+export const SUPABASE_ANON_KEY = "";
+
+// ── Backend selection ────────────────────────────────────────────────────
+/** @type {'sheets'|'supabase'|'none'} */
+export const BACKEND_TYPE = "sheets";
+
+// ── Auth ─────────────────────────────────────────────────────────────────
+export const GOOGLE_CLIENT_ID = "";
+export const FB_APP_ID = "";
+export const APPLE_SERVICE_ID = "";
+
+/** @type {string[]} */
+export const ADMIN_EMAILS = [
+  "yair.rajwan@gmail.com",
+  "ylipman@gmail.com",
+  "elior.rajwan@gmail.com",
+  "anat.rajwan@gmail.com",
+];
+
+/** Session rotation interval: 2 hours (S4.1) */
+export const AUTH_SESSION_DURATION_MS = 2 * 60 * 60 * 1000;
+
+// ── UI ────────────────────────────────────────────────────────────────────
+export const TOAST_DURATION_MS = 3000;
+export const DEBOUNCE_MS = 1500;
+
+// ── RSVP deadlines ────────────────────────────────────────────────────────
+export const RSVP_DEADLINE = "";
+
+// ── Guest status options ──────────────────────────────────────────────────
+/** @type {readonly string[]} */
+export const GUEST_STATUSES = /** @type {const} */ ([
+  "pending",
+  "confirmed",
+  "declined",
+  "maybe",
+]);
+
+/** @type {readonly string[]} */
+export const MEAL_TYPES = /** @type {const} */ ([
+  "regular",
+  "vegetarian",
+  "vegan",
+  "gluten_free",
+  "kosher",
+]);

@@ -1,35 +1,46 @@
 {
     "name": "wedding-manager",
-    "version": "1.19.0",
+    "version": "3.8.1",
     "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
     "type": "module",
     "private": true,
     "scripts": {
-        "test": "node --test tests/wedding.test.mjs",
-        "test:watch": "node --test --watch tests/wedding.test.mjs",
-        "test:e2e": "npx playwright test",
+        "dev": "vite",
+        "build": "vite build",
+        "postbuild": "node scripts/generate-precache.mjs",
+        "preview": "vite preview",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "test:e2e": "playwright test",
         "lint:html": "htmlhint --config .htmlhintrc index.html",
-        "lint:css": "stylelint --config .stylelintrc.json --max-warnings 0 css/*.css",
-        "lint:js": "eslint --max-warnings 0 js/*.js",
+        "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
+        "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
         "lint:md": "markdownlint-cli2 README.md CHANGELOG.md CLAUDE.md \".github/**/*.md\"",
         "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
         "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
         "icons": "node scripts/generate-icons.mjs",
         "sri": "node scripts/sri-check.mjs",
+        "precache": "node scripts/generate-precache.mjs",
         "size": "node scripts/size-report.mjs",
         "ci": "npm run lint && npm test"
     },
     "engines": {
         "node": ">=20.0.0"
     },
+    "comment:deps": "All devDependencies are installed in the parent MyScripts/ workspace. Run `npm install` from ../MyScripts to provision. CI uses its own npm ci.",
     "devDependencies": {
+        "@eslint/js": "^10.2.0",
         "@playwright/test": "^1.51.0",
+        "@vitest/coverage-v8": "^4.1.4",
         "eslint": "^10.2.0",
         "htmlhint": "^1.9.2",
         "markdownlint-cli2": "^0.22.0",
         "serve": "^14.2.4",
         "stylelint": "^17.7.0",
         "stylelint-config-standard": "^40.0.0",
+        "vite": "^8.0.8",
+        "vitest": "^4.1.4",
         "web-push": "^3.6.7"
     }
 }

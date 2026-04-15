@@ -1,8 +1,9 @@
+// @ts-check
 "use strict";
 
 /* ── Hash Router (v1.15.0) ───────────────────────────────────────────────────
    Updates URL hash when sections change; restores section from URL on page load.
-   Works seamlessly with the existing showSection() global scope.
+   Works seamlessly with the existing window.showSection() global scope.
    ─────────────────────────────────────────────────────────────────────────── */
 
 const _ROUTER_VALID = [
@@ -33,17 +34,17 @@ function initRouter() {
   /* Only respect initial hash if the app hasn't already picked a section */
   const initialHash = window.location.hash.slice(1);
   if (initialHash && _ROUTER_VALID.includes(initialHash)) {
-    showSection(initialHash);
+    window.showSection(initialHash);
   }
 }
 
 /**
  * Update the URL hash to reflect the current section.
  * Uses replaceState (not pushState) to avoid polluting browser history.
- * Called by showSection() in nav.js.
+ * Called by window.showSection() in nav.js.
  */
 function _routerPush(name) {
-  const desired = "#" + name;
+  const desired = `#${  name}`;
   if (window.location.hash !== desired) {
     history.replaceState(null, "", desired);
   }
@@ -53,6 +54,6 @@ function _routerPush(name) {
 function _routerHandleHash() {
   const hash = window.location.hash.slice(1);
   if (hash && _ROUTER_VALID.includes(hash)) {
-    showSection(hash);
+    window.showSection(hash);
   }
 }
