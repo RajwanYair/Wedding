@@ -344,6 +344,8 @@
     "sheets_clean_config": "Clean Duplicate Keys",
     "sheets_clean_config_done": "Removed {n} duplicate rows from Config ✅",
     "sheets_clean_config_none": "No duplicates in Config — sheet is clean ✅",
+    "install_banner_msg": "📲 Install the app on your device for quick access",
+    "install_banner_btn": "Install",
     "ph_sheets_webapp_url": "https://script.google.com/macros/s/...",
     "sw_update_msg": "🔄 A new version is available",
     "sw_update_btn": "Refresh",

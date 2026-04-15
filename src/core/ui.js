@@ -306,6 +306,86 @@ export function initSW() {
   });
 }
 
+// ── PWA Install Prompt ────────────────────────────────────────────────────
+
+const _INSTALL_DISMISSED_KEY = "wedding_v1_install_dismissed_until";
+const _INSTALL_SNOOZE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const _INSTALL_DELAY_MS = 30_000; // show after 30 s of use
+
+/**
+ * Listen for the browser's `beforeinstallprompt` event, defer it, then show
+ * a bottom banner after a short delay inviting the user to install the PWA.
+ * - Skips if already running in standalone mode (already installed).
+ * - Skips if the user dismissed within the last 30 days.
+ * - Clicking "Install" triggers the native browser install dialog.
+ * - Clicking × snoozes the banner for 30 days.
+ */
+export function initInstallPrompt() {
+  // Already installed — nothing to do
+  if (window.matchMedia("(display-mode: standalone)").matches) return;
+  // User dismissed recently
+  const until = Number(localStorage.getItem(_INSTALL_DISMISSED_KEY) ?? 0);
+  if (until > Date.now()) return;
+
+  /** @type {any} */ let _deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    _deferredPrompt = e;
+
+    setTimeout(() => {
+      if (!_deferredPrompt) return;
+      if (document.getElementById("installBanner")) return;
+
+      const banner = document.createElement("div");
+      banner.id = "installBanner";
+      banner.className = "install-banner";
+      banner.setAttribute("role", "complementary");
+      banner.setAttribute("aria-label", t("install_banner_msg"));
+
+      const icon = document.createElement("span");
+      icon.className = "install-banner-icon";
+      icon.textContent = "📲";
+
+      const msg = document.createElement("span");
+      msg.className = "install-banner-msg";
+      msg.textContent = t("install_banner_msg");
+
+      const btn = document.createElement("button");
+      btn.className = "btn btn-primary install-banner-btn";
+      btn.textContent = t("install_banner_btn");
+      btn.addEventListener("click", async () => {
+        banner.remove();
+        _deferredPrompt.prompt();
+        const { outcome } = await _deferredPrompt.userChoice;
+        _deferredPrompt = null;
+        if (outcome === "accepted") {
+          localStorage.removeItem(_INSTALL_DISMISSED_KEY);
+        }
+      });
+
+      const dismiss = document.createElement("button");
+      dismiss.className = "install-banner-dismiss";
+      dismiss.textContent = "\u00d7";
+      dismiss.setAttribute("aria-label", "Dismiss install prompt");
+      dismiss.addEventListener("click", () => {
+        banner.remove();
+        _deferredPrompt = null;
+        localStorage.setItem(
+          _INSTALL_DISMISSED_KEY,
+          String(Date.now() + _INSTALL_SNOOZE_MS),
+        );
+      });
+
+      banner.appendChild(icon);
+      banner.appendChild(msg);
+      banner.appendChild(btn);
+      banner.appendChild(dismiss);
+      document.body.appendChild(banner);
+    }, _INSTALL_DELAY_MS);
+  });
+}
+
 /**
  * Announce a message to screen readers via a dedicated aria-live region.
  * Creates the live region on first call. Polite for info, assertive for errors.
@@ -314,6 +394,7 @@ export function initSW() {
  * @param {'polite'|'assertive'} [politeness]  Default: 'polite'
  */
 export function announce(message, politeness = "polite") {
+
   let region = /** @type {HTMLElement|null} */ (
     document.getElementById("ariaLiveRegion")
   );

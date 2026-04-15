@@ -27,6 +27,7 @@ import {
   restoreTheme,
   showConfirmDialog,
   initSW,
+  initInstallPrompt,
 } from "./core/ui.js";
 import { injectTemplate } from "./core/template-loader.js";
 
@@ -284,6 +285,9 @@ let _activeSection = null;
 
   // 11d. Service Worker — update detection + refresh banner
   initSW();
+
+  // 11e. PWA install prompt — invite browser users to install the app
+  initInstallPrompt();
 })();
 
 // ── Handler registration ──────────────────────────────────────────────────

@@ -348,6 +348,8 @@
     "sheets_clean_config": "נקה מפתחות כפולים",
     "sheets_clean_config_done": "הוסרו {n} שורות כפולות מ-Config ✅",
     "sheets_clean_config_none": "אין כפילויות ב-Config — הגיליון נקי ✅",
+    "install_banner_msg": "📲 התקן את האפליקציה על המכשיר שלך לגישה מהירה",
+    "install_banner_btn": "התקן",
     "ph_sheets_webapp_url": "https://script.google.com/macros/s/...",
     "sw_update_msg": "🔄 גרסה חדשה זמינה",
     "sw_update_btn": "רענן",
