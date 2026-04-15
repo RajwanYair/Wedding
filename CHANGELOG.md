@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.9.0] — 2026-04-15
+
+### Added
+
+- **Status bar** — footer displays app version, GAS connection status, and user role in real time.
+- **What's New popup** — admin users see a version-gated popup with latest changes on first login after an update.
+- **Changelog section/tab** — dedicated browsable changelog section with nav tab; lazy-loaded template.
+- **WhatsApp bilingual templates** — confirmation/reminder/custom messages now support Hebrew + English with WhatsApp-safe emoji.
+- **Budget + checkedIn Sheets sync** — Budget sheet tab for gift tracking; `checkedIn` column synced to Attendees tab.
+- **Contacts + Gallery Sheets sync** — guest-submitted contact details and photo metadata synced two-way with Google Sheets.
+- **GAS v2.3.0** — `ALLOWED_SHEETS` expanded to 10 tabs: Attendees, Tables, Config, Vendors, Expenses, RSVP_Log, Timeline, Budget, Contacts, Gallery.
+- **250 wiring cross-reference tests** — new `tests/unit/wiring.test.mjs` validates consistency across template-loader, nav, SECTIONS map, HTML containers, template files, barrel exports, i18n keys, and Sheets sync.
+- **Modal lazy-loading** — `openModal()` now injects modal HTML via Vite `?raw` imports on first open; all 6 modal templates load on demand.
+
+### Fixed
+
+- **Guest landing page invisible** — added missing `sec-guest-landing` container, Home nav tab, and `"landing"` entry in `_sections` array.
+- **Changelog template not loading** — added missing `changelog` entry in template-loader `_loaders` map.
+- **Registry container missing** — added `sec-registry` div to `index.html` (caught by new wiring tests).
+- **`closeModal` handler** — registered `on("closeModal", ...)` and `on("closeGalleryLightbox", ...)` data-action handlers in `main.js`.
+- **Expenses section mount** — `expensesSection.mount()` now called when budget section mounts; unmounts alongside it.
+- **`openModal` export** — changed to `export async function` for lazy template loading; updated test assertion.
+
+### Changed
+
+- Version bumped to v3.9.0 across `package.json`, `src/core/config.js`, `js/config.js`, `public/sw.js`, `tests/wedding.test.mjs`.
+- Cache bust: `CACHE_NAME` → `wedding-v3.9.0`.
+- Test count: 1733+ tests across 17 suites.
+
 ## [3.8.3] — 2026-04-15
 
 ### Added

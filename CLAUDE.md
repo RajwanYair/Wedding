@@ -1,11 +1,11 @@
 # Wedding Manager — Claude Config
 
-> Full spec: `.github/copilot-instructions.md` · v3.8.3
+> Full spec: `.github/copilot-instructions.md` · v3.9.0
 
 ## Commands
 
 ```bash
-npm test                  # 1407+ tests (106+ suites) — must all pass · 0 Node warnings
+npm test                  # 1733+ tests (17+ suites) — must all pass · 0 Node warnings
 npm run lint              # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run lint:fix          # Auto-fix CSS + JS
 npm run ci                # lint + test (same as CI)
@@ -33,7 +33,7 @@ git add -A && git commit -m "<type>: <summary>" && git push
 ## Pre-Release Gate (all must be green before tagging)
 
 1. `npm run lint` — 0 errors, 0 warnings, 0 Node warnings
-2. `npm test` — 1407+ pass, 0 fail, 0 skip
+2. `npm test` — 1733+ pass, 0 fail, 0 skip
 3. `npm run build` — exits 0; `dist/sw.js` CACHE_NAME matches new version
 4. `npm audit --audit-level=high` — 0 high/critical vulnerabilities
 5. All version strings bumped: `package.json`, `src/core/config.js`, `public/sw.js`, `js/config.js`, `tests/wedding.test.mjs`, `CHANGELOG.md`
@@ -55,7 +55,7 @@ git add -A && git commit -m "<type>: <summary>" && git push
 | GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
 | `sanitize(input,schema)` | Use for all user input validation — returns `{ value, errors }` |
 | `enqueueWrite(key,fn)` | Use instead of direct `syncStoreKeyToSheets()` calls — debounces at 1.5 s |
-| Tests count | 1407+ tests, 106+ suites — update header comment in `wedding.test.mjs` when adding |
+| Tests count | 1733+ tests, 17+ suites — update header comment in `wedding.test.mjs` when adding |
 | ESLint disable | Any `// eslint-disable` must reference a real violation — stale ones error (`reportUnusedDisableDirectives`) |
 | Offline queue retries | `_MAX_RETRIES = 5`, `_RETRY_BASE_MS = 10_000` in `js/offline-queue.js` (S3.9) |
 | GAS backend | `sheets-webapp.gs` v2.0.0 — `ALLOWED_SHEETS` includes Vendors/Expenses/RSVP_Log (S3.5) |

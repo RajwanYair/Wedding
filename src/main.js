@@ -322,15 +322,11 @@ function _registerHandlers() {
   );
 
   // ── Auth ──
-  on("submitEmailLogin", (_el, e) => {
-    const form = /** @type {HTMLFormElement|null} */ (
-      /** @type {HTMLElement} */ (e.target).closest("form") ??
-        document.getElementById("emailLoginForm")
+  on("submitEmailLogin", () => {
+    const input = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("adminLoginEmail")
     );
-    const email =
-      /** @type {HTMLInputElement|null} */ (
-        form?.querySelector("[name='email'], #authEmailInput, #adminLoginEmail")
-      )?.value?.trim() ?? "";
+    const email = input?.value?.trim() ?? "";
     const result = loginOAuth(email, email, "", "email");
     if (!result) showToast(t("auth_email_not_approved"), "error");
     else {
