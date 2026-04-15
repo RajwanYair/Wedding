@@ -23,6 +23,8 @@ let _sheetCheck = null;
 let _sheetCreate = null;
 /** @type {typeof import('./sheets-impl.js').pullAllFromSheetsImpl | null} */
 let _sheetPull = null;
+/** @type {typeof import('./sheets-impl.js').pushAllToSheetsImpl | null} */
+let _sheetPushAll = null;
 
 /** @type {typeof import('./supabase.js').syncStoreKeyToSupabase | null} */
 let _sbSync = null;
@@ -53,6 +55,7 @@ async function _loadSheetsModule() {
   _sheetCheck = m.sheetsCheckConnectionImpl;
   _sheetCreate = m.createMissingSheetTabsImpl;
   _sheetPull = m.pullAllFromSheetsImpl;
+  _sheetPushAll = m.pushAllToSheetsImpl;
 }
 
 async function _loadSupabaseModule() {
@@ -134,4 +137,15 @@ export async function pullAll() {
   if (getBackendType() !== "sheets") return {};
   await _loadSheetsModule();
   return _sheetPull?.() ?? {};
+}
+
+/**
+ * Force-push ALL stores to the active backend (ignores the write queue).
+ * Sheets-only — no-op for Supabase or none.
+ * @returns {Promise<Record<string, number>>}
+ */
+export async function pushAll() {
+  if (getBackendType() !== "sheets") return {};
+  await _loadSheetsModule();
+  return _sheetPushAll?.() ?? {};
 }

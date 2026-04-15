@@ -48,6 +48,7 @@ import {
   onSyncStatus,
   initOnlineSync,
   pullFromSheets,
+  pushAllToSheets,
   sheetsPost,
 } from "./services/sheets.js";
 
@@ -806,6 +807,16 @@ function _registerHandlers() {
       showToast(t("sheets_pull_success"), "success");
     } catch {
       showToast(t("sheets_pull_error"), "error");
+    }
+  });
+  on("pushAllToSheets", async () => {
+    showToast(t("sheets_push_all_loading"), "info");
+    try {
+      const counts = /** @type {Record<string, number>} */ (await pushAllToSheets());
+      const total = Object.values(counts).reduce((s, n) => s + n, 0);
+      showToast(t("sheets_push_all_done").replace("{n}", String(total)), "success");
+    } catch {
+      showToast(t("toast_sheets_error"), "error");
     }
   });
   on("cleanConfigDuplicates", async () => {

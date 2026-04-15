@@ -330,3 +330,24 @@ export async function pullAllFromSheetsImpl() {
 
   return results;
 }
+
+/**
+ * Push ALL stores to Google Sheets in one shot (replaceAll for each tab).
+ * Pushes every key in _SHEET_NAMES regardless of the write queue.
+ * For empty stores the tab will contain just the header row (column schema).
+ * This is the "force full sync" used by the Push All button.
+ * @returns {Promise<Record<string, number>>}  row counts written per store key
+ */
+export async function pushAllToSheetsImpl() {
+  if (!_getWebAppUrl()) return {};
+  /** @type {Record<string, number>} */
+  const results = {};
+  for (const storeKey of Object.keys(_SHEET_NAMES)) {
+    await syncStoreKeyToSheetsImpl(storeKey);
+    const data = storeGet(storeKey);
+    results[storeKey] = Array.isArray(data)
+      ? data.length
+      : Object.keys(/** @type {object} */ (data ?? {})).length;
+  }
+  return results;
+}

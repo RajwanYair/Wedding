@@ -15,6 +15,7 @@ import {
   checkConnection,
   createMissingTabs,
   pullAll,
+  pushAll,
   getBackendType,
 } from "./backend.js";
 
@@ -222,6 +223,16 @@ export async function appendToRsvpLog(entry) {
  */
 export async function pullFromSheets() {
   return pullAll();
+}
+
+/**
+ * Force-push ALL local stores to Google Sheets regardless of what is in the
+ * write queue. Useful to seed column headers on a fresh spreadsheet or to do
+ * a one-shot full sync.
+ * @returns {Promise<Record<string, number>>}  row counts written per store key
+ */
+export async function pushAllToSheets() {
+  return pushAll();
 }
 
 /**
