@@ -189,12 +189,24 @@ let _activeSection = null;
   // 3. Reactive store — seed with persisted data from localStorage
   /** @type {Record<string,string>} */
   const _defaultWeddingInfo = {
+    // Core names
     groom: "אליאור",
     bride: "טובה",
+    groomEn: "",
+    brideEn: "",
+    // Date & time
     date: "2026-05-07",
+    hebrewDate: "",
     time: "18:00",
+    ceremonyTime: "19:30",
+    rsvpDeadline: "",
+    // Venue
     venue: "נוף הירדן",
     venueAddress: "מצפה יריחו",
+    venueWaze: "",
+    venueMapLink: "",
+    // Budget
+    budgetTarget: "",
   };
   const savedInfo = /** @type {Record<string,string>} */ (
     load("weddingInfo", {})

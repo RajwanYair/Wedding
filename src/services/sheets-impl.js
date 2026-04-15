@@ -30,6 +30,28 @@ const _SHEET_NAMES = {
 };
 
 /**
+ * Canonical ordered list of all weddingInfo keys that must always appear
+ * in the Config sheet, even when empty. Add new keys here as they are introduced.
+ * Keeps the sheet schema stable regardless of what the user has filled in.
+ */
+const _WEDDING_INFO_KEYS = [
+  "groom",
+  "bride",
+  "groomEn",
+  "brideEn",
+  "date",
+  "hebrewDate",
+  "time",
+  "ceremonyTime",
+  "rsvpDeadline",
+  "venue",
+  "venueAddress",
+  "venueWaze",
+  "venueMapLink",
+  "budgetTarget",
+];
+
+/**
  * Column ordering per sheet — must match GAS COL index map.
  * GAS validates by index, so order is critical.
  * @type {Record<string, string[]>}
@@ -117,9 +139,25 @@ export async function syncStoreKeyToSheetsImpl(storeKey) {
   if (!sheetName) return;
   let rows;
   if (storeKey === "weddingInfo") {
-    // Single config object → key-value rows with header (enables GViz pull)
-    const obj = /** @type {Record<string, unknown>} */ (storeGet(storeKey) ?? {});
-    rows = [["key", "value"], ...Object.entries(obj).map(([k, v]) => [k, v ?? ""])];
+    // Single config object → key-value rows with header (enables GViz pull).
+    // Merge canonical key schema with store values so every key is always
+    // present in the sheet — even if the user hasn't set it yet — and the
+    // order is deterministic. Store-only keys (e.g. set by future features)
+    // are appended after the canonical keys.
+    const obj = /** @type {Record<string, unknown>} */ (
+      storeGet(storeKey) ?? {}
+    );
+    const canonical = /** @type {Record<string, unknown>} */ (
+      Object.fromEntries(_WEDDING_INFO_KEYS.map((k) => [k, ""]))
+    );
+    const merged = { ...canonical, ...obj };
+    // Put canonical keys first in defined order, then any extra keys
+    const canonicalRows = _WEDDING_INFO_KEYS.map((k) => [k, merged[k] ?? ""]);
+    const extraKeys = Object.keys(merged).filter(
+      (k) => !_WEDDING_INFO_KEYS.includes(k),
+    );
+    const extraRows = extraKeys.map((k) => [k, merged[k] ?? ""]);
+    rows = [["key", "value"], ...canonicalRows, ...extraRows];
   } else {
     const cols = _COL_ORDER[storeKey];
     const records = /** @type {any[]} */ (storeGet(storeKey) ?? []);
