@@ -6,7 +6,7 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v3.8.1** |
+| Version | **v3.8.2** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |

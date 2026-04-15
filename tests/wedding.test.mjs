@@ -1,7 +1,7 @@
 // =============================================================================
-// Wedding Manager — Test Suite v3.8.1
+// Wedding Manager — Test Suite v3.8.2
 // Run: npx vitest run tests/wedding.test.mjs
-// 1093 tests — core + extended + v1.15.0–v3.8.1 features + S0/S1/S2/S3/S4.4/S4.6/S4.9/S5.4/S5.10/S6.4/S6.7/S6.8/S6.9/S0.11/S0.12 + v3.8.0 features
+// 1093 tests — core + extended + v1.15.0–v3.8.2 features + S0/S1/S2/S3/S4.4/S4.6/S4.9/S5.4/S5.10/S6.4/S6.7/S6.8/S6.9/S0.11/S0.12 + v3.8.0 features
 // =============================================================================
 import { describe, it } from "vitest";
 import assert from 'node:assert/strict';
@@ -56,16 +56,16 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v3.8.1", function () {
-    assert.ok(SRC.includes("v3.8.1"));
+  it("HTML contains v3.8.2", function () {
+    assert.ok(SRC.includes("v3.8.2"));
   });
 
-  it("SW cache name contains v3.8.1", function () {
-    assert.ok(SW.includes("wedding-v3.8.1"));
+  it("SW cache name contains v3.8.2", function () {
+    assert.ok(SW.includes("wedding-v3.8.2"));
   });
 
-  it("package.json version is 3.8.1", function () {
-    assert.equal(PKG.version, "3.8.1");
+  it("package.json version is 3.8.2", function () {
+    assert.equal(PKG.version, "3.8.2");
   });
 });
 
@@ -894,7 +894,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v3.8.1"));
+    assert.ok(SW.includes("wedding-v3.8.2"));
   });
 
   it("pre-caches app shell", function () {
@@ -6572,7 +6572,14 @@ describe("v3.6.0: version stamps consistent", function () {
   });
   it("CLAUDE.md references a current version", function () {
     const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
-    assert.ok(src.includes("3.7.0") || src.includes("3.6.0") || src.includes("3.8.0") || src.includes("3.8.1"), "CLAUDE.md missing version reference");
+    assert.ok(
+      src.includes("3.7.0") ||
+        src.includes("3.6.0") ||
+        src.includes("3.8.0") ||
+        src.includes("3.8.1") ||
+        src.includes("3.8.2"),
+      "CLAUDE.md missing version reference",
+    );
   });
   it("README.md version badge exists", function () {
     const src = readFileSync(resolve(__dirname, "..", "README.md"), "utf8");

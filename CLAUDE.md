@@ -1,6 +1,6 @@
 # Wedding Manager — Claude Config
 
-> Full spec: `.github/copilot-instructions.md` · v3.8.1
+> Full spec: `.github/copilot-instructions.md` · v3.8.2
 
 ## Commands
 
@@ -21,9 +21,11 @@ cd ../MyScripts && npm install
 ## Session Commit Rule
 
 After every Copilot chat session or completed sprint:
+
 ```bash
 git add -A && git commit -m "<type>: <summary>" && git push
 ```
+
 - Use conventional commit prefixes: `feat:` `fix:` `chore:` `docs:` `ci:` `style:`
 - Message must reference what changed and why (not just "update files")
 - Pre-release: also `git tag vX.Y.Z && git push --tags`

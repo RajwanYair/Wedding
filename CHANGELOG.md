@@ -4,14 +4,32 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.8.2] — 2026-04-15
+
+### Added
+
+- **Default timeline** — `src/sections/timeline.js` now seeds a wedding-day timeline on first load with standard ceremony/reception milestones; ceremony time set to 18:50.
+
+### Fixed
+
+- **Hebrew "Find Your Table" translation** — corrected `tableFinder` i18n key in `js/i18n/he.json` to display proper Hebrew text.
+- **Email login selector** — `#adminLoginEmail` selector mismatch in `src/services/auth.js` caused email input not to be found; now resolves correctly.
+
+### Changed
+
+- **AI/CI/VS Code configs** — updated `copilot-instructions.md`, `CLAUDE.md`, `.vscode/` settings, and CI workflows for pre-release discipline enforcement.
+- Cache bust: `CACHE_NAME` bumped to `wedding-v3.8.2` in `public/sw.js`.
+
 ## [3.8.1] — 2026-04-15
 
 ### Added
+
 - **SW update prompt** — `initSW()` in `src/core/ui.js` registers the service worker and detects new deployments via `updatefound`, `UPDATE_AVAILABLE` postMessage, and tab-refocus polling. Shows a dismissible top banner (`showUpdateBanner()`) prompting users to refresh; auto-reloads silently if the page has been open ≥ 5 minutes.
 - **`showUpdateBanner()` / `applyUpdate()`** — New exports in `src/core/ui.js`; wired in `src/main.js` bootstrap.
 - Cache bust: `CACHE_NAME` bumped to `wedding-v3.8.1` in `public/sw.js`.
 
 ### Fixed
+
 - **Guest landing page** — Guests now land on the `landing` section (couple names, date, venue) instead of the bare RSVP form. `updateTopBar()` + `updateCountdown()` called at bootstrap so header shows wedding info immediately before any section mounts.
 - **Sign-out** — Signs out to `landing` (was `rsvp`); unreachable non-public sections silently redirect to `landing`.
 - **Admin emails** — Added `anat.rajwan@gmail.com` to default `ADMIN_EMAILS` in both `src/core/config.js` and `js/config.js` (was misspelled as `anar`).

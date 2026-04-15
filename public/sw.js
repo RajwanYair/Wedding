@@ -4,7 +4,7 @@
 // =============================================================================
 "use strict";
 
-const CACHE_NAME = "wedding-v3.8.1";
+const CACHE_NAME = "wedding-v3.8.2";
 // Static assets to pre-cache. Vite-built JS/CSS have hashed filenames and are
 // cached on first fetch by the non-shell handler (cache-first with network fallback).
 const APP_SHELL = [
@@ -166,7 +166,7 @@ self.addEventListener("push", function (e) {
     icon: data.icon || "./icon-192.png",
     badge: "./icon-192.png",
     tag: "wedding-push",
-    data: data,
+    data,
   };
   e.waitUntil(self.registration.showNotification(title, options));
 });
