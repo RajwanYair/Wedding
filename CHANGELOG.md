@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.1.0] — 2025-07-14
+
+### Added — S11 Quick Wins + Day-of Essentials
+
+- **S11.1 Per-guest unique RSVP links**: `{rsvpLink}` placeholder in WhatsApp templates, auto-prefill RSVP from `?guestId=` URL parameter.
+- **S11.2 Transport manifest / bus lists**: grouped view by transport route with passenger counts, CSV export, print support.
+- **S11.3 Caterer-ready meal report per table**: table × meal-type matrix in analytics with CSV export and print.
+- **S11.4 Guest status batch update**: checkbox column in guest table, select-all, batch set status / batch delete.
+- **S11.5 Day-of gift recording**: gift mode toggle in check-in screen, ₪ input alongside check-in button, running gift total.
+
+### Added — S12 UX Upgrades + Automation
+
+- **S12.1 RSVP reminders via WhatsApp**: separate reminder template, target guests who were sent invite but haven't RSVP'd, track `reminderSent`/`reminderSentAt`.
+- **S12.2 Duplicate guest detection & merge**: scan for duplicate guests by phone/name, merge tool with keep-first/keep-second options.
+- **S12.3 QR code check-in**: BarcodeDetector API camera scan, per-guest QR URL generation, auto check-in on scan.
+- **S12.4 Drag-and-drop table seating**: draggable unassigned guest rows, drop zones on table cards, visual drop highlight.
+- **S12.5 RSVP deadline enforcement**: form disabled after `weddingInfo.rsvpDeadline`, shows "deadline passed" message.
+- 46 new i18n keys (he + en) for all S11/S12 features.
+- CSS: drag-drop highlight, batch toolbar, gift input, transport route styles.
+
 ## [4.0.0] — 2025-07-14
 
 ### Added

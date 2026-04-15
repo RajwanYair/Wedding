@@ -25,21 +25,38 @@
       <span class="checkin-stat-num" id="checkinPct">0%</span>
       <span class="checkin-stat-label">%</span>
     </div>
+    <!-- S11.5 Gift Total -->
+    <div class="checkin-stat" id="giftStatBox">
+      <span class="checkin-stat-num" id="checkinGiftTotal">₪0</span>
+      <span class="checkin-stat-label" data-i18n="gift_total">סה״כ מתנות</span>
+    </div>
   </div>
   <!-- Progress bar -->
   <div class="checkin-progress-track">
     <div class="checkin-progress-fill" id="checkinProgressBar"></div>
   </div>
-  <!-- Search -->
-  <div class="form-group form-group--search">
+  <!-- Toolbar: Search + Gift Mode + QR Scanner -->
+  <div class="checkin-toolbar">
     <input
       type="search"
       id="checkinSearch"
       data-i18n-placeholder="checkin_search_ph"
       placeholder="חפש לפי שם או טלפון..."
       data-on-input="checkinSearch"
-      class="u-w-full"
+      class="u-flex-1"
     />
+    <label class="checkin-gift-toggle">
+      <input type="checkbox" id="giftModeToggle" data-action="toggleGiftMode" />
+      <span data-i18n="gift_mode">💰 מתנות</span>
+    </label>
+    <button class="btn btn-secondary btn-small" data-action="startQrScan" id="qrScanBtn">
+      <span>📷</span> <span data-i18n="qr_scan">סרוק QR</span>
+    </button>
+  </div>
+  <!-- S12.3 QR Scanner Viewport -->
+  <div id="qrScannerBox" class="qr-scanner-box u-hidden">
+    <video id="qrVideo" autoplay playsinline class="qr-video"></video>
+    <button class="btn btn-danger btn-small qr-close-btn" data-action="stopQrScan">✕</button>
   </div>
   <!-- Guest table -->
   <div class="u-overflow-x">
@@ -50,6 +67,7 @@
           <th data-i18n="col_phone">טלפון</th>
           <th data-i18n="col_count">מוזמנים</th>
           <th data-i18n="col_table">שולחן</th>
+          <th data-i18n="col_gift" class="gift-col u-hidden">מתנה ₪</th>
           <th data-i18n="col_arrived">הגיע?</th>
         </tr>
       </thead>

@@ -100,6 +100,11 @@ import {
   downloadCSVTemplate,
   importGuestsCSV,
   openGuestForEdit,
+  toggleSelectAll,
+  batchSetStatus,
+  batchDeleteGuests,
+  renderDuplicates,
+  mergeGuests,
 } from "./sections/guests.js";
 import {
   saveTable,
@@ -109,6 +114,8 @@ import {
   printPlaceCards,
   printTableSigns,
   openTableForEdit,
+  exportTransportCSV,
+  printTransportManifest,
 } from "./sections/tables.js";
 import {
   saveVendor,
@@ -130,11 +137,16 @@ import {
   setCheckinSearch,
   exportCheckinReport,
   resetAllCheckins,
+  toggleGiftMode,
+  startQrScan,
+  stopQrScan,
 } from "./sections/checkin.js";
 import {
   renderBudgetChart,
   exportAnalyticsPDF,
   exportAnalyticsCSV,
+  exportMealPerTableCSV,
+  printMealPerTable,
 } from "./sections/analytics.js";
 import { submitRsvp, lookupRsvpByPhone } from "./sections/rsvp.js";
 import {
@@ -143,6 +155,7 @@ import {
   checkGreenApiConnection,
   saveGreenApiConfig,
   updateWaPreview,
+  sendWhatsAppReminder,
 } from "./sections/whatsapp.js";
 import {
   handleGalleryUpload,
@@ -710,6 +723,29 @@ function _registerHandlers() {
     openGuestForEdit(el.dataset.actionArg ?? "");
     openModal("guestModal");
   });
+  on("toggleSelectAll", () => toggleSelectAll());
+  on("batchSetStatus", () => {
+    const select = /** @type {HTMLSelectElement|null} */ (
+      document.getElementById("batchStatusSelect")
+    );
+    const status = select?.value ?? "";
+    if (status) {
+      batchSetStatus(status);
+      showToast(t("batch_success"), "success");
+    }
+  });
+  on("batchDeleteGuests", () =>
+    showConfirmDialog(t("confirm_delete"), () => {
+      batchDeleteGuests();
+      showToast(t("batch_deleted"), "success");
+    }),
+  );
+  on("scanDuplicates", () => renderDuplicates());
+  on("mergeGuests", (el) => {
+    mergeGuests(el.dataset.keepId ?? "", el.dataset.mergeId ?? "");
+    showToast(t("merge_success") || "Merged", "success");
+    renderDuplicates();
+  });
 
   // ── Tables ──
   on("saveTable", (_el, _e) => {
@@ -733,6 +769,8 @@ function _registerHandlers() {
   on("printSeatingChart", () => printSeatingChart());
   on("printPlaceCards", () => printPlaceCards());
   on("printTableSigns", () => printTableSigns());
+  on("exportTransportCSV", () => exportTransportCSV());
+  on("printTransportManifest", () => printTransportManifest());
   on("deleteTable", (el) =>
     showConfirmDialog(t("confirm_delete"), () =>
       deleteTable(el.dataset.actionArg ?? ""),
@@ -755,6 +793,9 @@ function _registerHandlers() {
   on("resetAllCheckins", () =>
     showConfirmDialog(t("confirm_reset_checkins"), () => resetAllCheckins()),
   );
+  on("toggleGiftMode", () => toggleGiftMode());
+  on("startQrScan", () => startQrScan());
+  on("stopQrScan", () => stopQrScan());
 
   // ── Vendors ──
   on("saveVendor", (_el, _e) => {
@@ -854,6 +895,8 @@ function _registerHandlers() {
   // ── Analytics exports (S8.4) ──
   on("exportAnalyticsPDF", () => exportAnalyticsPDF());
   on("exportAnalyticsCSV", () => exportAnalyticsCSV());
+  on("exportMealPerTableCSV", () => exportMealPerTableCSV());
+  on("printMealPerTable", () => printMealPerTable());
 
   // ── RSVP ──
   on("submitRSVP", (_el, e) => {
@@ -953,6 +996,7 @@ function _registerHandlers() {
     updateWaPreview(input?.value ?? "");
   });
   on("checkGreenApiConnection", () => checkGreenApiConnection());
+  on("sendWhatsAppReminder", () => sendWhatsAppReminder());
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")

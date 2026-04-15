@@ -17,10 +17,54 @@ let _container = null;
 
 export function mount(container) {
   _container = container;
+  // S12.5 — Check RSVP deadline
+  if (_isRsvpDeadlinePassed()) {
+    _showDeadlineMessage();
+    return;
+  }
+  // S11.1 — Auto-lookup from URL guestId param
+  _autoLookupFromUrl();
 }
 
 export function unmount() {
   _container = null;
+}
+
+// ── S11.1 Auto-lookup from URL ────────────────────────────────────────────
+
+/**
+ * If URL contains ?guestId=xxx or ?phone=05x, auto-lookup and pre-fill.
+ */
+function _autoLookupFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const guestId = params.get("guestId");
+  const phone = params.get("phone");
+
+  if (guestId) {
+    const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+    const guest = guests.find((g) => g.id === guestId);
+    if (guest) {
+      _prefillForm(guest);
+      const statusEl = document.getElementById("rsvpLookupStatus");
+      if (statusEl) {
+        statusEl.classList.remove("u-hidden");
+        statusEl.textContent = t("rsvp_welcome_name").replace("{name}", `${guest.firstName} ${guest.lastName || ""}`.trim());
+      }
+      return;
+    }
+  }
+  if (phone) {
+    const result = lookupRsvpByPhone(phone);
+    const phoneInput = /** @type {HTMLInputElement|null} */ (document.getElementById("rsvpPhone"));
+    if (phoneInput) phoneInput.value = phone;
+    if (result.found) {
+      const statusEl = document.getElementById("rsvpLookupStatus");
+      if (statusEl) {
+        statusEl.classList.remove("u-hidden");
+        statusEl.textContent = t("rsvp_lookup_found");
+      }
+    }
+  }
 }
 
 // ── RSVP flow ─────────────────────────────────────────────────────────────
@@ -173,4 +217,42 @@ function _showConfirmation(status) {
   confirmEl.classList.remove("u-hidden");
   const details = document.getElementById("rsvpDetails");
   if (details) details.classList.add("u-hidden");
+}
+
+// ── S12.5 RSVP Deadline Enforcement ───────────────────────────────────────
+
+/**
+ * Check if the RSVP deadline has passed.
+ * @returns {boolean}
+ */
+function _isRsvpDeadlinePassed() {
+  const info = /** @type {Record<string, string|undefined>} */ (storeGet("weddingInfo") ?? {});
+  const deadline = info.rsvpDeadline;
+  if (!deadline) return false;
+  const deadlineDate = new Date(deadline);
+  const now = new Date();
+  return now > deadlineDate;
+}
+
+/**
+ * Show a "RSVP is closed" message and disable the form.
+ */
+function _showDeadlineMessage() {
+  if (!_container) return;
+  const form = _container.querySelector(".rsvp-form");
+  if (form) {
+    form.textContent = "";
+    const msg = document.createElement("div");
+    msg.className = "rsvp-deadline-msg u-text-center u-p-lg";
+    const icon = document.createElement("div");
+    icon.textContent = "⏰";
+    icon.style.fontSize = "3rem";
+    msg.appendChild(icon);
+    const p = document.createElement("p");
+    p.textContent = t("rsvp_deadline_passed") || "RSVP deadline has passed. Please contact the couple directly.";
+    p.style.fontSize = "1.2rem";
+    p.style.marginTop = "1rem";
+    msg.appendChild(p);
+    form.appendChild(msg);
+  }
 }

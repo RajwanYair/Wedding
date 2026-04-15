@@ -750,5 +750,50 @@
     "expense_by_category": "Expenses by category",
     "wa_chars_left": "characters left",
     "filter_by_status": "Filter by status",
-    "filter_all": "All"
+    "filter_all": "All",
+
+    "rsvp_welcome_name": "Hello {name}, we'd love to see you!",
+    "rsvp_deadline_passed": "RSVP deadline has passed. Please contact the couple directly.",
+
+    "transport_manifest_title": "Transport Manifest",
+    "transport_export_csv": "Export CSV",
+    "transport_print": "Print",
+    "transport_passengers": "passengers",
+    "transport_none": "No transport requests",
+
+    "analytics_meal_per_table": "Meals by Table",
+    "meal_report_export": "Export CSV",
+    "meal_report_print": "Print",
+
+    "batch_set_status": "Set Status",
+    "batch_apply": "Apply",
+    "batch_delete": "Delete Selected",
+    "batch_selected_count": "{n} selected",
+    "batch_success": "Status updated successfully",
+    "batch_deleted": "Selected guests deleted",
+
+    "gift_mode": "💰 Gifts",
+    "gift_total": "Total Gifts",
+    "col_gift": "Gift ₪",
+
+    "wa_reminder_title": "RSVP Reminder",
+    "wa_reminder_desc": "Send a reminder to guests who received an invitation but haven't RSVP'd yet.",
+    "wa_reminder_template_label": "Reminder Template",
+    "wa_send_reminder": "Send Reminder to Pending",
+    "wa_reminder_count": "{n} guests awaiting reminder",
+    "wa_reminder_default": "Hi {name}, just a reminder - we'd love to know if you're coming! {rsvpLink}",
+
+    "duplicates_title": "Duplicate Detection",
+    "scan_duplicates": "Scan for Duplicates",
+    "no_duplicates": "No duplicates found",
+    "duplicate_phone": "Duplicate phone",
+    "duplicate_name": "Duplicate name",
+    "merge_keep_first": "Keep first",
+    "merge_keep_second": "Keep second",
+    "merge_success": "Guests merged successfully",
+
+    "qr_scan": "Scan QR",
+    "qr_not_supported": "QR scanning not supported in this browser",
+    "qr_camera_error": "Camera access denied",
+    "checkin_qr_success": "Guest checked in via QR"
 }

@@ -1540,6 +1540,18 @@ body.ptr--refreshing::before {
 /* ── Guest Section Toolbar (CSP) ── */
 .guest-table-wrap { overflow-x: auto; }
 [id="unassignedGuests"] { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.unassigned-row { cursor: grab; padding: 0.25rem 0.5rem; border-radius: var(--border-radius); background: var(--glass); }
+.unassigned-row.dragging { opacity: 0.4; }
+.drop-highlight { outline: 2px dashed var(--accent); outline-offset: 4px; }
+.batch-toolbar { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--glass); border-radius: var(--border-radius); margin-bottom: 0.5rem; }
+.th-checkbox { width: 2rem; text-align: center; }
+.gift-input { border: 1px solid var(--glass-border); border-radius: 4px; background: var(--glass); color: var(--text-primary); padding: 0.2rem 0.4rem; }
+.transport-route { margin-bottom: 1rem; }
+.checkin-toolbar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.checkin-gift-toggle { display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
+.qr-scanner-box { position: relative; max-width: 400px; margin: 0 auto 1rem; }
+.qr-video { width: 100%; border-radius: var(--border-radius); }
+.qr-close-btn { position: absolute; top: 0.5rem; right: 0.5rem; }
 .section-toolbar-start { margin-right: auto; margin-left: 0; display: flex; gap: 0.5rem; }
 
 /* ── Venue Map Link (CSP) ── */

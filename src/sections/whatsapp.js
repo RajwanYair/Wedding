@@ -9,6 +9,7 @@ import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { cleanPhone } from "../utils/phone.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -128,12 +129,15 @@ export function buildWhatsAppMessage(guestId, template) {
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 function _interpolate(template, guest, info) {
+  const baseUrl = window.location.origin + window.location.pathname;
+  const rsvpLink = `${baseUrl}?guestId=${encodeURIComponent(guest.id)}#rsvp`;
   return template
     .replace(/\{name\}/g, `${guest.firstName} ${guest.lastName || ""}`.trim())
     .replace(/\{date\}/g, info.date || "")
     .replace(/\{venue\}/g, info.venue || "")
     .replace(/\{groom\}/g, info.groom || "")
-    .replace(/\{bride\}/g, info.bride || "");
+    .replace(/\{bride\}/g, info.bride || "")
+    .replace(/\{rsvpLink\}/g, rsvpLink);
 }
 
 function _defaultTemplate(info) {
@@ -327,4 +331,58 @@ export function saveGreenApiConfig(form) {
   } catch {
     // storage unavailable
   }
+}
+
+// ── S12.1 RSVP Reminders ─────────────────────────────────────────────────
+
+/**
+ * Send WhatsApp reminder to guests who were sent an invite but haven't RSVP'd.
+ * Opens wa.me links for each matching guest.
+ */
+export function sendWhatsAppReminder() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const template =
+    /** @type {HTMLTextAreaElement|null} */ (
+      document.getElementById("waReminderTemplate")
+    )?.value?.trim() || t("wa_reminder_default") || "Hi {name}, reminder: RSVP at {rsvpLink}";
+
+  const targets = guests.filter(
+    (g) => g.phone && g.sent && (g.status === "pending" || g.status === "maybe"),
+  );
+
+  if (targets.length === 0) return;
+
+  targets.forEach((g) => {
+    const phone = (g.phone || "").replace(/\D/g, "");
+    if (!phone) return;
+    const message = _interpolate(template, g, info);
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+
+    // Mark reminder sent
+    const allGuests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+    const idx = allGuests.findIndex((gg) => gg.id === g.id);
+    if (idx !== -1) {
+      allGuests[idx] = {
+        ...allGuests[idx],
+        reminderSent: true,
+        reminderSentAt: new Date().toISOString(),
+      };
+      storeSet("guests", allGuests);
+    }
+  });
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+/**
+ * Update the reminder count badge shown next to the reminder button.
+ */
+export function updateReminderCount() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const count = guests.filter(
+    (g) => g.phone && g.sent && (g.status === "pending" || g.status === "maybe"),
+  ).length;
+  const el = document.getElementById("waReminderCount");
+  if (el) el.textContent = t("wa_reminder_count").replace("{n}", String(count));
 }

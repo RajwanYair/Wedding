@@ -158,3 +158,20 @@
 
 <!-- Meal Summary for Caterer -->
 <div class="card" id="analyticsMealSummary"></div>
+
+<!-- S11.3 Meal Report Per Table (for caterer) -->
+<div class="card" id="analyticsMealPerTable">
+  <div class="card-header">
+    <span class="icon">🍽️</span>
+    <span data-i18n="analytics_meal_per_table">ארוחות לפי שולחן</span>
+    <div class="section-toolbar-start">
+      <button class="btn btn-secondary btn-small" data-action="exportMealPerTableCSV">
+        <span>📥</span> <span data-i18n="meal_report_export">ייצוא CSV</span>
+      </button>
+      <button class="btn btn-secondary btn-small" data-action="printMealPerTable">
+        <span>🖨️</span> <span data-i18n="meal_report_print">הדפסה</span>
+      </button>
+    </div>
+  </div>
+  <div id="mealPerTableContent"></div>
+</div>

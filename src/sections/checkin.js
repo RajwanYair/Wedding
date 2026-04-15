@@ -8,12 +8,22 @@ import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { announce } from "../core/ui.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
 /** @type {string} */
 let _searchQuery = "";
+
+/** @type {boolean} */
+let _giftMode = false;
+
+/** @type {MediaStream|null} */
+let _cameraStream = null;
+
+/** @type {number|null} */
+let _scanIntervalId = null;
 
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderCheckin));
@@ -23,6 +33,8 @@ export function mount(_container) {
 export function unmount() {
   _unsubs.forEach((fn) => fn());
   _unsubs.length = 0;
+  _giftMode = false;
+  stopQrScan();
 }
 
 /**
@@ -41,10 +53,21 @@ export function checkInGuest(guestId) {
   const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
   const idx = guests.findIndex((g) => g.id === guestId);
   if (idx !== -1) {
+    // S11.5 Capture gift amount if visible
+    let giftVal = guests[idx].gift;
+    if (_giftMode) {
+      const giftInput = /** @type {HTMLInputElement|null} */ (
+        document.querySelector(`.gift-input[data-guest-id="${guestId}"]`)
+      );
+      if (giftInput && giftInput.value) {
+        giftVal = Number(giftInput.value) || 0;
+      }
+    }
     guests[idx] = {
       ...guests[idx],
       checkedIn: true,
       checkedInAt: new Date().toISOString(),
+      gift: giftVal,
     };
     storeSet("guests", guests);
     enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
@@ -95,6 +118,23 @@ export function renderCheckin() {
         : "—";
     tr.appendChild(tableTd);
 
+    // S11.5 Gift column
+    const giftTd = document.createElement("td");
+    giftTd.className = `gift-col${  _giftMode ? "" : " u-hidden"}`;
+    if (g.checkedIn) {
+      giftTd.textContent = g.gift ? `₪${g.gift}` : "—";
+    } else {
+      const giftInput = document.createElement("input");
+      giftInput.type = "number";
+      giftInput.min = "0";
+      giftInput.className = "gift-input";
+      giftInput.style.width = "5rem";
+      giftInput.placeholder = "₪";
+      giftInput.dataset.guestId = g.id;
+      giftTd.appendChild(giftInput);
+    }
+    tr.appendChild(giftTd);
+
     const actionTd = document.createElement("td");
     if (!g.checkedIn) {
       const btn = document.createElement("button");
@@ -135,6 +175,13 @@ export function renderCheckin() {
     document.getElementById("checkinProgressBar")
   );
   if (progressBar) progressBar.style.width = `${pct}%`;
+
+  // S11.5 Gift total
+  const giftTotal = allGuests
+    .filter((g) => g.checkedIn && g.gift)
+    .reduce((s, g) => s + (Number(g.gift) || 0), 0);
+  const giftTotalEl = document.getElementById("checkinGiftTotal");
+  if (giftTotalEl) giftTotalEl.textContent = `₪${giftTotal.toLocaleString()}`;
 }
 
 /**
@@ -196,4 +243,110 @@ export function getCheckinStats() {
     checkinRate: total > 0 ? Math.round((checkedIn / total) * 100) : 0,
     remaining: total - checkedIn,
   };
+}
+
+// ── S11.5 Gift Mode ───────────────────────────────────────────────────────
+
+/**
+ * Toggle gift mode — shows/hides gift column in check-in table.
+ */
+export function toggleGiftMode() {
+  _giftMode = !_giftMode;
+  document.querySelectorAll(".gift-col").forEach((el) => {
+    el.classList.toggle("u-hidden", !_giftMode);
+  });
+}
+
+/**
+ * Record a gift for a specific guest.
+ * @param {string} guestId
+ * @param {number} amount
+ */
+export function recordGift(guestId, amount) {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx !== -1) {
+    guests[idx] = { ...guests[idx], gift: amount, updatedAt: new Date().toISOString() };
+    storeSet("guests", guests);
+    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  }
+}
+
+// ── S12.3 QR Code Check-in ────────────────────────────────────────────────
+
+/**
+ * Start QR scanner using BarcodeDetector API + camera.
+ */
+export async function startQrScan() {
+  const box = document.getElementById("qrScannerBox");
+  const video = /** @type {HTMLVideoElement|null} */ (document.getElementById("qrVideo"));
+  if (!box || !video) return;
+
+  // Check BarcodeDetector support
+  if (!("BarcodeDetector" in window)) {
+    announce(t("qr_not_supported") || "QR scanning not supported in this browser");
+    return;
+  }
+
+  try {
+    _cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+    });
+    video.srcObject = _cameraStream;
+    box.classList.remove("u-hidden");
+
+    const detector = new /** @type {any} */ (window).BarcodeDetector({
+      formats: ["qr_code"],
+    });
+
+    _scanIntervalId = window.setInterval(async () => {
+      if (video.readyState < 2) return;
+      try {
+        const barcodes = await detector.detect(video);
+        if (barcodes.length > 0) {
+          const raw = barcodes[0].rawValue || "";
+          // QR contains guestId
+          const guestId = raw.includes("guestId=")
+            ? new URL(raw).searchParams.get("guestId")
+            : raw;
+          if (guestId) {
+            checkInGuest(guestId);
+            announce(t("checkin_qr_success") || "Guest checked in via QR");
+            stopQrScan();
+          }
+        }
+      } catch {
+        // detection error — keep scanning
+      }
+    }, 500);
+  } catch {
+    announce(t("qr_camera_error") || "Camera access denied");
+  }
+}
+
+/**
+ * Stop QR scanner and release camera.
+ */
+export function stopQrScan() {
+  if (_scanIntervalId !== null) {
+    clearInterval(_scanIntervalId);
+    _scanIntervalId = null;
+  }
+  if (_cameraStream) {
+    _cameraStream.getTracks().forEach((t) => t.stop());
+    _cameraStream = null;
+  }
+  const box = document.getElementById("qrScannerBox");
+  if (box) box.classList.add("u-hidden");
+}
+
+/**
+ * Generate a QR code URL for a guest (using QR API).
+ * @param {string} guestId
+ * @returns {string} QR code image URL
+ */
+export function getGuestQrUrl(guestId) {
+  const baseUrl = window.location.origin + window.location.pathname;
+  const checkinUrl = `${baseUrl}?guestId=${encodeURIComponent(guestId)}&action=checkin`;
+  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkinUrl)}`;
 }

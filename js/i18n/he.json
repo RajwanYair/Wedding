@@ -752,5 +752,50 @@
     "expense_by_category": "הוצאות לפי קטגוריה",
     "wa_chars_left": "תווים נותרים",
     "filter_by_status": "סנן לפי סטטוס",
-    "filter_all": "הכל"
+    "filter_all": "הכל",
+
+    "rsvp_welcome_name": "שלום {name}, נשמח שתאשרו הגעה!",
+    "rsvp_deadline_passed": "מועד אישור ההגעה עבר. אנא צרו קשר ישירות עם הזוג.",
+
+    "transport_manifest_title": "רשימת הסעות",
+    "transport_export_csv": "ייצוא CSV",
+    "transport_print": "הדפסה",
+    "transport_passengers": "נוסעים",
+    "transport_none": "אין בקשות להסעה",
+
+    "analytics_meal_per_table": "ארוחות לפי שולחן",
+    "meal_report_export": "ייצוא CSV",
+    "meal_report_print": "הדפסה",
+
+    "batch_set_status": "שנה סטטוס",
+    "batch_apply": "החל",
+    "batch_delete": "מחק נבחרים",
+    "batch_selected_count": "{n} נבחרו",
+    "batch_success": "הסטטוס עודכן בהצלחה",
+    "batch_deleted": "האורחים הנבחרים נמחקו",
+
+    "gift_mode": "💰 מתנות",
+    "gift_total": "סה״כ מתנות",
+    "col_gift": "מתנה ₪",
+
+    "wa_reminder_title": "תזכורת RSVP",
+    "wa_reminder_desc": "שלח תזכורת לאורחים שקיבלו הזמנה אך לא אישרו עדיין.",
+    "wa_reminder_template_label": "תבנית תזכורת",
+    "wa_send_reminder": "שלח תזכורת לממתינים",
+    "wa_reminder_count": "{n} אורחים ממתינים לתזכורת",
+    "wa_reminder_default": "שלום {name}, רק מזכירים - נשמח לדעת אם אתם מגיעים! {rsvpLink}",
+
+    "duplicates_title": "זיהוי כפילויות",
+    "scan_duplicates": "סרוק כפילויות",
+    "no_duplicates": "לא נמצאו כפילויות",
+    "duplicate_phone": "טלפון כפול",
+    "duplicate_name": "שם כפול",
+    "merge_keep_first": "שמור ראשון",
+    "merge_keep_second": "שמור שני",
+    "merge_success": "האורחים מוזגו בהצלחה",
+
+    "qr_scan": "סרוק QR",
+    "qr_not_supported": "סריקת QR לא נתמכת בדפדפן זה",
+    "qr_camera_error": "לא ניתן לגשת למצלמה",
+    "checkin_qr_success": "האורח צ׳ק-אין בהצלחה דרך QR"
 }

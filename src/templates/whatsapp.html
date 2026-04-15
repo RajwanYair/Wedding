@@ -41,6 +41,22 @@
           </div>
         </div>
 
+        <!-- S12.1 RSVP Reminder -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">🔔</span> <span data-i18n="wa_reminder_title">תזכורת RSVP</span></div>
+          <p class="text-note" data-i18n="wa_reminder_desc">שלח תזכורת לאורחים שקיבלו הזמנה אך לא אישרו עדיין.</p>
+          <div class="form-group">
+            <label data-i18n="wa_reminder_template_label">תבנית תזכורת</label>
+            <textarea id="waReminderTemplate" rows="4" class="u-direction-rtl" placeholder="שלום {name}, רק מזכירים - נשמח לדעת אם אתם מגיעים לחתונה ב{date}! {rsvpLink}"></textarea>
+          </div>
+          <div class="wa-filter-row">
+            <button class="btn btn-warning btn-small" data-action="sendWhatsAppReminder">
+              <span>🔔</span> <span data-i18n="wa_send_reminder">שלח תזכורת לממתינים</span>
+            </button>
+            <span class="text-note" id="waReminderCount"></span>
+          </div>
+        </div>
+
         <!-- Guest list for individual send -->
         <div class="card u-mt-md">
           <div class="card-header"><span class="icon">👤</span> <span data-i18n="wa_individual">שליחה בודדת</span></div>

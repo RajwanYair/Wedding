@@ -31,6 +31,8 @@
 | S8 — Analytics | Heatmap, funnel, vendor timeline, PDF/CSV export, delivery rate | v3.9.0 | ✅ Done |
 | S9 — Multi-Event | Event namespace, switcher UI, per-event Sheets, import/export | v4.0.0 | ✅ Done |
 | S10 — Real-time | Polling live sync, conflict resolution, presence indicator | v4.0.0 | ✅ Done |
+| S11 — Quick Wins | Per-guest RSVP links, transport manifest, meal-per-table, batch ops, gift recording | v4.1.0 | ✅ Done |
+| S12 — UX Upgrades | WhatsApp reminders, duplicate detection, QR check-in, drag-drop seating, RSVP deadline | v4.1.0 | ✅ Done |
 
 ### Current State (v3.8.0)
 
@@ -98,6 +100,7 @@ Live updates between multiple admin devices.
 | v3.0.0–v3.8.0 | S0–S7 | ✅ Released |
 | v3.9.0 | S8 | ✅ Released |
 | v4.0.0 | S9 + S10 | ✅ Released |
+| v4.1.0 | S11 + S12 | ✅ Released |
 
 ---
 

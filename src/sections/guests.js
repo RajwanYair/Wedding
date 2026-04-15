@@ -213,6 +213,16 @@ export function renderGuests() {
     tr.dataset.id = g.id;
     if (_pendingSync.has(g.id)) tr.dataset.syncPending = "1";
 
+    // S11.4 Checkbox column
+    const checkTd = document.createElement("td");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.className = "guest-select-cb";
+    cb.dataset.guestId = g.id;
+    cb.addEventListener("change", _updateBatchToolbar);
+    checkTd.appendChild(cb);
+    tr.appendChild(checkTd);
+
     const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
     const table = tables.find((tb) => tb.id === g.tableId);
     const cells = [
@@ -522,4 +532,183 @@ export function filterGuestsByStatus(status) {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   if (!status || status === "all") return guests;
   return guests.filter((g) => g.status === status);
+}
+
+// ── S11.4 Batch Operations ────────────────────────────────────────────────
+
+/** @returns {string[]} selected guest IDs */
+function _getSelectedIds() {
+  return Array.from(document.querySelectorAll(".guest-select-cb:checked")).map(
+    (cb) => /** @type {HTMLInputElement} */ (cb).dataset.guestId || "",
+  );
+}
+
+/** Show/hide batch toolbar based on selection count */
+function _updateBatchToolbar() {
+  const ids = _getSelectedIds();
+  const toolbar = document.getElementById("batchToolbar");
+  const countEl = document.getElementById("batchCount");
+  if (toolbar) toolbar.classList.toggle("u-hidden", ids.length === 0);
+  if (countEl)
+    countEl.textContent = t("batch_selected_count").replace(
+      "{n}",
+      String(ids.length),
+    );
+}
+
+/** Toggle all checkboxes */
+export function toggleSelectAll() {
+  const selectAll = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("selectAllGuests")
+  );
+  if (!selectAll) return;
+  const checked = selectAll.checked;
+  document.querySelectorAll(".guest-select-cb").forEach((cb) => {
+    /** @type {HTMLInputElement} */ (cb).checked = checked;
+  });
+  _updateBatchToolbar();
+}
+
+/**
+ * Set status for all selected guests.
+ * @param {string} status
+ */
+export function batchSetStatus(status) {
+  if (!status) return;
+  const ids = new Set(_getSelectedIds());
+  if (ids.size === 0) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
+    ids.has(g.id) ? { ...g, status, updatedAt: new Date().toISOString() } : g,
+  );
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+/**
+ * Delete all selected guests.
+ */
+export function batchDeleteGuests() {
+  const ids = new Set(_getSelectedIds());
+  if (ids.size === 0) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (g) => !ids.has(g.id),
+  );
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+// ── S12.2 Duplicate Detection ─────────────────────────────────────────────
+
+/**
+ * Scan for duplicate guests by phone or name similarity.
+ * @returns {{ groupA: any, groupB: any, reason: string }[]}
+ */
+export function findDuplicates() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {{ groupA: any, groupB: any, reason: string }[]} */
+  const dupes = [];
+  const seen = new Set();
+
+  for (let i = 0; i < guests.length; i++) {
+    for (let j = i + 1; j < guests.length; j++) {
+      const a = guests[i];
+      const b = guests[j];
+      const key = [a.id, b.id].sort().join("-");
+      if (seen.has(key)) continue;
+
+      // Exact phone match
+      if (a.phone && b.phone && a.phone === b.phone) {
+        seen.add(key);
+        dupes.push({ groupA: a, groupB: b, reason: "phone" });
+        continue;
+      }
+      // Name similarity (exact match on full name)
+      const nameA = `${a.firstName} ${a.lastName || ""}`.trim().toLowerCase();
+      const nameB = `${b.firstName} ${b.lastName || ""}`.trim().toLowerCase();
+      if (nameA && nameA === nameB) {
+        seen.add(key);
+        dupes.push({ groupA: a, groupB: b, reason: "name" });
+      }
+    }
+  }
+  return dupes;
+}
+
+/**
+ * Merge two guests — keep target, transfer data from source, delete source.
+ * @param {string} keepId  Guest to keep
+ * @param {string} mergeId Guest to merge into keepId and then delete
+ */
+export function mergeGuests(keepId, mergeId) {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const keepIdx = guests.findIndex((g) => g.id === keepId);
+  const mergeIdx = guests.findIndex((g) => g.id === mergeId);
+  if (keepIdx === -1 || mergeIdx === -1) return;
+
+  const kept = guests[keepIdx];
+  const merged = guests[mergeIdx];
+
+  // Transfer non-empty fields from merged if kept has empty
+  for (const key of Object.keys(merged)) {
+    if (key === "id" || key === "createdAt") continue;
+    if (!kept[key] && merged[key]) {
+      kept[key] = merged[key];
+    }
+  }
+  kept.updatedAt = new Date().toISOString();
+  kept.notes = [kept.notes, merged.notes].filter(Boolean).join("; ");
+
+  guests[keepIdx] = kept;
+  guests.splice(mergeIdx, 1);
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+/**
+ * Render duplicate detection results in the DOM.
+ */
+export function renderDuplicates() {
+  const container = document.getElementById("duplicateResults");
+  if (!container) return;
+  container.textContent = "";
+
+  const dupes = findDuplicates();
+  if (dupes.length === 0) {
+    const p = document.createElement("p");
+    p.className = "u-text-muted";
+    p.textContent = t("no_duplicates") || "No duplicates found";
+    container.appendChild(p);
+    return;
+  }
+
+  dupes.forEach(({ groupA, groupB, reason }) => {
+    const card = document.createElement("div");
+    card.className = "duplicate-card u-p-sm u-mb-sm";
+    card.style.border = "1px solid var(--warning)";
+    card.style.borderRadius = "var(--radius)";
+
+    const label = document.createElement("p");
+    label.textContent =
+      `⚠️ ${reason === "phone" ? t("duplicate_phone") : t("duplicate_name")}: ` +
+      `${groupA.firstName} ${groupA.lastName || ""} ↔ ${groupB.firstName} ${groupB.lastName || ""}`;
+    card.appendChild(label);
+
+    const mergeBtn = document.createElement("button");
+    mergeBtn.className = "btn btn-small btn-primary u-mr-xs";
+    mergeBtn.textContent = t("merge_keep_first") || "Keep first";
+    mergeBtn.dataset.action = "mergeGuests";
+    mergeBtn.dataset.keepId = groupA.id;
+    mergeBtn.dataset.mergeId = groupB.id;
+    card.appendChild(mergeBtn);
+
+    const mergeBtn2 = document.createElement("button");
+    mergeBtn2.className = "btn btn-small btn-secondary";
+    mergeBtn2.textContent = t("merge_keep_second") || "Keep second";
+    mergeBtn2.dataset.action = "mergeGuests";
+    mergeBtn2.dataset.keepId = groupB.id;
+    mergeBtn2.dataset.mergeId = groupA.id;
+    card.appendChild(mergeBtn2);
+
+    container.appendChild(card);
+  });
 }

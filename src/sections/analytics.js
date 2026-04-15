@@ -123,6 +123,9 @@ export function renderAnalytics() {
   // Meal summary for caterer
   _renderMealSummary(guests);
 
+  // S11.3 Meal per table for caterer
+  _renderMealPerTable();
+
   // S8 charts
   _renderHeatmap();
   _renderFunnel();
@@ -279,6 +282,144 @@ function _renderMealSummary(guests) {
   });
   html += `</ul>`;
   container.innerHTML = html; // safe: all values are i18n strings and integers
+}
+
+// ── S11.3 Meal Per Table Report ───────────────────────────────────────────
+
+/**
+ * Render a table × meal-type matrix for the caterer.
+ */
+function _renderMealPerTable() {
+  const container = document.getElementById("mealPerTableContent");
+  if (!container) return;
+  container.textContent = "";
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const meals = ["regular", "vegetarian", "vegan", "gluten_free", "kosher"];
+
+  if (tables.length === 0 || confirmed.length === 0) {
+    const p = document.createElement("p");
+    p.className = "u-text-muted";
+    p.textContent = t("analytics_no_data") || "No data";
+    container.appendChild(p);
+    return;
+  }
+
+  const tbl = document.createElement("table");
+  tbl.className = "guest-table u-w-full";
+
+  // Header
+  const thead = document.createElement("thead");
+  const headRow = document.createElement("tr");
+  const thTable = document.createElement("th");
+  thTable.textContent = t("table") || "Table";
+  headRow.appendChild(thTable);
+  meals.forEach((m) => {
+    const th = document.createElement("th");
+    th.textContent = t(`meal_${m}`);
+    headRow.appendChild(th);
+  });
+  const thTotal = document.createElement("th");
+  thTotal.textContent = t("total") || "Total";
+  headRow.appendChild(thTotal);
+  thead.appendChild(headRow);
+  tbl.appendChild(thead);
+
+  // Body
+  const tbody = document.createElement("tbody");
+  const grandTotals = new Array(meals.length).fill(0);
+  let grandTotal = 0;
+
+  tables.forEach((table) => {
+    const seated = confirmed.filter((g) => g.tableId === table.id);
+    const tr = document.createElement("tr");
+    const tdName = document.createElement("td");
+    tdName.textContent = table.name;
+    tdName.style.fontWeight = "600";
+    tr.appendChild(tdName);
+
+    let rowTotal = 0;
+    meals.forEach((m, i) => {
+      const count = seated.filter((g) => (g.meal || "regular") === m).reduce(
+        (s, g) => s + (g.count || 1),
+        0,
+      );
+      grandTotals[i] += count;
+      rowTotal += count;
+      const td = document.createElement("td");
+      td.textContent = count > 0 ? String(count) : "—";
+      tr.appendChild(td);
+    });
+    grandTotal += rowTotal;
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = String(rowTotal);
+    tdTotal.style.fontWeight = "600";
+    tr.appendChild(tdTotal);
+    tbody.appendChild(tr);
+  });
+
+  // Footer totals
+  const tfoot = document.createElement("tfoot");
+  const footRow = document.createElement("tr");
+  const ftLabel = document.createElement("td");
+  ftLabel.textContent = t("total") || "Total";
+  ftLabel.style.fontWeight = "700";
+  footRow.appendChild(ftLabel);
+  grandTotals.forEach((gt) => {
+    const td = document.createElement("td");
+    td.textContent = String(gt);
+    td.style.fontWeight = "600";
+    footRow.appendChild(td);
+  });
+  const ftGrand = document.createElement("td");
+  ftGrand.textContent = String(grandTotal);
+  ftGrand.style.fontWeight = "700";
+  footRow.appendChild(ftGrand);
+  tfoot.appendChild(footRow);
+
+  tbl.appendChild(tbody);
+  tbl.appendChild(tfoot);
+  container.appendChild(tbl);
+}
+
+/**
+ * Export meal-per-table matrix as CSV.
+ */
+export function exportMealPerTableCSV() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const meals = ["regular", "vegetarian", "vegan", "gluten_free", "kosher"];
+  const header = ["Table", ...meals.map((m) => t(`meal_${m}`)), "Total"].join(",");
+
+  const rows = tables.map((table) => {
+    const seated = confirmed.filter((g) => g.tableId === table.id);
+    const counts = meals.map(
+      (m) => seated.filter((g) => (g.meal || "regular") === m).reduce((s, g) => s + (g.count || 1), 0),
+    );
+    const total = counts.reduce((s, c) => s + c, 0);
+    return [`"${table.name}"`, ...counts, total].join(",");
+  });
+
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "meal-per-table.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Print meal-per-table report.
+ */
+export function printMealPerTable() {
+  window.print();
 }
 
 // ── S8.1 Guest Side-by-Table Heatmap ──────────────────────────────────────

@@ -165,6 +165,21 @@ export function renderTables() {
     actions.appendChild(delBtn);
     card.appendChild(actions);
 
+    // S12.4 Drop zone for drag-and-drop
+    card.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      card.classList.add("drop-highlight");
+    });
+    card.addEventListener("dragleave", () => {
+      card.classList.remove("drop-highlight");
+    });
+    card.addEventListener("drop", (e) => {
+      e.preventDefault();
+      card.classList.remove("drop-highlight");
+      const guestId = e.dataTransfer?.getData("text/plain");
+      if (guestId) _assignGuestToTable(guestId, tb.id);
+    });
+
     floor.appendChild(card);
   });
 
@@ -173,27 +188,171 @@ export function renderTables() {
   }
 
   // Unassigned guests list
+  _renderUnassigned(guests);
+
+  // S11.2 Transport manifest
+  _renderTransportManifest(guests);
+}
+
+/** @param {any[]} guests */
+function _renderUnassigned(guests) {
   const unassignedEl = document.getElementById("unassignedGuests");
-  if (unassignedEl) {
-    const unassigned = guests.filter(
-      (g) => !g.tableId && g.status !== "declined",
-    );
-    unassignedEl.textContent = "";
-    if (unassigned.length === 0) {
-      const p = document.createElement("p");
-      p.className = "u-text-muted";
-      p.setAttribute("data-i18n", "all_guests_seated");
-      p.textContent = t("all_guests_seated");
-      unassignedEl.appendChild(p);
-    } else {
-      unassigned.forEach((g) => {
-        const row = document.createElement("div");
-        row.className = "unassigned-row";
-        row.textContent = `${g.firstName} ${g.lastName || ""} (${t("count")}: ${g.count || 1})`;
-        unassignedEl.appendChild(row);
+  if (!unassignedEl) return;
+  const unassigned = guests.filter(
+    (g) => !g.tableId && g.status !== "declined",
+  );
+  unassignedEl.textContent = "";
+  if (unassigned.length === 0) {
+    const p = document.createElement("p");
+    p.className = "u-text-muted";
+    p.setAttribute("data-i18n", "all_guests_seated");
+    p.textContent = t("all_guests_seated");
+    unassignedEl.appendChild(p);
+  } else {
+    unassigned.forEach((g) => {
+      const row = document.createElement("div");
+      row.className = "unassigned-row";
+      row.textContent = `${g.firstName} ${g.lastName || ""} (${t("count")}: ${g.count || 1})`;
+      // S12.4 Draggable
+      row.draggable = true;
+      row.dataset.guestId = g.id;
+      row.addEventListener("dragstart", (e) => {
+        e.dataTransfer?.setData("text/plain", g.id);
+        row.classList.add("dragging");
       });
-    }
+      row.addEventListener("dragend", () => {
+        row.classList.remove("dragging");
+      });
+      unassignedEl.appendChild(row);
+    });
   }
+}
+
+// ── S12.4 Drag-and-drop assignment ────────────────────────────────────────
+
+/**
+ * Assign a guest to a table via drag-and-drop.
+ * @param {string} guestId
+ * @param {string} tableId
+ */
+function _assignGuestToTable(guestId, tableId) {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx !== -1) {
+    guests[idx] = { ...guests[idx], tableId, updatedAt: new Date().toISOString() };
+    storeSet("guests", guests);
+    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  }
+}
+
+// ── S11.2 Transport Manifest ──────────────────────────────────────────────
+
+/** @param {any[]} guests */
+function _renderTransportManifest(guests) {
+  const container = document.getElementById("transportManifest");
+  if (!container) return;
+  container.textContent = "";
+
+  const withTransport = guests.filter(
+    (g) => g.transport && g.status !== "declined",
+  );
+  if (withTransport.length === 0) {
+    const p = document.createElement("p");
+    p.className = "u-text-muted";
+    p.textContent = t("transport_none") || "No transport requests";
+    container.appendChild(p);
+    return;
+  }
+
+  /** @type {Map<string, any[]>} route → guests */
+  const routes = new Map();
+  withTransport.forEach((g) => {
+    const route = g.transport;
+    if (!routes.has(route)) routes.set(route, []);
+    routes.get(route).push(g);
+  });
+
+  routes.forEach((passengers, route) => {
+    const section = document.createElement("div");
+    section.className = "transport-route";
+
+    const header = document.createElement("h4");
+    const totalPax = passengers.reduce(
+      (s, g) => s + (g.count || 1) + (g.children || 0),
+      0,
+    );
+    header.textContent = `🚌 ${route} — ${totalPax} ${t("transport_passengers")}`;
+    section.appendChild(header);
+
+    const table = document.createElement("table");
+    table.className = "guest-table u-w-full";
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    [t("col_name"), t("col_phone"), t("col_guests_count")].forEach((h) => {
+      const th = document.createElement("th");
+      th.textContent = h;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    passengers.forEach((g) => {
+      const tr = document.createElement("tr");
+      const cells = [
+        `${g.firstName} ${g.lastName || ""}`,
+        g.phone || "",
+        String((g.count || 1) + (g.children || 0)),
+      ];
+      cells.forEach((txt) => {
+        const td = document.createElement("td");
+        td.textContent = txt;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    section.appendChild(table);
+    container.appendChild(section);
+  });
+}
+
+/**
+ * Export transport manifest as CSV.
+ */
+export function exportTransportCSV() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const withTransport = guests.filter(
+    (g) => g.transport && g.status !== "declined",
+  );
+  const header = "Route,Name,Phone,Count";
+  const rows = withTransport.map((g) =>
+    [
+      `"${g.transport}"`,
+      `"${g.firstName} ${g.lastName || ""}"`,
+      `"${g.phone || ""}"`,
+      (g.count || 1) + (g.children || 0),
+    ].join(","),
+  );
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "transport-manifest.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Print transport manifest.
+ */
+export function printTransportManifest() {
+  document.body.classList.add("print-transport");
+  window.print();
+  document.body.classList.remove("print-transport");
 }
 
 /**

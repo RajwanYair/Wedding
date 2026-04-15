@@ -99,11 +99,26 @@
     </div>
   </div>
 
+  <!-- S11.4 Batch Action Toolbar -->
+  <div class="batch-toolbar u-hidden" id="batchToolbar">
+    <span id="batchCount" class="u-mr-sm"></span>
+    <select id="batchStatusSelect" class="u-mr-sm">
+      <option value="" data-i18n="batch_set_status">שנה סטטוס</option>
+      <option value="confirmed" data-i18n="status_confirmed">אישרו</option>
+      <option value="pending" data-i18n="status_pending">ממתינים</option>
+      <option value="declined" data-i18n="status_declined">לא מגיעים</option>
+      <option value="maybe" data-i18n="status_maybe">אולי</option>
+    </select>
+    <button class="btn btn-primary btn-small" data-action="batchSetStatus" data-i18n="batch_apply">החל</button>
+    <button class="btn btn-danger btn-small" data-action="batchDeleteGuests" data-i18n="batch_delete">מחק נבחרים</button>
+  </div>
+
   <!-- Table -->
   <div class="guest-table-wrap">
     <table class="guest-table" id="guestTable">
       <thead>
         <tr>
+          <th class="th-checkbox"><input type="checkbox" id="selectAllGuests" data-action="toggleSelectAll" /></th>
           <th
             id="th-firstName"
             data-action="sortGuestsBy"
@@ -142,4 +157,18 @@
     </p>
     <p class="empty-sub">👆 ➕</p>
   </div>
+</div>
+
+<!-- S12.2 Duplicate Detection -->
+<div class="card" id="duplicateDetectionCard">
+  <div class="card-header">
+    <span class="icon">🔍</span>
+    <span data-i18n="duplicates_title">זיהוי כפילויות</span>
+    <div class="section-toolbar-start">
+      <button class="btn btn-secondary btn-small" data-action="scanDuplicates">
+        <span>🔍</span> <span data-i18n="scan_duplicates">סרוק כפילויות</span>
+      </button>
+    </div>
+  </div>
+  <div id="duplicateResults"></div>
 </div>
