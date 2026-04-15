@@ -38,6 +38,7 @@ const _loaders = {
   settings: () => import("../../src/templates/settings.html?raw"),
   registry: () => import("../../src/templates/registry.html?raw"),
   "guest-landing": () => import("../../src/templates/guest-landing.html?raw"),
+  changelog: () => import("../../src/templates/changelog.html?raw"),
 };
 
 /** @type {Map<string, () => void>} section name → post-inject callback */
