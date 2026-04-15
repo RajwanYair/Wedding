@@ -9,6 +9,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { loadSession } from "../services/auth.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -57,6 +58,7 @@ export function addGalleryPhoto(photo) {
   const gallery = [.../** @type {any[]} */ (storeGet("gallery") ?? [])];
   gallery.push({ id: uid(), ...photo, addedAt: new Date().toISOString() });
   storeSet("gallery", gallery);
+  enqueueWrite("gallery", () => syncStoreKeyToSheets("gallery"));
 }
 
 /**
@@ -67,6 +69,7 @@ export function deleteGalleryPhoto(id) {
     (p) => p.id !== id,
   );
   storeSet("gallery", gallery);
+  enqueueWrite("gallery", () => syncStoreKeyToSheets("gallery"));
 }
 
 /**

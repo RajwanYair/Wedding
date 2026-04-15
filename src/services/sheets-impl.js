@@ -27,6 +27,8 @@ const _SHEET_NAMES = {
   expenses: "Expenses",
   budget: "Budget",
   timeline: "Timeline",
+  contacts: "Contacts",
+  gallery: "Gallery",
   weddingInfo: "Config",
 };
 
@@ -99,6 +101,8 @@ const _COL_ORDER = {
   expenses: ["id", "category", "description", "amount", "date", "createdAt"],
   budget: ["id", "name", "amount", "note", "createdAt", "updatedAt"],
   timeline: ["id", "time", "title", "note", "icon"],
+  contacts: ["id", "firstName", "lastName", "phone", "email", "side", "dietaryNotes", "submittedAt"],
+  gallery: ["id", "caption", "credit", "addedAt"],
 };
 
 /**
@@ -262,6 +266,8 @@ const _NUM_FIELDS = {
   expenses: ["amount"],
   budget: ["amount"],
   timeline: [],
+  contacts: [],
+  gallery: [],
 };
 
 /** @type {Record<string, string[]>} */

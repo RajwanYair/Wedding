@@ -1,5 +1,5 @@
 /**
- * Wedding Manager — Google Apps Script Web App  v2.2.0
+ * Wedding Manager — Google Apps Script Web App  v2.3.0
  * Handles all write operations from the Wedding Manager app.
  *
  * SETUP (one-time):
@@ -18,9 +18,13 @@
  *   { action: 'append',        sheet: 'Attendees', row: [...] }
  *   { action: 'deleteRow',     sheet: 'Attendees', id: 'guest-id' }
  *   { action: 'cleanConfig' }  — deduplicate Config sheet keys in-place (one-time fix)
- *   { action: 'ensureSheets' } — create Attendees, Tables, Config, Vendors, Expenses, RSVP_Log, Timeline, Budget
+ *   { action: 'ensureSheets' } — create Attendees, Tables, Config, Vendors, Expenses, RSVP_Log, Timeline, Budget, Contacts, Gallery
  *   { action: 'sendEmail',     type: 'rsvpConfirmation'|'adminRsvpNotify', to, name, ... }
  *   { action: 'savePushSubscription', subscription: {...} }
+ *
+ * NEW in v2.3.0:
+ *   • Contacts sheet tab (guest-submitted contact details)
+ *   • Gallery sheet tab (photo metadata — id, caption, credit, addedAt)
  *
  * NEW in v2.2.0:
  *   • Budget sheet tab added to ALLOWED_SHEETS and ensureSheets
@@ -55,11 +59,13 @@
  *   RSVP_Log   — append-only RSVP audit trail (S3.7)
  *   Timeline   — wedding day schedule items
  *   Budget     — gift/contribution tracking entries (v2.2.0)
+ *   Contacts   — guest-submitted contact details (v2.3.0)
+ *   Gallery    — photo metadata without image data (v2.3.0)
  */
 
 const SPREADSHEET_ID = '1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA';
 
-const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log', 'Timeline', 'Budget'];
+const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log', 'Timeline', 'Budget', 'Contacts', 'Gallery'];
 
 /* ── Index constants for Attendees columns (must match GUEST_COLS in config.js) ── */
 var COL = {
@@ -426,5 +432,5 @@ function doGet(e) {
       return jsonResponse({ ok: false, error: err.toString() });
     }
   }
-  return jsonResponse({ ok: true, service: 'Wedding Manager', version: '2.2.0' });
+  return jsonResponse({ ok: true, service: 'Wedding Manager', version: '2.3.0' });
 }

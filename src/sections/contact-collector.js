@@ -9,6 +9,7 @@ import { t } from "../core/i18n.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { uid } from "../utils/misc.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -46,6 +47,7 @@ export function submitContactForm(data) {
     submittedAt: new Date().toISOString(),
   });
   storeSet("contacts", contacts);
+  enqueueWrite("contacts", () => syncStoreKeyToSheets("contacts"));
 
   // Show success
   const form = document.getElementById("contactFormFields");
