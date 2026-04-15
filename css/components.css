@@ -1947,5 +1947,32 @@ body.ptr--refreshing::before {
   }
 }
 
+/* ── Analytics Charts (S8) ── */
+.analytics-heatmap svg,
+.analytics-funnel svg {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+}
+.analytics-rate-label {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 0.5rem;
+}
+.analytics-activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.92rem;
+
+  & li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  & li:last-child { border-bottom: none; }
+}
+
 } /* end @layer components */
 

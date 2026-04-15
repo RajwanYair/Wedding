@@ -118,7 +118,11 @@ import {
   exportCheckinReport,
   resetAllCheckins,
 } from "./sections/checkin.js";
-import { renderBudgetChart } from "./sections/analytics.js";
+import {
+  renderBudgetChart,
+  exportAnalyticsPDF,
+  exportAnalyticsCSV,
+} from "./sections/analytics.js";
 import { submitRsvp, lookupRsvpByPhone } from "./sections/rsvp.js";
 import {
   sendWhatsAppAll,
@@ -653,6 +657,10 @@ function _registerHandlers() {
   );
   on("renderBudgetProgress", () => renderBudgetProgress());
   on("renderBudgetChart", () => renderBudgetChart());
+
+  // ── Analytics exports (S8.4) ──
+  on("exportAnalyticsPDF", () => exportAnalyticsPDF());
+  on("exportAnalyticsCSV", () => exportAnalyticsCSV());
 
   // ── RSVP ──
   on("submitRSVP", (_el, e) => {

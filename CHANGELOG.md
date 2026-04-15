@@ -27,11 +27,21 @@ All notable changes to this project will be documented in this file.
 - **Expenses section mount** — `expensesSection.mount()` now called when budget section mounts; unmounts alongside it.
 - **`openModal` export** — changed to `export async function` for lazy template loading; updated test assertion.
 
+- **S8.1 Guest side-by-table heatmap** — stacked horizontal SVG bars showing groom/bride/mutual guest split per table in Analytics.
+- **S8.2 RSVP funnel report** — horizontal bar funnel visualizing invited → sent → confirmed → checked-in pipeline.
+- **S8.3 Vendor payment timeline** — per-vendor SVG progress bars showing paid vs total amounts.
+- **S8.4 Export analytics** — "Export PDF" (triggers print) and "Export CSV" buttons on the Analytics page.
+- **S8.5 WhatsApp delivery rate** — donut chart showing sent vs unsent WhatsApp invitations with delivery percentage.
+- **Group distribution chart** — bar chart of guests by group (family, friends, work, other).
+- **Table fill-rate progress bars** — horizontal bars per table showing seated/capacity with color-coded thresholds.
+- **Recent activity feed** — lists the 10 most recent guest/RSVP changes sorted by updatedAt.
+- **20 new i18n keys** — Hebrew + English entries for all S8 analytics features (funnel, heatmap, delivery, group, activity).
+
 ### Changed
 
 - Version bumped to v3.9.0 across `package.json`, `src/core/config.js`, `js/config.js`, `public/sw.js`, `tests/wedding.test.mjs`.
 - Cache bust: `CACHE_NAME` → `wedding-v3.9.0`.
-- Test count: 1733+ tests across 17 suites.
+- Test count: 1735 tests across 17 suites.
 
 ## [3.8.3] — 2026-04-15
 
