@@ -10,25 +10,13 @@
  */
 
 // ── State ─────────────────────────────────────────────────────────────────
-/** Ordered list of navigable section names (for swipe prev/next logic).
- * @type {string[]}
+import { SECTION_LIST } from "./constants.js";
+
+/**
+ * Navigable sections — imported from constants.js (single source of truth).
+ * @type {readonly string[]}
  */
-const _sections = [
-  "landing",
-  "dashboard",
-  "guests",
-  "tables",
-  "invitation",
-  "whatsapp",
-  "rsvp",
-  "budget",
-  "analytics",
-  "timeline",
-  "gallery",
-  "checkin",
-  "settings",
-  "changelog",
-];
+const _sections = SECTION_LIST;
 
 /** @type {string} */
 let _activeSection = "dashboard";

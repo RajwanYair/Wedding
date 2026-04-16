@@ -19,27 +19,24 @@
 
 import { applyI18n } from "./i18n.js";
 
-/** @type {Map<string, () => Promise<{ default: string }>>} section name → lazy importer */
-const _loaders = {
-  landing: () => import("../../src/templates/landing.html?raw"),
-  dashboard: () => import("../../src/templates/dashboard.html?raw"),
-  guests: () => import("../../src/templates/guests.html?raw"),
-  tables: () => import("../../src/templates/tables.html?raw"),
-  invitation: () => import("../../src/templates/invitation.html?raw"),
-  whatsapp: () => import("../../src/templates/whatsapp.html?raw"),
-  rsvp: () => import("../../src/templates/rsvp.html?raw"),
-  budget: () => import("../../src/templates/budget.html?raw"),
-  analytics: () => import("../../src/templates/analytics.html?raw"),
-  timeline: () => import("../../src/templates/timeline.html?raw"),
-  checkin: () => import("../../src/templates/checkin.html?raw"),
-  gallery: () => import("../../src/templates/gallery.html?raw"),
-  "contact-form": () => import("../../src/templates/contact-form.html?raw"),
-  vendors: () => import("../../src/templates/vendors.html?raw"),
-  settings: () => import("../../src/templates/settings.html?raw"),
-  registry: () => import("../../src/templates/registry.html?raw"),
-  "guest-landing": () => import("../../src/templates/guest-landing.html?raw"),
-  changelog: () => import("../../src/templates/changelog.html?raw"),
-};
+/**
+ * Auto-discovered template loaders via import.meta.glob (F1.4).
+ * Vite resolves all *.html files in src/templates/ at build time.
+ * Filenames are mapped to section names (e.g. "guests.html" → "guests").
+ * @type {Record<string, () => Promise<{ default: string }>>}
+ */
+const _rawGlob = import.meta.glob("../templates/*.html", {
+  query: "?raw",
+  eager: false,
+});
+
+/** @type {Map<string, () => Promise<{ default: string }>>} */
+const _loaders = new Map();
+for (const [path, loader] of Object.entries(_rawGlob)) {
+  // path looks like "../templates/guests.html"
+  const match = path.match(/\/([^/]+)\.html$/);
+  if (match) _loaders.set(match[1], /** @type {any} */ (loader));
+}
 
 /** @type {Map<string, () => void>} section name → post-inject callback */
 const _callbacks = new Map();
@@ -64,8 +61,11 @@ export function onTemplateLoaded(sectionName, fn) {
 export async function injectTemplate(container, sectionName) {
   if (container.dataset.loaded === "1") return;
 
-  const loader = _loaders[sectionName];
-  if (!loader) return; // no template registered — section already has inline HTML
+  const loader = _loaders.get(sectionName);
+  if (!loader) {
+    console.warn(`[template-loader] No template for section: ${sectionName}`);
+    return;
+  }
 
   try {
     const { default: html } = await loader();
@@ -102,7 +102,7 @@ export async function injectTemplate(container, sectionName) {
 export function prefetchTemplates(names) {
   if ("requestIdleCallback" in window) {
     requestIdleCallback(() => {
-      names.forEach((n) => _loaders[n]?.());
+      names.forEach((n) => _loaders.get(n)?.());
     });
   }
 }

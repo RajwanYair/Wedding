@@ -18,7 +18,13 @@ function _dispatch(e) {
   const action = /** @type {HTMLElement} */ (el).dataset.action;
   if (!action) return;
   const fn = _handlers.get(action);
-  if (fn) fn(/** @type {HTMLElement} */ (el), e);
+  if (fn) {
+    try {
+      fn(/** @type {HTMLElement} */ (el), e);
+    } catch (err) {
+      console.error(`[events] Handler "${action}" threw:`, err);
+    }
+  }
 }
 
 /**
@@ -38,7 +44,13 @@ export function initEvents() {
     const action = target.dataset.onInput;
     if (!action) return;
     const fn = _handlers.get(action);
-    if (fn) fn(target, e);
+    if (fn) {
+      try {
+        fn(target, e);
+      } catch (err) {
+        console.error(`[events] Input handler "${action}" threw:`, err);
+      }
+    }
   });
 
   // data-on-change: delegated change event (e.g. file inputs, selects)
@@ -49,7 +61,11 @@ export function initEvents() {
     if (onChangeAction) {
       const fn = _handlers.get(onChangeAction);
       if (fn) {
-        fn(target, e);
+        try {
+          fn(target, e);
+        } catch (err) {
+          console.error(`[events] Change handler "${onChangeAction}" threw:`, err);
+        }
         return;
       }
     }
@@ -65,7 +81,13 @@ export function initEvents() {
     if (!action) return;
     e.preventDefault();
     const fn = _handlers.get(action);
-    if (fn) fn(target, e);
+    if (fn) {
+      try {
+        fn(target, e);
+      } catch (err) {
+        console.error(`[events] Enter handler "${action}" threw:`, err);
+      }
+    }
   });
 }
 

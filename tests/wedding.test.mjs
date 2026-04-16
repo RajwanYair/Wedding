@@ -6743,17 +6743,22 @@ describe("v3.4.0: CSS color-scheme", function () {
 });
 
 describe("v3.4.0: template-loader.js completeness", function () {
+  const usesGlob = _srcTemplateLoader.includes("import.meta.glob");
   it("template-loader.js loads registry template", function () {
     assert.ok(
-      _srcTemplateLoader.includes("registry") &&
-        _srcTemplateLoader.includes("registry.html"),
+      usesGlob || (
+        _srcTemplateLoader.includes("registry") &&
+        _srcTemplateLoader.includes("registry.html")
+      ),
       "registry loader missing",
     );
   });
   it("template-loader.js loads guest-landing template", function () {
     assert.ok(
-      _srcTemplateLoader.includes("guest-landing") &&
-        _srcTemplateLoader.includes("guest-landing.html"),
+      usesGlob || (
+        _srcTemplateLoader.includes("guest-landing") &&
+        _srcTemplateLoader.includes("guest-landing.html")
+      ),
       "guest-landing loader missing",
     );
   });

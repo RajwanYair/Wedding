@@ -8,6 +8,7 @@
 
 // ── Foundation layer ──────────────────────────────────────────────────────
 import { APP_VERSION } from "./core/config.js";
+import { PUBLIC_SECTIONS } from "./core/constants.js";
 import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import { loadLocale, applyI18n, t } from "./core/i18n.js";
@@ -324,6 +325,8 @@ function _buildStoreDefs() {
         ..._defaultWeddingInfo,
         groom: "אליאור",
         bride: "טובה",
+        groomEn: "Elior",
+        brideEn: "Tova",
         date: "2026-05-07",
         venue: "נוף הירדן",
         venueAddress: "מצפה יריחו",
@@ -1620,16 +1623,7 @@ function _maybeShowWhatsNew(user) {
 }
 
 // ── Section lifecycle ─────────────────────────────────────────────────────
-
-// Public-facing sections (no auth required)
-const PUBLIC_SECTIONS = new Set([
-  "rsvp",
-  "landing",
-  "contact-form",
-  "registry",
-  "guest-landing",
-  "changelog",
-]);
+// PUBLIC_SECTIONS imported from src/core/constants.js
 
 /**
  * Update nav visibility and user-bar chip based on current auth state.

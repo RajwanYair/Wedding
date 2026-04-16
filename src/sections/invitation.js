@@ -6,6 +6,8 @@
 
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
+import { t } from "../core/i18n.js";
+import { createMissingTabs } from "../services/backend.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -49,7 +51,23 @@ export function updateWeddingDetails() {
   const current = /** @type {Record<string,string>} */ (
     storeGet("weddingInfo") ?? {}
   );
+  const prevGroomEn = current.groomEn ?? "";
+  const prevBrideEn = current.brideEn ?? "";
   storeSet("weddingInfo", { ...current, ...delta });
+
+  // If groomEn or brideEn changed from a non-empty value, offer to reinitialise backend tabs
+  const newGroomEn = delta.groomEn ?? prevGroomEn;
+  const newBrideEn = delta.brideEn ?? prevBrideEn;
+  const namesChanged =
+    (prevGroomEn && newGroomEn !== prevGroomEn) ||
+    (prevBrideEn && newBrideEn !== prevBrideEn);
+  if (namesChanged && window.confirm(t("backend_reinit_prompt"))) {
+    createMissingTabs().then(() => {
+      window.alert(t("backend_reinit_done"));
+    }).catch(() => {
+      window.alert(t("backend_reinit_skip"));
+    });
+  }
 }
 
 /**

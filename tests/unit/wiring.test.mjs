@@ -34,22 +34,42 @@ const MAIN_JS = readFileSync(resolve(root, "src", "main.js"), "utf8");
 const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
 const BARREL = readFileSync(resolve(root, "src", "sections", "index.js"), "utf8");
 const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets-impl.js"), "utf8");
+const CONSTANTS_JS = readFileSync(resolve(root, "src", "core", "constants.js"), "utf8");
 const I18N_HE = JSON.parse(readFileSync(resolve(root, "js", "i18n", "he.json"), "utf8"));
 const I18N_EN = JSON.parse(readFileSync(resolve(root, "js", "i18n", "en.json"), "utf8"));
 
 // ── Extract canonical lists from source ───────────────────────────────────────
 
-/** Extract all keys from the _loaders map in template-loader.js */
+/** Extract all keys from the _loaders map in template-loader.js.
+ * Supports both old object literal and new import.meta.glob patterns. */
 function extractLoaderKeys() {
-  // Match both `key:` and `"key-name":` patterns inside _loaders = { ... }
+  // New pattern: import.meta.glob("../templates/*.html"...) builds a Map
+  // Verify the glob import exists — if so, enumerate template files from disk
+  if (TEMPLATE_LOADER.includes('import.meta.glob')) {
+    return readdirSync(resolve(root, "src", "templates"))
+      .filter((f) => f.endsWith(".html"))
+      .map((f) => f.replace(".html", ""));
+  }
+  // Fallback: old object-literal pattern
   const block = TEMPLATE_LOADER.match(/const _loaders\s*=\s*\{([\s\S]*?)\};/);
   if (!block) return [];
   return [...block[1].matchAll(/["']?([a-z][-a-z]*)["']?\s*:/g)].map((m) => m[1]);
 }
 
-/** Extract _sections array from nav.js */
+/** Extract _sections list — may be inline array or imported from constants.js */
 function extractNavSections() {
+  // Check if nav.js imports from constants.js
+  if (NAV_JS.includes('SECTION_LIST')) {
+    return extractSectionList();
+  }
   const block = NAV_JS.match(/const _sections\s*=\s*\[([\s\S]*?)\];/);
+  if (!block) return [];
+  return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+}
+
+/** Extract SECTION_LIST from constants.js */
+function extractSectionList() {
+  const block = CONSTANTS_JS.match(/SECTION_LIST\s*=.*?\(\[([\s\S]*?)\]\)/);
   if (!block) return [];
   return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 }
@@ -61,8 +81,14 @@ function extractSectionsMap() {
   return [...block[1].matchAll(/["']?([a-z][-a-z]*)["']?\s*:/g)].map((m) => m[1]);
 }
 
-/** Extract PUBLIC_SECTIONS set from main.js */
+/** Extract PUBLIC_SECTIONS — may be in main.js or constants.js */
 function extractPublicSections() {
+  // Try constants.js first
+  const constBlock = CONSTANTS_JS.match(/PUBLIC_SECTIONS\s*=\s*new Set\(\[([\s\S]*?)\]\)/);
+  if (constBlock) {
+    return [...constBlock[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  }
+  // Fallback: main.js
   const block = MAIN_JS.match(/const PUBLIC_SECTIONS\s*=\s*new Set\(\[([\s\S]*?)\]\)/);
   if (!block) return [];
   return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);

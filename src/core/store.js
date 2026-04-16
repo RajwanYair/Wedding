@@ -91,10 +91,17 @@ function _flush() {
     if (!storageKey) return;
     try {
       localStorage.setItem(pfx + storageKey, JSON.stringify(_state[key]));
-    } catch {}
+    } catch (err) {
+      console.warn(`[store] Failed to persist "${key}":`, err);
+    }
   });
   _dirty.clear();
   _saveTimer = null;
+}
+
+// Flush pending writes before the page unloads to prevent data loss
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", _flush);
 }
 
 // ── Proxy factory ─────────────────────────────────────────────────────────
