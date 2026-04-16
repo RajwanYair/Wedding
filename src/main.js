@@ -45,6 +45,8 @@ import { injectTemplate } from "./core/template-loader.js";
 
 // ── Extracted handler modules ─────────────────────────────────────────────
 import { registerGuestHandlers } from "./handlers/guest-handlers.js";
+import { registerTableHandlers } from "./handlers/table-handlers.js";
+import { registerVendorHandlers } from "./handlers/vendor-handlers.js";
 
 // ── Services ──────────────────────────────────────────────────────────────
 import {
@@ -93,48 +95,9 @@ import * as changelogSection from "./sections/changelog.js";
 
 // ── Named imports for event handlers ─────────────────────────────────────
 // Guest imports moved to src/handlers/guest-handlers.js
-import {
-  saveTable,
-  deleteTable,
-  autoAssignTables,
-  renderTables,
-  printSeatingChart,
-  printPlaceCards,
-  printTableSigns,
-  openTableForEdit,
-  exportTransportCSV,
-  printTransportManifest,
-  smartAutoAssign,
-} from "./sections/tables.js";
-import {
-  saveVendor,
-  deleteVendor,
-  exportVendorsCSV,
-  filterVendorsByCategory,
-  openVendorForEdit,
-  exportVendorPaymentsCSV, // S24.2
-} from "./sections/vendors.js";
-import {
-  saveExpense,
-  deleteExpense,
-  exportExpensesCSV,
-  filterExpensesByCategory,
-  setExpenseCategoryFilter,
-  openExpenseForEdit,
-} from "./sections/expenses.js";
+// Table+checkin imports moved to src/handlers/table-handlers.js
+// Vendor+expense imports moved to src/handlers/vendor-handlers.js
 import { deleteBudgetEntry, renderBudgetProgress } from "./sections/budget.js";
-import {
-  checkInGuest,
-  setCheckinSearch,
-  exportCheckinReport,
-  exportGiftsCSV,
-  resetAllCheckins,
-  toggleGiftMode,
-  startQrScan,
-  stopQrScan,
-  checkInByTable,
-  toggleAccessibilityFilter,
-} from "./sections/checkin.js";
 import {
   renderBudgetChart,
   exportAnalyticsPDF,
@@ -716,151 +679,11 @@ function _registerHandlers() {
   // ── Guests (extracted to src/handlers/guest-handlers.js) ──
   registerGuestHandlers();
 
-  // ── Tables ──
-  on("saveTable", (_el, _e) => {
-    const getVal = (id) =>
-      /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
-        document.getElementById(id)
-      )?.value?.trim() ?? "";
-    const data = {
-      name: getVal("tableName"),
-      capacity: getVal("tableCapacity") || "10",
-      shape: getVal("tableShape") || "round",
-    };
-    const id = getVal("tableModalId") || null;
-    const result = saveTable(data, id);
-    if (result.ok) {
-      closeModal("tableModal");
-      showToast(t("table_saved"), "success");
-    } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
-  });
-  on("autoAssignTables", () => autoAssignTables());
-  on("smartAutoAssign", () => {
-    const n = smartAutoAssign();
-    showToast(t("smart_assign_result").replace("{n}", String(n)), "success");
-    renderTables();
-  });
-  on("printSeatingChart", () => printSeatingChart());
-  on("printPlaceCards", () => printPlaceCards());
-  on("printTableSigns", () => printTableSigns());
-  // S21.4 Per-table place-card print
-  on("printTablePlaceCards", (el) =>
-    printPlaceCards(el.dataset.actionArg ?? ""),
-  );
-  on("exportTransportCSV", () => exportTransportCSV());
-  on("printTransportManifest", () => printTransportManifest());
-  on("deleteTable", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteTable(el.dataset.actionArg ?? ""),
-    ),
-  );
-  on("openEditTableModal", (el) => {
-    openTableForEdit(el.dataset.actionArg ?? "");
-    openModal("tableModal");
-  });
+  // ── Tables + Check-in (extracted to src/handlers/table-handlers.js) ──
+  registerTableHandlers();
 
-  // ── Check-in ──
-  on("checkInGuest", (el) => checkInGuest(el.dataset.actionArg ?? ""));
-  on("checkinSearch", (_el, e) => {
-    const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
-    );
-    setCheckinSearch(input?.value ?? "");
-  });
-  on("exportCheckinReport", () => exportCheckinReport());
-  // S21.3 Gift log CSV export
-  on("exportGiftsCSV", () => exportGiftsCSV());
-  on("resetAllCheckins", () =>
-    showConfirmDialog(t("confirm_reset_checkins"), () => resetAllCheckins()),
-  );
-  on("toggleGiftMode", () => toggleGiftMode());
-  on("startQrScan", () => startQrScan());
-  on("stopQrScan", () => stopQrScan());
-  // S18.3 Batch check-in by table
-  on("checkInByTable", (el) => {
-    const tableId = el.dataset.actionArg ?? "";
-    checkInByTable(tableId);
-    showToast(t("checkin_table_all"), "success");
-  });
-  // S20.5 Accessibility filter
-  on("toggleAccessibilityFilter", () => toggleAccessibilityFilter());
-
-  // ── Vendors ──
-  on("saveVendor", (_el, _e) => {
-    const getVal = (id) =>
-      /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
-        document.getElementById(id)
-      )?.value?.trim() ?? "";
-    const data = {
-      category: getVal("vendorCategory"),
-      name: getVal("vendorName"),
-      contact: getVal("vendorContact"),
-      phone: getVal("vendorPhone"),
-      price: getVal("vendorPrice") || "0",
-      paid: getVal("vendorPaid") || "0",
-      dueDate: getVal("vendorDueDate") || "",
-      notes: getVal("vendorNotes"),
-      contractUrl: getVal("vendorContractUrl") || "",
-    };
-    const id = getVal("vendorModalId") || null;
-    const result = saveVendor(data, id);
-    if (result.ok) {
-      closeModal("vendorModal");
-      showToast(t("vendor_saved"), "success");
-    } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
-  });
-  on("deleteVendor", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteVendor(el.dataset.actionArg ?? ""),
-    ),
-  );
-  on("exportVendorsCSV", () => exportVendorsCSV());
-  // S23.5 + S24.2 Overdue chip and payments export
-  on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());
-  on("filterVendorsByCategory", (el) =>
-    filterVendorsByCategory(el.dataset.category ?? "all"),
-  );
-  on("openEditVendorModal", (el) => {
-    openVendorForEdit(el.dataset.actionArg ?? "");
-    openModal("vendorModal");
-  });
-
-  // ── Expenses ──
-  on("saveExpense", (_el, _e) => {
-    const getVal = (id) =>
-      /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
-        document.getElementById(id)
-      )?.value?.trim() ?? "";
-    const data = {
-      category: getVal("expenseCategory"),
-      amount: getVal("expenseAmount") || "0",
-      description: getVal("expenseDescription"),
-      date: getVal("expenseDate"),
-    };
-    const id = getVal("expenseModalId") || null;
-    const result = saveExpense(data, id);
-    if (result.ok) {
-      closeModal("expenseModal");
-      showToast(t("expense_saved"), "success");
-    } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
-  });
-  on("deleteExpense", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteExpense(el.dataset.actionArg ?? ""),
-    ),
-  );
-  on("exportExpensesCSV", () => exportExpensesCSV());
-  on("filterExpensesByCategory", (el) =>
-    filterExpensesByCategory(el.dataset.category ?? "all"),
-  );
-  // S20.3 clickable category chip filter
-  on("setExpenseCategoryFilter", (el) =>
-    setExpenseCategoryFilter(el.dataset.actionArg ?? "all"),
-  );
-  on("openEditExpenseModal", (el) => {
-    openExpenseForEdit(el.dataset.actionArg ?? "");
-    openModal("expenseModal");
-  });
+  // ── Vendors + Expenses (extracted to src/handlers/vendor-handlers.js) ──
+  registerVendorHandlers();
 
   // ── Budget ──
   on("saveBudgetTarget", (_el, e) => {
