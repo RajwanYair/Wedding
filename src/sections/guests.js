@@ -709,6 +709,109 @@ export function filterGuestsByStatus(status) {
   return guests.filter((g) => g.status === status);
 }
 
+// ── Sprint 5: Guest Data Helpers ──────────────────────────────────────────
+
+/**
+ * Group guests by their group field (family/friends/work/other).
+ * @returns {Record<string, any[]>}
+ */
+export function getGuestsByGroup() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Record<string, any[]>} */
+  const groups = { family: [], friends: [], work: [], other: [] };
+  for (const g of guests) {
+    const key = groups[g.group] ? g.group : "other";
+    groups[key].push(g);
+  }
+  return groups;
+}
+
+/**
+ * Find pending guests whose RSVP is overdue (past the RSVP deadline).
+ * @returns {any[]}
+ */
+export function getGuestsNeedingFollowup() {
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const deadline = info.rsvpDeadline;
+  if (!deadline) return [];
+  const now = new Date();
+  const dl = new Date(deadline);
+  if (isNaN(dl.getTime()) || now < dl) return [];
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests.filter((g) => g.status === "pending" && g.phone);
+}
+
+/**
+ * Find tables with remaining capacity (empty seats).
+ * @returns {Array<{ table: any, assigned: number, remaining: number }>}
+ */
+export function getSeatingGaps() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return tables.map((tb) => {
+    const assigned = guests.filter((g) => g.tableId === tb.id)
+      .reduce((s, g) => s + (g.count || 1), 0);
+    return { table: tb, assigned, remaining: (tb.capacity || 0) - assigned };
+  }).filter((r) => r.remaining > 0);
+}
+
+/**
+ * Build a daily RSVP response timeline (count per day).
+ * @returns {Array<{ date: string, count: number }>}
+ */
+export function getGuestResponseTimeline() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Record<string, number>} */
+  const byDay = {};
+  for (const g of guests) {
+    if (!g.rsvpDate) continue;
+    const day = g.rsvpDate.slice(0, 10);
+    byDay[day] = (byDay[day] || 0) + 1;
+  }
+  return Object.entries(byDay)
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/**
+ * Find potential duplicate guests (same phone or same full name).
+ * @returns {Array<{ guests: any[], reason: string }>}
+ */
+export function getDuplicateGuests() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Array<{ guests: any[], reason: string }>} */
+  const dupes = [];
+
+  // By phone
+  /** @type {Map<string, any[]>} */
+  const byPhone = new Map();
+  for (const g of guests) {
+    if (!g.phone) continue;
+    const key = g.phone.replace(/\D/g, "");
+    if (!key) continue;
+    if (!byPhone.has(key)) byPhone.set(key, []);
+    byPhone.get(key).push(g);
+  }
+  for (const [, group] of byPhone) {
+    if (group.length > 1) dupes.push({ guests: group, reason: "phone" });
+  }
+
+  // By name
+  /** @type {Map<string, any[]>} */
+  const byName = new Map();
+  for (const g of guests) {
+    const name = `${g.firstName || ""} ${g.lastName || ""}`.trim().toLowerCase();
+    if (!name) continue;
+    if (!byName.has(name)) byName.set(name, []);
+    byName.get(name).push(g);
+  }
+  for (const [, group] of byName) {
+    if (group.length > 1) dupes.push({ guests: group, reason: "name" });
+  }
+
+  return dupes;
+}
+
 // ── S11.4 Batch Operations ────────────────────────────────────────────────
 
 /** @returns {string[]} selected guest IDs */
