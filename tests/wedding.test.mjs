@@ -6438,10 +6438,13 @@ describe("Language toggle — v3.3.0 fix", function () {
     const src = readFileSync(
       resolve(__dirname, "..", "src", "main.js"),
       "utf8",
-    );
+    ) + (existsSync(resolve(__dirname, "..", "src", "handlers"))
+      ? readdirSync(resolve(__dirname, "..", "src", "handlers")).filter((f) => f.endsWith(".js"))
+          .map((f) => readFileSync(resolve(__dirname, "..", "src", "handlers", f), "utf8")).join("\n")
+      : "");
     assert.ok(
       src.includes("switchLanguage") && src.includes('"he"'),
-      "switchLanguage arg missing from main.js",
+      "switchLanguage arg missing from main.js or handler files",
     );
   });
 
@@ -6484,10 +6487,14 @@ const _srcSheets = readFileSync(
   resolve(__dirname, "..", "src", "services", "sheets.js"),
   "utf8",
 );
+const _handlersDir = resolve(__dirname, "..", "src", "handlers");
 const _srcMain = readFileSync(
   resolve(__dirname, "..", "src", "main.js"),
   "utf8",
-);
+) + (existsSync(_handlersDir)
+  ? readdirSync(_handlersDir).filter((f) => f.endsWith(".js"))
+      .map((f) => readFileSync(resolve(_handlersDir, f), "utf8")).join("\n")
+  : "");
 const _srcTemplateLoader = readFileSync(
   resolve(__dirname, "..", "src", "core", "template-loader.js"),
   "utf8",
