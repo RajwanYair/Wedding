@@ -23,6 +23,7 @@
         "sri": "node scripts/sri-check.mjs",
         "precache": "node scripts/generate-precache.mjs",
         "size": "node scripts/size-report.mjs",
+        "docs": "node scripts/generate-docs.mjs",
         "typecheck": "tsc --noEmit",
         "ci": "npm run lint && npm run typecheck && npm test"
     },
