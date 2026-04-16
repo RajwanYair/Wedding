@@ -13,15 +13,18 @@ const _unsubs = [];
 
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderAnalytics));
+  _unsubs.push(storeSubscribe("guests", renderSeatingMap));
   _unsubs.push(storeSubscribe("expenses", renderBudgetChart));
   _unsubs.push(storeSubscribe("vendors", _renderVendorTimeline));
   _unsubs.push(storeSubscribe("vendors", renderBudgetChart));
   _unsubs.push(storeSubscribe("tables", _renderTableFill));
+  _unsubs.push(storeSubscribe("tables", renderSeatingMap));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
   _renderTableFill();
   _renderActivityFeed();
+  renderSeatingMap();
 }
 
 export function unmount() {
@@ -753,4 +756,121 @@ export function exportAnalyticsCSV() {
 /** @param {string} s */
 function _escSvg(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// ── S13.4 Seating Chart SVG Map ───────────────────────────────────────────
+
+/**
+ * Render an SVG visual floor plan of all tables with guest names.
+ */
+export function renderSeatingMap() {
+  const container = document.getElementById("analyticsSeatingMap");
+  if (!container) return;
+
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+
+  if (tables.length === 0) {
+    container.textContent = t("analytics_no_data") || "";
+    return;
+  }
+
+  const cols = Math.min(tables.length, 4);
+  const rows = Math.ceil(tables.length / cols);
+  const cellW = 180;
+  const cellH = 140;
+  const pad = 20;
+  const w = cols * cellW + pad * 2;
+  const h = rows * cellH + pad * 2;
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${t("seating_map_title")}">`;
+
+  tables.forEach((tbl, idx) => {
+    const col = idx % cols;
+    const row = Math.floor(idx / cols);
+    const cx = pad + col * cellW + cellW / 2;
+    const cy = pad + row * cellH + 40;
+    const seated = guests.filter((g) => g.tableId === tbl.id);
+    const cap = tbl.capacity || 10;
+    const fill = seated.length >= cap ? "var(--danger)" : seated.length > 0 ? "var(--success)" : "var(--bg-card)";
+
+    // Table shape
+    if (tbl.shape === "rect") {
+      svg += `<rect x="${cx - 50}" y="${cy - 25}" width="100" height="50" rx="6" fill="${fill}" stroke="var(--border)" stroke-width="1.5" opacity="0.7"/>`;
+    } else {
+      svg += `<circle cx="${cx}" cy="${cy}" r="30" fill="${fill}" stroke="var(--border)" stroke-width="1.5" opacity="0.7"/>`;
+    }
+
+    // Table name + count
+    svg += `<text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text)">${_escSvg(tbl.name)}</text>`;
+    svg += `<text x="${cx}" y="${cy + 18}" text-anchor="middle" font-size="9" fill="var(--text-muted)">${seated.length}/${cap}</text>`;
+
+    // Guest names (up to 4)
+    const names = seated.slice(0, 4).map((g) => `${g.firstName || ""}`.trim());
+    names.forEach((name, ni) => {
+      svg += `<text x="${cx}" y="${cy + 42 + ni * 12}" text-anchor="middle" font-size="8" fill="var(--text-secondary)">${_escSvg(name)}</text>`;
+    });
+    if (seated.length > 4) {
+      svg += `<text x="${cx}" y="${cy + 42 + 4 * 12}" text-anchor="middle" font-size="8" fill="var(--text-muted)">+${seated.length - 4}</text>`;
+    }
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/store data/CSS vars
+}
+
+// ── S14.4 Export Event Summary PDF ────────────────────────────────────────
+
+/**
+ * Export a comprehensive event summary as a printable page.
+ */
+export function exportEventSummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const totalHeads = confirmed.reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
+  const vendorCost = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  const vendorPaid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
+  const expenseTotal = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+
+  const bom = "\uFEFF";
+  const lines = [
+    `${t("event_summary_title")}`,
+    "",
+    `${t("label_groom")}: ${info.groom || ""}`,
+    `${t("label_bride")}: ${info.bride || ""}`,
+    `${t("label_wedding_date")}: ${info.date || ""}`,
+    `${t("label_venue")}: ${info.venue || ""}`,
+    "",
+    `=== ${t("stat_total")} ===`,
+    `${t("stat_guests")}: ${guests.length}`,
+    `${t("status_confirmed")}: ${confirmed.length}`,
+    `${t("analytics_total_heads")}: ${totalHeads}`,
+    `${t("stat_tables")}: ${tables.length}`,
+    "",
+    `=== ${t("budget_title")} ===`,
+    `${t("vendor_total")}: ₪${vendorCost}`,
+    `${t("vendor_paid")}: ₪${vendorPaid}`,
+    `${t("expense_total")}: ₪${expenseTotal}`,
+    `${t("budget_total_spent")}: ₪${vendorPaid + expenseTotal}`,
+    "",
+    `=== ${t("nav_vendors")} ===`,
+    ...vendors.map((v) => `${v.name}: ₪${v.paid || 0}/₪${v.price || 0}`),
+    "",
+    `=== ${t("nav_guests")} (${t("status_confirmed")}) ===`,
+    ...confirmed.map((g) => `${g.firstName} ${g.lastName || ""} — ${g.count || 1} guests — ${t(`meal_${g.meal || "regular"}`)}`),
+  ];
+
+  const csv = bom + lines.join("\n");
+  const blob = new Blob([csv], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "event-summary.txt";
+  a.click();
+  URL.revokeObjectURL(url);
 }

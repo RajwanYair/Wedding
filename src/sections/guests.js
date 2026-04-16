@@ -183,11 +183,30 @@ export function renderGuests() {
 
   let guests = /** @type {any[]} */ (storeGet("guests") ?? []);
 
-  // Filter
+  // S14.1 Multi-criteria filter
   if (_filter !== "all") {
     guests = guests.filter(
       (g) => g.status === _filter || g.side === _filter || g.group === _filter,
     );
+  }
+  if (_multiFilter.status !== "all") {
+    guests = guests.filter((g) => g.status === _multiFilter.status);
+  }
+  if (_multiFilter.side !== "all") {
+    guests = guests.filter((g) => g.side === _multiFilter.side);
+  }
+  if (_multiFilter.group !== "all") {
+    guests = guests.filter((g) => (g.group || "friends") === _multiFilter.group);
+  }
+  if (_multiFilter.meal !== "all") {
+    guests = guests.filter((g) => (g.meal || "regular") === _multiFilter.meal);
+  }
+  if (_multiFilter.table !== "all") {
+    if (_multiFilter.table === "unassigned") {
+      guests = guests.filter((g) => !g.tableId);
+    } else {
+      guests = guests.filter((g) => g.tableId === _multiFilter.table);
+    }
   }
 
   // Search
@@ -235,9 +254,19 @@ export function renderGuests() {
       t(`status_${g.status}`) || g.status,
       table ? table.name : "",
     ];
-    cells.forEach((txt) => {
+    cells.forEach((txt, ci) => {
       const td = document.createElement("td");
       td.textContent = txt;
+      // S14.5 — Show tags in name cell
+      if (ci === 0 && Array.isArray(g.tags) && g.tags.length > 0) {
+        g.tags.forEach((tag) => {
+          const badge = document.createElement("span");
+          badge.className = "badge badge--tag";
+          badge.textContent = tag;
+          td.appendChild(document.createTextNode(" "));
+          td.appendChild(badge);
+        });
+      }
       tr.appendChild(td);
     });
 
@@ -711,4 +740,124 @@ export function renderDuplicates() {
 
     container.appendChild(card);
   });
+}
+
+// ── S13.5 Guest Notes Timeline ────────────────────────────────────────────
+
+/**
+ * Add a timestamped note to a guest's history log.
+ * @param {string} guestId
+ * @param {string} noteText
+ * @returns {{ ok: boolean }}
+ */
+export function addGuestNote(guestId, noteText) {
+  if (!noteText.trim()) return { ok: false };
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx === -1) return { ok: false };
+  const history = Array.isArray(guests[idx].history) ? [...guests[idx].history] : [];
+  history.push({
+    text: noteText.trim().slice(0, 500),
+    timestamp: new Date().toISOString(),
+  });
+  guests[idx] = { ...guests[idx], history, updatedAt: new Date().toISOString() };
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  return { ok: true };
+}
+
+/**
+ * Render guest notes history in the modal.
+ * @param {string} guestId
+ */
+export function renderGuestHistory(guestId) {
+  const container = document.getElementById("guestHistoryLog");
+  if (!container) return;
+  container.textContent = "";
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const guest = guests.find((g) => g.id === guestId);
+  if (!guest) return;
+  const history = Array.isArray(guest.history) ? guest.history : [];
+  if (history.length === 0) {
+    const p = document.createElement("p");
+    p.className = "u-text-muted";
+    p.textContent = t("guest_no_notes");
+    container.appendChild(p);
+    return;
+  }
+  history.slice().reverse().forEach((entry) => {
+    const div = document.createElement("div");
+    div.className = "guest-note-entry";
+    const time = document.createElement("span");
+    time.className = "guest-note-time";
+    time.textContent = new Date(entry.timestamp).toLocaleString("he-IL");
+    div.appendChild(time);
+    const text = document.createElement("span");
+    text.className = "guest-note-text";
+    text.textContent = entry.text;
+    div.appendChild(text);
+    container.appendChild(div);
+  });
+}
+
+// ── S14.1 Multi-Criteria Guest Filter ─────────────────────────────────────
+
+/** @type {{ status: string, side: string, group: string, meal: string, table: string }} */
+const _multiFilter = { status: "all", side: "all", group: "all", meal: "all", table: "all" };
+
+/**
+ * Set a multi-criteria filter and re-render.
+ * @param {string} field — filter dimension (status|side|group|meal|table)
+ * @param {string} value — filter value or "all"
+ */
+export function setMultiFilter(field, value) {
+  if (field in _multiFilter) {
+    _multiFilter[field] = value;
+  }
+  renderGuests();
+}
+
+/**
+ * Get current multi-filter state (for UI highlighting).
+ * @returns {typeof _multiFilter}
+ */
+export function getMultiFilter() {
+  return { ..._multiFilter };
+}
+
+// ── S14.5 Guest Tags ──────────────────────────────────────────────────────
+
+/**
+ * Add a tag to a guest.
+ * @param {string} guestId
+ * @param {string} tag
+ */
+export function addGuestTag(guestId, tag) {
+  if (!tag.trim()) return;
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx === -1) return;
+  const tags = Array.isArray(guests[idx].tags) ? [...guests[idx].tags] : [];
+  const normalized = tag.trim().toLowerCase().slice(0, 30);
+  if (!tags.includes(normalized)) {
+    tags.push(normalized);
+    guests[idx] = { ...guests[idx], tags, updatedAt: new Date().toISOString() };
+    storeSet("guests", guests);
+    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  }
+}
+
+/**
+ * Remove a tag from a guest.
+ * @param {string} guestId
+ * @param {string} tag
+ */
+export function removeGuestTag(guestId, tag) {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx === -1) return;
+  const tags = Array.isArray(guests[idx].tags) ? guests[idx].tags.filter((t) => t !== tag) : [];
+  guests[idx] = { ...guests[idx], tags, updatedAt: new Date().toISOString() };
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
 }

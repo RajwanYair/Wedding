@@ -797,5 +797,55 @@
     "qr_scan": "סרוק QR",
     "qr_not_supported": "סריקת QR לא נתמכת בדפדפן זה",
     "qr_camera_error": "לא ניתן לגשת למצלמה",
-    "checkin_qr_success": "האורח צ׳ק-אין בהצלחה דרך QR"
+    "checkin_qr_success": "האורח צ׳ק-אין בהצלחה דרך QR",
+
+    "countdown_days": "ימים",
+    "countdown_hours": "שעות",
+    "countdown_minutes": "דקות",
+    "countdown_seconds": "שניות",
+
+    "rsvp_plusone_heading": "שמות המלווים:",
+    "rsvp_plusone_name": "שם מלווה",
+
+    "wa_thankyou_title": "הודעות תודה",
+    "wa_thankyou_desc": "שלח הודעת תודה לאורחים שהגיעו.",
+    "wa_thankyou_template_label": "תבנית הודעת תודה",
+    "wa_thankyou_default": "שלום {name}, תודה רבה שהגעת לחגוג איתנו! 💕 {groom} & {bride}",
+    "wa_thankyou_send": "שלח תודה לאורחים שהגיעו",
+    "wa_thankyou_count": "{n} אורחים לא קיבלו תודה",
+    "wa_thankyou_sent": "הודעות תודה נשלחו",
+    "wa_send_thankyou": "שלח הודעות תודה",
+
+    "seating_map_title": "מפת ישיבה",
+    "seating_map_subtitle": "סידור שולחנות ואורחים",
+
+    "guest_notes_title": "הערות ותיעוד",
+    "guest_no_notes": "אין הערות עדיין",
+    "guest_note_added": "ההערה נוספה",
+    "guest_note_ph": "הוסף הערה...",
+
+    "filter_group": "קבוצה",
+    "filter_meal": "ארוחה",
+    "filter_table": "שולחן",
+    "filter_unassigned": "לא שובץ",
+
+    "dash_budget_title": "סיכום תקציבי",
+    "dash_budget_target": "יעד תקציב",
+    "dash_total_committed": "סה״כ התחייבויות",
+    "dash_total_spent": "סה״כ שולם",
+    "dash_budget_remaining": "נותר בתקציב",
+    "budget_total_spent": "סה״כ שולם",
+
+    "label_vendor_due_date": "תאריך תשלום",
+    "vendor_overdue": "באיחור",
+    "vendor_overdue_count": "ספקים באיחור תשלום",
+    "col_due_date": "תאריך יעד",
+
+    "event_summary_title": "סיכום אירוע",
+    "export_event_summary": "ייצוא סיכום אירוע",
+
+    "tag_added": "תגית נוספה",
+    "tag_removed": "תגית הוסרה",
+    "guest_tags_title": "תגיות",
+    "guest_tag_ph": "הוסף תגית..."
 }

@@ -125,3 +125,28 @@
           </button>
         </div>
       </div>
+
+      <!-- S14.2 Budget Summary Widget -->
+      <div class="card" id="dashExpenseSummary">
+        <div class="card-header"><span class="icon">💰</span> <span data-i18n="dash_budget_title">סיכום תקציבי</span></div>
+        <div class="budget-summary-grid">
+          <div class="budget-summary-item">
+            <div class="budget-summary-label" data-i18n="dash_budget_target">יעד תקציב</div>
+            <div class="budget-summary-value" id="dashBudgetTarget">—</div>
+          </div>
+          <div class="budget-summary-item">
+            <div class="budget-summary-label" data-i18n="dash_total_committed">סה״כ התחייבויות</div>
+            <div class="budget-summary-value" id="dashTotalCommitted">₪0</div>
+          </div>
+          <div class="budget-summary-item">
+            <div class="budget-summary-label" data-i18n="dash_total_spent">סה״כ שולם</div>
+            <div class="budget-summary-value" id="dashTotalSpent">₪0</div>
+          </div>
+          <div class="budget-summary-item">
+            <div class="budget-summary-label" data-i18n="dash_budget_remaining">נותר בתקציב</div>
+            <div class="budget-summary-value" id="dashBudgetRemaining">—</div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="dashBudgetFill"></div></div>
+        <div id="dashOverdueVendors" class="u-hidden u-text-danger u-mt-xs"></div>
+      </div>

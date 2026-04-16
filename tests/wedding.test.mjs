@@ -56,16 +56,16 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v4.1.0", function () {
-    assert.ok(SRC.includes("v4.1.0"));
+  it("HTML contains v4.2.0", function () {
+    assert.ok(SRC.includes("v4.2.0"));
   });
 
-  it("SW cache name contains v4.1.0", function () {
-    assert.ok(SW.includes("wedding-v4.1.0"));
+  it("SW cache name contains v4.2.0", function () {
+    assert.ok(SW.includes("wedding-v4.2.0"));
   });
 
-  it("package.json version is 4.1.0", function () {
-    assert.equal(PKG.version, "4.1.0");
+  it("package.json version is 4.2.0", function () {
+    assert.equal(PKG.version, "4.2.0");
   });
 });
 
@@ -894,7 +894,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v4.1.0"));
+    assert.ok(SW.includes("wedding-v4.2.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -6580,7 +6580,9 @@ describe("v3.6.0: version stamps consistent", function () {
         src.includes("3.8.2") ||
         src.includes("3.8.3") ||
         src.includes("3.9.0") ||
-        src.includes("4.0.0"),
+        src.includes("4.0.0") ||
+        src.includes("4.1.0") ||
+        src.includes("4.2.0"),
       "CLAUDE.md missing version reference",
     );
   });
@@ -6600,35 +6602,34 @@ describe("v3.7.0: version stamps consistent", function () {
   });
   it("public/sw.js CACHE_NAME contains 3.7.0 or later", function () {
     assert.ok(
-      SW.includes("3.7") || SW.includes("3.8") || SW.includes("3.9") || SW.includes("4.0") || SW.includes("4.1"),
+      SW.includes("3.7") || SW.includes("3.8") || SW.includes("3.9") || SW.includes("4.0") || SW.includes("4.1") || SW.includes("4.2"),
       "sw.js CACHE_NAME too old",
     );
   });
   it("js/config.js version comment contains 3.7.0 or later", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "js", "config.js"), "utf8");
     assert.ok(
-      cfg.includes("3.7") || cfg.includes("3.8") || cfg.includes("3.9") || cfg.includes("4.0") || cfg.includes("4.1"),
-      "js/config.js version comment not updated",
+      cfg.includes("3.7") || cfg.includes("3.8") || cfg.includes("3.9") || cfg.includes("4.0") || cfg.includes("4.1") || cfg.includes("4.2"),
     );
   });
   it("src/core/config.js APP_VERSION is 3.7.0 or later", function () {
     const src = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
     assert.ok(
-      src.includes("3.7") || src.includes("3.8") || src.includes("3.9") || src.includes("4.0") || src.includes("4.1"),
+      src.includes("3.7") || src.includes("3.8") || src.includes("3.9") || src.includes("4.0") || src.includes("4.1") || src.includes("4.2"),
       "src/core/config.js APP_VERSION not updated",
     );
   });
   it("CLAUDE.md references v3.7.0 or later", function () {
     const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
     assert.ok(
-      src.includes("3.7") || src.includes("3.8") || src.includes("3.9") || src.includes("4.0") || src.includes("4.1"),
+      src.includes("3.7") || src.includes("3.8") || src.includes("3.9") || src.includes("4.0") || src.includes("4.1") || src.includes("4.2"),
       "CLAUDE.md not updated",
     );
   });
   it("README.md version badge shows v3.7.0 or later", function () {
     const src = readFileSync(resolve(__dirname, "..", "README.md"), "utf8");
     assert.ok(
-      src.includes("v3.7") || src.includes("v3.8") || src.includes("v3.9") || src.includes("v4.0") || src.includes("v4.1"),
+      src.includes("v3.7") || src.includes("v3.8") || src.includes("v3.9") || src.includes("v4.0") || src.includes("v4.1") || src.includes("v4.2"),
       "README.md version badge not updated",
     );
   });

@@ -795,5 +795,55 @@
     "qr_scan": "Scan QR",
     "qr_not_supported": "QR scanning not supported in this browser",
     "qr_camera_error": "Camera access denied",
-    "checkin_qr_success": "Guest checked in via QR"
+    "checkin_qr_success": "Guest checked in via QR",
+
+    "countdown_days": "days",
+    "countdown_hours": "hours",
+    "countdown_minutes": "minutes",
+    "countdown_seconds": "seconds",
+
+    "rsvp_plusone_heading": "Companion names:",
+    "rsvp_plusone_name": "Companion name",
+
+    "wa_thankyou_title": "Thank You Messages",
+    "wa_thankyou_desc": "Send thank-you messages to guests who attended.",
+    "wa_thankyou_template_label": "Thank-you template",
+    "wa_thankyou_default": "Hi {name}, thank you so much for celebrating with us! 💕 {groom} & {bride}",
+    "wa_thankyou_send": "Send thank-you to checked-in guests",
+    "wa_thankyou_count": "{n} guests haven't received thank-you",
+    "wa_thankyou_sent": "Thank-you messages sent",
+    "wa_send_thankyou": "Send Thank-You Messages",
+
+    "seating_map_title": "Seating Map",
+    "seating_map_subtitle": "Table layout & guest assignment",
+
+    "guest_notes_title": "Notes & History",
+    "guest_no_notes": "No notes yet",
+    "guest_note_added": "Note added",
+    "guest_note_ph": "Add a note...",
+
+    "filter_group": "Group",
+    "filter_meal": "Meal",
+    "filter_table": "Table",
+    "filter_unassigned": "Unassigned",
+
+    "dash_budget_title": "Budget Summary",
+    "dash_budget_target": "Budget Target",
+    "dash_total_committed": "Total Committed",
+    "dash_total_spent": "Total Paid",
+    "dash_budget_remaining": "Remaining",
+    "budget_total_spent": "Total Paid",
+
+    "label_vendor_due_date": "Payment Due Date",
+    "vendor_overdue": "Overdue",
+    "vendor_overdue_count": "vendors overdue",
+    "col_due_date": "Due Date",
+
+    "event_summary_title": "Event Summary",
+    "export_event_summary": "Export Event Summary",
+
+    "tag_added": "Tag added",
+    "tag_removed": "Tag removed",
+    "guest_tags_title": "Tags",
+    "guest_tag_ph": "Add tag..."
 }

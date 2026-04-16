@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.2.0] — 2025-07-15
+
+### Added — S13 Guest Experience & Communication
+
+- **S13.1 Live countdown timer**: Real-time d:h:m:s countdown on dashboard with 1-second interval.
+- **S13.2 Plus-one names in RSVP**: Dynamic name input fields when guest count > 1, stored as `plusOneNames` array.
+- **S13.3 Thank-you WhatsApp messages**: Post-wedding thank-you messages for checked-in guests with template support.
+- **S13.4 Seating chart SVG map**: Visual floor plan with table shapes (round/rect), guest names, and fill-rate colors.
+- **S13.5 Guest notes timeline**: Timestamped admin notes per guest, rendered in guest modal.
+
+### Added — S14 Admin Productivity
+
+- **S14.1 Multi-criteria guest filter**: Combined status + side + group + meal + table dropdown filters.
+- **S14.2 Budget summary widget**: Dashboard card showing target, committed, paid, remaining with progress bar.
+- **S14.3 Vendor due dates**: Due date field with overdue detection and visual indicators.
+- **S14.4 Export event summary**: Comprehensive text file export with all event statistics.
+- **S14.5 Guest custom tags/labels**: Add/remove tags per guest with badge display in guest table.
+
 ## [4.1.0] — 2025-07-14
 
 ### Added — S11 Quick Wins + Day-of Essentials

@@ -97,6 +97,28 @@
         משותפ
       </button>
     </div>
+    <!-- S14.1 Multi-criteria filters -->
+    <div class="toolbar-group">
+      <select class="filter-select" data-filter-field="group" data-on-change="setMultiFilter">
+        <option value="all" data-i18n="filter_group">קבוצה</option>
+        <option value="family" data-i18n="group_family">משפחה</option>
+        <option value="friends" data-i18n="group_friends">חברים</option>
+        <option value="work" data-i18n="group_work">עבודה</option>
+        <option value="other" data-i18n="group_other">אחר</option>
+      </select>
+      <select class="filter-select" data-filter-field="meal" data-on-change="setMultiFilter">
+        <option value="all" data-i18n="filter_meal">ארוחה</option>
+        <option value="regular" data-i18n="meal_regular">רגיל</option>
+        <option value="vegetarian" data-i18n="meal_vegetarian">צמחוני</option>
+        <option value="vegan" data-i18n="meal_vegan">טבעוני</option>
+        <option value="gluten_free" data-i18n="meal_gluten_free">ללא גלוטן</option>
+        <option value="kosher" data-i18n="meal_kosher">מהדרין</option>
+      </select>
+      <select class="filter-select" data-filter-field="table" data-on-change="setMultiFilter">
+        <option value="all" data-i18n="filter_table">שולחן</option>
+        <option value="unassigned" data-i18n="filter_unassigned">לא שובץ</option>
+      </select>
+    </div>
   </div>
 
   <!-- S11.4 Batch Action Toolbar -->

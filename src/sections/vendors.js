@@ -36,6 +36,7 @@ export function saveVendor(data, existingId = null) {
     phone: { type: "string", required: false, maxLength: 30 },
     price: { type: "number", required: false, min: 0, default: 0 },
     paid: { type: "number", required: false, min: 0, default: 0 },
+    dueDate: { type: "string", required: false, maxLength: 20 },
     notes: { type: "string", required: false, maxLength: 500 },
   });
   if (errors.length) return { ok: false, errors };
@@ -80,17 +81,28 @@ export function renderVendors() {
     tr.dataset.id = v.id;
     tr.dataset.category = v.category || "";
 
+    // S14.3 — Overdue detection
+    const now = new Date();
+    const isOverdue = v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0);
+    if (isOverdue) tr.classList.add("vendor-row--overdue");
+
+    const dueDateStr = v.dueDate ? new Date(v.dueDate).toLocaleDateString("he-IL") : "—";
     const cells = [
       v.category || "",
       v.name || "",
       v.phone || "",
       `₪${v.price || 0}`,
       `₪${v.paid || 0}`,
+      dueDateStr,
       v.notes || "",
     ];
-    cells.forEach((txt) => {
+    cells.forEach((txt, ci) => {
       const td = document.createElement("td");
       td.textContent = txt;
+      if (ci === 5 && isOverdue) {
+        td.classList.add("vendor-overdue-cell");
+        td.textContent = `⚠️ ${txt}`;
+      }
       tr.appendChild(td);
     });
 
@@ -192,6 +204,7 @@ export function openVendorForEdit(id) {
   setVal("vendorPhone", v.phone ?? "");
   setVal("vendorPrice", v.price ?? 0);
   setVal("vendorPaid", v.paid ?? 0);
+  setVal("vendorDueDate", v.dueDate ?? "");
   setVal("vendorNotes", v.notes ?? "");
   const title = document.getElementById("vendorModalTitle");
   if (title) title.setAttribute("data-i18n", "modal_edit_vendor");

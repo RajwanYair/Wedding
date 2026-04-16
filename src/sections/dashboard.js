@@ -26,6 +26,8 @@ let _countdownTimer = null;
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderDashboard));
   _unsubs.push(storeSubscribe("tables", renderDashboard));
+  _unsubs.push(storeSubscribe("vendors", renderExpenseSummary));
+  _unsubs.push(storeSubscribe("expenses", renderExpenseSummary));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -34,6 +36,7 @@ export function mount(_container) {
     }),
   );
   renderDashboard();
+  renderExpenseSummary();
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -128,7 +131,7 @@ export function updateTopBar() {
 }
 
 /**
- * Update the countdown widget.
+ * Update the countdown widget with live d:h:m:s (S13.1).
  */
 export function updateCountdown() {
   if (!el.countdown) return;
@@ -136,21 +139,50 @@ export function updateCountdown() {
     storeGet("weddingInfo") ?? {}
   );
   const dateStr = info.date;
+  const timeStr = info.time || "18:00";
   if (!dateStr) {
     el.countdown.textContent = "";
+    _clearLiveCountdown();
     return;
   }
-  const days = daysUntil(dateStr);
-  if (days < 0) {
+  const target = new Date(`${dateStr}T${timeStr}:00`);
+  const now = new Date();
+  const diff = target.getTime() - now.getTime();
+  if (diff < 0) {
     el.countdown.textContent = t("wedding_past");
-  } else if (days === 0) {
-    el.countdown.textContent = t("wedding_today");
+    _clearLiveCountdown();
+  } else if (diff < 86_400_000 && diff >= 0) {
+    // Less than 24h — show h:m:s
+    _renderLiveCountdown(diff);
   } else {
-    el.countdown.textContent = `${days} ${t("days_until_wedding")}`;
+    const days = Math.floor(diff / 86_400_000);
+    const hours = Math.floor((diff % 86_400_000) / 3_600_000);
+    const mins = Math.floor((diff % 3_600_000) / 60_000);
+    const secs = Math.floor((diff % 60_000) / 1_000);
+    el.countdown.textContent =
+      `${days} ${t("countdown_days")} ${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   }
   if (el.weddingDateDisplay) {
     el.weddingDateDisplay.textContent = formatDateHebrew(dateStr);
   }
+}
+
+/**
+ * Render live countdown digits into the countdown element.
+ * @param {number} diff — ms remaining
+ */
+function _renderLiveCountdown(diff) {
+  if (!el.countdown) return;
+  const hours = Math.floor(diff / 3_600_000);
+  const mins = Math.floor((diff % 3_600_000) / 60_000);
+  const secs = Math.floor((diff % 60_000) / 1_000);
+  el.countdown.textContent =
+    `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+/** Clear the live countdown if no longer needed. */
+function _clearLiveCountdown() {
+  // no-op for now; timer managed by _startCountdownTimer
 }
 
 // ── Private helpers ───────────────────────────────────────────────────────
@@ -165,7 +197,7 @@ let _statObserver = null;
 
 function _startCountdownTimer() {
   if (_countdownTimer) return;
-  _countdownTimer = setInterval(updateCountdown, 60_000);
+  _countdownTimer = setInterval(updateCountdown, 1_000);
 }
 
 /**
@@ -238,5 +270,53 @@ export function updateRsvpDeadlineBanner() {
     banner.hidden = false;
   } else {
     banner.hidden = true;
+  }
+}
+
+// ── S14.2 Expense Summary Widget ──────────────────────────────────────────
+
+/**
+ * Render expense/vendor summary widget on the dashboard.
+ */
+export function renderExpenseSummary() {
+  const container = document.getElementById("dashExpenseSummary");
+  if (!container) return;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const budgetTarget = Number(info.budgetTarget) || 0;
+  const vendorTotal = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  const vendorPaid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
+  const expenseTotal = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  const totalSpent = vendorPaid + expenseTotal;
+  const totalCommitted = vendorTotal + expenseTotal;
+
+  _setText("dashBudgetTarget", budgetTarget > 0 ? `₪${budgetTarget.toLocaleString()}` : "—");
+  _setText("dashTotalCommitted", `₪${totalCommitted.toLocaleString()}`);
+  _setText("dashTotalSpent", `₪${totalSpent.toLocaleString()}`);
+  _setText("dashBudgetRemaining", budgetTarget > 0 ? `₪${(budgetTarget - totalCommitted).toLocaleString()}` : "—");
+
+  // Progress bar
+  const pctEl = document.getElementById("dashBudgetFill");
+  if (pctEl && budgetTarget > 0) {
+    const pct = Math.min(100, Math.round((totalCommitted / budgetTarget) * 100));
+    /** @type {HTMLElement} */ (pctEl).style.width = `${pct}%`;
+    pctEl.className = pct > 100 ? "progress-fill progress-fill--danger" : "progress-fill";
+  }
+
+  // Overdue vendors (S14.3)
+  const now = new Date();
+  const overdue = vendors.filter((v) => {
+    if (!v.dueDate) return false;
+    return new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0);
+  });
+  const overdueEl = document.getElementById("dashOverdueVendors");
+  if (overdueEl) {
+    if (overdue.length > 0) {
+      overdueEl.textContent = `⚠️ ${overdue.length} ${t("vendor_overdue_count")}`;
+      overdueEl.classList.remove("u-hidden");
+    } else {
+      overdueEl.classList.add("u-hidden");
+    }
   }
 }

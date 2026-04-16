@@ -22,6 +22,8 @@ export function mount(container) {
     _showDeadlineMessage();
     return;
   }
+  // S13.2 — Wire plus-one name fields
+  _wirePlusOneFields();
   // S11.1 — Auto-lookup from URL guestId param
   _autoLookupFromUrl();
 }
@@ -133,6 +135,7 @@ export function submitRsvp(data) {
       ...(value.side ? { side: value.side } : {}),
       accessibility: value.accessibility === "true",
       transport: value.transport ?? guests[idx].transport,
+      plusOneNames: collectPlusOneNames(),
       rsvpDate: now,
       updatedAt: now,
     };
@@ -151,6 +154,7 @@ export function submitRsvp(data) {
       accessibility: value.accessibility === "true",
       transport: value.transport || "",
       notes: value.notes ?? "",
+      plusOneNames: collectPlusOneNames(),
       rsvpDate: now,
       createdAt: now,
       updatedAt: now,
@@ -169,6 +173,60 @@ export function submitRsvp(data) {
   }));
   _showConfirmation(/** @type {string} */ (value.status));
   return { ok: true };
+}
+
+// ── S13.2 Plus-one name fields ────────────────────────────────────────────
+
+/**
+ * Wire the guest count input to dynamically show name fields for plus-ones.
+ */
+function _wirePlusOneFields() {
+  const guestCountInput = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("rsvpGuests")
+  );
+  if (!guestCountInput) return;
+  guestCountInput.addEventListener("input", _updatePlusOneFields);
+}
+
+/**
+ * Update the plus-one name fields based on the current guest count.
+ */
+function _updatePlusOneFields() {
+  const guestCountInput = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("rsvpGuests")
+  );
+  const container = document.getElementById("plusOneNames");
+  if (!guestCountInput || !container) return;
+  const count = Math.min(parseInt(guestCountInput.value, 10) || 1, 20);
+  container.textContent = "";
+  if (count <= 1) return;
+  const heading = document.createElement("p");
+  heading.className = "u-text-muted u-mb-xs";
+  heading.textContent = t("rsvp_plusone_heading");
+  container.appendChild(heading);
+  for (let i = 2; i <= count; i++) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "u-w-full u-mb-xs";
+    input.id = `plusOneName_${i}`;
+    input.placeholder = `${t("rsvp_plusone_name")} ${i}`;
+    input.maxLength = 80;
+    container.appendChild(input);
+  }
+}
+
+/**
+ * Collect plus-one names from the dynamic fields.
+ * @returns {string[]}
+ */
+export function collectPlusOneNames() {
+  const names = [];
+  const inputs = document.querySelectorAll("[id^=plusOneName_]");
+  inputs.forEach((input) => {
+    const val = /** @type {HTMLInputElement} */ (input).value.trim();
+    if (val) names.push(val);
+  });
+  return names;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────

@@ -57,6 +57,22 @@
           </div>
         </div>
 
+        <!-- S13.3 Thank-You Messages -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">🙏</span> <span data-i18n="wa_thankyou_title">הודעות תודה</span></div>
+          <p class="text-note" data-i18n="wa_thankyou_desc">שלח תודה לאורחים שהגיעו לאירוע.</p>
+          <div class="form-group">
+            <label data-i18n="wa_thankyou_template_label">תבנית תודה</label>
+            <textarea id="waThankYouTemplate" rows="4" class="u-direction-rtl" data-i18n-placeholder="wa_thankyou_default"></textarea>
+          </div>
+          <div class="wa-filter-row">
+            <button class="btn btn-whatsapp btn-small" data-action="sendThankYouMessages">
+              <span>🙏</span> <span data-i18n="wa_send_thankyou">שלח הודעות תודה</span>
+            </button>
+            <span class="text-note" id="waThankYouCount"></span>
+          </div>
+        </div>
+
         <!-- Guest list for individual send -->
         <div class="card u-mt-md">
           <div class="card-header"><span class="icon">👤</span> <span data-i18n="wa_individual">שליחה בודדת</span></div>

@@ -105,6 +105,11 @@ import {
   batchDeleteGuests,
   renderDuplicates,
   mergeGuests,
+  addGuestNote,
+  renderGuestHistory,
+  setMultiFilter,
+  addGuestTag,
+  removeGuestTag,
 } from "./sections/guests.js";
 import {
   saveTable,
@@ -147,6 +152,8 @@ import {
   exportAnalyticsCSV,
   exportMealPerTableCSV,
   printMealPerTable,
+  renderSeatingMap,
+  exportEventSummary,
 } from "./sections/analytics.js";
 import { submitRsvp, lookupRsvpByPhone } from "./sections/rsvp.js";
 import {
@@ -156,6 +163,7 @@ import {
   saveGreenApiConfig,
   updateWaPreview,
   sendWhatsAppReminder,
+  sendThankYouMessages,
 } from "./sections/whatsapp.js";
 import {
   handleGalleryUpload,
@@ -720,8 +728,11 @@ function _registerHandlers() {
     setSearchQuery(input?.value ?? "");
   });
   on("openEditGuestModal", (el) => {
-    openGuestForEdit(el.dataset.actionArg ?? "");
+    const gid = el.dataset.actionArg ?? "";
+    openGuestForEdit(gid);
     openModal("guestModal");
+    // S13.5 + S14.5 — render history + tags
+    renderGuestHistory(gid);
   });
   on("toggleSelectAll", () => toggleSelectAll());
   on("batchSetStatus", () => {
@@ -745,6 +756,39 @@ function _registerHandlers() {
     mergeGuests(el.dataset.keepId ?? "", el.dataset.mergeId ?? "");
     showToast(t("merge_success") || "Merged", "success");
     renderDuplicates();
+  });
+
+  // ── S13.5 Guest notes ──
+  on("addGuestNote", () => {
+    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))?.value;
+    const noteInput = /** @type {HTMLInputElement|null} */ (document.getElementById("guestNoteInput"));
+    if (!guestId || !noteInput?.value?.trim()) return;
+    addGuestNote(guestId, noteInput.value);
+    noteInput.value = "";
+    renderGuestHistory(guestId);
+    showToast(t("guest_note_added"), "success");
+  });
+
+  // ── S14.1 Multi-criteria filter ──
+  on("setMultiFilter", (el) => {
+    const field = el.dataset.filterField ?? "";
+    const value = /** @type {HTMLSelectElement} */ (el).value ?? "all";
+    setMultiFilter(field, value);
+  });
+
+  // ── S14.5 Guest tags ──
+  on("addGuestTag", () => {
+    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))?.value;
+    const tagInput = /** @type {HTMLInputElement|null} */ (document.getElementById("guestTagInput"));
+    if (!guestId || !tagInput?.value?.trim()) return;
+    addGuestTag(guestId, tagInput.value);
+    tagInput.value = "";
+    showToast(t("tag_added"), "success");
+  });
+  on("removeGuestTag", (el) => {
+    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))?.value;
+    if (!guestId) return;
+    removeGuestTag(guestId, el.dataset.tag ?? "");
   });
 
   // ── Tables ──
@@ -810,6 +854,7 @@ function _registerHandlers() {
       phone: getVal("vendorPhone"),
       price: getVal("vendorPrice") || "0",
       paid: getVal("vendorPaid") || "0",
+      dueDate: getVal("vendorDueDate") || "",
       notes: getVal("vendorNotes"),
     };
     const id = getVal("vendorModalId") || null;
@@ -897,6 +942,8 @@ function _registerHandlers() {
   on("exportAnalyticsCSV", () => exportAnalyticsCSV());
   on("exportMealPerTableCSV", () => exportMealPerTableCSV());
   on("printMealPerTable", () => printMealPerTable());
+  on("renderSeatingMap", () => renderSeatingMap());
+  on("exportEventSummary", () => exportEventSummary());
 
   // ── RSVP ──
   on("submitRSVP", (_el, e) => {
@@ -997,6 +1044,10 @@ function _registerHandlers() {
   });
   on("checkGreenApiConnection", () => checkGreenApiConnection());
   on("sendWhatsAppReminder", () => sendWhatsAppReminder());
+  on("sendThankYouMessages", () => {
+    sendThankYouMessages();
+    showToast(t("wa_thankyou_sent"), "success");
+  });
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")

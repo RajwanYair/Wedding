@@ -386,3 +386,55 @@ export function updateReminderCount() {
   const el = document.getElementById("waReminderCount");
   if (el) el.textContent = t("wa_reminder_count").replace("{n}", String(count));
 }
+
+// ── S13.3 Thank-You Messages ──────────────────────────────────────────────
+
+/**
+ * Send thank-you WhatsApp messages to checked-in guests.
+ * Opens wa.me links for each guest who checked in.
+ */
+export function sendThankYouMessages() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const template =
+    /** @type {HTMLTextAreaElement|null} */ (
+      document.getElementById("waThankYouTemplate")
+    )?.value?.trim() || t("wa_thankyou_default");
+
+  const targets = guests.filter(
+    (g) => g.phone && g.checkedIn && g.status === "confirmed",
+  );
+
+  if (targets.length === 0) return;
+
+  targets.forEach((g) => {
+    const phone = cleanPhone(g.phone);
+    if (!phone) return;
+    const message = _interpolate(template, g, info);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+
+    // Mark thank-you sent
+    const allGuests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+    const idx = allGuests.findIndex((gg) => gg.id === g.id);
+    if (idx !== -1) {
+      allGuests[idx] = {
+        ...allGuests[idx],
+        thankYouSent: true,
+        thankYouSentAt: new Date().toISOString(),
+      };
+      storeSet("guests", allGuests);
+    }
+  });
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+/**
+ * Get count of eligible thank-you recipients.
+ * @returns {number}
+ */
+export function getThankYouCount() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests.filter(
+    (g) => g.phone && g.checkedIn && g.status === "confirmed" && !g.thankYouSent,
+  ).length;
+}

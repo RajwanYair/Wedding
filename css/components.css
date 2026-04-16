@@ -2058,5 +2058,124 @@ body.ptr--refreshing::before {
   font-size: 0.9rem;
 }
 
+/* ── S14.2 Budget Summary Widget ── */
+.budget-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.budget-summary-item {
+  text-align: center;
+}
+.budget-summary-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+.budget-summary-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ── S14.1 Multi-filter selects ── */
+.filter-select {
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--border-radius-sm, 6px);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* ── S13.5 Guest Notes Timeline ── */
+.guest-history-log {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+}
+.guest-note-entry {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child { border-bottom: none; }
+}
+.guest-note-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  min-width: 5rem;
+}
+.guest-note-text {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+/* ── S14.5 Guest Tags ── */
+.badge--tag {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  background: var(--accent, var(--gold));
+  color: var(--bg-main, #fff);
+  font-size: 0.7rem;
+  margin-inline-end: 0.25rem;
+  cursor: pointer;
+
+  &:hover { opacity: 0.8; }
+}
+.guest-tags-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+/* ── S14.3 Vendor Overdue ── */
+.vendor-row--overdue {
+  border-inline-start: 3px solid var(--color-error, #e74c3c);
+  background: color-mix(in srgb, var(--color-error, #e74c3c) 8%, transparent);
+}
+
+/* ── S13.4 Seating Map ── */
+.seating-map-container {
+  min-height: 300px;
+  overflow: auto;
+}
+.seating-map-container svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ── S13.2 Plus-one Names ── */
+.plusone-names-container {
+  margin-top: 0.5rem;
+
+  & input {
+    margin-bottom: 0.4rem;
+  }
+}
+
+/* ── Modal section title ── */
+.modal-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.card-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: -0.5rem;
+  margin-bottom: 0.75rem;
+}
+
 } /* end @layer components */
 

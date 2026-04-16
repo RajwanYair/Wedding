@@ -33,6 +33,8 @@
 | S10 — Real-time | Polling live sync, conflict resolution, presence indicator | v4.0.0 | ✅ Done |
 | S11 — Quick Wins | Per-guest RSVP links, transport manifest, meal-per-table, batch ops, gift recording | v4.1.0 | ✅ Done |
 | S12 — UX Upgrades | WhatsApp reminders, duplicate detection, QR check-in, drag-drop seating, RSVP deadline | v4.1.0 | ✅ Done |
+| S13 — Guest Experience | Live countdown, plus-one names, thank-you messages, seating map, guest notes | v4.2.0 | ✅ Done |
+| S14 — Admin Productivity | Multi-filter, budget widget, vendor due dates, event export, guest tags | v4.2.0 | ✅ Done |
 
 ### Current State (v3.8.0)
 
@@ -91,6 +93,34 @@ Live updates between multiple admin devices.
 
 **Exit**: Two admins can edit simultaneously without data loss. CI green.
 
+### S13 — Guest Experience & Communication
+
+Enhanced guest-facing features and communication tools.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 13.1 | Live countdown timer (d:h:m:s, 1-second interval) | S |
+| 13.2 | Plus-one names in RSVP (dynamic fields when count > 1) | M |
+| 13.3 | Thank-you WhatsApp messages (post-wedding for checked-in guests) | M |
+| 13.4 | Seating chart SVG map (floor plan with table shapes + guests) | L |
+| 13.5 | Guest notes timeline (timestamped admin notes per guest) | M |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
+### S14 — Admin Productivity
+
+Power-user tools for efficient wedding management.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 14.1 | Multi-criteria guest filter (status + side + group + meal + table) | M |
+| 14.2 | Budget summary widget on dashboard (target, committed, paid, remaining) | M |
+| 14.3 | Vendor due dates + overdue indicators (date field + red highlight) | S |
+| 14.4 | Export event summary (comprehensive text file with all stats) | M |
+| 14.5 | Guest custom tags/labels (add/remove/display badges) | M |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
 ---
 
 ## Version Plan
@@ -101,6 +131,7 @@ Live updates between multiple admin devices.
 | v3.9.0 | S8 | ✅ Released |
 | v4.0.0 | S9 + S10 | ✅ Released |
 | v4.1.0 | S11 + S12 | ✅ Released |
+| v4.2.0 | S13 + S14 | ✅ Released |
 
 ---
 
