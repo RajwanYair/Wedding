@@ -7,7 +7,6 @@
  */
 
 // ── Foundation layer ──────────────────────────────────────────────────────
-import { APP_VERSION } from "./core/config.js";
 import { PUBLIC_SECTIONS } from "./core/constants.js";
 import { initStorage, migrateFromLocalStorage } from "./core/storage.js";
 import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
@@ -45,6 +44,12 @@ import {
   initInstallPrompt,
 } from "./core/ui.js";
 import { injectTemplate, prefetchTemplates } from "./core/template-loader.js";
+import { maybeShowWhatsNew } from "./core/whats-new.js";
+import { fetchGasVersion, updateStatusBar } from "./core/status-bar.js";
+import {
+  applyConflictResolutions,
+  getPendingConflicts,
+} from "./core/conflict-resolver.js";
 
 // ── Extracted handler modules ─────────────────────────────────────────────
 import { registerGuestHandlers } from "./handlers/guest-handlers.js";
@@ -348,7 +353,7 @@ function _buildStoreDefs() {
   initInstallPrompt();
 
   // 11f. Fetch GAS version for status bar (fire-and-forget)
-  _fetchGasVersion();
+  fetchGasVersion(currentUser());
 
   // S18.4 — Start timeline alarms after app is ready
   startTimelineAlarms();
@@ -434,58 +439,6 @@ async function _doDeleteEvent() {
   clearEventData(eid);
   removeEvent(eid);
   await _doSwitchEvent("default");
-}
-
-// ── S10.2 Conflict Resolution State ──────────────────────────────────────
-
-/** @type {Array<{ id: string, field: string, localVal: unknown, remoteVal: unknown }>} */
-let _pendingConflicts = [];
-
-/**
- * Show the conflict resolution modal with the given conflicts.
- * @param {Array<{ id: string, field: string, localVal: unknown, remoteVal: unknown }>} conflicts
- */
-async function _showConflictModal(conflicts) {
-  _pendingConflicts = conflicts;
-  await openModal("conflictModal");
-  const list = document.getElementById("conflictList");
-  if (!list) return;
-  list.textContent = "";
-  conflicts.forEach((c, i) => {
-    const row = document.createElement("div");
-    row.className = "conflict-row";
-    row.innerHTML = `
-      <strong>${_escHtml(c.id)} → ${_escHtml(c.field)}</strong>
-      <label><input type="radio" name="conflict_${i}" value="local" checked>
-        ${t("conflict_local")}: <code>${_escHtml(String(c.localVal ?? ""))}</code></label>
-      <label><input type="radio" name="conflict_${i}" value="remote">
-        ${t("conflict_remote")}: <code>${_escHtml(String(c.remoteVal ?? ""))}</code></label>`;
-    list.appendChild(row);
-  });
-}
-
-/**
- * Apply conflict resolutions. Each choice is "local" or "remote".
- * @param {string[]} choices
- */
-function _applyConflictResolutions(choices) {
-  const guests = /** @type {any[]} */ ([...(storeGet("guests") ?? [])]);
-  for (let i = 0; i < _pendingConflicts.length; i++) {
-    if (choices[i] === "remote") {
-      const c = _pendingConflicts[i];
-      const guest = guests.find((g) => String(g.id) === c.id);
-      if (guest) guest[c.field] = c.remoteVal;
-    }
-  }
-  storeSet("guests", guests);
-  _pendingConflicts = [];
-}
-
-/** @param {string} s */
-function _escHtml(s) {
-  const d = document.createElement("div");
-  d.textContent = s;
-  return d.innerHTML;
 }
 
 // ── Handler registration ──────────────────────────────────────────────────
@@ -609,116 +562,9 @@ function _registerHandlers() {
 
   // ── Settings + Sheets + Misc ──
   registerSettingsHandlers({
-    pendingConflicts: () => _pendingConflicts,
-    applyConflictResolutions: _applyConflictResolutions,
+    pendingConflicts: () => getPendingConflicts(),
+    applyConflictResolutions,
   });
-}
-
-// ── Status Bar ────────────────────────────────────────────────────────────
-
-/** @type {string} */
-let _gasVersion = "";
-
-/**
- * Fetch the GAS version once (fire-and-forget) and update the status bar.
- */
-async function _fetchGasVersion() {
-  try {
-    const url =
-      load("sheetsWebAppUrl", "") ||
-      (await import("./core/config.js")).SHEETS_WEBAPP_URL;
-    if (!url) return;
-    const resp = await fetch(/** @type {string} */ (url), { method: "GET", cache: "no-store" });
-    if (!resp.ok) return;
-    const data = await resp.json();
-    _gasVersion = data?.version ?? "";
-  } catch {
-    _gasVersion = "";
-  }
-  _updateStatusBar(currentUser());
-}
-
-/**
- * Populate the footer status bar with app version, GAS version and user role.
- * @param {import('./services/auth.js').AuthUser | null} user
- */
-function _updateStatusBar(user) {
-  const verEl = document.getElementById("statusVersion");
-  const gasEl = document.getElementById("statusGas");
-  const roleEl = document.getElementById("statusRole");
-  if (verEl) verEl.textContent = `v${APP_VERSION}`;
-  if (gasEl) gasEl.textContent = _gasVersion ? `GAS v${_gasVersion}` : "";
-  if (roleEl) {
-    roleEl.textContent = user?.isAdmin
-      ? `\u2705 ${t("role_admin")}`
-      : `\uD83D\uDC64 ${t("role_guest") || "Guest"}`;
-  }
-}
-
-// ── What's New popup ──────────────────────────────────────────────────────
-
-/** Storage key for last-seen version */
-const _LAST_SEEN_KEY = "wedding_v1_lastSeenVersion";
-
-/**
- * Show What's New dialog if the user hasn't seen the current version.
- * Only shown for admin users.
- * @param {import('./services/auth.js').AuthUser | null} user
- */
-function _maybeShowWhatsNew(user) {
-  if (!user?.isAdmin) return;
-  const lastSeen = localStorage.getItem(_LAST_SEEN_KEY) ?? "";
-  if (lastSeen === APP_VERSION) return;
-
-  // Build content from the latest changelog entries
-  const items = [
-    "\uD83D\uDCCA Budget sync to Google Sheets (two-way)",
-    "\u2705 Check-in status synced to Sheets",
-    "\uD83D\uDCF1 Richer WhatsApp templates (Hebrew + English)",
-    "\uD83D\uDCCB Status bar with version & GAS info",
-    "\uD83C\uDD95 What's New popup on login",
-    "\uD83D\uDCC4 Changelog tab for all users",
-  ];
-
-  const overlay = document.createElement("div");
-  overlay.className = "modal-overlay";
-  overlay.style.cssText = "display:flex;z-index:10000;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)";
-  const card = document.createElement("div");
-  card.className = "card";
-  card.style.cssText = "max-width:420px;width:90%;padding:1.5rem;max-height:80vh;overflow-y:auto";
-  card.innerHTML = "";
-
-  const title = document.createElement("h3");
-  title.style.cssText = "margin:0 0 0.75rem;text-align:center";
-  title.textContent = `\uD83C\uDD95 ${t("whats_new_title") || "What's New"} \u2014 v${APP_VERSION}`;
-  card.appendChild(title);
-
-  const list = document.createElement("ul");
-  list.style.cssText = "padding-inline-start:1.2rem;margin:0 0 1rem;line-height:1.8";
-  items.forEach((txt) => {
-    const li = document.createElement("li");
-    li.textContent = txt;
-    list.appendChild(li);
-  });
-  card.appendChild(list);
-
-  const btn = document.createElement("button");
-  btn.className = "btn btn-primary";
-  btn.style.cssText = "display:block;margin:0 auto";
-  btn.textContent = t("whats_new_dismiss") || "Got it!";
-  btn.addEventListener("click", () => {
-    localStorage.setItem(_LAST_SEEN_KEY, APP_VERSION);
-    overlay.remove();
-  });
-  card.appendChild(btn);
-  overlay.appendChild(card);
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
-      localStorage.setItem(_LAST_SEEN_KEY, APP_VERSION);
-      overlay.remove();
-    }
-  });
-  document.body.appendChild(overlay);
 }
 
 // ── Section lifecycle ─────────────────────────────────────────────────────
@@ -758,8 +604,8 @@ function _updateNavForAuth(user) {
   }
 
   // Update footer status bar and show What's New on admin login
-  _updateStatusBar(user);
-  _maybeShowWhatsNew(user);
+  updateStatusBar(user);
+  maybeShowWhatsNew(user);
 }
 
 /**
