@@ -32,6 +32,8 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
   // S22.2 expense trend chart
   _unsubs.push(storeSubscribe("expenses", renderExpenseTrend));
+  // S24.4 tag breakdown
+  _unsubs.push(storeSubscribe("guests", renderTagBreakdown));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -43,6 +45,7 @@ export function mount(_container) {
   renderExpenseDonut();
   renderArrivalForecast();
   renderExpenseTrend(); // S22.2
+  renderTagBreakdown(); // S24.4
 }
 
 export function unmount() {
@@ -1256,5 +1259,59 @@ export function renderExpenseTrend() {
     lbl.setAttribute("fill", "var(--text-muted)");
     lbl.textContent = m.label;
     container.appendChild(lbl);
+  });
+}
+
+// -- S24.4 Tag Breakdown -------------------------------------------------------
+
+/**
+ * Render a horizontal bar breakdown of guest tags in #analyticsTagBreakdown.
+ */
+export function renderTagBreakdown() {
+  const container = document.getElementById("analyticsTagBreakdown");
+  if (!container) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+
+  /** @type {Map<string, number>} */
+  const tagCounts = new Map();
+  guests.forEach((g) => {
+    const tags = Array.isArray(g.tags) ? g.tags : [];
+    tags.forEach((tag) => {
+      const normalized = String(tag || "").trim();
+      if (normalized) tagCounts.set(normalized, (tagCounts.get(normalized) ?? 0) + 1);
+    });
+  });
+
+  container.textContent = "";
+  if (tagCounts.size === 0) {
+    container.textContent = t("analytics_no_tags") || "אין תגיות עדיין";
+    return;
+  }
+
+  const entries = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15);
+  const max = entries[0][1];
+  entries.forEach(([tag, count]) => {
+    const row = document.createElement("div");
+    row.className = "tag-breakdown-row";
+
+    const label = document.createElement("span");
+    label.className = "tag-breakdown-label";
+    label.textContent = tag;
+
+    const barWrap = document.createElement("div");
+    barWrap.className = "tag-breakdown-bar-wrap";
+    const bar = document.createElement("div");
+    bar.className = "tag-breakdown-bar";
+    bar.style.width = `${Math.round((count / max) * 100)}%`;
+    barWrap.appendChild(bar);
+
+    const num = document.createElement("span");
+    num.className = "tag-breakdown-count";
+    num.textContent = String(count);
+
+    row.appendChild(label);
+    row.appendChild(barWrap);
+    row.appendChild(num);
+    container.appendChild(row);
   });
 }

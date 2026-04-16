@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.7.0] — 2025-07-22
+
+### Added — S23 Guest Follow-Up & Table Intelligence
+
+- **S23.1 WhatsApp declined follow-up filter**: 📞 "מעקב מסרבים" toggle button shows only declined guests with a phone number in the WhatsApp section, for targeted re-engagement messaging.
+- **S23.2 Print guests by table**: 🪑 "Print by Table" button generates a print-ready HTML document grouping all guests by their assigned table, with unseated guests listed at the end.
+- **S23.3 Table dietary conflict indicator**: ⚠️ warning badge on any table card where a mix of vegan/vegetarian and non-veg guests are assigned to the same table. Tooltip shows clarifying text.
+- **S23.4 Dashboard suggested actions card**: 💡 "Suggested Actions" card on the dashboard shows up to 3 priority tasks (unsent invitations, pending follow-ups, overdue vendor payments, unseated confirmed guests) as clickable shortcut buttons.
+- **S23.5 Vendor overdue chip**: ⚠️ count badge in the vendors header bar updates automatically when any vendor has a past-due payment outstanding.
+
+### Added — S24 Timeline, Analytics & Dashboard Depth
+
+- **S24.1 Timeline item done checkbox**: ✅/⬜ toggle button per timeline item marks it as completed; done items are visually struck through. State persists in `timelineDone` store key.
+- **S24.2 Export vendor payments CSV**: 📊 "Export Payments" button generates a detailed CSV with Name, Category, Contact, Phone, Price, Paid, Outstanding, Due Date, and Payment Status columns (including overdue detection).
+- **S24.3 Dashboard gift progress widget**: 🎁 "Gift Tracker" card on the dashboard shows a progress bar and `X / Y (%)` count of confirmed guests who have a gift recorded.
+- **S24.4 Analytics tag breakdown**: 🏷️ Tag Breakdown card in the analytics section renders a horizontal bar chart of the most-used guest tags (top 15), sorted by frequency.
+- **S24.5 Dashboard next timeline event widget**: ⏰ "Next Event" card shows the next upcoming timeline event with dynamic time-until text; auto-hidden when no upcoming events exist.
+
 ## [4.6.0] — 2025-07-20
 
 ### Added — S21 Guest Analytics & Vendor Enrichment

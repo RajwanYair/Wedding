@@ -441,6 +441,61 @@ export function printGuests() {
 }
 
 /**
+ * S23.2 — Open a print window with guests grouped by table assignment.
+ * Confirmed guests first, then others; unseated guests in a separate section.
+ */
+export function printGuestsByTable() {
+  const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const tableNames = new Map(tables.map((tb) => [tb.id, tb.name]));
+
+  /** @type {Map<string|null, any[]>} */
+  const byTable = new Map();
+  byTable.set(null, []);
+  for (const tb of tables) byTable.set(tb.id, []);
+  for (const g of allGuests) {
+    const key = g.tableId ?? null;
+    if (!byTable.has(key)) byTable.set(key, []);
+    byTable.get(key).push(g);
+  }
+
+  const esc = (/** @type {string} */ s) => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  let html = `<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="UTF-8">
+<title>${t("print_guests_by_table")}</title>
+<style>body{font-family:Arial,sans-serif;direction:rtl;padding:1rem}
+h1{text-align:center;margin-bottom:.5rem}
+.subtitle{text-align:center;color:#666;margin-bottom:1.5rem}
+h2{background:#f0f0f0;padding:4px 10px;margin:1rem 0 4px;border-radius:4px}
+table{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:.9rem}
+th,td{padding:5px 8px;border:1px solid #ccc;text-align:right}
+th{background:#e8e8e8}
+.un{font-style:italic;color:#888}
+@media print{button{display:none}}</style></head><body>
+<h1>${esc(t("print_guests_by_table"))}</h1>
+<p class="subtitle">${new Date().toLocaleDateString("he-IL")} \u2022 ${allGuests.length} ${esc(t("stat_guests"))}</p>
+<button onclick="window.print()" style="margin-bottom:1rem">🖨️ ${esc(t("action_print"))}</button>`;
+
+  for (const [tableId, guestList] of byTable) {
+    if (guestList.length === 0) continue;
+    const tableName = tableId ? (tableNames.get(tableId) ?? tableId) : t("print_unseated");
+    html += `<h2>${esc(String(tableName))} (${guestList.length})</h2>
+<table><thead><tr><th>#</th><th>${esc(t("label_first_name"))}</th><th>${esc(t("label_last_name"))}</th><th>${esc(t("label_phone"))}</th><th>${esc(t("label_meal"))}</th><th>${esc(t("label_status"))}</th></tr></thead><tbody>`;
+    const sorted = [...guestList].sort((a, b) =>
+      (a.lastName ?? "").localeCompare(b.lastName ?? "", "he"),
+    );
+    sorted.forEach((g, i) => {
+      html += `<tr${!tableId ? ' class="un"' : ""}><td>${i + 1}</td><td>${esc(g.firstName ?? "")}</td><td>${esc(g.lastName ?? "")}</td><td>${esc(g.phone ?? "")}</td><td>${esc(g.meal ?? "")}</td><td>${esc(g.status ?? "")}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+
+  html += `</body></html>`;
+  const win = window.open("", "_blank");
+  if (win) { win.document.write(html); win.document.close(); }
+}
+
+/**
  * Download a blank CSV template for bulk import.
  */
 export function downloadCSVTemplate() {

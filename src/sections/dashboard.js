@@ -47,6 +47,14 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderCheckinProgress));
   // S22.5 guest target ring
   _unsubs.push(storeSubscribe("guests", renderGuestTargetRing));
+  // S23.4 suggested actions
+  _unsubs.push(storeSubscribe("guests", renderSuggestedActions));
+  _unsubs.push(storeSubscribe("vendors", renderSuggestedActions));
+  _unsubs.push(storeSubscribe("tables", renderSuggestedActions));
+  // S24.3 gift progress
+  _unsubs.push(storeSubscribe("guests", renderGiftProgress));
+  // S24.5 next timeline event
+  _unsubs.push(storeSubscribe("timeline", renderNextTimelineEvent));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -63,6 +71,9 @@ export function mount(_container) {
   renderInvitationStats(); // S20.4
   renderCheckinProgress(); // S22.1
   renderGuestTargetRing(); // S22.5
+  renderSuggestedActions(); // S23.4
+  renderGiftProgress(); // S24.3
+  renderNextTimelineEvent(); // S24.5
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -617,4 +628,175 @@ export function renderGuestTargetRing() {
   textSub.setAttribute("fill", "var(--text-muted)");
   textSub.textContent = `${confirmed}/${total}`;
   svg.appendChild(textSub);
+}
+
+// ── S23.4 Suggested Actions Card ─────────────────────────────────────────
+
+/**
+ * Render up to 3 actionable suggestions in #dashSuggestedActions.
+ */
+export function renderSuggestedActions() {
+  const container = document.getElementById("dashSuggestedActions");
+  if (!container) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+
+  /** @type {{ icon: string; text: string; action: string; arg: string }[]} */
+  const actions = [];
+  const now = new Date();
+
+  const unsentPending = guests.filter((g) => !g.sent && g.status === "pending");
+  if (unsentPending.length > 0) {
+    actions.push({
+      icon: "📱",
+      text: (t("tip_send_invitations") || "שלח הזמנה ל-{n} אורחים").replace("{n}", String(unsentPending.length)),
+      action: "showSection",
+      arg: "whatsapp",
+    });
+  }
+
+  const sentPending = guests.filter((g) => g.sent && g.status === "pending");
+  if (sentPending.length > 0) {
+    actions.push({
+      icon: "🔔",
+      text: (t("tip_follow_up_pending") || "עקוב אחר {n} ממתינים").replace("{n}", String(sentPending.length)),
+      action: "showSection",
+      arg: "whatsapp",
+    });
+  }
+
+  const overdue = vendors.filter(
+    (v) => v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
+  );
+  if (overdue.length > 0) {
+    actions.push({
+      icon: "💸",
+      text: (t("tip_overdue_vendors") || "{n} ספקים עם תשלום באיחור").replace("{n}", String(overdue.length)),
+      action: "showSection",
+      arg: "vendors",
+    });
+  }
+
+  const confirmedUnseated = guests.filter(
+    (g) => g.status === "confirmed" && !g.tableId,
+  );
+  if (confirmedUnseated.length > 0) {
+    actions.push({
+      icon: "🪑",
+      text: (t("tip_unseated_confirmed") || "{n} אורחים מאושרים ללא שולחן").replace("{n}", String(confirmedUnseated.length)),
+      action: "showSection",
+      arg: "tables",
+    });
+  }
+
+  container.textContent = "";
+  if (actions.length === 0) {
+    container.textContent = t("all_actions_done") || "✅ הכל מסודר!";
+    return;
+  }
+
+  actions.slice(0, 3).forEach(({ icon, text, action, arg }) => {
+    const btn = document.createElement("button");
+    btn.className = "suggestion-item";
+    btn.dataset.action = action;
+    btn.dataset.actionArg = arg;
+    const iconEl = document.createElement("span");
+    iconEl.className = "suggestion-icon";
+    iconEl.textContent = icon;
+    const textEl = document.createElement("span");
+    textEl.className = "suggestion-text";
+    textEl.textContent = text;
+    btn.appendChild(iconEl);
+    btn.appendChild(textEl);
+    container.appendChild(btn);
+  });
+}
+
+// ── S24.3 Gift Progress Widget ────────────────────────────────────────────
+
+/**
+ * Show how many confirmed guests have a gift recorded in #dashGiftProgress.
+ */
+export function renderGiftProgress() {
+  const el = document.getElementById("dashGiftProgress");
+  if (!el) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const withGift = confirmed.filter((g) => g.gift && String(g.gift).trim());
+  const pct = confirmed.length > 0 ? Math.round((withGift.length / confirmed.length) * 100) : 0;
+  const bar = document.getElementById("dashGiftBar");
+  if (bar) /** @type {HTMLElement} */ (bar).style.width = `${pct}%`;
+  el.textContent = `${withGift.length} / ${confirmed.length} (${pct}%)`;
+}
+
+// ── S24.5 Next Timeline Event Widget ─────────────────────────────────────
+
+/**
+ * Show the next upcoming timeline event in #dashNextEventContent.
+ * Hides #dashNextEventCard if no upcoming events found.
+ */
+export function renderNextTimelineEvent() {
+  const card = document.getElementById("dashNextEventCard");
+  if (!card) return;
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  const info = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
+  const weddingDateStr = /** @type {string} */ (info.date ?? "");
+
+  if (!weddingDateStr || items.length === 0) {
+    /** @type {HTMLElement} */ (card).hidden = true;
+    return;
+  }
+
+  const now = new Date();
+  const baseDate = new Date(new Date(weddingDateStr).toDateString());
+
+  const upcoming = items
+    .filter((item) => {
+      if (!item.time) return false;
+      const [hh, mm] = String(item.time).split(":").map(Number);
+      if (isNaN(hh) || isNaN(mm)) return false;
+      const ts = new Date(baseDate);
+      ts.setHours(hh, mm, 0, 0);
+      return ts.getTime() >= now.getTime();
+    })
+    .sort((a, b) => String(a.time || "").localeCompare(String(b.time || "")));
+
+  const next = upcoming[0];
+  const content = document.getElementById("dashNextEventContent");
+  if (!content) return;
+
+  if (!next) {
+    /** @type {HTMLElement} */ (card).hidden = true;
+    return;
+  }
+
+  /** @type {HTMLElement} */ (card).hidden = false;
+  const [hh, mm] = String(next.time).split(":").map(Number);
+  const eventTs = new Date(baseDate);
+  eventTs.setHours(hh, mm, 0, 0);
+  const diffMins = Math.max(0, Math.round((eventTs.getTime() - now.getTime()) / 60000));
+  const isToday = now.toDateString() === baseDate.toDateString();
+
+  let timeStr;
+  if (isToday && diffMins < 60) {
+    timeStr = (t("dash_next_event_soon") || "בעוד {mins} דקות").replace("{mins}", String(diffMins));
+  } else if (isToday) {
+    timeStr = (t("dash_next_event_in") || "ב-{time}").replace("{time}", String(next.time));
+  } else {
+    timeStr = `${t("dash_next_event_at") || "ב-"} ${next.time}`;
+  }
+
+  content.textContent = "";
+  const iconSpan = document.createElement("span");
+  iconSpan.className = "next-event-icon";
+  iconSpan.textContent = String(next.icon || "📍");
+  const titleSpan = document.createElement("span");
+  titleSpan.className = "next-event-title";
+  titleSpan.textContent = String(next.title || "");
+  const timeSpan = document.createElement("span");
+  timeSpan.className = "next-event-time u-text-muted";
+  timeSpan.textContent = timeStr;
+  content.appendChild(iconSpan);
+  content.appendChild(titleSpan);
+  content.appendChild(timeSpan);
 }

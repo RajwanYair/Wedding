@@ -17,6 +17,7 @@ const _unsubs = [];
 export function mount(_container) {
   _unsubs.push(storeSubscribe("timeline", renderTimeline));
   _unsubs.push(storeSubscribe("weddingInfo", renderTimeline));
+  _unsubs.push(storeSubscribe("timelineDone", renderTimeline)); // S24.1
   renderTimeline();
   startTimelineAlarms();
 }
@@ -101,6 +102,21 @@ export function renderTimeline() {
     // Action buttons
     const actions = document.createElement("span");
     actions.className = "timeline-actions";
+
+    // S24.1 Done checkbox toggle
+    const doneMap = /** @type {Record<string,boolean>} */ (
+      storeGet("timelineDone") ?? {}
+    );
+    const isDone = !!doneMap[item.id];
+    li.classList.toggle("timeline-item--done", isDone);
+    const doneBtn = document.createElement("button");
+    doneBtn.className = `btn btn-small ${isDone ? "btn-success" : "btn-ghost"} u-mr-xs`;
+    doneBtn.title = t("timeline_toggle_done");
+    doneBtn.textContent = isDone ? "✅" : "⬜";
+    doneBtn.dataset.action = "toggleTimelineDone";
+    doneBtn.dataset.actionArg = item.id;
+    actions.appendChild(doneBtn);
+
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
     editBtn.textContent = t("btn_edit");
@@ -276,6 +292,19 @@ export function printTimeline() {
   </body></html>`);
   win.document.close();
   win.print();
+}
+
+// ── S24.1 Timeline done toggle ───────────────────────────────────────────
+
+/**
+ * Toggle the done state of a timeline item.
+ * Persists in the "timelineDone" store key (local only, not synced).
+ * @param {string} id
+ */
+export function toggleTimelineDone(id) {
+  const done = { .../** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {}) };
+  done[id] = !done[id];
+  storeSet("timelineDone", done);
 }
 
 /** @param {string} s */

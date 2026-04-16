@@ -115,6 +115,7 @@ import {
   toggleGuestVip,
   toggleVipFilter,
   printGuestBadges,
+  printGuestsByTable, // S23.2
 } from "./sections/guests.js";
 import {
   saveTable,
@@ -135,6 +136,7 @@ import {
   exportVendorsCSV,
   filterVendorsByCategory,
   openVendorForEdit,
+  exportVendorPaymentsCSV, // S24.2
 } from "./sections/vendors.js";
 import {
   saveExpense,
@@ -178,6 +180,7 @@ import {
   sendThankYouMessages,
   toggleUnsentFilter,
   renderUnsentBadge,
+  toggleDeclinedFilter, // S23.1
 } from "./sections/whatsapp.js";
 import {
   handleGalleryUpload,
@@ -191,6 +194,7 @@ import {
   openTimelineForEdit,
   startTimelineAlarms,
   printTimeline,
+  toggleTimelineDone, // S24.1
 } from "./sections/timeline.js";
 import {
   switchLanguage,
@@ -850,6 +854,8 @@ function _registerHandlers() {
   });
   // S20.1 Print guest badges
   on("printGuestBadges", () => printGuestBadges());
+  // S23.2 Print guests by table
+  on("printGuestsByTable", () => printGuestsByTable());
   on("scanDuplicates", () => renderDuplicates());
   on("mergeGuests", (el) => {
     mergeGuests(el.dataset.keepId ?? "", el.dataset.mergeId ?? "");
@@ -999,6 +1005,8 @@ function _registerHandlers() {
     ),
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
+  // S23.5 + S24.2 Overdue chip and payments export
+  on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());
   on("filterVendorsByCategory", (el) =>
     filterVendorsByCategory(el.dataset.category ?? "all"),
   );
@@ -1187,6 +1195,8 @@ function _registerHandlers() {
     toggleUnsentFilter();
     renderUnsentBadge();
   });
+  // S23.1 Declined follow-up filter
+  on("toggleDeclinedFilter", () => toggleDeclinedFilter());
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")
@@ -1225,6 +1235,10 @@ function _registerHandlers() {
   });
   // S20.2 Print timeline
   on("printTimeline", () => printTimeline());
+  // S24.1 Timeline done toggle
+  on("toggleTimelineDone", (el) =>
+    toggleTimelineDone(el.dataset.actionArg ?? ""),
+  );
 
   // ── Sheets / Sync ──
   on("syncSheetsNow", async () => {

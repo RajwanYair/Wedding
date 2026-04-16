@@ -2425,5 +2425,62 @@ kbd {
 /* S22.5 Guest target ring layout */
 [id="dashGuestTargetCard"] .u-flex { justify-content: center; padding: 0.5rem 0; }
 
+/* S23.3 Table dietary conflict badge */
+.table-card { position: relative; }
+.table-conflict-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 1.1em;
+  cursor: help;
+  line-height: 1;
+}
+
+/* S23.4 Suggested actions card */
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--bg-card);
+  border: var(--card-border);
+  width: 100%;
+  text-align: right;
+  margin-bottom: 0.5rem;
+  transition: background 0.15s;
+
+  &:hover { background: var(--bg-hover, color-mix(in srgb, var(--primary) 8%, transparent)); }
+}
+.suggestion-icon { font-size: 1.4em; flex-shrink: 0; }
+.suggestion-text { flex: 1; font-size: 0.95em; }
+
+/* S24.1 Timeline done state */
+.timeline-item--done .timeline-title { text-decoration: line-through; opacity: 0.5; }
+
+/* S24.4 Tag breakdown chart */
+.tag-breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+.tag-breakdown-label { min-width: 100px; font-size: 0.9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag-breakdown-bar-wrap { flex: 1; background: var(--bg-subtle, #f0f0f0); border-radius: 4px; height: 12px; }
+.tag-breakdown-bar { background: var(--primary); height: 100%; border-radius: 4px; transition: width 0.3s; }
+.tag-breakdown-count { min-width: 30px; text-align: center; font-size: 0.9em; font-weight: 600; }
+
+/* S24.5 Next event widget */
+.next-event-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+}
+.next-event-icon { font-size: 1.6em; flex-shrink: 0; }
+.next-event-title { flex: 1; font-weight: 600; }
+.next-event-time { font-size: 0.9em; }
 } /* end @layer components */
 

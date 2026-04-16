@@ -158,6 +158,25 @@ export function renderTables() {
       `table-card table-card--${tb.shape || "round"} ${fillClass}`.trim();
     card.dataset.id = tb.id;
 
+    // S23.3 — Detect dietary conflict (vegan/vegetarian + non-veg at same table)
+    const tableGuests = guests.filter((g) => g.tableId === tb.id);
+    const meals = tableGuests.map((g) => g.meal || "regular");
+    const hasVegOrVegan = meals.some(
+      (m) => m === "vegan" || m === "vegetarian",
+    );
+    const hasNonVeg = meals.some(
+      (m) => m === "regular" || m === "kosher" || m === "gluten_free",
+    );
+    const hasDietaryConflict =
+      hasVegOrVegan && hasNonVeg && tableGuests.length > 1;
+    if (hasDietaryConflict) {
+      const conflictBadge = document.createElement("span");
+      conflictBadge.className = "table-conflict-badge";
+      conflictBadge.title = t("table_dietary_conflict");
+      conflictBadge.textContent = "⚠️";
+      card.appendChild(conflictBadge);
+    }
+
     const name = document.createElement("h3");
     name.textContent = tb.name;
     card.appendChild(name);

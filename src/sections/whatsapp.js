@@ -17,6 +17,9 @@ const _unsubs = [];
 /** @type {boolean} */
 let _unsentOnly = false;
 
+/** @type {boolean} — S23.1: show only declined guests for follow-up */
+let _declinedOnly = false;
+
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderWhatsApp));
   _unsubs.push(storeSubscribe("weddingInfo", renderWhatsApp));
@@ -27,6 +30,31 @@ export function unmount() {
   _unsubs.forEach((fn) => fn());
   _unsubs.length = 0;
   _unsentOnly = false;
+  _declinedOnly = false;
+}
+
+/**
+ * S23.1 — Toggle the declined follow-up filter.
+ * When active, shows only declined guests + loads follow-up template.
+ */
+export function toggleDeclinedFilter() {
+  _declinedOnly = !_declinedOnly;
+  if (_declinedOnly) _unsentOnly = false;
+  const btn = document.getElementById("waDeclinedFilterBtn");
+  if (btn) btn.classList.toggle("active", _declinedOnly);
+  // Pre-load follow-up template when activating
+  const textarea = /** @type {HTMLTextAreaElement|null} */ (
+    document.getElementById("waTemplate")
+  );
+  if (textarea && _declinedOnly && !textarea.dataset.userEdited) {
+    const info = /** @type {Record<string,string>} */ (
+      storeGet("weddingInfo") ?? {}
+    );
+    textarea.value = t("wa_declined_template")
+      .replace(/\{groom\}/g, info.groom || "")
+      .replace(/\{bride\}/g, info.bride || "");
+  }
+  renderWhatsApp();
 }
 
 export function renderWhatsApp() {
@@ -55,7 +83,10 @@ export function renderWhatsApp() {
 
   guests
     .filter((g) => {
-      if (g.status === "declined" || !g.phone) return false;
+      if (!g.phone) return false;
+      // S23.1 declined follow-up mode
+      if (_declinedOnly) return g.status === "declined";
+      if (g.status === "declined") return false;
       if (_unsentOnly && g.sent) return false;
       return true;
     })

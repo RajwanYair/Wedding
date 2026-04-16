@@ -17,7 +17,9 @@ const _unsubs = [];
 
 export function mount(_container) {
   _unsubs.push(storeSubscribe("vendors", renderVendors));
+  _unsubs.push(storeSubscribe("vendors", renderOverdueChip)); // S23.5
   renderVendors();
+  renderOverdueChip(); // S23.5
 }
 
 export function unmount() {
@@ -269,4 +271,78 @@ export function getVendorStats() {
     outstanding: totalCost - totalPaid,
     paymentRate: totalCost > 0 ? Math.round((totalPaid / totalCost) * 100) : 0,
   };
+}
+
+// ── S23.5 Vendor overdue chip ─────────────────────────────────────────────
+
+/**
+ * Show/hide the overdue vendor count chip in the vendors section header.
+ */
+export function renderOverdueChip() {
+  const chip = document.getElementById("vendorOverdueChip");
+  if (!chip) return;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const now = new Date();
+  const count = vendors.filter(
+    (v) =>
+      v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
+  ).length;
+  if (count > 0) {
+    chip.textContent = `⚠️ ${count} ${t("vendor_overdue_count")}`;
+    /** @type {HTMLElement} */ (chip).hidden = false;
+  } else {
+    /** @type {HTMLElement} */ (chip).hidden = true;
+  }
+}
+
+// ── S24.2 Vendor payments CSV export ─────────────────────────────────────
+
+/**
+ * Export a detailed vendor payments CSV including outstanding and status columns.
+ */
+export function exportVendorPaymentsCSV() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const header = [
+    t("label_vendor_name") || "Name",
+    t("label_vendor_category") || "Category",
+    t("vendor_contact") || "Contact",
+    t("label_vendor_phone") || "Phone",
+    t("label_vendor_price") || "Price",
+    t("label_vendor_paid") || "Paid",
+    t("vendor_outstanding") || "Outstanding",
+    t("vendor_due_date") || "Due Date",
+    t("vendor_payment_status") || "Status",
+  ].join(",");
+  const now = new Date();
+  const rows = vendors.map((v) => {
+    const outstanding = (v.price || 0) - (v.paid || 0);
+    const isOverdue = v.dueDate && new Date(v.dueDate) < now && outstanding > 0;
+    const status =
+      outstanding <= 0
+        ? t("status_paid") || "Paid"
+        : isOverdue
+          ? t("vendor_overdue_label") || "Overdue"
+          : t("vendor_pending_payment") || "Pending";
+    return [
+      `"${(v.name || "").replace(/"/g, '""')}"`,
+      `"${v.category || ""}"`,
+      `"${(v.contact || "").replace(/"/g, '""')}"`,
+      `"${v.phone || ""}"`,
+      v.price || 0,
+      v.paid || 0,
+      outstanding,
+      `"${v.dueDate || ""}"`,
+      `"${status}"`,
+    ].join(",");
+  });
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "vendor-payments.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }

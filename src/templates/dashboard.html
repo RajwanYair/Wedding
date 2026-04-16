@@ -215,3 +215,22 @@
           <svg id="guestTargetRing" viewBox="0 0 120 120" width="120" height="120" aria-label="guest confirmation ring"></svg>
         </div>
       </div>
+
+      <!-- S23.4 Suggested actions card -->
+      <div class="card" id="dashSuggestedCard">
+        <div class="card-header"><span class="icon">💡</span> <span data-i18n="suggested_actions_title">פעולות מוצעות</span></div>
+        <div id="dashSuggestedActions"></div>
+      </div>
+
+      <!-- S24.3 Gift progress widget -->
+      <div class="card" id="dashGiftCard">
+        <div class="card-header"><span class="icon">🎁</span> <span data-i18n="dash_gift_title">מעקב מתנות</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="dashGiftBar"></div></div>
+        <div id="dashGiftProgress" class="u-text-center u-mt-xs u-text-muted"></div>
+      </div>
+
+      <!-- S24.5 Next timeline event widget -->
+      <div class="card" id="dashNextEventCard" hidden>
+        <div class="card-header"><span class="icon">⏰</span> <span data-i18n="dash_next_event_title">האירוע הבא</span></div>
+        <div id="dashNextEventContent" class="next-event-content"></div>
+      </div>

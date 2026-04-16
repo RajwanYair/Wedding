@@ -5,6 +5,10 @@
             <button class="btn btn-primary btn-small" data-action="openAddVendorModal">
               <span>➕</span> <span data-i18n="vendor_add">הוסף ספק</span>
             </button>
+            <!-- S24.2 Export vendor payments CSV -->
+            <button class="btn btn-ghost btn-small u-mr-xs" data-action="exportVendorPaymentsCSV" data-i18n="export_vendor_payments">📊 ייצוא תשלומים</button>
+            <!-- S23.5 Overdue chip -->
+            <span id="vendorOverdueChip" class="badge badge--danger" hidden></span>
           </div>
         </div>
         <div class="vendor-total-banner" id="vendorTotalBanner"></div>
