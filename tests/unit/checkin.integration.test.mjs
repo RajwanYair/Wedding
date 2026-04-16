@@ -13,6 +13,11 @@ import {
   exportCheckinReport,
   resetAllCheckins,
   getCheckinStats,
+  getCheckinRateBySide,
+  getCheckinRateByTable,
+  getVipNotCheckedIn,
+  getAccessibilityNotCheckedIn,
+  getCheckinTimeline,
 } from "../../src/sections/checkin.js";
 
 beforeEach(() => {
@@ -145,5 +150,93 @@ describe("getCheckinStats", () => {
     ]);
     const stats = getCheckinStats();
     expect(stats.checkinRate).toBe(100);
+  });
+});
+
+// ── getCheckinRateBySide ──────────────────────────────────────────────────
+describe("getCheckinRateBySide", () => {
+  it("returns empty when no confirmed guests", () => {
+    storeSet("guests", [makeGuest({ status: "pending" })]);
+    expect(getCheckinRateBySide()).toHaveLength(0);
+  });
+
+  it("groups check-in rate by side", () => {
+    storeSet("guests", [
+      makeGuest({ side: "groom", checkedIn: true }),
+      makeGuest({ side: "groom", checkedIn: false }),
+      makeGuest({ side: "bride", checkedIn: true }),
+    ]);
+    const rates = getCheckinRateBySide();
+    const groom = rates.find((r) => r.side === "groom");
+    expect(groom.rate).toBe(50);
+    const bride = rates.find((r) => r.side === "bride");
+    expect(bride.rate).toBe(100);
+  });
+});
+
+// ── getCheckinRateByTable ─────────────────────────────────────────────────
+describe("getCheckinRateByTable", () => {
+  it("returns empty when no seated confirmed guests", () => {
+    storeSet("guests", [makeGuest({ tableId: "" })]);
+    expect(getCheckinRateByTable()).toHaveLength(0);
+  });
+
+  it("calculates arrival rate per table", () => {
+    initStore({ guests: { value: [] }, tables: { value: [] } });
+    storeSet("tables", [{ id: "t1", name: "Head Table" }]);
+    storeSet("guests", [
+      makeGuest({ tableId: "t1", checkedIn: true }),
+      makeGuest({ tableId: "t1", checkedIn: false }),
+    ]);
+    const rates = getCheckinRateByTable();
+    expect(rates).toHaveLength(1);
+    expect(rates[0].tableName).toBe("Head Table");
+    expect(rates[0].rate).toBe(50);
+  });
+});
+
+// ── getVipNotCheckedIn ────────────────────────────────────────────────────
+describe("getVipNotCheckedIn", () => {
+  it("returns VIP confirmed guests who haven't arrived", () => {
+    storeSet("guests", [
+      makeGuest({ id: "v1", vip: true, firstName: "VIP", checkedIn: false }),
+      makeGuest({ id: "v2", vip: true, checkedIn: true }),
+      makeGuest({ id: "v3", vip: false, checkedIn: false }),
+    ]);
+    const result = getVipNotCheckedIn();
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe("v1");
+  });
+});
+
+// ── getAccessibilityNotCheckedIn ──────────────────────────────────────────
+describe("getAccessibilityNotCheckedIn", () => {
+  it("returns accessibility guests not checked in", () => {
+    storeSet("guests", [
+      makeGuest({ id: "a1", accessibility: "wheelchair", checkedIn: false }),
+      makeGuest({ id: "a2", accessibility: "wheelchair", checkedIn: true }),
+      makeGuest({ id: "a3", accessibility: "", checkedIn: false }),
+    ]);
+    const result = getAccessibilityNotCheckedIn();
+    expect(result).toHaveLength(1);
+    expect(result[0].accessibility).toBe("wheelchair");
+  });
+});
+
+// ── getCheckinTimeline ────────────────────────────────────────────────────
+describe("getCheckinTimeline", () => {
+  it("returns empty when no checkin times", () => {
+    storeSet("guests", [makeGuest({ checkedIn: true })]);
+    expect(getCheckinTimeline()).toHaveLength(0);
+  });
+
+  it("buckets check-ins by hour", () => {
+    storeSet("guests", [
+      makeGuest({ checkedIn: true, checkinTime: "2025-06-15T18:30:00Z" }),
+      makeGuest({ checkedIn: true, checkinTime: "2025-06-15T18:45:00Z" }),
+      makeGuest({ checkedIn: true, checkinTime: "2025-06-15T19:10:00Z" }),
+    ]);
+    const timeline = getCheckinTimeline();
+    expect(timeline.length).toBeGreaterThanOrEqual(1);
   });
 });

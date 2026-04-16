@@ -472,3 +472,93 @@ export function toggleAccessibilityFilter() {
   if (btn) btn.classList.toggle("btn-primary", _accessibilityOnly);
   renderCheckin();
 }
+
+/**
+ * Check-in rate by side (groom/bride/mutual).
+ * @returns {{ side: string, total: number, checkedIn: number, rate: number }[]}
+ */
+export function getCheckinRateBySide() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? [])
+    .filter((g) => g.status === "confirmed");
+  /** @type {Map<string, { total: number, checkedIn: number }>} */
+  const map = new Map();
+  for (const g of guests) {
+    const side = g.side || "mutual";
+    const entry = map.get(side) ?? { total: 0, checkedIn: 0 };
+    entry.total += 1;
+    if (g.checkedIn) entry.checkedIn += 1;
+    map.set(side, entry);
+  }
+  return [...map.entries()].map(([side, d]) => ({
+    side,
+    total: d.total,
+    checkedIn: d.checkedIn,
+    rate: d.total ? Math.round((d.checkedIn / d.total) * 100) : 0,
+  }));
+}
+
+/**
+ * Check-in rate by table — how full is each table at the event.
+ * @returns {{ tableId: string, tableName: string, seated: number, arrived: number, rate: number }[]}
+ */
+export function getCheckinRateByTable() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? [])
+    .filter((g) => g.status === "confirmed" && g.tableId);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const tableMap = new Map(tables.map((tbl) => [tbl.id, tbl.name || tbl.id]));
+  /** @type {Map<string, { seated: number, arrived: number }>} */
+  const map = new Map();
+  for (const g of guests) {
+    const entry = map.get(g.tableId) ?? { seated: 0, arrived: 0 };
+    entry.seated += 1;
+    if (g.checkedIn) entry.arrived += 1;
+    map.set(g.tableId, entry);
+  }
+  return [...map.entries()].map(([tableId, d]) => ({
+    tableId,
+    tableName: tableMap.get(tableId) || tableId,
+    seated: d.seated,
+    arrived: d.arrived,
+    rate: d.seated ? Math.round((d.arrived / d.seated) * 100) : 0,
+  }));
+}
+
+/**
+ * VIP guests not yet checked in.
+ * @returns {{ id: string, firstName: string, lastName: string, phone: string }[]}
+ */
+export function getVipNotCheckedIn() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests
+    .filter((g) => g.vip && g.status === "confirmed" && !g.checkedIn)
+    .map((g) => ({ id: g.id, firstName: g.firstName || "", lastName: g.lastName || "", phone: g.phone || "" }));
+}
+
+/**
+ * Guests with accessibility needs who are confirmed but not checked in.
+ * @returns {{ id: string, firstName: string, lastName: string, accessibility: string }[]}
+ */
+export function getAccessibilityNotCheckedIn() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests
+    .filter((g) => g.accessibility && g.status === "confirmed" && !g.checkedIn)
+    .map((g) => ({ id: g.id, firstName: g.firstName || "", lastName: g.lastName || "", accessibility: g.accessibility }));
+}
+
+/**
+ * Arrival timeline — check-ins bucketed by hour of day.
+ * @returns {{ hour: number, count: number }[]}
+ */
+export function getCheckinTimeline() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Map<number, number>} */
+  const map = new Map();
+  for (const g of guests) {
+    if (!g.checkedIn || !g.checkinTime) continue;
+    const hour = new Date(g.checkinTime).getHours();
+    map.set(hour, (map.get(hour) ?? 0) + 1);
+  }
+  return [...map.entries()]
+    .map(([hour, count]) => ({ hour, count }))
+    .sort((a, b) => a.hour - b.hour);
+}
