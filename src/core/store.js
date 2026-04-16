@@ -1,9 +1,13 @@
 /**
- * src/core/store.js — Reactive store (S0 named-export module)
+ * src/core/store.js — Reactive store V2 (v6.0)
  *
- * ES module version of js/store.js. Provides a Proxy-based reactive store
- * with debounced localStorage persistence and subscriber notifications.
- * Supports multi-event namespacing (S9.1) via dynamic prefix from state.js.
+ * Proxy-based reactive store with:
+ * - Debounced localStorage persistence
+ * - Microtask-batched subscriber notifications
+ * - `storeBatch()` for bulk mutations with single notification pass
+ * - `storeSubscribeScoped()` for auto-cleanup on section unmount
+ * - `pauseNotifications()` / `resumeNotifications()` for external batch ops
+ * - Multi-event namespacing (S9.1) via dynamic prefix from state.js
  * No window.* side effects — consumers import and call directly.
  */
 
@@ -39,6 +43,23 @@ function _prefix() {
   return eid === "default" ? _BASE_PREFIX : `${_BASE_PREFIX}evt_${eid}_`;
 }
 
+// ── Scoped subscription tracking ──────────────────────────────────────────
+
+/**
+ * Map of scope names → Set of unsubscribe functions.
+ * When a scope is cleaned up, all its subscriptions are removed.
+ * @type {Map<string, Set<() => void>>}
+ */
+const _scopedUnsubs = new Map();
+
+// ── Batch / Pause state ───────────────────────────────────────────────────
+
+/** When > 0, notifications are paused and keys are collected for deferred notify. */
+let _pauseDepth = 0;
+/** Keys that were mutated while notifications were paused. */
+/** @type {Set<string>} */
+const _pausedKeys = new Set();
+
 // ── Subscribers ───────────────────────────────────────────────────────────
 
 /**
@@ -53,7 +74,43 @@ export function storeSubscribe(key, fn) {
   return () => _subs.get(key)?.delete(fn);
 }
 
+/**
+ * Subscribe to a store key, scoped to a section name.
+ * When `cleanupScope(sectionName)` is called (e.g. on section unmount),
+ * all subscriptions registered under that scope are automatically removed.
+ *
+ * @param {string} key        Store key to subscribe to (or "*")
+ * @param {Function} fn       Callback
+ * @param {string} scope      Scope name (typically the section name)
+ * @returns {() => void}      Unsubscribe function (also callable manually)
+ */
+export function storeSubscribeScoped(key, fn, scope) {
+  const unsub = storeSubscribe(key, fn);
+  if (!_scopedUnsubs.has(scope)) _scopedUnsubs.set(scope, new Set());
+  _scopedUnsubs.get(scope).add(unsub);
+  return unsub;
+}
+
+/**
+ * Clean up all subscriptions for a given scope.
+ * Call this in the section's `unmount()` function.
+ * @param {string} scope
+ */
+export function cleanupScope(scope) {
+  const unsubs = _scopedUnsubs.get(scope);
+  if (unsubs) {
+    unsubs.forEach((fn) => fn());
+    unsubs.clear();
+    _scopedUnsubs.delete(scope);
+  }
+}
+
 function _scheduleNotify(key) {
+  // If notifications are paused (inside batch or manual pause), collect keys
+  if (_pauseDepth > 0) {
+    _pausedKeys.add(key);
+    return;
+  }
   if (_notifyBatch === null) {
     _notifyBatch = new Set();
     Promise.resolve().then(() => {
@@ -74,6 +131,17 @@ function _scheduleNotify(key) {
     });
   }
   _notifyBatch.add(key);
+}
+
+/**
+ * Flush all deferred notifications collected during a pause.
+ */
+function _flushPausedNotifications() {
+  if (_pausedKeys.size > 0) {
+    const keys = [..._pausedKeys];
+    _pausedKeys.clear();
+    keys.forEach((k) => _scheduleNotify(k));
+  }
 }
 
 // ── Persistence ───────────────────────────────────────────────────────────
@@ -180,6 +248,61 @@ export function storeSet(key, value) {
  */
 export function storeFlush() {
   _flush();
+}
+
+/**
+ * Execute a callback with all store notifications deferred until completion.
+ * Multiple mutations inside the batch trigger only one notification per key.
+ *
+ * @param {() => void} fn  Synchronous function performing store mutations
+ */
+export function storeBatch(fn) {
+  _pauseDepth++;
+  try {
+    fn();
+  } finally {
+    _pauseDepth--;
+    if (_pauseDepth === 0) {
+      _flushPausedNotifications();
+    }
+  }
+}
+
+/**
+ * Pause all subscriber notifications. Pair with `resumeNotifications()`.
+ * Supports nesting — notifications resume only when depth returns to 0.
+ */
+export function pauseNotifications() {
+  _pauseDepth++;
+}
+
+/**
+ * Resume subscriber notifications after a `pauseNotifications()` call.
+ * Flushes all deferred notifications when the outermost pause ends.
+ */
+export function resumeNotifications() {
+  if (_pauseDepth > 0) _pauseDepth--;
+  if (_pauseDepth === 0) {
+    _flushPausedNotifications();
+  }
+}
+
+/**
+ * Debug utility — returns diagnostic info about the store.
+ * @returns {{ keys: string[], subscriberCount: Record<string, number>, dirtyKeys: string[], scopeCount: number }}
+ */
+export function storeDebug() {
+  /** @type {Record<string, number>} */
+  const subscriberCount = {};
+  _subs.forEach((fns, key) => {
+    subscriberCount[key] = fns.size;
+  });
+  return {
+    keys: Object.keys(_state),
+    subscriberCount,
+    dirtyKeys: [..._dirty],
+    scopeCount: _scopedUnsubs.size,
+  };
 }
 
 /**
