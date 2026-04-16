@@ -12,6 +12,9 @@ import {
   saveTimelineItem,
   deleteTimelineItem,
   exportTimelineCSV,
+  getTimelineCompletionStats,
+  getTimelineDuration,
+  getUpcomingTimelineItems,
 } from "../../src/sections/timeline.js";
 
 function seedStore() {
@@ -115,5 +118,70 @@ describe("exportTimelineCSV", () => {
     saveTimelineItem(makeItem({ time: "18:00", title: "Ceremony" }));
     saveTimelineItem(makeItem({ time: "20:00", title: "Dinner" }));
     expect(() => exportTimelineCSV()).not.toThrow();
+  });
+});
+
+// ── getTimelineCompletionStats ────────────────────────────────────────────
+describe("getTimelineCompletionStats", () => {
+  beforeEach(() => seedStore());
+
+  it("returns zeros for empty timeline", () => {
+    const stats = getTimelineCompletionStats();
+    expect(stats.total).toBe(0);
+    expect(stats.completionRate).toBe(0);
+  });
+
+  it("calculates done/pending/rate correctly", () => {
+    saveTimelineItem(makeItem({ time: "18:00", title: "A" }));
+    saveTimelineItem(makeItem({ time: "19:00", title: "B" }));
+    const items = storeGet("timeline");
+    storeSet("timelineDone", { [items[0].id]: true });
+    const stats = getTimelineCompletionStats();
+    expect(stats.total).toBe(2);
+    expect(stats.done).toBe(1);
+    expect(stats.pending).toBe(1);
+    expect(stats.completionRate).toBe(50);
+  });
+});
+
+// ── getTimelineDuration ───────────────────────────────────────────────────
+describe("getTimelineDuration", () => {
+  beforeEach(() => seedStore());
+
+  it("returns null with fewer than 2 items", () => {
+    saveTimelineItem(makeItem({ time: "18:00" }));
+    expect(getTimelineDuration()).toBeNull();
+  });
+
+  it("calculates duration between first and last items", () => {
+    saveTimelineItem(makeItem({ time: "17:00", title: "Start" }));
+    saveTimelineItem(makeItem({ time: "23:30", title: "End" }));
+    const d = getTimelineDuration();
+    expect(d.startTime).toBe("17:00");
+    expect(d.endTime).toBe("23:30");
+    expect(d.durationMinutes).toBe(390);
+  });
+});
+
+// ── getUpcomingTimelineItems ──────────────────────────────────────────────
+describe("getUpcomingTimelineItems", () => {
+  beforeEach(() => seedStore());
+
+  it("excludes done items", () => {
+    saveTimelineItem(makeItem({ time: "18:00", title: "Done" }));
+    saveTimelineItem(makeItem({ time: "19:00", title: "Pending" }));
+    const items = storeGet("timeline");
+    storeSet("timelineDone", { [items[0].id]: true });
+    const upcoming = getUpcomingTimelineItems(5);
+    expect(upcoming).toHaveLength(1);
+    expect(upcoming[0].title).toBe("Pending");
+  });
+
+  it("respects limit parameter", () => {
+    saveTimelineItem(makeItem({ time: "17:00" }));
+    saveTimelineItem(makeItem({ time: "18:00" }));
+    saveTimelineItem(makeItem({ time: "19:00" }));
+    const upcoming = getUpcomingTimelineItems(2);
+    expect(upcoming).toHaveLength(2);
   });
 });

@@ -9,6 +9,10 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import {
+  getWeddingReadinessScore,
+  getDashboardSnapshot,
+} from "../../src/sections/dashboard.js";
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -227,5 +231,84 @@ describe("Activity feed", () => {
     ];
     expect(entries).toHaveLength(2);
     expect(entries[0].key).toBe("guests");
+  });
+});
+
+// ── getWeddingReadinessScore ──────────────────────────────────────────────
+describe("getWeddingReadinessScore", () => {
+  beforeEach(() => seedStore());
+
+  it("returns factors with correct names", () => {
+    const { factors } = getWeddingReadinessScore();
+    expect(factors.map((f) => f.name)).toContain("rsvp");
+    expect(factors.map((f) => f.name)).toContain("seating");
+    expect(factors.map((f) => f.name)).toContain("payments");
+  });
+
+  it("returns 100 when all tasks complete", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", tableId: "t1" }),
+    ]);
+    storeSet("tables", [{ id: "t1", name: "T1", capacity: 10 }]);
+    storeSet("vendors", [{ id: "v1", price: 1000, paid: 1000 }]);
+    storeSet("timeline", [{ id: "tl1", time: "18:00" }]);
+    initStore({
+      guests: { value: storeGet("guests") },
+      tables: { value: storeGet("tables") },
+      vendors: { value: storeGet("vendors") },
+      timeline: { value: storeGet("timeline") },
+      timelineDone: { value: { tl1: true } },
+      weddingInfo: { value: {} },
+      expenses: { value: [] },
+    });
+    const { score } = getWeddingReadinessScore();
+    expect(score).toBe(100);
+  });
+
+  it("returns score between 0 and 100", () => {
+    storeSet("guests", [makeGuest({ status: "pending" })]);
+    const { score } = getWeddingReadinessScore();
+    expect(score).toBeGreaterThanOrEqual(0);
+    expect(score).toBeLessThanOrEqual(100);
+  });
+});
+
+// ── getDashboardSnapshot ──────────────────────────────────────────────────
+describe("getDashboardSnapshot", () => {
+  beforeEach(() => seedStore());
+
+  it("returns correct guest counts", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", count: 3 }),
+      makeGuest({ status: "pending", count: 1 }),
+      makeGuest({ status: "declined" }),
+    ]);
+    storeSet("tables", [{ id: "t1" }]);
+    const snap = getDashboardSnapshot();
+    expect(snap.totalGuests).toBe(3);
+    expect(snap.confirmed).toBe(1);
+    expect(snap.pending).toBe(1);
+    expect(snap.totalHeads).toBe(3);
+    expect(snap.totalTables).toBe(1);
+  });
+
+  it("returns -1 daysUntilWedding when no date set", () => {
+    const snap = getDashboardSnapshot();
+    expect(snap.daysUntilWedding).toBe(-1);
+  });
+
+  it("calculates daysUntilWedding from weddingInfo.date", () => {
+    const futureDate = new Date(Date.now() + 86400000 * 30).toISOString().slice(0, 10);
+    initStore({
+      guests: { value: [] },
+      tables: { value: [] },
+      vendors: { value: [] },
+      expenses: { value: [] },
+      weddingInfo: { value: { date: futureDate } },
+      timeline: { value: [] },
+    });
+    const snap = getDashboardSnapshot();
+    expect(snap.daysUntilWedding).toBeGreaterThanOrEqual(29);
+    expect(snap.daysUntilWedding).toBeLessThanOrEqual(31);
   });
 });

@@ -975,3 +975,71 @@ export function renderNextTimelineEvent() {
   content.appendChild(titleSpan);
   content.appendChild(timeSpan);
 }
+
+/**
+ * Overall wedding readiness score (0-100) based on critical tasks.
+ * Factors: RSVP response rate, seating completion, vendor payments, timeline progress.
+ * @returns {{ score: number, factors: { name: string, value: number, weight: number }[] }}
+ */
+export function getWeddingReadinessScore() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const timeline = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  const done = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
+
+  const responded = guests.filter((g) => g.status === "confirmed" || g.status === "declined" || g.status === "maybe").length;
+  const rsvpRate = guests.length ? Math.round((responded / guests.length) * 100) : 0;
+
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const seated = confirmed.filter((g) => g.tableId).length;
+  const seatingRate = confirmed.length ? Math.round((seated / confirmed.length) * 100) : 0;
+
+  const totalCost = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  const totalPaid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
+  const paymentRate = totalCost ? Math.round((totalPaid / totalCost) * 100) : 100;
+
+  const tlDone = timeline.filter((i) => done[i.id]).length;
+  const tlRate = timeline.length ? Math.round((tlDone / timeline.length) * 100) : 100;
+
+  const hasTable = tables.length > 0 ? 100 : 0;
+
+  const factors = [
+    { name: "rsvp", value: rsvpRate, weight: 30 },
+    { name: "seating", value: seatingRate, weight: 25 },
+    { name: "payments", value: paymentRate, weight: 25 },
+    { name: "timeline", value: tlRate, weight: 10 },
+    { name: "tables", value: hasTable, weight: 10 },
+  ];
+
+  const score = Math.round(factors.reduce((s, f) => s + (f.value * f.weight) / 100, 0));
+  return { score, factors };
+}
+
+/**
+ * Quick snapshot of key metrics for the dashboard header.
+ * @returns {{ totalGuests: number, confirmed: number, pending: number, totalHeads: number, totalTables: number, daysUntilWedding: number }}
+ */
+export function getDashboardSnapshot() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const info = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
+
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const pending = guests.filter((g) => g.status === "pending");
+  const totalHeads = confirmed.reduce((s, g) => s + (g.count || 1), 0);
+
+  const weddingDate = info.date ? new Date(/** @type {string} */ (info.date)) : null;
+  const daysUntilWedding = weddingDate
+    ? Math.ceil((weddingDate.getTime() - Date.now()) / 86400000)
+    : -1;
+
+  return {
+    totalGuests: guests.length,
+    confirmed: confirmed.length,
+    pending: pending.length,
+    totalHeads,
+    totalTables: tables.length,
+    daysUntilWedding,
+  };
+}

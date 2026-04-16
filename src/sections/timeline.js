@@ -336,3 +336,49 @@ export function exportTimelineCSV() {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+/**
+ * Timeline completion stats — done vs pending items.
+ * @returns {{ total: number, done: number, pending: number, completionRate: number }}
+ */
+export function getTimelineCompletionStats() {
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  const done = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
+  const doneCount = items.filter((i) => done[i.id]).length;
+  return {
+    total: items.length,
+    done: doneCount,
+    pending: items.length - doneCount,
+    completionRate: items.length ? Math.round((doneCount / items.length) * 100) : 0,
+  };
+}
+
+/**
+ * Duration between first and last timeline items (minutes).
+ * @returns {{ startTime: string, endTime: string, durationMinutes: number } | null}
+ */
+export function getTimelineDuration() {
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  const withTime = items.filter((i) => i.time).sort((a, b) => String(a.time).localeCompare(String(b.time)));
+  if (withTime.length < 2) return null;
+  const first = withTime[0].time;
+  const last = withTime[withTime.length - 1].time;
+  const [h1, m1] = first.split(":").map(Number);
+  const [h2, m2] = last.split(":").map(Number);
+  return { startTime: first, endTime: last, durationMinutes: (h2 * 60 + m2) - (h1 * 60 + m1) };
+}
+
+/**
+ * Next N upcoming timeline items (from wedding day).
+ * @param {number} [limit=3]
+ * @returns {{ id: string, time: string, title: string, done: boolean }[]}
+ */
+export function getUpcomingTimelineItems(limit = 3) {
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  const done = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
+  return items
+    .filter((i) => i.time && !done[i.id])
+    .sort((a, b) => String(a.time).localeCompare(String(b.time)))
+    .slice(0, limit)
+    .map((i) => ({ id: i.id, time: i.time, title: i.title || "", done: false }));
+}
