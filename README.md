@@ -45,7 +45,7 @@ open index.html
 
 ![Auth Flow](auth-flow.svg)
 
-Edit `js/config.js`:
+Edit `src/core/config.js`:
 
 ```js
 const GOOGLE_CLIENT_ID  = "YOUR_ID.apps.googleusercontent.com"; // console.cloud.google.com

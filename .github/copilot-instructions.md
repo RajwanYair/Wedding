@@ -71,9 +71,9 @@ Expense:{ id, category, description, amount, date, createdAt }
 | Provider | Status | Config key |
 | --- | --- | --- |
 | Email allowlist | ✅ Primary | `ADMIN_EMAILS` + Settings → User Access |
-| Google | ✅ Active (GIS SDK) | `GOOGLE_CLIENT_ID` in `js/config.js` |
-| Facebook | ✅ Active (FB JS SDK, dynamic) | `FB_APP_ID` in `js/config.js` |
-| Apple | ✅ Active (AppleID SDK, dynamic) | `APPLE_SERVICE_ID` in `js/config.js` |
+| Google | ✅ Active (GIS SDK) | `GOOGLE_CLIENT_ID` in `src/core/config.js` |
+| Facebook | ✅ Active (FB JS SDK, dynamic) | `FB_APP_ID` in `src/core/config.js` |
+| Apple | ✅ Active (AppleID SDK, dynamic) | `APPLE_SERVICE_ID` in `src/core/config.js` |
 | Guest / Anonymous | ✅ Default | Auto-login, RSVP-only |
 
 All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single source of truth.
@@ -87,7 +87,7 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 
 ## Version Bump Checklist
 
-1. `js/config.js`, `src/core/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
+1. `src/core/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
 2. `CHANGELOG.md` — new entry; `README.md` — badge + tests badge; `CLAUDE.md` — version + test count
 3. `.github/copilot-instructions.md` — version + test count (Quick Facts row + Pre-release checklist)
 4. `.github/copilot/config.json` — welcomeMessage version + test count

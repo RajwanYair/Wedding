@@ -32,7 +32,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        /* S4.5 + S1.8: Manual chunk splitting — section templates + public bundle */
+        /* S4.5 + S1.8 + F1.6.4: Manual chunk splitting — per-section + templates + public bundle */
         manualChunks(id) {
           if (id.includes("i18n/en.json")) return "locale-en";
           if (id.includes("i18n/ar.json")) return "locale-ar";
@@ -48,24 +48,28 @@ export default defineConfig({
           )
             return "chunk-public";
 
+          // F1.6.4: Per-section chunks for admin sections
+          if (id.includes("src/sections/dashboard")) return "sec-dashboard";
+          if (id.includes("src/sections/guests")) return "sec-guests";
+          if (id.includes("src/sections/tables")) return "sec-tables";
+          if (id.includes("src/sections/vendors")) return "sec-vendors";
+          if (id.includes("src/sections/whatsapp")) return "sec-whatsapp";
+          if (id.includes("src/sections/checkin")) return "sec-checkin";
+          if (id.includes("src/sections/settings")) return "sec-settings";
+          if (id.includes("src/sections/invitation")) return "sec-invitation";
+          if (id.includes("src/sections/changelog")) return "sec-changelog";
+
           // S1.8: Lazy section templates — each in its own chunk
           if (id.includes("src/templates/")) {
             const match = id.match(/src\/templates\/([^/]+)\.html/);
             return match ? `template-${match[1]}` : "templates";
           }
 
-          if (
-            id.includes("analytics") ||
-            id.includes("budget") ||
-            id.includes("expenses")
-          )
-            return "chunk-analytics";
-          if (
-            id.includes("gallery") ||
-            id.includes("timeline") ||
-            id.includes("registry")
-          )
-            return "chunk-gallery";
+          if (id.includes("src/sections/analytics")) return "sec-analytics";
+          if (id.includes("src/sections/budget")) return "sec-budget";
+          if (id.includes("src/sections/expenses")) return "sec-expenses";
+          if (id.includes("src/sections/gallery")) return "sec-gallery";
+          if (id.includes("src/sections/timeline")) return "sec-timeline";
           if (
             id.includes("sheets") ||
             id.includes("auth") ||
@@ -73,6 +77,9 @@ export default defineConfig({
             id.includes("email")
           )
             return "chunk-services";
+
+          // Plugin modules
+          if (id.includes("src/plugins/")) return "chunk-plugins";
         },
         /* Keep asset filenames stable for SRI hashing */
         entryFileNames: "assets/[name]-[hash].js",

@@ -143,3 +143,19 @@ export interface ContactSubmission {
   side: string;
   dietaryNotes: string;
 }
+
+/**
+ * F1.3.5 — Store key → value type map.
+ * Used with `@type {import('./types').StoreKeys}` for typed storeGet/storeSet.
+ */
+export interface StoreKeys {
+  guests: Guest[];
+  tables: Table[];
+  vendors: Vendor[];
+  expenses: Expense[];
+  timeline: TimelineItem[];
+  gallery: GalleryPhoto[];
+  weddingInfo: WeddingInfo;
+  budget: BudgetEntry[];
+}
+
