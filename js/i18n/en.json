@@ -1040,5 +1040,17 @@
     "plural_days": "{count, plural, one {# day} other {# days}}",
     "plural_children": "{count, plural, one {# child} other {# children}}",
     "plural_vendors": "{count, plural, one {# vendor} other {# vendors}}",
-    "plural_items": "{count, plural, one {# item} other {# items}}"
+    "plural_items": "{count, plural, one {# item} other {# items}}",
+    "wa_reminder_schedule": "Schedule Reminder",
+    "wa_reminder_scheduled_for": "Reminder scheduled for {date}",
+    "wa_reminder_cancel_schedule": "Cancel Schedule",
+    "wa_reminder_queue_empty": "No scheduled reminders",
+    "wa_thankyou_progress": "Sending... {sent}/{total}",
+    "wa_thankyou_via_api": "Send Thanks via API",
+    "email_send_invitation": "Email Invitation",
+    "email_send_reminder": "Email Reminder",
+    "email_send_thankyou": "Email Thank You",
+    "email_subject_invitation": "{groom} & {bride} — Wedding Invitation",
+    "email_subject_reminder": "Reminder: RSVP for the Wedding",
+    "email_subject_thankyou": "Thank You — {groom} & {bride}"
 }

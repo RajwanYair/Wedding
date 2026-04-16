@@ -179,6 +179,7 @@ function _interpolate(template, guest, info) {
     .replace(/\{venue\}/g, info.venue || "")
     .replace(/\{groom\}/g, info.groom || "")
     .replace(/\{bride\}/g, info.bride || "")
+    .replace(/\{gift\}/g, guest.gift || "")
     .replace(/\{rsvpLink\}/g, rsvpLink);
 }
 
@@ -417,6 +418,101 @@ export function sendWhatsAppReminder() {
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
 }
 
+// ── F4.2.1 Scheduled Reminders ───────────────────────────────────────────
+
+/** @typedef {{ id: string, scheduledAt: string, sentAt?: string, type: 'reminder'|'thankyou', template?: string }} ScheduledMsg */
+
+const _QUEUE_KEY = "wedding_v1_reminderQueue";
+
+/**
+ * Get the scheduled message queue from localStorage.
+ * @returns {ScheduledMsg[]}
+ */
+export function getScheduledQueue() {
+  try {
+    return JSON.parse(localStorage.getItem(_QUEUE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Save the scheduled queue to localStorage.
+ * @param {ScheduledMsg[]} queue
+ */
+function _saveQueue(queue) {
+  try {
+    localStorage.setItem(_QUEUE_KEY, JSON.stringify(queue));
+  } catch {
+    // storage unavailable
+  }
+}
+
+/**
+ * Schedule reminders for all pending guests at a specific datetime.
+ * @param {string} scheduledAt  ISO datetime string
+ * @param {string} [template]   Custom message template
+ * @returns {number} Number of reminders scheduled
+ */
+export function scheduleReminders(scheduledAt, template) {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const targets = guests.filter(
+    (g) => g.phone && g.sent && (g.status === "pending" || g.status === "maybe"),
+  );
+  if (targets.length === 0) return 0;
+
+  const queue = getScheduledQueue();
+  for (const g of targets) {
+    // Avoid duplicates
+    if (queue.some((q) => q.id === g.id && q.type === "reminder" && !q.sentAt)) continue;
+    queue.push({ id: g.id, scheduledAt, type: "reminder", template });
+  }
+  _saveQueue(queue);
+  return targets.length;
+}
+
+/**
+ * Check for due scheduled messages and process them.
+ * Call on app boot and periodically.
+ * @returns {string[]} Array of guest IDs that were sent
+ */
+export function processScheduledQueue() {
+  const queue = getScheduledQueue();
+  const now = new Date();
+  const due = queue.filter((q) => !q.sentAt && new Date(q.scheduledAt) <= now);
+  if (due.length === 0) return [];
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const sentIds = [];
+
+  for (const item of due) {
+    const guest = guests.find((g) => g.id === item.id);
+    if (!guest || !guest.phone) continue;
+
+    const phone = cleanPhone(guest.phone);
+    if (!phone) continue;
+
+    const tpl = item.template || t("wa_reminder_default");
+    const message = _interpolate(tpl, guest, info);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+    item.sentAt = now.toISOString();
+    sentIds.push(item.id);
+  }
+
+  _saveQueue(queue);
+  return sentIds;
+}
+
+/**
+ * Cancel all scheduled reminders for a given type.
+ * @param {'reminder'|'thankyou'} [type]
+ */
+export function cancelScheduledReminders(type = "reminder") {
+  const queue = getScheduledQueue().filter((q) => q.type !== type || q.sentAt);
+  _saveQueue(queue);
+}
+
 /**
  * Update the reminder count badge shown next to the reminder button.
  */
@@ -479,6 +575,153 @@ export function getThankYouCount() {
   return guests.filter(
     (g) => g.phone && g.checkedIn && g.status === "confirmed" && !g.thankYouSent,
   ).length;
+}
+
+// ── F4.2.3 Thank-You Queue (Green API paced) ─────────────────────────────
+
+/**
+ * Send thank-you messages via Green API with pacing (350ms between sends).
+ * Falls back to wa.me links if Green API is not configured.
+ * @returns {Promise<{ sent: number, failed: number }>}
+ */
+export async function sendThankYouViaApi() {
+  const instanceId = localStorage.getItem("wedding_v1_greenApiInstanceId") || "";
+  const token = localStorage.getItem("wedding_v1_greenApiToken") || "";
+  if (!instanceId || !token) {
+    // Fallback to wa.me links
+    sendThankYouMessages();
+    return { sent: 0, failed: 0 };
+  }
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const template =
+    /** @type {HTMLTextAreaElement|null} */ (
+      document.getElementById("waThankYouTemplate")
+    )?.value?.trim() || t("wa_thankyou_default");
+
+  const targets = guests.filter(
+    (g) => g.phone && g.checkedIn && g.status === "confirmed" && !g.thankYouSent,
+  );
+  if (targets.length === 0) return { sent: 0, failed: 0 };
+
+  let sent = 0;
+  let failed = 0;
+  const allGuests = [...guests];
+
+  for (let i = 0; i < targets.length; i++) {
+    const g = targets[i];
+    const phone = cleanPhone(g.phone);
+    if (!phone) { failed++; continue; }
+
+    const message = _interpolate(template, g, info);
+    const chatId = `${phone}@c.us`;
+    const url = `https://api.green-api.com/waInstance${instanceId}/sendMessage/${token}`;
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chatId, message }),
+      });
+      if (res.ok) {
+        sent++;
+        const idx = allGuests.findIndex((gg) => gg.id === g.id);
+        if (idx !== -1) {
+          allGuests[idx] = {
+            ...allGuests[idx],
+            thankYouSent: true,
+            thankYouSentAt: new Date().toISOString(),
+          };
+        }
+      } else {
+        failed++;
+      }
+    } catch {
+      failed++;
+    }
+
+    // Update progress UI
+    const progressEl = document.getElementById("waThankYouProgress");
+    if (progressEl) {
+      progressEl.textContent = (t("wa_thankyou_progress") || "{sent}/{total}")
+        .replace("{sent}", String(sent + failed))
+        .replace("{total}", String(targets.length));
+    }
+
+    // Pace: wait 350ms between sends (avoid rate limiting)
+    if (i < targets.length - 1) {
+      await new Promise((r) => setTimeout(r, 350));
+    }
+  }
+
+  storeSet("guests", allGuests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  return { sent, failed };
+}
+
+// ── F4.2.4 Email Templates ───────────────────────────────────────────────
+
+/**
+ * Generate a mailto: link for a guest with the specified email template.
+ * @param {object} guest  Guest object
+ * @param {'invitation'|'reminder'|'thankyou'} templateType
+ * @returns {string|null}  mailto: URI or null if no email
+ */
+export function generateMailtoLink(guest, templateType = "invitation") {
+  if (!guest.email) return null;
+
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const name = `${guest.firstName} ${guest.lastName || ""}`.trim();
+
+  /** @type {Record<string, { subject: string, body: string }>} */
+  const templates = {
+    invitation: {
+      subject: t("email_subject_invitation") || `${info.groom || ""} & ${info.bride || ""} — Wedding Invitation`,
+      body: t("email_body_invitation") || `Dear ${name},\n\nYou are invited to the wedding of ${info.groom || ""} & ${info.bride || ""}!\n\n📅 ${info.date || ""}\n📍 ${info.venue || ""}\n\nPlease RSVP at your earliest convenience.\n\nWith love,\n${info.groom || ""} & ${info.bride || ""}`,
+    },
+    reminder: {
+      subject: t("email_subject_reminder") || `Reminder: RSVP for ${info.groom || ""} & ${info.bride || ""}'s Wedding`,
+      body: t("email_body_reminder") || `Dear ${name},\n\nThis is a friendly reminder to RSVP for the wedding.\n\n📅 ${info.date || ""}\n📍 ${info.venue || ""}\n\nWe'd love to hear from you!\n\nBest,\n${info.groom || ""} & ${info.bride || ""}`,
+    },
+    thankyou: {
+      subject: t("email_subject_thankyou") || `Thank You — ${info.groom || ""} & ${info.bride || ""}`,
+      body: t("email_body_thankyou") || `Dear ${name},\n\nThank you so much for celebrating with us! 💕\n\nWe truly appreciated your presence and ${guest.gift ? `your generous gift (${guest.gift})` : "your love and support"}.\n\nWith love,\n${info.groom || ""} & ${info.bride || ""}`,
+    },
+  };
+
+  const tpl = templates[templateType] || templates.invitation;
+  const subject = encodeURIComponent(tpl.subject);
+  const body = encodeURIComponent(tpl.body);
+  return `mailto:${encodeURIComponent(guest.email)}?subject=${subject}&body=${body}`;
+}
+
+/**
+ * Open email client for a batch of guests.
+ * @param {'invitation'|'reminder'|'thankyou'} templateType
+ * @returns {number} Number of emails opened
+ */
+export function sendBatchEmails(templateType = "invitation") {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  let targets;
+
+  if (templateType === "thankyou") {
+    targets = guests.filter((g) => g.email && g.checkedIn && g.status === "confirmed");
+  } else if (templateType === "reminder") {
+    targets = guests.filter((g) => g.email && g.sent && (g.status === "pending" || g.status === "maybe"));
+  } else {
+    targets = guests.filter((g) => g.email && !g.emailSent);
+  }
+
+  let opened = 0;
+  for (const g of targets) {
+    const link = generateMailtoLink(g, templateType);
+    if (link) {
+      window.open(link, "_blank");
+      opened++;
+    }
+  }
+  return opened;
 }
 
 // ── S18.5 WhatsApp Unsent Filter Shortcut ────────────────────────────────

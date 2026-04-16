@@ -1008,5 +1008,17 @@
     "plural_days": "{count, plural, one {# день} few {# дня} many {# дней} other {# дней}}",
     "plural_children": "{count, plural, one {# ребёнок} few {# ребёнка} many {# детей} other {# детей}}",
     "plural_vendors": "{count, plural, one {# поставщик} few {# поставщика} many {# поставщиков} other {# поставщиков}}",
-    "plural_items": "{count, plural, one {# элемент} few {# элемента} many {# элементов} other {# элементов}}"
+    "plural_items": "{count, plural, one {# элемент} few {# элемента} many {# элементов} other {# элементов}}",
+    "wa_reminder_schedule": "Запланировать напоминание",
+    "wa_reminder_scheduled_for": "Напоминание запланировано на {date}",
+    "wa_reminder_cancel_schedule": "Отменить расписание",
+    "wa_reminder_queue_empty": "Нет запланированных напоминаний",
+    "wa_thankyou_progress": "Отправка... {sent}/{total}",
+    "wa_thankyou_via_api": "Отправить благодарность через API",
+    "email_send_invitation": "Приглашение по email",
+    "email_send_reminder": "Напоминание по email",
+    "email_send_thankyou": "Благодарность по email",
+    "email_subject_invitation": "{groom} и {bride} — Приглашение на свадьбу",
+    "email_subject_reminder": "Напоминание: подтвердите присутствие",
+    "email_subject_thankyou": "Спасибо — {groom} и {bride}"
 }

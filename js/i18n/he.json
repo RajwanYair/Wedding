@@ -1042,5 +1042,17 @@
     "plural_days": "{count, plural, one {יום #} other {# ימים}}",
     "plural_children": "{count, plural, one {ילד #} other {# ילדים}}",
     "plural_vendors": "{count, plural, one {ספק #} other {# ספקים}}",
-    "plural_items": "{count, plural, one {פריט #} other {# פריטים}}"
+    "plural_items": "{count, plural, one {פריט #} other {# פריטים}}",
+    "wa_reminder_schedule": "תזמן תזכורת",
+    "wa_reminder_scheduled_for": "תזכורת מתוזמנת ל-{date}",
+    "wa_reminder_cancel_schedule": "בטל תזמון",
+    "wa_reminder_queue_empty": "אין תזכורות מתוזמנות",
+    "wa_thankyou_progress": "נשלח... {sent}/{total}",
+    "wa_thankyou_via_api": "שלח תודה ב-API",
+    "email_send_invitation": "שלח הזמנה במייל",
+    "email_send_reminder": "שלח תזכורת במייל",
+    "email_send_thankyou": "שלח תודה במייל",
+    "email_subject_invitation": "{groom} ו-{bride} — הזמנה לחתונה",
+    "email_subject_reminder": "תזכורת: אישור הגעה לחתונה",
+    "email_subject_thankyou": "תודה — {groom} ו-{bride}"
 }

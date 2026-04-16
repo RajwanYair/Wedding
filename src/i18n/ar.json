@@ -1007,5 +1007,17 @@
     "plural_days": "{count, plural, =0 {اليوم} one {يوم واحد} two {يومان} few {# أيام} many {# يومًا} other {# يوم}}",
     "plural_children": "{count, plural, =0 {لا أطفال} one {طفل واحد} two {طفلان} few {# أطفال} many {# طفلًا} other {# طفل}}",
     "plural_vendors": "{count, plural, =0 {لا موردين} one {مورد واحد} two {مورّدان} few {# موردين} many {# موردًا} other {# مورد}}",
-    "plural_items": "{count, plural, =0 {لا عناصر} one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}"
+    "plural_items": "{count, plural, =0 {لا عناصر} one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}",
+    "wa_reminder_schedule": "جدولة تذكير",
+    "wa_reminder_scheduled_for": "تذكير مجدول في {date}",
+    "wa_reminder_cancel_schedule": "إلغاء الجدولة",
+    "wa_reminder_queue_empty": "لا توجد تذكيرات مجدولة",
+    "wa_thankyou_progress": "جاري الإرسال... {sent}/{total}",
+    "wa_thankyou_via_api": "إرسال شكر عبر API",
+    "email_send_invitation": "إرسال دعوة بالبريد",
+    "email_send_reminder": "إرسال تذكير بالبريد",
+    "email_send_thankyou": "إرسال شكر بالبريد",
+    "email_subject_invitation": "{groom} و {bride} — دعوة زفاف",
+    "email_subject_reminder": "تذكير: تأكيد الحضور للزفاف",
+    "email_subject_thankyou": "شكرًا — {groom} و {bride}"
 }
