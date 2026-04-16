@@ -37,6 +37,12 @@ export function mount(_container) {
   // S18.2 arrival forecast
   _unsubs.push(storeSubscribe("guests", renderArrivalForecast));
   _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
+  // S19.3 vendor category card
+  _unsubs.push(storeSubscribe("vendors", renderVendorCategories));
+  // S19.4 follow-up pending list
+  _unsubs.push(storeSubscribe("guests", renderFollowUpList));
+  // S20.4 invitation stats
+  _unsubs.push(storeSubscribe("guests", renderInvitationStats));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -48,6 +54,9 @@ export function mount(_container) {
   renderExpenseSummary();
   renderActivityFeed();
   renderArrivalForecast(); // S18.2
+  renderVendorCategories(); // S19.3
+  renderFollowUpList(); // S19.4
+  renderInvitationStats(); // S20.4
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -397,4 +406,121 @@ function _timeAgo(date) {
   if (diff < 3600) return `${Math.floor(diff / 60)} ${t("time_minutes_ago")}`;
   if (diff < 86400) return `${Math.floor(diff / 3600)} ${t("time_hours_ago")}`;
   return `${Math.floor(diff / 86400)} ${t("time_days_ago")}`;
+}
+
+// ── S19.3 Vendor Category Dashboard Card ─────────────────────────────────
+
+/**
+ * Render a summary of vendors grouped by category into #dashVendorCategories.
+ */
+export function renderVendorCategories() {
+  const el = document.getElementById("dashVendorCategories");
+  if (!el) return;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  if (vendors.length === 0) {
+    el.textContent = t("no_vendors");
+    return;
+  }
+  /** @type {Map<string, { count: number, cost: number, paid: number, overdue: number }>} */
+  const catMap = new Map();
+  const now = new Date();
+  vendors.forEach((v) => {
+    const cat = v.category || t("other");
+    const entry = catMap.get(cat) ?? { count: 0, cost: 0, paid: 0, overdue: 0 };
+    entry.count += 1;
+    entry.cost += v.price || 0;
+    entry.paid += v.paid || 0;
+    if (v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0)) {
+      entry.overdue += 1;
+    }
+    catMap.set(cat, entry);
+  });
+  el.textContent = "";
+  catMap.forEach((entry, cat) => {
+    const row = document.createElement("div");
+    row.className = "vendor-cat-row";
+    const outstanding = entry.cost - entry.paid;
+    const overdueTag = entry.overdue > 0
+      ? ` <span class="badge badge--danger">${entry.overdue} ${t("overdue")}</span>`
+      : "";
+    row.innerHTML = `<span class="vendor-cat-name">${_escDash(cat)}</span>
+      <span class="vendor-cat-stat">₪${entry.paid.toLocaleString()} / ₪${entry.cost.toLocaleString()} ${outstanding > 0 ? `(<span class="u-text-danger">-₪${outstanding.toLocaleString()}</span>)` : "✅"}${overdueTag}</span>`;
+    el.appendChild(row);
+  });
+}
+
+/** @param {string} s */
+function _escDash(s) {
+  return String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// ── S19.4 Follow-up Pending List Card ────────────────────────────────────
+
+/**
+ * Render guests who received an invitation but haven't RSVP'd (sent=true + pending).
+ */
+export function renderFollowUpList() {
+  const el = document.getElementById("dashFollowUpList");
+  if (!el) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const pending = guests.filter((g) => g.sent && g.status === "pending");
+  const badge = document.getElementById("dashFollowUpBadge");
+  if (badge) badge.textContent = String(pending.length);
+  if (pending.length === 0) {
+    el.textContent = t("followup_none");
+    return;
+  }
+  el.textContent = "";
+  pending.slice(0, 15).forEach((g) => {
+    const row = document.createElement("div");
+    row.className = "followup-row";
+    const name = document.createElement("span");
+    name.className = "followup-name";
+    name.textContent = `${g.firstName} ${g.lastName || ""}`;
+    row.appendChild(name);
+    if (g.phone) {
+      const phone = document.createElement("a");
+      phone.href = `tel:${g.phone}`;
+      phone.className = "followup-phone u-text-muted u-ml-sm";
+      phone.textContent = g.phone;
+      row.appendChild(phone);
+    }
+    el.appendChild(row);
+  });
+  if (pending.length > 15) {
+    const more = document.createElement("div");
+    more.className = "u-text-muted u-text-sm u-mt-xs";
+    more.textContent = `+${pending.length - 15} ${t("more_guests")}`;
+    el.appendChild(more);
+  }
+}
+
+// ── S20.4 Invitation Stats Dashboard Card ────────────────────────────────
+
+/**
+ * Render mini invitation statistics into #dashInviteStats.
+ */
+export function renderInvitationStats() {
+  const el = document.getElementById("dashInviteStats");
+  if (!el) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const total = guests.length;
+  const sent = guests.filter((g) => g.sent).length;
+  const unsent = total - sent;
+  const rsvpd = guests.filter((g) => g.status !== "pending").length;
+  const sentPct = total > 0 ? Math.round((sent / total) * 100) : 0;
+  const rsvpPct = sent > 0 ? Math.round((rsvpd / sent) * 100) : 0;
+
+  const items = [
+    { label: t("stat_sent"), val: String(sent), sub: `${sentPct}%` },
+    { label: t("stat_unsent"), val: String(unsent), sub: "" },
+    { label: t("invite_rsvp_rate"), val: `${rsvpPct}%`, sub: `${rsvpd}/${sent}` },
+  ];
+  el.textContent = "";
+  items.forEach(({ label, val, sub }) => {
+    const item = document.createElement("div");
+    item.className = "invite-stat-item";
+    item.innerHTML = `<div class="invite-stat-val">${val}</div><div class="invite-stat-label">${_escDash(label)}${sub ? ` <span class="u-text-muted">(${sub})</span>` : ""}</div>`;
+    el.appendChild(item);
+  });
 }

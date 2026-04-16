@@ -104,6 +104,7 @@ import {
   batchSetStatus,
   batchDeleteGuests,
   batchSetMeal,
+  batchMarkUnsent,
   renderDuplicates,
   mergeGuests,
   addGuestNote,
@@ -111,6 +112,9 @@ import {
   setMultiFilter,
   addGuestTag,
   removeGuestTag,
+  toggleGuestVip,
+  toggleVipFilter,
+  printGuestBadges,
 } from "./sections/guests.js";
 import {
   saveTable,
@@ -137,6 +141,7 @@ import {
   deleteExpense,
   exportExpensesCSV,
   filterExpensesByCategory,
+  setExpenseCategoryFilter,
   openExpenseForEdit,
 } from "./sections/expenses.js";
 import { deleteBudgetEntry, renderBudgetProgress } from "./sections/budget.js";
@@ -149,6 +154,7 @@ import {
   startQrScan,
   stopQrScan,
   checkInByTable,
+  toggleAccessibilityFilter,
 } from "./sections/checkin.js";
 import {
   renderBudgetChart,
@@ -183,6 +189,7 @@ import {
   deleteTimelineItem,
   openTimelineForEdit,
   startTimelineAlarms,
+  printTimeline,
 } from "./sections/timeline.js";
 import {
   switchLanguage,
@@ -806,6 +813,16 @@ function _registerHandlers() {
       showToast(t("batch_success"), "success");
     }
   });
+  // S19.2 VIP toggle
+  on("toggleGuestVip", (actionEl) => toggleGuestVip(actionEl.dataset.actionArg ?? ""));
+  on("toggleVipFilter", () => toggleVipFilter());
+  // S19.5 Bulk mark as unsent
+  on("batchMarkUnsent", () => {
+    batchMarkUnsent();
+    showToast(t("batch_success"), "success");
+  });
+  // S20.1 Print guest badges
+  on("printGuestBadges", () => printGuestBadges());
   on("scanDuplicates", () => renderDuplicates());
   on("mergeGuests", (el) => {
     mergeGuests(el.dataset.keepId ?? "", el.dataset.mergeId ?? "");
@@ -906,6 +923,8 @@ function _registerHandlers() {
     checkInByTable(tableId);
     showToast(t("checkin_table_all"), "success");
   });
+  // S20.5 Accessibility filter
+  on("toggleAccessibilityFilter", () => toggleAccessibilityFilter());
 
   // ── Vendors ──
   on("saveVendor", (_el, _e) => {
@@ -971,6 +990,10 @@ function _registerHandlers() {
   on("exportExpensesCSV", () => exportExpensesCSV());
   on("filterExpensesByCategory", (el) =>
     filterExpensesByCategory(el.dataset.category ?? "all"),
+  );
+  // S20.3 clickable category chip filter
+  on("setExpenseCategoryFilter", (el) =>
+    setExpenseCategoryFilter(el.dataset.actionArg ?? "all"),
   );
   on("openEditExpenseModal", (el) => {
     openExpenseForEdit(el.dataset.actionArg ?? "");
@@ -1156,6 +1179,8 @@ function _registerHandlers() {
     openTimelineForEdit(el.dataset.actionArg ?? "");
     openModal("timelineModal");
   });
+  // S20.2 Print timeline
+  on("printTimeline", () => printTimeline());
 
   // ── Sheets / Sync ──
   on("syncSheetsNow", async () => {

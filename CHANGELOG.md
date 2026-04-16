@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.5.0] — 2025-07-18
+
+### Added — S19 Vendor Management & Guest Intelligence
+
+- **S19.1 Vendor quick-dial**: Phone and WhatsApp `tel:` / `wa.me` link buttons in vendor action cell for instant one-tap contact.
+- **S19.2 Guest VIP flag**: ⭐ toggle button per guest row; VIP-only filter button in toolbar to show starred guests.
+- **S19.3 Vendor category dashboard card**: Dashboard card groups vendors by category showing cost, paid, and overdue payment count per category.
+- **S19.4 Follow-up pending list**: Dashboard card lists guests who received an invitation (`sent=true`) but still have `pending` status — with one-tap phone link.
+- **S19.5 Bulk mark as unsent**: Batch toolbar button resets `sent=false` for all selected guests, enabling invitation resend workflow.
+
+### Added — S20 Print, Reports & UX Polish
+
+- **S20.1 Guest name badges print**: "Print Badges" button opens a printable 3-column badge grid for all `confirmed` guests — name, table, and dietary need.
+- **S20.2 Timeline schedule print**: "Print Schedule" button in Timeline section opens a print-ready table of all events sorted by time.
+- **S20.3 Expense category filter**: Category column in expense table renders as clickable chips — click to filter by category, click again to clear.
+- **S20.4 Invitation stats dashboard card**: Dashboard card shows Sent, Unsent, and RSVP Rate with animated counters.
+- **S20.5 Accessibility check-in filter**: ♿ filter button in check-in toolbar narrows the list to guests with `accessibility=true` or wheelchair notes.
+
 ## [4.4.0] — 2025-07-17
 
 ### Added — S17 Data Quality & Smart Insights

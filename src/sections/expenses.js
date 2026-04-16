@@ -14,6 +14,9 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
+/** @type {string} active expense category filter; "all" means no filter */
+let _expenseCatFilter = "all";
+
 export function mount(_container) {
   _unsubs.push(storeSubscribe("expenses", renderExpenses));
   renderExpenses();
@@ -75,16 +78,33 @@ export function renderExpenses() {
   const list = el.expenseList;
   if (!list) return;
 
-  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  let expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+
+  // S20.3 Category filter
+  if (_expenseCatFilter !== "all") {
+    expenses = expenses.filter((e) => (e.category || "") === _expenseCatFilter);
+  }
+
   list.textContent = "";
 
   expenses.forEach((e) => {
     const tr = document.createElement("tr");
     tr.className = "expense-row";
     tr.dataset.id = e.id;
+    tr.dataset.category = e.category || "";
+
+    // S20.3 — clickable category chip
+    const catTd = document.createElement("td");
+    const catBtn = document.createElement("button");
+    catBtn.className = `btn btn-chip${_expenseCatFilter === e.category ? " btn-primary" : " btn-ghost"} u-text-sm`;
+    catBtn.textContent = e.category || "";
+    catBtn.title = t("expense_filter_by_cat");
+    catBtn.dataset.action = "setExpenseCategoryFilter";
+    catBtn.dataset.actionArg = _expenseCatFilter === e.category ? "all" : (e.category || "all");
+    catTd.appendChild(catBtn);
+    tr.appendChild(catTd);
 
     const cells = [
-      e.category || "",
       e.description || "",
       e.date || "",
       `₪${e.amount || 0}`,
@@ -117,7 +137,8 @@ export function renderExpenses() {
 
   const totalEl = document.getElementById("expenseStatTotal");
   if (totalEl) {
-    const total = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+    const allExpenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+    const total = allExpenses.reduce((s, e) => s + (e.amount || 0), 0);
     totalEl.textContent = `₪${total}`;
   }
   const emptyEl = document.getElementById("expenseEmpty");
@@ -155,19 +176,26 @@ export function exportExpensesCSV() {
 }
 
 /**
+ * S20.3 Set (or clear) the active expense category filter, then re-render.
+ * @param {string} category — pass "all" to clear
+ */
+export function setExpenseCategoryFilter(category) {
+  _expenseCatFilter = category || "all";
+  // Update category filter chip label if present
+  const chip = document.getElementById("expCatFilterChip");
+  if (chip) {
+    chip.textContent = _expenseCatFilter === "all" ? t("all_categories") : _expenseCatFilter;
+  }
+  renderExpenses();
+}
+
+/**
  * Filter expenses by category for display.
  * @param {string} category — pass "all" to clear filter
+ * @deprecated Use setExpenseCategoryFilter instead
  */
 export function filterExpensesByCategory(category) {
-  const list = el.expenseList;
-  if (!list) return;
-  const rows = list.querySelectorAll("tr.expense-row");
-  rows.forEach((row) => {
-    const htmlRow = /** @type {HTMLElement} */ (row);
-    const cat = htmlRow.dataset.category || "";
-    htmlRow.style.display =
-      category === "all" || !category || cat === category ? "" : "none";
-  });
+  setExpenseCategoryFilter(category);
 }
 
 /**

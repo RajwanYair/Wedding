@@ -253,6 +253,8 @@
 .btn-green-api { background: #128c7e; color: #fff; }
 .btn-green-api:hover { background: #0e7066; }
 .btn-small { padding: 0.3rem 0.7rem; font-size: 0.78em; }
+.btn-ghost { background: transparent; border: 1px solid var(--card-border-color, #e5e7eb); color: var(--text-primary); }
+.btn-ghost:hover { background: var(--bg-card-hover); }
 
 /* ── Table Seating ── */
 .seating-floor {
@@ -1103,6 +1105,17 @@ body.light-mode .btn-dark-mode-icon { filter: invert(0.85); }
   color: var(--text-secondary);
 }
 .btn-icon-sm:hover { background: rgba(255, 255, 255, 0.1); }
+.btn-icon {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+  font-size: 1em;
+  line-height: 1;
+}
+.btn-icon:hover { background: var(--bg-card-hover); border-color: var(--card-border-color, #e5e7eb); }
 
 /* ── Guest Landing Page ── */
 .guest-landing-hero {
@@ -2365,6 +2378,30 @@ kbd {
   gap: 0.5rem;
   margin-bottom: 0.75rem;
 }
+
+/* S19.2 VIP star button */
+.btn-vip-active { color: var(--color-warning, #f59e0b); }
+
+/* S19.3 Vendor category list */
+.vendor-cat-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.vendor-cat-row { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
+.vendor-cat-name { font-weight: 600; }
+.vendor-cat-stat { color: var(--color-muted, #6b7280); font-size: 0.8rem; }
+
+/* S19.4 Follow-up list */
+.followup-list { display: flex; flex-direction: column; gap: 0.3rem; }
+.followup-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+.followup-name { font-weight: 600; }
+.followup-phone { color: var(--color-muted, #6b7280); }
+
+/* S20.3 Expense category chip */
+.btn-chip { padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.78rem; white-space: nowrap; cursor: pointer; }
+
+/* S20.4 Invitation stats */
+.invite-stats-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.invite-stat-item { text-align: center; }
+.invite-stat-val { font-size: 1.75rem; font-weight: 700; color: var(--color-primary, #7c3aed); }
+.invite-stat-label { font-size: 0.8rem; color: var(--color-muted, #6b7280); }
 
 } /* end @layer components */
 

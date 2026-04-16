@@ -6,6 +6,8 @@
       <button class="btn btn-primary btn-small" data-action="openAddGuestModal">
         <span>➕</span> <span data-i18n="action_add_guest">הוסף אורח</span>
       </button>
+      <!-- S20.1 Print guest name badges -->
+      <button class="btn btn-ghost btn-small u-mr-xs" data-action="printGuestBadges" data-i18n="print_badges">🏷️ הדפס תגיות</button>
     </div>
   </div>
 
@@ -118,6 +120,8 @@
         <option value="all" data-i18n="filter_table">שולחן</option>
         <option value="unassigned" data-i18n="filter_unassigned">לא שובץ</option>
       </select>
+      <!-- S19.2 VIP filter -->
+      <button id="vipFilterBtn" class="btn btn-small btn-ghost" data-action="toggleVipFilter" data-i18n="guest_vip_filter">VIP</button>
     </div>
   </div>
 
@@ -143,6 +147,8 @@
       <option value="kosher" data-i18n="meal_kosher">כשר מהדרין</option>
     </select>
     <button class="btn btn-secondary btn-small" data-action="batchSetMeal" data-i18n="batch_apply">החל</button>
+    <!-- S19.5 Bulk mark as unsent -->
+    <button class="btn btn-ghost btn-small u-mr-sm" data-action="batchMarkUnsent" data-i18n="batch_mark_unsent">סמן כלא נשלח</button>
   </div>
 
   <!-- Table -->

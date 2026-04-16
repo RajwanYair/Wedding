@@ -235,3 +235,50 @@ function _fireTimelineAlert(item, diffMs) {
   (document.getElementById("timelineList") ?? document.body).before(banner);
   setTimeout(() => banner.remove(), 10000);
 }
+
+// ── S20.2 Timeline Print ─────────────────────────────────────────────────
+
+/**
+ * Open a print window containing the full timeline schedule.
+ */
+export function printTimeline() {
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  if (items.length === 0) { alert(t("timeline_empty")); return; }
+
+  const sorted = [...items].sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+  const rows = sorted.map((item) =>
+    `<tr><td class="tl-time">${_esc(item.time || "")}</td><td class="tl-title">${_esc(item.title || "")}</td><td class="tl-notes">${_esc(item.notes || "")}</td></tr>`,
+  ).join("");
+
+  const weddingInfo = /** @type {any} */ (storeGet("weddingInfo") ?? {});
+  const heading = weddingInfo.brideName && weddingInfo.groomName
+    ? `${_esc(weddingInfo.brideName)} &amp; ${_esc(weddingInfo.groomName)}`
+    : t("timeline_title");
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(`<!DOCTYPE html><html dir="rtl"><head>
+    <meta charset="utf-8"><title>${heading}</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2cm; direction: rtl; }
+      h1 { text-align: center; font-size: 18pt; margin-bottom: 1cm; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #ccc; padding: 0.3cm; text-align: right; vertical-align: top; }
+      th { background: #f0f0f0; font-size: 12pt; }
+      .tl-time { white-space: nowrap; width: 2cm; font-weight: bold; }
+      .tl-notes { color: #666; font-size: 10pt; }
+      @media print { body { margin: 1cm; } }
+    </style>
+  </head><body>
+  <h1>${heading}</h1>
+  <table><thead><tr><th>${t("col_time")}</th><th>${t("col_title")}</th><th>${t("col_notes")}</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+/** @param {string} s */
+function _esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}

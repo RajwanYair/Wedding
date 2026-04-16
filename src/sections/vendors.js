@@ -10,6 +10,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 import { pushUndo } from "../utils/undo.js";
+import { cleanPhone } from "../utils/phone.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -111,6 +112,26 @@ export function renderVendors() {
     // Actions cell
     const actionsTd = document.createElement("td");
     actionsTd.className = "u-text-center";
+    // S19.1 Quick-dial buttons
+    if (v.phone) {
+      const rawPhone = cleanPhone(v.phone);
+      const telLink = document.createElement("a");
+      telLink.href = `tel:${v.phone}`;
+      telLink.className = "btn btn-small btn-secondary u-mr-xs";
+      telLink.title = t("vendor_call");
+      telLink.textContent = "📞";
+      actionsTd.appendChild(telLink);
+      if (rawPhone) {
+        const waLink = document.createElement("a");
+        waLink.href = `https://wa.me/${rawPhone}`;
+        waLink.target = "_blank";
+        waLink.rel = "noopener noreferrer";
+        waLink.className = "btn btn-small btn-whatsapp u-mr-xs";
+        waLink.title = t("vendor_whatsapp");
+        waLink.textContent = "💬";
+        actionsTd.appendChild(waLink);
+      }
+    }
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
     editBtn.textContent = t("btn_edit");

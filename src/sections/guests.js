@@ -23,6 +23,9 @@ const _pendingSync = new Set();
 /** @type {string} current filter: "all" | status | side | group */
 let _filter = "all";
 
+/** @type {boolean} show VIP guests only */
+let _vipOnly = false;
+
 /** @type {string} current sort field */
 let _sortField = "lastName";
 
@@ -226,6 +229,11 @@ export function renderGuests() {
     );
   }
 
+  // S19.2 VIP-only filter
+  if (_vipOnly) {
+    guests = guests.filter((g) => g.vip === true);
+  }
+
   // Sort
   guests = [...guests].sort((a, b) => {
     const av = String(a[_sortField] ?? "");
@@ -286,6 +294,14 @@ export function renderGuests() {
     // Actions cell
     const actionsTd = document.createElement("td");
     actionsTd.className = "u-text-nowrap";
+    // S19.2 VIP star button
+    const vipBtn = document.createElement("button");
+    vipBtn.className = `btn btn-icon btn-small u-mr-xs${g.vip ? " btn-vip-active" : ""}`;
+    vipBtn.title = t("guest_vip_toggle");
+    vipBtn.textContent = g.vip ? "⭐" : "☆";
+    vipBtn.dataset.action = "toggleGuestVip";
+    vipBtn.dataset.actionArg = g.id;
+    actionsTd.appendChild(vipBtn);
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
     editBtn.textContent = t("btn_edit");
@@ -654,6 +670,94 @@ export function batchSetMeal(meal) {
   );
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+// ── S19.2 Guest VIP Flag ──────────────────────────────────────────────────
+
+/**
+ * Toggle the VIP flag on a single guest.
+ * @param {string} guestId
+ */
+export function toggleGuestVip(guestId) {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx === -1) return;
+  guests[idx] = {
+    ...guests[idx],
+    vip: !guests[idx].vip,
+    updatedAt: new Date().toISOString(),
+  };
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+/**
+ * Toggle the VIP-only filter and re-render.
+ */
+export function toggleVipFilter() {
+  _vipOnly = !_vipOnly;
+  const btn = document.getElementById("vipFilterBtn");
+  if (btn) btn.classList.toggle("btn-primary", _vipOnly);
+  renderGuests();
+}
+
+// ── S19.5 Bulk Mark as Unsent ─────────────────────────────────────────────
+
+/**
+ * Reset the `sent` flag for all selected guests (mark as not yet sent).
+ */
+export function batchMarkUnsent() {
+  const ids = new Set(_getSelectedIds());
+  if (ids.size === 0) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
+    ids.has(g.id) ? { ...g, sent: false, updatedAt: new Date().toISOString() } : g,
+  );
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+// ── S20.1 Guest Name Badges Print ────────────────────────────────────────
+
+/**
+ * Open a print window with a 2-column badge grid for all filtered/confirmed guests.
+ */
+export function printGuestBadges() {
+  const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = allGuests.filter((g) => g.status === "confirmed");
+
+  const badgeHTML = guests.map((g) => {
+    const tbl = tables.find((tb) => tb.id === g.tableId);
+    const tableName = tbl ? tbl.name : "—";
+    const name = `${g.firstName} ${g.lastName || ""}`.trim();
+    return `<div class="badge-card">
+      <div class="badge-name">${_escHtml(name)}</div>
+      <div class="badge-table">${_escHtml(t("col_table") || "שולחן")} ${_escHtml(tableName)}</div>
+      ${g.meal && g.meal !== "regular" ? `<div class="badge-meal">${_escHtml(t(`meal_${g.meal}`) || g.meal)}</div>` : ""}
+    </div>`;
+  }).join("");
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(`<!DOCTYPE html><html dir="rtl"><head>
+    <meta charset="utf-8"><title>Guest Badges</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; }
+      .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5cm; padding: 1cm; }
+      .badge-card { border: 1px solid #999; border-radius: 8px; padding: 0.8cm; text-align: center; page-break-inside: avoid; min-height: 4cm; display: flex; flex-direction: column; justify-content: center; }
+      .badge-name { font-size: 18pt; font-weight: bold; margin-bottom: 0.3cm; }
+      .badge-table { font-size: 13pt; color: #555; }
+      .badge-meal { font-size: 10pt; color: #888; margin-top: 0.2cm; }
+      @media print { body { margin: 0; } }
+    </style>
+  </head><body><div class="badge-grid">${badgeHTML}</div></body></html>`);
+  win.document.close();
+  win.print();
+}
+
+/** @param {string} s */
+function _escHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 // ── S12.2 Duplicate Detection ─────────────────────────────────────────────

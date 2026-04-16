@@ -19,6 +19,9 @@ let _searchQuery = "";
 /** @type {boolean} */
 let _giftMode = false;
 
+/** @type {boolean} S20.5 show accessibility-needed guests only */
+let _accessibilityOnly = false;
+
 /** @type {MediaStream|null} */
 let _cameraStream = null;
 
@@ -92,6 +95,11 @@ export function renderCheckin() {
           .toLowerCase()
           .includes(_searchQuery) || (g.phone || "").includes(_searchQuery),
     );
+  }
+
+  // S20.5 Accessibility-only filter
+  if (_accessibilityOnly) {
+    guests = guests.filter((g) => g.accessibility || (g.notes || "").toLowerCase().includes("wheelchair") || (g.notes || "").toLowerCase().includes("נגיש"));
   }
 
   list.textContent = "";
@@ -421,4 +429,16 @@ export function checkInByTable(tableId) {
     storeSet("guests", guests);
     enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
   }
+}
+
+// ── S20.5 Accessibility Filter ───────────────────────────────────────────
+
+/**
+ * Toggle accessibility-needs-only filter in the check-in list.
+ */
+export function toggleAccessibilityFilter() {
+  _accessibilityOnly = !_accessibilityOnly;
+  const btn = document.getElementById("accessibilityFilterBtn");
+  if (btn) btn.classList.toggle("btn-primary", _accessibilityOnly);
+  renderCheckin();
 }

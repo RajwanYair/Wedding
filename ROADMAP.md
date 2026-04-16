@@ -39,6 +39,8 @@
 | S16 — Day-Of & Advanced | Check-in sound, smart table assign, payment schedule, RSVP timeline, dietary cards | v4.3.0 | ✅ Done |
 | S17 — Data Quality & Smart Insights | Full-text search, bulk meal, expense donut, table capacity colors, budget alert | v4.4.0 | ✅ Done |
 | S18 — Sync, Forecast & Operations | Queue monitor, arrival forecast, batch checkin, timeline alarm, WhatsApp unsent filter | v4.4.0 | ✅ Done |
+| S19 — Vendor Management & Guest Intelligence | Vendor quick-dial, VIP flag, vendor category card, follow-up list, bulk mark unsent | v4.5.0 | ✅ Done |
+| S20 — Print, Reports & UX Polish | Guest badges print, timeline print, expense cat filter, invite stats card, accessibility filter | v4.5.0 | ✅ Done |
 
 ### Current State (v3.8.0)
 
@@ -181,6 +183,34 @@ Operational intelligence and day-of efficiency improvements.
 
 **Exit**: All 5 features functional. i18n complete. CI green.
 
+### S19 — Vendor Management & Guest Intelligence (v4.5.0)
+
+Vendor quick-contact and guest VIP/follow-up tools.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 19.1 | Vendor quick-dial — tel: + wa.me buttons in vendor action cell | S |
+| 19.2 | Guest VIP/star flag — toggle ⭐ per guest, filter VIP-only | S |
+| 19.3 | Vendor category dashboard card — cost/paid/overdue per category | M |
+| 19.4 | Follow-up pending list — sent guests still showing `pending` status | M |
+| 19.5 | Bulk mark as unsent — reset `sent=false` for selected guests | S |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
+### S20 — Print, Reports & UX Polish (v4.5.0)
+
+Printing workflows, UX refinements, and invitation analytics.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 20.1 | Guest name badges print — 3-up badge grid for confirmed guests | M |
+| 20.2 | Timeline schedule print — full schedule in print window | S |
+| 20.3 | Expense category filter — click category chip to filter expense rows | S |
+| 20.4 | Invitation stats dashboard card — sent/unsent/RSVP rate summary | S |
+| 20.5 | Accessibility check-in filter — ♿ button to show accessibility-needed guests | S |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
 | Version | Sprint | Status |
 | --- | --- | --- |
 | v3.0.0–v3.8.0 | S0–S7 | ✅ Released |
@@ -190,6 +220,7 @@ Operational intelligence and day-of efficiency improvements.
 | v4.2.0 | S13 + S14 | ✅ Released |
 | v4.3.0 | S15 + S16 | ✅ Released |
 | v4.4.0 | S17 + S18 | ✅ Released |
+| v4.5.0 | S19 + S20 | ✅ Released |
 
 ---
 
