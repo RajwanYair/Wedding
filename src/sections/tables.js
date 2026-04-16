@@ -772,3 +772,100 @@ export function exportTableCSV(tableId) {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+// ── Sprint 3: Seating Intelligence Helpers ────────────────────────────────
+
+/**
+ * Find tables with mixed dietary needs (potential conflicts).
+ * @returns {Array<{ tableId: string, tableName: string, meals: string[] }>}
+ */
+export function getTablesWithMixedDiets() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const result = [];
+  for (const tbl of tables) {
+    const seated = guests.filter((g) => g.tableId === tbl.id);
+    const meals = [...new Set(seated.map((g) => g.meal || "regular"))];
+    if (meals.length > 1) {
+      result.push({ tableId: tbl.id, tableName: tbl.name || tbl.id, meals });
+    }
+  }
+  return result;
+}
+
+/**
+ * Get table utilization — seats used / capacity for each table.
+ * @returns {Array<{ tableId: string, name: string, capacity: number, seated: number, utilization: number }>}
+ */
+export function getTableUtilization() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return tables.map((tbl) => {
+    const seated = guests.filter((g) => g.tableId === tbl.id).length;
+    const capacity = tbl.capacity || 10;
+    return {
+      tableId: tbl.id,
+      name: tbl.name || tbl.id,
+      capacity,
+      seated,
+      utilization: Math.round((seated / capacity) * 100),
+    };
+  });
+}
+
+/**
+ * Get side balance per table (groom, bride, mutual).
+ * @returns {Array<{ tableId: string, name: string, groom: number, bride: number, mutual: number }>}
+ */
+export function getTableSideBalance() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return tables.map((tbl) => {
+    const seated = guests.filter((g) => g.tableId === tbl.id);
+    return {
+      tableId: tbl.id,
+      name: tbl.name || tbl.id,
+      groom: seated.filter((g) => g.side === "groom").length,
+      bride: seated.filter((g) => g.side === "bride").length,
+      mutual: seated.filter((g) => g.side === "mutual" || !g.side).length,
+    };
+  });
+}
+
+/**
+ * Detect over-capacity tables (more guests assigned than capacity).
+ * @returns {Array<{ tableId: string, name: string, capacity: number, seated: number, over: number }>}
+ */
+export function getOverCapacityTables() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const over = [];
+  for (const tbl of tables) {
+    const seated = guests.filter((g) => g.tableId === tbl.id).length;
+    const capacity = tbl.capacity || 10;
+    if (seated > capacity) {
+      over.push({ tableId: tbl.id, name: tbl.name || tbl.id, capacity, seated, over: seated - capacity });
+    }
+  }
+  return over;
+}
+
+/**
+ * Get unseated guests grouped by side and group.
+ * @returns {{ total: number, bySide: Record<string, number>, byGroup: Record<string, number> }}
+ */
+export function getUnseatedGuestBreakdown() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const unseated = guests.filter((g) => g.status === "confirmed" && !g.tableId);
+  /** @type {Record<string, number>} */
+  const bySide = {};
+  /** @type {Record<string, number>} */
+  const byGroup = {};
+  for (const g of unseated) {
+    const side = g.side || "mutual";
+    bySide[side] = (bySide[side] || 0) + 1;
+    const group = g.group || "other";
+    byGroup[group] = (byGroup[group] || 0) + 1;
+  }
+  return { total: unseated.length, bySide, byGroup };
+}

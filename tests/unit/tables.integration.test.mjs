@@ -13,6 +13,11 @@ import {
   deleteTable,
   autoAssignTables,
   getTableStats,
+  getTablesWithMixedDiets,
+  getTableUtilization,
+  getTableSideBalance,
+  getOverCapacityTables,
+  getUnseatedGuestBreakdown,
 } from "../../src/sections/tables.js";
 
 beforeEach(() => {
@@ -201,5 +206,119 @@ describe("getTableStats", () => {
     const stats = getTableStats();
     expect(stats.totalSeated).toBe(2);
     expect(stats.available).toBe(8);
+  });
+});
+
+// ── getTablesWithMixedDiets ───────────────────────────────────────────────
+describe("getTablesWithMixedDiets", () => {
+  it("returns empty when no mixed diets", () => {
+    saveTable(makeTable());
+    const tid = storeGet("tables")[0].id;
+    storeSet("guests", [
+      makeGuest({ tableId: tid, meal: "regular" }),
+      makeGuest({ tableId: tid, meal: "regular" }),
+    ]);
+    expect(getTablesWithMixedDiets()).toEqual([]);
+  });
+
+  it("detects tables with mixed meals", () => {
+    saveTable(makeTable());
+    const tid = storeGet("tables")[0].id;
+    storeSet("guests", [
+      makeGuest({ tableId: tid, meal: "regular" }),
+      makeGuest({ tableId: tid, meal: "vegan" }),
+    ]);
+    const mixed = getTablesWithMixedDiets();
+    expect(mixed).toHaveLength(1);
+    expect(mixed[0].meals).toContain("regular");
+    expect(mixed[0].meals).toContain("vegan");
+  });
+});
+
+// ── getTableUtilization ───────────────────────────────────────────────────
+describe("getTableUtilization", () => {
+  it("computes utilization for each table", () => {
+    saveTable(makeTable({ capacity: 10 }));
+    const tid = storeGet("tables")[0].id;
+    storeSet("guests", [
+      makeGuest({ tableId: tid }),
+      makeGuest({ tableId: tid }),
+    ]);
+    const util = getTableUtilization();
+    expect(util).toHaveLength(1);
+    expect(util[0].seated).toBe(2);
+    expect(util[0].utilization).toBe(20);
+  });
+
+  it("returns 0 for empty table", () => {
+    saveTable(makeTable({ capacity: 8 }));
+    const util = getTableUtilization();
+    expect(util[0].utilization).toBe(0);
+  });
+});
+
+// ── getTableSideBalance ───────────────────────────────────────────────────
+describe("getTableSideBalance", () => {
+  it("counts groom, bride, mutual per table", () => {
+    saveTable(makeTable());
+    const tid = storeGet("tables")[0].id;
+    storeSet("guests", [
+      makeGuest({ tableId: tid, side: "groom" }),
+      makeGuest({ tableId: tid, side: "bride" }),
+      makeGuest({ tableId: tid, side: "mutual" }),
+      makeGuest({ tableId: tid }), // no side = mutual
+    ]);
+    const bal = getTableSideBalance();
+    expect(bal[0].groom).toBe(1);
+    expect(bal[0].bride).toBe(1);
+    expect(bal[0].mutual).toBe(2);
+  });
+});
+
+// ── getOverCapacityTables ─────────────────────────────────────────────────
+describe("getOverCapacityTables", () => {
+  it("returns empty when all tables within capacity", () => {
+    saveTable(makeTable({ capacity: 10 }));
+    expect(getOverCapacityTables()).toEqual([]);
+  });
+
+  it("detects over-capacity tables", () => {
+    saveTable(makeTable({ capacity: 2 }));
+    const tid = storeGet("tables")[0].id;
+    storeSet("guests", [
+      makeGuest({ tableId: tid }),
+      makeGuest({ tableId: tid }),
+      makeGuest({ tableId: tid }),
+    ]);
+    const over = getOverCapacityTables();
+    expect(over).toHaveLength(1);
+    expect(over[0].over).toBe(1);
+  });
+});
+
+// ── getUnseatedGuestBreakdown ─────────────────────────────────────────────
+describe("getUnseatedGuestBreakdown", () => {
+  it("returns zeros when all guests seated", () => {
+    saveTable(makeTable());
+    const tid = storeGet("tables")[0].id;
+    storeSet("guests", [
+      makeGuest({ tableId: tid, status: "confirmed" }),
+    ]);
+    expect(getUnseatedGuestBreakdown().total).toBe(0);
+  });
+
+  it("counts unseated confirmed guests by side and group", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", side: "groom", group: "family" }),
+      makeGuest({ status: "confirmed", side: "bride", group: "friends" }),
+      makeGuest({ status: "confirmed", side: "groom", group: "family" }),
+      makeGuest({ status: "pending" }), // not counted (not confirmed)
+    ]);
+    const bd = getUnseatedGuestBreakdown();
+    expect(bd.total).toBe(3);
+    expect(bd.bySide.groom).toBe(2);
+    expect(bd.bySide.bride).toBe(1);
+    expect(bd.byGroup.family).toBe(2);
+    expect(bd.byGroup.friends).toBe(1);
   });
 });
