@@ -2,7 +2,7 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v4.7.0-d4a574?style=flat-square)
+![Version](https://img.shields.io/badge/version-v5.0.0-d4a574?style=flat-square)
 ![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
 ![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
 ![Tests](https://img.shields.io/badge/tests-1776%2B_passing-brightgreen?style=flat-square)
@@ -188,3 +188,40 @@ graph TD
 ## License
 
 MIT © [RajwanYair](https://github.com/RajwanYair)
+
+---
+
+## User Guide
+
+### Dashboard
+
+The **Dashboard** is the first tab after login. It shows countdown, confirmed/pending/declined counts, total seats, suggested actions, and gift tracker. Stats animate on scroll.
+
+### Managing Guests
+
+1. Click **הוסף אורח / Add Guest** (+ button).
+2. Fill in first name, last name, phone, and group.
+3. Set expected attendance count (adults + children).
+4. Click **שמור / Save**.
+
+Use the filter bar for Status, Side, Group, or free-text search. Click column headers to sort. An amber border indicates unsynced data.
+
+### Table Seating
+
+Create tables with name, capacity, and shape. Use **שבץ אוטומטית / Auto-assign** to seat all unassigned confirmed guests by group priority, or drag guests manually.
+
+### RSVP Flow
+
+Guests open the app link, enter their phone number (phone-first lookup), confirm/decline, select meal preference, and submit. Generate QR codes from the Invitation tab.
+
+### WhatsApp Messages
+
+Select guests and click the WhatsApp icon (💬). Phone numbers are auto-converted to `+972` international format via `wa.me/` links.
+
+### Vendors & Budget
+
+Add vendors with category, name, contact, price, and paid amount. The Budget tab shows total cost, paid amount, remaining balance, and category breakdown. Log ad-hoc expenses separately.
+
+### Settings & Offline Mode
+
+The app works offline once loaded. Data is saved to localStorage and syncs to Google Sheets when online. Configure backend settings, themes, and language in Settings.

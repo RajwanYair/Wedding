@@ -6973,7 +6973,7 @@ describe("v3.5.0: Gallery decoding=async (S4.6)", function () {
 // v3.6.0 Regression Tests
 // S3.9 offline-to-online sync, S4.4 postbuild precache,
 // S6.4 nav tests, S6.7 integration tests, S7.9 aria-live toast,
-// S7 docs: SECURITY.md, CONTRIBUTING.md, README badges, CLAUDE.md v3.6.0
+// S7 docs: SECURITY.md, CONTRIBUTING.md, README badges, copilot-instructions.md
 // =============================================================================
 const _v36_srcDir = resolve(__dirname, "..", "src");
 const _v36_servicesDir = resolve(_v36_srcDir, "services");
@@ -7176,23 +7176,14 @@ describe("v3.6.0: version stamps consistent", function () {
       "js/config.js version comment missing",
     );
   });
-  it("CLAUDE.md references a current version", function () {
-    const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
+  it("copilot-instructions.md references a current version", function () {
+    const src = readFileSync(
+      resolve(__dirname, "..", ".github", "copilot-instructions.md"),
+      "utf8",
+    );
     assert.ok(
-      src.includes("3.7.0") ||
-        src.includes("3.6.0") ||
-        src.includes("3.8.0") ||
-        src.includes("3.8.1") ||
-        src.includes("3.8.2") ||
-        src.includes("3.8.3") ||
-        src.includes("3.9.0") ||
-        src.includes("4.0.0") ||
-        src.includes("4.1.0") ||
-        src.includes("4.2.0") ||
-        src.includes("4.4.0") ||
-        src.includes("4.5.0") ||
-        src.includes("4.7.0"),
-      "CLAUDE.md missing version reference",
+      src.includes("4.") || src.includes("5."),
+      "copilot-instructions.md missing version reference",
     );
   });
   it("README.md version badge exists", function () {
@@ -7217,14 +7208,8 @@ describe("v3.7.0: version stamps consistent", function () {
       SW.includes("3.7") ||
         SW.includes("3.8") ||
         SW.includes("3.9") ||
-        SW.includes("4.0") ||
-        SW.includes("4.1") ||
-        SW.includes("4.2") ||
-        SW.includes("4.3") ||
-        SW.includes("4.4") ||
-        SW.includes("4.5") ||
-        SW.includes("4.6") ||
-        SW.includes("4.7"),
+        SW.includes("4.") ||
+        SW.includes("5."),
       "sw.js CACHE_NAME too old",
     );
   });
@@ -7237,7 +7222,8 @@ describe("v3.7.0: version stamps consistent", function () {
       cfg.includes("3.7") ||
         cfg.includes("3.8") ||
         cfg.includes("3.9") ||
-        cfg.includes("4."),
+        cfg.includes("4.") ||
+        cfg.includes("5."),
     );
   });
   it("src/core/config.js APP_VERSION is 3.7.0 or later", function () {
@@ -7249,18 +7235,19 @@ describe("v3.7.0: version stamps consistent", function () {
       src.includes("3.7") ||
         src.includes("3.8") ||
         src.includes("3.9") ||
-        src.includes("4."),
+        src.includes("4.") ||
+        src.includes("5."),
       "src/core/config.js APP_VERSION not updated",
     );
   });
-  it("CLAUDE.md references v3.7.0 or later", function () {
-    const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
+  it("copilot-instructions.md references v4.7.0 or later", function () {
+    const src = readFileSync(
+      resolve(__dirname, "..", ".github", "copilot-instructions.md"),
+      "utf8",
+    );
     assert.ok(
-      src.includes("3.7") ||
-        src.includes("3.8") ||
-        src.includes("3.9") ||
-        src.includes("4."),
-      "CLAUDE.md not updated",
+      src.includes("4.7") || src.includes("5."),
+      "copilot-instructions.md not updated",
     );
   });
   it("README.md version badge shows v3.7.0 or later", function () {
@@ -7269,7 +7256,8 @@ describe("v3.7.0: version stamps consistent", function () {
       src.includes("v3.7") ||
         src.includes("v3.8") ||
         src.includes("v3.9") ||
-        src.includes("v4."),
+        src.includes("v4.") ||
+        src.includes("v5."),
       "README.md version badge not updated",
     );
   });

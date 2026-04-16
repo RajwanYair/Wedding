@@ -371,7 +371,7 @@ const HANDLER_FILES = existsSync(handlersDir)
 
 /** Extract all on("X", ...) handler registrations from main.js + handler files */
 function extractHandlers() {
-  const combined = MAIN_JS + "\n" + HANDLER_FILES;
+  const combined = `${MAIN_JS}\n${HANDLER_FILES}`;
   return [...new Set([...combined.matchAll(/on\("([a-zA-Z]+)"/g)].map((m) => m[1]))];
 }
 
