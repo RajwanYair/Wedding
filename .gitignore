@@ -22,3 +22,7 @@ dist/
 *.bak
 *.tmp
 .extracted.*
+
+# Legacy (deleted in v5.3.0 — still on disk for reference)
+js/
+sw.js

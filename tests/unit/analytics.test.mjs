@@ -19,6 +19,11 @@ import {
   checkBudgetOvershoot,
   predictNoShowRate,
   computeArrivalForecast,
+  getCostPerHead,
+  getSeatingCompletion,
+  getBudgetCategoryBreakdown,
+  getRsvpDeadlineCountdown,
+  getVendorPaymentProgress,
 } from "../../src/sections/analytics.js";
 
 function seedStore() {
@@ -400,5 +405,141 @@ describe("computeArrivalForecast", () => {
     expect(result.declined).toBe(5);
     // projected = 10 + 10*0.6 + 10*0.4 = 10 + 6 + 4 = 20
     expect(result.projected).toBe(20);
+  });
+});
+
+// ── getCostPerHead ───────────────────────────────────────────────────────
+
+describe("getCostPerHead", () => {
+  beforeEach(() => seedStore());
+
+  it("returns 0 when no confirmed guests", () => {
+    const result = getCostPerHead();
+    expect(result.costPerHead).toBe(0);
+    expect(result.confirmedSeats).toBe(0);
+  });
+
+  it("computes cost per head with budget target", () => {
+    storeSet("weddingInfo", { budgetTarget: "100000" });
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", count: 50 }),
+    ]);
+    const result = getCostPerHead();
+    expect(result.costPerHead).toBe(2000);
+    expect(result.totalBudget).toBe(100000);
+  });
+
+  it("falls back to vendor+expense total when no budget target", () => {
+    storeSet("vendors", [{ price: 30000 }]);
+    storeSet("expenses", [{ amount: 10000 }]);
+    storeSet("guests", [makeGuest({ status: "confirmed", count: 20 })]);
+    const result = getCostPerHead();
+    expect(result.totalBudget).toBe(40000);
+    expect(result.costPerHead).toBe(2000);
+  });
+});
+
+// ── getSeatingCompletion ─────────────────────────────────────────────────
+
+describe("getSeatingCompletion", () => {
+  beforeEach(() => seedStore());
+
+  it("returns 0% when no guests", () => {
+    const result = getSeatingCompletion();
+    expect(result.rate).toBe(0);
+    expect(result.totalGuests).toBe(0);
+  });
+
+  it("computes seating rate for confirmed guests", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", tableId: "t1" }),
+      makeGuest({ status: "confirmed", tableId: "t2" }),
+      makeGuest({ status: "confirmed", tableId: "" }),
+      makeGuest({ status: "pending" }), // not counted
+    ]);
+    const result = getSeatingCompletion();
+    expect(result.totalGuests).toBe(3);
+    expect(result.seated).toBe(2);
+    expect(result.unseated).toBe(1);
+    expect(result.rate).toBe(67); // 2/3 ≈ 67%
+  });
+});
+
+// ── getBudgetCategoryBreakdown ───────────────────────────────────────────
+
+describe("getBudgetCategoryBreakdown", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty when no vendors or expenses", () => {
+    expect(getBudgetCategoryBreakdown()).toEqual([]);
+  });
+
+  it("groups by category with percentages", () => {
+    storeSet("vendors", [
+      { category: "venue", price: 50000 },
+      { category: "catering", price: 30000 },
+    ]);
+    storeSet("expenses", [
+      { category: "venue", amount: 10000 },
+    ]);
+    const result = getBudgetCategoryBreakdown();
+    expect(result[0].category).toBe("venue");
+    expect(result[0].amount).toBe(60000);
+    expect(result[1].category).toBe("catering");
+    expect(result.reduce((s, r) => s + r.pct, 0)).toBeCloseTo(100, -1);
+  });
+});
+
+// ── getRsvpDeadlineCountdown ─────────────────────────────────────────────
+
+describe("getRsvpDeadlineCountdown", () => {
+  beforeEach(() => seedStore());
+
+  it("returns null when no deadline set", () => {
+    const result = getRsvpDeadlineCountdown();
+    expect(result.daysLeft).toBeNull();
+    expect(result.deadline).toBeNull();
+  });
+
+  it("detects overdue deadline", () => {
+    storeSet("weddingInfo", { rsvpDeadline: "2020-01-01" });
+    const result = getRsvpDeadlineCountdown();
+    expect(result.isOverdue).toBe(true);
+    expect(result.daysLeft).toBeLessThan(0);
+  });
+
+  it("detects future deadline", () => {
+    const future = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+    storeSet("weddingInfo", { rsvpDeadline: future });
+    const result = getRsvpDeadlineCountdown();
+    expect(result.isOverdue).toBe(false);
+    expect(result.daysLeft).toBeGreaterThan(0);
+  });
+});
+
+// ── getVendorPaymentProgress ─────────────────────────────────────────────
+
+describe("getVendorPaymentProgress", () => {
+  beforeEach(() => seedStore());
+
+  it("returns zeros when no vendors", () => {
+    const result = getVendorPaymentProgress();
+    expect(result.totalVendors).toBe(0);
+    expect(result.totalCost).toBe(0);
+  });
+
+  it("categorizes vendor payment status", () => {
+    storeSet("vendors", [
+      { price: 10000, paid: 10000 },  // fully paid
+      { price: 20000, paid: 5000 },   // partially paid
+      { price: 15000, paid: 0 },      // unpaid
+    ]);
+    const result = getVendorPaymentProgress();
+    expect(result.fullyPaid).toBe(1);
+    expect(result.partiallyPaid).toBe(1);
+    expect(result.unpaid).toBe(1);
+    expect(result.outstanding).toBe(30000);
+    expect(result.totalCost).toBe(45000);
+    expect(result.totalPaid).toBe(15000);
   });
 });

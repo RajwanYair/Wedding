@@ -34,9 +34,13 @@ const CSS = readdirSync(CSS_DIR).filter(function(f) { return f.endsWith('.css');
 function _readJsDir(dir) {
   let result = '';
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.isDirectory()) { result += _readJsDir(resolve(dir, entry.name)); }
-    else if (entry.name.endsWith('.js')) { result += readFileSync(resolve(dir, entry.name), 'utf8') + '\n'; }
-    else if (entry.name.endsWith('.json')) { result += readFileSync(resolve(dir, entry.name), 'utf8') + '\n'; }
+    if (entry.isDirectory()) {
+      result += _readJsDir(resolve(dir, entry.name));
+    } else if (entry.name.endsWith(".js")) {
+      result += `${readFileSync(resolve(dir, entry.name), "utf8")}\n`;
+    } else if (entry.name.endsWith(".json")) {
+      result += `${readFileSync(resolve(dir, entry.name), "utf8")}\n`;
+    }
   }
   return result;
 }

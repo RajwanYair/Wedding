@@ -1794,3 +1794,115 @@ export function getRsvpConversionRate() {
     confirmRate: responded > 0 ? Math.round((confirmed / responded) * 100) : 0,
   };
 }
+
+// ── Sprint 6: Advanced Analytics Helpers ──────────────────────────────────
+
+/**
+ * Compute cost per confirmed head (budget / confirmed seats).
+ * @returns {{ costPerHead: number, totalBudget: number, confirmedSeats: number }}
+ */
+export function getCostPerHead() {
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const target = parseFloat(info.budgetTarget || "0") || 0;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const totalBudget = target ||
+    vendors.reduce((s, v) => s + (parseFloat(v.price) || 0), 0) +
+    expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmedSeats = guests
+    .filter((g) => g.status === "confirmed")
+    .reduce((s, g) => s + (g.count || 1), 0);
+  return {
+    costPerHead: confirmedSeats > 0 ? Math.round(totalBudget / confirmedSeats) : 0,
+    totalBudget,
+    confirmedSeats,
+  };
+}
+
+/**
+ * Get seating completion metrics.
+ * @returns {{ totalGuests: number, seated: number, unseated: number, rate: number }}
+ */
+export function getSeatingCompletion() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const seated = confirmed.filter((g) => g.tableId).length;
+  return {
+    totalGuests: confirmed.length,
+    seated,
+    unseated: confirmed.length - seated,
+    rate: confirmed.length > 0 ? Math.round((seated / confirmed.length) * 100) : 0,
+  };
+}
+
+/**
+ * Get budget category breakdown with percentages.
+ * @returns {Array<{ category: string, amount: number, pct: number }>}
+ */
+export function getBudgetCategoryBreakdown() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  /** @type {Record<string, number>} */
+  const cats = {};
+  for (const v of vendors) {
+    const cat = v.category || "other";
+    cats[cat] = (cats[cat] || 0) + (parseFloat(v.price) || 0);
+  }
+  for (const e of expenses) {
+    const cat = e.category || "other";
+    cats[cat] = (cats[cat] || 0) + (parseFloat(e.amount) || 0);
+  }
+  const total = Object.values(cats).reduce((s, v) => s + v, 0);
+  return Object.entries(cats)
+    .map(([category, amount]) => ({
+      category,
+      amount,
+      pct: total > 0 ? Math.round((amount / total) * 100) : 0,
+    }))
+    .sort((a, b) => b.amount - a.amount);
+}
+
+/**
+ * Get RSVP deadline countdown in days.
+ * @returns {{ daysLeft: number | null, deadline: string | null, isOverdue: boolean }}
+ */
+export function getRsvpDeadlineCountdown() {
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const deadline = info.rsvpDeadline;
+  if (!deadline) return { daysLeft: null, deadline: null, isOverdue: false };
+  const dl = new Date(deadline);
+  if (isNaN(dl.getTime())) return { daysLeft: null, deadline: null, isOverdue: false };
+  const now = new Date();
+  const diff = dl.getTime() - now.getTime();
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return { daysLeft: days, deadline, isOverdue: days < 0 };
+}
+
+/**
+ * Get vendor payment progress summary.
+ * @returns {{ totalVendors: number, fullyPaid: number, partiallyPaid: number,
+ *             unpaid: number, totalCost: number, totalPaid: number, outstanding: number }}
+ */
+export function getVendorPaymentProgress() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  let totalCost = 0, totalPaid = 0, fullyPaid = 0, partiallyPaid = 0, unpaid = 0;
+  for (const v of vendors) {
+    const price = parseFloat(v.price) || 0;
+    const paid = parseFloat(v.paid) || 0;
+    totalCost += price;
+    totalPaid += paid;
+    if (paid >= price && price > 0) fullyPaid++;
+    else if (paid > 0) partiallyPaid++;
+    else unpaid++;
+  }
+  return {
+    totalVendors: vendors.length,
+    fullyPaid,
+    partiallyPaid,
+    unpaid,
+    totalCost,
+    totalPaid,
+    outstanding: totalCost - totalPaid,
+  };
+}
