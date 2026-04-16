@@ -5679,10 +5679,14 @@ describe("Sprint 1: HTML template extraction (S1.1-S1.3)", function () {
 // ── v3.1.0: New section exports ────────────────────────────────────────────
 describe("v3.1.0: New section exports and handlers", function () {
   const SECTIONS_DIR = resolve(__dirname, "..", "src", "sections");
+  const HANDLERS_DIR = resolve(__dirname, "..", "src", "handlers");
   const MAIN_SRC = readFileSync(
     resolve(__dirname, "..", "src", "main.js"),
     "utf8",
-  );
+  ) + (existsSync(HANDLERS_DIR)
+    ? readdirSync(HANDLERS_DIR).filter((f) => f.endsWith(".js"))
+        .map((f) => readFileSync(resolve(HANDLERS_DIR, f), "utf8")).join("\n")
+    : "");
 
   // guests.js
   it("guests.js exports importGuestsCSV", function () {

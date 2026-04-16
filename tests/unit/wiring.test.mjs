@@ -328,9 +328,19 @@ function extractDataActions(src) {
   return [...new Set([...src.matchAll(/data-action="([a-zA-Z]+)"/g)].map((m) => m[1]))];
 }
 
-/** Extract all on("X", ...) handler registrations from main.js */
+/** Read all handler files from src/handlers/ (if any) */
+const handlersDir = resolve(root, "src", "handlers");
+const HANDLER_FILES = existsSync(handlersDir)
+  ? readdirSync(handlersDir)
+      .filter((f) => f.endsWith(".js"))
+      .map((f) => readFileSync(resolve(handlersDir, f), "utf8"))
+      .join("\n")
+  : "";
+
+/** Extract all on("X", ...) handler registrations from main.js + handler files */
 function extractHandlers() {
-  return [...new Set([...MAIN_JS.matchAll(/on\("([a-zA-Z]+)"/g)].map((m) => m[1]))];
+  const combined = MAIN_JS + "\n" + HANDLER_FILES;
+  return [...new Set([...combined.matchAll(/on\("([a-zA-Z]+)"/g)].map((m) => m[1]))];
 }
 
 /** Extract _modalLoaders keys from ui.js */
