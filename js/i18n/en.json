@@ -1011,5 +1011,16 @@
     "vendor_due_title": "Upcoming Vendor Payments",
     "vendor_due_overdue": "Overdue",
     "vendor_due_days": "In {n} days",
-    "vendor_due_today": "Today"
+    "vendor_due_today": "Today",
+    "noshow_title": "No-Show Prediction",
+    "noshow_rate": "Expected no-show rate",
+    "noshow_expected": "Expected no-shows",
+    "noshow_actual_expected": "Expected to attend",
+    "noshow_late_rsvp": "Late RSVPs",
+    "noshow_on_time": "on time",
+    "noshow_late": "late",
+    "suggest_same_side": "Same side",
+    "suggest_same_group": "Same group",
+    "suggest_same_meal": "Similar diet",
+    "suggest_best_fit": "Available seat"
 }

@@ -597,3 +597,102 @@ export function smartAutoAssign() {
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
   return assigned;
 }
+
+// ── F4.1.1 Table Assignment Suggestions ──────────────────────────────────
+
+/**
+ * Return table assignment suggestions without applying them.
+ * Each suggestion includes the guest, recommended table, and reasoning.
+ * @returns {{ guestId: string, guestName: string, tableId: string, tableName: string, reason: string }[]}
+ */
+export function suggestTableAssignments() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+
+  /** @type {Map<string, number>} */
+  const usage = new Map(tables.map((tb) => [tb.id, 0]));
+  guests.filter((g) => g.tableId).forEach((g) => {
+    usage.set(g.tableId, (usage.get(g.tableId) ?? 0) + (g.count || 1));
+  });
+
+  const unassigned = guests.filter(
+    (g) => !g.tableId && g.status !== "declined",
+  );
+
+  /** @type {{ guestId: string, guestName: string, tableId: string, tableName: string, reason: string }[]} */
+  const suggestions = [];
+
+  for (const g of unassigned) {
+    const side = g.side || "mutual";
+    const group = g.group || "friends";
+    const meal = g.meal || "regular";
+    const cnt = g.count || 1;
+
+    // Score each table
+    let bestTable = null;
+    let bestScore = -Infinity;
+    let bestReason = "";
+
+    for (const tb of tables) {
+      const free = (tb.capacity || 0) - (usage.get(tb.id) ?? 0);
+      if (free < cnt) continue;
+
+      let score = 0;
+      const reasons = [];
+
+      // Same side bonus
+      const sameSide = guests.filter(
+        (og) => og.tableId === tb.id && og.side === side,
+      ).length;
+      if (sameSide > 0) {
+        score += sameSide * 3;
+        reasons.push(t("suggest_same_side") || "אותו צד");
+      }
+
+      // Same group bonus
+      const sameGroup = guests.filter(
+        (og) => og.tableId === tb.id && og.group === group,
+      ).length;
+      if (sameGroup > 0) {
+        score += sameGroup * 2;
+        reasons.push(t("suggest_same_group") || "אותה קבוצה");
+      }
+
+      // Meal compatibility bonus (avoid mixing special diets)
+      const isSpecialMeal = meal !== "regular";
+      if (isSpecialMeal) {
+        const sameMeal = guests.filter(
+          (og) => og.tableId === tb.id && og.meal === meal,
+        ).length;
+        if (sameMeal > 0) {
+          score += 2;
+          reasons.push(t("suggest_same_meal") || "העדפת תזונה דומה");
+        }
+      }
+
+      // Tighter fit = slightly better (avoids spreading across many tables)
+      score += (1 - free / (tb.capacity || 1));
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestTable = tb;
+        bestReason = reasons.length > 0 ? reasons.join(", ") : (t("suggest_best_fit") || "מקום פנוי");
+      }
+    }
+
+    if (bestTable) {
+      const name = [g.firstName, g.lastName].filter(Boolean).join(" ") || g.id;
+      suggestions.push({
+        guestId: g.id,
+        guestName: name,
+        tableId: bestTable.id,
+        tableName: String(bestTable.name || bestTable.id),
+        reason: bestReason,
+      });
+      // Track projected usage to avoid over-suggesting the same table
+      usage.set(bestTable.id, (usage.get(bestTable.id) ?? 0) + cnt);
+    }
+  }
+
+  return suggestions;
+}

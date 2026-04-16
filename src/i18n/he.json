@@ -1013,5 +1013,16 @@
     "vendor_due_title": "תשלומים קרובים לספקים",
     "vendor_due_overdue": "באיחור",
     "vendor_due_days": "עוד {n} ימים",
-    "vendor_due_today": "היום"
+    "vendor_due_today": "היום",
+    "noshow_title": "תחזית אי-הגעה",
+    "noshow_rate": "שיעור אי-הגעה צפוי",
+    "noshow_expected": "צפויים לא להגיע",
+    "noshow_actual_expected": "צפויים להגיע",
+    "noshow_late_rsvp": "אישרו מאוחר",
+    "noshow_on_time": "בזמן",
+    "noshow_late": "מאוחר",
+    "suggest_same_side": "אותו צד",
+    "suggest_same_group": "אותה קבוצה",
+    "suggest_same_meal": "העדפת תזונה דומה",
+    "suggest_best_fit": "מקום פנוי"
 }

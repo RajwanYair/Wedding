@@ -34,6 +34,8 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("expenses", renderExpenseTrend));
   // S24.4 tag breakdown
   _unsubs.push(storeSubscribe("guests", renderTagBreakdown));
+  // F4.1.2 no-show prediction
+  _unsubs.push(storeSubscribe("guests", renderNoShowPrediction));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -46,6 +48,7 @@ export function mount(_container) {
   renderArrivalForecast();
   renderExpenseTrend(); // S22.2
   renderTagBreakdown(); // S24.4
+  renderNoShowPrediction(); // F4.1.2
 }
 
 export function unmount() {
@@ -1120,6 +1123,47 @@ export function checkBudgetOvershoot() {
 const _MAYBE_PCT = 0.6;  // assume 60% of "maybe" guests will come
 const _PENDING_PCT = 0.4; // assume 40% of pending guests will come
 
+// ── F4.1.2 No-Show Rate Prediction ──────────────────────────────────────
+
+/**
+ * Predict no-show rate based on RSVP timing patterns.
+ * Guests who confirmed late (close to event date) historically have higher no-show rates.
+ * @returns {{ noShowRate: number, expectedNoShows: number, confirmed: number, lateConfirmed: number, details: string }}
+ */
+export function predictNoShowRate() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const weddingDate = info.date ? new Date(info.date) : null;
+
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  if (confirmed.length === 0 || !weddingDate) {
+    return { noShowRate: 0, expectedNoShows: 0, confirmed: 0, lateConfirmed: 0, details: "" };
+  }
+
+  const DAY = 86400000;
+  let lateCount = 0; // confirmed within 7 days of event
+  let veryLateCount = 0; // confirmed within 3 days
+  const totalHeads = confirmed.reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
+
+  for (const g of confirmed) {
+    if (!g.rsvpDate) continue;
+    const rsvp = new Date(g.rsvpDate);
+    const daysBeforeEvent = (weddingDate.getTime() - rsvp.getTime()) / DAY;
+    if (daysBeforeEvent <= 3) veryLateCount++;
+    else if (daysBeforeEvent <= 7) lateCount++;
+  }
+
+  // Base no-show rate: 5% for on-time, 15% for late, 25% for very-late
+  const onTimeCount = confirmed.length - lateCount - veryLateCount;
+  const weighted = (onTimeCount * 0.05) + (lateCount * 0.15) + (veryLateCount * 0.25);
+  const noShowRate = confirmed.length > 0 ? weighted / confirmed.length : 0.05;
+  const expectedNoShows = Math.round(totalHeads * noShowRate);
+
+  const details = `${onTimeCount} ${t("noshow_on_time") || "בזמן"}, ${lateCount + veryLateCount} ${t("noshow_late") || "מאוחר"}`;
+
+  return { noShowRate, expectedNoShows, confirmed: totalHeads, lateConfirmed: lateCount + veryLateCount, details };
+}
+
 /**
  * Compute projected final headcount (heads, not unique guests).
  * @returns {{ projected: number, confirmed: number, maybe: number, pending: number, declined: number }}
@@ -1314,4 +1358,42 @@ export function renderTagBreakdown() {
     row.appendChild(num);
     container.appendChild(row);
   });
+}
+
+// ── F4.1.2 No-Show Prediction Renderer ──────────────────────────────────
+
+/**
+ * Render no-show prediction card into #noShowPrediction.
+ */
+export function renderNoShowPrediction() {
+  const container = document.getElementById("noShowPrediction");
+  if (!container) return;
+  const { noShowRate, expectedNoShows, confirmed, lateConfirmed } = predictNoShowRate();
+
+  container.textContent = "";
+  if (confirmed === 0) {
+    container.textContent = t("forecast_no_guests") || "אין אורחים מאושרים עדיין";
+    return;
+  }
+
+  const items = [
+    { num: `${Math.round(noShowRate * 100)}%`, label: t("noshow_rate") || "שיעור אי-הגעה צפוי" },
+    { num: String(expectedNoShows), label: t("noshow_expected") || "צפויים לא להגיע" },
+    { num: String(confirmed - expectedNoShows), label: t("noshow_actual_expected") || "צפויים להגיע" },
+    { num: String(lateConfirmed), label: t("noshow_late_rsvp") || "אישרו מאוחר" },
+  ];
+
+  for (const { num, label } of items) {
+    const box = document.createElement("div");
+    box.className = "analytics-stat-box";
+    const numEl = document.createElement("div");
+    numEl.className = "analytics-stat-num";
+    numEl.textContent = num;
+    const lblEl = document.createElement("div");
+    lblEl.className = "analytics-stat-lbl";
+    lblEl.textContent = label;
+    box.appendChild(numEl);
+    box.appendChild(lblEl);
+    container.appendChild(box);
+  }
 }
