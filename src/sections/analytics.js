@@ -1694,3 +1694,103 @@ function renderSeatingScore() {
     container.appendChild(box);
   }
 }
+
+// ── Sprint 8: Response Velocity ──────────────────────────────────────────
+
+/**
+ * Calculate RSVP response velocity — submissions per day over time.
+ * @returns {{ date: string, count: number }[]}
+ */
+export function computeResponseVelocity() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const dated = guests.filter((g) => g.rsvpDate);
+  const buckets = {};
+  for (const g of dated) {
+    const day = g.rsvpDate.slice(0, 10);
+    buckets[day] = (buckets[day] || 0) + 1;
+  }
+  return Object.entries(buckets)
+    .map(([date, count]) => ({ date, count: /** @type {number} */ (count) }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// ── Sprint 8: Meal Distribution ──────────────────────────────────────────
+
+/**
+ * Get meal distribution with counts and percentages.
+ * @returns {{ meal: string, count: number, pct: number }[]}
+ */
+export function getMealDistribution() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const total = confirmed.length || 1;
+  const counts = {};
+  for (const g of confirmed) {
+    const m = g.meal || "regular";
+    counts[m] = (counts[m] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([meal, count]) => ({ meal, count: /** @type {number} */ (count), pct: Math.round((/** @type {number} */ (count) / total) * 100) }))
+    .sort((a, b) => b.count - a.count);
+}
+
+// ── Sprint 8: Side Balance ───────────────────────────────────────────────
+
+/**
+ * Get bride/groom side balance with percentages.
+ * @returns {{ groom: number, bride: number, mutual: number, groomPct: number, bridePct: number }}
+ */
+export function getSideBalance() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const groom = guests.filter((g) => g.side === "groom").length;
+  const bride = guests.filter((g) => g.side === "bride").length;
+  const mutual = guests.filter((g) => g.side === "mutual" || !g.side).length;
+  const total = guests.length || 1;
+  return {
+    groom, bride, mutual,
+    groomPct: Math.round((groom / total) * 100),
+    bridePct: Math.round((bride / total) * 100),
+  };
+}
+
+// ── Sprint 8: Check-in Velocity ──────────────────────────────────────────
+
+/**
+ * Get check-in velocity — arrivals per 15-minute slot.
+ * @returns {{ slot: string, count: number }[]}
+ */
+export function getCheckinVelocity() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const checkedIn = guests.filter((g) => g.checkedIn && g.checkedInAt);
+  const slots = {};
+  for (const g of checkedIn) {
+    const d = new Date(g.checkedInAt);
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mm = String(Math.floor(d.getMinutes() / 15) * 15).padStart(2, "0");
+    const slot = `${hh}:${mm}`;
+    slots[slot] = (slots[slot] || 0) + 1;
+  }
+  return Object.entries(slots)
+    .map(([slot, count]) => ({ slot, count: /** @type {number} */ (count) }))
+    .sort((a, b) => a.slot.localeCompare(b.slot));
+}
+
+// ── Sprint 8: RSVP Conversion Rate ──────────────────────────────────────
+
+/**
+ * Get RSVP conversion metrics.
+ * @returns {{ sent: number, responded: number, rate: number, confirmed: number, confirmRate: number }}
+ */
+export function getRsvpConversionRate() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const sent = guests.filter((g) => g.sent).length;
+  const responded = guests.filter((g) => g.status !== "pending").length;
+  const confirmed = guests.filter((g) => g.status === "confirmed").length;
+  return {
+    sent,
+    responded,
+    rate: sent > 0 ? Math.round((responded / sent) * 100) : 0,
+    confirmed,
+    confirmRate: responded > 0 ? Math.round((confirmed / responded) * 100) : 0,
+  };
+}
