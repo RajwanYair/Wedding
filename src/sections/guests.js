@@ -12,6 +12,7 @@ import { uid } from "../utils/misc.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { pushUndo } from "../utils/undo.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -125,9 +126,12 @@ export function saveGuest(data, existingId = null) {
  * @param {string} id
  */
 export function deleteGuest(id) {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
-    (g) => g.id !== id,
-  );
+  const all = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const victim = all.find((g) => g.id === id);
+  if (victim) {
+    pushUndo(`Delete guest ${victim.firstName}`, "guests", JSON.parse(JSON.stringify(all)));
+  }
+  const guests = all.filter((g) => g.id !== id);
   storeSet("guests", guests);
   _pendingSync.delete(id);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
@@ -256,7 +260,12 @@ export function renderGuests() {
     ];
     cells.forEach((txt, ci) => {
       const td = document.createElement("td");
-      td.textContent = txt;
+      // S15.5 — Highlight search terms in name and phone columns
+      if (_searchQuery && (ci === 0 || ci === 2)) {
+        _highlightText(td, txt, _searchQuery);
+      } else {
+        td.textContent = txt;
+      }
       // S14.5 — Show tags in name cell
       if (ci === 0 && Array.isArray(g.tags) && g.tags.length > 0) {
         g.tags.forEach((tag) => {
@@ -860,4 +869,27 @@ export function removeGuestTag(guestId, tag) {
   guests[idx] = { ...guests[idx], tags, updatedAt: new Date().toISOString() };
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+// ── S15.5 Search Highlight Helper ────────────────────────────────────────
+
+/**
+ * Render text into an element with the search query highlighted.
+ * @param {HTMLElement} container
+ * @param {string} text
+ * @param {string} query  Lowercase query string
+ */
+function _highlightText(container, text, query) {
+  const lower = text.toLowerCase();
+  const idx = lower.indexOf(query);
+  if (idx === -1) {
+    container.textContent = text;
+    return;
+  }
+  container.appendChild(document.createTextNode(text.slice(0, idx)));
+  const mark = document.createElement("mark");
+  mark.className = "search-highlight";
+  mark.textContent = text.slice(idx, idx + query.length);
+  container.appendChild(mark);
+  container.appendChild(document.createTextNode(text.slice(idx + query.length)));
 }

@@ -570,6 +570,35 @@
       </button>
     </div>
 
+    <!-- S15.3 Auto-Backup -->
+    <div class="settings-card">
+      <h3>💾 <span data-i18n="autobackup_title">גיבוי אוטומטי</span></h3>
+      <p data-i18n="autobackup_desc">גיבוי אוטומטי שומר תמונת מצב כל 30 דקות.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="autobackup_interval">מרווח (דקות)</label>
+          <input type="number" id="autoBackupInterval" min="5" max="240" value="30" inputmode="numeric" />
+        </div>
+        <div class="form-group">
+          <span class="badge" id="lastBackupTime" data-i18n="autobackup_never">טרם בוצע</span>
+        </div>
+      </div>
+      <div class="section-toolbar-start">
+        <button class="btn btn-primary btn-small" data-action="startAutoBackup">
+          ▶ <span data-i18n="autobackup_start">הפעל גיבוי</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="stopAutoBackup">
+          ⏹ <span data-i18n="autobackup_stop">עצור גיבוי</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="downloadAutoBackup">
+          📥 <span data-i18n="autobackup_download">הורד גיבוי</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="restoreAutoBackup">
+          📤 <span data-i18n="autobackup_restore">שחזר מגיבוי</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Danger Zone -->
     <div class="settings-card settings-card--danger">
       <h3>⚠️ <span data-i18n="clear_data_title">מחיקת נתונים</span></h3>

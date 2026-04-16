@@ -71,6 +71,9 @@ export function checkInGuest(guestId) {
     };
     storeSet("guests", guests);
     enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+    // S16.1 — Sound + visual alert on check-in
+    _playCheckinSound();
+    _flashCheckinAlert(guests[idx]);
   }
 }
 
@@ -349,4 +352,43 @@ export function getGuestQrUrl(guestId) {
   const baseUrl = window.location.origin + window.location.pathname;
   const checkinUrl = `${baseUrl}?guestId=${encodeURIComponent(guestId)}&action=checkin`;
   return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkinUrl)}`;
+}
+
+// ── S16.1 Check-in Sound & Visual Alerts ─────────────────────────────────
+
+/** @type {AudioContext|null} */
+let _audioCtx = null;
+
+/**
+ * Play a short pleasant confirmation beep using Web Audio API.
+ */
+function _playCheckinSound() {
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = _audioCtx.createOscillator();
+    const gain = _audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(_audioCtx.destination);
+    osc.frequency.value = 800;
+    osc.type = "sine";
+    gain.gain.setValueAtTime(0.3, _audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, _audioCtx.currentTime + 0.3);
+    osc.start(_audioCtx.currentTime);
+    osc.stop(_audioCtx.currentTime + 0.3);
+  } catch {
+    // Audio not available — silently skip
+  }
+}
+
+/**
+ * Flash a visual alert banner for the checked-in guest.
+ * @param {Record<string,unknown>} guest
+ */
+function _flashCheckinAlert(guest) {
+  const banner = document.createElement("div");
+  banner.className = "checkin-flash";
+  banner.textContent = `✅ ${guest.firstName} ${guest.lastName || ""} ${t("checkin_arrived")}`;
+  const anchor = document.getElementById("checkinList") ?? document.body;
+  anchor.parentElement?.insertBefore(banner, anchor);
+  setTimeout(() => banner.remove(), 3000);
 }

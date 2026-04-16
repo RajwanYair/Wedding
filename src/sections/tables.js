@@ -11,6 +11,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { pushUndo } from "../utils/undo.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -66,6 +67,10 @@ export function saveTable(data, existingId = null) {
  * @param {string} id
  */
 export function deleteTable(id) {
+  // Snapshot for undo
+  const allTables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const victim = allTables.find((tb) => tb.id === id);
+  if (victim) pushUndo(`Delete table ${victim.name}`, "tables", JSON.parse(JSON.stringify(allTables)));
   // Unassign any seated guests
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
     g.tableId === id ? { ...g, tableId: null } : g,
@@ -459,4 +464,69 @@ export function getTableStats() {
     totalSeated,
     available: totalCapacity - totalSeated,
   };
+}
+
+// ── S16.2 Smart Table Optimizer ─────────────────────────────────────────
+
+/**
+ * Smart table auto-assign that balances guests by side, group, and dietary.
+ * Groups guests by (side + group), then assigns each group to the best-fit table,
+ * keeping same-side/group guests together and considering dietary preferences.
+ */
+export function smartAutoAssign() {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+
+  /** @type {Map<string, number>} */
+  const usage = new Map(tables.map((tb) => [tb.id, 0]));
+  guests.filter((g) => g.tableId).forEach((g) => {
+    usage.set(g.tableId, (usage.get(g.tableId) ?? 0) + (g.count || 1));
+  });
+
+  const unassigned = guests.filter((g) => !g.tableId && g.status !== "declined");
+  if (unassigned.length === 0) return 0;
+
+  // Group by side+group key
+  /** @type {Map<string, any[]>} */
+  const groups = new Map();
+  unassigned.forEach((g) => {
+    const key = `${g.side || "mutual"}_${g.group || "friends"}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(g);
+  });
+
+  let assigned = 0;
+  // Sort groups by size (largest first for best packing)
+  const sortedGroups = [...groups.entries()].sort((a, b) => b[1].length - a[1].length);
+
+  for (const [_key, groupGuests] of sortedGroups) {
+    // Find best-fit table: closest capacity to needed, preferring tables with same-side occupants
+    const side = groupGuests[0]?.side || "mutual";
+    const bestTable = tables
+      .filter((tb) => (tb.capacity || 0) - (usage.get(tb.id) ?? 0) >= 1)
+      .sort((a, b) => {
+        const freeA = (a.capacity || 0) - (usage.get(a.id) ?? 0);
+        const freeB = (b.capacity || 0) - (usage.get(b.id) ?? 0);
+        // Prefer tables with same-side guests already
+        const sameA = guests.filter((g) => g.tableId === a.id && g.side === side).length;
+        const sameB = guests.filter((g) => g.tableId === b.id && g.side === side).length;
+        if (sameB !== sameA) return sameB - sameA; // more same-side = better
+        return freeA - freeB; // tighter fit = better
+      });
+
+    // Assign guests from this group to the best available tables
+    for (const g of groupGuests) {
+      const cnt = g.count || 1;
+      const table = bestTable.find((tb) => (tb.capacity || 0) - (usage.get(tb.id) ?? 0) >= cnt);
+      if (table) {
+        const idx = guests.findIndex((ug) => ug.id === g.id);
+        if (idx !== -1) { guests[idx] = { ...guests[idx], tableId: table.id }; assigned++; }
+        usage.set(table.id, (usage.get(table.id) ?? 0) + cnt);
+      }
+    }
+  }
+
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  return assigned;
 }

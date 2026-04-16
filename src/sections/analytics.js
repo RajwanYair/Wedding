@@ -19,12 +19,16 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("vendors", renderBudgetChart));
   _unsubs.push(storeSubscribe("tables", _renderTableFill));
   _unsubs.push(storeSubscribe("tables", renderSeatingMap));
+  _unsubs.push(storeSubscribe("vendors", renderPaymentSchedule));
+  _unsubs.push(storeSubscribe("guests", renderRsvpTimeline));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
   _renderTableFill();
   _renderActivityFeed();
   renderSeatingMap();
+  renderPaymentSchedule();
+  renderRsvpTimeline();
 }
 
 export function unmount() {
@@ -873,4 +877,160 @@ export function exportEventSummary() {
   a.download = "event-summary.txt";
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// ── S16.3 Vendor Payment Schedule ────────────────────────────────────────
+
+/**
+ * Render a chronological payment schedule for vendors with due dates.
+ */
+export function renderPaymentSchedule() {
+  const container = document.getElementById("analyticsPaymentSchedule");
+  if (!container) return;
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? [])
+    .filter((v) => v.dueDate)
+    .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+
+  container.textContent = "";
+  if (vendors.length === 0) {
+    container.textContent = t("no_payment_schedule");
+    return;
+  }
+
+  const now = new Date();
+  const table = document.createElement("table");
+  table.className = "data-table payment-schedule-table";
+  const thead = document.createElement("thead");
+  thead.innerHTML = `<tr><th data-i18n="col_vendor">${t("col_vendor")}</th><th data-i18n="label_vendor_due_date">${t("label_vendor_due_date")}</th><th data-i18n="vendor_paid">${t("vendor_paid")}</th><th data-i18n="label_status">${t("label_status")}</th></tr>`;
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  vendors.forEach((v) => {
+    const tr = document.createElement("tr");
+    const dueDate = new Date(v.dueDate);
+    const isPaid = (v.paid || 0) >= (v.price || 0);
+    const isOverdue = dueDate < now && !isPaid;
+    if (isOverdue) tr.className = "vendor-row--overdue";
+    if (isPaid) tr.className = "vendor-row--paid";
+
+    const statusText = isPaid ? t("vendor_status_paid") : (isOverdue ? t("vendor_overdue") : t("vendor_status_upcoming"));
+
+    tr.innerHTML = `<td>${_escSvg(v.name || v.category)}</td><td>${v.dueDate}</td><td>₪${(v.paid || 0).toLocaleString()} / ₪${(v.price || 0).toLocaleString()}</td><td>${statusText}</td>`;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+// ── S16.4 RSVP Response Timeline ─────────────────────────────────────────
+
+/**
+ * Render an SVG timeline of RSVP responses over time.
+ */
+export function renderRsvpTimeline() {
+  const container = document.getElementById("analyticsRsvpTimeline");
+  if (!container) return;
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? [])
+    .filter((g) => g.rsvpDate)
+    .sort((a, b) => (a.rsvpDate || "").localeCompare(b.rsvpDate || ""));
+
+  container.textContent = "";
+  if (guests.length === 0) {
+    container.textContent = t("no_rsvp_data");
+    return;
+  }
+
+  // Group by date
+  /** @type {Map<string, number>} */
+  const byDate = new Map();
+  guests.forEach((g) => {
+    const d = g.rsvpDate.slice(0, 10);
+    byDate.set(d, (byDate.get(d) ?? 0) + 1);
+  });
+
+  const entries = [...byDate.entries()];
+  const maxVal = Math.max(...entries.map(([, v]) => v), 1);
+  const barW = 30;
+  const gap = 6;
+  const w = entries.length * (barW + gap) + 40;
+  const h = 160;
+  const barArea = h - 40;
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${t("rsvp_timeline_title")}">`;
+  // X-axis
+  svg += `<line x1="20" y1="${h - 25}" x2="${w - 10}" y2="${h - 25}" stroke="var(--border)" stroke-width="1"/>`;
+
+  entries.forEach(([date, count], i) => {
+    const x = 25 + i * (barW + gap);
+    const barH = (count / maxVal) * barArea;
+    const y = h - 25 - barH;
+    svg += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="var(--accent)" rx="3"/>`;
+    svg += `<text x="${x + barW / 2}" y="${y - 3}" text-anchor="middle" font-size="9" fill="var(--text)">${count}</text>`;
+    svg += `<text x="${x + barW / 2}" y="${h - 10}" text-anchor="middle" font-size="7" fill="var(--text-muted)">${date.slice(5)}</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: computed from store data + CSS vars
+}
+
+// ── S16.5 Printable Dietary Cards ────────────────────────────────────────
+
+/**
+ * Generate and print per-table dietary requirement cards for the caterer.
+ */
+export function printDietaryCards() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter((g) => g.status === "confirmed");
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+
+  const lines = [];
+  lines.push(`<html><head><meta charset="utf-8"><title>${t("dietary_cards_title")}</title>`);
+  lines.push(`<style>
+    body { font-family: 'Segoe UI', tahoma, sans-serif; direction: rtl; }
+    .card { page-break-inside: avoid; border: 1px solid #333; padding: 12px; margin: 10px 0; border-radius: 8px; }
+    .card h3 { margin: 0 0 8px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: right; }
+    th { background: #f0f0f0; }
+    .meal-special { font-weight: bold; color: #d33; }
+    @media print { .no-print { display: none; } }
+  </style></head><body>`);
+
+  tables.forEach((tb) => {
+    const seated = guests.filter((g) => g.tableId === tb.id);
+    if (seated.length === 0) return;
+    const mealCounts = {};
+    seated.forEach((g) => {
+      const m = g.meal || "regular";
+      mealCounts[m] = (mealCounts[m] || 0) + (g.count || 1);
+    });
+    lines.push(`<div class="card"><h3>${_escSvg(tb.name)} (${seated.reduce((s, g) => s + (g.count || 1), 0)} ${t("stat_guests")})</h3>`);
+    lines.push(`<table><thead><tr><th>${t("col_name")}</th><th>${t("col_meal")}</th><th>${t("label_meal_notes")}</th><th>${t("col_count")}</th></tr></thead><tbody>`);
+    seated.forEach((g) => {
+      const special = g.meal && g.meal !== "regular" ? "meal-special" : "";
+      lines.push(`<tr><td>${_escSvg(g.firstName)} ${_escSvg(g.lastName || "")}</td><td class="${special}">${t(`meal_${g.meal || "regular"}`)}</td><td>${_escSvg(g.mealNotes || "")}</td><td>${g.count || 1}</td></tr>`);
+    });
+    lines.push(`</tbody></table>`);
+    lines.push(`<p><strong>${t("dietary_summary")}:</strong> ${Object.entries(mealCounts).map(([m, c]) => `${t(`meal_${m}`)}: ${c}`).join(", ")}</p>`);
+    lines.push(`</div>`);
+  });
+
+  // Unassigned guests with special diets
+  const unassigned = guests.filter((g) => !g.tableId && g.meal && g.meal !== "regular");
+  if (unassigned.length > 0) {
+    lines.push(`<div class="card"><h3>${t("filter_unassigned")} — ${t("dietary_special")}</h3><ul>`);
+    unassigned.forEach((g) => {
+      lines.push(`<li>${_escSvg(g.firstName)} ${_escSvg(g.lastName || "")} — ${t(`meal_${g.meal}`)} ${g.mealNotes ? `(${_escSvg(g.mealNotes)})` : ""}</li>`);
+    });
+    lines.push(`</ul></div>`);
+  }
+
+  lines.push(`</body></html>`);
+  const w = window.open("", "_blank");
+  if (w) {
+    w.document.write(lines.join("\\n"));
+    w.document.close();
+    w.print();
+  }
 }

@@ -9,6 +9,7 @@ import { storeGet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { daysUntil, formatDateHebrew } from "../utils/date.js";
+import { load, save } from "../core/state.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -28,6 +29,8 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("tables", renderDashboard));
   _unsubs.push(storeSubscribe("vendors", renderExpenseSummary));
   _unsubs.push(storeSubscribe("expenses", renderExpenseSummary));
+  _unsubs.push(storeSubscribe("guests", () => _logActivity("guests")));
+  _unsubs.push(storeSubscribe("vendors", () => _logActivity("vendors")));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -37,6 +40,7 @@ export function mount(_container) {
   );
   renderDashboard();
   renderExpenseSummary();
+  renderActivityFeed();
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -319,4 +323,59 @@ export function renderExpenseSummary() {
       overdueEl.classList.add("u-hidden");
     }
   }
+}
+
+// ── S15.4 Dashboard Activity Feed ────────────────────────────────────────
+
+/** @type {boolean} */
+let _activityMounted = false;
+
+/**
+ * Log an activity event when a store key changes.
+ * @param {string} key
+ */
+function _logActivity(key) {
+  if (!_activityMounted) { _activityMounted = true; return; } // skip initial load
+  const feed = /** @type {Array<{ts: string, key: string}>} */ (load("activityFeed", []) || []);
+  feed.unshift({ ts: new Date().toISOString(), key });
+  if (feed.length > 50) feed.length = 50; // cap at 50 entries
+  save("activityFeed", feed);
+  renderActivityFeed();
+}
+
+/**
+ * Render the activity feed into the dashboard widget.
+ */
+export function renderActivityFeed() {
+  const container = document.getElementById("dashActivityFeed");
+  if (!container) return;
+  const feed = /** @type {Array<{ts: string, key: string}>} */ (load("activityFeed", []) || []);
+  container.textContent = "";
+  if (feed.length === 0) {
+    container.textContent = t("activity_none");
+    return;
+  }
+  const icons = { guests: "👤", vendors: "🏢", tables: "🪑", expenses: "💸" };
+  feed.slice(0, 10).forEach((entry) => {
+    const row = document.createElement("div");
+    row.className = "activity-feed-item";
+    const icon = icons[entry.key] || "📋";
+    const time = new Date(entry.ts);
+    const relative = _timeAgo(time);
+    row.textContent = `${icon} ${t(`activity_${entry.key}_changed`)} — ${relative}`;
+    container.appendChild(row);
+  });
+}
+
+/**
+ * Simple relative time formatter.
+ * @param {Date} date
+ * @returns {string}
+ */
+function _timeAgo(date) {
+  const diff = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (diff < 60) return t("time_just_now");
+  if (diff < 3600) return `${Math.floor(diff / 60)} ${t("time_minutes_ago")}`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} ${t("time_hours_ago")}`;
+  return `${Math.floor(diff / 86400)} ${t("time_days_ago")}`;
 }

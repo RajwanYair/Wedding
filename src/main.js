@@ -115,12 +115,14 @@ import {
   saveTable,
   deleteTable,
   autoAssignTables,
+  renderTables,
   printSeatingChart,
   printPlaceCards,
   printTableSigns,
   openTableForEdit,
   exportTransportCSV,
   printTransportManifest,
+  smartAutoAssign,
 } from "./sections/tables.js";
 import {
   saveVendor,
@@ -154,6 +156,7 @@ import {
   printMealPerTable,
   renderSeatingMap,
   exportEventSummary,
+  printDietaryCards,
 } from "./sections/analytics.js";
 import { submitRsvp, lookupRsvpByPhone } from "./sections/rsvp.js";
 import {
@@ -170,6 +173,7 @@ import {
   deleteGalleryPhoto,
   openLightbox,
 } from "./sections/gallery.js";
+import { popUndo } from "./utils/undo.js";
 import {
   saveTimelineItem,
   deleteTimelineItem,
@@ -190,6 +194,10 @@ import {
   clearAuditLog,
   clearErrorLog,
   generateRsvpQrCode,
+  startAutoBackup,
+  stopAutoBackup,
+  downloadAutoBackup,
+  restoreAutoBackup,
 } from "./sections/settings.js";
 // registry.js addRegistryLink — added inline below (section handles its own form)
 
@@ -362,6 +370,30 @@ function _buildStoreDefs() {
   // 11a. Pull-to-refresh on mobile (S2.8) — triggers immediate Sheets sync
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
+
+  // S15.1 — Ctrl+Z undo for reversible operations
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+      const tag = /** @type {HTMLElement} */ (e.target).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      e.preventDefault();
+      const entry = popUndo();
+      if (entry) {
+        storeSet(entry.key, entry.snapshot);
+        showToast(t("undo_success").replace("{label}", entry.label), "info");
+      }
+    }
+  });
+
+  // S15.2 — "?" key opens keyboard shortcuts help overlay
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "?" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = /** @type {HTMLElement} */ (e.target).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      e.preventDefault();
+      openModal("shortcutsModal");
+    }
+  });
 
   // 11b. Wire sync status indicator (S3.6)
   onSyncStatus((status) => {
@@ -810,6 +842,11 @@ function _registerHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("autoAssignTables", () => autoAssignTables());
+  on("smartAutoAssign", () => {
+    const n = smartAutoAssign();
+    showToast(t("smart_assign_result").replace("{n}", String(n)), "success");
+    renderTables();
+  });
   on("printSeatingChart", () => printSeatingChart());
   on("printPlaceCards", () => printPlaceCards());
   on("printTableSigns", () => printTableSigns());
@@ -944,6 +981,7 @@ function _registerHandlers() {
   on("printMealPerTable", () => printMealPerTable());
   on("renderSeatingMap", () => renderSeatingMap());
   on("exportEventSummary", () => exportEventSummary());
+  on("printDietaryCards", () => printDietaryCards());
 
   // ── RSVP ──
   on("submitRSVP", (_el, e) => {
@@ -1249,6 +1287,22 @@ function _registerHandlers() {
   on("clearErrorLog", () => clearErrorLog());
   on("exportJSON", () => exportJSON());
   on("importJSON", (el) => importJSON(el));
+  on("startAutoBackup", () => {
+    const interval = Number(document.getElementById("autoBackupInterval")?.value) || 30;
+    startAutoBackup(interval);
+    showToast(t("autobackup_started"), "success");
+  });
+  on("stopAutoBackup", () => {
+    stopAutoBackup();
+    showToast(t("autobackup_stopped"), "info");
+  });
+  on("downloadAutoBackup", () => downloadAutoBackup());
+  on("restoreAutoBackup", () => {
+    showConfirmDialog(t("autobackup_restore_confirm"), () => {
+      restoreAutoBackup();
+      showToast(t("autobackup_restored"), "success");
+    });
+  });
   on("printRsvpQr", () => window.print());
   on("copyRsvpLink", () => {
     copyRsvpLink();

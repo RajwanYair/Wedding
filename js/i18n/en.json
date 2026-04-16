@@ -845,5 +845,66 @@
     "tag_added": "Tag added",
     "tag_removed": "Tag removed",
     "guest_tags_title": "Tags",
-    "guest_tag_ph": "Add tag..."
+    "guest_tag_ph": "Add tag...",
+
+    "undo_success": "Undone: {label}",
+    "shortcuts_title": "Keyboard Shortcuts",
+    "shortcuts_key": "Key",
+    "shortcuts_action": "Action",
+    "shortcut_undo": "Undo last action",
+    "shortcuts_undo": "Undo last action",
+    "shortcut_help": "Show keyboard shortcuts",
+    "shortcuts_help": "Open this help window",
+    "shortcut_nav": "Navigate to section {n}",
+
+    "btn_close": "Close",
+
+    "autobackup_title": "Auto-Backup",
+    "autobackup_desc": "Auto-backup saves a snapshot every 30 minutes.",
+    "autobackup_interval": "Interval (min)",
+    "autobackup_never": "Never backed up",
+    "autobackup_start": "Start Backup",
+    "autobackup_stop": "Stop Backup",
+    "autobackup_download": "Download Backup",
+    "autobackup_restore": "Restore Backup",
+    "autobackup_started": "Auto-backup started",
+    "autobackup_stopped": "Auto-backup stopped",
+    "autobackup_restored": "Data restored from backup",
+    "autobackup_restore_confirm": "Restore from latest backup? This will replace current data.",
+    "autobackup_last": "Last backup: {time}",
+    "autobackup_no_data": "No backup data found",
+
+    "dash_activity_feed": "Recent Activity",
+    "activity_none": "No activity yet",
+    "activity_guests_changed": "Guest list updated",
+    "activity_vendors_changed": "Vendor list updated",
+    "activity_tables_changed": "Tables updated",
+    "activity_expenses_changed": "Expenses updated",
+    "time_just_now": "Just now",
+    "time_minutes_ago": "{n} min ago",
+    "time_hours_ago": "{n} hours ago",
+    "time_days_ago": "{n} days ago",
+
+    "checkin_arrived": "has arrived!",
+
+    "btn_smart_assign": "Smart Assign",
+    "tip_smart_assign": "Smart assign by side, group & diet",
+    "smart_assign_result": "{n} guests assigned via smart seating",
+
+    "payment_schedule_title": "Payment Schedule",
+    "payment_schedule_subtitle": "Upcoming and overdue payments",
+    "no_payment_schedule": "No vendors with due dates set",
+    "vendor_status_paid": "Paid",
+    "vendor_status_upcoming": "Upcoming",
+    "label_vendor_due_date": "Due Date",
+
+    "rsvp_timeline_title": "RSVP Timeline",
+    "rsvp_timeline_subtitle": "RSVP response rate over time",
+    "no_rsvp_data": "No RSVP data yet",
+
+    "print_dietary_cards": "Print Dietary Cards",
+    "dietary_cards_title": "Dietary Cards by Table",
+    "dietary_summary": "Dietary Summary",
+    "dietary_special": "Special Diets",
+    "label_meal_notes": "Meal Notes"
 }

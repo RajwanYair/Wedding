@@ -121,9 +121,33 @@ Power-user tools for efficient wedding management.
 
 **Exit**: All 5 features functional. i18n complete. CI green.
 
----
+### S15 — UX & Smart Features
 
-## Version Plan
+Polish and smart automation for a refined user experience.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 15.1 | Undo stack — Ctrl+Z for guest/table/vendor deletes | M |
+| 15.2 | Keyboard shortcuts help overlay (? key opens modal) | S |
+| 15.3 | Auto-backup scheduler (periodic JSON snapshots + download/restore) | M |
+| 15.4 | Dashboard activity feed (recent changes log with timestamps) | M |
+| 15.5 | Guest search highlight (mark matched text in search results) | S |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
+### S16 — Day-Of & Advanced
+
+Day-of operations tools and advanced analytics.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 16.1 | Check-in sound + visual flash alerts (Web Audio API beep) | S |
+| 16.2 | Smart table optimizer (balance by side, group, dietary) | M |
+| 16.3 | Vendor payment schedule view (timeline of upcoming/overdue) | M |
+| 16.4 | RSVP response timeline (SVG chart of responses over time) | M |
+| 16.5 | Printable dietary cards (per-table dietary requirement cards) | M |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
 
 | Version | Sprint | Status |
 | --- | --- | --- |
@@ -132,6 +156,7 @@ Power-user tools for efficient wedding management.
 | v4.0.0 | S9 + S10 | ✅ Released |
 | v4.1.0 | S11 + S12 | ✅ Released |
 | v4.2.0 | S13 + S14 | ✅ Released |
+| v4.3.0 | S15 + S16 | ✅ Released |
 
 ---
 

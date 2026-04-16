@@ -1,11 +1,11 @@
 # Wedding Manager — Claude Config
 
-> Full spec: `.github/copilot-instructions.md` · v4.2.0
+> Full spec: `.github/copilot-instructions.md` · v4.3.0
 
 ## Commands
 
 ```bash
-npm test                  # 1733+ tests (17+ suites) — must all pass · 0 Node warnings
+npm test                  # 1763+ tests (17+ suites) — must all pass · 0 Node warnings
 npm run lint              # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run lint:fix          # Auto-fix CSS + JS
 npm run ci                # lint + test (same as CI)

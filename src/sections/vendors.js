@@ -9,6 +9,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { pushUndo } from "../utils/undo.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -61,9 +62,10 @@ export function saveVendor(data, existingId = null) {
  * @param {string} id
  */
 export function deleteVendor(id) {
-  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []).filter(
-    (v) => v.id !== id,
-  );
+  const all = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const victim = all.find((v) => v.id === id);
+  if (victim) pushUndo(`Delete vendor ${victim.name}`, "vendors", JSON.parse(JSON.stringify(all)));
+  const vendors = all.filter((v) => v.id !== id);
   storeSet("vendors", vendors);
   enqueueWrite("vendors", () => syncStoreKeyToSheets("vendors"));
 }

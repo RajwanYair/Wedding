@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.3.0] — 2025-07-16
+
+### Added — S15 UX & Smart Features
+
+- **S15.1 Undo stack**: Ctrl+Z restores deleted guests/tables/vendors. 30-entry deep stack with snapshot isolation.
+- **S15.2 Keyboard shortcuts overlay**: Press `?` to open help modal listing all keyboard shortcuts (Alt+1–9, Ctrl+Z).
+- **S15.3 Auto-backup scheduler**: Configurable interval (default 30 min) periodic JSON backup with download/restore actions.
+- **S15.4 Dashboard activity feed**: Live log of recent guest/vendor changes with relative timestamps and icons.
+- **S15.5 Guest search highlight**: Matched search terms highlighted with `<mark>` elements in guest table name and phone columns.
+
+### Added — S16 Day-Of & Advanced
+
+- **S16.1 Check-in sound + visual alerts**: Web Audio API confirmation beep (800Hz) and animated green flash banner on guest check-in.
+- **S16.2 Smart table optimizer**: Intelligent seating that groups guests by side, group, and dietary preferences. "Smart Assign" button on tables page.
+- **S16.3 Vendor payment schedule**: Chronological table of vendor payments in analytics with overdue/paid/upcoming status indicators.
+- **S16.4 RSVP response timeline**: SVG bar chart in analytics showing RSVP response rate over time grouped by date.
+- **S16.5 Printable dietary cards**: Per-table dietary requirement cards for caterer, opened in new window for printing.
+
 ## [4.2.0] — 2025-07-15
 
 ### Added — S13 Guest Experience & Communication

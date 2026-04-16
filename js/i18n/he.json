@@ -847,5 +847,66 @@
     "tag_added": "תגית נוספה",
     "tag_removed": "תגית הוסרה",
     "guest_tags_title": "תגיות",
-    "guest_tag_ph": "הוסף תגית..."
+    "guest_tag_ph": "הוסף תגית...",
+
+    "undo_success": "בוטל: {label}",
+    "shortcuts_title": "קיצורי מקשים",
+    "shortcuts_key": "מקש",
+    "shortcuts_action": "פעולה",
+    "shortcut_undo": "ביטול פעולה אחרונה",
+    "shortcuts_undo": "ביטול פעולה אחרונה",
+    "shortcut_help": "הצג קיצורי מקשים",
+    "shortcuts_help": "פתח חלון עזרה זה",
+    "shortcut_nav": "ניווט למקטע {n}",
+
+    "btn_close": "סגור",
+
+    "autobackup_title": "גיבוי אוטומטי",
+    "autobackup_desc": "גיבוי אוטומטי שומר תמונת מצב כל 30 דקות.",
+    "autobackup_interval": "מרווח (דקות)",
+    "autobackup_never": "טרם בוצע",
+    "autobackup_start": "הפעל גיבוי",
+    "autobackup_stop": "עצור גיבוי",
+    "autobackup_download": "הורד גיבוי",
+    "autobackup_restore": "שחזר מגיבוי",
+    "autobackup_started": "גיבוי אוטומטי הופעל",
+    "autobackup_stopped": "גיבוי אוטומטי הופסק",
+    "autobackup_restored": "נתונים שוחזרו מגיבוי",
+    "autobackup_restore_confirm": "לשחזר נתונים מהגיבוי האחרון? פעולה זו תחליף את הנתונים הנוכחיים.",
+    "autobackup_last": "גיבוי אחרון: {time}",
+    "autobackup_no_data": "אין נתוני גיבוי",
+
+    "dash_activity_feed": "פעילות אחרונה",
+    "activity_none": "עדיין אין פעילות",
+    "activity_guests_changed": "עדכון רשימת אורחים",
+    "activity_vendors_changed": "עדכון רשימת ספקים",
+    "activity_tables_changed": "עדכון שולחנות",
+    "activity_expenses_changed": "עדכון הוצאות",
+    "time_just_now": "הרגע",
+    "time_minutes_ago": "לפני {n} דק׳",
+    "time_hours_ago": "לפני {n} שעות",
+    "time_days_ago": "לפני {n} ימים",
+
+    "checkin_arrived": "הגיע/ה!",
+
+    "btn_smart_assign": "שיבוץ חכם",
+    "tip_smart_assign": "שיבוץ חכם לפי צד, קבוצה ודיאטה",
+    "smart_assign_result": "שוּבצו {n} אורחים בשיבוץ חכם",
+
+    "payment_schedule_title": "לוח תשלומים",
+    "payment_schedule_subtitle": "תשלומים קרובים ומאחרים",
+    "no_payment_schedule": "אין ספקים עם תאריך תשלום",
+    "vendor_status_paid": "שולם",
+    "vendor_status_upcoming": "עתידי",
+    "label_vendor_due_date": "תאריך תשלום",
+
+    "rsvp_timeline_title": "ציר זמן אישורים",
+    "rsvp_timeline_subtitle": "קצב אישורי הגעה לאורך זמן",
+    "no_rsvp_data": "אין נתוני אישורים",
+
+    "print_dietary_cards": "הדפסת כרטיסי דיאטה",
+    "dietary_cards_title": "כרטיסי דיאטה לפי שולחן",
+    "dietary_summary": "סיכום דיאטה",
+    "dietary_special": "דיאטות מיוחדות",
+    "label_meal_notes": "הערות ארוחה"
 }

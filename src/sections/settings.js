@@ -397,3 +397,75 @@ function _renderApprovedEmails() {
     container.appendChild(row);
   });
 }
+
+// ── S15.3 Auto-backup Scheduler ─────────────────────────────────────────
+
+/** @type {number|null} */
+let _autoBackupInterval = null;
+
+/**
+ * Start automatic periodic backups to localStorage.
+ * Saves a snapshot every `intervalMin` minutes.
+ * @param {number} [intervalMin=30]
+ */
+export function startAutoBackup(intervalMin = 30) {
+  stopAutoBackup();
+  _runAutoBackup(); // snapshot immediately
+  _autoBackupInterval = setInterval(_runAutoBackup, intervalMin * 60 * 1000);
+  save("autoBackupEnabled", true);
+  save("autoBackupInterval", intervalMin);
+}
+
+/**
+ * Stop automatic backups.
+ */
+export function stopAutoBackup() {
+  if (_autoBackupInterval !== null) {
+    clearInterval(_autoBackupInterval);
+    _autoBackupInterval = null;
+  }
+  save("autoBackupEnabled", false);
+}
+
+/**
+ * Run a single auto-backup snapshot.
+ */
+function _runAutoBackup() {
+  const snapshot = {
+    guests: storeGet("guests") ?? [],
+    tables: storeGet("tables") ?? [],
+    vendors: storeGet("vendors") ?? [],
+    expenses: storeGet("expenses") ?? [],
+    weddingInfo: storeGet("weddingInfo") ?? {},
+    timeline: storeGet("timeline") ?? [],
+    budget: storeGet("budget") ?? [],
+    backedUpAt: new Date().toISOString(),
+  };
+  save("autoBackup", snapshot);
+  const badge = document.getElementById("lastBackupTime");
+  if (badge) badge.textContent = new Date().toLocaleTimeString("he-IL");
+}
+
+/**
+ * Download the latest auto-backup as a JSON file.
+ */
+export function downloadAutoBackup() {
+  const snapshot = load("autoBackup", null);
+  if (!snapshot) return;
+  const blob = new Blob([JSON.stringify(snapshot, null, 2)], {
+    type: "application/json",
+  });
+  _downloadBlob(blob, `wedding-autobackup-${Date.now()}.json`);
+}
+
+/**
+ * Restore from the latest auto-backup.
+ */
+export function restoreAutoBackup() {
+  const snapshot = /** @type {Record<string, unknown> | null} */ (load("autoBackup", null));
+  if (!snapshot) return;
+  const keys = ["guests", "tables", "vendors", "expenses", "weddingInfo", "timeline", "budget"];
+  keys.forEach((k) => {
+    if (snapshot[k] !== undefined) storeSet(k, snapshot[k]);
+  });
+}

@@ -56,16 +56,16 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v4.2.0", function () {
-    assert.ok(SRC.includes("v4.2.0"));
+  it("HTML contains v4.3.0", function () {
+    assert.ok(SRC.includes("v4.3.0"));
   });
 
-  it("SW cache name contains v4.2.0", function () {
-    assert.ok(SW.includes("wedding-v4.2.0"));
+  it("SW cache name contains v4.3.0", function () {
+    assert.ok(SW.includes("wedding-v4.3.0"));
   });
 
-  it("package.json version is 4.2.0", function () {
-    assert.equal(PKG.version, "4.2.0");
+  it("package.json version is 4.3.0", function () {
+    assert.equal(PKG.version, "4.3.0");
   });
 });
 
@@ -894,7 +894,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v4.2.0"));
+    assert.ok(SW.includes("wedding-v4.3.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -6582,7 +6582,8 @@ describe("v3.6.0: version stamps consistent", function () {
         src.includes("3.9.0") ||
         src.includes("4.0.0") ||
         src.includes("4.1.0") ||
-        src.includes("4.2.0"),
+        src.includes("4.2.0") ||
+        src.includes("4.3.0"),
       "CLAUDE.md missing version reference",
     );
   });
@@ -6602,14 +6603,14 @@ describe("v3.7.0: version stamps consistent", function () {
   });
   it("public/sw.js CACHE_NAME contains 3.7.0 or later", function () {
     assert.ok(
-      SW.includes("3.7") || SW.includes("3.8") || SW.includes("3.9") || SW.includes("4.0") || SW.includes("4.1") || SW.includes("4.2"),
+      SW.includes("3.7") || SW.includes("3.8") || SW.includes("3.9") || SW.includes("4.0") || SW.includes("4.1") || SW.includes("4.2") || SW.includes("4.3"),
       "sw.js CACHE_NAME too old",
     );
   });
   it("js/config.js version comment contains 3.7.0 or later", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "js", "config.js"), "utf8");
     assert.ok(
-      cfg.includes("3.7") || cfg.includes("3.8") || cfg.includes("3.9") || cfg.includes("4.0") || cfg.includes("4.1") || cfg.includes("4.2"),
+      cfg.includes("3.7") || cfg.includes("3.8") || cfg.includes("3.9") || cfg.includes("4.0") || cfg.includes("4.1") || cfg.includes("4.2") || cfg.includes("4.3"),
     );
   });
   it("src/core/config.js APP_VERSION is 3.7.0 or later", function () {
