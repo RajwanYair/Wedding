@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v3.8.1
+# Workspace — Wedding Manager v4.7.0
 
 ## Available Resources
 
@@ -24,8 +24,15 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | S5 | Auth overlay, Facebook + Apple OAuth, anonymous guest mode, email allowlist |
 | S6 | Visual regression, coverage CI gate, analytics SVG, a11y live regions |
 | S7 | Docs (GUIDE, ARCHITECTURE, CONTRIBUTING), copilot instructions, Supabase backend |
-| S8 | `src/` ESM entry (`src/main.js`), 18 section modules, admin-only nav, landing page, 1407+ tests |
-| Post-S8 | SW update prompt + auto-reload, guest → landing redirect, `anat.rajwan` admin email fix |
+| S8 | Analytics heatmap, funnel, vendor timeline, PDF/CSV export, delivery rate |
+| S9–10 | Multi-event namespace, event switcher, live sync polling, presence indicator (v4.0.0) |
+| S11–12 | Per-guest RSVP links, transport manifest, WhatsApp reminders, duplicate detection, QR check-in (v4.1.0) |
+| S13–14 | Countdown, plus-one names, thank-you messages, seating map, multi-filter, budget widget (v4.2.0) |
+| S15–16 | Undo stack, shortcuts overlay, auto-backup, check-in sound, smart table assign (v4.3.0) |
+| S17–18 | Full-text search, bulk meal, expense donut, sync queue monitor, arrival forecast (v4.4.0) |
+| S19–20 | Vendor quick-dial, VIP flag, guest badges print, timeline print, accessibility filter (v4.5.0) |
+| S21–22 | Changelog section, Supabase presence, conflict modal, `src/` ESM entry, 18 modules (v4.6.0) |
+| S23–24 | Background sync, budget alerts, bulk ops, gallery lightbox, timeline done sync, top-bar sync btn (v4.7.0) |
 
 ## Detailed File Structure
 
@@ -109,7 +116,7 @@ Wedding/
 │   └── icons/             # Generated PWA icons
 ├── scripts/              # sri-check, inject-config, size-report, send-push, generate-icons
 ├── tests/
-│   ├── wedding.test.mjs   # 1407+ unit tests (106+ suites, Vitest)
+│   ├── wedding.test.mjs   # 1776+ unit tests (17 suites, Vitest)
 │   └── e2e/smoke.spec.mjs # Playwright smoke tests
 ├── .github/
 │   ├── copilot-instructions.md   # master project spec (always loaded by Copilot)

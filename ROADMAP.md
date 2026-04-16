@@ -40,19 +40,21 @@
 | S17 — Data Quality & Smart Insights | Full-text search, bulk meal, expense donut, table capacity colors, budget alert | v4.4.0 | ✅ Done |
 | S18 — Sync, Forecast & Operations | Queue monitor, arrival forecast, batch checkin, timeline alarm, WhatsApp unsent filter | v4.4.0 | ✅ Done |
 | S19 — Vendor Management & Guest Intelligence | Vendor quick-dial, VIP flag, vendor category card, follow-up list, bulk mark unsent | v4.5.0 | ✅ Done |
-| S20 — Print, Reports & UX Polish | Guest badges print, timeline print, expense cat filter, invite stats card, accessibility filter | v4.5.0 | ✅ Done |
+| S21–22 | Changelog viewer, Supabase presence, conflict modal, vendor/expense modal refactor | v4.6.0 | ✅ Done |
+| S23–24 | Background sync, budget alerts, bulk export, gallery lightbox v2, timeline done sync, top-bar sync btn | v4.7.0 | ✅ Done |
 
-### Current State (v3.8.0)
+### Current State (v4.7.0)
 
 ```text
-index.html     ~425 lines (shell only — sections lazy-loaded)
-src/           18 section modules · 9 core modules · 2 services · 5 utils
-               15 template HTML files · 6 modal HTML files
-Tests          1407+ passing (106+ suites) · 0 Node warnings
+index.html     ~430 lines (shell only — sections lazy-loaded)
+src/           18 section modules · 9 core modules · 5 services · 5 utils
+               15 template HTML files · 7 modal HTML files
+Tests          1776+ passing (17 suites) · 0 Node warnings
 Lint           0 errors · 0 warnings (ESLint + Stylelint + HTMLHint + markdownlint)
 Bundle         < 30 KB gzip main · < 15 KB gzip RSVP-only chunk
 CI             6 jobs: lint+test (Node 22+24) · security · Lighthouse · size · E2E
 Auth           Google/Facebook/Apple OAuth + email allowlist + anonymous guest
+Sheets sync    10 keys: guests, tables, vendors, expenses, budget, timeline, contacts, gallery, weddingInfo, timelineDone
 ```
 
 ---
@@ -221,19 +223,21 @@ Printing workflows, UX refinements, and invitation analytics.
 | v4.3.0 | S15 + S16 | ✅ Released |
 | v4.4.0 | S17 + S18 | ✅ Released |
 | v4.5.0 | S19 + S20 | ✅ Released |
+| v4.6.0 | S21 + S22 | ✅ Released |
+| v4.7.0 | S23 + S24 | ✅ Released |
 
 ---
 
 ## Success Metrics
 
-| Metric | v2 baseline | v3.8.0 actual | Target |
+| Metric | v2 baseline | v4.7.0 actual | Target |
 | --- | --- | --- | --- |
-| `index.html` lines | 1 774 | ~425 | < 250 |
+| `index.html` lines | 1 774 | ~430 | < 250 |
 | Initial bundle (gzip) | ~45 KB | < 30 KB | < 30 KB ✅ |
 | RSVP-only bundle | ~45 KB | < 15 KB | < 15 KB ✅ |
 | Lighthouse Performance | 0.85 | ≥ 0.90 | ≥ 0.95 |
 | Lighthouse Accessibility | 0.90 | ≥ 0.95 | ≥ 0.95 ✅ |
-| Test count | 689 | 1 407+ | ≥ 1 400 ✅ |
+| Test count | 689 | 1 776+ | ≥ 1 400 ✅ |
 | Coverage (lines) | ~60% | ≥ 80% | ≥ 80% ✅ |
 | `window.*` cross-module | ~200 | 0 | 0 ✅ |
 | ESLint varsIgnorePattern | 70+ prefixes | `^_` only | `^_` ✅ |

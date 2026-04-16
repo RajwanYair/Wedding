@@ -33,10 +33,10 @@ git add -A && git commit -m "<type>: <summary>" && git push
 ## Pre-Release Gate (all must be green before tagging)
 
 1. `npm run lint` — 0 errors, 0 warnings, 0 Node warnings
-2. `npm test` — 1733+ pass, 0 fail, 0 skip
+2. `npm test` — 1776+ pass, 0 fail, 0 skip
 3. `npm run build` — exits 0; `dist/sw.js` CACHE_NAME matches new version
 4. `npm audit --audit-level=high` — 0 high/critical vulnerabilities
-5. All version strings bumped: `package.json`, `src/core/config.js`, `public/sw.js`, `js/config.js`, `tests/wedding.test.mjs`, `CHANGELOG.md`
+5. All version strings bumped: `package.json`, `src/core/config.js`, `public/sw.js`, `js/config.js`, `tests/wedding.test.mjs`, `CHANGELOG.md`, `README.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `.github/copilot-instructions.md`, `.github/copilot/config.json`, `.github/instructions/workspace.instructions.md`, `.github/workflows/ci.yml`
 6. Both `he` + `en` i18n entries for every new `t('key')`
 7. No dead code, orphaned templates, or stale `eslint-disable` comments
 

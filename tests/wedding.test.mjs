@@ -1,7 +1,7 @@
 // =============================================================================
-// Wedding Manager — Test Suite v4.0.0
-// Run: npx vitest run tests/wedding.test.mjs
-// 1093 tests — core + extended + v1.15.0–v4.0.0 features + S0/S1/S2/S3/S4.4/S4.6/S4.9/S5.4/S5.10/S6.4/S6.7/S6.8/S6.9/S0.11/S0.12 + v3.8.0 features
+// Wedding Manager — Test Suite v4.7.0
+// Run: npm test
+// 1776+ tests — core + extended + S0–S25 features
 // =============================================================================
 import { describe, it } from "vitest";
 import assert from 'node:assert/strict';
@@ -7216,12 +7216,7 @@ describe("v3.7.0: version stamps consistent", function () {
       cfg.includes("3.7") ||
         cfg.includes("3.8") ||
         cfg.includes("3.9") ||
-        cfg.includes("4.0") ||
-        cfg.includes("4.1") ||
-        cfg.includes("4.2") ||
-        cfg.includes("4.3") ||
-        cfg.includes("4.4") ||
-        cfg.includes("4.5"),
+        cfg.includes("4."),
     );
   });
   it("src/core/config.js APP_VERSION is 3.7.0 or later", function () {
@@ -7233,12 +7228,7 @@ describe("v3.7.0: version stamps consistent", function () {
       src.includes("3.7") ||
         src.includes("3.8") ||
         src.includes("3.9") ||
-        src.includes("4.0") ||
-        src.includes("4.1") ||
-        src.includes("4.2") ||
-        src.includes("4.3") ||
-        src.includes("4.4") ||
-        src.includes("4.5"),
+        src.includes("4."),
       "src/core/config.js APP_VERSION not updated",
     );
   });
@@ -7248,9 +7238,7 @@ describe("v3.7.0: version stamps consistent", function () {
       src.includes("3.7") ||
         src.includes("3.8") ||
         src.includes("3.9") ||
-        src.includes("4.0") ||
-        src.includes("4.1") ||
-        src.includes("4.2"),
+        src.includes("4."),
       "CLAUDE.md not updated",
     );
   });
@@ -7260,9 +7248,7 @@ describe("v3.7.0: version stamps consistent", function () {
       src.includes("v3.7") ||
         src.includes("v3.8") ||
         src.includes("v3.9") ||
-        src.includes("v4.0") ||
-        src.includes("v4.1") ||
-        src.includes("v4.2"),
+        src.includes("v4."),
       "README.md version badge not updated",
     );
   });

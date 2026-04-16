@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v4.0.0
+# GitHub Copilot Instructions — Wedding Manager v4.7.0
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
@@ -6,12 +6,12 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v4.0.0** |
+| Version | **v4.7.0** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
 | Language | Hebrew RTL primary, English toggle (lazy JSON) |
-| Tests | `npm test` — **1765+ pass (17+ suites)** · 0 Node warnings |
+| Tests | `npm test` — **1776+ pass (17+ suites)** · 0 Node warnings |
 | Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 | Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |
@@ -87,11 +87,15 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 
 ## Version Bump Checklist
 
-1. `js/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
-2. `CHANGELOG.md` — new entry; `README.md` — badge; `CLAUDE.md` — version + test count
-3. `.github/copilot-instructions.md` — version + test count (Quick Facts row)
-4. `npm run lint && npm test` — 0 fail, 0 warn, 0 Node warnings
-5. `git tag vX.Y.Z && git push --tags`
+1. `js/config.js`, `src/core/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
+2. `CHANGELOG.md` — new entry; `README.md` — badge + tests badge; `CLAUDE.md` — version + test count
+3. `.github/copilot-instructions.md` — version + test count (Quick Facts row + Pre-release checklist)
+4. `.github/copilot/config.json` — welcomeMessage version + test count
+5. `.github/instructions/workspace.instructions.md` — version in title
+6. `.github/workflows/ci.yml` — version in header comment
+7. `ARCHITECTURE.md` — version in h1; `ROADMAP.md` — current state block + release table
+8. `npm run lint && npm test` — 0 fail, 0 warn, 0 Node warnings
+9. `git tag vX.Y.Z && git push --tags`
 
 ## Pre-Release Checklist
 
@@ -100,7 +104,7 @@ Run before every version tag / GitHub Pages deploy. All items must be green.
 | # | Check | Command / Action |
 | --- | --- | --- |
 | 1 | **Zero lint errors/warnings** | `npm run lint` — 0 errors, 0 warnings, 0 Node warnings |
-| 2 | **Zero test failures** | `npm test` — all 1765+ pass, 0 skipped |
+| 2 | **Zero test failures** | `npm test` — all 1776+ pass, 0 skipped |
 | 3 | **Zero deprecation notices** | No `npm WARN deprecated` in `npm ci` output |
 | 4 | **No dead code/files** | No unused exports, no orphaned templates or JS modules |
 | 5 | **No eval/innerHTML** | CI security scan passes (`js/*.js`, `index.html`) |

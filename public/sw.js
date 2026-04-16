@@ -1,5 +1,5 @@
 // =============================================================================
-// Service Worker — Wedding Manager v3.6.0
+// Service Worker — Wedding Manager v4.7.0
 // Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
 "use strict";
