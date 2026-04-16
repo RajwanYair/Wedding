@@ -88,7 +88,7 @@ Wedding/
 ├── scripts/              # sri-check, inject-config, size-report, send-push, generate-icons
 ├── tests/
 │   ├── wedding.test.mjs   # Main test suite (Vitest)
-│   ├── unit/              # 16 unit/integration test files
+│   ├── unit/              # 33 unit/integration test files
 │   └── e2e/               # Playwright: smoke + visual regression
 ├── .github/
 │   ├── copilot-instructions.md   # Master project spec

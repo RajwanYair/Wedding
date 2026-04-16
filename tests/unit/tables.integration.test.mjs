@@ -37,7 +37,7 @@ function makeTable(overrides = {}) {
 
 function makeGuest(overrides = {}) {
   return {
-    id: "g" + Math.random().toString(36).slice(2),
+    id: `g${Math.random().toString(36).slice(2)}`,
     firstName: "Test",
     phone: "",
     count: 1,
