@@ -1040,5 +1040,21 @@
     "export_contacts_csv": "Export Contacts",
     "data_integrity_ok": "Data integrity OK ✓",
     "data_integrity_issues": "Found {n} issues",
-    "check_data_integrity": "Check Data Integrity"
+    "check_data_integrity": "Check Data Integrity",
+    "wa_vars_title": "Template Variables",
+    "wa_schedule_label": "Schedule reminders for:",
+    "wa_schedule_btn": "Schedule",
+    "wa_cancel_scheduled": "Cancel Scheduled",
+    "wa_schedule_no_date": "Select a date and time",
+    "wa_scheduled_count": "Scheduled {n} reminders",
+    "wa_cancelled": "Scheduled reminders cancelled",
+    "wa_scheduled_pending": "pending",
+    "wa_vars_title": "Template Variables",
+    "wa_schedule_label": "Schedule reminders for:",
+    "wa_schedule_btn": "Schedule",
+    "wa_cancel_scheduled": "Cancel Scheduled",
+    "wa_schedule_no_date": "Select a date and time",
+    "wa_scheduled_count": "Scheduled {n} reminders",
+    "wa_cancelled": "Scheduled reminders cancelled",
+    "wa_scheduled_pending": "pending"
 }

@@ -1042,5 +1042,21 @@
     "export_contacts_csv": "ייצוא אנשי קשר",
     "data_integrity_ok": "הנתונים תקינים ✓",
     "data_integrity_issues": "נמצאו {n} בעיות",
-    "check_data_integrity": "בדיקת תקינות נתונים"
+    "check_data_integrity": "בדיקת תקינות נתונים",
+    "wa_vars_title": "משתני תבנית",
+    "wa_schedule_label": "תזמן תזכורות ל:",
+    "wa_schedule_btn": "תזמן",
+    "wa_cancel_scheduled": "בטל תזמונים",
+    "wa_schedule_no_date": "בחר תאריך ושעה",
+    "wa_scheduled_count": "תוזמנו {n} תזכורות",
+    "wa_cancelled": "תזמונים בוטלו",
+    "wa_scheduled_pending": "ממתינים לשליחה",
+    "wa_vars_title": "משתני תבנית",
+    "wa_schedule_label": "תזמן תזכורות ל:",
+    "wa_schedule_btn": "תזמן",
+    "wa_cancel_scheduled": "בטל תזמונים",
+    "wa_schedule_no_date": "בחר תאריך ושעה",
+    "wa_scheduled_count": "תוזמנו {n} תזכורות",
+    "wa_cancelled": "תזמונים בוטלו",
+    "wa_scheduled_pending": "ממתינים לשליחה"
 }

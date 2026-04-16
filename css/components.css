@@ -420,6 +420,14 @@
   text-align: left;
   margin-top: 0.2rem;
 }
+.wa-vars-summary { cursor: pointer; }
+.wa-vars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+.wa-char-warn { color: var(--negative); font-weight: 600; }
 
 /* ── Countdown ── */
 .countdown {

@@ -1029,5 +1029,21 @@
     "export_contacts_csv": "Экспорт контактов",
     "data_integrity_ok": "Данные в порядке ✓",
     "data_integrity_issues": "Найдено {n} проблем",
-    "check_data_integrity": "Проверить целостность данных"
+    "check_data_integrity": "Проверить целостность данных",
+    "wa_vars_title": "Переменные шаблона",
+    "wa_schedule_label": "Запланировать напоминания на:",
+    "wa_schedule_btn": "Запланировать",
+    "wa_cancel_scheduled": "Отменить запланированные",
+    "wa_schedule_no_date": "Выберите дату и время",
+    "wa_scheduled_count": "Запланировано {n} напоминаний",
+    "wa_cancelled": "Запланированные напоминания отменены",
+    "wa_scheduled_pending": "ожидают",
+    "wa_vars_title": "Переменные шаблона",
+    "wa_schedule_label": "Запланировать напоминания на:",
+    "wa_schedule_btn": "Запланировать",
+    "wa_cancel_scheduled": "Отменить запланированные",
+    "wa_schedule_no_date": "Выберите дату и время",
+    "wa_scheduled_count": "Запланировано {n} напоминаний",
+    "wa_cancelled": "Запланированные напоминания отменены",
+    "wa_scheduled_pending": "ожидают"
 }

@@ -39,6 +39,9 @@ import {
   renderUnsentBadge,
   toggleDeclinedFilter,
   downloadCalendarInvite,
+  scheduleReminders,
+  cancelScheduledReminders,
+  getScheduledQueue,
 } from "../sections/whatsapp.js";
 import {
   saveTimelineItem,
@@ -162,6 +165,31 @@ export function registerSectionHandlers() {
   });
   on("toggleDeclinedFilter", () => toggleDeclinedFilter());
   on("downloadCalendarInvite", () => downloadCalendarInvite());
+  // Sprint 3: template variables, scheduling
+  on("insertWaVar", (el) => {
+    const varText = el.dataset.actionArg || "";
+    const textarea = /** @type {HTMLTextAreaElement|null} */ (document.getElementById("waTemplate"));
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    textarea.value = textarea.value.slice(0, start) + varText + textarea.value.slice(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + varText.length, start + varText.length);
+    updateWaPreview(textarea.value);
+  });
+  on("scheduleWaReminders", () => {
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("waScheduleDate"));
+    const dateVal = input?.value;
+    if (!dateVal) { showToast(t("wa_schedule_no_date") || "Select a date first", "warning"); return; }
+    const count = scheduleReminders(new Date(dateVal).toISOString());
+    showToast(t("wa_scheduled_count").replace("{n}", String(count)), "success");
+    _updateScheduleStatus();
+  });
+  on("cancelScheduledWa", () => {
+    cancelScheduledReminders("reminder");
+    showToast(t("wa_cancelled"), "info");
+    _updateScheduleStatus();
+  });
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")
@@ -199,4 +227,15 @@ export function registerSectionHandlers() {
   on("toggleTimelineDone", (el) =>
     toggleTimelineDone(el.dataset.actionArg ?? ""),
   );
+}
+
+/** Update the scheduled reminders status display. */
+function _updateScheduleStatus() {
+  const el = document.getElementById("waScheduledStatus");
+  if (!el) return;
+  const queue = getScheduledQueue();
+  const pending = queue.filter((q) => !q.sentAt);
+  el.textContent = pending.length > 0
+    ? `⏰ ${pending.length} ${t("wa_scheduled_pending") || "scheduled"}`
+    : "";
 }

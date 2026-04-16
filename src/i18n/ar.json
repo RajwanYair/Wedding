@@ -1028,5 +1028,21 @@
     "export_contacts_csv": "تصدير جهات الاتصال",
     "data_integrity_ok": "سلامة البيانات جيدة ✓",
     "data_integrity_issues": "تم العثور على {n} مشاكل",
-    "check_data_integrity": "فحص سلامة البيانات"
+    "check_data_integrity": "فحص سلامة البيانات",
+    "wa_vars_title": "متغيرات القالب",
+    "wa_schedule_label": "جدولة التذكيرات لـ:",
+    "wa_schedule_btn": "جدولة",
+    "wa_cancel_scheduled": "إلغاء المجدول",
+    "wa_schedule_no_date": "اختر تاريخًا ووقتًا",
+    "wa_scheduled_count": "تم جدولة {n} تذكيرات",
+    "wa_cancelled": "تم إلغاء التذكيرات المجدولة",
+    "wa_scheduled_pending": "قيد الانتظار",
+    "wa_vars_title": "متغيرات القالب",
+    "wa_schedule_label": "جدولة التذكيرات لـ:",
+    "wa_schedule_btn": "جدولة",
+    "wa_cancel_scheduled": "إلغاء المجدول",
+    "wa_schedule_no_date": "اختر تاريخًا ووقتًا",
+    "wa_scheduled_count": "تم جدولة {n} تذكيرات",
+    "wa_cancelled": "تم إلغاء التذكيرات المجدولة",
+    "wa_scheduled_pending": "قيد الانتظار"
 }

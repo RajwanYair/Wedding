@@ -5,7 +5,22 @@
         <div class="form-group">
           <label data-i18n="wa_template_label">תבנית הודעה</label>
           <textarea id="waTemplate" rows="6" data-on-input="updateWaPreview" class="u-direction-rtl" data-i18n-tooltip="tip_wa_template"></textarea>
+          <span class="text-note" id="waCharCount"></span>
         </div>
+
+        <!-- Sprint 3: Template Variable Helper -->
+        <details class="card u-mt-sm">
+          <summary class="card-header wa-vars-summary"><span class="icon">📝</span> <span data-i18n="wa_vars_title">משתני תבנית</span></summary>
+          <div class="wa-vars-grid">
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{name}" type="button">{name}</button>
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{groom}" type="button">{groom}</button>
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{bride}" type="button">{bride}</button>
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{date}" type="button">{date}</button>
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{venue}" type="button">{venue}</button>
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{rsvpLink}" type="button">{rsvpLink}</button>
+            <button class="btn btn-secondary btn-small" data-action="insertWaVar" data-action-arg="{gift}" type="button">{gift}</button>
+          </div>
+        </details>
 
         <!-- Preview -->
         <div class="whatsapp-preview">
@@ -55,6 +70,20 @@
             </button>
             <span class="text-note" id="waReminderCount"></span>
           </div>
+          <!-- Sprint 3: Schedule reminders -->
+          <div class="form-row u-mt-sm">
+            <div class="form-group">
+              <label data-i18n="wa_schedule_label">תזמן תזכורות ל:</label>
+              <input type="datetime-local" id="waScheduleDate" class="form-control">
+            </div>
+            <button class="btn btn-secondary btn-small" data-action="scheduleWaReminders" type="button">
+              ⏰ <span data-i18n="wa_schedule_btn">תזמן</span>
+            </button>
+            <button class="btn btn-danger btn-small" data-action="cancelScheduledWa" type="button">
+              ✕ <span data-i18n="wa_cancel_scheduled">בטל תזמונים</span>
+            </button>
+          </div>
+          <div id="waScheduledStatus" class="text-note u-mt-xs"></div>
         </div>
 
         <!-- S13.3 Thank-You Messages -->
