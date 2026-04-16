@@ -105,6 +105,36 @@ function getOrCreateSheet(ss, name) {
   return sheet;
 }
 
+/* ── Column header definitions for each sheet tab (v2.4.0) ─────────────── */
+var SHEET_HEADERS = {
+  'Attendees':   ['id','firstName','lastName','phone','email','count','children','status','side','group','relationship','meal','mealNotes','accessibility','transport','tableId','gift','notes','sent','checkedIn','rsvpDate','createdAt','updatedAt'],
+  'Tables':      ['id','name','capacity','shape'],
+  'Config':      ['key','value'],
+  'Vendors':     ['id','category','name','contact','phone','price','paid','notes','updatedAt','createdAt'],
+  'Expenses':    ['id','category','description','amount','date','createdAt'],
+  'RSVP_Log':   ['timestamp','phone','name','status','count'],
+  'Timeline':    ['id','time','title','note','icon'],
+  'Budget':      ['id','name','amount','note','createdAt','updatedAt'],
+  'Contacts':    ['id','firstName','lastName','phone','email','side','dietaryNotes','submittedAt'],
+  'Gallery':     ['id','caption','credit','addedAt'],
+  'TimelineDone':['itemId','done'],
+};
+
+/**
+ * Ensure a sheet exists and has a header row.
+ * Writes headers only if row 1 is completely empty.
+ */
+function ensureSheetWithHeaders(ss, name) {
+  var sheet = getOrCreateSheet(ss, name);
+  var headers = SHEET_HEADERS[name];
+  if (headers && sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
 function jsonResponse(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
@@ -321,11 +351,10 @@ function doPost(e) {
       return jsonResponse({ ok: true, action: 'cleanConfig', removed: removed, remaining: cleanRows.length });
     }
 
-    /* ── ensureSheets: create any missing tabs ───────────────────────── */
+    /* ── ensureSheets: create any missing tabs and write headers ──── */
     if (action === 'ensureSheets') {
-      /* Core tabs + new S3.7 tabs */
       var ensureList = ALLOWED_SHEETS;
-      ensureList.forEach(function(name) { getOrCreateSheet(ss, name); });
+      ensureList.forEach(function(name) { ensureSheetWithHeaders(ss, name); });
       return jsonResponse({ ok: true, action: 'ensureSheets', sheets: ensureList });
     }
 
@@ -366,6 +395,12 @@ function doPost(e) {
       }
       sheet.clearContents();
       sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
+      /* Bold and freeze header row if the first row contains expected column names */
+      var expectedHeaders = SHEET_HEADERS[sheetName];
+      if (expectedHeaders && rows.length > 1) {
+        sheet.getRange(1, 1, 1, rows[0].length).setFontWeight('bold');
+        sheet.setFrozenRows(1);
+      }
       return jsonResponse({ ok: true, action: 'replaceAll', count: rows.length });
     }
 

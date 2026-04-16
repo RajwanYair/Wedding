@@ -36,12 +36,12 @@ let _sbCheck = null;
 /**
  * Return the active backend type.
  * Priority: runtime localStorage → build-time config → "sheets".
- * @returns {'sheets'|'supabase'|'none'}
+ * @returns {'sheets'|'supabase'|'both'|'none'}
  */
 export function getBackendType() {
   const stored = /** @type {string} */ (load("backendType", "") ?? "");
   const val = stored.trim() || _CONFIG_BACKEND || "sheets";
-  if (val === "supabase" || val === "none") return val;
+  if (val === "supabase" || val === "none" || val === "both") return val;
   return "sheets";
 }
 
@@ -70,6 +70,7 @@ async function _loadSupabaseModule() {
 
 /**
  * Sync a store key to the active backend.
+ * "both" mode writes to sheets AND supabase in parallel.
  * @param {string} storeKey
  * @returns {Promise<void>}
  */
@@ -80,12 +81,20 @@ export async function syncStoreKey(storeKey) {
     await _loadSupabaseModule();
     return _sbSync?.(storeKey);
   }
+  if (backend === "both") {
+    await Promise.all([
+      _loadSheetsModule().then(() => _sheetSync?.(storeKey)),
+      _loadSupabaseModule().then(() => _sbSync?.(storeKey)),
+    ]);
+    return;
+  }
   await _loadSheetsModule();
   return _sheetSync?.(storeKey);
 }
 
 /**
  * Append an RSVP log entry to the active backend.
+ * "both" mode appends to sheets AND supabase in parallel.
  * @param {{ phone: string, firstName: string, lastName: string, status: string, count: number, timestamp: string }} entry
  * @returns {Promise<void>}
  */
@@ -96,12 +105,20 @@ export async function appendRsvpLog(entry) {
     await _loadSupabaseModule();
     return _sbLog?.(entry);
   }
+  if (backend === "both") {
+    await Promise.all([
+      _loadSheetsModule().then(() => _sheetLog?.(entry)),
+      _loadSupabaseModule().then(() => _sbLog?.(entry)),
+    ]);
+    return;
+  }
   await _loadSheetsModule();
   return _sheetLog?.(entry);
 }
 
 /**
  * Check connection to the active backend.
+ * "both" mode checks sheets (primary) first.
  * @returns {Promise<boolean>}
  */
 export async function checkConnection() {
@@ -111,6 +128,7 @@ export async function checkConnection() {
     await _loadSupabaseModule();
     return _sbCheck?.() ?? false;
   }
+  // "sheets" or "both" — sheets is the primary health signal
   await _loadSheetsModule();
   return _sheetCheck?.() ?? false;
 }
@@ -130,22 +148,23 @@ export async function createMissingTabs() {
 
 /**
  * Pull all data from the active backend into the local store.
- * Sheets-only — no-op for Supabase or none.
+ * "both" mode pulls from sheets (authoritative source).
+ * Supabase-only: no-op (use supabaseRead directly for targeted reads).
  * @returns {Promise<Record<string, number>>}
  */
 export async function pullAll() {
-  if (getBackendType() !== "sheets") return {};
+  if (getBackendType() === "supabase" || getBackendType() === "none") return {};
   await _loadSheetsModule();
   return _sheetPull?.() ?? {};
 }
 
 /**
  * Force-push ALL stores to the active backend (ignores the write queue).
- * Sheets-only — no-op for Supabase or none.
+ * "both" mode pushes to sheets (primary). Individual key syncs cover supabase.
  * @returns {Promise<Record<string, number>>}
  */
 export async function pushAll() {
-  if (getBackendType() !== "sheets") return {};
+  if (getBackendType() === "supabase" || getBackendType() === "none") return {};
   await _loadSheetsModule();
   return _sheetPushAll?.() ?? {};
 }

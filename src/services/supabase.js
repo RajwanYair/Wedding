@@ -41,8 +41,15 @@ const _TABLE_NAMES = {
   tables: "tables",
   vendors: "vendors",
   expenses: "expenses",
+  budget: "budget",
+  timeline: "timeline",
+  contacts: "contacts",
+  gallery: "gallery",
   weddingInfo: "config",
 };
+
+/** Store keys that use key-value (map) format — stored as rows of { key, value }. */
+const _KV_TABLES = new Set(["weddingInfo"]);
 
 // ── Low-level REST helpers ───────────────────────────────────────────────
 
@@ -93,7 +100,15 @@ export async function syncStoreKeyToSupabase(storeKey) {
   const table = _TABLE_NAMES[storeKey];
   if (!table) return;
 
-  const records = /** @type {any[]} */ (storeGet(storeKey) ?? []);
+  /** @type {any[]} */
+  let records;
+  if (_KV_TABLES.has(storeKey)) {
+    // weddingInfo: convert { key: value } object → [{ key, value }, ...]
+    const obj = /** @type {Record<string, unknown>} */ (storeGet(storeKey) ?? {});
+    records = Object.entries(obj).map(([k, v]) => ({ key: k, value: String(v ?? "") }));
+  } else {
+    records = /** @type {any[]} */ (storeGet(storeKey) ?? []);
+  }
 
   // DELETE all existing rows, then bulk INSERT
   await _rest(`/rest/v1/${table}?id=neq.___never_match___`, {
