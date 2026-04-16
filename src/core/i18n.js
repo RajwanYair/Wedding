@@ -43,13 +43,118 @@ export async function loadLocale(lang, _inlineDict) {
 }
 
 /**
- * Translate a key.
+ * Translate a key, with optional ICU MessageFormat interpolation.
+ *
+ * Supports:
+ *  - Simple interpolation: `"Hello, {name}"` with `{ name: "Yair" }`
+ *  - ICU plural: `"{count, plural, one {# guest} other {# guests}}"` with `{ count: 5 }`
+ *  - Exact matches: `"{n, plural, =0 {none} one {# item} other {# items}}"`
+ *
+ * Backward-compatible: `t(key)` and `t(key, "fallback")` still work.
+ *
  * @param {string} key
+ * @param {Record<string, string|number> | string} [paramsOrFallback]
  * @param {string} [fallback]
  * @returns {string}
  */
-export function t(key, fallback) {
-  return _dict[key] ?? fallback ?? key;
+export function t(key, paramsOrFallback, fallback) {
+  const isParams = paramsOrFallback !== null && typeof paramsOrFallback === "object";
+  const fb = isParams ? fallback : /** @type {string|undefined} */ (paramsOrFallback);
+  const template = _dict[key] ?? fb ?? key;
+  return isParams ? formatMessage(template, paramsOrFallback) : template;
+}
+
+// ── ICU MessageFormat (lightweight) ─────────────────────────────────────
+
+/**
+ * Resolve a lightweight ICU MessageFormat string.
+ *
+ * Handles `{key}` simple interpolation and
+ * `{key, plural, =N {…} one {…} few {…} many {…} other {…}}` plural blocks.
+ * Uses native `Intl.PluralRules` for locale-correct plural categories
+ * (important for Arabic few/many and Russian one/few/many).
+ *
+ * @param {string} template
+ * @param {Record<string, string|number>} params
+ * @returns {string}
+ */
+export function formatMessage(template, params) {
+  if (!template || !params) return template ?? "";
+
+  // Parse top-level {…} blocks, handling nested braces for ICU plural syntax
+  let result = "";
+  let i = 0;
+  while (i < template.length) {
+    if (template[i] === "{") {
+      // Find matching closing brace at depth 0
+      let depth = 1;
+      let j = i + 1;
+      while (j < template.length && depth > 0) {
+        if (template[j] === "{") depth++;
+        else if (template[j] === "}") depth--;
+        j++;
+      }
+      const inner = template.slice(i + 1, j - 1).trim();
+
+      if (inner.includes(", plural,")) {
+        result += _resolvePlural(inner, params);
+      } else if (inner in params) {
+        result += String(params[inner]);
+      } else {
+        result += template.slice(i, j); // leave unresolved tokens as-is
+      }
+      i = j;
+    } else {
+      result += template[i];
+      i++;
+    }
+  }
+  return result;
+}
+
+/**
+ * Resolve an ICU plural expression.
+ * @param {string} expr  e.g. `count, plural, =0 {none} one {# guest} other {# guests}`
+ * @param {Record<string, string|number>} params
+ * @returns {string}
+ */
+function _resolvePlural(expr, params) {
+  const commaIdx = expr.indexOf(",");
+  const varName = expr.slice(0, commaIdx).trim();
+  const value = Number(params[varName] ?? 0);
+
+  // Extract rules: `=N {text}`, `category {text}`
+  const ruleStr = expr.slice(expr.indexOf(", plural,") + 9);
+  /** @type {Record<string, string>} */
+  const rules = {};
+  const ruleRE = /(=\d+|\w+)\s*\{([^}]*)\}/g;
+  let m;
+  while ((m = ruleRE.exec(ruleStr)) !== null) {
+    rules[m[1]] = m[2];
+  }
+
+  // 1. Exact match first: =0, =1, =5 …
+  const exact = rules[`=${value}`];
+  if (exact !== undefined) return exact.replace(/#/g, String(value));
+
+  // 2. Intl.PluralRules category
+  const category = _pluralRules().select(value); // "zero"|"one"|"two"|"few"|"many"|"other"
+  const chosen = rules[category] ?? rules.other ?? "";
+  return chosen.replace(/#/g, String(value));
+}
+
+/** @type {Intl.PluralRules | null} */
+let _cachedRules = null;
+/** @type {string} */
+let _cachedRulesLang = "";
+
+/** Get or create a cached PluralRules for the current locale. */
+function _pluralRules() {
+  const loc = _locale();
+  if (_cachedRules && _cachedRulesLang === loc) return _cachedRules;
+  _cachedRulesLang = loc;
+  _cachedRules = new Intl.PluralRules(loc);
+  return _cachedRules;
 }
 
 /**

@@ -1034,5 +1034,11 @@
     "seating_score_pct": "Overall score",
     "seating_score_grade": "Grade",
     "seating_score_seated": "Seated",
-    "seating_score_tables": "Tables"
+    "seating_score_tables": "Tables",
+    "plural_guests": "{count, plural, one {# guest} other {# guests}}",
+    "plural_tables": "{count, plural, one {# table} other {# tables}}",
+    "plural_days": "{count, plural, one {# day} other {# days}}",
+    "plural_children": "{count, plural, one {# child} other {# children}}",
+    "plural_vendors": "{count, plural, one {# vendor} other {# vendors}}",
+    "plural_items": "{count, plural, one {# item} other {# items}}"
 }

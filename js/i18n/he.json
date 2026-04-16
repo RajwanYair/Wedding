@@ -1036,5 +1036,11 @@
     "seating_score_pct": "ציון כולל",
     "seating_score_grade": "דרגה",
     "seating_score_seated": "מושבים",
-    "seating_score_tables": "שולחנות"
+    "seating_score_tables": "שולחנות",
+    "plural_guests": "{count, plural, one {אורח #} other {# אורחים}}",
+    "plural_tables": "{count, plural, one {שולחן #} other {# שולחנות}}",
+    "plural_days": "{count, plural, one {יום #} other {# ימים}}",
+    "plural_children": "{count, plural, one {ילד #} other {# ילדים}}",
+    "plural_vendors": "{count, plural, one {ספק #} other {# ספקים}}",
+    "plural_items": "{count, plural, one {פריט #} other {# פריטים}}"
 }

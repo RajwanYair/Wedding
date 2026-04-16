@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { t, loadLocale, currentLang, applyI18n } from "../../src/core/i18n.js";
+import { t, loadLocale, currentLang, applyI18n, formatMessage } from "../../src/core/i18n.js";
 
 const SAMPLE_DICT = {
   app_title: "ניהול חתונה",
@@ -149,5 +149,70 @@ describe("applyI18n()", () => {
     expect(document.querySelectorAll("[data-i18n]")[0].textContent).toBe("שמור");
     // Unscoped element should remain untranslated
     expect(document.querySelectorAll("[data-i18n]")[1].textContent).toBe("");
+  });
+});
+
+// ── formatMessage / ICU plurals (F3.2.3) ──────────────────────────────────
+describe("formatMessage()", () => {
+  it("does simple interpolation", () => {
+    expect(formatMessage("Hello, {name}!", { name: "Yair" })).toBe("Hello, Yair!");
+  });
+
+  it("leaves unresolved tokens as-is", () => {
+    expect(formatMessage("{greeting}, {name}!", { name: "A" })).toBe("{greeting}, A!");
+  });
+
+  it("returns empty string for null template", () => {
+    expect(formatMessage(null, { a: 1 })).toBe("");
+  });
+
+  it("returns template unchanged when no params", () => {
+    expect(formatMessage("hello", null)).toBe("hello");
+  });
+});
+
+describe("ICU plural via t()", () => {
+  beforeEach(async () => {
+    await loadLocale("en", {
+      guest_count: "{count, plural, one {# guest} other {# guests}}",
+      item_count: "{count, plural, =0 {no items} one {# item} other {# items}}",
+      simple_key: "Hello, {name}!",
+    });
+  });
+
+  it("resolves plural one", () => {
+    expect(t("guest_count", { count: 1 })).toBe("1 guest");
+  });
+
+  it("resolves plural other", () => {
+    expect(t("guest_count", { count: 5 })).toBe("5 guests");
+  });
+
+  it("resolves plural zero via other", () => {
+    expect(t("guest_count", { count: 0 })).toBe("0 guests");
+  });
+
+  it("resolves plural exact =0", () => {
+    expect(t("item_count", { count: 0 })).toBe("no items");
+  });
+
+  it("resolves plural one with exact match available", () => {
+    expect(t("item_count", { count: 1 })).toBe("1 item");
+  });
+
+  it("resolves plural other with large number", () => {
+    expect(t("item_count", { count: 42 })).toBe("42 items");
+  });
+
+  it("does simple interpolation via t()", () => {
+    expect(t("simple_key", { name: "Yair" })).toBe("Hello, Yair!");
+  });
+
+  it("backward compat: t(key, stringFallback) still works", () => {
+    expect(t("unknown", "fallback")).toBe("fallback");
+  });
+
+  it("backward compat: t(key) still returns key", () => {
+    expect(t("missing_key")).toBe("missing_key");
   });
 });

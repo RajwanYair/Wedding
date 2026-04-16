@@ -1002,5 +1002,11 @@
     "seating_score_pct": "Общий балл",
     "seating_score_grade": "Оценка",
     "seating_score_seated": "Рассажены",
-    "seating_score_tables": "Столов"
+    "seating_score_tables": "Столов",
+    "plural_guests": "{count, plural, one {# гость} few {# гостя} many {# гостей} other {# гостей}}",
+    "plural_tables": "{count, plural, one {# стол} few {# стола} many {# столов} other {# столов}}",
+    "plural_days": "{count, plural, one {# день} few {# дня} many {# дней} other {# дней}}",
+    "plural_children": "{count, plural, one {# ребёнок} few {# ребёнка} many {# детей} other {# детей}}",
+    "plural_vendors": "{count, plural, one {# поставщик} few {# поставщика} many {# поставщиков} other {# поставщиков}}",
+    "plural_items": "{count, plural, one {# элемент} few {# элемента} many {# элементов} other {# элементов}}"
 }
