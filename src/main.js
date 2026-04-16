@@ -9,6 +9,7 @@
 // ── Foundation layer ──────────────────────────────────────────────────────
 import { APP_VERSION } from "./core/config.js";
 import { PUBLIC_SECTIONS } from "./core/constants.js";
+import { initStorage, migrateFromLocalStorage } from "./core/storage.js";
 import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import { loadLocale, applyI18n, t } from "./core/i18n.js";
@@ -183,6 +184,13 @@ function _buildStoreDefs() {
 
   // 2a. Restore active event (S9.1) — must be before initStore
   restoreActiveEvent();
+
+  // 2b. F2.3 — Initialise async storage layer (IndexedDB > localStorage > memory)
+  const adapterType = await initStorage();
+  if (adapterType === "indexeddb") {
+    const migrated = await migrateFromLocalStorage();
+    if (migrated > 0) console.log(`[storage] Migrated ${migrated} keys from localStorage to IndexedDB`);
+  }
 
   // 3. Reactive store — seed with persisted data from localStorage
   initStore(_buildStoreDefs());
