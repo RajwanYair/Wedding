@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [5.2.0] — 2025-07-26
+
+### Added — Phase 2-5 Features
+
+- **F3.3.3 Bottom sheet modals**: Slide-up modal pattern on mobile (`@media max-width: 768px`) with `modalSlideUp` animation.
+- **F3.3.4 Scroll-driven animations**: Timeline items reveal on scroll via `animation-timeline: view()`.
+- **F4.1.5 Vendor payment due reminders**: Dashboard card showing vendors with payments due within 7 days (overdue/soon/upcoming).
+- **F4.1.1 Table assignment suggestions**: `suggestTableAssignments()` — non-destructive scoring by side, group, meal to suggest optimal seating.
+- **F4.1.2 No-show prediction**: `predictNoShowRate()` — estimates no-shows based on RSVP timing (5%/15%/25% tiers).
+- **F4.2.5 Calendar invite (.ics)**: `generateICS()` + download button in WhatsApp section for adding wedding event to calendars.
+- **F2.4.3 Queue drain progress bar**: Settings sync monitor shows progress bar with percentage as queue items drain.
+- **F4.3.2 Response time histogram**: SVG bar chart showing guest RSVP response time distribution.
+- **F4.3.3 Budget burn-down chart**: SVG line chart showing cumulative spending vs budget target.
+- **F4.3.4 Seating quality score**: Side/group coherence scoring (A-D grade) for current table assignments.
+- **F3.2.4 Intl.DateTimeFormat**: `formatDate()` in i18n module — locale-aware date formatting.
+- **F3.2.5 Intl.NumberFormat**: `formatNumber()` and `formatCurrency()` in i18n module.
+- **F2.1.1 getSchema client API**: `fetchServerSchema()` for retrieving GAS column order + version.
+- **F2.1.2 Schema validation**: `validateSchema()` compares local `_COL_ORDER` against server schema.
+- **F2.1.3 Version handshake**: `schemaHandshake()` checks major version compatibility between client and GAS.
+- **F2.1.6 HTTP 429 backoff**: `sheetsPostImpl()` retries with exponential backoff on Too Many Requests.
+- **F1.3.4 tsc in CI**: `npm run typecheck` step in CI workflow (non-blocking, informational).
+- **F1.6.2 Eager entry sections**: Preload landing, rsvp, dashboard modules during bootstrap.
+- **F5.1.3 ADRs**: Architecture Decision Records for zero-deps, ESM modules, store-driven reactivity.
+- **F5.1.4 Add-section tutorial**: Step-by-step guide in CONTRIBUTING.md.
+
 ## [5.1.0] — 2025-07-25
 
 ### Added — Phase 1 Remaining + Phase 2-4 Features

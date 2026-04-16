@@ -279,7 +279,7 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | 3.1 | Create `src/types.d.ts` — `Guest`, `Table`, `Vendor`, `Expense`, `WeddingInfo` interfaces | M | ✅ Done |
 | 3.2 | Update `tsconfig.json`: include `src/`, enable `strict: true`, `noImplicitAny: true` | S | ✅ src/ included (strict deferred) |
 | 3.3 | Fix type errors surfaced by strict mode (estimate: 20–40) | L | ⏳ Deferred |
-| 3.4 | Add `tsc --noEmit` step to CI pipeline | S | ⏳ Deferred |
+| 3.4 | Add `tsc --noEmit` step to CI pipeline | S | ✅ Done (non-blocking) |
 | 3.5 | Add `@satisfies` / `@type` annotations to all store get/set operations | M | ⏳ Deferred |
 
 **Exit:** `src/types.d.ts` created with 11 interfaces. tsconfig includes src/. Strict mode deferred.
@@ -311,7 +311,7 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | # | Task | Size | Status |
 | --- | --- | --- | --- |
 | 6.1 | Convert section imports from eager to `import.meta.glob` + `await import()` on navigation | L | ✅ Done |
-| 6.2 | Eagerly load only `landing.js` + `rsvp.js` + `dashboard.js` (entry sections) | M | ⏳ Deferred |
+| 6.2 | Eagerly load only `landing.js` + `rsvp.js` + `dashboard.js` (entry sections) | M | ✅ Done |
 | 6.3 | Add `prefetchSection(name)` using `requestIdleCallback` | S | ✅ Done |
 | 6.4 | Update Vite manual chunks config to produce per-section chunks | M | ⏳ Deferred |
 
@@ -338,12 +338,12 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
-| 1.1 | Add `getSchema` GAS action — returns column order + sheet names + GAS version | M | Client validates schema |
-| 1.2 | Client-side schema validation on first sync (compare returned schema vs `_COL_ORDER`) | M | Detect drift before corruption |
-| 1.3 | API version handshake — client sends `clientVersion`, GAS rejects if incompatible | S | Safe client/server upgrades |
+| 1.1 | Add `getSchema` GAS action — returns column order + sheet names + GAS version | M | ✅ Done (client-side) |
+| 1.2 | Client-side schema validation on first sync (compare returned schema vs `_COL_ORDER`) | M | ✅ Done |
+| 1.3 | API version handshake — client sends `clientVersion`, GAS rejects if incompatible | S | ✅ Done |
 | 1.4 | Set up `@google/clasp` for GAS development workflow (push/pull/deploy) | M | Version-controlled backend |
 | 1.5 | Write GAS unit tests (mock `SpreadsheetApp`, test `ensureSheets`, `replaceAll`) | L | Backend test coverage |
-| 1.6 | Handle GAS 429 Too Many Requests (exponential backoff in `sheetsPost`) | S | Resilience under load |
+| 1.6 | Handle GAS 429 Too Many Requests (exponential backoff in `sheetsPost`) | S | ✅ Done |
 
 **Exit:** GAS code managed via clasp. Schema validated on every sync cycle. GAS tests run in CI.
 
@@ -378,7 +378,7 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | --- | --- | --- | --- |
 | 4.1 | Consolidate retry logic: single `MAX_RETRIES`, `RETRY_BASE_MS` in `sheets.js` | S | One retry strategy |
 | 4.2 | Add queue persistence to IndexedDB (survive browser restart) | M | ✅ Done |
-| 4.3 | Add queue drain progress indicator in settings | S | ⏳ Deferred |
+| 4.3 | Add queue drain progress indicator in settings | S | ✅ Done |
 | 4.4 | Flush queue on `navigator.onLine` + `visibilitychange` events | S | ✅ Done |
 
 **Exit:** Single retry strategy. Queue survives restart. Progress visible to user.
@@ -410,8 +410,8 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | 2.1 | Add Arabic locale (`ar.json`) — shares RTL infrastructure with Hebrew | L | Broader audience |
 | 2.2 | Add Russian locale (`ru.json`) — large Israeli demographic | M | Broader audience |
 | 2.3 | Implement ICU MessageFormat for plurals: `{count, plural, one {# guest} other {# guests}}` | L | Correct grammar across locales |
-| 2.4 | Use `Intl.DateTimeFormat` for all date rendering (locale-aware) | M | Proper locale formatting |
-| 2.5 | Use `Intl.NumberFormat` for currency and number display | S | Correct currency symbols |
+| 2.4 | Use `Intl.DateTimeFormat` for all date rendering (locale-aware) | M | ✅ Done |
+| 2.5 | Use `Intl.NumberFormat` for currency and number display | S | ✅ Done |
 
 **Exit:** 4 locales (he, en, ar, ru). Plural forms correct. Dates/numbers locale-aware.
 
@@ -421,8 +421,8 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | --- | --- | --- | --- |
 | 3.1 | Haptic feedback on guest check-in (Vibration API) | S | ✅ Done |
 | 3.2 | Ensure all touch targets ≥ 48×48 px (Material Design 3 guideline) | M | ✅ Done |
-| 3.3 | Bottom sheet pattern for modals on mobile (replace centered overlay) | L | Native mobile feel |
-| 3.4 | Scroll-driven animations for timeline section (CSS `animation-timeline`) | M | Modern, smooth feel |
+| 3.3 | Bottom sheet pattern for modals on mobile (replace centered overlay) | L | ✅ Done |
+| 3.4 | Scroll-driven animations for timeline section (CSS `animation-timeline`) | M | ✅ Done |
 | 3.5 | Auto-detect `prefers-color-scheme` for light/dark mode | S | ✅ Done |
 
 **Exit:** All touch targets ≥ 48px. Mobile modals are bottom sheets. LCP < 1.5s on 3G throttle.
@@ -437,11 +437,11 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
-| 1.1 | Auto-suggest table assignments based on side + group + meal constraints | M | Save hours of manual work |
-| 1.2 | Predict no-show rate from RSVP timing + pending/maybe historical patterns | M | Accurate headcount forecast |
+| 1.1 | Auto-suggest table assignments based on side + group + meal constraints | M | ✅ Done |
+| 1.2 | Predict no-show rate from RSVP timing + pending/maybe historical patterns | M | ✅ Done |
 | 1.3 | Suggest optimal follow-up timing for pending guests (days since invite) | S | ✅ Done |
 | 1.4 | Budget forecast: confirmed headcount × per-plate cost vs. budget target | S | ✅ Done |
-| 1.5 | Vendor payment due reminders on dashboard (7d, 3d, overdue) | S | No missed payments |
+| 1.5 | Vendor payment due reminders on dashboard (7d, 3d, overdue) | S | ✅ Done |
 
 ### F4.2 — Communication Automation
 
@@ -451,16 +451,16 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | 2.2 | Evaluate WhatsApp Business Cloud API (free: 1K service conversations/mo) | M | Replace paid Green API |
 | 2.3 | Post-wedding thank-you message queue (auto-send to checked-in guests) | M | Courteous automation |
 | 2.4 | RSVP confirmation email with HTML template (via GAS `MailApp`) | M | Professional guest emails |
-| 2.5 | Calendar invite (.ics file) generation for confirmed guests | S | Guest convenience |
+| 2.5 | Calendar invite (.ics file) generation for confirmed guests | S | ✅ Done |
 
 ### F4.3 — Advanced Analytics
 
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
 | 3.1 | RSVP conversion funnel: invited → link clicked → form started → submitted | L | Understand drop-off points |
-| 3.2 | Guest response time histogram (pure SVG, client-rendered) | M | Timing insights |
-| 3.3 | Budget burn-down chart (committed vs. paid plotted over time) | M | Financial trajectory |
-| 3.4 | Seating plan optimization score (conflict count + group-balance metric) | M | Quality measure |
+| 3.2 | Guest response time histogram (pure SVG, client-rendered) | M | ✅ Done |
+| 3.3 | Budget burn-down chart (committed vs. paid plotted over time) | M | ✅ Done |
+| 3.4 | Seating plan optimization score (conflict count + group-balance metric) | M | ✅ Done |
 | 3.5 | One-page executive summary PDF export (all key stats + charts) | L | Shareable report |
 
 ---
@@ -475,8 +475,8 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | --- | --- | --- | --- |
 | 1.1 | Auto-generate API docs from JSDoc (`typedoc` or custom script → HTML) | M | Contributor onboarding |
 | 1.2 | Component gallery page — lightweight HTML page showing all UI states | L | Design system reference |
-| 1.3 | Architecture Decision Records (ADRs) for major v5 decisions | M | Decision history |
-| 1.4 | "Add a section" tutorial in CONTRIBUTING.md | S | Open-source readiness |
+| 1.3 | Architecture Decision Records (ADRs) for major v5 decisions | M | ✅ Done |
+| 1.4 | "Add a section" tutorial in CONTRIBUTING.md | S | ✅ Done |
 | 1.5 | Copilot custom agents per domain (guest, vendor, analytics) | M | AI-assisted development |
 
 ### F5.2 — Plugin Architecture (Evaluate)
