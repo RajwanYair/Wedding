@@ -8,6 +8,15 @@ body.light-mode { color-scheme: light; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
 
+/* ── Focus-visible (F3.1 Accessibility) ── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 body {
   font-family: var(--font-main);
   background: var(--bg-gradient);
