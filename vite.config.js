@@ -35,6 +35,8 @@ export default defineConfig({
         /* S4.5 + S1.8: Manual chunk splitting — section templates + public bundle */
         manualChunks(id) {
           if (id.includes("i18n/en.json")) return "locale-en";
+          if (id.includes("i18n/ar.json")) return "locale-ar";
+          if (id.includes("i18n/ru.json")) return "locale-ru";
 
           // S1.8: Public bundle — RSVP, landing, guest-landing load without admin
           if (

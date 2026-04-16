@@ -61,14 +61,15 @@ export function saveWeddingInfo(data) {
 
 /**
  * Switch the app language.
- * @param {"he"|"en"} lang
+ * @param {"he"|"en"|"ar"|"ru"} lang
  */
 export async function switchLanguage(lang) {
-  if (lang !== "he" && lang !== "en") return;
+  const supported = ["he", "en", "ar", "ru"];
+  if (!supported.includes(lang)) return;
   await loadLocale(lang);
   save("lang", lang);
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
+  document.documentElement.dir = lang === "he" || lang === "ar" ? "rtl" : "ltr";
   applyI18n();
 }
 

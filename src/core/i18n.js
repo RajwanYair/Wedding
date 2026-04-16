@@ -8,14 +8,14 @@
 
 /** @type {Record<string, string>} */
 let _dict = {};
-/** @type {'he'|'en'} */
+/** @type {'he'|'en'|'ar'|'ru'} */
 let _lang = "he";
 
 /**
  * Load a language pack via Vite dynamic import().
- * Hebrew is bundled eagerly; English is split into the `locale-en` lazy chunk.
+ * Hebrew is bundled eagerly; other locales are split into lazy chunks.
  *
- * @param {'he'|'en'} lang
+ * @param {'he'|'en'|'ar'|'ru'} lang
  * @param {Record<string, string>} [_inlineDict]  Injected dict for unit tests only
  * @returns {Promise<void>}
  */
@@ -27,8 +27,13 @@ export async function loadLocale(lang, _inlineDict) {
     return;
   }
   if (lang === "en") {
-    // Lazy-loaded English locale — Vite splits this into the `locale-en` chunk
     const { default: dict } = await import("../i18n/en.json");
+    _dict = dict;
+  } else if (lang === "ar") {
+    const { default: dict } = await import("../i18n/ar.json");
+    _dict = dict;
+  } else if (lang === "ru") {
+    const { default: dict } = await import("../i18n/ru.json");
     _dict = dict;
   } else {
     // Hebrew — bundled eagerly into the main entry chunk
@@ -49,7 +54,7 @@ export function t(key, fallback) {
 
 /**
  * Current active language.
- * @returns {'he'|'en'}
+ * @returns {'he'|'en'|'ar'|'ru'}
  */
 export function currentLang() {
   return _lang;
@@ -76,9 +81,10 @@ export function applyI18n(root = document) {
 
 // ── F3.2.4 / F3.2.5 — Intl formatting helpers ──────────────────────────
 
-/** Locale string matching current language: "he-IL" or "en-IL" */
+/** Locale string matching current language */
 function _locale() {
-  return _lang === "en" ? "en-IL" : "he-IL";
+  const map = { he: "he-IL", en: "en-IL", ar: "ar-IL", ru: "ru-IL" };
+  return map[_lang] ?? "he-IL";
 }
 
 /**

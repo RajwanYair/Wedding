@@ -199,15 +199,21 @@ export function registerSettingsHandlers(ctx) {
   on("clearAllData", () => clearAllData());
   on("switchLanguage", async () => {
     const current = load("lang", "he");
-    await switchLanguage(current === "he" ? "en" : "he");
+    const order = ["he", "en", "ar", "ru"];
+    const idx = order.indexOf(current);
+    const next = order[(idx + 1) % order.length];
+    await switchLanguage(next);
     showToast(t("language_switched"), "info");
   });
   on("toggleLanguage", async () => {
     const current = load("lang", "he");
-    const next = current === "he" ? "en" : "he";
+    const order = ["he", "en", "ar", "ru"];
+    const labels = { he: "EN", en: "\u0639\u0631", ar: "RU", ru: "\u05E2\u05D1" };
+    const idx = order.indexOf(current);
+    const next = order[(idx + 1) % order.length];
     await switchLanguage(next);
     const btn = document.getElementById("btnLang");
-    if (btn) btn.textContent = next === "he" ? "EN" : "\u05E2\u05D1";
+    if (btn) btn.textContent = labels[next] ?? "EN";
     showToast(t("language_switched"), "info");
   });
   on("clearAuditLog", () => clearAuditLog());
