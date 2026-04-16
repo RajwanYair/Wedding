@@ -1028,5 +1028,13 @@
     "ics_wedding_title": "חתונה",
     "ics_card_title": "הזמנה ליומן",
     "ics_card_desc": "הורד קובץ .ics להוספת האירוע ליומן.",
-    "ics_download_btn": "הורד הזמנה ליומן"
+    "ics_download_btn": "הורד הזמנה ליומן",
+    "response_histogram_title": "זמני תגובה",
+    "budget_burndown_title": "צריכת תקציב",
+    "budget_target": "יעד",
+    "seating_score_title": "ציון הושבה",
+    "seating_score_pct": "ציון כולל",
+    "seating_score_grade": "דרגה",
+    "seating_score_seated": "מושבים",
+    "seating_score_tables": "שולחנות"
 }

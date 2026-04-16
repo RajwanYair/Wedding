@@ -36,6 +36,13 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderTagBreakdown));
   // F4.1.2 no-show prediction
   _unsubs.push(storeSubscribe("guests", renderNoShowPrediction));
+  // F4.3.2 response histogram
+  _unsubs.push(storeSubscribe("guests", renderResponseHistogram));
+  // F4.3.3 budget burn-down
+  _unsubs.push(storeSubscribe("expenses", renderBudgetBurndown));
+  // F4.3.4 seating score
+  _unsubs.push(storeSubscribe("guests", renderSeatingScore));
+  _unsubs.push(storeSubscribe("tables", renderSeatingScore));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -49,6 +56,9 @@ export function mount(_container) {
   renderExpenseTrend(); // S22.2
   renderTagBreakdown(); // S24.4
   renderNoShowPrediction(); // F4.1.2
+  renderResponseHistogram(); // F4.3.2
+  renderBudgetBurndown(); // F4.3.3
+  renderSeatingScore(); // F4.3.4
 }
 
 export function unmount() {
@@ -1381,6 +1391,189 @@ export function renderNoShowPrediction() {
     { num: String(expectedNoShows), label: t("noshow_expected") || "צפויים לא להגיע" },
     { num: String(confirmed - expectedNoShows), label: t("noshow_actual_expected") || "צפויים להגיע" },
     { num: String(lateConfirmed), label: t("noshow_late_rsvp") || "אישרו מאוחר" },
+  ];
+
+  for (const { num, label } of items) {
+    const box = document.createElement("div");
+    box.className = "analytics-stat-box";
+    const numEl = document.createElement("div");
+    numEl.className = "analytics-stat-num";
+    numEl.textContent = num;
+    const lblEl = document.createElement("div");
+    lblEl.className = "analytics-stat-lbl";
+    lblEl.textContent = label;
+    box.appendChild(numEl);
+    box.appendChild(lblEl);
+    container.appendChild(box);
+  }
+}
+
+// ── F4.3.2 Response Time Histogram ────────────────────────────────────────
+
+/**
+ * Render a histogram showing guest response times (days between invite and RSVP).
+ */
+function renderResponseHistogram() {
+  const container = document.getElementById("analyticsResponseHistogram");
+  if (!container) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+
+  // Compute response days for guests that have both createdAt and rsvpDate
+  const days = [];
+  for (const g of guests) {
+    if (!g.createdAt || !g.rsvpDate) continue;
+    const created = new Date(g.createdAt).getTime();
+    const rsvp = new Date(g.rsvpDate).getTime();
+    if (Number.isNaN(created) || Number.isNaN(rsvp)) continue;
+    days.push(Math.max(0, Math.round((rsvp - created) / 86_400_000)));
+  }
+
+  if (days.length === 0) {
+    container.textContent = t("no_data") || "אין נתונים";
+    return;
+  }
+
+  // Bucket into ranges: 0-1, 2-3, 4-7, 8-14, 15-30, 30+
+  const buckets = [
+    { label: "0-1d", max: 1, count: 0 },
+    { label: "2-3d", max: 3, count: 0 },
+    { label: "4-7d", max: 7, count: 0 },
+    { label: "8-14d", max: 14, count: 0 },
+    { label: "15-30d", max: 30, count: 0 },
+    { label: "30d+", max: Infinity, count: 0 },
+  ];
+  for (const d of days) {
+    const b = buckets.find((bk) => d <= bk.max);
+    if (b) b.count++;
+  }
+
+  const bars = buckets
+    .filter((b) => b.count > 0)
+    .map((b) => ({ label: b.label, value: b.count, color: "var(--accent)" }));
+  _renderBar("analyticsResponseHistogram", bars);
+}
+
+// ── F4.3.3 Budget Burn-Down Chart ──────────────────────────────────────────
+
+/**
+ * Render a simple burn-down SVG showing cumulative paid vs budget target.
+ */
+function renderBudgetBurndown() {
+  const container = document.getElementById("analyticsBudgetBurndown");
+  if (!container) return;
+
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const budget = /** @type {Record<string,any>} */ (storeGet("budget") ?? {});
+  const target = Number(budget.target) || 0;
+
+  if (expenses.length === 0 || target === 0) {
+    container.textContent = t("no_data") || "אין נתונים";
+    return;
+  }
+
+  // Sort expenses by date and compute cumulative
+  const sorted = [...expenses]
+    .filter((e) => e.date && e.amount)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  if (sorted.length === 0) {
+    container.textContent = t("no_data") || "אין נתונים";
+    return;
+  }
+
+  const points = [];
+  let cumulative = 0;
+  for (const e of sorted) {
+    cumulative += Number(e.amount) || 0;
+    points.push({ date: e.date, total: cumulative });
+  }
+
+  // SVG dimensions
+  const w = 280;
+  const h = 120;
+  const pad = 20;
+  const chartW = w - pad * 2;
+  const chartH = h - pad * 2;
+  const maxY = Math.max(target, cumulative) * 1.1;
+
+  // Build path from points
+  const pathParts = points.map((p, i) => {
+    const x = pad + (i / Math.max(points.length - 1, 1)) * chartW;
+    const y = pad + chartH - (p.total / maxY) * chartH;
+    return `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`;
+  });
+
+  // Budget target line
+  const tgtY = pad + chartH - (target / maxY) * chartH;
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${t("budget_burndown_title")}"><title>${t("budget_burndown_title")}</title>`;
+  // Target line
+  svg += `<line x1="${pad}" y1="${tgtY.toFixed(1)}" x2="${w - pad}" y2="${tgtY.toFixed(1)}" stroke="var(--danger)" stroke-dasharray="4 2" stroke-width="1"/>`;
+  svg += `<text x="${w - pad}" y="${tgtY.toFixed(1) - 3}" text-anchor="end" font-size="7" fill="var(--danger)">${_escSvg(t("budget_target") || "Target")}</text>`;
+  // Cumulative line
+  svg += `<path d="${pathParts.join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+  // Axis labels
+  svg += `<text x="${pad}" y="${h - 2}" font-size="7" fill="var(--text-muted)">${_escSvg(sorted[0].date.slice(0, 7))}</text>`;
+  svg += `<text x="${w - pad}" y="${h - 2}" text-anchor="end" font-size="7" fill="var(--text-muted)">${_escSvg(sorted.at(-1).date.slice(0, 7))}</text>`;
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
+// ── F4.3.4 Seating Quality Score ──────────────────────────────────────────
+
+/**
+ * Compute and render a seating quality score based on group/side coherence.
+ */
+function renderSeatingScore() {
+  const container = document.getElementById("analyticsSeatingScore");
+  if (!container) return;
+  container.textContent = "";
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const seated = guests.filter((g) => g.tableId);
+
+  if (seated.length === 0 || tables.length === 0) {
+    container.textContent = t("no_data") || "אין נתונים";
+    return;
+  }
+
+  // Build table → guests map
+  const tableGuests = new Map();
+  for (const g of seated) {
+    const arr = tableGuests.get(g.tableId) ?? [];
+    arr.push(g);
+    tableGuests.set(g.tableId, arr);
+  }
+
+  let totalScore = 0;
+  let tableCount = 0;
+
+  for (const [, tblGuests] of tableGuests) {
+    if (tblGuests.length < 2) continue;
+    tableCount++;
+    // Side coherence: fraction of majority side
+    const sides = {};
+    const groups = {};
+    for (const g of tblGuests) {
+      sides[g.side || "mutual"] = (sides[g.side || "mutual"] || 0) + 1;
+      groups[g.group || "other"] = (groups[g.group || "other"] || 0) + 1;
+    }
+    const maxSide = Math.max(...Object.values(sides));
+    const maxGroup = Math.max(...Object.values(groups));
+    const sideScore = maxSide / tblGuests.length;
+    const groupScore = maxGroup / tblGuests.length;
+    totalScore += (sideScore + groupScore) / 2;
+  }
+
+  const avgScore = tableCount > 0 ? totalScore / tableCount : 0;
+  const pct = Math.round(avgScore * 100);
+  const grade = pct >= 80 ? "A" : pct >= 60 ? "B" : pct >= 40 ? "C" : "D";
+
+  const items = [
+    { num: `${pct}%`, label: t("seating_score_pct") || "ציון כולל" },
+    { num: grade, label: t("seating_score_grade") || "דרגה" },
+    { num: String(seated.length), label: t("seating_score_seated") || "מושבים" },
+    { num: String(tableCount), label: t("seating_score_tables") || "שולחנות" },
   ];
 
   for (const { num, label } of items) {

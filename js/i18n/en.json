@@ -1026,5 +1026,13 @@
     "ics_wedding_title": "Wedding",
     "ics_card_title": "Calendar Invite",
     "ics_card_desc": "Download .ics file to add the event to your calendar.",
-    "ics_download_btn": "Download Calendar Invite"
+    "ics_download_btn": "Download Calendar Invite",
+    "response_histogram_title": "Response Times",
+    "budget_burndown_title": "Budget Burn-Down",
+    "budget_target": "Target",
+    "seating_score_title": "Seating Quality Score",
+    "seating_score_pct": "Overall score",
+    "seating_score_grade": "Grade",
+    "seating_score_seated": "Seated",
+    "seating_score_tables": "Tables"
 }
