@@ -220,8 +220,14 @@ export function restoreTheme() {
       _themeIdx = idx;
       if (theme !== "default") document.body.classList.add(`theme-${theme}`);
     }
-    if (localStorage.getItem("wedding_v1_lightMode") === "true") {
+    const savedLight = localStorage.getItem("wedding_v1_lightMode");
+    if (savedLight === "true") {
       document.body.classList.add("light-mode");
+    } else if (savedLight === null) {
+      // F3.3 — Auto-detect system preference when no explicit choice was saved
+      if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+        document.body.classList.add("light-mode");
+      }
     }
   } catch {
     // storage unavailable

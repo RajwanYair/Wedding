@@ -150,6 +150,20 @@
   }
 }
 
+/* ── F3.3 Touch targets — ensure minimum 48×48px on touch devices ── */
+@media (pointer: coarse) {
+  .btn,
+  .nav-tab,
+  .btn-icon,
+  .bottom-nav-item,
+  .checkin-row button,
+  input[type="checkbox"],
+  select {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
 
 
 } /* end @layer responsive */

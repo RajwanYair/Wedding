@@ -77,6 +77,8 @@ export function checkInGuest(guestId) {
     // S16.1 — Sound + visual alert on check-in
     _playCheckinSound();
     _flashCheckinAlert(guests[idx]);
+    // F3.3 — Haptic feedback on mobile check-in
+    if (navigator.vibrate) navigator.vibrate(50);
   }
 }
 
