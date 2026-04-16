@@ -15,6 +15,7 @@ import {
   filterVendorsByCategory,
   openVendorForEdit,
   exportVendorPaymentsCSV,
+  setVendorPaymentFilter,
 } from "../sections/vendors.js";
 import {
   saveExpense,
@@ -38,6 +39,7 @@ export function registerVendorHandlers() {
       price: getVal("vendorPrice") || "0",
       paid: getVal("vendorPaid") || "0",
       dueDate: getVal("vendorDueDate") || "",
+      rating: getVal("vendorRating") || "0",
       notes: getVal("vendorNotes"),
       contractUrl: getVal("vendorContractUrl") || "",
     };
@@ -55,6 +57,9 @@ export function registerVendorHandlers() {
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
   on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());
+  on("setVendorPaymentFilter", (el) =>
+    setVendorPaymentFilter(el.dataset.actionArg ?? "all"),
+  );
   on("filterVendorsByCategory", (el) =>
     filterVendorsByCategory(el.dataset.category ?? "all"),
   );

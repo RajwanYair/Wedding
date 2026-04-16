@@ -1061,5 +1061,10 @@
     "rsvp_countdown": "{days} days until the wedding!",
     "label_table_notes": "Notes",
     "ph_table_notes": "Table notes",
-    "export_table_csv": "Export table guest list"
+    "export_table_csv": "Export table guest list",
+    "label_vendor_rating": "Rating (1-5)",
+    "vendor_filter_all": "All",
+    "vendor_filter_paid": "Paid",
+    "vendor_filter_unpaid": "Unpaid",
+    "vendor_filter_overdue": "Overdue"
 }

@@ -1063,5 +1063,10 @@
     "rsvp_countdown": "עוד {days} ימים לחתונה!",
     "label_table_notes": "הערות",
     "ph_table_notes": "הערות לשולחן",
-    "export_table_csv": "ייצא רשימת שולחן"
+    "export_table_csv": "ייצא רשימת שולחן",
+    "label_vendor_rating": "דירוג (1-5)",
+    "vendor_filter_all": "הכל",
+    "vendor_filter_paid": "שולם",
+    "vendor_filter_unpaid": "לא שולם",
+    "vendor_filter_overdue": "באיחור"
 }

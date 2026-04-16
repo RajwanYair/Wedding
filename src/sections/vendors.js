@@ -41,6 +41,7 @@ export function saveVendor(data, existingId = null) {
     price: { type: "number", required: false, min: 0, default: 0 },
     paid: { type: "number", required: false, min: 0, default: 0 },
     dueDate: { type: "string", required: false, maxLength: 20 },
+    rating: { type: "number", required: false, min: 0, max: 5, default: 0 },
     notes: { type: "string", required: false, maxLength: 500 },
     contractUrl: { type: "string", required: false, maxLength: 500 },
   });
@@ -108,6 +109,7 @@ export function renderVendors() {
       `₪${v.price || 0}`,
       `₪${v.paid || 0}`,
       dueDateStr,
+      _renderRatingText(v.rating || 0),
       v.notes || "",
     ];
     cells.forEach((txt, ci) => {
@@ -345,4 +347,45 @@ export function exportVendorPaymentsCSV() {
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+}
+
+// ── Sprint 6: Rating Helper ─────────────────────────────────────────────
+
+/**
+ * @param {number} rating
+ * @returns {string}
+ */
+function _renderRatingText(rating) {
+  if (!rating || rating <= 0) return "";
+  return "★".repeat(Math.min(rating, 5)) + "☆".repeat(Math.max(0, 5 - rating));
+}
+
+// ── Sprint 6: Vendor Payment Filter ─────────────────────────────────────
+
+/** @type {string} current vendor payment filter */
+let _paymentFilter = "all";
+
+/**
+ * Toggle vendor payment filter.
+ * @param {string} filter — "all" | "paid" | "unpaid" | "overdue"
+ */
+export function setVendorPaymentFilter(filter) {
+  _paymentFilter = filter;
+  renderVendors();
+}
+
+/**
+ * Get vendor payment summary stats.
+ * @returns {{ total: number, totalCost: number, totalPaid: number, outstanding: number, paidCount: number, overdueCount: number }}
+ */
+export function getVendorPaymentSummary() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const now = new Date();
+  const totalCost = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  const totalPaid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
+  const paidCount = vendors.filter((v) => (v.paid || 0) >= (v.price || 0) && (v.price || 0) > 0).length;
+  const overdueCount = vendors.filter(
+    (v) => v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
+  ).length;
+  return { total: vendors.length, totalCost, totalPaid, outstanding: totalCost - totalPaid, paidCount, overdueCount };
 }

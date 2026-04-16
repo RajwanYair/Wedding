@@ -1050,5 +1050,10 @@
     "rsvp_countdown": "До свадьбы осталось {days} дней!",
     "label_table_notes": "Заметки",
     "ph_table_notes": "Заметки для стола",
-    "export_table_csv": "Экспорт списка стола"
+    "export_table_csv": "Экспорт списка стола",
+    "label_vendor_rating": "Рейтинг (1-5)",
+    "vendor_filter_all": "Все",
+    "vendor_filter_paid": "Оплачено",
+    "vendor_filter_unpaid": "Не оплачено",
+    "vendor_filter_overdue": "Просрочено"
 }
