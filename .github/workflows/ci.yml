@@ -71,7 +71,7 @@ jobs:
       - name: Check for dangerous JS patterns
         run: |
           FAILED=0
-          for f in js/*.js index.html; do
+          for f in $(find src/ -name '*.js') index.html; do
             if grep -n "eval(" "$f"; then
               echo "::error file=$f::eval() usage detected"
               FAILED=1

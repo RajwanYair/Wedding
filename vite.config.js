@@ -88,7 +88,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov", "html"],
-      include: ["js/**", "src/**"],
+      include: ["src/**"],
       exclude: [
         "tests/**",
         "scripts/**",

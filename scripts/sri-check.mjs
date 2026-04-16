@@ -17,7 +17,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
-const DIRS = ["js", "css"];
+const DIRS = ["src", "css"];
 const EXTS = new Set([".js", ".css"]);
 
 function computeSri(filePath) {

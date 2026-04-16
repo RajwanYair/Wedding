@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 /**
- * inject-config.mjs — Replace hardcoded config values in BOTH js/config.js
- * and src/core/config.js from environment variables, for deployment via
- * GitHub Actions.
+ * inject-config.mjs — Replace hardcoded config values in src/core/config.js
+ * from environment variables, for deployment via GitHub Actions.
  *
  * Each env variable is optional.  If unset the constant is left unchanged,
  * so local development continues to work without any secrets in the environment.
  *
- * Environment variables → JS constants patched (in both files):
+ * Environment variables → JS constants patched:
  *   GH_GOOGLE_CLIENT_ID   → GOOGLE_CLIENT_ID
  *   GH_FB_APP_ID          → FB_APP_ID
  *   GH_APPLE_SERVICE_ID   → APPLE_SERVICE_ID
@@ -25,7 +24,6 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
-const LEGACY_CONFIG = resolve(ROOT, "js", "config.js");
 const ESM_CONFIG = resolve(ROOT, "src", "core", "config.js");
 
 /** @type {Array<[envVar: string, jsConst: string]>} */
@@ -78,13 +76,11 @@ function patchFile(filePath, label) {
   return changed;
 }
 
-const total =
-  patchFile(LEGACY_CONFIG, "js/config.js") +
-  patchFile(ESM_CONFIG, "src/core/config.js");
+const total = patchFile(ESM_CONFIG, "src/core/config.js");
 
 if (total > 0) {
   console.log(
-    `\nConfig injection complete: ${total} value(s) updated across both config files.`,
+    `\nConfig injection complete: ${total} value(s) updated.`,
   );
 } else {
   console.log("No secrets set — config files left unchanged (local dev mode).");

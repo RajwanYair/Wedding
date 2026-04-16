@@ -28,11 +28,11 @@ export async function loadLocale(lang, _inlineDict) {
   }
   if (lang === "en") {
     // Lazy-loaded English locale — Vite splits this into the `locale-en` chunk
-    const { default: dict } = await import("../../js/i18n/en.json");
+    const { default: dict } = await import("../i18n/en.json");
     _dict = dict;
   } else {
     // Hebrew — bundled eagerly into the main entry chunk
-    const { default: dict } = await import("../../js/i18n/he.json");
+    const { default: dict } = await import("../i18n/he.json");
     _dict = dict;
   }
 }
