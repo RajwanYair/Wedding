@@ -133,6 +133,16 @@
     </select>
     <button class="btn btn-primary btn-small" data-action="batchSetStatus" data-i18n="batch_apply">החל</button>
     <button class="btn btn-danger btn-small" data-action="batchDeleteGuests" data-i18n="batch_delete">מחק נבחרים</button>
+    <!-- S17.2 Batch Meal Assignment -->
+    <select id="batchMealSelect" class="u-mr-sm">
+      <option value="" data-i18n="batch_set_meal">שנה ארוחה</option>
+      <option value="regular" data-i18n="meal_regular">רגיל</option>
+      <option value="vegetarian" data-i18n="meal_vegetarian">צמחוני</option>
+      <option value="vegan" data-i18n="meal_vegan">טבעוני</option>
+      <option value="gluten_free" data-i18n="meal_gluten_free">ללא גלוטן</option>
+      <option value="kosher" data-i18n="meal_kosher">כשר מהדרין</option>
+    </select>
+    <button class="btn btn-secondary btn-small" data-action="batchSetMeal" data-i18n="batch_apply">החל</button>
   </div>
 
   <!-- Table -->

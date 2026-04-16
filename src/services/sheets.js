@@ -314,3 +314,21 @@ export function stopLiveSync() {
 export function isLiveSyncActive() {
   return _pollTimer !== null;
 }
+
+// ── S18.1 Queue Monitor ───────────────────────────────────────────────────
+
+/**
+ * Return the number of pending write entries in the queue.
+ * @returns {number}
+ */
+export function queueSize() {
+  return _queue.size;
+}
+
+/**
+ * Return an array of pending queue keys.
+ * @returns {string[]}
+ */
+export function queueKeys() {
+  return [..._queue.keys()];
+}

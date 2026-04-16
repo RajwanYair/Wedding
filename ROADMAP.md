@@ -35,6 +35,10 @@
 | S12 — UX Upgrades | WhatsApp reminders, duplicate detection, QR check-in, drag-drop seating, RSVP deadline | v4.1.0 | ✅ Done |
 | S13 — Guest Experience | Live countdown, plus-one names, thank-you messages, seating map, guest notes | v4.2.0 | ✅ Done |
 | S14 — Admin Productivity | Multi-filter, budget widget, vendor due dates, event export, guest tags | v4.2.0 | ✅ Done |
+| S15 — UX & Smart Features | Undo stack, shortcuts, auto-backup, activity feed, search highlight | v4.3.0 | ✅ Done |
+| S16 — Day-Of & Advanced | Check-in sound, smart table assign, payment schedule, RSVP timeline, dietary cards | v4.3.0 | ✅ Done |
+| S17 — Data Quality & Smart Insights | Full-text search, bulk meal, expense donut, table capacity colors, budget alert | v4.4.0 | ✅ Done |
+| S18 — Sync, Forecast & Operations | Queue monitor, arrival forecast, batch checkin, timeline alarm, WhatsApp unsent filter | v4.4.0 | ✅ Done |
 
 ### Current State (v3.8.0)
 
@@ -149,6 +153,34 @@ Day-of operations tools and advanced analytics.
 
 **Exit**: All 5 features functional. i18n complete. CI green.
 
+### S17 — Data Quality & Smart Insights (v4.4.0)
+
+Richer search, batch operations, and visual analytics improvements.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 17.1 | Full-text guest search — extend to email, notes, group, meal, tags | S |
+| 17.2 | Bulk meal assignment — batch toolbar selector for meal type | S |
+| 17.3 | Expense category donut chart — visual breakdown in Analytics | M |
+| 17.4 | Table capacity color indicators — green/yellow/red + overbooking banner | M |
+| 17.5 | Budget overshoot alert — dashboard warning when committed > target | S |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
+### S18 — Sync, Forecast & Operations (v4.4.0)
+
+Operational intelligence and day-of efficiency improvements.
+
+| # | Task | Size |
+| --- | --- | --- |
+| 18.1 | Offline sync queue monitor — badge + list of pending store keys | M |
+| 18.2 | Guest arrival forecast — projected headcount using maybe/pending weights | M |
+| 18.3 | Batch check-in by table — one tap to arrive all guests at a table | S |
+| 18.4 | Timeline event alarm — browser notification / in-app banner for upcoming events | M |
+| 18.5 | WhatsApp unsent filter shortcut — one-click unsent filter with count badge | S |
+
+**Exit**: All 5 features functional. i18n complete. CI green.
+
 | Version | Sprint | Status |
 | --- | --- | --- |
 | v3.0.0–v3.8.0 | S0–S7 | ✅ Released |
@@ -157,6 +189,7 @@ Day-of operations tools and advanced analytics.
 | v4.1.0 | S11 + S12 | ✅ Released |
 | v4.2.0 | S13 + S14 | ✅ Released |
 | v4.3.0 | S15 + S16 | ✅ Released |
+| v4.4.0 | S17 + S18 | ✅ Released |
 
 ---
 

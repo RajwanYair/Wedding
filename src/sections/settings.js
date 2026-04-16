@@ -10,7 +10,7 @@ import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n } from "../core/i18n.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets, queueSize, queueKeys, onSyncStatus } from "../services/sheets.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -468,4 +468,34 @@ export function restoreAutoBackup() {
   keys.forEach((k) => {
     if (snapshot[k] !== undefined) storeSet(k, snapshot[k]);
   });
+}
+
+// ── S18.1 Sync Queue Monitor ─────────────────────────────────────────────
+
+/** @type {(() => void) | null} */
+let _queueMonitorUnreg = null;
+
+/**
+ * Start monitoring the sync queue and update the badge in settings.
+ * Registers an onSyncStatus listener that refreshes the queue badge.
+ */
+export function initQueueMonitor() {
+  _renderQueueBadge();
+  // Register status listener (replaces previous)
+  _queueMonitorUnreg?.();
+  _queueMonitorUnreg = onSyncStatus(_renderQueueBadge) || null;
+}
+
+/** Render the pending-writes badge */
+function _renderQueueBadge() {
+  const badgeEl = document.getElementById("syncQueueBadge");
+  const listEl = document.getElementById("syncQueueList");
+  if (!badgeEl) return;
+  const count = queueSize();
+  badgeEl.textContent = String(count);
+  badgeEl.classList.toggle("badge--warn", count > 0);
+  if (listEl) {
+    const keys = queueKeys();
+    listEl.textContent = count > 0 ? keys.join(", ") : t("queue_empty");
+  }
 }

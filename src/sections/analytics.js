@@ -21,6 +21,10 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("tables", renderSeatingMap));
   _unsubs.push(storeSubscribe("vendors", renderPaymentSchedule));
   _unsubs.push(storeSubscribe("guests", renderRsvpTimeline));
+  _unsubs.push(storeSubscribe("expenses", renderExpenseDonut));
+  _unsubs.push(storeSubscribe("vendors", () => { checkBudgetOvershoot(); renderArrivalForecast(); }));
+  _unsubs.push(storeSubscribe("guests", renderArrivalForecast));
+  _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -29,6 +33,8 @@ export function mount(_container) {
   renderSeatingMap();
   renderPaymentSchedule();
   renderRsvpTimeline();
+  renderExpenseDonut();
+  renderArrivalForecast();
 }
 
 export function unmount() {
@@ -1032,5 +1038,122 @@ export function printDietaryCards() {
     w.document.write(lines.join("\\n"));
     w.document.close();
     w.print();
+  }
+}
+
+// ── S17.3 Expense Category Donut Chart ───────────────────────────────────
+
+/**
+ * Render a donut chart of expenses broken down by category.
+ */
+export function renderExpenseDonut() {
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const container = document.getElementById("analyticsExpenseDonut");
+  if (!container) return;
+
+  container.textContent = "";
+  if (expenses.length === 0) {
+    container.textContent = t("no_expenses");
+    return;
+  }
+
+  /** @type {Map<string, number>} */
+  const catMap = new Map();
+  expenses.forEach((e) => {
+    const cat = e.category || t("expense_cat_other");
+    catMap.set(cat, (catMap.get(cat) ?? 0) + (e.amount || 0));
+  });
+
+  const colors = [
+    "var(--primary)", "var(--accent)", "var(--success)", "var(--warning)",
+    "var(--danger)", "var(--info, #0288d1)", "#9c27b0", "#ff5722",
+  ];
+  const slices = Array.from(catMap.entries()).map(([label, value], i) => ({
+    label,
+    value,
+    color: colors[i % colors.length],
+  }));
+  _renderDonut("analyticsExpenseDonut", slices);
+
+  // Append legend
+  const legend = document.createElement("div");
+  legend.className = "donut-legend";
+  slices.forEach((sl) => {
+    const item = document.createElement("div");
+    item.className = "donut-legend-item";
+    item.innerHTML = `<span class="donut-legend-dot" style="background:${sl.color}"></span><span>${_escSvg(sl.label)}: ₪${sl.value.toLocaleString()}</span>`;
+    legend.appendChild(item);
+  });
+  container.appendChild(legend);
+}
+
+// ── S17.5 Budget Overshoot Helpers ───────────────────────────────────────
+
+/**
+ * Check if total committed (vendors + expenses) exceeds the budget target.
+ * Returns { overBudget: boolean, committed: number, target: number }
+ */
+export function checkBudgetOvershoot() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const settings = /** @type {any} */ (storeGet("weddingInfo") ?? {});
+  const target = Number(settings.budgetTarget) || 0;
+  const committed =
+    vendors.reduce((s, v) => s + (v.price || 0), 0) +
+    expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  return { overBudget: target > 0 && committed > target, committed, target };
+}
+
+// ── S18.2 Guest Arrival Forecast ────────────────────────────────────────
+
+const _MAYBE_PCT = 0.6;  // assume 60% of "maybe" guests will come
+const _PENDING_PCT = 0.4; // assume 40% of pending guests will come
+
+/**
+ * Compute projected final headcount (heads, not unique guests).
+ * @returns {{ projected: number, confirmed: number, maybe: number, pending: number, declined: number }}
+ */
+export function computeArrivalForecast() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  let confirmed = 0, maybe = 0, pending = 0, declined = 0;
+  guests.forEach((g) => {
+    const heads = (g.count || 1) + (g.children || 0);
+    if (g.status === "confirmed") confirmed += heads;
+    else if (g.status === "maybe") maybe += heads;
+    else if (g.status === "pending") pending += heads;
+    else if (g.status === "declined") declined += heads;
+  });
+  const projected = Math.round(confirmed + maybe * _MAYBE_PCT + pending * _PENDING_PCT);
+  return { projected, confirmed, maybe, pending, declined };
+}
+
+/**
+ * Render guest arrival forecast card into #dashForecastCard.
+ */
+export function renderArrivalForecast() {
+  const { projected, confirmed, maybe, pending } = computeArrivalForecast();
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const capacity = tables.reduce((s, tb) => s + (tb.capacity || 0), 0);
+
+  const isOver = capacity > 0 && projected > capacity;
+  const colorClass = isOver ? "forecast-num--over" : "forecast-num--projected";
+
+  // Format: structured elements (dashboard & analytics both use these ids)
+  const confirmedEl = document.getElementById("forecastConfirmed");
+  const projectedEl = document.getElementById("forecastProjected");
+  const capacityEl  = document.getElementById("forecastCapacity");
+  const detailEl    = document.getElementById("forecastDetail");
+
+  if (confirmedEl) confirmedEl.textContent = String(confirmed);
+  if (projectedEl) {
+    projectedEl.textContent = String(projected);
+    projectedEl.className = `forecast-num ${colorClass}`;
+  }
+  if (capacityEl) capacityEl.textContent = String(capacity || "—");
+  if (detailEl) {
+    const overMsg = isOver
+      ? t("forecast_detail_over").replace("{n}", String(projected - capacity))
+      : t("forecast_detail_ok");
+    detailEl.textContent = `${overMsg}  |  ${t("status_maybe")}: ${maybe} × ${Math.round(_MAYBE_PCT * 100)}%  ${t("status_pending")}: ${pending} × ${Math.round(_PENDING_PCT * 100)}%`;
   }
 }

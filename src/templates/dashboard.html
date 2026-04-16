@@ -149,6 +149,28 @@
         </div>
         <div class="progress-bar"><div class="progress-fill" id="dashBudgetFill"></div></div>
         <div id="dashOverdueVendors" class="u-hidden u-text-danger u-mt-xs"></div>
+        <!-- S17.5 Budget Overshoot Alert -->
+        <div id="dashBudgetAlert" class="alert alert--danger u-hidden" role="alert" aria-live="polite"></div>
+      </div>
+
+      <!-- S18.2 Arrival Forecast Card -->
+      <div class="card" id="dashForecastCard">
+        <div class="card-header"><span class="icon">📈</span> <span data-i18n="forecast_title">תחזית הגעה</span></div>
+        <div class="forecast-row">
+          <div class="forecast-item">
+            <div class="forecast-num" id="forecastConfirmed">0</div>
+            <div class="forecast-label" data-i18n="stat_confirmed">אישרו</div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-num forecast-num--projected" id="forecastProjected">0</div>
+            <div class="forecast-label" data-i18n="forecast_projected">תחזית</div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-num" id="forecastCapacity">0</div>
+            <div class="forecast-label" data-i18n="forecast_capacity">קיבולת</div>
+          </div>
+        </div>
+        <div class="forecast-detail" id="forecastDetail"></div>
       </div>
 
       <!-- S15.4 Activity Feed -->

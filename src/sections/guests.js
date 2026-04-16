@@ -213,12 +213,16 @@ export function renderGuests() {
     }
   }
 
-  // Search
+  // S17.1 Full-text search (name, phone, email, notes, group, meal, tags)
   if (_searchQuery) {
-    guests = guests.filter(
-      (g) =>
-        `${g.firstName} ${g.lastName}`.toLowerCase().includes(_searchQuery) ||
-        (g.phone || "").includes(_searchQuery),
+    guests = guests.filter((g) =>
+      `${g.firstName} ${g.lastName}`.toLowerCase().includes(_searchQuery) ||
+      (g.phone || "").includes(_searchQuery) ||
+      (g.email || "").toLowerCase().includes(_searchQuery) ||
+      (g.notes || "").toLowerCase().includes(_searchQuery) ||
+      (g.meal || "").toLowerCase().includes(_searchQuery) ||
+      (g.group || "").toLowerCase().includes(_searchQuery) ||
+      (Array.isArray(g.tags) ? g.tags.join(" ") : "").toLowerCase().includes(_searchQuery),
     );
   }
 
@@ -260,7 +264,7 @@ export function renderGuests() {
     ];
     cells.forEach((txt, ci) => {
       const td = document.createElement("td");
-      // S15.5 — Highlight search terms in name and phone columns
+      // S15.5 — Highlight search terms in name, phone columns
       if (_searchQuery && (ci === 0 || ci === 2)) {
         _highlightText(td, txt, _searchQuery);
       } else {
@@ -630,6 +634,23 @@ export function batchDeleteGuests() {
   if (ids.size === 0) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
     (g) => !ids.has(g.id),
+  );
+  storeSet("guests", guests);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+// ── S17.2 Bulk Meal Assignment ────────────────────────────────────────────
+
+/**
+ * Set meal type for all selected guests.
+ * @param {string} meal
+ */
+export function batchSetMeal(meal) {
+  if (!meal) return;
+  const ids = new Set(_getSelectedIds());
+  if (ids.size === 0) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
+    ids.has(g.id) ? { ...g, meal, updatedAt: new Date().toISOString() } : g,
   );
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));

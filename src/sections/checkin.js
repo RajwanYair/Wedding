@@ -392,3 +392,33 @@ function _flashCheckinAlert(guest) {
   anchor.parentElement?.insertBefore(banner, anchor);
   setTimeout(() => banner.remove(), 3000);
 }
+
+// ── S18.3 Batch Check-in by Table ────────────────────────────────────────
+
+/**
+ * Check in all confirmed guests assigned to a given table at once.
+ * @param {string} tableId
+ */
+export function checkInByTable(tableId) {
+  if (!tableId) return;
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  let changed = false;
+  for (let i = 0; i < guests.length; i++) {
+    if (
+      guests[i].tableId === tableId &&
+      guests[i].status === "confirmed" &&
+      !guests[i].checkedIn
+    ) {
+      guests[i] = {
+        ...guests[i],
+        checkedIn: true,
+        checkedInAt: new Date().toISOString(),
+      };
+      changed = true;
+    }
+  }
+  if (changed) {
+    storeSet("guests", guests);
+    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  }
+}

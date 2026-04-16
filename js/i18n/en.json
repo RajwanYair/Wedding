@@ -906,5 +906,24 @@
     "dietary_cards_title": "Dietary Cards by Table",
     "dietary_summary": "Dietary Summary",
     "dietary_special": "Special Diets",
-    "label_meal_notes": "Meal Notes"
+    "label_meal_notes": "Meal Notes",
+
+    "budget_overshoot": "Over budget by {amount}",
+    "tables_overbooked": "{count} tables are overbooked",
+    "forecast_title": "Arrival Forecast",
+    "forecast_projected": "Projected",
+    "forecast_capacity": "Capacity",
+    "forecast_detail_over": "⚠️ Forecast exceeds capacity by {n} guests",
+    "forecast_detail_ok": "✅ Within capacity",
+    "expense_donut_title": "Expenses by Category",
+    "no_expenses": "No expenses",
+    "batch_set_meal": "Set meal",
+    "checkin_table_all": "Check in all at table",
+    "timeline_alarm_title": "Event Reminder",
+    "timeline_alarm_minutes": "minutes",
+    "wa_unsent_filter": "Show unsent",
+    "sync_monitor_title": "Sync Monitor",
+    "sync_monitor_desc": "Items waiting to sync to Google Sheets.",
+    "sync_queue_pending": "Pending sync:",
+    "queue_empty": "Queue is empty"
 }

@@ -2265,5 +2265,106 @@ kbd {
   }
 }
 
+/* ── S17.3 Expense Donut Legend ─────────────────────────────────── */
+.donut-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+
+  & .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  & .donut-legend-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+}
+
+/* ── S17.4 Table Capacity Color Classes ─────────────────────────── */
+.table-card--full  { border-color: var(--danger, #d32f2f) !important; }
+.table-card--almost { border-color: var(--warning, #f57c00) !important; }
+.table-card--half  { border-color: var(--success, #388e3c) !important; }
+
+/* Overbooking banner */
+.overbooking-banner {
+  background: rgba(211, 47, 47, 0.12);
+  border: 1px solid var(--danger, #d32f2f);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--danger, #d32f2f);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ── S17.5 / S18.2 Forecast Card ────────────────────────────────── */
+.forecast-row {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  padding: 0.75rem 0;
+
+  & .forecast-item {
+    text-align: center;
+  }
+  & .forecast-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  & .forecast-num--projected { color: var(--primary); }
+  & .forecast-num--over      { color: var(--danger, #d32f2f); }
+  & .forecast-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+}
+.forecast-detail {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  min-height: 1.2em;
+}
+
+/* ── S18.1 Sync Queue Monitor ───────────────────────────────────── */
+.sync-queue-monitor {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  & .sync-queue-list {
+    font-size: 0.8rem;
+    width: 100%;
+    margin-top: 0.25rem;
+    word-break: break-all;
+  }
+}
+.badge--warn {
+  background: var(--warning, #f57c00);
+  color: #fff;
+  border-radius: 99px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ── S18.4 Timeline Alarm Banner ────────────────────────────────── */
+.timeline-alarm-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
 } /* end @layer components */
 

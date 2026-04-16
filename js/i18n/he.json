@@ -908,5 +908,24 @@
     "dietary_cards_title": "כרטיסי דיאטה לפי שולחן",
     "dietary_summary": "סיכום דיאטה",
     "dietary_special": "דיאטות מיוחדות",
-    "label_meal_notes": "הערות ארוחה"
+    "label_meal_notes": "הערות ארוחה",
+
+    "budget_overshoot": "חריגה מהתקציב ב-{amount}",
+    "tables_overbooked": "{count} שולחנות מוקצים יתר על המידה",
+    "forecast_title": "תחזית הגעה",
+    "forecast_projected": "תחזית",
+    "forecast_capacity": "קיבולת",
+    "forecast_detail_over": "⚠️ תחזית גבוהה מהקיבולת ב-{n} אורחים",
+    "forecast_detail_ok": "✅ בתוך קיבולת",
+    "expense_donut_title": "הוצאות לפי קטגוריה",
+    "no_expenses": "אין הוצאות",
+    "batch_set_meal": "שנה ארוחה",
+    "checkin_table_all": "כניסת כולם בשולחן",
+    "timeline_alarm_title": "תזכורת אירוע",
+    "timeline_alarm_minutes": "דקות",
+    "wa_unsent_filter": "הצג לא נשלחו",
+    "sync_monitor_title": "מוניטור סנכרון",
+    "sync_monitor_desc": "פריטים הממתינים לסנכרון עם Google Sheets.",
+    "sync_queue_pending": "ממתינים לסנכרון:",
+    "queue_empty": "התור ריק"
 }

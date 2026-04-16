@@ -16,12 +16,15 @@ const _unsubs = [];
 
 export function mount(_container) {
   _unsubs.push(storeSubscribe("timeline", renderTimeline));
+  _unsubs.push(storeSubscribe("weddingInfo", renderTimeline));
   renderTimeline();
+  startTimelineAlarms();
 }
 
 export function unmount() {
   _unsubs.forEach((fn) => fn());
   _unsubs.length = 0;
+  stopTimelineAlarms();
 }
 
 /**
@@ -143,4 +146,92 @@ export function openTimelineForEdit(id) {
   setVal("timelineDesc", item.note ?? "");
   const title = document.getElementById("timelineModalTitle");
   if (title) title.setAttribute("data-i18n", "timeline_edit");
+}
+
+// ── S18.4 Timeline Event Alarm ────────────────────────────────────────────
+
+/** @type {number|null} */
+let _alarmIntervalId = null;
+
+/**
+ * Check timeline items due within the next 24 h.
+ * Shows a browser Notification (if granted) or in-app banner.
+ */
+export function checkTimelineAlarms() {
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  if (!items.length) return;
+
+  // Build wedding date from weddingInfo
+  const info = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
+  const weddingDateStr = /** @type {string} */ (info.date ?? "");
+  const today = new Date();
+  // Use wedding date's year/month/day combined with item time
+  const baseDate = weddingDateStr
+    ? new Date(new Date(weddingDateStr).toDateString())
+    : new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  const now = Date.now();
+  const H24 = 24 * 60 * 60 * 1000;
+
+  items.forEach((item) => {
+    if (!item.time) return;
+    const [hh, mm] = item.time.split(":").map(Number);
+    if (isNaN(hh) || isNaN(mm)) return;
+    const eventTs = new Date(baseDate).setHours(hh, mm, 0, 0);
+    const diffMs = eventTs - now;
+    // Only alert for events in the next 24 h (not past)
+    if (diffMs > 0 && diffMs <= H24) {
+      _fireTimelineAlert(item, diffMs);
+    }
+  });
+}
+
+/**
+ * Start the periodic alarm check (runs every 5 minutes after mount).
+ */
+export function startTimelineAlarms() {
+  checkTimelineAlarms();
+  if (_alarmIntervalId === null) {
+    _alarmIntervalId = window.setInterval(checkTimelineAlarms, 5 * 60 * 1000);
+  }
+}
+
+/**
+ * Stop the periodic alarm interval.
+ */
+export function stopTimelineAlarms() {
+  if (_alarmIntervalId !== null) {
+    clearInterval(_alarmIntervalId);
+    _alarmIntervalId = null;
+  }
+}
+
+/**
+ * @param {Record<string,unknown>} item
+ * @param {number} diffMs
+ */
+function _fireTimelineAlert(item, diffMs) {
+  const minutesLeft = Math.round(diffMs / 60000);
+  const msg = `${item.icon ?? "📍"} ${item.title} — ${minutesLeft} ${t("timeline_alarm_minutes")}`;
+
+  // Try browser notification
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification(t("timeline_alarm_title"), { body: msg });
+    return;
+  }
+
+  // Fallback: in-app banner
+  const existing = document.getElementById("timelineAlarmBanner");
+  if (existing) existing.remove();
+  const banner = document.createElement("div");
+  banner.id = "timelineAlarmBanner";
+  banner.className = "alert alert--warning timeline-alarm-banner";
+  banner.textContent = msg;
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "btn-icon u-ml-sm";
+  closeBtn.textContent = "✕";
+  closeBtn.addEventListener("click", () => banner.remove());
+  banner.appendChild(closeBtn);
+  (document.getElementById("timelineList") ?? document.body).before(banner);
+  setTimeout(() => banner.remove(), 10000);
 }

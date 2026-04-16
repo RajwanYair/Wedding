@@ -140,9 +140,15 @@ export function renderTables() {
 
   floor.textContent = "";
   tables.forEach((tb) => {
-    const seated = guests.filter((g) => g.tableId === tb.id).length;
+    const seated = guests.filter((g) => g.tableId === tb.id).reduce((s, g) => s + (g.count || 1), 0);
+    const cap = tb.capacity || 1;
+    const fillPct = Math.round((seated / cap) * 100);
+    const fillClass =
+      fillPct >= 100 ? "table-card--full" :
+      fillPct >= 85 ? "table-card--almost" :
+      fillPct >= 50 ? "table-card--half" : "";
     const card = document.createElement("div");
-    card.className = `table-card table-card--${tb.shape || "round"}`;
+    card.className = `table-card table-card--${tb.shape || "round"} ${fillClass}`.trim();
     card.dataset.id = tb.id;
 
     const name = document.createElement("h3");
@@ -151,6 +157,8 @@ export function renderTables() {
 
     const info = document.createElement("p");
     info.textContent = `${seated}/${tb.capacity} ${t("seated")}`;
+    if (fillPct >= 100) info.className = "u-text-danger";
+    else if (fillPct >= 85) info.className = "u-text-warning";
     card.appendChild(info);
 
     // Action buttons
@@ -192,11 +200,36 @@ export function renderTables() {
     el.tablesEmpty.classList.toggle("u-hidden", tables.length > 0);
   }
 
+  // S17.4 Overbooking banner
+  _renderOverbookingBanner(tables, guests);
+
   // Unassigned guests list
   _renderUnassigned(guests);
 
   // S11.2 Transport manifest
   _renderTransportManifest(guests);
+}
+
+/** Show/hide overbooking warning banner */
+function _renderOverbookingBanner(tables, guests) {
+  let bannerEl = document.getElementById("overbookingBanner");
+  if (!bannerEl) {
+    bannerEl = document.createElement("div");
+    bannerEl.id = "overbookingBanner";
+    bannerEl.className = "alert alert--warning u-hidden";
+    const floor = el.seatingFloor;
+    if (floor?.parentElement) floor.parentElement.insertBefore(bannerEl, floor);
+  }
+  const overbooked = tables.filter((tb) => {
+    const seated = guests.filter((g) => g.tableId === tb.id).reduce((s, g) => s + (g.count || 1), 0);
+    return seated > (tb.capacity || 0);
+  });
+  if (overbooked.length > 0) {
+    bannerEl.textContent = `⚠️ ${t("tables_overbooked")}: ${overbooked.map((tb) => tb.name).join(", ")}`;
+    bannerEl.classList.remove("u-hidden");
+  } else {
+    bannerEl.classList.add("u-hidden");
+  }
 }
 
 /** @param {any[]} guests */

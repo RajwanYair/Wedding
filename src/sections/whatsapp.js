@@ -14,6 +14,9 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
+/** @type {boolean} */
+let _unsentOnly = false;
+
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderWhatsApp));
   _unsubs.push(storeSubscribe("weddingInfo", renderWhatsApp));
@@ -23,6 +26,7 @@ export function mount(_container) {
 export function unmount() {
   _unsubs.forEach((fn) => fn());
   _unsubs.length = 0;
+  _unsentOnly = false;
 }
 
 export function renderWhatsApp() {
@@ -50,7 +54,11 @@ export function renderWhatsApp() {
   list.textContent = "";
 
   guests
-    .filter((g) => g.status !== "declined" && g.phone)
+    .filter((g) => {
+      if (g.status === "declined" || !g.phone) return false;
+      if (_unsentOnly && g.sent) return false;
+      return true;
+    })
     .forEach((g) => {
       const phone = cleanPhone(g.phone);
       const msg = _interpolate(template || _defaultTemplate(info), g, info);
@@ -83,6 +91,9 @@ export function renderWhatsApp() {
 
       list.appendChild(row);
     });
+
+  // S18.5 update unsent badge after re-render
+  _renderUnsentBadge();
 }
 
 /**
@@ -437,4 +448,43 @@ export function getThankYouCount() {
   return guests.filter(
     (g) => g.phone && g.checkedIn && g.status === "confirmed" && !g.thankYouSent,
   ).length;
+}
+
+// ── S18.5 WhatsApp Unsent Filter Shortcut ────────────────────────────────
+
+/**
+ * Get count of guests who have not yet received a WhatsApp message.
+ * @returns {number}
+ */
+export function getUnsentCount() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests.filter(
+    (g) => g.status !== "declined" && g.phone && !g.sent,
+  ).length;
+}
+
+/**
+ * Toggle the "show unsent only" filter in the WhatsApp list.
+ */
+export function toggleUnsentFilter() {
+  _unsentOnly = !_unsentOnly;
+  // Update filter button state
+  const btn = document.getElementById("waUnsentFilterBtn");
+  if (btn) btn.classList.toggle("btn-primary", _unsentOnly);
+  // Update badge
+  _renderUnsentBadge();
+  renderWhatsApp();
+}
+
+/** Render/update the unsent count badge on the filter button. */
+export function renderUnsentBadge() {
+  _renderUnsentBadge();
+}
+
+function _renderUnsentBadge() {
+  const badge = document.getElementById("waUnsentBadge");
+  if (!badge) return;
+  const count = getUnsentCount();
+  badge.textContent = String(count);
+  badge.classList.toggle("u-hidden", count === 0);
 }

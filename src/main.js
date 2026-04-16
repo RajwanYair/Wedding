@@ -103,6 +103,7 @@ import {
   toggleSelectAll,
   batchSetStatus,
   batchDeleteGuests,
+  batchSetMeal,
   renderDuplicates,
   mergeGuests,
   addGuestNote,
@@ -147,6 +148,7 @@ import {
   toggleGiftMode,
   startQrScan,
   stopQrScan,
+  checkInByTable,
 } from "./sections/checkin.js";
 import {
   renderBudgetChart,
@@ -167,6 +169,8 @@ import {
   updateWaPreview,
   sendWhatsAppReminder,
   sendThankYouMessages,
+  toggleUnsentFilter,
+  renderUnsentBadge,
 } from "./sections/whatsapp.js";
 import {
   handleGalleryUpload,
@@ -178,6 +182,7 @@ import {
   saveTimelineItem,
   deleteTimelineItem,
   openTimelineForEdit,
+  startTimelineAlarms,
 } from "./sections/timeline.js";
 import {
   switchLanguage,
@@ -198,6 +203,7 @@ import {
   stopAutoBackup,
   downloadAutoBackup,
   restoreAutoBackup,
+  initQueueMonitor,
 } from "./sections/settings.js";
 // registry.js addRegistryLink — added inline below (section handles its own form)
 
@@ -426,6 +432,12 @@ function _buildStoreDefs() {
 
   // 11f. Fetch GAS version for status bar (fire-and-forget)
   _fetchGasVersion();
+
+  // S18.4 — Start timeline alarms after app is ready
+  startTimelineAlarms();
+
+  // S18.1 — Init queue monitor (updates badge live)
+  initQueueMonitor();
 })();
 
 // ── S9.2 Event Switcher ──────────────────────────────────────────────────
@@ -783,6 +795,17 @@ function _registerHandlers() {
       showToast(t("batch_deleted"), "success");
     }),
   );
+  // S17.2 Batch meal assignment
+  on("batchSetMeal", () => {
+    const select = /** @type {HTMLSelectElement|null} */ (
+      document.getElementById("batchMealSelect")
+    );
+    const meal = select?.value ?? "";
+    if (meal) {
+      batchSetMeal(meal);
+      showToast(t("batch_success"), "success");
+    }
+  });
   on("scanDuplicates", () => renderDuplicates());
   on("mergeGuests", (el) => {
     mergeGuests(el.dataset.keepId ?? "", el.dataset.mergeId ?? "");
@@ -877,6 +900,12 @@ function _registerHandlers() {
   on("toggleGiftMode", () => toggleGiftMode());
   on("startQrScan", () => startQrScan());
   on("stopQrScan", () => stopQrScan());
+  // S18.3 Batch check-in by table
+  on("checkInByTable", (el) => {
+    const tableId = el.dataset.actionArg ?? "";
+    checkInByTable(tableId);
+    showToast(t("checkin_table_all"), "success");
+  });
 
   // ── Vendors ──
   on("saveVendor", (_el, _e) => {
@@ -1085,6 +1114,11 @@ function _registerHandlers() {
   on("sendThankYouMessages", () => {
     sendThankYouMessages();
     showToast(t("wa_thankyou_sent"), "success");
+  });
+  // S18.5 Unsent filter shortcut
+  on("toggleUnsentFilter", () => {
+    toggleUnsentFilter();
+    renderUnsentBadge();
   });
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (

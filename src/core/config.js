@@ -7,7 +7,7 @@
  */
 
 // ── Version ───────────────────────────────────────────────────────────────
-export const APP_VERSION = "4.3.0";
+export const APP_VERSION = "4.4.0";
 
 // ── LocalStorage ─────────────────────────────────────────────────────────
 export const STORAGE_PREFIX = "wedding_v1_";

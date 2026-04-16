@@ -215,3 +215,35 @@
   <p class="card-subtitle" data-i18n="rsvp_timeline_subtitle">קצב אישורי הגעה לאורך זמן</p>
   <div id="analyticsRsvpTimeline"></div>
 </div>
+
+<!-- S17.3 Expense Category Donut Chart -->
+<div class="card">
+  <div class="card-header">
+    <span class="icon">🍩</span>
+    <span data-i18n="expense_donut_title">הוצאות לפי קטגוריה</span>
+  </div>
+  <div id="analyticsExpenseDonut" aria-label="Expense categories donut chart"></div>
+</div>
+
+<!-- S18.2 Arrival Forecast -->
+<div class="card">
+  <div class="card-header">
+    <span class="icon">📈</span>
+    <span data-i18n="forecast_title">תחזית הגעה</span>
+  </div>
+  <div class="forecast-row">
+    <div class="forecast-item">
+      <div class="forecast-num" id="forecastConfirmed">0</div>
+      <div class="forecast-label" data-i18n="stat_confirmed">אישרו</div>
+    </div>
+    <div class="forecast-item">
+      <div class="forecast-num forecast-num--projected" id="forecastProjected">0</div>
+      <div class="forecast-label" data-i18n="forecast_projected">תחזית</div>
+    </div>
+    <div class="forecast-item">
+      <div class="forecast-num" id="forecastCapacity">0</div>
+      <div class="forecast-label" data-i18n="forecast_capacity">קיבולת</div>
+    </div>
+  </div>
+  <div class="forecast-detail" id="forecastDetail"></div>
+</div>

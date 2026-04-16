@@ -10,6 +10,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { daysUntil, formatDateHebrew } from "../utils/date.js";
 import { load, save } from "../core/state.js";
+import { renderArrivalForecast } from "./analytics.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -27,10 +28,15 @@ let _countdownTimer = null;
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderDashboard));
   _unsubs.push(storeSubscribe("tables", renderDashboard));
+  _unsubs.push(storeSubscribe("vendors", renderDashboard)); // S17.5 budget alert
+  _unsubs.push(storeSubscribe("expenses", renderDashboard)); // S17.5 budget alert
   _unsubs.push(storeSubscribe("vendors", renderExpenseSummary));
   _unsubs.push(storeSubscribe("expenses", renderExpenseSummary));
   _unsubs.push(storeSubscribe("guests", () => _logActivity("guests")));
   _unsubs.push(storeSubscribe("vendors", () => _logActivity("vendors")));
+  // S18.2 arrival forecast
+  _unsubs.push(storeSubscribe("guests", renderArrivalForecast));
+  _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -41,6 +47,7 @@ export function mount(_container) {
   renderDashboard();
   renderExpenseSummary();
   renderActivityFeed();
+  renderArrivalForecast(); // S18.2
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -306,6 +313,18 @@ export function renderExpenseSummary() {
     const pct = Math.min(100, Math.round((totalCommitted / budgetTarget) * 100));
     /** @type {HTMLElement} */ (pctEl).style.width = `${pct}%`;
     pctEl.className = pct > 100 ? "progress-fill progress-fill--danger" : "progress-fill";
+  }
+
+  // S17.5 Budget overshoot alert
+  const budgetAlertEl = document.getElementById("dashBudgetAlert");
+  if (budgetAlertEl) {
+    if (budgetTarget > 0 && totalCommitted > budgetTarget) {
+      const over = totalCommitted - budgetTarget;
+      budgetAlertEl.textContent = `🚨 ${t("budget_overshoot").replace("{amount}", `₪${over.toLocaleString()}`)}`;
+      budgetAlertEl.classList.remove("u-hidden");
+    } else {
+      budgetAlertEl.classList.add("u-hidden");
+    }
   }
 
   // Overdue vendors (S14.3)

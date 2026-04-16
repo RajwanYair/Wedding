@@ -56,16 +56,16 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe('Version', function() {
-  it("HTML contains v4.3.0", function () {
-    assert.ok(SRC.includes("v4.3.0"));
+  it("HTML contains v4.4.0", function () {
+    assert.ok(SRC.includes("v4.4.0"));
   });
 
-  it("SW cache name contains v4.3.0", function () {
-    assert.ok(SW.includes("wedding-v4.3.0"));
+  it("SW cache name contains v4.4.0", function () {
+    assert.ok(SW.includes("wedding-v4.4.0"));
   });
 
-  it("package.json version is 4.3.0", function () {
-    assert.equal(PKG.version, "4.3.0");
+  it("package.json version is 4.4.0", function () {
+    assert.equal(PKG.version, "4.4.0");
   });
 });
 
@@ -894,7 +894,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v4.3.0"));
+    assert.ok(SW.includes("wedding-v4.4.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -6583,7 +6583,7 @@ describe("v3.6.0: version stamps consistent", function () {
         src.includes("4.0.0") ||
         src.includes("4.1.0") ||
         src.includes("4.2.0") ||
-        src.includes("4.3.0"),
+        src.includes("4.4.0"),
       "CLAUDE.md missing version reference",
     );
   });

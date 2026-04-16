@@ -76,6 +76,14 @@
         <!-- Guest list for individual send -->
         <div class="card u-mt-md">
           <div class="card-header"><span class="icon">👤</span> <span data-i18n="wa_individual">שליחה בודדת</span></div>
+          <!-- S18.5 Unsent Filter Shortcut -->
+          <div class="wa-filter-row u-mb-sm">
+            <button id="waUnsentFilterBtn" class="btn btn-secondary btn-small" data-action="toggleUnsentFilter">
+              <span>📋</span>
+              <span data-i18n="wa_unsent_filter">הצג לא נשלחו</span>
+              <span id="waUnsentBadge" class="badge badge--warn u-hidden">0</span>
+            </button>
+          </div>
           <div id="waGuestList"></div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 "use strict";
 /* eslint-disable prefer-const -- state variables are reassigned across files */
 
-/* ── Wedding Manager — Config & State v4.3.0 ── */
+/* ── Wedding Manager — Config & State v4.4.0 ── */
 
 /**
  * @typedef {'pending'|'confirmed'|'declined'|'maybe'} GuestStatus

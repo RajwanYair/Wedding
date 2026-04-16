@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.4.0] — 2025-07-17
+
+### Added — S17 Data Quality & Smart Insights
+
+- **S17.1 Full-text guest search**: Search now covers email, notes, group, meal type, and tags — in addition to name and phone.
+- **S17.2 Bulk meal assignment**: Batch toolbar in guests section includes meal type selector; one action sets meal for all selected guests.
+- **S17.3 Expense category donut chart**: Visual donut chart with legend in Analytics showing expenses broken down by category.
+- **S17.4 Table capacity color indicators**: Table cards display green/yellow/red border based on fill percentage (half/almost/full). Overbooking banner appears when any table is over capacity.
+- **S17.5 Budget overshoot alert**: Dashboard shows a red alert banner when total committed spend (vendors + expenses) exceeds the budget target.
+
+### Added — S18 Sync, Forecast & Operations
+
+- **S18.1 Offline sync queue monitor**: Settings page shows live badge + list of pending write keys waiting to sync to Google Sheets.
+- **S18.2 Guest arrival forecast**: Dashboard and Analytics forecast projected headcount using 60% maybe + 40% pending probability weights, compared against total table capacity.
+- **S18.3 Batch check-in by table**: New `checkInByTable(tableId)` function marks all confirmed guests at a given table as arrived in a single action.
+- **S18.4 Timeline event alarm**: Timeline section starts a 5-minute interval alarm on mount; events due within 24 h trigger a browser Notification or in-app banner.
+- **S18.5 WhatsApp unsent filter shortcut**: "Show unsent" button above the WhatsApp guest list filters to guests who haven't received a message; badge shows count.
+
 ## [4.3.0] — 2025-07-16
 
 ### Added — S15 UX & Smart Features
