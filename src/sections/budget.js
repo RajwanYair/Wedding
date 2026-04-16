@@ -288,3 +288,130 @@ export function renderExpenseCategoryBreakdown() {
   });
   tbody.appendChild(totalTr);
 }
+
+// ── Sprint 2: Budget Intelligence Helpers ─────────────────────────────────
+
+/**
+ * Compute budget-vs-actual by vendor category.
+ * Compares budgeted amounts from budget entries against actual vendor costs.
+ * @returns {Array<{ category: string, budgeted: number, actual: number, diff: number }>}
+ */
+export function getBudgetVsActual() {
+  const entries = /** @type {any[]} */ (storeGet("budget") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  /** @type {Record<string, { budgeted: number, actual: number }>} */
+  const cats = {};
+  for (const e of entries) {
+    const cat = e.category || "other";
+    if (!cats[cat]) cats[cat] = { budgeted: 0, actual: 0 };
+    cats[cat].budgeted += Number(e.amount) || 0;
+  }
+  for (const v of vendors) {
+    const cat = v.category || "other";
+    if (!cats[cat]) cats[cat] = { budgeted: 0, actual: 0 };
+    cats[cat].actual += Number(v.price) || 0;
+  }
+  return Object.entries(cats)
+    .map(([category, { budgeted, actual }]) => ({
+      category,
+      budgeted,
+      actual,
+      diff: budgeted - actual,
+    }))
+    .sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
+}
+
+/**
+ * Get monthly expense distribution.
+ * Groups expenses by month for burn-down analysis.
+ * @returns {Array<{ month: string, total: number, count: number }>}
+ */
+export function getMonthlyExpenses() {
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  /** @type {Record<string, { total: number, count: number }>} */
+  const months = {};
+  for (const e of expenses) {
+    const d = e.date || e.createdAt;
+    if (!d) continue;
+    const month = String(d).slice(0, 7); // YYYY-MM
+    if (!months[month]) months[month] = { total: 0, count: 0 };
+    months[month].total += Number(e.amount) || 0;
+    months[month].count++;
+  }
+  return Object.entries(months)
+    .map(([month, data]) => ({ month, ...data }))
+    .sort((a, b) => a.month.localeCompare(b.month));
+}
+
+/**
+ * Calculate budget utilization rate by category.
+ * Shows which categories have been paid vs. committed.
+ * @returns {Array<{ category: string, committed: number, paid: number, rate: number }>}
+ */
+export function getPaymentUtilization() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  /** @type {Record<string, { committed: number, paid: number }>} */
+  const cats = {};
+  for (const v of vendors) {
+    const cat = v.category || "other";
+    if (!cats[cat]) cats[cat] = { committed: 0, paid: 0 };
+    cats[cat].committed += Number(v.price) || 0;
+    cats[cat].paid += Number(v.paid) || 0;
+  }
+  return Object.entries(cats)
+    .map(([category, { committed, paid }]) => ({
+      category,
+      committed,
+      paid,
+      rate: committed > 0 ? Math.round((paid / committed) * 100) : 0,
+    }))
+    .sort((a, b) => b.committed - a.committed);
+}
+
+/**
+ * Forecast remaining budget burn rate.
+ * Based on historical spend rate, predicts when budget will be exhausted.
+ * @returns {{ monthlyRate: number, monthsLeft: number | null, remaining: number }}
+ */
+export function getBudgetForecast() {
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const target = Number(info.budgetTarget) || 0;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const totalSpent =
+    vendors.reduce((s, v) => s + (Number(v.paid) || 0), 0) +
+    expenses.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const remaining = target - totalSpent;
+
+  // Calculate monthly rate from expenses with dates
+  const dated = expenses.filter((e) => e.date || e.createdAt);
+  if (dated.length < 2) return { monthlyRate: 0, monthsLeft: null, remaining };
+  const dates = dated.map((e) => new Date(e.date || e.createdAt).getTime()).sort((a, b) => a - b);
+  const spanMs = dates[dates.length - 1] - dates[0];
+  const spanMonths = spanMs / (1000 * 60 * 60 * 24 * 30) || 1;
+  const monthlyRate = Math.round(totalSpent / spanMonths);
+  return {
+    monthlyRate,
+    monthsLeft: monthlyRate > 0 ? Math.round(remaining / monthlyRate * 10) / 10 : null,
+    remaining,
+  };
+}
+
+/**
+ * Get top expense items sorted by amount.
+ * @param {number} [limit=10] Max items to return
+ * @returns {Array<{ id: string, description: string, amount: number, category: string }>}
+ */
+export function getTopExpenses(limit = 10) {
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const items = [
+    ...expenses.map((e) => ({
+      id: e.id, description: e.description || "", amount: Number(e.amount) || 0, category: e.category || "other",
+    })),
+    ...vendors.map((v) => ({
+      id: v.id, description: v.name || "", amount: Number(v.price) || 0, category: v.category || "other",
+    })),
+  ];
+  return items.sort((a, b) => b.amount - a.amount).slice(0, limit);
+}
