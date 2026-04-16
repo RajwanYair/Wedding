@@ -139,19 +139,31 @@ function _recordToRow(record, storeKey) {
 
 /**
  * POST data to the Apps Script Web App.
+ * F2.1.6: Handles HTTP 429 (Too Many Requests) with exponential backoff.
  * @param {Record<string, unknown>} payload
  * @returns {Promise<unknown>}
  */
 export async function sheetsPostImpl(payload) {
   const url = _getWebAppUrl();
   if (!url) throw new Error("SHEETS_WEBAPP_URL not configured");
-  const resp = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-  return resp.json();
+
+  const _MAX_429_RETRIES = 3;
+  const _429_BASE_MS = 3000;
+
+  for (let attempt = 0; attempt <= _MAX_429_RETRIES; attempt++) {
+    const resp = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
+    if (resp.status === 429 && attempt < _MAX_429_RETRIES) {
+      const delay = _429_BASE_MS * 2 ** attempt + Math.random() * 500;
+      await new Promise((r) => setTimeout(r, delay));
+      continue;
+    }
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    return resp.json();
+  }
 }
 
 /**
@@ -405,4 +417,76 @@ export async function pushAllToSheetsImpl() {
       : Object.keys(/** @type {object} */ (data ?? {})).length;
   }
   return results;
+}
+
+// ── F2.1.1 / F2.1.2 / F2.1.3 — Schema validation + version handshake ──
+
+/**
+ * Fetch the server schema via GAS `getSchema` action (F2.1.1).
+ * Returns column order + sheet names + GAS version from the server.
+ * @returns {Promise<{ colOrder?: Record<string,string[]>, sheetNames?: Record<string,string>, version?: string } | null>}
+ */
+export async function fetchServerSchema() {
+  try {
+    const result = await sheetsPostImpl({ action: "getSchema" });
+    return /** @type {any} */ (result) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Validate the local `_COL_ORDER` against the server schema (F2.1.2).
+ * Returns an array of mismatch descriptions, or empty if schemas match.
+ * @param {Record<string, string[]>} serverColOrder
+ * @returns {string[]}
+ */
+export function validateSchema(serverColOrder) {
+  const errors = [];
+  for (const [key, localCols] of Object.entries(_COL_ORDER)) {
+    const serverCols = serverColOrder[key];
+    if (!serverCols) {
+      errors.push(`Missing server schema for "${key}"`);
+      continue;
+    }
+    if (localCols.length !== serverCols.length) {
+      errors.push(`Column count mismatch for "${key}": local=${localCols.length}, server=${serverCols.length}`);
+      continue;
+    }
+    for (let i = 0; i < localCols.length; i++) {
+      if (localCols[i] !== serverCols[i]) {
+        errors.push(`Column mismatch in "${key}" at index ${i}: local="${localCols[i]}", server="${serverCols[i]}"`);
+      }
+    }
+  }
+  return errors;
+}
+
+/**
+ * Perform schema + version handshake before first sync (F2.1.3).
+ * Calls getSchema, validates columns, checks version compatibility.
+ * @param {string} clientVersion  Current app version
+ * @returns {Promise<{ ok: boolean, errors: string[], serverVersion?: string }>}
+ */
+export async function schemaHandshake(clientVersion) {
+  const schema = await fetchServerSchema();
+  if (!schema) return { ok: true, errors: [], serverVersion: undefined };
+
+  const errors = [];
+
+  // F2.1.2 — validate column order
+  if (schema.colOrder) {
+    errors.push(...validateSchema(schema.colOrder));
+  }
+
+  // F2.1.3 — version handshake
+  if (schema.version && clientVersion) {
+    const serverMajor = String(schema.version).split(".")[0];
+    const clientMajor = clientVersion.split(".")[0];
+    if (serverMajor !== clientMajor) {
+      errors.push(`Major version mismatch: client=${clientVersion}, server=${schema.version}`);
+    }
+  }
+
+  return { ok: errors.length === 0, errors, serverVersion: schema.version ?? undefined };
 }
