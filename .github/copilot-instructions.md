@@ -11,7 +11,7 @@
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
 | Language | Hebrew RTL primary, English toggle (lazy JSON) |
-| Tests | `npm test` — **1783+ pass (18+ suites)** · 0 Node warnings |
+| Tests | `npm test` — **1587+ pass (19 suites)** · 0 Node warnings |
 | Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 | Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |
@@ -23,17 +23,17 @@
 ```text
 index.html           # HTML shell
 css/                 # 7 modules: variables · base · layout · components · responsive · print · auth
-js/                  # 38 legacy modules (excluded from linting — js/ is kept for backward compat)
 src/                 # Active ESM source (Vite entry: src/main.js)
   core/              # store · events · i18n · nav · state · ui · dom · config · template-loader
   sections/          # 18 section modules with mount/unmount lifecycle
-  services/          # auth · sheets (Google OAuth + Sheets sync)
+  services/          # auth · sheets · sheets-impl · backend · presence · supabase
   utils/             # phone · date · sanitize · misc
   templates/         # 15 section HTML files (lazy-loaded by nav.js)
-  modals/            # 6 modal HTML files (lazy-loaded on first open)
+  modals/            # 7 modal HTML files (lazy-loaded on first open)
+  i18n/              # 4 language files (he · en · ar · ru)
 public/              # sw.js · manifest.json · icons
 scripts/             # sri-check · inject-config · size-report · send-push · generate-icons · generate-precache
-tests/               # 1765+ tests: wedding.test.mjs (1136) + 16 unit/integration files
+tests/               # 1587+ tests: wedding.test.mjs + 18 unit/integration files
   e2e/               # Playwright: smoke · visual regression
 .github/             # workflows · instructions · copilot · agents · prompts · Dependabot
 .vscode/             # settings · extensions · tasks
@@ -88,7 +88,7 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 ## Version Bump Checklist
 
 1. `src/core/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` — version string
-2. `CHANGELOG.md` — new entry; `README.md` — badge + tests badge; `CLAUDE.md` — version + test count
+2. `CHANGELOG.md` — new entry; `README.md` — badge + tests badge
 3. `.github/copilot-instructions.md` — version + test count (Quick Facts row + Pre-release checklist)
 4. `.github/copilot/config.json` — welcomeMessage version + test count
 5. `.github/instructions/workspace.instructions.md` — version in title
@@ -104,23 +104,23 @@ Run before every version tag / GitHub Pages deploy. All items must be green.
 | # | Check | Command / Action |
 | --- | --- | --- |
 | 1 | **Zero lint errors/warnings** | `npm run lint` — 0 errors, 0 warnings, 0 Node warnings |
-| 2 | **Zero test failures** | `npm test` — all 1783+ pass, 0 skipped |
+| 2 | **Zero test failures** | `npm test` — all 1587+ pass, 0 skipped |
 | 3 | **Zero deprecation notices** | No `npm WARN deprecated` in `npm ci` output |
 | 4 | **No dead code/files** | No unused exports, no orphaned templates or JS modules |
-| 5 | **No eval/innerHTML** | CI security scan passes (`js/*.js`, `index.html`) |
+| 5 | **No eval/innerHTML** | CI security scan passes (`src/**/*.js`, `index.html`) |
 | 6 | **Vite build succeeds** | `npm run build` exits 0; check `dist/` size with `npm run size` |
 | 7 | **SW cache name bumped** | `public/sw.js` `CACHE_NAME` matches new `vX.Y.Z` |
 | 8 | **Docs current** | `CHANGELOG.md` has entry; `README.md` badge matches `package.json` |
 | 9 | **Auth providers confirmed** | Google · Facebook · Apple secrets in GitHub Secrets; email allowlist current |
 | 10 | **Commit + push** | `git commit -m "vX.Y.Z — ..."` + `git push` + `git tag vX.Y.Z && git push --tags` |
 | 11 | **GH issues closed** | Link each resolved issue to commit hash in its closing comment |
-| 12 | **i18n complete** | Every new `t('key')` has both `he` + `en` entries in `js/i18n/*.json` |
+| 12 | **i18n complete** | Every new `t('key')` has both `he` + `en` entries in `src/i18n/*.json` |
 
 ## Known Gotchas
 
 | Area | Rule |
 | --- | --- |
-| ESLint scope | `js/` excluded from linting; `src/` uses `^_` varsIgnorePattern |
+| ESLint scope | `src/` uses `^_` varsIgnorePattern |
 | Stylelint fonts | lowercase: `tahoma` ✅; multi-word: `"Segoe UI"` ✅ |
 | GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
 | OAuth globals | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs` |

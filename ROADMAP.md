@@ -67,21 +67,17 @@ All major decisions made during v3–v4 are reviewed here with honest assessment
 
 **Decision:** Extract handlers into co-located files under `src/handlers/`. Main.js should be ≤300 lines (bootstrap + imports).
 
-### 2. `js/` Legacy Directory Still Exists (38 files, ~2,000 lines)
+### 2. ~~`js/` Legacy Directory~~ ✅ RESOLVED (v5.3.0)
 
-**Problem:** The entire `js/` folder is excluded from linting and not loaded by Vite. It was kept for "backward compat" but nothing in `src/` imports from it. It contains duplicated logic (`offline-queue.js`, `config.js`, `auth.js`, `store.js`).
+Entire `js/` directory deleted. All code lives in `src/`. Tests updated.
 
-**Decision:** Audit each file. Migrate anything still needed to `src/`. Delete the rest. Target: remove `js/` entirely.
+### 3. ~~Two Configs, Two Auth, Two Offline Queues~~ ✅ RESOLVED (v5.3.0)
 
-### 3. Two Configs, Two Auth, Two Offline Queues
-
-**Problem:** `js/config.js` and `src/core/config.js` both define `ADMIN_EMAILS`, `GOOGLE_CLIENT_ID`, etc. `js/offline-queue.js` has retry logic (`MAX_RETRIES=5`, `BASE=10s`) that conflicts with `src/services/sheets.js` (`MAX_RETRIES=4`, `BASE=2s`). Two different retry strategies for the same purpose.
-
-**Decision:** Single source of truth in `src/`. Remove all `js/` duplicates. Align retry strategy.
+Single source of truth in `src/`. All `js/` duplicates removed.
 
 ### 4. No TypeScript — JSDoc Only (Partially Applied)
 
-**Problem:** `tsconfig.json` exists but only checks `js/` (the legacy folder that's excluded from lint). `src/` has JSDoc annotations but no type checking enabled. Section code frequently casts with `/** @type {any[]} */`.
+**Problem:** `tsconfig.json` exists with `checkJs: true` for `src/`. Section code frequently casts with `/** @type {any[]} */`.
 
 **Decision:** Enable `checkJs: true` for `src/` in tsconfig. Add `@typedef` for all data models (`Guest`, `Table`, `Vendor`, `Expense`, `WeddingInfo`). Add `tsc --noEmit` to CI. Stay with JS — no full TS migration (preserves zero-deps principle).
 

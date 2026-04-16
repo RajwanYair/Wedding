@@ -35,8 +35,8 @@ const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
 const BARREL = readFileSync(resolve(root, "src", "sections", "index.js"), "utf8");
 const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets-impl.js"), "utf8");
 const CONSTANTS_JS = readFileSync(resolve(root, "src", "core", "constants.js"), "utf8");
-const I18N_HE = JSON.parse(readFileSync(resolve(root, "js", "i18n", "he.json"), "utf8"));
-const I18N_EN = JSON.parse(readFileSync(resolve(root, "js", "i18n", "en.json"), "utf8"));
+const I18N_HE = JSON.parse(readFileSync(resolve(root, "src", "i18n", "he.json"), "utf8"));
+const I18N_EN = JSON.parse(readFileSync(resolve(root, "src", "i18n", "en.json"), "utf8"));
 
 // ── Extract canonical lists from source ───────────────────────────────────────
 

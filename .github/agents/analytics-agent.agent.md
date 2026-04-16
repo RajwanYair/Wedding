@@ -45,6 +45,7 @@ getRsvpFunnelStats() // { invited, sent, linkClicked, formStarted, confirmed, ch
 ## RSVP Funnel
 
 6-stage conversion funnel:
+
 1. **Invited** — total guest count
 2. **Sent** — WhatsApp/email sent
 3. **Link Clicked** — guest opened RSVP link (`rsvpLinkClicked` timestamp)

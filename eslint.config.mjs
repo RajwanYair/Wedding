@@ -1,7 +1,6 @@
 import js from "@eslint/js";
 
 export default [
-  { ignores: ["js/"] },
   js.configs.recommended,
   {
     linterOptions: {

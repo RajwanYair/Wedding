@@ -125,41 +125,41 @@ Wedding/
 ```mermaid
 graph TD
     subgraph "Entry"
-        A[index.html] --> B[js/main.js]
+        A[index.html] --> B[src/main.js]
     end
     subgraph "Core"
-        B --> C[config.js]
-        B --> D[store.js\nProxy reactive]
-        B --> E[state.js\nlocalStorage]
-        B --> F[router.js\nhash nav]
-        B --> G[i18n.js\nhe eager / en lazy]
-        B --> H[dom.js\ncached refs]
-        B --> I[events.js\ndata-action delegation]
+        B --> C[core/config.js]
+        B --> D[core/store.js\nProxy reactive]
+        B --> E[core/state.js\nlocalStorage]
+        B --> F[core/nav.js\nhash nav]
+        B --> G[core/i18n.js\nhe/en/ar/ru]
+        B --> H[core/dom.js\ncached refs]
+        B --> I[core/events.js\ndata-action delegation]
     end
     subgraph "Sections"
-        B --> J[dashboard.js]
-        B --> K[guests.js]
-        B --> L[tables.js]
-        B --> M[rsvp.js]
-        B --> N[analytics.js]
-        B --> O[settings.js]
-        B --> P[...]
+        B --> J[sections/dashboard.js]
+        B --> K[sections/guests.js]
+        B --> L[sections/tables.js]
+        B --> M[sections/rsvp.js]
+        B --> N[sections/analytics.js]
+        B --> O[sections/settings.js]
+        B --> P[sections/...]
     end
     subgraph "Services"
-        B --> Q[sheets.js\nexp. backoff + write queue]
-        B --> R[auth.js\nGoogle/FB/Apple/Email]
-        B --> S[push.js]
-        B --> T[email.js]
-        B --> U[offline-queue.js]
+        B --> Q[services/sheets.js\nenqueueWrite + sync]
+        B --> R[services/auth.js\nGoogle/FB/Apple/Email]
+        B --> S[services/backend.js\nSupabase + offline queue]
+        B --> T[services/presence.js]
     end
     subgraph "Data Store"
         Q -- read/write --> V[(Google Sheets\nApps Script)]
         E -- persist --> W[(localStorage\nwedding_v1_*)]
+        S -- sync --> X[(Supabase)]
     end
     subgraph "CI/CD"
-        X[git push] --> Y[ci.yml\nlint+test+LH]
-        X --> Z[deploy.yml\nGH Pages]
-        X --> AA[release.yml\non vX.Y.Z tag]
+        Y[git push] --> Z[ci.yml\nlint+test]
+        Y --> AA[deploy.yml\nGH Pages]
+        Y --> AB[release.yml\non vX.Y.Z tag]
     end
 ```
 

@@ -30,8 +30,8 @@ assignees: RajwanYair
 
 ## i18n Checklist
 
-- [ ] New Hebrew strings added to `js/i18n/he.json`
-- [ ] New English strings added to `js/i18n/en.json`
+- [ ] New Hebrew strings added to `src/i18n/he.json`
+- [ ] New English strings added to `src/i18n/en.json`
 
 ## Priority
 

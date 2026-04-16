@@ -49,5 +49,5 @@
 
 ### Version bump (if releasing)
 
-- [ ] `js/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` updated
+- [ ] `src/core/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` updated
 - [ ] `CHANGELOG.md` new entry added

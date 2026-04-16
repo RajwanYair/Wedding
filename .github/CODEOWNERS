@@ -6,11 +6,11 @@
 # GitHub workflows & config — always requires review
 /.github/ @RajwanYair
 
-# Security-critical JS modules
-/js/auth.js @RajwanYair
-/js/config.js @RajwanYair
-/js/rsvp.js @RajwanYair
-/js/state.js @RajwanYair
+# Security-critical modules
+/src/services/auth.js @RajwanYair
+/src/core/config.js @RajwanYair
+/src/sections/rsvp.js @RajwanYair
+/src/core/state.js @RajwanYair
 
 # Core CSS variables — theme changes need careful review
 /css/variables.css @RajwanYair

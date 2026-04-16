@@ -67,7 +67,7 @@ for (const { path, sri, sizeKB } of rows) {
 }
 
 console.log("\nUsage in HTML:");
-console.log('  <script src="./js/app.js"');
+console.log('  <script type="module" src="./src/main.js"');
 console.log('          integrity="sha384-<hash above>"');
 console.log('          crossorigin="anonymous"></script>\n');
 

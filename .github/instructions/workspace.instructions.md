@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v5.1.0
+# Workspace — Wedding Manager v5.3.0
 
 ## Available Resources
 
@@ -47,36 +47,9 @@ Wedding/
 │   ├── responsive.css     # Media queries, prefers-reduced-motion
 │   ├── auth.css           # Auth overlay, user bar
 │   └── print.css          # Print styles
-├── js/                   # 38 JS modules (Legacy Vite entry — active build)
-│   ├── main.js            # ES module entry point (Vite entry)
-│   ├── store.js           # Proxy-based reactive store
-│   ├── events.js          # data-action event delegation hub
-│   ├── config.js          # Constants, state vars, auth/sheets config, @typedef
-│   ├── i18n.he.js         # Hebrew translations (eager)
-│   ├── i18n.en.js         # English translations (lazy-loaded)
-│   ├── i18n.js            # i18n engine (t(), applyLanguage())
-│   ├── dom.js             # Lazy Proxy DOM cache (el.xxx → getElementById on demand)
-│   ├── state.js           # Persistence (save/load/saveAll/loadAll, migration)
-│   ├── utils.js           # uid, escapeHtml, cleanPhone, formatDateHebrew
-│   ├── ui.js              # theme, modal, toast utilities
-│   ├── nav.js             # Async section navigation (lazy template loading)
-│   ├── dashboard.js       # Stats, countdown, RSVP deadline banner
-│   ├── guests.js          # Guest CRUD, filter, sort, search, duplicate detection
-│   ├── tables.js          # Table CRUD, drag-drop seating, auto-assign
-│   ├── analytics.js       # SVG donut + bar charts, meal summary for caterer
-│   ├── vendors.js         # Vendor CRUD with payment tracking
-│   ├── invitation.js      # Invitation rendering (SVG + image upload)
-│   ├── whatsapp.js        # WhatsApp template + Green API send
-│   ├── rsvp.js            # Public RSVP form (phone-first lookup)
-│   ├── settings.js        # Wedding details, export/import, CSV, RSVP deadline
-│   ├── sheets.js          # Google Sheets API sync
-│   ├── auth.js            # Google/Facebook/Apple/Guest OAuth auth
-│   └── app.js             # init() entry + (timeline, gallery, checkin, registry,
-│                           #   expenses, budget, contact-collector, offline-queue,
-│                           #   audit, error-monitor, email, push, router, guest-landing)
-├── src/                  # ESM v3 modules (active Vite entry — src/main.js is entry point)
-│   ├── main.js            # Future entry — imports all 18 section modules
-│   ├── core/              # Pure ESM equivalents of js/ core modules
+├── src/                  # Active ESM source (Vite entry: src/main.js)
+│   ├── main.js            # Entry point — imports all section modules
+│   ├── core/              # Core infrastructure modules
 │   │   ├── store.js       # Reactive store
 │   │   ├── events.js      # Event delegation
 │   │   ├── i18n.js        # i18n engine
@@ -85,67 +58,61 @@ Wedding/
 │   │   ├── ui.js          # Toast + modal
 │   │   ├── dom.js         # DOM helpers
 │   │   ├── config.js      # Config/constants
-│   │   └── template-loader.js  # Lazy HTML template injector (S1.4)
+│   │   └── template-loader.js  # Lazy HTML template injector
 │   ├── services/
 │   │   ├── auth.js        # OAuth auth service
-│   │   └── sheets.js      # Google Sheets service
+│   │   ├── sheets.js      # Google Sheets sync (enqueueWrite API)
+│   │   ├── sheets-impl.js # Sheets implementation
+│   │   ├── backend.js     # Supabase backend + offline queue
+│   │   ├── presence.js    # Real-time presence
+│   │   └── supabase.js    # Supabase client
 │   ├── utils/
-│   │   ├── index.js       # Barrel exports
 │   │   ├── date.js        # Date formatting + Jerusalem timezone
 │   │   ├── phone.js       # cleanPhone() + Israeli number normalization
-│   │   ├── sanitize.js    # sanitize(input, schema) — S4.2
-│   │   └── misc.js        # uid(), escapeHtml()
+│   │   ├── sanitize.js    # sanitize(input, schema)
+│   │   └── misc.js        # uid(), guestFullName(), parseGiftAmount(), isValidHttpsUrl()
 │   ├── sections/          # 18 ESM section modules with mount/unmount lifecycle
 │   │   ├── dashboard.js, guests.js, tables.js, settings.js
 │   │   ├── vendors.js, expenses.js, budget.js, analytics.js
 │   │   ├── rsvp.js, checkin.js, gallery.js, timeline.js
 │   │   ├── invitation.js, whatsapp.js, landing.js
 │   │   ├── contact-collector.js, registry.js, guest-landing.js
-│   │   └── index.js       # Barrel export (export * as xxxSection from ...)
+│   │   └── index.js       # Barrel export
 │   ├── templates/         # 15 section HTML files (lazy-loaded by nav.js)
-│   │   ├── dashboard.html, guests.html, tables.html, settings.html
-│   │   ├── vendors.html, budget.html, analytics.html, timeline.html
-│   │   ├── rsvp.html, checkin.html, gallery.html, invitation.html
-│   │   ├── whatsapp.html, landing.html, contact-form.html
-│   └── modals/            # 6 modal HTML files (lazy-loaded on first open)
-│       ├── guestModal.html, tableModal.html, vendorModal.html
-│       ├── galleryLightbox.html, expenseModal.html, timelineModal.html
+│   ├── modals/            # 7 modal HTML files (lazy-loaded on first open)
+│   └── i18n/              # 4 language files (he.json, en.json, ar.json, ru.json)
 ├── public/
 │   ├── sw.js              # ServiceWorker (offline cache, push notifications)
 │   ├── manifest.json      # PWA manifest
-│   └── icons/             # Generated PWA icons
+│   └── wedding.json       # External config
 ├── scripts/              # sri-check, inject-config, size-report, send-push, generate-icons
 ├── tests/
-│   ├── wedding.test.mjs   # 1776+ unit tests (17 suites, Vitest)
-│   └── e2e/smoke.spec.mjs # Playwright smoke tests
+│   ├── wedding.test.mjs   # Main test suite (Vitest)
+│   ├── unit/              # 16 unit/integration test files
+│   └── e2e/               # Playwright: smoke + visual regression
 ├── .github/
-│   ├── copilot-instructions.md   # master project spec (always loaded by Copilot)
-│   ├── AGENTS.md                 # agent/prompt discovery index
+│   ├── copilot-instructions.md   # Master project spec
+│   ├── AGENTS.md                 # Agent/prompt discovery index
 │   ├── CODEOWNERS
 │   ├── agents/                   # guest-manager.agent.md, wedding-designer.agent.md
-│   ├── instructions/             # wedding.instructions.md, cicd.instructions.md, workspace.instructions.md
-│   ├── prompts/                  # add-feature.prompt.md, code-review.prompt.md
+│   ├── instructions/             # wedding, cicd, workspace instructions
+│   ├── prompts/                  # add-feature, code-review prompts
 │   ├── workflows/                # ci.yml, deploy.yml, release.yml
 │   └── copilot/config.json
 ├── .vscode/
-│   ├── settings.json    # ESLint/Stylelint/markdownlint, Copilot, test explorer
-│   ├── extensions.json  # Recommended extensions
-│   ├── tasks.json       # Lint, test, CI, E2E tasks
-│   └── mcp.json         # MCP server config (filesystem + fetch)
+│   ├── settings.json, extensions.json, tasks.json, mcp.json
 ├── eslint.config.mjs     # JS lint — flat config, ecmaVersion: 2025
-├── .stylelintrc.json     # CSS lint — extends stylelint-config-standard
-├── .htmlhintrc           # HTML lint
-├── .markdownlint.json    # Markdown lint rules
-├── vite.config.js        # Vite 8 build config (chunk-public + per-template chunks)
-└── CLAUDE.md             # Minimal context for Claude/AI agents
+├── .stylelintrc.json     # CSS lint
+├── vite.config.js        # Vite 8 build config
+└── package.json          # Zero runtime deps — devDeps only
 ```
 
 ## Template Lazy Loading — How It Works
 
 1. `index.html` has section wrappers with `data-template="xxx"` and empty `<div class="section-skeleton">`.
-2. `js/nav.js showSection()` checks `sec.dataset.template && sec.dataset.loaded !== "1"`.
-3. If not loaded: fetches `./src/templates/${name}.html`, injects innerHTML, calls `refreshDomCache()`, sets `data-loaded="1"`.
-4. Then `_renderSection(name)` fires `window.renderXxx()` as usual.
+2. `src/core/nav.js showSection()` checks `sec.dataset.template && sec.dataset.loaded !== "1"`.
+3. Template-loader uses `import.meta.glob` to discover and inject templates.
+4. Then the section module's `mount()` is called.
 5. Modal lazy loading: `ensureModalLoaded(id)` fetches `./src/modals/${id}.html` on first open.
 
 ## Dependency Model

@@ -41,7 +41,7 @@ Root variables in `:root` — never hardcode colors:
 ## Event Delegation Pattern
 
 ```js
-// js/events.js handles all data-action clicks globally
+// src/core/events.js handles all data-action clicks globally
 // Use data-action="actionName" + data-* params — never inline onclick
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-action]');

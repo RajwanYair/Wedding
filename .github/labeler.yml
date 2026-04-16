@@ -15,8 +15,8 @@ documentation:
       - any-glob-to-any-file:
           - "README.md"
           - "CHANGELOG.md"
-          - "CLAUDE.md"
-          - "architecture.svg"
+          - "ARCHITECTURE.md"
+          - "CONTRIBUTING.md"
           - ".github/*.md"
           - ".github/instructions/**"
 

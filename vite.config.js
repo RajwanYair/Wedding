@@ -101,7 +101,6 @@ export default defineConfig({
       exclude: [
         "tests/**",
         "scripts/**",
-        "vite-plugin-legacy-globals.mjs",
         "vite.config.js",
       ],
       thresholds: {

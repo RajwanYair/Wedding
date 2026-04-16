@@ -51,11 +51,6 @@ patch("src/core/config.js", [
   [/APP_VERSION\s*=\s*["'][^"']+["']/, `APP_VERSION = "${ver}"`],
 ]);
 
-// js/config.js — version comment
-patch("js/config.js", [
-  [/\/\/\s*v[\d.]+/, `// v${ver}`],
-]);
-
 // public/sw.js — CACHE_NAME
 patch("public/sw.js", [
   [/CACHE_NAME\s*=\s*["']wedding-v[^"']+["']/, `CACHE_NAME = "wedding-v${ver}"`],
