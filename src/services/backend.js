@@ -118,7 +118,7 @@ export async function appendRsvpLog(entry) {
 
 /**
  * Check connection to the active backend.
- * "both" mode checks sheets (primary) first.
+ * "both" mode checks both; falls back if primary fails (F2.2.5).
  * @returns {Promise<boolean>}
  */
 export async function checkConnection() {
@@ -128,7 +128,21 @@ export async function checkConnection() {
     await _loadSupabaseModule();
     return _sbCheck?.() ?? false;
   }
-  // "sheets" or "both" — sheets is the primary health signal
+  if (backend === "both") {
+    await Promise.all([_loadSheetsModule(), _loadSupabaseModule()]);
+    const [sheetsOk, sbOk] = await Promise.all([
+      _sheetCheck?.() ?? Promise.resolve(false),
+      _sbCheck?.() ?? Promise.resolve(false),
+    ]);
+    // Log fallback status for debugging
+    if (!sheetsOk && sbOk) {
+      console.warn("[backend] Sheets unreachable — Supabase available (fallback)");
+    } else if (sheetsOk && !sbOk) {
+      console.warn("[backend] Supabase unreachable — Sheets available (fallback)");
+    }
+    return sheetsOk || sbOk;
+  }
+  // "sheets" — sheets is the primary health signal
   await _loadSheetsModule();
   return _sheetCheck?.() ?? false;
 }
