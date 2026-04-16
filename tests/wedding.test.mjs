@@ -6674,8 +6674,8 @@ describe("v3.4.0: events.js delegation", function () {
 describe("v3.4.0: Sheets exponential backoff", function () {
   it("src/services/sheets.js has retry logic", function () {
     assert.ok(
-      _srcSheets.includes("_MAX_RETRIES") ||
-        _srcSheets.includes("_BACKOFF_BASE_MS"),
+      _srcSheets.includes("MAX_RETRIES") ||
+        _srcSheets.includes("BACKOFF_BASE_MS"),
       "retry/backoff constants missing from src/services/sheets.js",
     );
   });
@@ -6687,7 +6687,7 @@ describe("v3.4.0: Sheets exponential backoff", function () {
   });
   it("src/services/sheets.js flush retries on failure", function () {
     assert.ok(
-      _srcSheets.includes("attempt") && _srcSheets.includes("_MAX_RETRIES"),
+      _srcSheets.includes("attempt") && _srcSheets.includes("MAX_RETRIES"),
       "retry attempt logic missing",
     );
   });

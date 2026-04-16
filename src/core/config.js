@@ -52,6 +52,12 @@ export const AUTH_SESSION_DURATION_MS = 2 * 60 * 60 * 1000;
 export const TOAST_DURATION_MS = 3000;
 export const DEBOUNCE_MS = 1500;
 
+// ── Retry / Backoff (F2.4.1 single source) ────────────────────────────────
+/** Maximum retry attempts before marking sync as failed */
+export const MAX_RETRIES = 4;
+/** Base delay in ms for exponential backoff (delay = BASE × 2^attempt + jitter) */
+export const BACKOFF_BASE_MS = 2000;
+
 // ── RSVP deadlines ────────────────────────────────────────────────────────
 export const RSVP_DEADLINE = "";
 

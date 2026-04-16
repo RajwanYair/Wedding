@@ -22,8 +22,8 @@
   --rose: #e8a0b4;
   --rose-dark: #c77a92;
   --text-primary: #f0e6d6;
-  --text-secondary: rgba(240, 230, 214, 0.7);
-  --text-muted: rgba(240, 230, 214, 0.4);
+  --text-secondary: rgba(240, 230, 214, 0.75);
+  --text-muted: rgba(240, 230, 214, 0.45);
   --positive: #6ee7b7;
   --negative: #fca5a5;
   --warning: #fcd34d;
@@ -86,8 +86,8 @@ body.light-mode {
   --bg-card-hover: rgba(255, 255, 255, 0.95);
   --bg-gradient: linear-gradient(135deg, #fdf9f5 0%, #f5ede0 50%, #fdf9f5 100%);
   --text-primary: #2d1a0d;
-  --text-secondary: rgba(45, 26, 13, 0.68);
-  --text-muted: rgba(45, 26, 13, 0.38);
+  --text-secondary: rgba(45, 26, 13, 0.75);
+  --text-muted: rgba(45, 26, 13, 0.45);
   --card-border: 1px solid rgba(212, 165, 116, 0.28);
   --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.09);
 }
@@ -98,8 +98,8 @@ body.light-mode.theme-rosegold {
   --bg-secondary: #f9ecf0;
   --bg-gradient: linear-gradient(135deg, #fdf5f7 0%, #f5e0e8 50%, #fdf5f7 100%);
   --text-primary: #2d0f1a;
-  --text-secondary: rgba(45, 15, 26, 0.68);
-  --text-muted: rgba(45, 15, 26, 0.38);
+  --text-secondary: rgba(45, 15, 26, 0.75);
+  --text-muted: rgba(45, 15, 26, 0.45);
 }
 
 /* ── Light Mode: Classic Gold ── */
@@ -108,8 +108,8 @@ body.light-mode.theme-gold {
   --bg-secondary: #f7eed8;
   --bg-gradient: linear-gradient(135deg, #fdf8f0 0%, #f5e6c0 50%, #fdf8f0 100%);
   --text-primary: #2d1e00;
-  --text-secondary: rgba(45, 30, 0, 0.68);
-  --text-muted: rgba(45, 30, 0, 0.38);
+  --text-secondary: rgba(45, 30, 0, 0.75);
+  --text-muted: rgba(45, 30, 0, 0.45);
 }
 
 /* ── Light Mode: Emerald ── */
@@ -118,8 +118,8 @@ body.light-mode.theme-emerald {
   --bg-secondary: #e8f9f0;
   --bg-gradient: linear-gradient(135deg, #f4fdf8 0%, #d0f5e5 50%, #f4fdf8 100%);
   --text-primary: #0a2d1a;
-  --text-secondary: rgba(10, 45, 26, 0.68);
-  --text-muted: rgba(10, 45, 26, 0.38);
+  --text-secondary: rgba(10, 45, 26, 0.75);
+  --text-muted: rgba(10, 45, 26, 0.45);
 }
 
 /* ── Light Mode: Royal Blue ── */
@@ -128,8 +128,8 @@ body.light-mode.theme-royal {
   --bg-secondary: #e8eef9;
   --bg-gradient: linear-gradient(135deg, #f4f7fd 0%, #d0def5 50%, #f4f7fd 100%);
   --text-primary: #0a1530;
-  --text-secondary: rgba(10, 21, 48, 0.68);
-  --text-muted: rgba(10, 21, 48, 0.38);
+  --text-secondary: rgba(10, 21, 48, 0.75);
+  --text-muted: rgba(10, 21, 48, 0.45);
 }
 
 } /* end @layer variables */

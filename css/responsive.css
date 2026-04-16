@@ -155,12 +155,24 @@
   .stat-number, .card-header, .gold { color: #333; }
 }
 
-/* ── Reduced Motion ── */
+/* ── Reduced Motion (F3.1.4) ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+
+  /* Kill infinite decorative animations entirely */
+  .particle,
+  .countdown-number,
+  .empty-state .icon,
+  .offline-indicator::before,
+  .sync-badge.syncing::after { animation: none !important; }
+
+  /* Disable scroll-driven timeline reveal */
+  .timeline-item { animation-timeline: none !important; }
 }
 
 /* ── F3.3 Touch targets — ensure minimum 48×48px on touch devices ── */

@@ -8,7 +8,7 @@
  * Sections continue to `import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js"`.
  */
 
-import { DEBOUNCE_MS } from "../core/config.js";
+import { DEBOUNCE_MS, MAX_RETRIES, BACKOFF_BASE_MS } from "../core/config.js";
 import { storageGet, storageSet, storageRemove } from "../core/storage.js";
 import {
   syncStoreKey,
@@ -66,11 +66,6 @@ export function enqueueWrite(key, syncFn) {
 /** @type {Map<string, number>} track retry count per key */
 const _retryCount = new Map();
 
-/** Maximum retry attempts before giving up */
-const _MAX_RETRIES = 4;
-/** Base delay in ms for exponential backoff */
-const _BACKOFF_BASE_MS = 2000;
-
 async function _flush(key) {
   const entry = _queue.get(key);
   if (!entry) return;
@@ -87,9 +82,9 @@ async function _flush(key) {
     }, 3000);
   } catch {
     const attempt = (_retryCount.get(key) ?? 0) + 1;
-    if (attempt <= _MAX_RETRIES) {
+    if (attempt <= MAX_RETRIES) {
       _retryCount.set(key, attempt);
-      const delay = _BACKOFF_BASE_MS * 2 ** (attempt - 1) + Math.random() * 500;
+      const delay = BACKOFF_BASE_MS * 2 ** (attempt - 1) + Math.random() * 500;
       const timer = setTimeout(() => _flush(key), delay);
       _queue.set(key, { syncFn: entry.syncFn, timer });
       _setStatus("syncing");
