@@ -24,6 +24,8 @@ export function mount(container) {
   }
   // S13.2 — Wire plus-one name fields
   _wirePlusOneFields();
+  // F4.3.1 — Wire form-start funnel tracking
+  _wireFormStartTracking();
   // S11.1 — Auto-lookup from URL guestId param
   _autoLookupFromUrl();
 }
@@ -46,6 +48,8 @@ function _autoLookupFromUrl() {
     const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
     const guest = guests.find((g) => g.id === guestId);
     if (guest) {
+      // F4.3.1 — Track link click for funnel analytics
+      _trackFunnelStage(guest.id, "linkClicked");
       _prefillForm(guest);
       const statusEl = document.getElementById("rsvpLookupStatus");
       if (statusEl) {
@@ -60,6 +64,8 @@ function _autoLookupFromUrl() {
     const phoneInput = /** @type {HTMLInputElement|null} */ (document.getElementById("rsvpPhone"));
     if (phoneInput) phoneInput.value = phone;
     if (result.found) {
+      // F4.3.1 — Track link click for funnel analytics
+      if (result.guest) _trackFunnelStage(result.guest.id, "linkClicked");
       const statusEl = document.getElementById("rsvpLookupStatus");
       if (statusEl) {
         statusEl.classList.remove("u-hidden");
@@ -313,4 +319,63 @@ function _showDeadlineMessage() {
     msg.appendChild(p);
     form.appendChild(msg);
   }
+}
+
+// ── F4.3.1 RSVP Funnel Tracking ──────────────────────────────────────────
+
+/**
+ * Track a funnel stage for a guest (persists to guest record).
+ * Stages: linkClicked → formStarted → submitted (submitted is already handled by submitRsvp).
+ * @param {string} guestId
+ * @param {'linkClicked'|'formStarted'} stage
+ */
+function _trackFunnelStage(guestId, stage) {
+  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
+  const idx = guests.findIndex((g) => g.id === guestId);
+  if (idx === -1) return;
+
+  const field = stage === "linkClicked" ? "rsvpLinkClicked" : "rsvpFormStarted";
+  if (guests[idx][field]) return; // Already tracked
+
+  guests[idx] = {
+    ...guests[idx],
+    [field]: true,
+    [`${field}At`]: new Date().toISOString(),
+  };
+  storeSet("guests", guests);
+}
+
+/**
+ * Wire form-start tracking: first interaction with any RSVP form field.
+ * Listens for focus/change on RSVP inputs and tracks once per guest.
+ */
+function _wireFormStartTracking() {
+  if (!_container) return;
+  let tracked = false;
+  const handler = () => {
+    if (tracked) return;
+    tracked = true;
+    // Try to identify the guest from pre-filled data
+    const params = new URLSearchParams(window.location.search);
+    const guestId = params.get("guestId");
+    if (guestId) _trackFunnelStage(guestId, "formStarted");
+  };
+  _container.addEventListener("focusin", handler);
+  _container.addEventListener("change", handler);
+}
+
+/**
+ * Get RSVP funnel stats for analytics.
+ * @returns {{ invited: number, sent: number, linkClicked: number, formStarted: number, submitted: number, checkedIn: number }}
+ */
+export function getRsvpFunnelStats() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return {
+    invited: guests.length,
+    sent: guests.filter((g) => g.sent).length,
+    linkClicked: guests.filter((g) => g.rsvpLinkClicked).length,
+    formStarted: guests.filter((g) => g.rsvpFormStarted).length,
+    submitted: guests.filter((g) => g.status === "confirmed" || g.status === "declined" || g.status === "maybe").length,
+    checkedIn: guests.filter((g) => g.checkedIn).length,
+  };
 }

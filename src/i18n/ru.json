@@ -1020,5 +1020,8 @@
     "email_send_thankyou": "Благодарность по email",
     "email_subject_invitation": "{groom} и {bride} — Приглашение на свадьбу",
     "email_subject_reminder": "Напоминание: подтвердите присутствие",
-    "email_subject_thankyou": "Спасибо — {groom} и {bride}"
+    "email_subject_thankyou": "Спасибо — {groom} и {bride}",
+    "funnel_clicked": "Перешли по ссылке",
+    "funnel_started": "Начали заполнять",
+    "pdf_summary": "Отчёт PDF"
 }

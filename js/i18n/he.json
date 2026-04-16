@@ -1054,5 +1054,8 @@
     "email_send_thankyou": "שלח תודה במייל",
     "email_subject_invitation": "{groom} ו-{bride} — הזמנה לחתונה",
     "email_subject_reminder": "תזכורת: אישור הגעה לחתונה",
-    "email_subject_thankyou": "תודה — {groom} ו-{bride}"
+    "email_subject_thankyou": "תודה — {groom} ו-{bride}",
+    "funnel_clicked": "לחצו על קישור",
+    "funnel_started": "התחילו למלא",
+    "pdf_summary": "דוח סיכום PDF"
 }

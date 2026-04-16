@@ -6,7 +6,7 @@
  */
 
 import { storeGet, storeSubscribe } from "../core/store.js";
-import { t } from "../core/i18n.js";
+import { t, currentLang } from "../core/i18n.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -536,12 +536,16 @@ function _renderFunnel() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const total = guests.length;
   const sent = guests.filter((g) => g.sent).length;
+  const linkClicked = guests.filter((g) => g.rsvpLinkClicked).length;
+  const formStarted = guests.filter((g) => g.rsvpFormStarted).length;
   const confirmed = guests.filter((g) => g.status === "confirmed").length;
   const checkedIn = guests.filter((g) => g.checkedIn).length;
 
   const stages = [
     { label: t("funnel_invited"), value: total, color: "var(--primary)" },
     { label: t("funnel_sent"), value: sent, color: "var(--info)" },
+    { label: t("funnel_clicked"), value: linkClicked, color: "var(--warning, #f0ad4e)" },
+    { label: t("funnel_started"), value: formStarted, color: "var(--accent-secondary, #9b59b6)" },
     { label: t("funnel_confirmed"), value: confirmed, color: "var(--success)" },
     { label: t("funnel_checkedin"), value: checkedIn, color: "var(--accent)" },
   ];
@@ -731,10 +735,105 @@ function _renderActivityFeed() {
 // ── S8.4 Export Functions ─────────────────────────────────────────────────
 
 /**
- * Trigger print dialog with analytics section visible (PDF export).
+ * F4.3.5 — Generate and print a one-page executive summary PDF.
+ * Opens a new window with a formatted summary of all key stats + charts.
  */
 export function exportAnalyticsPDF() {
-  window.print();
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+
+  const total = guests.length;
+  const confirmed = guests.filter((g) => g.status === "confirmed").length;
+  const pending = guests.filter((g) => g.status === "pending").length;
+  const declined = guests.filter((g) => g.status === "declined").length;
+  const checkedIn = guests.filter((g) => g.checkedIn).length;
+  const adults = guests.reduce((s, g) => s + (g.count || 1), 0);
+  const children = guests.reduce((s, g) => s + (g.children || 0), 0);
+  const seated = guests.filter((g) => g.tableId).length;
+  const vendorCost = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  const vendorPaid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
+  const expenseTotal = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  const groomSide = guests.filter((g) => g.side === "groom").length;
+  const brideSide = guests.filter((g) => g.side === "bride").length;
+
+  // Meal breakdown
+  const meals = {};
+  guests.forEach((g) => {
+    const m = g.meal || "regular";
+    meals[m] = (meals[m] || 0) + 1;
+  });
+  const mealRows = Object.entries(meals)
+    .map(([k, v]) => `<tr><td>${_escHtml(t(`meal_${k}`) || k)}</td><td>${v}</td></tr>`)
+    .join("");
+
+  const title = `${info.groom || ""} & ${info.bride || ""} — ${t("event_summary_title")}`;
+  const dateStr = info.date || "";
+  const lang = currentLang();
+
+  const html = `<!DOCTYPE html>
+<html lang="${lang}" dir="${lang === "he" || lang === "ar" ? "rtl" : "ltr"}">
+<head><meta charset="utf-8"><title>${_escHtml(title)}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;padding:24px;max-width:800px;margin:auto;color:#222}
+h1{font-size:1.6rem;margin-bottom:4px}
+h2{font-size:1.1rem;margin:16px 0 8px;border-bottom:1px solid #ddd;padding-bottom:4px}
+.subtitle{font-size:.9rem;color:#666;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+.stat{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0}
+.stat-label{font-weight:500}
+table{width:100%;border-collapse:collapse;margin-top:6px}
+td,th{text-align:start;padding:4px 8px;border-bottom:1px solid #eee}
+th{font-weight:600;background:#f9f9f9}
+.footer{margin-top:24px;font-size:.75rem;color:#999;text-align:center}
+@media print{body{padding:12px}}
+</style></head><body>
+<h1>${_escHtml(title)}</h1>
+<div class="subtitle">${_escHtml(dateStr)} · ${_escHtml(info.venue || "")} · ${t("app_title")}</div>
+
+<h2>📊 ${t("stat_total")}</h2>
+<div class="grid">
+<div class="stat"><span class="stat-label">${t("stat_total")}</span><span>${total}</span></div>
+<div class="stat"><span class="stat-label">${t("status_confirmed")}</span><span>${confirmed}</span></div>
+<div class="stat"><span class="stat-label">${t("status_pending")}</span><span>${pending}</span></div>
+<div class="stat"><span class="stat-label">${t("status_declined")}</span><span>${declined}</span></div>
+<div class="stat"><span class="stat-label">${t("funnel_checkedin")}</span><span>${checkedIn}</span></div>
+<div class="stat"><span class="stat-label">${t("analytics_adults")}</span><span>${adults}</span></div>
+<div class="stat"><span class="stat-label">${t("analytics_children")}</span><span>${children}</span></div>
+<div class="stat"><span class="stat-label">${t("analytics_total_heads")}</span><span>${adults + children}</span></div>
+</div>
+
+<h2>💺 ${t("tables_title")}</h2>
+<div class="grid">
+<div class="stat"><span class="stat-label">${t("stat_tables")}</span><span>${tables.length}</span></div>
+<div class="stat"><span class="stat-label">${t("stat_seated")}</span><span>${seated}/${total}</span></div>
+<div class="stat"><span class="stat-label">${t("stat_groom_side")}</span><span>${groomSide}</span></div>
+<div class="stat"><span class="stat-label">${t("stat_bride_side")}</span><span>${brideSide}</span></div>
+</div>
+
+<h2>🍽️ ${t("meal_summary_title")}</h2>
+<table><tr><th>${t("meal_type_label")}</th><th>${t("col_count")}</th></tr>${mealRows}</table>
+
+<h2>💰 ${t("budget_title")}</h2>
+<div class="grid">
+<div class="stat"><span class="stat-label">${t("vendor_total_cost")}</span><span>₪${vendorCost.toLocaleString()}</span></div>
+<div class="stat"><span class="stat-label">${t("vendor_paid")}</span><span>₪${vendorPaid.toLocaleString()}</span></div>
+<div class="stat"><span class="stat-label">${t("vendor_outstanding")}</span><span>₪${(vendorCost - vendorPaid).toLocaleString()}</span></div>
+<div class="stat"><span class="stat-label">${t("expense_total")}</span><span>₪${expenseTotal.toLocaleString()}</span></div>
+</div>
+
+<div class="footer">${t("app_title")} · ${new Date().toLocaleDateString()}</div>
+</body></html>`;
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  win.print();
 }
 
 /**
@@ -790,6 +889,11 @@ export function exportAnalyticsCSV() {
 /** @param {string} s */
 function _escSvg(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/** Escape HTML special characters for safe insertion into generated HTML. */
+function _escHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 // ── S13.4 Seating Chart SVG Map ───────────────────────────────────────────

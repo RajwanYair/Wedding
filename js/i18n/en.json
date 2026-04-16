@@ -1052,5 +1052,8 @@
     "email_send_thankyou": "Email Thank You",
     "email_subject_invitation": "{groom} & {bride} — Wedding Invitation",
     "email_subject_reminder": "Reminder: RSVP for the Wedding",
-    "email_subject_thankyou": "Thank You — {groom} & {bride}"
+    "email_subject_thankyou": "Thank You — {groom} & {bride}",
+    "funnel_clicked": "Link Clicked",
+    "funnel_started": "Form Started",
+    "pdf_summary": "PDF Summary Report"
 }
