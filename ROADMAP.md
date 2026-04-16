@@ -1,7 +1,7 @@
-# Wedding Manager — Roadmap v5.0
+# Wedding Manager — Roadmap v5.3
 
 > A strategic review and forward-looking plan for a best-in-class wedding management SPA.
-> Last updated: 2026-04-16 · Current release: v4.7.0
+> Last updated: 2026-04-16 · Current release: v5.3.0
 
 ---
 

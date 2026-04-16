@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [5.3.0] — 2026-04-16
+
+### Added — Sprints 1-10
+
+- **F3.1.4** `prefers-reduced-motion` enhancements — kills particle, countdown, confetti animations.
+- **F3.1.5** Color contrast boost — text opacities raised for dark/light themes (WCAG AA).
+- **F2.4.1** Retry constant consolidation — `MAX_RETRIES`/`BACKOFF_BASE_MS` in `src/core/config.js`.
+- **F3.2.1** Arabic locale (ar.json) — 988 RTL keys.
+- **F3.2.2** Russian locale (ru.json) — 988 keys. Vite manualChunks for ar/ru.
+- **F3.2.3** ICU MessageFormat — `formatMessage()` with `Intl.PluralRules`; `t()` accepts params.
+- **F4.2.1** Scheduled reminder queue — localStorage-persisted `wedding_v1_reminderQueue`.
+- **F4.2.3** Paced thank-you via Green API — 350ms delay, progress UI.
+- **F4.2.4** Email templates — `generateMailtoLink()` + batch `sendBatchEmails()`.
+- **F4.3.1** RSVP funnel — 6-stage tracking (invited → linkClicked → formStarted → confirmed → checkedIn).
+- **F4.3.5** Executive PDF — one-page summary via `window.print()`.
+- **F3.1.1** Accessibility E2E tests — 10 tests (axe-core ready + manual checks).
+- **F5.1.1** API docs generator — `scripts/generate-docs.mjs` → `docs/API.md` (379 exports).
+- **F5.1.5** Domain agents — analytics-agent + vendor-agent for Copilot.
+- **F5.2.1** Plugin architecture — `registerPlugin/mountPlugin/unmountPlugin` API.
+- **F5.2.2** Plugin demos — gallery, registry, contact-collector as plugin wrappers.
+- **F5.2.3** Plugin authoring guide — `docs/PLUGINS.md`.
+- **F1.6.4** Per-section Vite chunks — `sec-dashboard`, `sec-guests`, etc.
+- **F1.2.4** Offline queue ESM — `src/services/offline-queue.js` using shared config constants.
+- **F1.3.5** StoreKeys type map — typed store key → value interface.
+- **F1.2.7** Doc references updated — `js/` → `src/` in README, copilot-instructions.
+- **F2.2.1** SQL migrations — `supabase/migrations/001_create_tables.sql` (9 tables).
+- **F2.2.2** RLS policies — `supabase/migrations/002_rls_policies.sql`.
+- **F2.2.5** Backend health fallback — dual check in "both" mode with console warnings.
+- **F4.2.2** WhatsApp Cloud API evaluation — `docs/WA-CLOUD-API-EVAL.md`.
+- **F5.3.1** Edge deployment evaluation — `docs/EDGE-DEPLOYMENT-EVAL.md`.
+
+### Stats
+
+- **Tests**: 1812 passing (19 suites) — +15 plugin tests
+- **Lint**: 0 errors, 0 warnings
+- **i18n**: 4 languages (he, en, ar, ru) with ICU plural support
+- **Agents**: 4 Copilot agents (guest-manager, wedding-designer, analytics, vendor)
+
 ## [5.2.0] — 2025-07-26
 
 ### Added — Phase 2-5 Features
