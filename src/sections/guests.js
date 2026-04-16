@@ -1135,3 +1135,80 @@ function _highlightText(container, text, query) {
   container.appendChild(mark);
   container.appendChild(document.createTextNode(text.slice(idx + query.length)));
 }
+
+// ── Sprint 7: Guest Group Summary ───────────────────────────────────────
+
+/**
+ * Get guest counts broken down by group.
+ * @returns {Record<string, { total: number, confirmed: number, pending: number, declined: number }>}
+ */
+export function getGuestGroupSummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const groups = {};
+  for (const g of guests) {
+    const grp = g.group || "other";
+    if (!groups[grp]) groups[grp] = { total: 0, confirmed: 0, pending: 0, declined: 0 };
+    groups[grp].total++;
+    if (g.status === "confirmed") groups[grp].confirmed++;
+    else if (g.status === "declined") groups[grp].declined++;
+    else groups[grp].pending++;
+  }
+  return groups;
+}
+
+// ── Sprint 7: Export by Group ───────────────────────────────────────────
+
+/**
+ * Export guest list filtered by group as CSV.
+ * @param {string} group
+ */
+export function exportGuestsByGroup(group) {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const filtered = group === "all" ? guests : guests.filter((g) => (g.group || "other") === group);
+  const header = "FirstName,LastName,Phone,Status,Count,Meal,Side";
+  const rows = filtered.map((g) =>
+    [g.firstName || "", g.lastName || "", g.phone || "", g.status || "pending", g.count || 1, g.meal || "regular", g.side || "mutual"].join(","),
+  );
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `guests-${group}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ── Sprint 7: Accessibility Summary ─────────────────────────────────────
+
+/**
+ * Get accessibility needs summary.
+ * @returns {{ total: number, needsAccess: number, withTransport: number }}
+ */
+export function getAccessibilitySummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return {
+    total: guests.length,
+    needsAccess: guests.filter((g) => g.accessibility).length,
+    withTransport: guests.filter((g) => g.transport && g.transport !== "").length,
+  };
+}
+
+// ── Sprint 7: Transport Summary ─────────────────────────────────────────
+
+/**
+ * Get transport breakdown by route.
+ * @returns {Record<string, number>}
+ */
+export function getTransportSummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const routes = {};
+  for (const g of guests) {
+    if (g.transport && g.transport !== "") {
+      routes[g.transport] = (routes[g.transport] || 0) + (g.count || 1);
+    }
+  }
+  return routes;
+}

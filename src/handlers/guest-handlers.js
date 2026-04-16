@@ -36,8 +36,7 @@ import {
   toggleGuestVip,
   toggleVipFilter,
   printGuestBadges,
-  printGuestsByTable,
-} from "../sections/guests.js";
+  printGuestsByTable,  exportGuestsByGroup,} from "../sections/guests.js";
 
 /**
  * Register all guest-related event handlers.
@@ -226,4 +225,9 @@ export function registerGuestHandlers() {
     if (!guestId) return;
     removeGuestTag(guestId, el.dataset.tag ?? "");
   });
+
+  // Sprint 7: Export by group
+  on("exportGuestsByGroup", (el) =>
+    exportGuestsByGroup(el.dataset.actionArg ?? "all"),
+  );
 }
