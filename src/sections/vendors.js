@@ -389,3 +389,88 @@ export function getVendorPaymentSummary() {
   ).length;
   return { total: vendors.length, totalCost, totalPaid, outstanding: totalCost - totalPaid, paidCount, overdueCount };
 }
+
+/**
+ * Vendor timeline — sorted upcoming due dates.
+ * @returns {{ id: string, name: string, category: string, dueDate: string, remaining: number, daysUntilDue: number }[]}
+ */
+export function getVendorTimeline() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const now = Date.now();
+  return vendors
+    .filter((v) => v.dueDate && (v.paid || 0) < (v.price || 0))
+    .map((v) => ({
+      id: v.id,
+      name: v.name,
+      category: v.category,
+      dueDate: v.dueDate,
+      remaining: (v.price || 0) - (v.paid || 0),
+      daysUntilDue: Math.ceil((new Date(v.dueDate).getTime() - now) / 86400000),
+    }))
+    .sort((a, b) => a.daysUntilDue - b.daysUntilDue);
+}
+
+/**
+ * Group vendors by category with aggregated totals.
+ * @returns {{ category: string, count: number, totalCost: number, totalPaid: number }[]}
+ */
+export function getVendorsByCategory() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  /** @type {Map<string, { count: number, totalCost: number, totalPaid: number }>} */
+  const map = new Map();
+  for (const v of vendors) {
+    const cat = v.category || "other";
+    const entry = map.get(cat) ?? { count: 0, totalCost: 0, totalPaid: 0 };
+    entry.count += 1;
+    entry.totalCost += v.price || 0;
+    entry.totalPaid += v.paid || 0;
+    map.set(cat, entry);
+  }
+  return [...map.entries()]
+    .map(([category, d]) => ({ category, ...d }))
+    .sort((a, b) => b.totalCost - a.totalCost);
+}
+
+/**
+ * Contract completeness check — vendors missing contract URL.
+ * @returns {{ id: string, name: string, category: string, price: number }[]}
+ */
+export function getVendorsMissingContract() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  return vendors
+    .filter((v) => !v.contractUrl)
+    .map((v) => ({ id: v.id, name: v.name, category: v.category, price: v.price || 0 }));
+}
+
+/**
+ * Vendors rated below threshold (default 3).
+ * @param {number} [threshold=3]
+ * @returns {{ id: string, name: string, category: string, rating: number }[]}
+ */
+export function getLowRatedVendors(threshold = 3) {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  return vendors
+    .filter((v) => typeof v.rating === "number" && v.rating > 0 && v.rating < threshold)
+    .map((v) => ({ id: v.id, name: v.name, category: v.category, rating: v.rating }))
+    .sort((a, b) => a.rating - b.rating);
+}
+
+/**
+ * Maximum single-vendor exposure (share of total budget).
+ * @returns {{ id: string, name: string, category: string, price: number, share: number }[]}
+ */
+export function getVendorBudgetShare() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const total = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  if (total === 0) return [];
+  return vendors
+    .filter((v) => (v.price || 0) > 0)
+    .map((v) => ({
+      id: v.id,
+      name: v.name,
+      category: v.category,
+      price: v.price,
+      share: Math.round(((v.price || 0) / total) * 100),
+    }))
+    .sort((a, b) => b.share - a.share);
+}
