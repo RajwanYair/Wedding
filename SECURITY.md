@@ -4,9 +4,8 @@
 
 | Version | Supported     |
 | ------- | ------------- |
-| 3.x     | ✅ Active     |
-| 2.x     | ❌ No support |
-| < 2.0   | ❌ No support |
+| 5.x     | ✅ Active     |
+| < 5.0   | ❌ No support |
 
 ## Reporting a Vulnerability
 
@@ -41,9 +40,9 @@ This project applies the following security practices:
 
 | In scope                      | Out of scope                                  |
 | ----------------------------- | --------------------------------------------- |
-| `src/` ES modules             | `js/` legacy code (not linted, not in bundle) |
-| `public/sw.js` service worker | Third-party OAuth SDKs                        |
-| `scripts/` build scripts      | GitHub Actions secrets management             |
+| `src/` ES modules             | Third-party OAuth SDKs            |
+| `public/sw.js` service worker | GitHub Actions secrets management |
+| `scripts/` build scripts      |                                   |
 
 ## Known Limitations
 

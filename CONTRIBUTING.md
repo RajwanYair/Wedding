@@ -50,7 +50,7 @@ tests/
 1. Pick the relevant `src/sections/` module (or create one)
 2. Export named functions — no default exports
 3. Register any new `data-action` handlers in `src/main.js`
-4. Add i18n keys to both `js/i18n/he.json` and `js/i18n/en.json`
+4. Add i18n keys to both `src/i18n/he.json` and `src/i18n/en.json`
 5. Add unit tests in `tests/unit/`
 6. Add content tests in `tests/wedding.test.mjs`
 7. Run `npm run lint && npm test` — must exit 0
