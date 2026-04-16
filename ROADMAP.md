@@ -289,8 +289,8 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | # | Task | Size | Status |
 | --- | --- | --- | --- |
 | 4.1 | Replace `_loaders` map with `import.meta.glob("../templates/*.html", { query: "?raw" })` | M | ✅ Done |
-| 4.2 | Replace `_modalLoaders` with same pattern for `../modals/*.html` | S | ⏳ Deferred |
-| 4.3 | Add warning log when template/modal not found (instead of silent return) | S | ⏳ Deferred |
+| 4.2 | Replace `_modalLoaders` with same pattern for `../modals/*.html` | S | ✅ Done |
+| 4.3 | Add warning log when template/modal not found (instead of silent return) | S | ✅ Done |
 
 **Exit:** Template loader uses glob auto-discovery. Adding a new section requires no template-loader edits.
 
@@ -301,10 +301,10 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | 5.1 | Wrap handler dispatch in `events.js` with try-catch + error toast | S | ✅ Done |
 | 5.2 | Add `window.addEventListener("beforeunload", storeFlush)` in bootstrap | S | ✅ Done |
 | 5.3 | Add localStorage quota detection in `store.js` — toast "Storage full" on failure | S | ✅ Done (console.warn) |
-| 5.4 | Add `console.assert` validation in `sheets-impl.js` for column order | S | ⏳ Deferred |
-| 5.5 | Add `onStorageError` callback in store for UI notification | S | ⏳ Deferred |
+| 5.4 | Add `console.assert` validation in `sheets-impl.js` for column order | S | ✅ Done |
+| 5.5 | Add `onStorageError` callback in store for UI notification | S | ✅ Done |
 
-**Exit:** All event dispatch paths wrapped with try-catch. beforeunload flush. Store quota warnings.
+**Exit:** All event dispatch paths wrapped with try-catch. beforeunload flush. Store quota warnings. Column order validated. Storage errors surfaced.
 
 ### F1.6 — Lazy Section JS ✅
 
@@ -312,19 +312,19 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | --- | --- | --- | --- |
 | 6.1 | Convert section imports from eager to `import.meta.glob` + `await import()` on navigation | L | ✅ Done |
 | 6.2 | Eagerly load only `landing.js` + `rsvp.js` + `dashboard.js` (entry sections) | M | ⏳ Deferred |
-| 6.3 | Add `prefetchSection(name)` using `requestIdleCallback` | S | ⏳ Deferred |
+| 6.3 | Add `prefetchSection(name)` using `requestIdleCallback` | S | ✅ Done |
 | 6.4 | Update Vite manual chunks config to produce per-section chunks | M | ⏳ Deferred |
 
-**Exit:** 19 section modules lazy-loaded via import.meta.glob. Cached after first load.
+**Exit:** 19 section modules lazy-loaded via import.meta.glob. Cached after first load. Top sections prefetched on idle.
 
-### F1.7 — Documentation Consolidation
+### F1.7 — Documentation Consolidation ✅
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 7.1 | Merge `GUIDE.md` content into `README.md` (usage section) | S | Fewer files to maintain |
-| 7.2 | Merge `CLAUDE.md` into `.github/copilot-instructions.md` | S | Single AI instruction source |
-| 7.3 | Delete `GUIDE.md` and `CLAUDE.md` | S | Cleaner root directory |
-| 7.4 | Add automated version sync script that reads `package.json` and patches all docs | M | End 12-place manual updates |
+| 7.1 | Merge `GUIDE.md` content into `README.md` (usage section) | S | ✅ Done |
+| 7.2 | Merge `CLAUDE.md` into `.github/copilot-instructions.md` | S | ✅ Done (deleted, content covered) |
+| 7.3 | Delete `GUIDE.md` and `CLAUDE.md` | S | ✅ Done |
+| 7.4 | Add automated version sync script that reads `package.json` and patches all docs | M | ✅ Done (scripts/sync-version.mjs) |
 
 **Exit:** 5 root docs remain: `README`, `ARCHITECTURE`, `ROADMAP`, `CHANGELOG`, `CONTRIBUTING`. Version string auto-synced.
 
@@ -360,14 +360,14 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 
 **Exit:** Supabase usable as standalone production backend. RLS enforced. Migration scripts versioned in repo.
 
-### F2.3 — IndexedDB Storage Layer
+### F2.3 — IndexedDB Storage Layer ✅
 
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
-| 3.1 | Create `src/core/storage.js` abstraction: `storageGet` / `storageSet` / `storageDel` | M | Single storage API |
-| 3.2 | Implement IndexedDB adapter (idb-keyval pattern, ~60 lines, zero deps) | M | 50× more storage capacity |
-| 3.3 | Auto-migrate existing localStorage data to IndexedDB on first run | M | Seamless upgrade |
-| 3.4 | Fallback chain: IndexedDB → localStorage → in-memory | S | Never crash on storage |
+| 3.1 | Create `src/core/storage.js` abstraction: `storageGet` / `storageSet` / `storageDel` | M | ✅ Done |
+| 3.2 | Implement IndexedDB adapter (idb-keyval pattern, ~60 lines, zero deps) | M | ✅ Done |
+| 3.3 | Auto-migrate existing localStorage data to IndexedDB on first run | M | ✅ Done |
+| 3.4 | Fallback chain: IndexedDB → localStorage → in-memory | S | ✅ Done |
 | 3.5 | Update `store.js` to use new async storage API | L | Breaking internal change |
 
 **Exit:** App stores data in IndexedDB. Old localStorage auto-migrated. Guest lists > 5 MB work. Fallback chain tested.
@@ -377,9 +377,9 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
 | 4.1 | Consolidate retry logic: single `MAX_RETRIES`, `RETRY_BASE_MS` in `sheets.js` | S | One retry strategy |
-| 4.2 | Add queue persistence to IndexedDB (survive browser restart) | M | Truly offline-first |
-| 4.3 | Add queue drain progress indicator in settings | S | User visibility |
-| 4.4 | Flush queue on `navigator.onLine` + `visibilitychange` events | S | Faster sync recovery |
+| 4.2 | Add queue persistence to IndexedDB (survive browser restart) | M | ✅ Done |
+| 4.3 | Add queue drain progress indicator in settings | S | ⏳ Deferred |
+| 4.4 | Flush queue on `navigator.onLine` + `visibilitychange` events | S | ✅ Done |
 
 **Exit:** Single retry strategy. Queue survives restart. Progress visible to user.
 
@@ -394,12 +394,12 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
 | 1.1 | Integrate `@axe-core/playwright` in E2E suite — automated a11y gate in CI | M | Catch regressions |
-| 1.2 | Ensure `aria-live="polite"` on all dynamic content update regions | S | Screen reader support |
-| 1.3 | Ensure all interactive elements have `:focus-visible` styles | M | Keyboard navigation |
+| 1.2 | Ensure `aria-live="polite"` on all dynamic content update regions | S | ✅ Done (verified) |
+| 1.3 | Ensure all interactive elements have `:focus-visible` styles | M | ✅ Done |
 | 1.4 | Add `prefers-reduced-motion` media query to all CSS animations | S | Vestibular disorders |
 | 1.5 | Verify color contrast ≥ 4.5:1 across all 5 themes + light mode | M | Visual impairment |
-| 1.6 | Add `role="alert"` to toast notifications | S | Screen reader announcements |
-| 1.7 | Add `role="status"` to sync indicator | S | Activity awareness |
+| 1.6 | Add `role="alert"` to toast notifications | S | ✅ Done (verified) |
+| 1.7 | Add `role="status"` to sync indicator | S | ✅ Done |
 
 **Exit:** axe-core CI gate passes on all pages. WCAG 2.2 AA compliance verified. Lighthouse Accessibility ≥ 0.98.
 
@@ -419,11 +419,11 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 
 | # | Task | Size | Impact |
 | --- | --- | --- | --- |
-| 3.1 | Haptic feedback on guest check-in (Vibration API) | S | Tactile confirmation |
-| 3.2 | Ensure all touch targets ≥ 48×48 px (Material Design 3 guideline) | M | Finger-friendly |
+| 3.1 | Haptic feedback on guest check-in (Vibration API) | S | ✅ Done |
+| 3.2 | Ensure all touch targets ≥ 48×48 px (Material Design 3 guideline) | M | ✅ Done |
 | 3.3 | Bottom sheet pattern for modals on mobile (replace centered overlay) | L | Native mobile feel |
 | 3.4 | Scroll-driven animations for timeline section (CSS `animation-timeline`) | M | Modern, smooth feel |
-| 3.5 | Auto-detect `prefers-color-scheme` for light/dark mode | S | Respect system preference |
+| 3.5 | Auto-detect `prefers-color-scheme` for light/dark mode | S | ✅ Done |
 
 **Exit:** All touch targets ≥ 48px. Mobile modals are bottom sheets. LCP < 1.5s on 3G throttle.
 
@@ -439,8 +439,8 @@ main.js        707 lines (down from 1,720 — 59% reduction via handler extracti
 | --- | --- | --- | --- |
 | 1.1 | Auto-suggest table assignments based on side + group + meal constraints | M | Save hours of manual work |
 | 1.2 | Predict no-show rate from RSVP timing + pending/maybe historical patterns | M | Accurate headcount forecast |
-| 1.3 | Suggest optimal follow-up timing for pending guests (days since invite) | S | Higher RSVP response rate |
-| 1.4 | Budget forecast: confirmed headcount × per-plate cost vs. budget target | S | Financial planning |
+| 1.3 | Suggest optimal follow-up timing for pending guests (days since invite) | S | ✅ Done |
+| 1.4 | Budget forecast: confirmed headcount × per-plate cost vs. budget target | S | ✅ Done |
 | 1.5 | Vendor payment due reminders on dashboard (7d, 3d, overdue) | S | No missed payments |
 
 ### F4.2 — Communication Automation

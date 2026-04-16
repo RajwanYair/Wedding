@@ -4,7 +4,7 @@
 // =============================================================================
 "use strict";
 
-const CACHE_NAME = "wedding-v1.20.0";
+const CACHE_NAME = "wedding-v5.1.0";
 const APP_SHELL = [
   "./",
   "./index.html",

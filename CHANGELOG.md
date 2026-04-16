@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [5.1.0] — 2025-07-25
+
+### Added — Phase 1 Remaining + Phase 2-4 Features
+
+- **F1.4.2 Modal glob auto-discovery**: Replace manual `_modalLoaders` object with `import.meta.glob("../modals/*.html")` → Map for zero-config modal loading.
+- **F1.4.3 Missing modal warning**: `console.warn` when modal template not found (instead of silent return).
+- **F1.5.4 Column order validation**: `sheets-impl.js` validates `_COL_ORDER` is non-empty, starts with "id", and has no duplicates on load.
+- **F1.5.5 Storage error callback**: `onStorageError(fn)` export in `store.js` — callback when localStorage persist fails.
+- **F1.6.3 Template prefetch**: `prefetchTemplates(["guests", "tables", "rsvp", "analytics"])` on idle after bootstrap.
+- **F1.7 Doc consolidation**: Merge `GUIDE.md` into README, delete `GUIDE.md` + `CLAUDE.md`, add `scripts/sync-version.mjs`.
+- **F2.3 IndexedDB storage**: `src/core/storage.js` — async storage abstraction with 3-tier fallback (IndexedDB → localStorage → in-memory). Auto-migration from localStorage on first run.
+- **F2.4 Offline queue unification**: Queue keys persisted to IndexedDB (survive restart). `recoverOfflineQueue()` on reload. `visibilitychange` listener flushes queue.
+- **F3.1 Accessibility**: `:focus-visible` outlines, `role="status"` on sync badge, verified aria-live regions and toast alert roles.
+- **F3.3 Mobile polish**: Haptic feedback on check-in (`navigator.vibrate`), 48×48 px minimum touch targets (`pointer: coarse`), auto-detect `prefers-color-scheme`.
+- **F4.1 Smart suggestions**: Budget forecast card on dashboard (headcount × per-plate vs target). Follow-up list sorted by days-pending with color-coded age badges.
+
 ### Changed — Phase 1 Foundations (v5.0 prep)
 
 - **F1.1 Break up god module**: Extract 5 handler modules from main.js → `src/handlers/` (guest, table, vendor, section, settings). Create `src/core/constants.js` (single source of truth for sections). Create `src/utils/form-helpers.js` (shared `openAddModal` + `getVal`). main.js reduced from 1,720 → 707 lines (59% reduction).
