@@ -1007,5 +1007,9 @@
     "forecast_per_plate": "Est. per plate",
     "forecast_total": "Forecast total",
     "forecast_vs_budget": "vs. Budget",
-    "forecast_no_guests": "No confirmed guests yet"
+    "forecast_no_guests": "No confirmed guests yet",
+    "vendor_due_title": "Upcoming Vendor Payments",
+    "vendor_due_overdue": "Overdue",
+    "vendor_due_days": "In {n} days",
+    "vendor_due_today": "Today"
 }

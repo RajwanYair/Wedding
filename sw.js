@@ -208,7 +208,7 @@ self.addEventListener("push", function (e) {
     icon: data.icon || "./icon-192.png",
     badge: "./icon-192.png",
     tag: "wedding-push",
-    data: data,
+    data,
   };
   e.waitUntil(self.registration.showNotification(title, options));
 });

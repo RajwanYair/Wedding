@@ -1009,5 +1009,9 @@
     "forecast_per_plate": "עלות למנה (משוער)",
     "forecast_total": "תחזית כוללת",
     "forecast_vs_budget": "מול תקציב",
-    "forecast_no_guests": "אין אורחים מאושרים עדיין"
+    "forecast_no_guests": "אין אורחים מאושרים עדיין",
+    "vendor_due_title": "תשלומים קרובים לספקים",
+    "vendor_due_overdue": "באיחור",
+    "vendor_due_days": "עוד {n} ימים",
+    "vendor_due_today": "היום"
 }

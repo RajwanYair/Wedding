@@ -58,6 +58,8 @@ export function mount(_container) {
   // F4.1 budget forecast
   _unsubs.push(storeSubscribe("guests", renderBudgetForecast));
   _unsubs.push(storeSubscribe("vendors", renderBudgetForecast));
+  // F4.1.5 vendor payment due reminders
+  _unsubs.push(storeSubscribe("vendors", renderVendorDueReminders));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -78,6 +80,7 @@ export function mount(_container) {
   renderGiftProgress(); // S24.3
   renderNextTimelineEvent(); // S24.5
   renderBudgetForecast(); // F4.1
+  renderVendorDueReminders(); // F4.1.5
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -443,6 +446,83 @@ export function renderBudgetForecast() {
     row.appendChild(v);
     container.appendChild(row);
   });
+}
+
+// ── F4.1.5 Vendor Payment Due Reminders ──────────────────────────────────
+
+/**
+ * Show upcoming/overdue vendor payments in #dashVendorDueList.
+ * Buckets: overdue, ≤3 days, ≤7 days.
+ */
+export function renderVendorDueReminders() {
+  const card = document.getElementById("dashVendorDueCard");
+  const container = document.getElementById("dashVendorDueList");
+  const badge = document.getElementById("dashVendorDueBadge");
+  if (!card || !container) return;
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const now = new Date();
+  const DAY = 86400000;
+
+  /** @type {{ vendor: any; daysLeft: number; outstanding: number }[]} */
+  const due = [];
+  for (const v of vendors) {
+    if (!v.dueDate) continue;
+    const outstanding = (v.price || 0) - (v.paid || 0);
+    if (outstanding <= 0) continue;
+    const dueDate = new Date(v.dueDate);
+    const daysLeft = Math.ceil((dueDate.getTime() - now.getTime()) / DAY);
+    if (daysLeft <= 7) due.push({ vendor: v, daysLeft, outstanding });
+  }
+
+  if (due.length === 0) {
+    /** @type {HTMLElement} */ (card).hidden = true;
+    return;
+  }
+
+  /** @type {HTMLElement} */ (card).hidden = false;
+  due.sort((a, b) => a.daysLeft - b.daysLeft);
+
+  if (badge) badge.textContent = String(due.length);
+
+  container.textContent = "";
+  for (const { vendor, daysLeft, outstanding } of due) {
+    const item = document.createElement("div");
+    let cls = "vendor-due-item";
+    let badgeCls = "vendor-due-badge";
+    let badgeText = "";
+    if (daysLeft < 0) {
+      cls += " vendor-due-item--overdue";
+      badgeCls += " vendor-due-badge--overdue";
+      badgeText = t("vendor_due_overdue") || "באיחור";
+    } else if (daysLeft <= 3) {
+      cls += " vendor-due-item--soon";
+      badgeCls += " vendor-due-badge--3d";
+      badgeText = (t("vendor_due_days") || "עוד {n} ימים").replace("{n}", String(daysLeft));
+    } else {
+      cls += " vendor-due-item--upcoming";
+      badgeCls += " vendor-due-badge--7d";
+      badgeText = (t("vendor_due_days") || "עוד {n} ימים").replace("{n}", String(daysLeft));
+    }
+    item.className = cls;
+
+    const name = document.createElement("span");
+    name.className = "vendor-due-name";
+    name.textContent = String(vendor.name || vendor.category || "");
+
+    const amt = document.createElement("span");
+    amt.className = "vendor-due-amount";
+    amt.textContent = `₪${outstanding.toLocaleString()}`;
+
+    const bdg = document.createElement("span");
+    bdg.className = badgeCls;
+    bdg.textContent = badgeText;
+
+    item.appendChild(name);
+    item.appendChild(amt);
+    item.appendChild(bdg);
+    container.appendChild(item);
+  }
 }
 
 // ── S15.4 Dashboard Activity Feed ────────────────────────────────────────

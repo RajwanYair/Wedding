@@ -1049,6 +1049,14 @@ body.light-mode .btn-dark-mode-icon { filter: invert(0.85); }
   border-radius: 12px;
   border: var(--card-border);
   transition: transform 0.18s, box-shadow 0.18s;
+  /* F3.3.4 Scroll-driven reveal animation */
+  animation: timelineReveal linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 30%;
+}
+@keyframes timelineReveal {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 .timeline-item:hover {
   transform: translateY(-1px);
@@ -2373,6 +2381,38 @@ kbd {
   margin-top: 0.5rem;
   min-height: 1.2em;
 }
+
+/* ── F4.1.5 Vendor Payment Due Reminders ─────────────────────────── */
+.vendor-due-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.vendor-due-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: var(--card-border);
+  font-size: 0.88rem;
+}
+.vendor-due-item--overdue { border-inline-start: 3px solid var(--negative); }
+.vendor-due-item--soon    { border-inline-start: 3px solid var(--warning, #f57c00); }
+.vendor-due-item--upcoming { border-inline-start: 3px solid var(--accent); }
+.vendor-due-name { font-weight: 600; flex: 1; min-width: 0; }
+.vendor-due-amount { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.vendor-due-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.vendor-due-badge--overdue  { background: rgba(239, 68, 68, 0.15); color: var(--negative); }
+.vendor-due-badge--3d       { background: rgba(245, 124, 0, 0.15); color: var(--warning, #f57c00); }
+.vendor-due-badge--7d       { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
 
 /* ── S18.1 Sync Queue Monitor ───────────────────────────────────── */
 .sync-queue-monitor {
