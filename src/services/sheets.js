@@ -9,6 +9,7 @@
  */
 
 import { DEBOUNCE_MS } from "../core/config.js";
+import { storageGet, storageSet, storageRemove } from "../core/storage.js";
 import {
   syncStoreKey,
   appendRsvpLog,
@@ -59,6 +60,7 @@ export function enqueueWrite(key, syncFn) {
   if (existing?.timer) clearTimeout(existing.timer);
   const timer = setTimeout(() => _flush(key), DEBOUNCE_MS);
   _queue.set(key, { syncFn, timer });
+  _persistQueueKeys().catch(() => {});
 }
 
 /** @type {Map<string, number>} track retry count per key */
@@ -73,6 +75,7 @@ async function _flush(key) {
   const entry = _queue.get(key);
   if (!entry) return;
   _queue.delete(key);
+  _persistQueueKeys().catch(() => {});
   _setStatus("syncing");
   try {
     await entry.syncFn();
@@ -199,7 +202,7 @@ export async function syncSheetsNow() {
  * S3.9 — Offline-to-online sync.
  * Registers a window "online" listener that flushes the write queue
  * whenever the browser regains network connectivity.
- * Also sets up an "offline" listener to update sync status.
+ * Also sets up "offline", and "visibilitychange" listeners.
  */
 export function initOnlineSync() {
   window.addEventListener(
@@ -219,6 +222,58 @@ export function initOnlineSync() {
     },
     { passive: true },
   );
+
+  // F2.4 — Flush queued writes when the tab becomes visible again
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (document.visibilityState === "visible" && _queue.size > 0 && navigator.onLine) {
+        syncSheetsNow();
+      }
+    },
+    { passive: true },
+  );
+}
+
+// ── F2.4 Queue persistence ──────────────────────────────────────────────
+const _PENDING_KEYS_STORAGE = "wedding_offline_queue_keys";
+
+/**
+ * Persist the set of queued store-key names so they survive a page reload.
+ * On next load, the app can re-enqueue writes for these keys.
+ */
+async function _persistQueueKeys() {
+  const keys = [..._queue.keys()];
+  if (keys.length > 0) {
+    await storageSet(_PENDING_KEYS_STORAGE, JSON.stringify(keys));
+  } else {
+    await storageRemove(_PENDING_KEYS_STORAGE);
+  }
+}
+
+/**
+ * Recover queued keys from storage after a page reload.
+ * Must be called after initStorage() and after store has been loaded.
+ * @param {(key: string) => () => Promise<void>} syncFnFactory
+ *   Given a store key, returns the async sync function for that key.
+ * @returns {Promise<string[]>} The keys that were recovered
+ */
+export async function recoverOfflineQueue(syncFnFactory) {
+  const raw = await storageGet(_PENDING_KEYS_STORAGE);
+  if (!raw) return [];
+  try {
+    const keys = JSON.parse(raw);
+    if (!Array.isArray(keys)) return [];
+    for (const key of keys) {
+      if (typeof key === "string") {
+        enqueueWrite(key, syncFnFactory(key));
+      }
+    }
+    await storageRemove(_PENDING_KEYS_STORAGE);
+    return keys;
+  } catch {
+    return [];
+  }
 }
 
 /**
