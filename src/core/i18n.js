@@ -90,7 +90,13 @@ function _locale() {
 export function formatDate(value, opts) {
   const d = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(d.getTime())) return String(value);
-  const defaults = { year: "numeric", month: "long", day: "numeric", timeZone: "Asia/Jerusalem" };
+  /** @type {Intl.DateTimeFormatOptions} */
+  const defaults = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "Asia/Jerusalem",
+  };
   return new Intl.DateTimeFormat(_locale(), { ...defaults, ...opts }).format(d);
 }
 

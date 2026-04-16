@@ -88,4 +88,71 @@ Types: `feat` · `fix` · `test` · `docs` · `chore` · `refactor` · `perf`
 ## Review Process
 
 PRs require at least one review approval and all CI checks to pass before merging.
-The CI runs: lint → unit tests → Vite build → coverage → security scan → bundle size.
+The CI runs: lint → type check → unit tests → Vite build → coverage → security scan → bundle size.
+
+## Tutorial: Adding a New Section
+
+Follow these steps to add a new section (e.g. "gifts"):
+
+### 1. Create the template
+
+Create `src/templates/gifts.html` with your section's HTML:
+
+```html
+<div class="section-content">
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">🎁</span>
+      <span data-i18n="gifts_title">מתנות</span>
+    </div>
+    <div id="giftsList"></div>
+  </div>
+</div>
+```
+
+### 2. Create the section module
+
+Create `src/sections/gifts.js` with mount/unmount lifecycle:
+
+```js
+import { storeGet, storeSubscribe } from "../core/store.js";
+import { t } from "../core/i18n.js";
+
+const _unsubs = [];
+
+export function mount(_container) {
+  _unsubs.push(storeSubscribe("guests", _render));
+  _render();
+}
+
+export function unmount() {
+  _unsubs.forEach((fn) => fn());
+  _unsubs.length = 0;
+}
+
+function _render() {
+  const el = document.getElementById("giftsList");
+  if (!el) return;
+  // Render your section content here using textContent (never innerHTML with user data)
+}
+```
+
+### 3. Add i18n keys
+
+Add keys to all 4 locale files:
+
+- `src/i18n/he.json` — Hebrew translations
+- `src/i18n/en.json` — English translations
+- `js/i18n/he.json` — Legacy Hebrew
+- `js/i18n/en.json` — Legacy English
+
+### 4. Register navigation
+
+Add your section to the nav list in `src/core/nav.js` and the sidebar in `index.html`.
+
+### 5. Test and lint
+
+```bash
+npm run lint   # Must exit 0
+npm test       # All tests must pass
+```

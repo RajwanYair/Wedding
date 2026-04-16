@@ -35,6 +35,10 @@ jobs:
       - name: Lint (HTML + CSS + JS + Markdown)
         run: npm run lint
 
+      - name: Type check (tsc --noEmit)
+        continue-on-error: true
+        run: npm run typecheck
+
       - name: Unit tests (Vitest)
         run: npm test
         env:

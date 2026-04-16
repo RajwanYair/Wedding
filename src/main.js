@@ -108,6 +108,11 @@ async function _resolveSection(name) {
   return mod;
 }
 
+// F1.6.2 — Eagerly preload entry sections (landing, rsvp, dashboard)
+// These are the most common initial views; preloading avoids navigation delay.
+const _EAGER_SECTIONS = ["landing", "rsvp", "dashboard"];
+Promise.all(_EAGER_SECTIONS.map((s) => _resolveSection(s))).catch(() => {});
+
 // ── Eagerly-needed section exports ────────────────────────────────────────
 // These are used during bootstrap, not just on section mount.
 import { startTimelineAlarms } from "./sections/timeline.js";
