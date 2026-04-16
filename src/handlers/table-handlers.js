@@ -20,6 +20,7 @@ import {
   exportTransportCSV,
   printTransportManifest,
   smartAutoAssign,
+  exportTableCSV,
 } from "../sections/tables.js";
 import {
   checkInGuest,
@@ -43,6 +44,7 @@ export function registerTableHandlers() {
       name: getVal("tableName"),
       capacity: getVal("tableCapacity") || "10",
       shape: getVal("tableShape") || "round",
+      notes: getVal("tableNotes") || "",
     };
     const id = getVal("tableModalId") || null;
     const result = saveTable(data, id);
@@ -65,6 +67,7 @@ export function registerTableHandlers() {
     printPlaceCards(el.dataset.actionArg ?? ""),
   );
   on("exportTransportCSV", () => exportTransportCSV());
+  on("exportTableCSV", (el) => exportTableCSV(el.dataset.actionArg ?? ""));
   on("printTransportManifest", () => printTransportManifest());
   on("deleteTable", (el) =>
     showConfirmDialog(t("confirm_delete"), () =>

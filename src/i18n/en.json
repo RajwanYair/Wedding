@@ -1058,5 +1058,8 @@
     "wa_cancelled": "Scheduled reminders cancelled",
     "wa_scheduled_pending": "pending",
     "rsvp_rate_limited": "Only one RSVP per hour. Please try again later",
-    "rsvp_countdown": "{days} days until the wedding!"
+    "rsvp_countdown": "{days} days until the wedding!",
+    "label_table_notes": "Notes",
+    "ph_table_notes": "Table notes",
+    "export_table_csv": "Export table guest list"
 }

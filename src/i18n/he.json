@@ -1060,5 +1060,8 @@
     "wa_cancelled": "תזמונים בוטלו",
     "wa_scheduled_pending": "ממתינים לשליחה",
     "rsvp_rate_limited": "ניתן לשלוח אישור אחד בשעה. נסה שוב מאוחר יותר",
-    "rsvp_countdown": "עוד {days} ימים לחתונה!"
+    "rsvp_countdown": "עוד {days} ימים לחתונה!",
+    "label_table_notes": "הערות",
+    "ph_table_notes": "הערות לשולחן",
+    "export_table_csv": "ייצא רשימת שולחן"
 }

@@ -1047,5 +1047,8 @@
     "wa_cancelled": "Запланированные напоминания отменены",
     "wa_scheduled_pending": "ожидают",
     "rsvp_rate_limited": "Только одно подтверждение в час. Попробуйте позже",
-    "rsvp_countdown": "До свадьбы осталось {days} дней!"
+    "rsvp_countdown": "До свадьбы осталось {days} дней!",
+    "label_table_notes": "Заметки",
+    "ph_table_notes": "Заметки для стола",
+    "export_table_csv": "Экспорт списка стола"
 }

@@ -2518,6 +2518,10 @@ kbd {
   cursor: help;
   line-height: 1;
 }
+/* Sprint 5: Table dietary icons + progress bar */
+.table-dietary-icons { display: flex; gap: 0.25rem; margin-top: 0.25rem; }
+.table-dietary-icon { font-size: 0.85em; cursor: help; }
+.progress-bar--table { height: 4px; margin-top: 0.35rem; }
 
 /* S23.4 Suggested actions card */
 .suggestion-item {

@@ -1046,5 +1046,8 @@
     "wa_cancelled": "تم إلغاء التذكيرات المجدولة",
     "wa_scheduled_pending": "قيد الانتظار",
     "rsvp_rate_limited": "يمكنك إرسال تأكيد واحد في الساعة. حاول لاحقًا",
-    "rsvp_countdown": "{days} أيام حتى الزفاف!"
+    "rsvp_countdown": "{days} أيام حتى الزفاف!",
+    "label_table_notes": "ملاحظات",
+    "ph_table_notes": "ملاحظات الطاولة",
+    "export_table_csv": "تصدير قائمة الطاولة"
 }

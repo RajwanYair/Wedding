@@ -44,6 +44,7 @@ export function saveTable(data, existingId = null) {
     name: { type: "string", required: true, maxLength: 60 },
     capacity: { type: "number", required: true, min: 1, max: 50 },
     shape: { type: "enum", values: ["round", "rect"], default: "round" },
+    notes: { type: "string", required: false, maxLength: 200 },
   });
   if (errors.length) return { ok: false, errors };
 
@@ -186,6 +187,27 @@ export function renderTables() {
     if (fillPct >= 100) info.className = "u-text-danger";
     else if (fillPct >= 85) info.className = "u-text-warning";
     card.appendChild(info);
+
+    // Sprint 5: Capacity progress bar
+    const bar = document.createElement("div");
+    bar.className = "progress-bar progress-bar--table";
+    const fill = document.createElement("div");
+    fill.className = "progress-fill";
+    fill.style.width = `${Math.min(fillPct, 100)}%`;
+    bar.appendChild(fill);
+    card.appendChild(bar);
+
+    // Sprint 5: Dietary summary icons
+    const dietaryIcons = _buildDietaryIcons(tableGuests);
+    if (dietaryIcons) card.appendChild(dietaryIcons);
+
+    // Sprint 5: Table notes
+    if (tb.notes) {
+      const notesEl = document.createElement("p");
+      notesEl.className = "u-text-muted u-text-sm";
+      notesEl.textContent = tb.notes;
+      card.appendChild(notesEl);
+    }
 
     // Action buttons
     const actions = document.createElement("div");
@@ -695,4 +717,58 @@ export function suggestTableAssignments() {
   }
 
   return suggestions;
+}
+
+// ── Sprint 5: Dietary Icons Helper ───────────────────────────────────────
+
+const MEAL_ICONS = { vegetarian: "🥬", vegan: "🌱", gluten_free: "🚫🌾", kosher: "✡️" };
+
+/** @param {any[]} tableGuests @returns {HTMLElement|null} */
+function _buildDietaryIcons(tableGuests) {
+  const counts = {};
+  for (const g of tableGuests) {
+    const m = g.meal || "regular";
+    if (m === "regular") continue;
+    counts[m] = (counts[m] || 0) + 1;
+  }
+  const keys = Object.keys(counts);
+  if (!keys.length) return null;
+  const wrap = document.createElement("div");
+  wrap.className = "table-dietary-icons";
+  for (const k of keys) {
+    const sp = document.createElement("span");
+    sp.className = "table-dietary-icon";
+    sp.title = `${t(`meal_${k}`)} (${counts[k]})`;
+    sp.textContent = MEAL_ICONS[k] || "🍽️";
+    wrap.appendChild(sp);
+  }
+  return wrap;
+}
+
+// ── Sprint 5: Export single table CSV ────────────────────────────────────
+
+/**
+ * Export a single table's guest list as CSV.
+ * @param {string} tableId
+ */
+export function exportTableCSV(tableId) {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const table = tables.find((tb) => tb.id === tableId);
+  if (!table) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const seated = guests.filter((g) => g.tableId === tableId);
+  const header = "FirstName,LastName,Count,Meal,Status";
+  const rows = seated.map((g) =>
+    [g.firstName || "", g.lastName || "", g.count || 1, g.meal || "regular", g.status || "pending"].join(","),
+  );
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `table-${table.name || tableId}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
