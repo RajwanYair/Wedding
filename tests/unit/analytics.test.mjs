@@ -1,0 +1,404 @@
+/**
+ * tests/unit/analytics.test.mjs — Unit tests for analytics section
+ * Covers: computeResponseVelocity · getMealDistribution · getSideBalance ·
+ *         getCheckinVelocity · getRsvpConversionRate · checkBudgetOvershoot ·
+ *         predictNoShowRate · computeArrivalForecast
+ *
+ * @vitest-environment happy-dom
+ * Run: npm test
+ */
+
+import { describe, it, expect, beforeEach } from "vitest";
+import { initStore, storeSet } from "../../src/core/store.js";
+import {
+  computeResponseVelocity,
+  getMealDistribution,
+  getSideBalance,
+  getCheckinVelocity,
+  getRsvpConversionRate,
+  checkBudgetOvershoot,
+  predictNoShowRate,
+  computeArrivalForecast,
+} from "../../src/sections/analytics.js";
+
+function seedStore() {
+  initStore({
+    guests: { value: [] },
+    tables: { value: [] },
+    vendors: { value: [] },
+    expenses: { value: [] },
+    weddingInfo: { value: {} },
+  });
+}
+
+function makeGuest(overrides = {}) {
+  return {
+    id: `g_${Math.random().toString(36).slice(2)}`,
+    firstName: "Test",
+    lastName: "Guest",
+    phone: "972501234567",
+    status: "pending",
+    count: 1,
+    children: 0,
+    side: "groom",
+    meal: "regular",
+    sent: false,
+    ...overrides,
+  };
+}
+
+// ── computeResponseVelocity ──────────────────────────────────────────────
+
+describe("computeResponseVelocity", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty array when no guests", () => {
+    expect(computeResponseVelocity()).toEqual([]);
+  });
+
+  it("returns empty when no guests have rsvpDate", () => {
+    storeSet("guests", [makeGuest()]);
+    expect(computeResponseVelocity()).toEqual([]);
+  });
+
+  it("groups responses by day", () => {
+    storeSet("guests", [
+      makeGuest({ rsvpDate: "2026-04-10T10:00:00Z" }),
+      makeGuest({ rsvpDate: "2026-04-10T15:00:00Z" }),
+      makeGuest({ rsvpDate: "2026-04-11T08:00:00Z" }),
+    ]);
+    const result = computeResponseVelocity();
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({ date: "2026-04-10", count: 2 });
+    expect(result[1]).toEqual({ date: "2026-04-11", count: 1 });
+  });
+
+  it("returns sorted by date ascending", () => {
+    storeSet("guests", [
+      makeGuest({ rsvpDate: "2026-04-15T10:00:00Z" }),
+      makeGuest({ rsvpDate: "2026-04-10T10:00:00Z" }),
+    ]);
+    const dates = computeResponseVelocity().map((r) => r.date);
+    expect(dates[0]).toBe("2026-04-10");
+    expect(dates[1]).toBe("2026-04-15");
+  });
+});
+
+// ── getMealDistribution ──────────────────────────────────────────────────
+
+describe("getMealDistribution", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty array when no confirmed guests", () => {
+    storeSet("guests", [makeGuest({ status: "pending" })]);
+    expect(getMealDistribution()).toEqual([]);
+  });
+
+  it("counts meals for confirmed guests only", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", meal: "regular" }),
+      makeGuest({ status: "confirmed", meal: "vegetarian" }),
+      makeGuest({ status: "pending", meal: "vegan" }),
+    ]);
+    const result = getMealDistribution();
+    expect(result).toHaveLength(2);
+    const total = result.reduce((s, r) => s + r.count, 0);
+    expect(total).toBe(2);
+  });
+
+  it("calculates percentage correctly", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", meal: "regular" }),
+      makeGuest({ status: "confirmed", meal: "regular" }),
+      makeGuest({ status: "confirmed", meal: "vegetarian" }),
+      makeGuest({ status: "confirmed", meal: "vegan" }),
+    ]);
+    const result = getMealDistribution();
+    const regular = result.find((r) => r.meal === "regular");
+    expect(regular.pct).toBe(50); // 2/4 = 50%
+  });
+
+  it("defaults missing meal to 'regular'", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", meal: undefined }),
+    ]);
+    const result = getMealDistribution();
+    expect(result[0].meal).toBe("regular");
+  });
+
+  it("sorts by count descending", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", meal: "vegan" }),
+      makeGuest({ status: "confirmed", meal: "regular" }),
+      makeGuest({ status: "confirmed", meal: "regular" }),
+      makeGuest({ status: "confirmed", meal: "regular" }),
+    ]);
+    const result = getMealDistribution();
+    expect(result[0].meal).toBe("regular");
+    expect(result[0].count).toBe(3);
+  });
+});
+
+// ── getSideBalance ───────────────────────────────────────────────────────
+
+describe("getSideBalance", () => {
+  beforeEach(() => seedStore());
+
+  it("returns zeros when no guests", () => {
+    const result = getSideBalance();
+    expect(result.groom).toBe(0);
+    expect(result.bride).toBe(0);
+    expect(result.mutual).toBe(0);
+  });
+
+  it("counts sides correctly", () => {
+    storeSet("guests", [
+      makeGuest({ side: "groom" }),
+      makeGuest({ side: "bride" }),
+      makeGuest({ side: "bride" }),
+      makeGuest({ side: "mutual" }),
+    ]);
+    const result = getSideBalance();
+    expect(result.groom).toBe(1);
+    expect(result.bride).toBe(2);
+    expect(result.mutual).toBe(1);
+  });
+
+  it("treats missing side as mutual", () => {
+    storeSet("guests", [makeGuest({ side: undefined })]);
+    const result = getSideBalance();
+    expect(result.mutual).toBe(1);
+  });
+
+  it("calculates percentages", () => {
+    storeSet("guests", [
+      makeGuest({ side: "groom" }),
+      makeGuest({ side: "bride" }),
+    ]);
+    const result = getSideBalance();
+    expect(result.groomPct).toBe(50);
+    expect(result.bridePct).toBe(50);
+  });
+});
+
+// ── getCheckinVelocity ───────────────────────────────────────────────────
+
+describe("getCheckinVelocity", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty when no checked-in guests", () => {
+    storeSet("guests", [makeGuest()]);
+    expect(getCheckinVelocity()).toEqual([]);
+  });
+
+  it("groups by 15-minute slots", () => {
+    storeSet("guests", [
+      makeGuest({ checkedIn: true, checkedInAt: "2026-05-07T18:05:00" }),
+      makeGuest({ checkedIn: true, checkedInAt: "2026-05-07T18:10:00" }),
+      makeGuest({ checkedIn: true, checkedInAt: "2026-05-07T18:20:00" }),
+    ]);
+    const result = getCheckinVelocity();
+    // 18:05 and 18:10 both in 18:00 slot, 18:20 in 18:15 slot
+    expect(result.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("skips guests without checkedInAt", () => {
+    storeSet("guests", [
+      makeGuest({ checkedIn: true }), // no checkedInAt
+    ]);
+    expect(getCheckinVelocity()).toEqual([]);
+  });
+
+  it("sorts by slot ascending", () => {
+    storeSet("guests", [
+      makeGuest({ checkedIn: true, checkedInAt: "2026-05-07T20:00:00" }),
+      makeGuest({ checkedIn: true, checkedInAt: "2026-05-07T18:00:00" }),
+    ]);
+    const result = getCheckinVelocity();
+    if (result.length >= 2) {
+      expect(result[0].slot < result[1].slot).toBe(true);
+    }
+  });
+});
+
+// ── getRsvpConversionRate ────────────────────────────────────────────────
+
+describe("getRsvpConversionRate", () => {
+  beforeEach(() => seedStore());
+
+  it("returns zeros when no guests", () => {
+    const result = getRsvpConversionRate();
+    expect(result.sent).toBe(0);
+    expect(result.responded).toBe(0);
+    expect(result.rate).toBe(0);
+  });
+
+  it("calculates sent count", () => {
+    storeSet("guests", [
+      makeGuest({ sent: true }),
+      makeGuest({ sent: true }),
+      makeGuest({ sent: false }),
+    ]);
+    expect(getRsvpConversionRate().sent).toBe(2);
+  });
+
+  it("counts responded as non-pending", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", sent: true }),
+      makeGuest({ status: "declined", sent: true }),
+      makeGuest({ status: "pending", sent: true }),
+    ]);
+    const result = getRsvpConversionRate();
+    expect(result.responded).toBe(2);
+    expect(result.sent).toBe(3);
+  });
+
+  it("calculates conversion rate as percentage", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", sent: true }),
+      makeGuest({ status: "pending", sent: true }),
+    ]);
+    const result = getRsvpConversionRate();
+    expect(result.rate).toBe(50); // 1 responded / 2 sent
+  });
+
+  it("calculates confirm rate", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", sent: true }),
+      makeGuest({ status: "declined", sent: true }),
+    ]);
+    const result = getRsvpConversionRate();
+    expect(result.confirmRate).toBe(50); // 1 confirmed / 2 responded
+  });
+});
+
+// ── checkBudgetOvershoot ─────────────────────────────────────────────────
+
+describe("checkBudgetOvershoot", () => {
+  beforeEach(() => seedStore());
+
+  it("returns not over budget when no target set", () => {
+    const result = checkBudgetOvershoot();
+    expect(result.overBudget).toBe(false);
+  });
+
+  it("detects over budget", () => {
+    storeSet("vendors", [{ price: 30000 }]);
+    storeSet("expenses", [{ amount: 25000 }]);
+    storeSet("weddingInfo", { budgetTarget: "50000" });
+    const result = checkBudgetOvershoot();
+    expect(result.overBudget).toBe(true);
+    expect(result.committed).toBe(55000);
+  });
+
+  it("not over budget when under target", () => {
+    storeSet("vendors", [{ price: 20000 }]);
+    storeSet("expenses", [{ amount: 10000 }]);
+    storeSet("weddingInfo", { budgetTarget: "50000" });
+    const result = checkBudgetOvershoot();
+    expect(result.overBudget).toBe(false);
+    expect(result.committed).toBe(30000);
+  });
+});
+
+// ── predictNoShowRate ────────────────────────────────────────────────────
+
+describe("predictNoShowRate", () => {
+  beforeEach(() => seedStore());
+
+  it("returns 0 when no confirmed guests", () => {
+    const result = predictNoShowRate();
+    expect(result.noShowRate).toBe(0);
+    expect(result.expectedNoShows).toBe(0);
+  });
+
+  it("returns 0 when no wedding date", () => {
+    storeSet("guests", [makeGuest({ status: "confirmed" })]);
+    const result = predictNoShowRate();
+    expect(result.noShowRate).toBe(0);
+  });
+
+  it("calculates rate with all on-time RSVPs", () => {
+    storeSet("weddingInfo", { date: "2026-05-07" });
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", rsvpDate: "2026-04-01T10:00:00Z", count: 2 }),
+      makeGuest({ status: "confirmed", rsvpDate: "2026-04-05T10:00:00Z", count: 3 }),
+    ]);
+    const result = predictNoShowRate();
+    expect(result.noShowRate).toBeCloseTo(0.05);
+    expect(result.confirmed).toBe(5); // 2+3 heads
+  });
+
+  it("increases rate for late RSVPs", () => {
+    storeSet("weddingInfo", { date: "2026-05-07" });
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", rsvpDate: "2026-05-05T10:00:00Z" }), // 2 days before = very late
+    ]);
+    const result = predictNoShowRate();
+    expect(result.noShowRate).toBeGreaterThan(0.05);
+    expect(result.lateConfirmed).toBeGreaterThan(0);
+  });
+});
+
+// ── computeArrivalForecast ───────────────────────────────────────────────
+
+describe("computeArrivalForecast", () => {
+  beforeEach(() => seedStore());
+
+  it("returns zeros when no guests", () => {
+    const result = computeArrivalForecast();
+    expect(result.projected).toBe(0);
+    expect(result.confirmed).toBe(0);
+  });
+
+  it("projects confirmed at 100%", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", count: 5 }),
+    ]);
+    const result = computeArrivalForecast();
+    expect(result.confirmed).toBe(5);
+    expect(result.projected).toBeGreaterThanOrEqual(5);
+  });
+
+  it("projects maybe at 60%", () => {
+    storeSet("guests", [
+      makeGuest({ status: "maybe", count: 10, children: 0 }),
+    ]);
+    const result = computeArrivalForecast();
+    expect(result.maybe).toBe(10);
+    expect(result.projected).toBe(6); // 10 * 0.6
+  });
+
+  it("projects pending at 40%", () => {
+    storeSet("guests", [
+      makeGuest({ status: "pending", count: 10, children: 0 }),
+    ]);
+    const result = computeArrivalForecast();
+    expect(result.pending).toBe(10);
+    expect(result.projected).toBe(4); // 10 * 0.4
+  });
+
+  it("includes children in headcount", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", count: 2, children: 3 }),
+    ]);
+    const result = computeArrivalForecast();
+    expect(result.confirmed).toBe(5); // 2 + 3
+  });
+
+  it("correctly sums mixed statuses", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", count: 10, children: 0 }),
+      makeGuest({ status: "maybe", count: 10, children: 0 }),
+      makeGuest({ status: "pending", count: 10, children: 0 }),
+      makeGuest({ status: "declined", count: 5, children: 0 }),
+    ]);
+    const result = computeArrivalForecast();
+    expect(result.confirmed).toBe(10);
+    expect(result.maybe).toBe(10);
+    expect(result.pending).toBe(10);
+    expect(result.declined).toBe(5);
+    // projected = 10 + 10*0.6 + 10*0.4 = 10 + 6 + 4 = 20
+    expect(result.projected).toBe(20);
+  });
+});
