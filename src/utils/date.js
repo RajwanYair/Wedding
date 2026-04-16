@@ -4,23 +4,20 @@
  * All dates use the Asia/Jerusalem timezone.
  */
 
+import { formatDate } from "../core/i18n.js";
+
 const TZ = "Asia/Jerusalem";
 
 /**
- * Format an ISO date string (or Date) in Hebrew locale.
+ * Format an ISO date string (or Date) in the current app locale.
+ * Falls back to Hebrew locale if i18n module not ready.
  * @param {string|Date} iso
  * @returns {string}  e.g. "יום שישי, 12 בספטמבר 2025"
  */
 export function formatDateHebrew(iso) {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("he-IL", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: TZ,
-  });
+  return formatDate(d, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 }
 
 /**

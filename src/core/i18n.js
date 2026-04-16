@@ -73,3 +73,43 @@ export function applyI18n(root = document) {
     if (key) /** @type {HTMLElement} */ (el).title = t(key);
   });
 }
+
+// ── F3.2.4 / F3.2.5 — Intl formatting helpers ──────────────────────────
+
+/** Locale string matching current language: "he-IL" or "en-IL" */
+function _locale() {
+  return _lang === "en" ? "en-IL" : "he-IL";
+}
+
+/**
+ * Format a date string or Date using Intl.DateTimeFormat, respecting current locale.
+ * @param {string | Date | number} value  ISO string, Date, or timestamp
+ * @param {Intl.DateTimeFormatOptions} [opts]
+ * @returns {string}
+ */
+export function formatDate(value, opts) {
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return String(value);
+  const defaults = { year: "numeric", month: "long", day: "numeric", timeZone: "Asia/Jerusalem" };
+  return new Intl.DateTimeFormat(_locale(), { ...defaults, ...opts }).format(d);
+}
+
+/**
+ * Format a number using Intl.NumberFormat, respecting current locale.
+ * @param {number} value
+ * @param {Intl.NumberFormatOptions} [opts]
+ * @returns {string}
+ */
+export function formatNumber(value, opts) {
+  return new Intl.NumberFormat(_locale(), opts).format(value);
+}
+
+/**
+ * Format a number as currency (ILS by default).
+ * @param {number} value
+ * @param {string} [currency]
+ * @returns {string}
+ */
+export function formatCurrency(value, currency = "ILS") {
+  return new Intl.NumberFormat(_locale(), { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
+}
