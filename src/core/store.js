@@ -78,6 +78,18 @@ function _scheduleNotify(key) {
 
 // ── Persistence ───────────────────────────────────────────────────────────
 
+/** @type {((key: string, err: unknown) => void) | null} */
+let _onStorageError = null;
+
+/**
+ * Register a callback invoked when localStorage persistence fails (F1.5.5).
+ * Useful for surfacing quota errors in the UI or triggering cleanup.
+ * @param {(key: string, err: unknown) => void} fn
+ */
+export function onStorageError(fn) {
+  _onStorageError = fn;
+}
+
 function _scheduleSave(key) {
   if (_persistMap.has(key)) _dirty.add(key);
   if (_saveTimer !== null) clearTimeout(_saveTimer);
@@ -93,6 +105,7 @@ function _flush() {
       localStorage.setItem(pfx + storageKey, JSON.stringify(_state[key]));
     } catch (err) {
       console.warn(`[store] Failed to persist "${key}":`, err);
+      _onStorageError?.(key, err);
     }
   });
   _dirty.clear();

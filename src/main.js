@@ -40,7 +40,7 @@ import {
   initSW,
   initInstallPrompt,
 } from "./core/ui.js";
-import { injectTemplate } from "./core/template-loader.js";
+import { injectTemplate, prefetchTemplates } from "./core/template-loader.js";
 
 // ── Extracted handler modules ─────────────────────────────────────────────
 import { registerGuestHandlers } from "./handlers/guest-handlers.js";
@@ -332,6 +332,9 @@ function _buildStoreDefs() {
 
   // S18.1 — Init queue monitor (updates badge live)
   initQueueMonitor();
+
+  // F1.6.3 — Prefetch likely-next section templates on idle
+  prefetchTemplates(["guests", "tables", "rsvp", "analytics"]);
 })();
 
 // ── S9.2 Event Switcher ──────────────────────────────────────────────────

@@ -118,6 +118,15 @@ const _COL_ORDER = {
   gallery: ["id", "caption", "credit", "addedAt"],
 };
 
+// F1.5.4 — Column order validation (dev-only guard)
+if (typeof console !== "undefined" && console.assert) {
+  for (const [key, cols] of Object.entries(_COL_ORDER)) {
+    console.assert(Array.isArray(cols) && cols.length > 0, `_COL_ORDER[${key}] must be a non-empty array`);
+    console.assert(cols[0] === "id", `_COL_ORDER[${key}] first column must be "id", got "${cols[0]}"`);
+    console.assert(new Set(cols).size === cols.length, `_COL_ORDER[${key}] has duplicate columns`);
+  }
+}
+
 /**
  * Convert a record to a row array in the correct column order for the sheet.
  * @param {Record<string, unknown>} record

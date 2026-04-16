@@ -71,15 +71,18 @@ export function showToast(message, type = "info", duration = _TOAST_DURATION) {
 let _modalOpener = /** @type {HTMLElement | null} */ (null);
 
 /** @type {Record<string, () => Promise<{ default: string }>>} */
-const _modalLoaders = {
-  guestModal: () => import("../../src/modals/guestModal.html?raw"),
-  tableModal: () => import("../../src/modals/tableModal.html?raw"),
-  vendorModal: () => import("../../src/modals/vendorModal.html?raw"),
-  expenseModal: () => import("../../src/modals/expenseModal.html?raw"),
-  timelineModal: () => import("../../src/modals/timelineModal.html?raw"),
-  galleryLightbox: () => import("../../src/modals/galleryLightbox.html?raw"),
-  conflictModal: () => import("../../src/modals/conflictModal.html?raw"),
-};
+const _modalGlob = import.meta.glob("../modals/*.html", {
+  query: "?raw",
+  eager: false,
+});
+
+/** @type {Map<string, () => Promise<{ default: string }>>} */
+const _modalLoaders = new Map();
+for (const [path, loader] of Object.entries(_modalGlob)) {
+  // path => "../modals/guestModal.html" → "guestModal"
+  const match = path.match(/\/([^/]+)\.html$/);
+  if (match) _modalLoaders.set(match[1], /** @type {any} */ (loader));
+}
 
 /**
  * Lazy-load modal HTML into an empty shell div on first open.
@@ -88,8 +91,11 @@ const _modalLoaders = {
  */
 async function _ensureModalLoaded(modal, modalId) {
   if (modal.dataset.loaded === "1") return;
-  const loader = _modalLoaders[modalId];
-  if (!loader) return;
+  const loader = _modalLoaders.get(modalId);
+  if (!loader) {
+    console.warn(`[ui] No modal template found for: ${modalId}`);
+    return;
+  }
   try {
     const { default: html } = await loader();
     modal.innerHTML = html; // safe: templates from src/modals/ (no user input)

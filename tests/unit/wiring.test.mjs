@@ -375,8 +375,15 @@ function extractHandlers() {
   return [...new Set([...combined.matchAll(/on\("([a-zA-Z]+)"/g)].map((m) => m[1]))];
 }
 
-/** Extract _modalLoaders keys from ui.js */
+/** Extract modal loader keys from ui.js — supports both glob-based Map and object literal */
 function extractModalLoaderKeys() {
+  // New: import.meta.glob("../modals/*.html") → filenames auto-discovered
+  if (UI_JS.includes('import.meta.glob("../modals/')) {
+    return readdirSync(resolve(root, "src", "modals"))
+      .filter((f) => f.endsWith(".html"))
+      .map((f) => f.replace(/\.html$/, ""));
+  }
+  // Legacy: object literal _modalLoaders = { guestModal: ... }
   const block = UI_JS.match(/const _modalLoaders\s*=\s*\{([\s\S]*?)\};/);
   if (!block) return [];
   return [...block[1].matchAll(/([a-zA-Z]+)\s*:/g)].map((m) => m[1]);
