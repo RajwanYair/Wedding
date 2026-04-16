@@ -43,6 +43,10 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderFollowUpList));
   // S20.4 invitation stats
   _unsubs.push(storeSubscribe("guests", renderInvitationStats));
+  // S22.1 check-in progress bar
+  _unsubs.push(storeSubscribe("guests", renderCheckinProgress));
+  // S22.5 guest target ring
+  _unsubs.push(storeSubscribe("guests", renderGuestTargetRing));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -57,6 +61,8 @@ export function mount(_container) {
   renderVendorCategories(); // S19.3
   renderFollowUpList(); // S19.4
   renderInvitationStats(); // S20.4
+  renderCheckinProgress(); // S22.1
+  renderGuestTargetRing(); // S22.5
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -523,4 +529,92 @@ export function renderInvitationStats() {
     item.innerHTML = `<div class="invite-stat-val">${val}</div><div class="invite-stat-label">${_escDash(label)}${sub ? ` <span class="u-text-muted">(${sub})</span>` : ""}</div>`;
     el.appendChild(item);
   });
+}
+
+// ── S22.1 Check-in Progress Bar ───────────────────────────────────────────
+
+/**
+ * Render a check-in progress bar in #dashCheckinCard.
+ */
+export function renderCheckinProgress() {
+  const card = document.getElementById("dashCheckinCard");
+  if (!card) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed").length;
+  const arrived = guests.filter((g) => g.checkedIn).length;
+  const pct = confirmed > 0 ? Math.min(100, Math.round((arrived / confirmed) * 100)) : 0;
+  const bar = document.getElementById("dashCheckinBar");
+  if (bar) bar.style.width = `${pct}%`;
+  const label = document.getElementById("dashCheckinLabel");
+  if (label) label.textContent = `${arrived} / ${confirmed} (${pct}%)`;
+}
+
+// ── S22.5 Confirmed Guest Target Ring ─────────────────────────────────────
+
+/**
+ * Render an SVG donut ring in #dashGuestTargetCard showing confirmed vs total invited.
+ */
+export function renderGuestTargetRing() {
+  const svg = document.getElementById("guestTargetRing");
+  if (!svg) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const total = guests.length;
+  const confirmed = guests.filter((g) => g.status === "confirmed").length;
+  const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+
+  const R = 48, CX = 60, CY = 60;
+  const circ = 2 * Math.PI * R;
+  const dash = (pct / 100) * circ;
+
+  svg.setAttribute("viewBox", "0 0 120 120");
+  svg.setAttribute("width", "120");
+  svg.setAttribute("height", "120");
+  svg.textContent = "";
+
+  // Background circle
+  const bg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  bg.setAttribute("cx", String(CX));
+  bg.setAttribute("cy", String(CY));
+  bg.setAttribute("r", String(R));
+  bg.setAttribute("fill", "none");
+  bg.setAttribute("stroke", "var(--card-border)");
+  bg.setAttribute("stroke-width", "10");
+  svg.appendChild(bg);
+
+  // Progress arc
+  if (pct > 0) {
+    const arc = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    arc.setAttribute("cx", String(CX));
+    arc.setAttribute("cy", String(CY));
+    arc.setAttribute("r", String(R));
+    arc.setAttribute("fill", "none");
+    arc.setAttribute("stroke", "var(--color-success, #22c55e)");
+    arc.setAttribute("stroke-width", "10");
+    arc.setAttribute("stroke-linecap", "round");
+    arc.setAttribute("stroke-dasharray", `${dash} ${circ}`);
+    arc.setAttribute("stroke-dashoffset", String(circ / 4));
+    arc.setAttribute("transform", `rotate(-90 ${CX} ${CY})`);
+    svg.appendChild(arc);
+  }
+
+  // Centre label
+  const textPct = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  textPct.setAttribute("x", String(CX));
+  textPct.setAttribute("y", String(CY - 4));
+  textPct.setAttribute("text-anchor", "middle");
+  textPct.setAttribute("dominant-baseline", "middle");
+  textPct.setAttribute("font-size", "18");
+  textPct.setAttribute("font-weight", "700");
+  textPct.setAttribute("fill", "var(--text-primary)");
+  textPct.textContent = `${pct}%`;
+  svg.appendChild(textPct);
+
+  const textSub = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  textSub.setAttribute("x", String(CX));
+  textSub.setAttribute("y", String(CY + 14));
+  textSub.setAttribute("text-anchor", "middle");
+  textSub.setAttribute("font-size", "10");
+  textSub.setAttribute("fill", "var(--text-muted)");
+  textSub.textContent = `${confirmed}/${total}`;
+  svg.appendChild(textSub);
 }

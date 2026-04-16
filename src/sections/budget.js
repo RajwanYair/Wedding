@@ -20,8 +20,12 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("weddingInfo", renderBudget));
   _unsubs.push(storeSubscribe("expenses", renderBudgetProgress));
   _unsubs.push(storeSubscribe("vendors", renderBudgetProgress));
+  // S22.3 expense category breakdown
+  _unsubs.push(storeSubscribe("expenses", renderExpenseCategoryBreakdown));
+  _unsubs.push(storeSubscribe("vendors", renderExpenseCategoryBreakdown));
   renderBudget();
   renderBudgetProgress();
+  renderExpenseCategoryBreakdown(); // S22.3
 }
 
 export function unmount() {
@@ -210,4 +214,77 @@ export function renderBudgetProgress() {
         ? `₪${spent.toLocaleString()} / ₪${target.toLocaleString()} (${pct}%)`
         : `₪${spent.toLocaleString()}`;
   }
+}
+
+// ── S22.3 Expense Category Breakdown ──────────────────────────────────────
+
+/**
+ * Render an expense breakdown by category in #expenseCategoryBreakdown.
+ * Shows each category with count, total amount, and % of all expenses.
+ */
+export function renderExpenseCategoryBreakdown() {
+  const tbody = document.getElementById("expenseCategoryTbody");
+  if (!tbody) return;
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+
+  // Bucket expenses by category
+  /** @type {Map<string, { count: number, total: number }>} */
+  const cats = new Map();
+  expenses.forEach((e) => {
+    const key = e.category || t("expense_other");
+    const cur = cats.get(key) ?? { count: 0, total: 0 };
+    cats.set(key, { count: cur.count + 1, total: cur.total + (Number(e.amount) || 0) });
+  });
+  // Merge vendor payments as a separate category
+  const vendorTotal = vendors.reduce((s, v) => s + (Number(v.paid) || 0), 0);
+  if (vendorTotal > 0) {
+    const vk = t("col_vendors");
+    const cur = cats.get(vk) ?? { count: 0, total: 0 };
+    cats.set(vk, { count: cur.count + vendors.length, total: cur.total + vendorTotal });
+  }
+
+  const grandTotal = expenses.reduce((s, e) => s + (Number(e.amount) || 0), 0) + vendorTotal;
+  tbody.textContent = "";
+
+  if (cats.size === 0) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "u-text-center u-text-muted";
+    td.textContent = t("expense_empty");
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  [...cats.entries()]
+    .sort((a, b) => b[1].total - a[1].total)
+    .forEach(([cat, { count, total }]) => {
+      const pct = grandTotal > 0 ? Math.round((total / grandTotal) * 100) : 0;
+      const tr = document.createElement("tr");
+      const cells = [
+        cat,
+        String(count),
+        `₪${total.toLocaleString()}`,
+        `${pct}%`,
+      ];
+      cells.forEach((txt) => {
+        const td = document.createElement("td");
+        td.textContent = txt;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+  // Total row
+  const totalTr = document.createElement("tr");
+  totalTr.className = "budget-vs-actual-total";
+  [`${t("budget_total") || "סה״כ"}`, "", `₪${grandTotal.toLocaleString()}`, "100%"].forEach((txt, i) => {
+    const td = document.createElement("td");
+    td.textContent = txt;
+    if (i === 0) td.style.fontWeight = "700";
+    totalTr.appendChild(td);
+  });
+  tbody.appendChild(totalTr);
 }

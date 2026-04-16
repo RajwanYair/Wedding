@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [4.6.0] — 2025-07-20
+
+### Added — S21 Guest Analytics & Vendor Enrichment
+
+- **S21.1 Meal count summary bar**: Colour-coded chip bar above the guest table showing per-meal-type counts across all guests (regular, vegetarian, vegan, kosher, gluten-free, other).
+- **S21.2 Vendor contract URL field**: Optional URL input in the vendor modal stores a link to the signed contract; 📄 icon button in the vendor row opens it in a new tab.
+- **S21.3 Gift log CSV export**: "Export gifts" button in check-in section generates a CSV of all guests who have a gift recorded (name, phone, gift, arrived, check-in time). Also surfaces the existing "Export check-in report" button.
+- **S21.4 Per-table place-card print button**: 🃏 button on each table card triggers `printPlaceCards(tableId)` for that table only — no need to print all tables at once.
+- **S21.5 Guest notes expandable row**: 📝 button in the guest action cell (visible only when the guest has notes) toggles an inline expansion row showing the full notes text.
+
+### Added — S22 Dashboard & Analytics Depth
+
+- **S22.1 Check-in progress card**: New dashboard card with a progress bar and counter showing how many confirmed guests have checked in (`arrived / confirmed (%)` ).
+- **S22.2 Expense trend SVG chart**: Pure SVG line chart in the analytics section shows total expenses bucketed by month for the last 6 months.
+- **S22.3 Expense category breakdown table**: New table card in the budget section shows each expense category with entry count, total amount, and percentage of overall spend — vendor payments included as a separate category.
+- **S22.4 RSVP source field**: Guests now carry a `rsvpSource` field (web / WhatsApp / phone / manual / other). Editable via select in the guest modal; badges (🌐 💬 📞 ❓) appear in the action cell for non-manual sources.
+- **S22.5 Confirmed guest target ring**: SVG donut ring on the dashboard shows the percentage of all invited guests who have confirmed attendance, with numeric breakdown.
+
 ## [4.5.0] — 2025-07-18
 
 ### Added — S19 Vendor Management & Guest Intelligence

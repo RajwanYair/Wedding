@@ -1514,6 +1514,9 @@ body.ptr--refreshing::before {
 .u-flex-wrap { display: flex; flex-wrap: wrap; }
 .u-flex-1 { flex: 1; }
 .u-flex-2 { flex: 2; }
+.u-justify-center { justify-content: center; }
+.u-pt-sm { padding-top: 0.5rem; }
+.u-pb-xs { padding-bottom: 0.3rem; }
 .u-w-full { width: 100%; }
 .u-overflow-x { overflow-x: auto; }
 .u-overflow-y { overflow-y: auto; }
@@ -2402,6 +2405,25 @@ kbd {
 .invite-stat-item { text-align: center; }
 .invite-stat-val { font-size: 1.75rem; font-weight: 700; color: var(--color-primary, #7c3aed); }
 .invite-stat-label { font-size: 0.8rem; color: var(--color-muted, #6b7280); }
+
+/* S21.1 Meal summary bar */
+.meal-summary-bar { display: flex; gap: 0.4rem; flex-wrap: wrap; padding: 0.35rem 0; min-height: 1.8rem; }
+.meal-chip { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: var(--bg-card); border: 1px solid var(--card-border); white-space: nowrap; }
+
+/* S21.5 Guest notes expandable row */
+.guest-notes-row td { background: var(--bg-secondary, #f5f5f5); }
+.guest-notes-cell { padding: 0.45rem 1rem !important; font-size: 0.85rem; color: var(--text-muted, #6b7280); border-bottom: 1px solid var(--card-border); font-style: italic; }
+
+/* S22.1 Dashboard check-in progress */
+[id="dashCheckinLabel"] { font-size: 0.85rem; color: var(--text-muted, #6b7280); margin-top: 0.25rem; }
+
+/* S22.3 Expense category breakdown table */
+.budget-vs-actual-table td { padding: 0.35rem 0.6rem; font-size: 0.875rem; border-bottom: 1px solid var(--card-border); }
+.budget-vs-actual-table thead th { padding: 0.35rem 0.6rem; font-size: 0.8rem; }
+.budget-vs-actual-total td { border-top: 2px solid var(--card-border); font-weight: 700; }
+
+/* S22.5 Guest target ring layout */
+[id="dashGuestTargetCard"] .u-flex { justify-content: center; padding: 0.5rem 0; }
 
 } /* end @layer components */
 

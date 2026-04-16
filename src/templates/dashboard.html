@@ -200,3 +200,18 @@
         <div class="card-header"><span class="icon">✉️</span> <span data-i18n="invite_stats_title">סטטיסטיקת הזמנות</span></div>
         <div id="dashInviteStats" class="invite-stats-grid"></div>
       </div>
+
+      <!-- S22.1 Check-in progress card -->
+      <div class="card" id="dashCheckinCard">
+        <div class="card-header"><span class="icon">✅</span> <span data-i18n="dash_checkin_progress_title">התקדמות קבלת אורחים</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="dashCheckinBar"></div></div>
+        <div id="dashCheckinLabel" class="u-text-center u-mt-xs u-text-sm"></div>
+      </div>
+
+      <!-- S22.5 Confirmed guest target ring -->
+      <div class="card" id="dashGuestTargetCard">
+        <div class="card-header"><span class="icon">🎯</span> <span data-i18n="dash_guest_target_title">אישורי הגעה</span></div>
+        <div class="u-flex u-justify-center u-pt-sm">
+          <svg id="guestTargetRing" viewBox="0 0 120 120" width="120" height="120" aria-label="guest confirmation ring"></svg>
+        </div>
+      </div>

@@ -85,6 +85,11 @@ export function saveGuest(data, existingId = null) {
       values: ["regular", "vegetarian", "vegan", "gluten_free", "kosher"],
       default: "regular",
     },
+    rsvpSource: {
+      type: "enum",
+      values: ["web", "whatsapp", "phone", "manual", "other"],
+      default: "manual",
+    },
   };
   const { value, errors } = sanitize(data, schema);
   if (errors.length) return { ok: false, errors };
@@ -132,7 +137,11 @@ export function deleteGuest(id) {
   const all = /** @type {any[]} */ (storeGet("guests") ?? []);
   const victim = all.find((g) => g.id === id);
   if (victim) {
-    pushUndo(`Delete guest ${victim.firstName}`, "guests", JSON.parse(JSON.stringify(all)));
+    pushUndo(
+      `Delete guest ${victim.firstName}`,
+      "guests",
+      JSON.parse(JSON.stringify(all)),
+    );
   }
   const guests = all.filter((g) => g.id !== id);
   storeSet("guests", guests);
@@ -203,7 +212,9 @@ export function renderGuests() {
     guests = guests.filter((g) => g.side === _multiFilter.side);
   }
   if (_multiFilter.group !== "all") {
-    guests = guests.filter((g) => (g.group || "friends") === _multiFilter.group);
+    guests = guests.filter(
+      (g) => (g.group || "friends") === _multiFilter.group,
+    );
   }
   if (_multiFilter.meal !== "all") {
     guests = guests.filter((g) => (g.meal || "regular") === _multiFilter.meal);
@@ -218,14 +229,17 @@ export function renderGuests() {
 
   // S17.1 Full-text search (name, phone, email, notes, group, meal, tags)
   if (_searchQuery) {
-    guests = guests.filter((g) =>
-      `${g.firstName} ${g.lastName}`.toLowerCase().includes(_searchQuery) ||
-      (g.phone || "").includes(_searchQuery) ||
-      (g.email || "").toLowerCase().includes(_searchQuery) ||
-      (g.notes || "").toLowerCase().includes(_searchQuery) ||
-      (g.meal || "").toLowerCase().includes(_searchQuery) ||
-      (g.group || "").toLowerCase().includes(_searchQuery) ||
-      (Array.isArray(g.tags) ? g.tags.join(" ") : "").toLowerCase().includes(_searchQuery),
+    guests = guests.filter(
+      (g) =>
+        `${g.firstName} ${g.lastName}`.toLowerCase().includes(_searchQuery) ||
+        (g.phone || "").includes(_searchQuery) ||
+        (g.email || "").toLowerCase().includes(_searchQuery) ||
+        (g.notes || "").toLowerCase().includes(_searchQuery) ||
+        (g.meal || "").toLowerCase().includes(_searchQuery) ||
+        (g.group || "").toLowerCase().includes(_searchQuery) ||
+        (Array.isArray(g.tags) ? g.tags.join(" ") : "")
+          .toLowerCase()
+          .includes(_searchQuery),
     );
   }
 
@@ -294,6 +308,25 @@ export function renderGuests() {
     // Actions cell
     const actionsTd = document.createElement("td");
     actionsTd.className = "u-text-nowrap";
+    // S21.5 Notes expand button
+    if (g.notes) {
+      const notesBtn = document.createElement("button");
+      notesBtn.className = "btn btn-icon btn-small u-mr-xs";
+      notesBtn.title = t("guest_notes_expand");
+      notesBtn.textContent = "📝";
+      notesBtn.dataset.action = "toggleGuestNotes";
+      notesBtn.dataset.actionArg = g.id;
+      actionsTd.appendChild(notesBtn);
+    }
+    // S22.4 RSVP source badge
+    if (g.rsvpSource && g.rsvpSource !== "manual") {
+      const srcBadge = document.createElement("span");
+      srcBadge.className = "badge badge--info u-mr-xs";
+      srcBadge.title = t("label_rsvp_source");
+      const srcIcons = { web: "🌐", whatsapp: "💬", phone: "📞", other: "❓" };
+      srcBadge.textContent = srcIcons[g.rsvpSource] ?? "❓";
+      actionsTd.appendChild(srcBadge);
+    }
     // S19.2 VIP star button
     const vipBtn = document.createElement("button");
     vipBtn.className = `btn btn-icon btn-small u-mr-xs${g.vip ? " btn-vip-active" : ""}`;
@@ -322,6 +355,35 @@ export function renderGuests() {
   if (empty) {
     empty.classList.toggle("u-hidden", guests.length > 0);
   }
+  renderMealSummary();
+}
+
+/**
+ * S21.1 — Render a meal-type summary bar in #mealSummaryBar.
+ * Shows counts for each meal type across ALL guests (not filtered).
+ */
+export function renderMealSummary() {
+  const bar = document.getElementById("mealSummaryBar");
+  if (!bar) return;
+  const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const MEAL_TYPES = [
+    { key: "regular", icon: "🍽️" },
+    { key: "vegetarian", icon: "🥗" },
+    { key: "vegan", icon: "🌱" },
+    { key: "gluten_free", icon: "🌾" },
+    { key: "kosher", icon: "✡️" },
+    { key: "other", icon: "🍴" },
+  ];
+  bar.textContent = "";
+  MEAL_TYPES.forEach(({ key, icon }) => {
+    const count = allGuests.filter((g) => (g.meal || "regular") === key).length;
+    if (count === 0) return;
+    const chip = document.createElement("span");
+    chip.className = "meal-chip";
+    chip.title = t(`meal_${key}`);
+    chip.textContent = `${icon} ${t(`meal_${key}`)} ${count}`;
+    bar.appendChild(chip);
+  });
 }
 
 /**

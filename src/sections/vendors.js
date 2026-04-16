@@ -40,6 +40,7 @@ export function saveVendor(data, existingId = null) {
     paid: { type: "number", required: false, min: 0, default: 0 },
     dueDate: { type: "string", required: false, maxLength: 20 },
     notes: { type: "string", required: false, maxLength: 500 },
+    contractUrl: { type: "string", required: false, maxLength: 500 },
   });
   if (errors.length) return { ok: false, errors };
 
@@ -65,7 +66,12 @@ export function saveVendor(data, existingId = null) {
 export function deleteVendor(id) {
   const all = /** @type {any[]} */ (storeGet("vendors") ?? []);
   const victim = all.find((v) => v.id === id);
-  if (victim) pushUndo(`Delete vendor ${victim.name}`, "vendors", JSON.parse(JSON.stringify(all)));
+  if (victim)
+    pushUndo(
+      `Delete vendor ${victim.name}`,
+      "vendors",
+      JSON.parse(JSON.stringify(all)),
+    );
   const vendors = all.filter((v) => v.id !== id);
   storeSet("vendors", vendors);
   enqueueWrite("vendors", () => syncStoreKeyToSheets("vendors"));
@@ -86,10 +92,13 @@ export function renderVendors() {
 
     // S14.3 — Overdue detection
     const now = new Date();
-    const isOverdue = v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0);
+    const isOverdue =
+      v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0);
     if (isOverdue) tr.classList.add("vendor-row--overdue");
 
-    const dueDateStr = v.dueDate ? new Date(v.dueDate).toLocaleDateString("he-IL") : "—";
+    const dueDateStr = v.dueDate
+      ? new Date(v.dueDate).toLocaleDateString("he-IL")
+      : "—";
     const cells = [
       v.category || "",
       v.name || "",
@@ -131,6 +140,17 @@ export function renderVendors() {
         waLink.textContent = "💬";
         actionsTd.appendChild(waLink);
       }
+    }
+    // S21.2 Contract URL link
+    if (v.contractUrl) {
+      const contractLink = document.createElement("a");
+      contractLink.href = v.contractUrl;
+      contractLink.target = "_blank";
+      contractLink.rel = "noopener noreferrer";
+      contractLink.className = "btn btn-small btn-ghost u-mr-xs";
+      contractLink.title = t("vendor_open_contract");
+      contractLink.textContent = "📄";
+      actionsTd.appendChild(contractLink);
     }
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
@@ -229,6 +249,7 @@ export function openVendorForEdit(id) {
   setVal("vendorPaid", v.paid ?? 0);
   setVal("vendorDueDate", v.dueDate ?? "");
   setVal("vendorNotes", v.notes ?? "");
+  setVal("vendorContractUrl", v.contractUrl ?? "");
   const title = document.getElementById("vendorModalTitle");
   if (title) title.setAttribute("data-i18n", "modal_edit_vendor");
 }

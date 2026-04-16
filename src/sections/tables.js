@@ -140,15 +140,22 @@ export function renderTables() {
 
   floor.textContent = "";
   tables.forEach((tb) => {
-    const seated = guests.filter((g) => g.tableId === tb.id).reduce((s, g) => s + (g.count || 1), 0);
+    const seated = guests
+      .filter((g) => g.tableId === tb.id)
+      .reduce((s, g) => s + (g.count || 1), 0);
     const cap = tb.capacity || 1;
     const fillPct = Math.round((seated / cap) * 100);
     const fillClass =
-      fillPct >= 100 ? "table-card--full" :
-      fillPct >= 85 ? "table-card--almost" :
-      fillPct >= 50 ? "table-card--half" : "";
+      fillPct >= 100
+        ? "table-card--full"
+        : fillPct >= 85
+          ? "table-card--almost"
+          : fillPct >= 50
+            ? "table-card--half"
+            : "";
     const card = document.createElement("div");
-    card.className = `table-card table-card--${tb.shape || "round"} ${fillClass}`.trim();
+    card.className =
+      `table-card table-card--${tb.shape || "round"} ${fillClass}`.trim();
     card.dataset.id = tb.id;
 
     const name = document.createElement("h3");
@@ -170,6 +177,14 @@ export function renderTables() {
     editBtn.dataset.action = "openEditTableModal";
     editBtn.dataset.actionArg = tb.id;
     actions.appendChild(editBtn);
+    // S21.4 Per-table place-card print button
+    const printCardsBtn = document.createElement("button");
+    printCardsBtn.className = "btn btn-small btn-ghost u-ml-xs";
+    printCardsBtn.title = t("print_place_cards");
+    printCardsBtn.textContent = "🃏";
+    printCardsBtn.dataset.action = "printTablePlaceCards";
+    printCardsBtn.dataset.actionArg = tb.id;
+    actions.appendChild(printCardsBtn);
     const delBtn = document.createElement("button");
     delBtn.className = "btn btn-small btn-danger u-ml-xs";
     delBtn.textContent = t("btn_delete");

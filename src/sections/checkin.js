@@ -431,6 +431,34 @@ export function checkInByTable(tableId) {
   }
 }
 
+/**
+ * S21.3 — Export guests who received gifts as a CSV download.
+ */
+export function exportGiftsCSV() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const gifted = guests.filter((g) => g.gift && String(g.gift).trim() !== "");
+  const header = "\uFEFFשם,טלפון,מתנה,הגיע?,זמן כניסה";
+  const rows = gifted.map((g) =>
+    [
+      `"${[g.firstName, g.lastName].filter(Boolean).join(" ").replace(/"/g, '""')}"`,
+      `"${g.phone || ""}"`,
+      `"${String(g.gift || "").replace(/"/g, '""')}"`,
+      g.checkedIn ? "כן" : "לא",
+      g.checkedInAt ? new Date(g.checkedInAt).toLocaleString("he-IL") : "",
+    ].join(","),
+  );
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "gifts.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 // ── S20.5 Accessibility Filter ───────────────────────────────────────────
 
 /**

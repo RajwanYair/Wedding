@@ -1,11 +1,11 @@
 # Wedding Manager — Claude Config
 
-> Full spec: `.github/copilot-instructions.md` · v4.5.0
+> Full spec: `.github/copilot-instructions.md` · v4.6.0
 
 ## Commands
 
 ```bash
-npm test                  # 1765+ tests (17+ suites) — must all pass · 0 Node warnings
+npm test                  # 1772+ tests (17+ suites) — must all pass · 0 Node warnings
 npm run lint              # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run lint:fix          # Auto-fix CSS + JS
 npm run ci                # lint + test (same as CI)
@@ -55,7 +55,7 @@ git add -A && git commit -m "<type>: <summary>" && git push
 | GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
 | `sanitize(input,schema)` | Use for all user input validation — returns `{ value, errors }` |
 | `enqueueWrite(key,fn)` | Use instead of direct `syncStoreKeyToSheets()` calls — debounces at 1.5 s |
-| Tests count | 1733+ tests, 17+ suites — update header comment in `wedding.test.mjs` when adding |
+| Tests count | 1772+ tests, 17+ suites — update header comment in `wedding.test.mjs` when adding |
 | ESLint disable | Any `// eslint-disable` must reference a real violation — stale ones error (`reportUnusedDisableDirectives`) |
 | Offline queue retries | `_MAX_RETRIES = 5`, `_RETRY_BASE_MS = 10_000` in `js/offline-queue.js` (S3.9) |
 | GAS backend | `sheets-webapp.gs` v2.0.0 — `ALLOWED_SHEETS` includes Vendors/Expenses/RSVP_Log (S3.5) |

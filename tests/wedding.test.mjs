@@ -55,62 +55,70 @@ const JS = `${JS_FILES}\n${I18N_JSON}`;
 const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
-describe('Version', function() {
-  it("HTML contains v4.5.0", function () {
-    assert.ok(SRC.includes("v4.5.0"));
+describe("Version", function () {
+  it("HTML contains v4.6.0", function () {
+    assert.ok(SRC.includes("v4.6.0"));
   });
 
-  it("SW cache name contains v4.5.0", function () {
-    assert.ok(SW.includes("wedding-v4.5.0"));
+  it("SW cache name contains v4.6.0", function () {
+    assert.ok(SW.includes("wedding-v4.6.0"));
   });
 
-  it("package.json version is 4.5.0", function () {
-    assert.equal(PKG.version, "4.5.0");
+  it("package.json version is 4.6.0", function () {
+    assert.equal(PKG.version, "4.6.0");
   });
 });
 
 // ── HTML Structure ──
-describe('HTML Structure', function() {
-  it('has DOCTYPE', function() {
-    assert.ok(HTML.startsWith('<!DOCTYPE html>'));
+describe("HTML Structure", function () {
+  it("has DOCTYPE", function () {
+    assert.ok(HTML.startsWith("<!DOCTYPE html>"));
   });
 
-  it('has lang="he" and dir="rtl"', function() {
+  it('has lang="he" and dir="rtl"', function () {
     assert.ok(SRC.includes('lang="he"'));
     assert.ok(SRC.includes('dir="rtl"'));
   });
 
-  it('has viewport meta', function() {
+  it("has viewport meta", function () {
     assert.ok(SRC.includes('name="viewport"'));
   });
 
-  it('has charset meta', function() {
+  it("has charset meta", function () {
     assert.ok(SRC.includes('charset="UTF-8"'));
   });
 
-  it('has title', function() {
+  it("has title", function () {
     assert.ok(SRC.includes("<title>"));
   });
 
-  it('links to manifest.json', function() {
+  it("links to manifest.json", function () {
     assert.ok(SRC.includes("manifest.json"));
   });
 
-  it('links to icon.svg', function() {
+  it("links to icon.svg", function () {
     assert.ok(SRC.includes("icon.svg"));
   });
 });
 
 // ── Sections ──
-describe('Sections', function() {
-  const sections = ['dashboard', 'guests', 'tables', 'invitation', 'whatsapp', 'rsvp', 'settings'];
-  sections.forEach(function(sec) {
+describe("Sections", function () {
+  const sections = [
+    "dashboard",
+    "guests",
+    "tables",
+    "invitation",
+    "whatsapp",
+    "rsvp",
+    "settings",
+  ];
+  sections.forEach(function (sec) {
     it(`has section: ${sec}`, function () {
       assert.ok(SRC.includes(`id="sec-${sec}"`));
     });
   });
 
-  it('has navigation tabs', function() {
+  it("has navigation tabs", function () {
     assert.ok(SRC.includes("nav-tabs"));
   });
 });
@@ -118,12 +126,12 @@ describe('Sections', function() {
 // ── SEO & Social Meta ──
 describe("SEO & Social Meta", function () {
   it("has Open Graph title and image", function () {
-    assert.ok(HTML.includes('og:title'), "og:title missing");
-    assert.ok(HTML.includes('og:image'), "og:image missing");
+    assert.ok(HTML.includes("og:title"), "og:title missing");
+    assert.ok(HTML.includes("og:image"), "og:image missing");
   });
 
   it("has Twitter Card meta", function () {
-    assert.ok(HTML.includes('twitter:card'), "twitter:card missing");
+    assert.ok(HTML.includes("twitter:card"), "twitter:card missing");
   });
 
   it("has canonical link", function () {
@@ -135,65 +143,65 @@ describe("SEO & Social Meta", function () {
   });
 
   it("has JSON-LD structured data", function () {
-    assert.ok(HTML.includes('application/ld+json'), "JSON-LD missing");
+    assert.ok(HTML.includes("application/ld+json"), "JSON-LD missing");
     assert.ok(HTML.includes('"@type"'), "JSON-LD @type missing");
   });
 });
 
 // ── i18n ──
-describe('i18n System', function() {
-  it('has data-i18n attributes', function() {
+describe("i18n System", function () {
+  it("has data-i18n attributes", function () {
     assert.ok(SRC.includes("data-i18n="));
   });
 
-  it('has Hebrew translations object', function() {
+  it("has Hebrew translations object", function () {
     assert.ok(
       SRC.includes("I18N_HE") || SRC.includes("he: {") || SRC.includes("he:{"),
     );
   });
 
-  it('has English translations object', function() {
+  it("has English translations object", function () {
     assert.ok(
       SRC.includes("I18N_EN") || SRC.includes("en: {") || SRC.includes("en:{"),
     );
   });
 
-  it('has language toggle button', function() {
+  it("has language toggle button", function () {
     assert.ok(SRC.includes("toggleLanguage"));
   });
 
-  it('has t() function', function() {
+  it("has t() function", function () {
     assert.ok(SRC.includes("function t("));
   });
 
-  it('has applyLanguage function', function() {
+  it("has applyLanguage function", function () {
     assert.ok(SRC.includes("function applyLanguage"));
   });
 });
 
 // ── Themes ──
-describe('Themes', function() {
-  it('has default theme (purple)', function() {
+describe("Themes", function () {
+  it("has default theme (purple)", function () {
     assert.ok(SRC.includes("--accent: #d4a574"));
   });
 
-  it('has rose gold theme', function() {
+  it("has rose gold theme", function () {
     assert.ok(SRC.includes("theme-rosegold"));
   });
 
-  it('has classic gold theme', function() {
+  it("has classic gold theme", function () {
     assert.ok(SRC.includes("theme-gold"));
   });
 
-  it('has emerald theme', function() {
+  it("has emerald theme", function () {
     assert.ok(SRC.includes("theme-emerald"));
   });
 
-  it('has royal blue theme', function() {
+  it("has royal blue theme", function () {
     assert.ok(SRC.includes("theme-royal"));
   });
 
-  it('has cycleTheme function', function() {
+  it("has cycleTheme function", function () {
     assert.ok(SRC.includes("function cycleTheme"));
   });
 });
@@ -894,7 +902,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v4.5.0"));
+    assert.ok(SW.includes("wedding-v4.6.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -5934,210 +5942,437 @@ describe("v3.1.0: src/utils pure functions (source pattern tests)", function () 
 // RSVP section
 describe("RSVP section — v3.3.0 fixes", function () {
   it("rsvp.js uses rsvpPhone element ID", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "rsvp.js"), "utf8");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "rsvp.js"),
+      "utf8",
+    );
     assert.ok(src.includes("rsvpPhone"), "rsvpPhone ID missing in rsvp.js");
   });
 
   it("rsvp.js uses rsvpDetails element ID to reveal form", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "rsvp.js"), "utf8");
-    assert.ok(src.includes("rsvpDetails"), "rsvpDetails reveal ID missing in rsvp.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "rsvp.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("rsvpDetails"),
+      "rsvpDetails reveal ID missing in rsvp.js",
+    );
   });
 
   it("rsvp.js uses rsvpConfirm for confirmation message", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "rsvp.js"), "utf8");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "rsvp.js"),
+      "utf8",
+    );
     assert.ok(src.includes("rsvpConfirm"), "rsvpConfirm ID missing in rsvp.js");
   });
 
   it("rsvp.html has rsvpConfirm element", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "rsvp.html"), "utf8");
-    assert.ok(src.includes('id="rsvpConfirm"'), "rsvpConfirm element missing from rsvp.html");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "rsvp.html"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes('id="rsvpConfirm"'),
+      "rsvpConfirm element missing from rsvp.html",
+    );
   });
 
   it("rsvp.js schema includes maybe status", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "rsvp.js"), "utf8");
-    assert.ok(src.includes('"maybe"'), 'maybe status missing from rsvp schema');
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "rsvp.js"),
+      "utf8",
+    );
+    assert.ok(src.includes('"maybe"'), "maybe status missing from rsvp schema");
   });
 
   it("he.json has rsvp_confirmed and rsvp_declined keys", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"rsvp_confirmed"'), "rsvp_confirmed key missing from he.json");
-    assert.ok(json.includes('"rsvp_declined"'), "rsvp_declined key missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"rsvp_confirmed"'),
+      "rsvp_confirmed key missing from he.json",
+    );
+    assert.ok(
+      json.includes('"rsvp_declined"'),
+      "rsvp_declined key missing from he.json",
+    );
   });
 
   it("en.json has rsvp_confirmed and rsvp_declined keys", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "en.json"), "utf8");
-    assert.ok(json.includes('"rsvp_confirmed"'), "rsvp_confirmed key missing from en.json");
-    assert.ok(json.includes('"rsvp_declined"'), "rsvp_declined key missing from en.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "en.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"rsvp_confirmed"'),
+      "rsvp_confirmed key missing from en.json",
+    );
+    assert.ok(
+      json.includes('"rsvp_declined"'),
+      "rsvp_declined key missing from en.json",
+    );
   });
 });
 
 // Analytics section
 describe("Analytics section — v3.3.0 fixes", function () {
   it("analytics.html has renamed analyticsSideDonut ID", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "analytics.html"), "utf8");
-    assert.ok(src.includes('id="analyticsSideDonut"'), "analyticsSideDonut missing");
-    assert.ok(!src.includes('id="analyticsSideChart"'), "old analyticsSideChart ID still present");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "analytics.html"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes('id="analyticsSideDonut"'),
+      "analyticsSideDonut missing",
+    );
+    assert.ok(
+      !src.includes('id="analyticsSideChart"'),
+      "old analyticsSideChart ID still present",
+    );
   });
 
   it("analytics.html has renamed analyticsMealBar ID", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "analytics.html"), "utf8");
-    assert.ok(src.includes('id="analyticsMealBar"'), "analyticsMealBar missing");
-    assert.ok(!src.includes('id="analyticsMealChart"'), "old analyticsMealChart ID still present");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "analytics.html"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes('id="analyticsMealBar"'),
+      "analyticsMealBar missing",
+    );
+    assert.ok(
+      !src.includes('id="analyticsMealChart"'),
+      "old analyticsMealChart ID still present",
+    );
   });
 
   it("analytics.js renders to analyticsSideDonut and analyticsMealBar", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "analytics.js"), "utf8");
-    assert.ok(src.includes("analyticsSideDonut"), "analyticsSideDonut missing from analytics.js");
-    assert.ok(src.includes("analyticsMealBar"), "analyticsMealBar missing from analytics.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "analytics.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("analyticsSideDonut"),
+      "analyticsSideDonut missing from analytics.js",
+    );
+    assert.ok(
+      src.includes("analyticsMealBar"),
+      "analyticsMealBar missing from analytics.js",
+    );
   });
 
   it("he.json has analytics_meal_summary_title key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"analytics_meal_summary_title"'), "analytics_meal_summary_title missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"analytics_meal_summary_title"'),
+      "analytics_meal_summary_title missing from he.json",
+    );
   });
 });
 
 // Dashboard section
 describe("Dashboard section — v3.3.0 fixes", function () {
   it("dashboard.js calculates groomSide guests", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "dashboard.js"), "utf8");
-    assert.ok(src.includes("groomSide"), "groomSide count missing from dashboard.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "dashboard.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("groomSide"),
+      "groomSide count missing from dashboard.js",
+    );
   });
 
   it("dashboard.js calculates brideSide guests", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "dashboard.js"), "utf8");
-    assert.ok(src.includes("brideSide"), "brideSide count missing from dashboard.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "dashboard.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("brideSide"),
+      "brideSide count missing from dashboard.js",
+    );
   });
 
   it("dashboard.js calculates transport count", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "dashboard.js"), "utf8");
-    assert.ok(src.includes("transport"), "transport count missing from dashboard.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "dashboard.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("transport"),
+      "transport count missing from dashboard.js",
+    );
   });
 });
 
 // Contact collector section
 describe("Contact collector section — v3.3.0 fixes", function () {
   it("contact-collector.js uses contactFormFields ID", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "contact-collector.js"), "utf8");
-    assert.ok(src.includes("contactFormFields"), "contactFormFields ID missing");
-    assert.ok(!src.includes('"contactForm"'), 'old "contactForm" ID still present');
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "contact-collector.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("contactFormFields"),
+      "contactFormFields ID missing",
+    );
+    assert.ok(
+      !src.includes('"contactForm"'),
+      'old "contactForm" ID still present',
+    );
   });
 
   it("contact-collector.js uses contactFormSuccess ID", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "contact-collector.js"), "utf8");
-    assert.ok(src.includes("contactFormSuccess"), "contactFormSuccess ID missing");
-    assert.ok(!src.includes('"contactSuccess"'), 'old "contactSuccess" ID still present');
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "contact-collector.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("contactFormSuccess"),
+      "contactFormSuccess ID missing",
+    );
+    assert.ok(
+      !src.includes('"contactSuccess"'),
+      'old "contactSuccess" ID still present',
+    );
   });
 
   it("he.json has contact_sent key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"contact_sent"'), "contact_sent missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"contact_sent"'),
+      "contact_sent missing from he.json",
+    );
   });
 });
 
 // Budget section
 describe("Budget section — v3.3.0 fixes", function () {
   it("budget.js fills budgetStatTotal", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "budget.js"), "utf8");
-    assert.ok(src.includes("budgetStatTotal"), "budgetStatTotal missing from budget.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "budget.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("budgetStatTotal"),
+      "budgetStatTotal missing from budget.js",
+    );
   });
 
   it("budget.js fills budgetStatGifts", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "budget.js"), "utf8");
-    assert.ok(src.includes("budgetStatGifts"), "budgetStatGifts missing from budget.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "budget.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("budgetStatGifts"),
+      "budgetStatGifts missing from budget.js",
+    );
   });
 
   it("budget.js fills budgetStatPct", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "budget.js"), "utf8");
-    assert.ok(src.includes("budgetStatPct"), "budgetStatPct missing from budget.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "budget.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("budgetStatPct"),
+      "budgetStatPct missing from budget.js",
+    );
   });
 
   it("budget.js subscribes to weddingInfo store changes", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "budget.js"), "utf8");
-    assert.ok(src.includes('storeSubscribe("weddingInfo"') || src.includes("storeSubscribe('weddingInfo'"), "weddingInfo subscription missing from budget.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "budget.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes('storeSubscribe("weddingInfo"') ||
+        src.includes("storeSubscribe('weddingInfo'"),
+      "weddingInfo subscription missing from budget.js",
+    );
   });
 });
 
 // Tables section
 describe("Tables section — v3.3.0 fixes", function () {
   it("tables.js renders unassigned guests list", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "tables.js"), "utf8");
-    assert.ok(src.includes("unassignedGuests"), "unassignedGuests render missing from tables.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "tables.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("unassignedGuests"),
+      "unassignedGuests render missing from tables.js",
+    );
   });
 
   it("he.json has all_guests_seated key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"all_guests_seated"'), "all_guests_seated missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"all_guests_seated"'),
+      "all_guests_seated missing from he.json",
+    );
   });
 });
 
 // Settings section
 describe("Settings section — v3.3.0 fixes", function () {
   it("settings.js uses sheetsWebAppUrl element ID", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "settings.js"), "utf8");
-    assert.ok(src.includes("sheetsWebAppUrl"), "sheetsWebAppUrl ID missing from settings.js");
-    assert.ok(!src.includes("settingWebAppUrl"), "old settingWebAppUrl ID still present");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "settings.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("sheetsWebAppUrl"),
+      "sheetsWebAppUrl ID missing from settings.js",
+    );
+    assert.ok(
+      !src.includes("settingWebAppUrl"),
+      "old settingWebAppUrl ID still present",
+    );
   });
 
   it("settings.html uses importGuestsCSV action (not importCSV)", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "settings.html"), "utf8");
-    assert.ok(!src.includes('"importCSV"'), 'old importCSV action still present in settings.html');
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "settings.html"),
+      "utf8",
+    );
+    assert.ok(
+      !src.includes('"importCSV"'),
+      "old importCSV action still present in settings.html",
+    );
   });
 
   it("settings.js renders approved emails list", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "settings.js"), "utf8");
-    assert.ok(src.includes("approvedEmailsList") || src.includes("_renderApprovedEmails"), "approvedEmails render missing from settings.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "settings.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("approvedEmailsList") ||
+        src.includes("_renderApprovedEmails"),
+      "approvedEmails render missing from settings.js",
+    );
   });
 
   it("he.json has no_approved_emails key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"no_approved_emails"'), "no_approved_emails missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"no_approved_emails"'),
+      "no_approved_emails missing from he.json",
+    );
   });
 });
 
 // Landing section
 describe("Landing section — v3.3.0 fixes", function () {
   it("landing.js uses landingCoupleName ID (not landingCouple)", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "landing.js"), "utf8");
-    assert.ok(src.includes("landingCoupleName"), "landingCoupleName ID missing from landing.js");
-    assert.ok(!src.includes('"landingCouple"'), 'old "landingCouple" ID still present');
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "landing.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("landingCoupleName"),
+      "landingCoupleName ID missing from landing.js",
+    );
+    assert.ok(
+      !src.includes('"landingCouple"'),
+      'old "landingCouple" ID still present',
+    );
   });
 
   it("landing.js populates landingAddress", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "landing.js"), "utf8");
-    assert.ok(src.includes("landingAddress"), "landingAddress populate missing from landing.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "landing.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("landingAddress"),
+      "landingAddress populate missing from landing.js",
+    );
   });
 
   it("landing.js populates landingHebrewDate", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "landing.js"), "utf8");
-    assert.ok(src.includes("landingHebrewDate"), "landingHebrewDate populate missing from landing.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "landing.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("landingHebrewDate"),
+      "landingHebrewDate populate missing from landing.js",
+    );
   });
 });
 
 // Check-in section
 describe("Check-in section — v3.3.0 fixes", function () {
   it("checkin.js looks up table name from tables store", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "checkin.js"), "utf8");
-    assert.ok(src.includes("tables.find"), "tables.find lookup missing from checkin.js");
-    assert.ok(src.includes(".name"), "table name display (.name) missing from checkin.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "checkin.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("tables.find"),
+      "tables.find lookup missing from checkin.js",
+    );
+    assert.ok(
+      src.includes(".name"),
+      "table name display (.name) missing from checkin.js",
+    );
   });
 
   it("checkin.js loads tables store in renderCheckin", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "sections", "checkin.js"), "utf8");
-    assert.ok(src.includes('storeGet("tables")') || src.includes("storeGet('tables')"), "tables storeGet missing from checkin.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "sections", "checkin.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes('storeGet("tables")') || src.includes("storeGet('tables')"),
+      "tables storeGet missing from checkin.js",
+    );
   });
 });
 
 // WhatsApp section
 describe("WhatsApp section — v3.3.0 i18n", function () {
   it("he.json has wa_default_template key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"wa_default_template"'), "wa_default_template missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"wa_default_template"'),
+      "wa_default_template missing from he.json",
+    );
   });
 
   it("en.json has wa_default_template key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "en.json"), "utf8");
-    assert.ok(json.includes('"wa_default_template"'), "wa_default_template missing from en.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "en.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"wa_default_template"'),
+      "wa_default_template missing from en.json",
+    );
   });
 });
 
@@ -6151,108 +6386,218 @@ describe("New templates — v3.3.0", function () {
   });
 
   it("registry.html has registryLinks element", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "registry.html"), "utf8");
-    assert.ok(src.includes('id="registryLinks"'), "registryLinks ID missing from registry.html");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "registry.html"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes('id="registryLinks"'),
+      "registryLinks ID missing from registry.html",
+    );
   });
 
   it("src/templates/guest-landing.html exists", function () {
     assert.ok(
-      existsSync(resolve(__dirname, "..", "src", "templates", "guest-landing.html")),
+      existsSync(
+        resolve(__dirname, "..", "src", "templates", "guest-landing.html"),
+      ),
       "guest-landing.html missing",
     );
   });
 
   it("guest-landing.html has data-guest-name attribute", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "guest-landing.html"), "utf8");
-    assert.ok(src.includes("data-guest-name"), "data-guest-name missing from guest-landing.html");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "guest-landing.html"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("data-guest-name"),
+      "data-guest-name missing from guest-landing.html",
+    );
   });
 
   it("guest-landing.html has data-guest-table attribute", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "templates", "guest-landing.html"), "utf8");
-    assert.ok(src.includes("data-guest-table"), "data-guest-table missing from guest-landing.html");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "templates", "guest-landing.html"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("data-guest-table"),
+      "data-guest-table missing from guest-landing.html",
+    );
   });
 });
 
 // Language toggle
 describe("Language toggle — v3.3.0 fix", function () {
   it("main.js switchLanguage passes language arg", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "main.js"), "utf8");
-    assert.ok(src.includes("switchLanguage") && src.includes('"he"'), "switchLanguage arg missing from main.js");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "main.js"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("switchLanguage") && src.includes('"he"'),
+      "switchLanguage arg missing from main.js",
+    );
   });
 
   it("he.json has language_switched key", function () {
-    const json = readFileSync(resolve(__dirname, "..", "js", "i18n", "he.json"), "utf8");
-    assert.ok(json.includes('"language_switched"'), "language_switched missing from he.json");
+    const json = readFileSync(
+      resolve(__dirname, "..", "js", "i18n", "he.json"),
+      "utf8",
+    );
+    assert.ok(
+      json.includes('"language_switched"'),
+      "language_switched missing from he.json",
+    );
   });
 });
-
 
 // ── v3.4.0 Regression & New Feature Tests ────────────────────────────────
 
 // Helper: read src file content once
-const _srcWhatsApp = readFileSync(resolve(__dirname, "..", "src", "sections", "whatsapp.js"), "utf8");
-const _srcGallery = readFileSync(resolve(__dirname, "..", "src", "sections", "gallery.js"), "utf8");
-const _srcSettings = readFileSync(resolve(__dirname, "..", "src", "sections", "settings.js"), "utf8");
-const _srcDashboard = readFileSync(resolve(__dirname, "..", "src", "sections", "dashboard.js"), "utf8");
-const _srcEvents = readFileSync(resolve(__dirname, "..", "src", "core", "events.js"), "utf8");
-const _srcSheets = readFileSync(resolve(__dirname, "..", "src", "services", "sheets.js"), "utf8");
-const _srcMain = readFileSync(resolve(__dirname, "..", "src", "main.js"), "utf8");
-const _srcTemplateLoader = readFileSync(resolve(__dirname, "..", "src", "core", "template-loader.js"), "utf8");
+const _srcWhatsApp = readFileSync(
+  resolve(__dirname, "..", "src", "sections", "whatsapp.js"),
+  "utf8",
+);
+const _srcGallery = readFileSync(
+  resolve(__dirname, "..", "src", "sections", "gallery.js"),
+  "utf8",
+);
+const _srcSettings = readFileSync(
+  resolve(__dirname, "..", "src", "sections", "settings.js"),
+  "utf8",
+);
+const _srcDashboard = readFileSync(
+  resolve(__dirname, "..", "src", "sections", "dashboard.js"),
+  "utf8",
+);
+const _srcEvents = readFileSync(
+  resolve(__dirname, "..", "src", "core", "events.js"),
+  "utf8",
+);
+const _srcSheets = readFileSync(
+  resolve(__dirname, "..", "src", "services", "sheets.js"),
+  "utf8",
+);
+const _srcMain = readFileSync(
+  resolve(__dirname, "..", "src", "main.js"),
+  "utf8",
+);
+const _srcTemplateLoader = readFileSync(
+  resolve(__dirname, "..", "src", "core", "template-loader.js"),
+  "utf8",
+);
 
 describe("v3.4.0: WhatsApp filter & preview", function () {
   it("sendWhatsAppAll accepts filter parameter", function () {
-    assert.ok(_srcWhatsApp.includes('function sendWhatsAppAll(filter'), "sendWhatsAppAll missing filter param");
+    assert.ok(
+      _srcWhatsApp.includes("function sendWhatsAppAll(filter"),
+      "sendWhatsAppAll missing filter param",
+    );
   });
   it("sendWhatsAppAll filters 'pending' guests", function () {
-    assert.ok(_srcWhatsApp.includes('filter === "pending"'), "pending filter logic missing");
+    assert.ok(
+      _srcWhatsApp.includes('filter === "pending"'),
+      "pending filter logic missing",
+    );
   });
   it("markGuestSent function exported", function () {
-    assert.ok(_srcWhatsApp.includes("export function markGuestSent"), "markGuestSent not exported");
+    assert.ok(
+      _srcWhatsApp.includes("export function markGuestSent"),
+      "markGuestSent not exported",
+    );
   });
   it("updateWaPreview function exported", function () {
-    assert.ok(_srcWhatsApp.includes("export function updateWaPreview"), "updateWaPreview not exported");
+    assert.ok(
+      _srcWhatsApp.includes("export function updateWaPreview"),
+      "updateWaPreview not exported",
+    );
   });
   it("updateWaPreview updates waPreviewBubble", function () {
-    assert.ok(_srcWhatsApp.includes('"waPreviewBubble"') || _srcWhatsApp.includes("'waPreviewBubble'"), "waPreviewBubble not referenced");
+    assert.ok(
+      _srcWhatsApp.includes('"waPreviewBubble"') ||
+        _srcWhatsApp.includes("'waPreviewBubble'"),
+      "waPreviewBubble not referenced",
+    );
   });
   it("storeSet imported in whatsapp.js for markGuestSent", function () {
-    assert.ok(_srcWhatsApp.includes("storeSet"), "storeSet not imported in whatsapp.js");
+    assert.ok(
+      _srcWhatsApp.includes("storeSet"),
+      "storeSet not imported in whatsapp.js",
+    );
   });
   it("renderWhatsApp populates template textarea default", function () {
-    assert.ok(_srcWhatsApp.includes("_defaultTemplate"), "default template not populated in renderWhatsApp");
+    assert.ok(
+      _srcWhatsApp.includes("_defaultTemplate"),
+      "default template not populated in renderWhatsApp",
+    );
   });
   it("sent badge shown for already-sent guests", function () {
-    assert.ok(_srcWhatsApp.includes("badge--success") || _srcWhatsApp.includes("g.sent"), "sent tracking missing");
+    assert.ok(
+      _srcWhatsApp.includes("badge--success") ||
+        _srcWhatsApp.includes("g.sent"),
+      "sent tracking missing",
+    );
   });
   it("sendWhatsAppAllViaApi accepts filter parameter", function () {
-    assert.ok(_srcWhatsApp.includes("async function sendWhatsAppAllViaApi(filter"), "sendWhatsAppAllViaApi missing filter param");
+    assert.ok(
+      _srcWhatsApp.includes("async function sendWhatsAppAllViaApi(filter"),
+      "sendWhatsAppAllViaApi missing filter param",
+    );
   });
 });
 
 describe("v3.4.0: Gallery upload, lightbox, delete", function () {
   it("handleGalleryUpload exported", function () {
-    assert.ok(_srcGallery.includes("export function handleGalleryUpload"), "handleGalleryUpload not exported");
+    assert.ok(
+      _srcGallery.includes("export function handleGalleryUpload"),
+      "handleGalleryUpload not exported",
+    );
   });
   it("handleGalleryUpload reads input.files", function () {
-    assert.ok(_srcGallery.includes("input.files"), "input.files not accessed in handleGalleryUpload");
+    assert.ok(
+      _srcGallery.includes("input.files"),
+      "input.files not accessed in handleGalleryUpload",
+    );
   });
   it("openLightbox exported", function () {
-    assert.ok(_srcGallery.includes("export function openLightbox"), "openLightbox not exported");
+    assert.ok(
+      _srcGallery.includes("export function openLightbox"),
+      "openLightbox not exported",
+    );
   });
   it("deleteGalleryPhoto exported", function () {
-    assert.ok(_srcGallery.includes("export function deleteGalleryPhoto"), "deleteGalleryPhoto not exported");
+    assert.ok(
+      _srcGallery.includes("export function deleteGalleryPhoto"),
+      "deleteGalleryPhoto not exported",
+    );
   });
   it("gallery mount shows admin bar for authenticated users", function () {
-    assert.ok(_srcGallery.includes("galleryAdminBar"), "galleryAdminBar not referenced");
+    assert.ok(
+      _srcGallery.includes("galleryAdminBar"),
+      "galleryAdminBar not referenced",
+    );
   });
   it("renderGallery adds delete button per item", function () {
-    assert.ok(_srcGallery.includes("deleteGalleryPhoto") && (_srcGallery.includes("dataset.action") || _srcGallery.includes("data-action")), "delete button not in renderGallery");
+    assert.ok(
+      _srcGallery.includes("deleteGalleryPhoto") &&
+        (_srcGallery.includes("dataset.action") ||
+          _srcGallery.includes("data-action")),
+      "delete button not in renderGallery",
+    );
   });
   it("gallery.html has data-on-change for file input", function () {
-    assert.ok(HTML.includes('data-on-change="handleGalleryUpload"'), "data-on-change not on gallery file input");
+    assert.ok(
+      HTML.includes('data-on-change="handleGalleryUpload"'),
+      "data-on-change not on gallery file input",
+    );
   });
   it("gallery.html has galleryAdminBar element", function () {
-    assert.ok(HTML.includes('id="galleryAdminBar"'), "galleryAdminBar missing from template");
+    assert.ok(
+      HTML.includes('id="galleryAdminBar"'),
+      "galleryAdminBar missing from template",
+    );
   });
   it("gallery.html has galleryGrid element", function () {
     assert.ok(HTML.includes('id="galleryGrid"'), "galleryGrid missing");
@@ -6261,110 +6606,199 @@ describe("v3.4.0: Gallery upload, lightbox, delete", function () {
 
 describe("v3.4.0: Settings fixes", function () {
   it("saveTransportSettings reads by element ID", function () {
-    assert.ok(_srcSettings.includes('"transportEnabled"') || _srcSettings.includes("'transportEnabled'"), "transportEnabled ID not referenced");
-    assert.ok(!_srcSettings.includes("new FormData"), "FormData should not be used in saveTransportSettings");
+    assert.ok(
+      _srcSettings.includes('"transportEnabled"') ||
+        _srcSettings.includes("'transportEnabled'"),
+      "transportEnabled ID not referenced",
+    );
+    assert.ok(
+      !_srcSettings.includes("new FormData"),
+      "FormData should not be used in saveTransportSettings",
+    );
   });
   it("addApprovedEmail uses newApproveEmail ID", function () {
-    assert.ok(_srcSettings.includes('"newApproveEmail"') || _srcSettings.includes("'newApproveEmail'"), "wrong ID in addApprovedEmail — should be newApproveEmail");
+    assert.ok(
+      _srcSettings.includes('"newApproveEmail"') ||
+        _srcSettings.includes("'newApproveEmail'"),
+      "wrong ID in addApprovedEmail — should be newApproveEmail",
+    );
   });
   it("settings.html has greenApiStatus element", function () {
-    assert.ok(HTML.includes('id="greenApiStatus"'), "greenApiStatus span missing from settings.html");
+    assert.ok(
+      HTML.includes('id="greenApiStatus"'),
+      "greenApiStatus span missing from settings.html",
+    );
   });
 });
 
 describe("v3.4.0: events.js delegation", function () {
   it("data-on-change delegation exists", function () {
-    assert.ok(_srcEvents.includes("data-on-change") || _srcEvents.includes("dataset.onChange"), "data-on-change delegation missing from events.js");
+    assert.ok(
+      _srcEvents.includes("data-on-change") ||
+        _srcEvents.includes("dataset.onChange"),
+      "data-on-change delegation missing from events.js",
+    );
   });
   it("data-on-enter delegation exists", function () {
-    assert.ok(_srcEvents.includes("data-on-enter") || _srcEvents.includes("dataset.onEnter"), "data-on-enter delegation missing from events.js");
+    assert.ok(
+      _srcEvents.includes("data-on-enter") ||
+        _srcEvents.includes("dataset.onEnter"),
+      "data-on-enter delegation missing from events.js",
+    );
   });
   it("Enter key triggers onEnter handlers", function () {
-    assert.ok(_srcEvents.includes('"Enter"') && _srcEvents.includes("onEnter"), "Enter key check missing");
+    assert.ok(
+      _srcEvents.includes('"Enter"') && _srcEvents.includes("onEnter"),
+      "Enter key check missing",
+    );
   });
 });
 
 describe("v3.4.0: Sheets exponential backoff", function () {
   it("src/services/sheets.js has retry logic", function () {
-    assert.ok(_srcSheets.includes("_MAX_RETRIES") || _srcSheets.includes("_BACKOFF_BASE_MS"), "retry/backoff constants missing from src/services/sheets.js");
+    assert.ok(
+      _srcSheets.includes("_MAX_RETRIES") ||
+        _srcSheets.includes("_BACKOFF_BASE_MS"),
+      "retry/backoff constants missing from src/services/sheets.js",
+    );
   });
   it("src/services/sheets.js exports onSyncStatus", function () {
-    assert.ok(_srcSheets.includes("export function onSyncStatus"), "onSyncStatus not exported from src/services/sheets.js");
+    assert.ok(
+      _srcSheets.includes("export function onSyncStatus"),
+      "onSyncStatus not exported from src/services/sheets.js",
+    );
   });
   it("src/services/sheets.js flush retries on failure", function () {
-    assert.ok(_srcSheets.includes("attempt") && _srcSheets.includes("_MAX_RETRIES"), "retry attempt logic missing");
+    assert.ok(
+      _srcSheets.includes("attempt") && _srcSheets.includes("_MAX_RETRIES"),
+      "retry attempt logic missing",
+    );
   });
 });
 
 describe("v3.4.0: Dashboard RSVP deadline banner", function () {
   it("updateRsvpDeadlineBanner function exported from dashboard.js", function () {
-    assert.ok(_srcDashboard.includes("export function updateRsvpDeadlineBanner"), "updateRsvpDeadlineBanner not exported");
+    assert.ok(
+      _srcDashboard.includes("export function updateRsvpDeadlineBanner"),
+      "updateRsvpDeadlineBanner not exported",
+    );
   });
   it("dashboard.js reads rsvpDeadline from weddingInfo", function () {
-    assert.ok(_srcDashboard.includes("rsvpDeadline"), "rsvpDeadline not referenced in dashboard.js");
+    assert.ok(
+      _srcDashboard.includes("rsvpDeadline"),
+      "rsvpDeadline not referenced in dashboard.js",
+    );
   });
   it("dashboard.html has rsvpDeadlineBanner element", function () {
-    assert.ok(HTML.includes('id="rsvpDeadlineBanner"'), "rsvpDeadlineBanner missing from template");
+    assert.ok(
+      HTML.includes('id="rsvpDeadlineBanner"'),
+      "rsvpDeadlineBanner missing from template",
+    );
   });
   it("RSVP deadline banner uses daysUntil", function () {
-    assert.ok(_srcDashboard.includes("daysUntil"), "daysUntil not used in deadline banner");
+    assert.ok(
+      _srcDashboard.includes("daysUntil"),
+      "daysUntil not used in deadline banner",
+    );
   });
 });
 
 describe("v3.4.0: index.html syncStatusBadge", function () {
   it("index.html has syncStatusBadge span", function () {
-    assert.ok(HTML.includes('id="syncStatusBadge"'), "syncStatusBadge span missing from index.html");
+    assert.ok(
+      HTML.includes('id="syncStatusBadge"'),
+      "syncStatusBadge span missing from index.html",
+    );
   });
   it("syncStatusBadge has aria-live attribute", function () {
-    assert.ok(HTML.includes('id="syncStatusBadge"') && HTML.includes('aria-live'), "aria-live missing on syncStatusBadge");
+    assert.ok(
+      HTML.includes('id="syncStatusBadge"') && HTML.includes("aria-live"),
+      "aria-live missing on syncStatusBadge",
+    );
   });
 });
 
 describe("v3.4.0: CSS color-scheme", function () {
   it("variables.css declares color-scheme: dark light", function () {
-    assert.ok(CSS.includes("color-scheme: dark light"), "color-scheme missing from variables.css");
+    assert.ok(
+      CSS.includes("color-scheme: dark light"),
+      "color-scheme missing from variables.css",
+    );
   });
   it("CSS has .sync-badge styles", function () {
     assert.ok(CSS.includes(".sync-badge"), ".sync-badge styles missing");
   });
   it("CSS has .rsvp-deadline-banner--late style", function () {
-    assert.ok(CSS.includes(".rsvp-deadline-banner--late"), ".rsvp-deadline-banner--late missing");
+    assert.ok(
+      CSS.includes(".rsvp-deadline-banner--late"),
+      ".rsvp-deadline-banner--late missing",
+    );
   });
   it("CSS has .rsvp-deadline-banner--soon style", function () {
-    assert.ok(CSS.includes(".rsvp-deadline-banner--soon"), ".rsvp-deadline-banner--soon missing");
+    assert.ok(
+      CSS.includes(".rsvp-deadline-banner--soon"),
+      ".rsvp-deadline-banner--soon missing",
+    );
   });
 });
 
 describe("v3.4.0: template-loader.js completeness", function () {
   it("template-loader.js loads registry template", function () {
-    assert.ok(_srcTemplateLoader.includes("registry") && _srcTemplateLoader.includes("registry.html"), "registry loader missing");
+    assert.ok(
+      _srcTemplateLoader.includes("registry") &&
+        _srcTemplateLoader.includes("registry.html"),
+      "registry loader missing",
+    );
   });
   it("template-loader.js loads guest-landing template", function () {
-    assert.ok(_srcTemplateLoader.includes("guest-landing") && _srcTemplateLoader.includes("guest-landing.html"), "guest-landing loader missing");
+    assert.ok(
+      _srcTemplateLoader.includes("guest-landing") &&
+        _srcTemplateLoader.includes("guest-landing.html"),
+      "guest-landing loader missing",
+    );
   });
 });
 
 describe("v3.4.0: main.js handler fixes", function () {
   it("addRegistryLink reads registryInputUrl by ID", function () {
-    assert.ok(_srcMain.includes('"registryInputUrl"') || _srcMain.includes("'registryInputUrl'"), "registryInputUrl not used in main.js");
+    assert.ok(
+      _srcMain.includes('"registryInputUrl"') ||
+        _srcMain.includes("'registryInputUrl'"),
+      "registryInputUrl not used in main.js",
+    );
   });
   it("addApprovedEmail handler calls with no form arg", function () {
-    assert.ok(_srcMain.includes("addApprovedEmail()"), "addApprovedEmail should be called with no args");
+    assert.ok(
+      _srcMain.includes("addApprovedEmail()"),
+      "addApprovedEmail should be called with no args",
+    );
   });
   it("sendWhatsAppAll handler passes actionArg", function () {
-    assert.ok(_srcMain.includes('sendWhatsAppAll(') && _srcMain.includes("actionArg"), "sendWhatsAppAll not passing actionArg");
+    assert.ok(
+      _srcMain.includes("sendWhatsAppAll(") && _srcMain.includes("actionArg"),
+      "sendWhatsAppAll not passing actionArg",
+    );
   });
   it("initSwipe imported and called in bootstrap", function () {
-    assert.ok(_srcMain.includes("initSwipe"), "initSwipe not called in main.js bootstrap");
+    assert.ok(
+      _srcMain.includes("initSwipe"),
+      "initSwipe not called in main.js bootstrap",
+    );
   });
   it("onSyncStatus wired to syncStatusBadge", function () {
-    assert.ok(_srcMain.includes("onSyncStatus") && _srcMain.includes("syncStatusBadge"), "sync status badge not wired up");
+    assert.ok(
+      _srcMain.includes("onSyncStatus") && _srcMain.includes("syncStatusBadge"),
+      "sync status badge not wired up",
+    );
   });
   it("updateWaPreview handler registered", function () {
-    assert.ok(_srcMain.includes('"updateWaPreview"') || _srcMain.includes("'updateWaPreview'"), "updateWaPreview not registered in main.js");
+    assert.ok(
+      _srcMain.includes('"updateWaPreview"') ||
+        _srcMain.includes("'updateWaPreview'"),
+      "updateWaPreview not registered in main.js",
+    );
   });
 });
-
 
 // ── v3.5.0 New Feature Tests ──────────────────────────────────────────────
 const _v35_srcDir = resolve(__dirname, "..", "src");
@@ -6373,85 +6807,145 @@ const _v35_secDir = resolve(_v35_srcDir, "sections");
 describe("v3.5.0: Pull-to-refresh (S2.8)", function () {
   it("initPullToRefresh exported from src/core/nav.js", function () {
     const nav = readFileSync(resolve(_v35_srcDir, "core", "nav.js"), "utf8");
-    assert.ok(nav.includes("export function initPullToRefresh"), "initPullToRefresh not exported from nav.js");
+    assert.ok(
+      nav.includes("export function initPullToRefresh"),
+      "initPullToRefresh not exported from nav.js",
+    );
   });
   it("main.js imports and calls initPullToRefresh", function () {
-    assert.ok(_srcMain.includes("initPullToRefresh"), "initPullToRefresh not wired in main.js");
+    assert.ok(
+      _srcMain.includes("initPullToRefresh"),
+      "initPullToRefresh not wired in main.js",
+    );
   });
   it("CSS has ptr--pulling class", function () {
-    assert.ok(CSS.includes("ptr--pulling"), "ptr--pulling class missing from CSS");
+    assert.ok(
+      CSS.includes("ptr--pulling"),
+      "ptr--pulling class missing from CSS",
+    );
   });
   it("CSS has ptr--refreshing class", function () {
-    assert.ok(CSS.includes("ptr--refreshing"), "ptr--refreshing class missing from CSS");
+    assert.ok(
+      CSS.includes("ptr--refreshing"),
+      "ptr--refreshing class missing from CSS",
+    );
   });
 });
 
 describe("v3.5.0: S3.8 Vendor/Expense sync wired", function () {
   it("vendors.js uses syncStoreKeyToSheets", function () {
     const vendors = readFileSync(resolve(_v35_secDir, "vendors.js"), "utf8");
-    assert.ok(vendors.includes("syncStoreKeyToSheets"), "vendors.js missing syncStoreKeyToSheets");
+    assert.ok(
+      vendors.includes("syncStoreKeyToSheets"),
+      "vendors.js missing syncStoreKeyToSheets",
+    );
   });
   it("expenses.js uses syncStoreKeyToSheets", function () {
     const expenses = readFileSync(resolve(_v35_secDir, "expenses.js"), "utf8");
-    assert.ok(expenses.includes("syncStoreKeyToSheets"), "expenses.js missing syncStoreKeyToSheets");
+    assert.ok(
+      expenses.includes("syncStoreKeyToSheets"),
+      "expenses.js missing syncStoreKeyToSheets",
+    );
   });
   it("guests.js uses syncStoreKeyToSheets", function () {
     const guests = readFileSync(resolve(_v35_secDir, "guests.js"), "utf8");
-    assert.ok(guests.includes("syncStoreKeyToSheets"), "guests.js missing syncStoreKeyToSheets");
+    assert.ok(
+      guests.includes("syncStoreKeyToSheets"),
+      "guests.js missing syncStoreKeyToSheets",
+    );
   });
   it("sheets.js exports mergeLastWriteWins (S3.4)", function () {
-    const sheets = readFileSync(resolve(_v35_srcDir, "services", "sheets.js"), "utf8");
-    assert.ok(sheets.includes("export function mergeLastWriteWins"), "mergeLastWriteWins not exported from sheets.js");
+    const sheets = readFileSync(
+      resolve(_v35_srcDir, "services", "sheets.js"),
+      "utf8",
+    );
+    assert.ok(
+      sheets.includes("export function mergeLastWriteWins"),
+      "mergeLastWriteWins not exported from sheets.js",
+    );
   });
 });
 
 describe("v3.5.0: i18n new keys", function () {
   it("he.json has rsvp_deadline_soon", function () {
-    assert.ok(I18N_JSON.includes("rsvp_deadline_soon"), "he.json missing rsvp_deadline_soon");
+    assert.ok(
+      I18N_JSON.includes("rsvp_deadline_soon"),
+      "he.json missing rsvp_deadline_soon",
+    );
   });
   it("he.json has rsvp_deadline_passed", function () {
-    assert.ok(I18N_JSON.includes("rsvp_deadline_passed"), "he.json missing rsvp_deadline_passed");
+    assert.ok(
+      I18N_JSON.includes("rsvp_deadline_passed"),
+      "he.json missing rsvp_deadline_passed",
+    );
   });
   it("he.json has skip_to_main", function () {
-    assert.ok(I18N_JSON.includes("skip_to_main"), "he.json missing skip_to_main");
+    assert.ok(
+      I18N_JSON.includes("skip_to_main"),
+      "he.json missing skip_to_main",
+    );
   });
   it("en.json has rsvp_deadline_soon", function () {
     const enJson = readFileSync(resolve(JS_DIR, "i18n", "en.json"), "utf8");
-    assert.ok(enJson.includes("rsvp_deadline_soon"), "en.json missing rsvp_deadline_soon");
+    assert.ok(
+      enJson.includes("rsvp_deadline_soon"),
+      "en.json missing rsvp_deadline_soon",
+    );
   });
   it("en.json has rsvp_deadline_passed", function () {
     const enJson = readFileSync(resolve(JS_DIR, "i18n", "en.json"), "utf8");
-    assert.ok(enJson.includes("rsvp_deadline_passed"), "en.json missing rsvp_deadline_passed");
+    assert.ok(
+      enJson.includes("rsvp_deadline_passed"),
+      "en.json missing rsvp_deadline_passed",
+    );
   });
 });
 
 describe("v3.5.0: A11y skip-to-main (S7.9)", function () {
   it("index.html has skip-to-main link", function () {
-    assert.ok(HTML.includes('class="skip-to-main"'), "skip-to-main link missing from index.html");
+    assert.ok(
+      HTML.includes('class="skip-to-main"'),
+      "skip-to-main link missing from index.html",
+    );
   });
   it("skip-to-main has data-i18n attribute", function () {
-    assert.ok(HTML.includes('data-i18n="skip_to_main"'), "skip_to_main i18n key missing on skip link");
+    assert.ok(
+      HTML.includes('data-i18n="skip_to_main"'),
+      "skip_to_main i18n key missing on skip link",
+    );
   });
   it("CSS has .skip-to-main styles", function () {
-    assert.ok(CSS.includes(".skip-to-main"), ".skip-to-main CSS styles missing");
+    assert.ok(
+      CSS.includes(".skip-to-main"),
+      ".skip-to-main CSS styles missing",
+    );
   });
 });
 
 describe("v3.5.0: S2.6 IntersectionObserver stat counters", function () {
   it("dashboard.js exports initStatCounterObserver", function () {
     const dash = readFileSync(resolve(_v35_secDir, "dashboard.js"), "utf8");
-    assert.ok(dash.includes("export function initStatCounterObserver"), "initStatCounterObserver not exported from dashboard.js");
+    assert.ok(
+      dash.includes("export function initStatCounterObserver"),
+      "initStatCounterObserver not exported from dashboard.js",
+    );
   });
   it("dashboard.js uses IntersectionObserver", function () {
     const dash = readFileSync(resolve(_v35_secDir, "dashboard.js"), "utf8");
-    assert.ok(dash.includes("IntersectionObserver"), "IntersectionObserver missing from dashboard.js");
+    assert.ok(
+      dash.includes("IntersectionObserver"),
+      "IntersectionObserver missing from dashboard.js",
+    );
   });
 });
 
 describe("v3.5.0: Gallery decoding=async (S4.6)", function () {
   it("gallery.js sets img.decoding=async on lightbox", function () {
     const gallery = readFileSync(resolve(_v35_secDir, "gallery.js"), "utf8");
-    assert.ok(gallery.includes('img.decoding = "async"'), "lightbox image missing async decoding in gallery.js");
+    assert.ok(
+      gallery.includes('img.decoding = "async"'),
+      "lightbox image missing async decoding in gallery.js",
+    );
   });
 });
 // =============================================================================
@@ -6467,31 +6961,58 @@ const _v36_coreDir = resolve(_v36_srcDir, "core");
 describe("v3.6.0: S3.9 — initOnlineSync in sheets.js", function () {
   it("sheets.js exports initOnlineSync function", function () {
     const src = readFileSync(resolve(_v36_servicesDir, "sheets.js"), "utf8");
-    assert.ok(src.includes("export function initOnlineSync"), "initOnlineSync not exported from sheets.js");
+    assert.ok(
+      src.includes("export function initOnlineSync"),
+      "initOnlineSync not exported from sheets.js",
+    );
   });
   it("initOnlineSync registers window online event listener", function () {
     const src = readFileSync(resolve(_v36_servicesDir, "sheets.js"), "utf8");
-    assert.ok(src.includes('"online"'), "online event listener missing in sheets.js");
+    assert.ok(
+      src.includes('"online"'),
+      "online event listener missing in sheets.js",
+    );
   });
   it("initOnlineSync calls syncSheetsNow on reconnect", function () {
     const src = readFileSync(resolve(_v36_servicesDir, "sheets.js"), "utf8");
-    assert.ok(src.includes("syncSheetsNow"), "syncSheetsNow not called in initOnlineSync");
+    assert.ok(
+      src.includes("syncSheetsNow"),
+      "syncSheetsNow not called in initOnlineSync",
+    );
   });
   it("main.js imports and calls initOnlineSync", function () {
     const src = readFileSync(resolve(_v36_srcDir, "main.js"), "utf8");
-    assert.ok(src.includes("initOnlineSync"), "initOnlineSync not wired in main.js");
+    assert.ok(
+      src.includes("initOnlineSync"),
+      "initOnlineSync not wired in main.js",
+    );
   });
 });
 
 describe("v3.6.0: S4.4 — postbuild precache wiring", function () {
   it("package.json has postbuild script", function () {
-    assert.ok(typeof PKG.scripts.postbuild === "string", "postbuild script missing from package.json");
-    assert.ok(PKG.scripts.postbuild.includes("generate-precache"), "postbuild does not call generate-precache");
+    assert.ok(
+      typeof PKG.scripts.postbuild === "string",
+      "postbuild script missing from package.json",
+    );
+    assert.ok(
+      PKG.scripts.postbuild.includes("generate-precache"),
+      "postbuild does not call generate-precache",
+    );
   });
   it("generate-precache.mjs patches dist/sw.js APP_SHELL", function () {
-    const src = readFileSync(resolve(__dirname, "..", "scripts", "generate-precache.mjs"), "utf8");
-    assert.ok(src.includes("dist/sw.js") || src.includes("sw.js"), "generate-precache.mjs does not reference sw.js");
-    assert.ok(src.includes("APP_SHELL"), "generate-precache.mjs does not patch APP_SHELL");
+    const src = readFileSync(
+      resolve(__dirname, "..", "scripts", "generate-precache.mjs"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("dist/sw.js") || src.includes("sw.js"),
+      "generate-precache.mjs does not reference sw.js",
+    );
+    assert.ok(
+      src.includes("APP_SHELL"),
+      "generate-precache.mjs does not patch APP_SHELL",
+    );
   });
 });
 
@@ -6501,60 +7022,115 @@ describe("v3.6.0: S6.4 — nav unit test file exists", function () {
     assert.ok(exists, "tests/unit/nav.test.mjs not found");
   });
   it("nav.test.mjs covers navigateTo, activeSection, initRouter, initSwipe, initPullToRefresh", function () {
-    const src = readFileSync(resolve(__dirname, "unit", "nav.test.mjs"), "utf8");
-    assert.ok(src.includes("navigateTo"), "nav test missing navigateTo coverage");
-    assert.ok(src.includes("activeSection"), "nav test missing activeSection coverage");
-    assert.ok(src.includes("initRouter"), "nav test missing initRouter coverage");
+    const src = readFileSync(
+      resolve(__dirname, "unit", "nav.test.mjs"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("navigateTo"),
+      "nav test missing navigateTo coverage",
+    );
+    assert.ok(
+      src.includes("activeSection"),
+      "nav test missing activeSection coverage",
+    );
+    assert.ok(
+      src.includes("initRouter"),
+      "nav test missing initRouter coverage",
+    );
     assert.ok(src.includes("initSwipe"), "nav test missing initSwipe coverage");
-    assert.ok(src.includes("initPullToRefresh"), "nav test missing initPullToRefresh coverage");
+    assert.ok(
+      src.includes("initPullToRefresh"),
+      "nav test missing initPullToRefresh coverage",
+    );
   });
 });
 
 describe("v3.6.0: S6.7 — guests integration test file exists", function () {
   it("tests/unit/guests.integration.test.mjs exists", function () {
-    const exists = existsSync(resolve(__dirname, "unit", "guests.integration.test.mjs"));
+    const exists = existsSync(
+      resolve(__dirname, "unit", "guests.integration.test.mjs"),
+    );
     assert.ok(exists, "tests/unit/guests.integration.test.mjs not found");
   });
   it("integration test file uses happy-dom environment", function () {
-    const src = readFileSync(resolve(__dirname, "unit", "guests.integration.test.mjs"), "utf8");
-    assert.ok(src.includes("happy-dom"), "guests integration test missing happy-dom env annotation");
+    const src = readFileSync(
+      resolve(__dirname, "unit", "guests.integration.test.mjs"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("happy-dom"),
+      "guests integration test missing happy-dom env annotation",
+    );
   });
 });
 
 describe("v3.6.0: S7.9 — a11y aria-live toast improvements", function () {
   it("src/core/ui.js uses role=alert for error/warning toasts", function () {
     const src = readFileSync(resolve(_v36_coreDir, "ui.js"), "utf8");
-    assert.ok(src.includes('role="alert"') || src.includes("role=\"alert\"") || src.includes('"alert"'), "ui.js missing role=alert for urgent toasts");
+    assert.ok(
+      src.includes('role="alert"') ||
+        src.includes('role="alert"') ||
+        src.includes('"alert"'),
+      "ui.js missing role=alert for urgent toasts",
+    );
   });
   it("src/core/ui.js uses aria-live=assertive for error/warning toasts", function () {
     const src = readFileSync(resolve(_v36_coreDir, "ui.js"), "utf8");
-    assert.ok(src.includes("assertive"), "ui.js missing aria-live=assertive for urgent toasts");
+    assert.ok(
+      src.includes("assertive"),
+      "ui.js missing aria-live=assertive for urgent toasts",
+    );
   });
   it("index.html toastContainer has aria-label attribute", function () {
-    assert.ok(HTML.includes('aria-label=') && HTML.includes("toastContainer"), "toastContainer missing aria-label in index.html");
+    assert.ok(
+      HTML.includes("aria-label=") && HTML.includes("toastContainer"),
+      "toastContainer missing aria-label in index.html",
+    );
   });
   it("index.html toastContainer uses role=region (not status)", function () {
-    const htmlSrc = readFileSync(resolve(__dirname, "..", "index.html"), "utf8");
+    const htmlSrc = readFileSync(
+      resolve(__dirname, "..", "index.html"),
+      "utf8",
+    );
     const containerMatch = htmlSrc.match(/id="toastContainer"[^>]*/);
     assert.ok(containerMatch, "toastContainer not found in index.html");
-    assert.ok(!containerMatch[0].includes('role="status"'), "toastContainer should not use role=status; use role=region");
+    assert.ok(
+      !containerMatch[0].includes('role="status"'),
+      "toastContainer should not use role=status; use role=region",
+    );
   });
 });
 
 describe("v3.6.0: S7 docs — SECURITY.md and CONTRIBUTING.md", function () {
   it("SECURITY.md exists", function () {
-    assert.ok(existsSync(resolve(__dirname, "..", "SECURITY.md")), "SECURITY.md not found");
+    assert.ok(
+      existsSync(resolve(__dirname, "..", "SECURITY.md")),
+      "SECURITY.md not found",
+    );
   });
   it("CONTRIBUTING.md exists", function () {
-    assert.ok(existsSync(resolve(__dirname, "..", "CONTRIBUTING.md")), "CONTRIBUTING.md not found");
+    assert.ok(
+      existsSync(resolve(__dirname, "..", "CONTRIBUTING.md")),
+      "CONTRIBUTING.md not found",
+    );
   });
   it("SECURITY.md covers reporting vulnerabilities", function () {
     const src = readFileSync(resolve(__dirname, "..", "SECURITY.md"), "utf8");
-    assert.ok(src.includes("Reporting") || src.includes("reporting"), "SECURITY.md missing vulnerability reporting section");
+    assert.ok(
+      src.includes("Reporting") || src.includes("reporting"),
+      "SECURITY.md missing vulnerability reporting section",
+    );
   });
   it("CONTRIBUTING.md covers development workflow", function () {
-    const src = readFileSync(resolve(__dirname, "..", "CONTRIBUTING.md"), "utf8");
-    assert.ok(src.includes("npm test") || src.includes("npm run"), "CONTRIBUTING.md missing dev commands");
+    const src = readFileSync(
+      resolve(__dirname, "..", "CONTRIBUTING.md"),
+      "utf8",
+    );
+    assert.ok(
+      src.includes("npm test") || src.includes("npm run"),
+      "CONTRIBUTING.md missing dev commands",
+    );
   });
 });
 
@@ -6564,11 +7140,20 @@ describe("v3.6.0: version stamps consistent", function () {
     assert.ok(src.includes("3.6.0"), "CHANGELOG.md not updated for v3.6.0");
   });
   it("public/sw.js CACHE_NAME contains a version", function () {
-    assert.ok(SW.includes("wedding-v"), "sw.js CACHE_NAME missing wedding-v prefix");
+    assert.ok(
+      SW.includes("wedding-v"),
+      "sw.js CACHE_NAME missing wedding-v prefix",
+    );
   });
   it("js/config.js has a version comment", function () {
-    const cfg = readFileSync(resolve(__dirname, "..", "js", "config.js"), "utf8");
-    assert.ok(cfg.includes("v3.") || cfg.includes("v4."), "js/config.js version comment missing");
+    const cfg = readFileSync(
+      resolve(__dirname, "..", "js", "config.js"),
+      "utf8",
+    );
+    assert.ok(
+      cfg.includes("v3.") || cfg.includes("v4."),
+      "js/config.js version comment missing",
+    );
   });
   it("CLAUDE.md references a current version", function () {
     const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
@@ -6584,13 +7169,17 @@ describe("v3.6.0: version stamps consistent", function () {
         src.includes("4.1.0") ||
         src.includes("4.2.0") ||
         src.includes("4.4.0") ||
-        src.includes("4.5.0"),
+        src.includes("4.5.0") ||
+        src.includes("4.6.0"),
       "CLAUDE.md missing version reference",
     );
   });
   it("README.md version badge exists", function () {
     const src = readFileSync(resolve(__dirname, "..", "README.md"), "utf8");
-    assert.ok(src.includes("version-v") && src.includes("d4a574"), "README.md version badge missing");
+    assert.ok(
+      src.includes("version-v") && src.includes("d4a574"),
+      "README.md version badge missing",
+    );
   });
 });
 
@@ -6604,34 +7193,75 @@ describe("v3.7.0: version stamps consistent", function () {
   });
   it("public/sw.js CACHE_NAME contains 3.7.0 or later", function () {
     assert.ok(
-      SW.includes("3.7") || SW.includes("3.8") || SW.includes("3.9") || SW.includes("4.0") || SW.includes("4.1") || SW.includes("4.2") || SW.includes("4.3") || SW.includes("4.4") || SW.includes("4.5"),
+      SW.includes("3.7") ||
+        SW.includes("3.8") ||
+        SW.includes("3.9") ||
+        SW.includes("4.0") ||
+        SW.includes("4.1") ||
+        SW.includes("4.2") ||
+        SW.includes("4.3") ||
+        SW.includes("4.4") ||
+        SW.includes("4.5") ||
+        SW.includes("4.6"),
       "sw.js CACHE_NAME too old",
     );
   });
   it("js/config.js version comment contains 3.7.0 or later", function () {
-    const cfg = readFileSync(resolve(__dirname, "..", "js", "config.js"), "utf8");
+    const cfg = readFileSync(
+      resolve(__dirname, "..", "js", "config.js"),
+      "utf8",
+    );
     assert.ok(
-      cfg.includes("3.7") || cfg.includes("3.8") || cfg.includes("3.9") || cfg.includes("4.0") || cfg.includes("4.1") || cfg.includes("4.2") || cfg.includes("4.3") || cfg.includes("4.4") || cfg.includes("4.5"),
+      cfg.includes("3.7") ||
+        cfg.includes("3.8") ||
+        cfg.includes("3.9") ||
+        cfg.includes("4.0") ||
+        cfg.includes("4.1") ||
+        cfg.includes("4.2") ||
+        cfg.includes("4.3") ||
+        cfg.includes("4.4") ||
+        cfg.includes("4.5"),
     );
   });
   it("src/core/config.js APP_VERSION is 3.7.0 or later", function () {
-    const src = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
+    const src = readFileSync(
+      resolve(__dirname, "..", "src", "core", "config.js"),
+      "utf8",
+    );
     assert.ok(
-      src.includes("3.7") || src.includes("3.8") || src.includes("3.9") || src.includes("4.0") || src.includes("4.1") || src.includes("4.2") || src.includes("4.3") || src.includes("4.4") || src.includes("4.5"),
+      src.includes("3.7") ||
+        src.includes("3.8") ||
+        src.includes("3.9") ||
+        src.includes("4.0") ||
+        src.includes("4.1") ||
+        src.includes("4.2") ||
+        src.includes("4.3") ||
+        src.includes("4.4") ||
+        src.includes("4.5"),
       "src/core/config.js APP_VERSION not updated",
     );
   });
   it("CLAUDE.md references v3.7.0 or later", function () {
     const src = readFileSync(resolve(__dirname, "..", "CLAUDE.md"), "utf8");
     assert.ok(
-      src.includes("3.7") || src.includes("3.8") || src.includes("3.9") || src.includes("4.0") || src.includes("4.1") || src.includes("4.2"),
+      src.includes("3.7") ||
+        src.includes("3.8") ||
+        src.includes("3.9") ||
+        src.includes("4.0") ||
+        src.includes("4.1") ||
+        src.includes("4.2"),
       "CLAUDE.md not updated",
     );
   });
   it("README.md version badge shows v3.7.0 or later", function () {
     const src = readFileSync(resolve(__dirname, "..", "README.md"), "utf8");
     assert.ok(
-      src.includes("v3.7") || src.includes("v3.8") || src.includes("v3.9") || src.includes("v4.0") || src.includes("v4.1") || src.includes("v4.2"),
+      src.includes("v3.7") ||
+        src.includes("v3.8") ||
+        src.includes("v3.9") ||
+        src.includes("v4.0") ||
+        src.includes("v4.1") ||
+        src.includes("v4.2"),
       "README.md version badge not updated",
     );
   });

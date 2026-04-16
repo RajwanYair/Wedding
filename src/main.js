@@ -149,6 +149,7 @@ import {
   checkInGuest,
   setCheckinSearch,
   exportCheckinReport,
+  exportGiftsCSV,
   resetAllCheckins,
   toggleGiftMode,
   startQrScan,
@@ -739,6 +740,7 @@ function _registerHandlers() {
       tableId: getVal("guestTableSelect"),
       gift: getVal("guestGift"),
       notes: getVal("guestNotes"),
+      rsvpSource: getVal("guestRsvpSource") || "manual",
     };
     const id = getVal("guestModalId") || null;
     const result = saveGuest(data, id);
@@ -814,8 +816,33 @@ function _registerHandlers() {
     }
   });
   // S19.2 VIP toggle
-  on("toggleGuestVip", (actionEl) => toggleGuestVip(actionEl.dataset.actionArg ?? ""));
+  on("toggleGuestVip", (actionEl) =>
+    toggleGuestVip(actionEl.dataset.actionArg ?? ""),
+  );
   on("toggleVipFilter", () => toggleVipFilter());
+  // S21.5 Guest notes expandable row
+  on("toggleGuestNotes", (actionEl) => {
+    const guestId = actionEl.dataset.actionArg ?? "";
+    const tr = actionEl.closest("tr");
+    const existingRow = document.getElementById(`notes-row-${guestId}`);
+    if (existingRow) {
+      existingRow.remove();
+      return;
+    }
+    const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+    const g = guests.find((gst) => gst.id === guestId);
+    if (!g?.notes) return;
+    const notesRow = document.createElement("tr");
+    notesRow.id = `notes-row-${guestId}`;
+    notesRow.className = "guest-notes-row";
+    const td = document.createElement("td");
+    td.colSpan = 11;
+    td.className = "guest-notes-cell";
+    td.textContent = g.notes;
+    notesRow.appendChild(td);
+    if (tr) tr.after(notesRow);
+  });
+  // S21.1 — meal summary is refreshed by the store subscription in guests.js mount()
   // S19.5 Bulk mark as unsent
   on("batchMarkUnsent", () => {
     batchMarkUnsent();
@@ -832,8 +859,12 @@ function _registerHandlers() {
 
   // ── S13.5 Guest notes ──
   on("addGuestNote", () => {
-    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))?.value;
-    const noteInput = /** @type {HTMLInputElement|null} */ (document.getElementById("guestNoteInput"));
+    const guestId = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("guestModalId")
+    )?.value;
+    const noteInput = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("guestNoteInput")
+    );
     if (!guestId || !noteInput?.value?.trim()) return;
     addGuestNote(guestId, noteInput.value);
     noteInput.value = "";
@@ -850,15 +881,21 @@ function _registerHandlers() {
 
   // ── S14.5 Guest tags ──
   on("addGuestTag", () => {
-    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))?.value;
-    const tagInput = /** @type {HTMLInputElement|null} */ (document.getElementById("guestTagInput"));
+    const guestId = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("guestModalId")
+    )?.value;
+    const tagInput = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("guestTagInput")
+    );
     if (!guestId || !tagInput?.value?.trim()) return;
     addGuestTag(guestId, tagInput.value);
     tagInput.value = "";
     showToast(t("tag_added"), "success");
   });
   on("removeGuestTag", (el) => {
-    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))?.value;
+    const guestId = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("guestModalId")
+    )?.value;
     if (!guestId) return;
     removeGuestTag(guestId, el.dataset.tag ?? "");
   });
@@ -890,6 +927,10 @@ function _registerHandlers() {
   on("printSeatingChart", () => printSeatingChart());
   on("printPlaceCards", () => printPlaceCards());
   on("printTableSigns", () => printTableSigns());
+  // S21.4 Per-table place-card print
+  on("printTablePlaceCards", (el) =>
+    printPlaceCards(el.dataset.actionArg ?? ""),
+  );
   on("exportTransportCSV", () => exportTransportCSV());
   on("printTransportManifest", () => printTransportManifest());
   on("deleteTable", (el) =>
@@ -911,6 +952,8 @@ function _registerHandlers() {
     setCheckinSearch(input?.value ?? "");
   });
   on("exportCheckinReport", () => exportCheckinReport());
+  // S21.3 Gift log CSV export
+  on("exportGiftsCSV", () => exportGiftsCSV());
   on("resetAllCheckins", () =>
     showConfirmDialog(t("confirm_reset_checkins"), () => resetAllCheckins()),
   );
@@ -941,6 +984,7 @@ function _registerHandlers() {
       paid: getVal("vendorPaid") || "0",
       dueDate: getVal("vendorDueDate") || "",
       notes: getVal("vendorNotes"),
+      contractUrl: getVal("vendorContractUrl") || "",
     };
     const id = getVal("vendorModalId") || null;
     const result = saveVendor(data, id);
@@ -1241,7 +1285,9 @@ function _registerHandlers() {
     if (!list) return;
     const radios = list.querySelectorAll('input[type="radio"]:checked');
     const choices = /** @type {string[]} */ ([]);
-    radios.forEach((r) => choices.push(/** @type {HTMLInputElement} */ (r).value));
+    radios.forEach((r) =>
+      choices.push(/** @type {HTMLInputElement} */ (r).value),
+    );
     _applyConflictResolutions(choices);
     closeModal();
     showToast(t("conflict_resolved"), "success");
@@ -1250,9 +1296,14 @@ function _registerHandlers() {
   on("pushAllToSheets", async () => {
     showToast(t("sheets_push_all_loading"), "info");
     try {
-      const counts = /** @type {Record<string, number>} */ (await pushAllToSheets());
+      const counts = /** @type {Record<string, number>} */ (
+        await pushAllToSheets()
+      );
       const total = Object.values(counts).reduce((s, n) => s + n, 0);
-      showToast(t("sheets_push_all_done").replace("{n}", String(total)), "success");
+      showToast(
+        t("sheets_push_all_done").replace("{n}", String(total)),
+        "success",
+      );
     } catch {
       showToast(t("toast_sheets_error"), "error");
     }
@@ -1347,7 +1398,8 @@ function _registerHandlers() {
   on("exportJSON", () => exportJSON());
   on("importJSON", (el) => importJSON(el));
   on("startAutoBackup", () => {
-    const interval = Number(document.getElementById("autoBackupInterval")?.value) || 30;
+    const interval =
+      Number(document.getElementById("autoBackupInterval")?.value) || 30;
     startAutoBackup(interval);
     showToast(t("autobackup_started"), "success");
   });

@@ -22,9 +22,16 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("vendors", renderPaymentSchedule));
   _unsubs.push(storeSubscribe("guests", renderRsvpTimeline));
   _unsubs.push(storeSubscribe("expenses", renderExpenseDonut));
-  _unsubs.push(storeSubscribe("vendors", () => { checkBudgetOvershoot(); renderArrivalForecast(); }));
+  _unsubs.push(
+    storeSubscribe("vendors", () => {
+      checkBudgetOvershoot();
+      renderArrivalForecast();
+    }),
+  );
   _unsubs.push(storeSubscribe("guests", renderArrivalForecast));
   _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
+  // S22.2 expense trend chart
+  _unsubs.push(storeSubscribe("expenses", renderExpenseTrend));
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -35,6 +42,7 @@ export function mount(_container) {
   renderRsvpTimeline();
   renderExpenseDonut();
   renderArrivalForecast();
+  renderExpenseTrend(); // S22.2
 }
 
 export function unmount() {
@@ -1156,4 +1164,97 @@ export function renderArrivalForecast() {
       : t("forecast_detail_ok");
     detailEl.textContent = `${overMsg}  |  ${t("status_maybe")}: ${maybe} × ${Math.round(_MAYBE_PCT * 100)}%  ${t("status_pending")}: ${pending} × ${Math.round(_PENDING_PCT * 100)}%`;
   }
+}
+
+// ── S22.2 Expense Trend SVG Line Chart ────────────────────────────────────
+
+/**
+ * Render a month-by-month expense trend as an SVG polyline in #expenseTrendSvg.
+ */
+export function renderExpenseTrend() {
+  const container = document.getElementById("expenseTrendSvg");
+  if (!container) return;
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+
+  // Build monthly buckets — last 6 months
+  const now = new Date();
+  /** @type {{ label: string, total: number }[]} */
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleDateString("he-IL", { month: "short" });
+    const total = expenses
+      .filter((e) => (e.date || "").startsWith(key))
+      .reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    months.push({ label, total });
+  }
+
+  const W = 280, H = 120, PAD = { top: 10, right: 10, bottom: 30, left: 44 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+  const maxVal = Math.max(...months.map((m) => m.total), 1);
+
+  container.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  container.setAttribute("width", "100%");
+  container.setAttribute("height", String(H));
+  container.textContent = "";
+
+  const ns = "http://www.w3.org/2000/svg";
+  const xStep = chartW / Math.max(months.length - 1, 1);
+
+  // Y-axis grid lines
+  [0, 0.5, 1].forEach((frac) => {
+    const y = PAD.top + chartH * (1 - frac);
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("x1", String(PAD.left));
+    line.setAttribute("x2", String(PAD.left + chartW));
+    line.setAttribute("y1", String(y));
+    line.setAttribute("y2", String(y));
+    line.setAttribute("stroke", "var(--card-border)");
+    line.setAttribute("stroke-dasharray", "4 4");
+    container.appendChild(line);
+    const amt = Math.round(maxVal * frac);
+    const labelEl = document.createElementNS(ns, "text");
+    labelEl.setAttribute("x", String(PAD.left - 4));
+    labelEl.setAttribute("y", String(y + 4));
+    labelEl.setAttribute("text-anchor", "end");
+    labelEl.setAttribute("font-size", "9");
+    labelEl.setAttribute("fill", "var(--text-muted)");
+    labelEl.textContent = amt > 999 ? `${Math.round(amt / 1000)}K` : String(amt);
+    container.appendChild(labelEl);
+  });
+
+  // Poly-line points
+  const pts = months.map((m, i) => {
+    const x = PAD.left + i * xStep;
+    const y = PAD.top + chartH * (1 - m.total / maxVal);
+    return { x, y, m };
+  });
+  const polyline = document.createElementNS(ns, "polyline");
+  polyline.setAttribute("points", pts.map((p) => `${p.x},${p.y}`).join(" "));
+  polyline.setAttribute("fill", "none");
+  polyline.setAttribute("stroke", "var(--color-accent, #8b5cf6)");
+  polyline.setAttribute("stroke-width", "2");
+  polyline.setAttribute("stroke-linejoin", "round");
+  polyline.setAttribute("stroke-linecap", "round");
+  container.appendChild(polyline);
+
+  // Data points + X labels
+  pts.forEach(({ x, y, m }) => {
+    const dot = document.createElementNS(ns, "circle");
+    dot.setAttribute("cx", String(x));
+    dot.setAttribute("cy", String(y));
+    dot.setAttribute("r", "3");
+    dot.setAttribute("fill", "var(--color-accent, #8b5cf6)");
+    container.appendChild(dot);
+    const lbl = document.createElementNS(ns, "text");
+    lbl.setAttribute("x", String(x));
+    lbl.setAttribute("y", String(H - PAD.bottom + 14));
+    lbl.setAttribute("text-anchor", "middle");
+    lbl.setAttribute("font-size", "9");
+    lbl.setAttribute("fill", "var(--text-muted)");
+    lbl.textContent = m.label;
+    container.appendChild(lbl);
+  });
 }
