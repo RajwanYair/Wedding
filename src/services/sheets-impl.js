@@ -119,12 +119,10 @@ const _COL_ORDER = {
 };
 
 // F1.5.4 — Column order validation (dev-only guard)
-if (typeof console !== "undefined" && console.assert) {
-  for (const [key, cols] of Object.entries(_COL_ORDER)) {
-    console.assert(Array.isArray(cols) && cols.length > 0, `_COL_ORDER[${key}] must be a non-empty array`);
-    console.assert(cols[0] === "id", `_COL_ORDER[${key}] first column must be "id", got "${cols[0]}"`);
-    console.assert(new Set(cols).size === cols.length, `_COL_ORDER[${key}] has duplicate columns`);
-  }
+for (const [key, cols] of Object.entries(_COL_ORDER)) {
+  if (!Array.isArray(cols) || cols.length === 0) console.warn(`_COL_ORDER[${key}] must be a non-empty array`);
+  if (cols[0] !== "id") console.warn(`_COL_ORDER[${key}] first column must be "id", got "${cols[0]}"`);
+  if (new Set(cols).size !== cols.length) console.warn(`_COL_ORDER[${key}] has duplicate columns`);
 }
 
 /**

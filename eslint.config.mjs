@@ -59,6 +59,9 @@ export default [
         FB: "readonly",
         AppleID: "readonly",
         google: "readonly",
+        indexedDB: "readonly",
+        IDBDatabase: "readonly",
+        IDBRequest: "readonly",
       },
     },
     rules: {

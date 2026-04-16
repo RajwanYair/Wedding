@@ -1001,5 +1001,11 @@
     "dash_next_event_soon": "In {mins} minutes",
     "dash_next_event_in": "At {time}",
     "dash_next_event_at": "At",
-    "dash_next_event_none": "No upcoming events"
+    "dash_next_event_none": "No upcoming events",
+    "forecast_budget_title": "Budget Forecast",
+    "forecast_headcount": "Confirmed headcount",
+    "forecast_per_plate": "Est. per plate",
+    "forecast_total": "Forecast total",
+    "forecast_vs_budget": "vs. Budget",
+    "forecast_no_guests": "No confirmed guests yet"
 }

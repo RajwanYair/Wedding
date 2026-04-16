@@ -55,6 +55,9 @@ export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderGiftProgress));
   // S24.5 next timeline event
   _unsubs.push(storeSubscribe("timeline", renderNextTimelineEvent));
+  // F4.1 budget forecast
+  _unsubs.push(storeSubscribe("guests", renderBudgetForecast));
+  _unsubs.push(storeSubscribe("vendors", renderBudgetForecast));
   _unsubs.push(
     storeSubscribe("weddingInfo", () => {
       updateTopBar();
@@ -74,6 +77,7 @@ export function mount(_container) {
   renderSuggestedActions(); // S23.4
   renderGiftProgress(); // S24.3
   renderNextTimelineEvent(); // S24.5
+  renderBudgetForecast(); // F4.1
   updateTopBar();
   updateCountdown();
   updateRsvpDeadlineBanner();
@@ -370,6 +374,77 @@ export function renderExpenseSummary() {
   }
 }
 
+// ── F4.1 Budget Forecast (headcount × per-plate vs target) ────────────────
+
+/**
+ * Render a budget forecast card showing estimated total cost based on
+ * confirmed guest headcount × per-plate estimate vs budget target.
+ * Displays in #dashBudgetForecast.
+ */
+export function renderBudgetForecast() {
+  const container = document.getElementById("dashBudgetForecast");
+  if (!container) return;
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const budgetTarget = Number(info.budgetTarget) || 0;
+
+  // Count confirmed attendees (adults + children)
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const headcount = confirmed.reduce((s, g) => s + (Number(g.count) || 1), 0);
+
+  // Estimate per-plate from catering vendor or default fallback
+  const cateringVendor = vendors.find(
+    (v) => (v.category || "").toLowerCase() === "catering" || (v.category || "").includes("קייטרינג"),
+  );
+  let perPlate = 0;
+  if (cateringVendor && headcount > 0) {
+    perPlate = Math.round((cateringVendor.price || 0) / headcount);
+  }
+
+  const estimatedCatering = perPlate * headcount;
+  const vendorTotalNoCatering = vendors
+    .filter((v) => v !== cateringVendor)
+    .reduce((s, v) => s + (v.price || 0), 0);
+  const forecastTotal = vendorTotalNoCatering + estimatedCatering;
+
+  container.textContent = "";
+
+  if (headcount === 0) {
+    container.textContent = t("forecast_no_guests") || "אין אורחים מאושרים עדיין";
+    return;
+  }
+
+  const items = [
+    { label: t("forecast_headcount") || "מוזמנים מאושרים", val: String(headcount) },
+    { label: t("forecast_per_plate") || "עלות למנה (משוער)", val: perPlate > 0 ? `₪${perPlate.toLocaleString()}` : "—" },
+    { label: t("forecast_total") || "תחזית כוללת", val: `₪${forecastTotal.toLocaleString()}` },
+  ];
+
+  if (budgetTarget > 0) {
+    const diff = budgetTarget - forecastTotal;
+    const cls = diff >= 0 ? "u-text-success" : "u-text-danger";
+    items.push({
+      label: t("forecast_vs_budget") || "מול תקציב",
+      val: `<span class="${cls}">${diff >= 0 ? "+" : ""}₪${diff.toLocaleString()}</span>`,
+    });
+  }
+
+  items.forEach(({ label, val }) => {
+    const row = document.createElement("div");
+    row.className = "forecast-row";
+    const lbl = document.createElement("span");
+    lbl.className = "forecast-label u-text-muted";
+    lbl.textContent = label;
+    const v = document.createElement("span");
+    v.className = "forecast-value";
+    v.innerHTML = val; // safe: values are computed numbers / class names
+    row.appendChild(lbl);
+    row.appendChild(v);
+    container.appendChild(row);
+  });
+}
+
 // ── S15.4 Dashboard Activity Feed ────────────────────────────────────────
 
 /** @type {boolean} */
@@ -487,14 +562,34 @@ export function renderFollowUpList() {
     el.textContent = t("followup_none");
     return;
   }
+  // F4.1 — Sort by longest-pending first (createdAt or sent date)
+  const now = Date.now();
+  const sorted = [...pending].sort((a, b) => {
+    const aTs = new Date(a.createdAt || 0).getTime();
+    const bTs = new Date(b.createdAt || 0).getTime();
+    return aTs - bTs; // oldest first
+  });
   el.textContent = "";
-  pending.slice(0, 15).forEach((g) => {
+  sorted.slice(0, 15).forEach((g) => {
     const row = document.createElement("div");
     row.className = "followup-row";
     const name = document.createElement("span");
     name.className = "followup-name";
     name.textContent = `${g.firstName} ${g.lastName || ""}`;
     row.appendChild(name);
+    // F4.1 — Show days pending as a timing hint
+    const created = g.createdAt ? new Date(g.createdAt) : null;
+    if (created) {
+      const daysPending = Math.floor((now - created.getTime()) / 86_400_000);
+      if (daysPending > 0) {
+        const age = document.createElement("span");
+        age.className = "followup-age u-text-muted u-text-sm u-ml-sm";
+        age.textContent = `${daysPending}d`;
+        if (daysPending >= 7) age.classList.add("u-text-warning");
+        if (daysPending >= 14) age.classList.replace("u-text-warning", "u-text-danger");
+        row.appendChild(age);
+      }
+    }
     if (g.phone) {
       const phone = document.createElement("a");
       phone.href = `tel:${g.phone}`;

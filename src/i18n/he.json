@@ -1003,5 +1003,11 @@
     "dash_next_event_soon": "בעוד {mins} דקות",
     "dash_next_event_in": "ב-{time}",
     "dash_next_event_at": "ב-",
-    "dash_next_event_none": "אין אירועים קרובים"
+    "dash_next_event_none": "אין אירועים קרובים",
+    "forecast_budget_title": "תחזית תקציב",
+    "forecast_headcount": "מוזמנים מאושרים",
+    "forecast_per_plate": "עלות למנה (משוער)",
+    "forecast_total": "תחזית כוללת",
+    "forecast_vs_budget": "מול תקציב",
+    "forecast_no_guests": "אין אורחים מאושרים עדיין"
 }

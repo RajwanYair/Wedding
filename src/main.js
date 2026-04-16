@@ -189,7 +189,7 @@ function _buildStoreDefs() {
   const adapterType = await initStorage();
   if (adapterType === "indexeddb") {
     const migrated = await migrateFromLocalStorage();
-    if (migrated > 0) console.log(`[storage] Migrated ${migrated} keys from localStorage to IndexedDB`);
+    if (migrated > 0) console.warn(`[storage] Migrated ${migrated} keys from localStorage to IndexedDB`);
   }
 
   // 3. Reactive store — seed with persisted data from localStorage
