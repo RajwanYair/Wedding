@@ -189,6 +189,47 @@
   }
 }
 
+/* ── F3.1.5 High Contrast (prefers-contrast: more) ── */
+@media (prefers-contrast: more) {
+  :root {
+    --card-border: 2px solid var(--accent);
+    --card-shadow: none;
+    --text-secondary: var(--text-primary);
+    --text-muted: var(--text-primary);
+  }
 
+  .card { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .stat-card { border-width: 2px; }
+  .btn { border: 2px solid currentColor; }
+  .nav-tab { border: 1px solid var(--text-secondary); }
+  .badge { border: 1px solid currentColor; }
+  .toast { border: 2px solid currentColor; }
+  .modal { border: 2px solid var(--accent); }
+  input, select, textarea { border: 2px solid var(--text-primary); }
+}
+
+/* ── Forced Colors (Windows High-Contrast / forced-colors: active) ── */
+@media (forced-colors: active) {
+  .card,
+  .stat-card,
+  .modal,
+  .toast { border: 1px solid CanvasText; forced-color-adjust: none; }
+
+  .btn { border: 1px solid ButtonText; }
+  .btn:hover { border-color: Highlight; }
+
+  .nav-tab.active { border-bottom: 3px solid Highlight; }
+
+  .gold, .stat-number, .card-header {
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  :focus-visible { outline: 2px solid Highlight; }
+
+  .badge { border: 1px solid CanvasText; }
+  .particle { display: none !important; }
+  body::before { display: none; }
+}
 
 } /* end @layer responsive */

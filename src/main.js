@@ -38,6 +38,7 @@ import {
   toggleMobileNav,
   restoreTheme,
   showConfirmDialog,
+  announce,
   initSW,
   initInstallPrompt,
 } from "./core/ui.js";
@@ -809,6 +810,9 @@ async function _switchSection(name) {
     const expMod = await _resolveSection("expenses");
     expMod?.mount?.(container);
   }
+
+  // A11y: announce section change to screen readers
+  announce(t(`nav_${name}`, name));
 
   storeSet("activeSection", name);
 }
