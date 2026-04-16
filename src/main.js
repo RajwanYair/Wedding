@@ -48,6 +48,7 @@ import { registerTableHandlers } from "./handlers/table-handlers.js";
 import { registerVendorHandlers } from "./handlers/vendor-handlers.js";
 import { registerSectionHandlers } from "./handlers/section-handlers.js";
 import { registerSettingsHandlers } from "./handlers/settings-handlers.js";
+import { openAddModal } from "./utils/form-helpers.js";
 
 // ── Services ──────────────────────────────────────────────────────────────
 import {
@@ -550,67 +551,22 @@ function _registerHandlers() {
   on("toggleLightMode", () => toggleLightMode());
   on("toggleMobileNav", () => toggleMobileNav());
 
-  // ── Sync ──
-  on("syncSheetsNow", async () => {
-    try {
-      await syncSheetsNow();
-      showToast(t("synced"), "success");
-    } catch (_err) {
-      showToast(t("error_save"), "error");
-    }
-  });
-
   // ── Modals ──
   on("closeModal", (el) => closeModal(el.dataset.actionArg ?? ""));
   on("closeGalleryLightbox", () => {
     const lb = document.getElementById("galleryLightbox");
     if (lb) lb.remove();
   });
-  on("openAddGuestModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("guestModalId")
-    );
-    if (idEl) idEl.value = "";
-    const title = document.getElementById("guestModalTitle");
-    if (title) title.setAttribute("data-i18n", "modal_add_guest");
-    openModal("guestModal");
-  });
-  on("openAddTableModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("tableModalId")
-    );
-    if (idEl) idEl.value = "";
-    const title = document.getElementById("tableModalTitle");
-    if (title) title.setAttribute("data-i18n", "modal_add_table");
-    openModal("tableModal");
-  });
-  on("openAddVendorModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("vendorModalId")
-    );
-    if (idEl) idEl.value = "";
-    const title = document.getElementById("vendorModalTitle");
-    if (title) title.setAttribute("data-i18n", "modal_add_vendor");
-    openModal("vendorModal");
-  });
-  on("openAddExpenseModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("expenseModalId")
-    );
-    if (idEl) idEl.value = "";
-    const title = document.getElementById("expenseModalTitle");
-    if (title) title.setAttribute("data-i18n", "expense_add");
-    openModal("expenseModal");
-  });
-  on("openAddTimelineModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("timelineModalId")
-    );
-    if (idEl) idEl.value = "";
-    const title = document.getElementById("timelineModalTitle");
-    if (title) title.setAttribute("data-i18n", "timeline_add");
-    openModal("timelineModal");
-  });
+  on("openAddGuestModal", () =>
+    openAddModal("guestModal", "guestModalId", "guestModalTitle", "modal_add_guest", openModal));
+  on("openAddTableModal", () =>
+    openAddModal("tableModal", "tableModalId", "tableModalTitle", "modal_add_table", openModal));
+  on("openAddVendorModal", () =>
+    openAddModal("vendorModal", "vendorModalId", "vendorModalTitle", "modal_add_vendor", openModal));
+  on("openAddExpenseModal", () =>
+    openAddModal("expenseModal", "expenseModalId", "expenseModalTitle", "expense_add", openModal));
+  on("openAddTimelineModal", () =>
+    openAddModal("timelineModal", "timelineModalId", "timelineModalTitle", "timeline_add", openModal));
 
   // ── Guests (extracted to src/handlers/guest-handlers.js) ──
   registerGuestHandlers();
