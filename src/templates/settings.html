@@ -609,6 +609,11 @@
       <div class="sync-queue-monitor">
         <span data-i18n="sync_queue_pending">ממתינים לסנכרון:</span>
         <span id="syncQueueBadge" class="badge badge--warn">0</span>
+        <!-- F2.4.3 Queue drain progress bar -->
+        <div class="progress-bar u-mt-sm" id="syncProgressWrap" hidden>
+          <div class="progress-fill" id="syncProgressBar"></div>
+        </div>
+        <p class="text-note u-mt-xs" id="syncProgressText"></p>
         <div id="syncQueueList" class="sync-queue-list u-text-muted"></div>
       </div>
     </div>

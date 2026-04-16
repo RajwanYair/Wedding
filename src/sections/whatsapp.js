@@ -519,3 +519,62 @@ function _renderUnsentBadge() {
   badge.textContent = String(count);
   badge.classList.toggle("u-hidden", count === 0);
 }
+
+// ── F4.2.5 Calendar Invite (.ics) Generation ─────────────────────────────
+
+/**
+ * Generate an iCalendar (.ics) string for the wedding event.
+ * @returns {string|null} iCalendar file content or null if no date
+ */
+export function generateICS() {
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  if (!info.date) return null;
+
+  const eventDate = new Date(info.date);
+  if (Number.isNaN(eventDate.getTime())) return null;
+
+  // Default 3-hour wedding event
+  const endDate = new Date(eventDate.getTime() + 3 * 60 * 60 * 1000);
+
+  const fmt = (/** @type {Date} */ d) =>
+    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+
+  const summary = `${info.groom || ""} & ${info.bride || ""} — ${t("ics_wedding_title") || "Wedding"}`.trim();
+  const location = [info.venue, info.venueAddress].filter(Boolean).join(", ");
+
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//WeddingManager//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `DTSTART:${fmt(eventDate)}`,
+    `DTEND:${fmt(endDate)}`,
+    `SUMMARY:${summary}`,
+    location ? `LOCATION:${location}` : "",
+    `UID:wedding-${eventDate.getTime()}@weddingmanager`,
+    `DTSTAMP:${fmt(new Date())}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].filter(Boolean);
+
+  return lines.join("\r\n");
+}
+
+/**
+ * Download the wedding .ics calendar invite file.
+ */
+export function downloadCalendarInvite() {
+  const ics = generateICS();
+  if (!ics) return;
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "wedding-invite.ics";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}

@@ -475,27 +475,57 @@ export function restoreAutoBackup() {
 /** @type {(() => void) | null} */
 let _queueMonitorUnreg = null;
 
+/** @type {number} F2.4.3 — peak queue size for progress tracking */
+let _peakQueueSize = 0;
+
 /**
  * Start monitoring the sync queue and update the badge in settings.
  * Registers an onSyncStatus listener that refreshes the queue badge.
  */
 export function initQueueMonitor() {
+  _peakQueueSize = 0;
   _renderQueueBadge();
   // Register status listener (replaces previous)
   _queueMonitorUnreg?.();
   _queueMonitorUnreg = onSyncStatus(_renderQueueBadge) || null;
 }
 
-/** Render the pending-writes badge */
+/** Render the pending-writes badge + F2.4.3 progress bar */
 function _renderQueueBadge() {
   const badgeEl = document.getElementById("syncQueueBadge");
   const listEl = document.getElementById("syncQueueList");
+  const progressWrap = document.getElementById("syncProgressWrap");
+  const progressBar = document.getElementById("syncProgressBar");
+  const progressText = document.getElementById("syncProgressText");
   if (!badgeEl) return;
   const count = queueSize();
   badgeEl.textContent = String(count);
   badgeEl.classList.toggle("badge--warn", count > 0);
+
+  // Track peak for progress calculation
+  if (count > _peakQueueSize) _peakQueueSize = count;
+
   if (listEl) {
     const keys = queueKeys();
     listEl.textContent = count > 0 ? keys.join(", ") : t("queue_empty");
+  }
+
+  // F2.4.3 — progress bar
+  if (progressWrap && progressBar) {
+    if (_peakQueueSize > 0 && count > 0) {
+      progressWrap.hidden = false;
+      const done = _peakQueueSize - count;
+      const pct = Math.round((done / _peakQueueSize) * 100);
+      progressBar.style.width = `${pct}%`;
+      if (progressText) {
+        progressText.textContent = `${done}/${_peakQueueSize} (${pct}%)`;
+      }
+    } else {
+      progressWrap.hidden = true;
+      progressBar.style.width = "0%";
+      if (progressText) progressText.textContent = "";
+      // Reset peak when queue is fully drained
+      if (count === 0) _peakQueueSize = 0;
+    }
   }
 }

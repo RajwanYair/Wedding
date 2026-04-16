@@ -1024,5 +1024,9 @@
     "suggest_same_side": "אותו צד",
     "suggest_same_group": "אותה קבוצה",
     "suggest_same_meal": "העדפת תזונה דומה",
-    "suggest_best_fit": "מקום פנוי"
+    "suggest_best_fit": "מקום פנוי",
+    "ics_wedding_title": "חתונה",
+    "ics_card_title": "הזמנה ליומן",
+    "ics_card_desc": "הורד קובץ .ics להוספת האירוע ליומן.",
+    "ics_download_btn": "הורד הזמנה ליומן"
 }

@@ -38,6 +38,7 @@ import {
   toggleUnsentFilter,
   renderUnsentBadge,
   toggleDeclinedFilter,
+  downloadCalendarInvite,
 } from "../sections/whatsapp.js";
 import {
   saveTimelineItem,
@@ -159,6 +160,7 @@ export function registerSectionHandlers() {
     renderUnsentBadge();
   });
   on("toggleDeclinedFilter", () => toggleDeclinedFilter());
+  on("downloadCalendarInvite", () => downloadCalendarInvite());
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")

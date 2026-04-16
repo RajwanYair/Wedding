@@ -1022,5 +1022,9 @@
     "suggest_same_side": "Same side",
     "suggest_same_group": "Same group",
     "suggest_same_meal": "Similar diet",
-    "suggest_best_fit": "Available seat"
+    "suggest_best_fit": "Available seat",
+    "ics_wedding_title": "Wedding",
+    "ics_card_title": "Calendar Invite",
+    "ics_card_desc": "Download .ics file to add the event to your calendar.",
+    "ics_download_btn": "Download Calendar Invite"
 }
