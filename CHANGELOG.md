@@ -4,6 +4,82 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [5.4.0] — 2026-04-17
+
+### Added — 50 Features (Sprints 1–9)
+
+#### Sprint 1 — Accessibility & High-Contrast
+
+- Focus trap for modal dialogs (Tab/Shift+Tab cycling)
+- `prefers-contrast: more` high-contrast CSS support
+- `forced-colors: active` Windows High Contrast mode support
+- Screen reader announcements on section navigation (`announce()`)
+- Skip-to-content link integration
+
+#### Sprint 2 — Data Export & Integrity
+
+- `exportTimelineCSV()` — timeline items as CSV download
+- `exportContactsCSV()` — contact collector export
+- `exportAllCSV()` — bulk export 5 sections as separate CSVs
+- `checkDataIntegrity()` — validates orphaned table IDs, duplicates, invalid statuses
+- Data integrity i18n keys (he/en/ar/ru)
+
+#### Sprint 3 — WhatsApp Enhancements
+
+- Character counter for WhatsApp message templates
+- Template variable insertion panel (7 variable buttons, cursor-aware)
+- WhatsApp schedule UI (datetime-local + schedule/cancel)
+- `scheduleReminders()` / `cancelScheduledReminders()` in WhatsApp section
+- Schedule status display with pending count
+
+#### Sprint 4 — RSVP & Guest UX
+
+- RSVP rate limiting (1 submission per phone per hour, localStorage-based)
+- RSVP success animation (`.rsvp-confirm--animated` + `@keyframes rsvpPop`)
+- Wedding countdown on RSVP page (`renderRsvpCountdown()`)
+- Duplicate phone detection warning in guest save
+- RSVP countdown i18n keys (he/en/ar/ru)
+
+#### Sprint 5 — Table & Seating Enhancements
+
+- Table notes field (maxlength 200) in modal and card display
+- Dietary summary icons per table (🥬🌱🚫🌾✡️)
+- Table capacity progress bar in card view
+- `exportTableCSV(tableId)` — single table guest list export
+- Table notes i18n keys (he/en/ar/ru)
+
+#### Sprint 6 — Vendor & Budget Enhancements
+
+- Vendor rating field (1-5 stars, ★★★☆☆ display)
+- Vendor payment filter (all/paid/unpaid/overdue)
+- `getVendorPaymentSummary()` — total/paid/outstanding analytics
+- Rating column in vendor table rendering
+- Vendor filter i18n keys (he/en/ar/ru)
+
+#### Sprint 7 — Guest Management Enhancements
+
+- `getGuestGroupSummary()` — counts by group with status breakdown
+- `exportGuestsByGroup(group)` — filtered CSV export
+- `getAccessibilitySummary()` — accessibility needs aggregation
+- `getTransportSummary()` — route-to-passenger mapping
+- Group export action handler wiring
+
+#### Sprint 8 — Analytics & Intelligence
+
+- `computeResponseVelocity()` — RSVP submissions per day
+- `getMealDistribution()` — meal counts + percentages for confirmed guests
+- `getSideBalance()` — groom/bride/mutual distribution
+- `getCheckinVelocity()` — arrivals per 15-minute slot
+- `getRsvpConversionRate()` — sent/responded/confirmed funnel
+
+#### Sprint 9 — Developer Experience
+
+- Keyboard shortcuts help overlay (`?` key opens dialog)
+- Global error monitor (`initErrorMonitor()`) — captures unhandled errors to localStorage
+- Bootstrap performance timing (`performance.mark/measure`)
+- `getAppHealth()` diagnostic utility in config.js
+- `exportDebugReport()` — JSON download with errors + store diagnostics
+
 ## [5.3.0] — 2026-04-16
 
 ### Added — Sprints 1-10

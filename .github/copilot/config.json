@@ -2,7 +2,7 @@
     "version": "1.1.0",
     "chat": {
         "localeOverride": "auto",
-        "welcomeMessage": "Wedding Manager v5.3.0 — Hebrew RTL · ES2025 · Vite 8 · 1587+ tests · 0 lint warnings",
+        "welcomeMessage": "Wedding Manager v5.4.0 — Hebrew RTL · ES2025 · Vite 8 · 1590+ tests · 0 lint warnings",
         "defaultModel": "claude-sonnet-4-5"
     },
     "codeGeneration": {

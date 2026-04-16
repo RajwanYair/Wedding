@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v5.3.0
+// Wedding Manager — Test Suite v5.4.0
 // Run: npm test
 // 1587+ tests — core + extended + S0–S25 features
 // =============================================================================
@@ -51,17 +51,17 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe("Version", function () {
-  it("src/core/config.js contains v5.3.0", function () {
+  it("src/core/config.js contains v5.4.0", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
-    assert.ok(cfg.includes("5.3.0"));
+    assert.ok(cfg.includes("5.4.0"));
   });
 
-  it("SW cache name contains v5.3.0", function () {
-    assert.ok(SW.includes("wedding-v5.3.0"));
+  it("SW cache name contains v5.4.0", function () {
+    assert.ok(SW.includes("wedding-v5.4.0"));
   });
 
-  it("package.json version is 5.3.0", function () {
-    assert.equal(PKG.version, "5.3.0");
+  it("package.json version is 5.4.0", function () {
+    assert.equal(PKG.version, "5.4.0");
   });
 });
 
@@ -749,7 +749,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v5.3.0"));
+    assert.ok(SW.includes("wedding-v5.4.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -5990,7 +5990,7 @@ describe("v3.7.0: version stamps consistent", function () {
       "src/core/config.js APP_VERSION not updated",
     );
   });
-  it("copilot-instructions.md references v5.3.0 or later", function () {
+  it("copilot-instructions.md references v5.4.0 or later", function () {
     const src = readFileSync(
       resolve(__dirname, "..", ".github", "copilot-instructions.md"),
       "utf8",
