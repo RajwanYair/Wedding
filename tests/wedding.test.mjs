@@ -878,17 +878,23 @@ describe("Security hardening", function () {
     assert.ok(HTML.includes("Content-Security-Policy"), "CSP meta tag missing");
     assert.ok(HTML.includes("object-src 'none'"), "object-src 'none' missing");
     assert.ok(HTML.includes("base-uri 'self'"), "base-uri 'self' missing");
-    assert.ok(
-      HTML.includes("frame-ancestors 'none'"),
-      "frame-ancestors missing",
-    );
     assert.ok(HTML.includes("form-action 'self'"), "form-action missing");
   });
 
-  it("framebusting inline script present in HTML", function () {
+  it("CSP _headers file has frame-ancestors 'none'", function () {
+    const headersPath = resolve(__dirname, "..", "public", "_headers");
+    const headers = readFileSync(headersPath, "utf8");
     assert.ok(
-      HTML.includes("window.top!==window.self"),
-      "framebusting script missing",
+      headers.includes("frame-ancestors 'none'"),
+      "frame-ancestors missing from _headers",
+    );
+  });
+
+  it("no inline scripts in index.html (strict CSP)", function () {
+    // Inline scripts are banned — CSP does not allow 'unsafe-inline'
+    assert.ok(
+      !/<script>[^<]/.test(HTML),
+      "inline script detected — use external files only",
     );
   });
 

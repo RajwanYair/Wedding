@@ -102,6 +102,11 @@ jobs:
               echo "::warning file=$f::Inline event handler detected (prefer data-action)"
             fi
           done
+          # Check index.html has no inline scripts (CSP moved to _headers)
+          if grep -Pn '<script>[^<]' index.html; then
+            echo "::error file=index.html::Inline script detected — use external files only (CSP disallows inline)"
+            FAILED=1
+          fi
           [ "$FAILED" -eq 0 ] && echo "Security scan passed."
           exit $FAILED
 
