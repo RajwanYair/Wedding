@@ -17,6 +17,8 @@ import {
   generateICS,
   getScheduledQueue,
   getThankYouCount,
+  getWhatsAppSendRate,
+  getMessageStatsByGroup,
 } from "../../src/sections/whatsapp.js";
 
 function seedStore() {
@@ -196,5 +198,57 @@ describe("getThankYouCount", () => {
     ]);
     const count = getThankYouCount();
     expect(count).toBe(1);
+  });
+});
+
+// ── getWhatsAppSendRate ───────────────────────────────────────────────────
+describe("getWhatsAppSendRate", () => {
+  beforeEach(() => seedStore());
+
+  it("returns 0 when no eligible guests", () => {
+    storeSet("guests", []);
+    const r = getWhatsAppSendRate();
+    expect(r.eligible).toBe(0);
+    expect(r.rate).toBe(0);
+  });
+
+  it("calculates send rate correctly", () => {
+    storeSet("guests", [
+      makeGuest({ phone: "972501111111", sent: true, status: "pending" }),
+      makeGuest({ phone: "972502222222", sent: false, status: "pending" }),
+      makeGuest({ phone: "972503333333", sent: true, status: "confirmed" }),
+      makeGuest({ phone: "", sent: false, status: "pending" }), // no phone
+      makeGuest({ phone: "972504444444", sent: false, status: "declined" }), // declined
+    ]);
+    const r = getWhatsAppSendRate();
+    expect(r.eligible).toBe(3);
+    expect(r.sent).toBe(2);
+    expect(r.rate).toBe(67);
+  });
+});
+
+// ── getMessageStatsByGroup ────────────────────────────────────────────────
+describe("getMessageStatsByGroup", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty for no guests", () => {
+    storeSet("guests", []);
+    expect(getMessageStatsByGroup()).toHaveLength(0);
+  });
+
+  it("groups message stats by guest group sorted by most pending", () => {
+    storeSet("guests", [
+      makeGuest({ phone: "972501111111", group: "family", sent: true, status: "pending" }),
+      makeGuest({ phone: "972502222222", group: "family", sent: false, status: "pending" }),
+      makeGuest({ phone: "972503333333", group: "friends", sent: false, status: "pending" }),
+      makeGuest({ phone: "972504444444", group: "friends", sent: false, status: "confirmed" }),
+    ]);
+    const stats = getMessageStatsByGroup();
+    expect(stats).toHaveLength(2);
+    expect(stats[0].group).toBe("friends"); // 2 pending
+    expect(stats[0].pending).toBe(2);
+    expect(stats[1].group).toBe("family");
+    expect(stats[1].sent).toBe(1);
+    expect(stats[1].pending).toBe(1);
   });
 });

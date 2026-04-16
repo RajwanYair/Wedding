@@ -11,6 +11,9 @@ import { initStore, storeGet, storeSet } from "../../src/core/store.js";
 import {
   lookupRsvpByPhone,
   submitRsvp,
+  getRsvpRateBySide,
+  getRsvpResponseTime,
+  getRsvpDailyTrend,
 } from "../../src/sections/rsvp.js";
 
 // Mock the sheets service so enqueueWrite/appendToRsvpLog are no-ops in tests
@@ -142,5 +145,74 @@ describe("submitRsvp", () => {
   it("returns ok:false when both phone and status are missing", () => {
     const result = submitRsvp({});
     expect(result.ok).toBe(false);
+  });
+});
+
+// ── getRsvpRateBySide ─────────────────────────────────────────────────────
+describe("getRsvpRateBySide", () => {
+  it("returns empty when no guests", () => {
+    storeSet("guests", []);
+    expect(getRsvpRateBySide()).toHaveLength(0);
+  });
+
+  it("groups response rate by side", () => {
+    storeSet("guests", [
+      { id: "1", side: "groom", status: "confirmed" },
+      { id: "2", side: "groom", status: "pending" },
+      { id: "3", side: "bride", status: "confirmed" },
+      { id: "4", side: "bride", status: "declined" },
+    ]);
+    const rates = getRsvpRateBySide();
+    const groom = rates.find((r) => r.side === "groom");
+    expect(groom.total).toBe(2);
+    expect(groom.responded).toBe(1);
+    expect(groom.rate).toBe(50);
+    const bride = rates.find((r) => r.side === "bride");
+    expect(bride.responded).toBe(2);
+    expect(bride.rate).toBe(100);
+  });
+});
+
+// ── getRsvpResponseTime ───────────────────────────────────────────────────
+describe("getRsvpResponseTime", () => {
+  it("returns zeros when no guests have timestamps", () => {
+    storeSet("guests", [{ id: "1" }]);
+    const r = getRsvpResponseTime();
+    expect(r.count).toBe(0);
+    expect(r.avgDays).toBe(0);
+  });
+
+  it("calculates average response time in days", () => {
+    const base = new Date("2025-01-01T00:00:00Z").toISOString();
+    storeSet("guests", [
+      { id: "1", createdAt: base, rsvpDate: new Date("2025-01-04T00:00:00Z").toISOString() },
+      { id: "2", createdAt: base, rsvpDate: new Date("2025-01-11T00:00:00Z").toISOString() },
+    ]);
+    const r = getRsvpResponseTime();
+    expect(r.count).toBe(2);
+    expect(r.fastest).toBe(3);
+    expect(r.slowest).toBe(10);
+    expect(r.avgDays).toBe(7); // (3+10)/2 = 6.5 → 7
+  });
+});
+
+// ── getRsvpDailyTrend ─────────────────────────────────────────────────────
+describe("getRsvpDailyTrend", () => {
+  it("returns empty when no rsvpDate present", () => {
+    storeSet("guests", [{ id: "1" }]);
+    expect(getRsvpDailyTrend()).toHaveLength(0);
+  });
+
+  it("counts submissions per day sorted chronologically", () => {
+    storeSet("guests", [
+      { id: "1", rsvpDate: "2025-03-15T10:00:00Z" },
+      { id: "2", rsvpDate: "2025-03-15T14:00:00Z" },
+      { id: "3", rsvpDate: "2025-03-16T08:00:00Z" },
+    ]);
+    const trend = getRsvpDailyTrend();
+    expect(trend).toHaveLength(2);
+    expect(trend[0].date).toBe("2025-03-15");
+    expect(trend[0].count).toBe(2);
+    expect(trend[1].count).toBe(1);
   });
 });

@@ -424,3 +424,66 @@ export function getRsvpFunnelStats() {
     checkedIn: guests.filter((g) => g.checkedIn).length,
   };
 }
+
+/**
+ * Response rate by side (groom/bride/mutual).
+ * @returns {{ side: string, total: number, responded: number, rate: number }[]}
+ */
+export function getRsvpRateBySide() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Map<string, { total: number, responded: number }>} */
+  const map = new Map();
+  for (const g of guests) {
+    const side = g.side || "mutual";
+    const entry = map.get(side) ?? { total: 0, responded: 0 };
+    entry.total += 1;
+    if (g.status === "confirmed" || g.status === "declined" || g.status === "maybe") {
+      entry.responded += 1;
+    }
+    map.set(side, entry);
+  }
+  return [...map.entries()].map(([side, d]) => ({
+    side,
+    total: d.total,
+    responded: d.responded,
+    rate: d.total ? Math.round((d.responded / d.total) * 100) : 0,
+  }));
+}
+
+/**
+ * Average response time (days between createdAt and rsvpDate) for guests who responded.
+ * @returns {{ avgDays: number, fastest: number, slowest: number, count: number }}
+ */
+export function getRsvpResponseTime() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const times = guests
+    .filter((g) => g.createdAt && g.rsvpDate)
+    .map((g) => (new Date(g.rsvpDate).getTime() - new Date(g.createdAt).getTime()) / 86400000)
+    .filter((d) => d >= 0);
+  if (times.length === 0) return { avgDays: 0, fastest: 0, slowest: 0, count: 0 };
+  const sum = times.reduce((s, d) => s + d, 0);
+  return {
+    avgDays: Math.round(sum / times.length),
+    fastest: Math.round(Math.min(...times)),
+    slowest: Math.round(Math.max(...times)),
+    count: times.length,
+  };
+}
+
+/**
+ * RSVP daily submission counts for trend charting.
+ * @returns {{ date: string, count: number }[]}
+ */
+export function getRsvpDailyTrend() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Map<string, number>} */
+  const map = new Map();
+  for (const g of guests) {
+    if (!g.rsvpDate) continue;
+    const day = g.rsvpDate.slice(0, 10);
+    map.set(day, (map.get(day) ?? 0) + 1);
+  }
+  return [...map.entries()]
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}

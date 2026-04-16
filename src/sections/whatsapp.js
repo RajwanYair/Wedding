@@ -821,3 +821,39 @@ export function downloadCalendarInvite() {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+/**
+ * WhatsApp send success rate — sent vs total eligible.
+ * @returns {{ eligible: number, sent: number, rate: number }}
+ */
+export function getWhatsAppSendRate() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const eligible = guests.filter((g) => g.phone && g.status !== "declined");
+  const sent = eligible.filter((g) => g.sent);
+  return {
+    eligible: eligible.length,
+    sent: sent.length,
+    rate: eligible.length ? Math.round((sent.length / eligible.length) * 100) : 0,
+  };
+}
+
+/**
+ * Message delivery breakdown by guest group.
+ * @returns {{ group: string, total: number, sent: number, pending: number }[]}
+ */
+export function getMessageStatsByGroup() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Map<string, { total: number, sent: number }>} */
+  const map = new Map();
+  for (const g of guests) {
+    if (!g.phone || g.status === "declined") continue;
+    const grp = g.group || "other";
+    const entry = map.get(grp) ?? { total: 0, sent: 0 };
+    entry.total += 1;
+    if (g.sent) entry.sent += 1;
+    map.set(grp, entry);
+  }
+  return [...map.entries()]
+    .map(([group, d]) => ({ group, total: d.total, sent: d.sent, pending: d.total - d.sent }))
+    .sort((a, b) => b.pending - a.pending);
+}
