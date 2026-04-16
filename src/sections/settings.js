@@ -620,3 +620,51 @@ export function exportDebugReport() {
   a.click();
   URL.revokeObjectURL(a.href);
 }
+
+/**
+ * Data completeness score — percentage of guests with all important fields filled.
+ * Checks: firstName, phone, status (non-pending), meal, tableId.
+ * @returns {{ total: number, complete: number, rate: number, missingFields: Record<string, number> }}
+ */
+export function getDataCompletenessScore() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  if (guests.length === 0) return { total: 0, complete: 0, rate: 0, missingFields: {} };
+
+  const fields = ["firstName", "phone", "meal", "tableId"];
+  /** @type {Record<string, number>} */
+  const missingFields = {};
+  let complete = 0;
+
+  for (const g of guests) {
+    let allPresent = true;
+    for (const field of fields) {
+      if (!g[field]) {
+        missingFields[field] = (missingFields[field] ?? 0) + 1;
+        allPresent = false;
+      }
+    }
+    if (allPresent) complete += 1;
+  }
+
+  return {
+    total: guests.length,
+    complete,
+    rate: Math.round((complete / guests.length) * 100),
+    missingFields,
+  };
+}
+
+/**
+ * Store sizes in bytes — useful for storage quota management.
+ * @returns {{ key: string, bytes: number }[]}
+ */
+export function getStoreSizes() {
+  const keys = ["guests", "tables", "vendors", "expenses", "timeline", "weddingInfo", "gallery"];
+  return keys
+    .map((key) => {
+      const val = storeGet(key);
+      const bytes = val ? new Blob([JSON.stringify(val)]).size : 0;
+      return { key, bytes };
+    })
+    .sort((a, b) => b.bytes - a.bytes);
+}

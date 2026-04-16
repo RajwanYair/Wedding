@@ -8,6 +8,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { getGalleryStats } from "../../src/sections/gallery.js";
 
 function seedStore() {
   initStore({
@@ -85,5 +86,28 @@ describe("Gallery store operations", () => {
     const photos = [makePhoto(), makePhoto(), makePhoto()];
     const ids = new Set(photos.map((p) => p.id));
     expect(ids.size).toBe(3);
+  });
+});
+
+// ── getGalleryStats ───────────────────────────────────────────────────────
+describe("getGalleryStats", () => {
+  beforeEach(() => seedStore());
+
+  it("returns zeros for empty gallery", () => {
+    const stats = getGalleryStats();
+    expect(stats.total).toBe(0);
+    expect(stats.withCaption).toBe(0);
+  });
+
+  it("counts photos and captions", () => {
+    storeSet("gallery", [
+      makePhoto({ caption: "Ceremony shot" }),
+      makePhoto({ caption: "" }),
+      makePhoto({ caption: "Group photo with family" }),
+    ]);
+    const stats = getGalleryStats();
+    expect(stats.total).toBe(3);
+    expect(stats.withCaption).toBe(2);
+    expect(stats.avgCaptionLength).toBeGreaterThan(0);
   });
 });

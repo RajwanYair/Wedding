@@ -236,3 +236,34 @@ export function getExpenseSummary() {
   });
   return { total, byCategory };
 }
+
+/**
+ * Expense trend — monthly totals sorted chronologically.
+ * @returns {{ month: string, total: number }[]}
+ */
+export function getExpenseMonthlyTrend() {
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  /** @type {Map<string, number>} */
+  const map = new Map();
+  for (const e of expenses) {
+    if (!e.date) continue;
+    const month = e.date.slice(0, 7);
+    map.set(month, (map.get(month) ?? 0) + (e.amount || 0));
+  }
+  return [...map.entries()]
+    .map(([month, total]) => ({ month, total }))
+    .sort((a, b) => a.month.localeCompare(b.month));
+}
+
+/**
+ * Largest N expenses for reporting.
+ * @param {number} [limit=5]
+ * @returns {{ id: string, category: string, description: string, amount: number, date: string }[]}
+ */
+export function getLargestExpenses(limit = 5) {
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  return [...expenses]
+    .sort((a, b) => (b.amount || 0) - (a.amount || 0))
+    .slice(0, limit)
+    .map((e) => ({ id: e.id, category: e.category || "", description: e.description || "", amount: e.amount || 0, date: e.date || "" }));
+}

@@ -190,3 +190,18 @@ export function renderGallery() {
     grid.appendChild(item);
   });
 }
+
+/**
+ * Gallery stats — total photos, photos with captions, storage size estimate.
+ * @returns {{ total: number, withCaption: number, avgCaptionLength: number }}
+ */
+export function getGalleryStats() {
+  const photos = /** @type {any[]} */ (storeGet("gallery") ?? []);
+  const withCaption = photos.filter((p) => p.caption);
+  const totalCaptionLength = withCaption.reduce((s, p) => s + (p.caption || "").length, 0);
+  return {
+    total: photos.length,
+    withCaption: withCaption.length,
+    avgCaptionLength: withCaption.length ? Math.round(totalCaptionLength / withCaption.length) : 0,
+  };
+}

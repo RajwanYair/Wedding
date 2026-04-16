@@ -12,6 +12,8 @@ import {
   saveExpense,
   deleteExpense,
   getExpenseSummary,
+  getExpenseMonthlyTrend,
+  getLargestExpenses,
 } from "../../src/sections/expenses.js";
 
 beforeEach(() => {
@@ -134,5 +136,41 @@ describe("getExpenseSummary", () => {
     storeSet("expenses", [{ id: "e1", amount: 100 }]);
     const summary = getExpenseSummary();
     expect(summary.byCategory["other"]).toBe(100);
+  });
+});
+
+// ── getExpenseMonthlyTrend ────────────────────────────────────────────────
+describe("getExpenseMonthlyTrend", () => {
+  it("returns empty when no dated expenses", () => {
+    storeSet("expenses", [{ id: "e1", amount: 500, category: "Test" }]);
+    expect(getExpenseMonthlyTrend()).toHaveLength(0);
+  });
+
+  it("groups expenses by month sorted chronologically", () => {
+    saveExpense(makeExpense({ amount: 1000, date: "2025-03-05" }));
+    saveExpense(makeExpense({ amount: 500, date: "2025-03-20" }));
+    saveExpense(makeExpense({ amount: 2000, date: "2025-04-10" }));
+    const trend = getExpenseMonthlyTrend();
+    expect(trend).toHaveLength(2);
+    expect(trend[0].month).toBe("2025-03");
+    expect(trend[0].total).toBe(1500);
+    expect(trend[1].month).toBe("2025-04");
+  });
+});
+
+// ── getLargestExpenses ─────────────────────────────────────────────────────
+describe("getLargestExpenses", () => {
+  it("returns empty for no expenses", () => {
+    expect(getLargestExpenses()).toHaveLength(0);
+  });
+
+  it("returns top N expenses sorted by amount", () => {
+    saveExpense(makeExpense({ amount: 100, description: "Small" }));
+    saveExpense(makeExpense({ amount: 5000, description: "Big" }));
+    saveExpense(makeExpense({ amount: 2000, description: "Medium" }));
+    const top = getLargestExpenses(2);
+    expect(top).toHaveLength(2);
+    expect(top[0].amount).toBe(5000);
+    expect(top[1].amount).toBe(2000);
   });
 });
