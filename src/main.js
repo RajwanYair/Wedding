@@ -68,55 +68,50 @@ import {
   startLiveSync,
 } from "./services/sheets.js";
 
-// ── Section modules (lifecycle) ───────────────────────────────────────────
-import * as dashboardSection from "./sections/dashboard.js";
-import * as guestsSection from "./sections/guests.js";
-import * as tablesSection from "./sections/tables.js";
-import * as settingsSection from "./sections/settings.js";
-import * as vendorsSection from "./sections/vendors.js";
-import * as expensesSection from "./sections/expenses.js";
-import * as budgetSection from "./sections/budget.js";
-import * as analyticsSection from "./sections/analytics.js";
-import * as rsvpSection from "./sections/rsvp.js";
-import * as checkinSection from "./sections/checkin.js";
-import * as gallerySection from "./sections/gallery.js";
-import * as timelineSection from "./sections/timeline.js";
-import * as invitationSection from "./sections/invitation.js";
-import * as whatsappSection from "./sections/whatsapp.js";
-import * as landingSection from "./sections/landing.js";
-import * as contactSection from "./sections/contact-collector.js";
-import * as registrySection from "./sections/registry.js";
-import * as guestLandingSection from "./sections/guest-landing.js";
-import * as changelogSection from "./sections/changelog.js";
+// ── Section modules (lazy-loaded via import.meta.glob) ────────────────────
+/** @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>} */
+const _sectionLoaders = import.meta.glob("./sections/*.js");
 
-// ── Named imports for event handlers ─────────────────────────────────────
-// Handler-specific imports moved to src/handlers/*.js
-import { popUndo } from "./utils/undo.js";
+/**
+ * Build a section-name → loader mapping from Vite glob.
+ * e.g. "./sections/dashboard.js" → "dashboard"
+ * Aliases handle filename-to-section-ID mismatches (e.g. contact-collector → contact-form).
+ * @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>}
+ */
+const _SECTION_ALIASES = { "contact-collector": "contact-form" };
+const _sectionByName = Object.fromEntries(
+  Object.entries(_sectionLoaders).map(([path, loader]) => {
+    const raw = path.replace("./sections/", "").replace(".js", "");
+    const name = _SECTION_ALIASES[raw] ?? raw;
+    return [name, loader];
+  }),
+);
+
+/**
+ * Cache of already-loaded section modules (avoids re-importing).
+ * @type {Map<string, {mount?: Function, unmount?: Function}>}
+ */
+const _loadedSections = new Map();
+
+/**
+ * Resolve a section module (lazy on first call, cached thereafter).
+ * @param {string} name
+ * @returns {Promise<{mount?: Function, unmount?: Function} | undefined>}
+ */
+async function _resolveSection(name) {
+  if (_loadedSections.has(name)) return _loadedSections.get(name);
+  const loader = _sectionByName[name];
+  if (!loader) return undefined;
+  const mod = await loader();
+  _loadedSections.set(name, mod);
+  return mod;
+}
+
+// ── Eagerly-needed section exports ────────────────────────────────────────
+// These are used during bootstrap, not just on section mount.
 import { startTimelineAlarms } from "./sections/timeline.js";
 import { initQueueMonitor } from "./sections/settings.js";
-
-/** Map of section name → module (provides mount/unmount lifecycle). */
-const SECTIONS = {
-  dashboard: dashboardSection,
-  guests: guestsSection,
-  tables: tablesSection,
-  settings: settingsSection,
-  vendors: vendorsSection,
-  expenses: expensesSection,
-  budget: budgetSection,
-  analytics: analyticsSection,
-  rsvp: rsvpSection,
-  checkin: checkinSection,
-  gallery: gallerySection,
-  timeline: timelineSection,
-  invitation: invitationSection,
-  whatsapp: whatsappSection,
-  landing: landingSection,
-  "contact-form": contactSection,
-  registry: registrySection,
-  "guest-landing": guestLandingSection,
-  changelog: changelogSection,
-};
+import { popUndo } from "./utils/undo.js";
 
 /** @type {string|null} currently mounted section name */
 let _activeSection = null;
@@ -217,8 +212,9 @@ function _buildStoreDefs() {
   restoreTheme();
 
   // 4a. Populate shared header with wedding info for all users (including guests)
-  dashboardSection.updateTopBar();
-  dashboardSection.updateCountdown();
+  const _dashMod = await _resolveSection("dashboard");
+  _dashMod?.updateTopBar?.();
+  _dashMod?.updateCountdown?.();
 
   // 5. Auth — restore session or sign in anonymously
   onAuthChange(_updateNavForAuth); // register BEFORE any login call
@@ -366,15 +362,16 @@ function _renderEventSwitcher() {
 async function _doSwitchEvent(eventId) {
   if (eventId === getActiveEventId()) return;
   // unmount active section
-  if (_activeSection && SECTIONS[_activeSection]?.unmount) {
-    SECTIONS[_activeSection].unmount();
+  if (_activeSection) {
+    _loadedSections.get(_activeSection)?.unmount?.();
   }
   // switch
   setActiveEvent(eventId);
   reinitStore(_buildStoreDefs());
   // refresh UI
-  dashboardSection.updateTopBar();
-  dashboardSection.updateCountdown();
+  const dash = await _resolveSection("dashboard");
+  dash?.updateTopBar?.();
+  dash?.updateCountdown?.();
   _renderEventSwitcher();
   // navigate to dashboard (or landing if guest)
   const target = currentUser()?.isAdmin ? "dashboard" : "landing";
@@ -753,10 +750,11 @@ async function _switchSection(name) {
   }
 
   if (_activeSection && _activeSection !== name) {
-    SECTIONS[_activeSection]?.unmount?.();
+    const prev = _loadedSections.get(_activeSection);
+    prev?.unmount?.();
     // Expenses is embedded in budget — unmount alongside it
     if (_activeSection === "budget") {
-      SECTIONS.expenses?.unmount?.();
+      _loadedSections.get("expenses")?.unmount?.();
     }
   }
   _activeSection = name;
@@ -786,12 +784,14 @@ async function _switchSection(name) {
     await injectTemplate(container, name);
   }
 
-  // Mount section module
-  SECTIONS[name]?.mount?.(container);
+  // Mount section module (lazy-loaded on first visit)
+  const mod = await _resolveSection(name);
+  mod?.mount?.(container);
 
   // Expenses is a sub-section embedded inside budget — mount alongside it
   if (name === "budget") {
-    SECTIONS.expenses?.mount?.(container);
+    const expMod = await _resolveSection("expenses");
+    expMod?.mount?.(container);
   }
 
   storeSet("activeSection", name);

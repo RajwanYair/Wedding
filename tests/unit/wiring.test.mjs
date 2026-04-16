@@ -74,8 +74,27 @@ function extractSectionList() {
   return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 }
 
-/** Extract all section names from the SECTIONS map in main.js */
+/** Extract all section names from import.meta.glob or SECTIONS map in main.js */
 function extractSectionsMap() {
+  // New: import.meta.glob("./sections/*.js") — enumerate section files on disk
+  if (MAIN_JS.includes("import.meta.glob")) {
+    // Also apply aliases defined in _SECTION_ALIASES
+    const aliasBlock = MAIN_JS.match(/_SECTION_ALIASES\s*=\s*\{([\s\S]*?)\}/);
+    const aliases = {};
+    if (aliasBlock) {
+      for (const m of aliasBlock[1].matchAll(/"([^"]+)"\s*:\s*"([^"]+)"/g)) {
+        aliases[m[1]] = m[2];
+      }
+    }
+    const sectionsDir = resolve(root, "src", "sections");
+    return readdirSync(sectionsDir)
+      .filter((f) => f.endsWith(".js") && f !== "index.js")
+      .map((f) => {
+        const raw = f.replace(".js", "");
+        return aliases[raw] ?? raw;
+      });
+  }
+  // Legacy: const SECTIONS = { ... };
   const block = MAIN_JS.match(/const SECTIONS\s*=\s*\{([\s\S]*?)\};/);
   if (!block) return [];
   return [...block[1].matchAll(/["']?([a-z][-a-z]*)["']?\s*:/g)].map((m) => m[1]);
@@ -221,15 +240,28 @@ describe("Wiring: SECTIONS map (main.js)", () => {
 });
 
 describe("Wiring: barrel exports (src/sections/index.js)", () => {
-  // Every section module imported in main.js should be in barrel
-  const importedModules = [...MAIN_JS.matchAll(/import \* as (\w+Section) from "\.\/sections\//g)]
-    .map((m) => m[1]);
+  // With import.meta.glob, verify barrel has an export for each section file
+  if (MAIN_JS.includes("import.meta.glob")) {
+    const sectionsDir = resolve(root, "src", "sections");
+    const sectionFiles = readdirSync(sectionsDir)
+      .filter((f) => f.endsWith(".js") && f !== "index.js");
 
-  importedModules.forEach((modName) => {
-    it(`barrel exports ${modName}`, () => {
-      expect(BARREL).toContain(modName);
+    sectionFiles.forEach((f) => {
+      it(`barrel references ${f}`, () => {
+        expect(BARREL).toContain(f.replace(".js", ""));
+      });
     });
-  });
+  } else {
+    // Legacy: check each import * as xxxSection from "./sections/"
+    const importedModules = [...MAIN_JS.matchAll(/import \* as (\w+Section) from "\.\/sections\//g)]
+      .map((m) => m[1]);
+
+    importedModules.forEach((modName) => {
+      it(`barrel exports ${modName}`, () => {
+        expect(BARREL).toContain(modName);
+      });
+    });
+  }
 });
 
 describe("Wiring: nav sections consistency", () => {
@@ -406,10 +438,18 @@ describe("Wiring: modal lazy-loading", () => {
 describe("Wiring: embedded sub-sections", () => {
   it("budget mount also mounts expenses sub-section", () => {
     expect(MAIN_JS).toContain('name === "budget"');
-    expect(MAIN_JS).toContain("SECTIONS.expenses?.mount");
+    // Accept either SECTIONS.expenses?.mount (eager) or _resolveSection("expenses") (lazy)
+    expect(
+      MAIN_JS.includes("SECTIONS.expenses?.mount") ||
+        MAIN_JS.includes('_resolveSection("expenses")'),
+    ).toBe(true);
   });
   it("budget unmount also unmounts expenses sub-section", () => {
     expect(MAIN_JS).toContain('_activeSection === "budget"');
-    expect(MAIN_JS).toContain("SECTIONS.expenses?.unmount");
+    // Accept either SECTIONS.expenses?.unmount (eager) or _loadedSections.get("expenses") (lazy)
+    expect(
+      MAIN_JS.includes("SECTIONS.expenses?.unmount") ||
+        MAIN_JS.includes('_loadedSections.get("expenses")'),
+    ).toBe(true);
   });
 });
