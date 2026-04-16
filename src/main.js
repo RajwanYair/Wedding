@@ -13,6 +13,7 @@ import { initStorage, migrateFromLocalStorage } from "./core/storage.js";
 import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import { loadLocale, applyI18n, t } from "./core/i18n.js";
+import { initErrorMonitor } from "./utils/error-monitor.js";
 import {
   load,
   restoreActiveEvent,
@@ -28,6 +29,7 @@ import {
   initSwipe,
   initPullToRefresh,
   initKeyboardShortcuts,
+  initShortcutsHelp,
 } from "./core/nav.js";
 import {
   showToast,
@@ -181,6 +183,12 @@ function _buildStoreDefs() {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────
 (async function bootstrap() {
+  // Sprint 9: Performance timing
+  performance.mark("bootstrap-start");
+
+  // 0. Global error monitoring
+  initErrorMonitor();
+
   // 1. Language
   const lang = load("lang", "he") === "en" ? "en" : "he";
   await loadLocale(lang);
@@ -277,6 +285,7 @@ function _buildStoreDefs() {
   // 11a. Pull-to-refresh on mobile (S2.8) — triggers immediate Sheets sync
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
+  initShortcutsHelp();
 
   // S15.1 — Ctrl+Z undo for reversible operations
   document.addEventListener("keydown", (e) => {
@@ -349,6 +358,10 @@ function _buildStoreDefs() {
 
   // F1.6.3 — Prefetch likely-next section templates on idle
   prefetchTemplates(["guests", "tables", "rsvp", "analytics"]);
+
+  // Sprint 9: Performance timing end
+  performance.mark("bootstrap-end");
+  performance.measure("bootstrap", "bootstrap-start", "bootstrap-end");
 })();
 
 // ── S9.2 Event Switcher ──────────────────────────────────────────────────

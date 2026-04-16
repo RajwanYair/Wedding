@@ -1066,5 +1066,7 @@
     "vendor_filter_all": "All",
     "vendor_filter_paid": "Paid",
     "vendor_filter_unpaid": "Unpaid",
-    "vendor_filter_overdue": "Overdue"
+    "vendor_filter_overdue": "Overdue",
+    "shortcuts_help_title": "Keyboard Shortcuts",
+    "export_debug_report": "Export Debug Report"
 }

@@ -78,3 +78,21 @@ export const MEAL_TYPES = /** @type {const} */ ([
   "gluten_free",
   "kosher",
 ]);
+
+// ── Sprint 9: App Health Check ────────────────────────────────────────────
+
+/**
+ * Quick health check — returns diagnostic info for debugging.
+ * @returns {{ version: string, stores: string[], locale: string, sw: boolean, online: boolean }}
+ */
+export function getAppHealth() {
+  const stores = ["guests", "tables", "vendors", "expenses", "timeline", "weddingInfo"]
+    .filter((k) => { try { return localStorage.getItem(`wedding_v1_${k}`) !== null; } catch { return false; } });
+  return {
+    version: APP_VERSION,
+    stores,
+    locale: document.documentElement.lang || "he",
+    sw: "serviceWorker" in navigator,
+    online: navigator.onLine,
+  };
+}

@@ -1068,5 +1068,7 @@
     "vendor_filter_all": "הכל",
     "vendor_filter_paid": "שולם",
     "vendor_filter_unpaid": "לא שולם",
-    "vendor_filter_overdue": "באיחור"
+    "vendor_filter_overdue": "באיחור",
+    "shortcuts_help_title": "קיצורי מקלדת",
+    "export_debug_report": "ייצוא דוח ניפוי שגיאות"
 }

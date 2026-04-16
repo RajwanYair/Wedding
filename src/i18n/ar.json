@@ -1054,5 +1054,7 @@
     "vendor_filter_all": "الكل",
     "vendor_filter_paid": "مدفوع",
     "vendor_filter_unpaid": "غير مدفوع",
-    "vendor_filter_overdue": "متأخر"
+    "vendor_filter_overdue": "متأخر",
+    "shortcuts_help_title": "اختصارات لوحة المفاتيح",
+    "export_debug_report": "تصدير تقرير التشخيص"
 }

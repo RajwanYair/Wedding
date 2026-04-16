@@ -591,3 +591,32 @@ export function checkDataIntegrity() {
 
   return { ok: issues.length === 0, issues };
 }
+
+/**
+ * Export client errors + store sizes as a diagnostic JSON download.
+ * Sprint 9 — DX: debug report for admin troubleshooting.
+ */
+export function exportDebugReport() {
+  let errors = [];
+  try {
+    const raw = localStorage.getItem("wedding_v1_errors");
+    if (raw) errors = JSON.parse(raw);
+  } catch { /* ignore corrupt data */ }
+
+  const report = {
+    timestamp: new Date().toISOString(),
+    errors,
+    stores: ["guests", "tables", "vendors", "expenses", "timeline", "weddingInfo"]
+      .map((k) => {
+        const val = storeGet(k);
+        return { key: k, count: Array.isArray(val) ? val.length : (val ? 1 : 0) };
+      }),
+    userAgent: navigator.userAgent,
+  };
+  const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `wedding-debug-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}

@@ -229,3 +229,75 @@ export function initKeyboardShortcuts() {
   document.addEventListener("keydown", handler);
   return () => document.removeEventListener("keydown", handler);
 }
+
+// ── Sprint 9: Keyboard Shortcuts Help Overlay ────────────────────────────
+
+/**
+ * Show/hide a keyboard shortcuts help overlay.
+ * Triggered by `?` key (when not in an input field).
+ * @returns {() => void} cleanup function
+ */
+export function initShortcutsHelp() {
+  /** @param {KeyboardEvent} e */
+  const handler = (e) => {
+    const tag = /** @type {HTMLElement} */ (e.target).tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (/** @type {HTMLElement} */ (e.target).isContentEditable) return;
+
+    if (e.key === "?") {
+      e.preventDefault();
+      _toggleShortcutsOverlay();
+    }
+    if (e.key === "Escape") {
+      const overlay = document.getElementById("shortcutsOverlay");
+      if (overlay && !overlay.hidden) {
+        overlay.hidden = true;
+      }
+    }
+  };
+  document.addEventListener("keydown", handler);
+  return () => document.removeEventListener("keydown", handler);
+}
+
+function _toggleShortcutsOverlay() {
+  let overlay = document.getElementById("shortcutsOverlay");
+  if (overlay) {
+    overlay.hidden = !overlay.hidden;
+    return;
+  }
+  overlay = document.createElement("div");
+  overlay.id = "shortcutsOverlay";
+  overlay.className = "shortcuts-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-label", "Keyboard shortcuts");
+
+  const shortcuts = _sections.slice(0, 9).map(
+    (s, i) => `<kbd>Alt+${i + 1}</kbd> ${s}`,
+  );
+  shortcuts.push("<kbd>?</kbd> Show this help");
+  shortcuts.push("<kbd>Esc</kbd> Close overlay / modal");
+
+  const inner = document.createElement("div");
+  inner.className = "shortcuts-inner";
+  const title = document.createElement("h3");
+  title.textContent = "⌨️ Keyboard Shortcuts";
+  inner.appendChild(title);
+  const list = document.createElement("ul");
+  list.className = "shortcuts-list";
+  for (const s of shortcuts) {
+    const li = document.createElement("li");
+    li.innerHTML = s;
+    list.appendChild(li);
+  }
+  inner.appendChild(list);
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "btn btn-secondary u-mt-sm";
+  closeBtn.textContent = "Close";
+  closeBtn.addEventListener("click", () => { overlay.hidden = true; });
+  inner.appendChild(closeBtn);
+  overlay.appendChild(inner);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) overlay.hidden = true;
+  });
+  document.body.appendChild(overlay);
+}

@@ -1055,5 +1055,7 @@
     "vendor_filter_all": "Все",
     "vendor_filter_paid": "Оплачено",
     "vendor_filter_unpaid": "Не оплачено",
-    "vendor_filter_overdue": "Просрочено"
+    "vendor_filter_overdue": "Просрочено",
+    "shortcuts_help_title": "Горячие клавиши",
+    "export_debug_report": "Экспорт отчёта об ошибках"
 }

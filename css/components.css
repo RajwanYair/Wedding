@@ -2523,6 +2523,45 @@ kbd {
 .table-dietary-icon { font-size: 0.85em; cursor: help; }
 .progress-bar--table { height: 4px; margin-top: 0.35rem; }
 
+/* Sprint 9: Keyboard shortcuts overlay */
+.shortcuts-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+.shortcuts-inner {
+  background: var(--card-bg);
+  border-radius: var(--radius, 12px);
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  color: var(--text);
+}
+.shortcuts-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.shortcuts-list li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.shortcuts-list kbd {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-family: monospace;
+  font-size: 0.85em;
+  margin-inline-end: 0.5rem;
+}
+
 /* S23.4 Suggested actions card */
 .suggestion-item {
   display: flex;
