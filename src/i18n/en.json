@@ -1056,5 +1056,7 @@
     "wa_schedule_no_date": "Select a date and time",
     "wa_scheduled_count": "Scheduled {n} reminders",
     "wa_cancelled": "Scheduled reminders cancelled",
-    "wa_scheduled_pending": "pending"
+    "wa_scheduled_pending": "pending",
+    "rsvp_rate_limited": "Only one RSVP per hour. Please try again later",
+    "rsvp_countdown": "{days} days until the wedding!"
 }

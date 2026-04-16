@@ -1044,5 +1044,7 @@
     "wa_schedule_no_date": "اختر تاريخًا ووقتًا",
     "wa_scheduled_count": "تم جدولة {n} تذكيرات",
     "wa_cancelled": "تم إلغاء التذكيرات المجدولة",
-    "wa_scheduled_pending": "قيد الانتظار"
+    "wa_scheduled_pending": "قيد الانتظار",
+    "rsvp_rate_limited": "يمكنك إرسال تأكيد واحد في الساعة. حاول لاحقًا",
+    "rsvp_countdown": "{days} أيام حتى الزفاف!"
 }

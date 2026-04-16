@@ -1045,5 +1045,7 @@
     "wa_schedule_no_date": "Выберите дату и время",
     "wa_scheduled_count": "Запланировано {n} напоминаний",
     "wa_cancelled": "Запланированные напоминания отменены",
-    "wa_scheduled_pending": "ожидают"
+    "wa_scheduled_pending": "ожидают",
+    "rsvp_rate_limited": "Только одно подтверждение в час. Попробуйте позже",
+    "rsvp_countdown": "До свадьбы осталось {days} дней!"
 }

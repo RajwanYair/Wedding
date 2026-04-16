@@ -1058,5 +1058,7 @@
     "wa_schedule_no_date": "בחר תאריך ושעה",
     "wa_scheduled_count": "תוזמנו {n} תזכורות",
     "wa_cancelled": "תזמונים בוטלו",
-    "wa_scheduled_pending": "ממתינים לשליחה"
+    "wa_scheduled_pending": "ממתינים לשליחה",
+    "rsvp_rate_limited": "ניתן לשלוח אישור אחד בשעה. נסה שוב מאוחר יותר",
+    "rsvp_countdown": "עוד {days} ימים לחתונה!"
 }

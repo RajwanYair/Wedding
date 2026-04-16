@@ -26,6 +26,8 @@ export function mount(container) {
   _wirePlusOneFields();
   // F4.3.1 — Wire form-start funnel tracking
   _wireFormStartTracking();
+  // Sprint 4 — Countdown to wedding on RSVP page
+  renderRsvpCountdown();
   // S11.1 — Auto-lookup from URL guestId param
   _autoLookupFromUrl();
 }
@@ -100,6 +102,12 @@ export function lookupRsvpByPhone(rawPhone) {
  * @returns {{ ok: boolean, errors?: string[] }}
  */
 export function submitRsvp(data) {
+  // Sprint 4: Rate limiting — 1 submission per phone per hour
+  const rawPhone = cleanPhone(String(data.phone || ""));
+  if (rawPhone && _isRateLimited(rawPhone)) {
+    return { ok: false, errors: [t("rsvp_rate_limited")] };
+  }
+
   const { value, errors } = sanitize(data, {
     phone: { type: "string", required: true },
     firstName: { type: "string", required: false, maxLength: 80 },
@@ -177,6 +185,7 @@ export function submitRsvp(data) {
     count: Number(value.count ?? 1),
     timestamp: now,
   }));
+  _recordRateLimit(phone);
   _showConfirmation(/** @type {string} */ (value.status));
   return { ok: true };
 }
@@ -267,7 +276,7 @@ function _prefillForm(guest) {
   if (formBody) formBody.classList.remove("u-hidden");
 }
 
-/** Show RSVP success message. */
+/** Show RSVP success message with animation. */
 function _showConfirmation(status) {
   const confirmEl = document.getElementById("rsvpConfirm");
   if (!confirmEl) return;
@@ -279,8 +288,44 @@ function _showConfirmation(status) {
     confirmEl.textContent = t("saved");
   }
   confirmEl.classList.remove("u-hidden");
+  // Sprint 4: Success animation
+  confirmEl.classList.add("rsvp-confirm--animated");
   const details = document.getElementById("rsvpDetails");
   if (details) details.classList.add("u-hidden");
+}
+
+// ── Sprint 4: Rate Limiting ───────────────────────────────────────────────
+
+const RATE_LIMIT_MS = 60 * 60 * 1000; // 1 hour
+
+/** @param {string} phone */
+function _isRateLimited(phone) {
+  try {
+    const key = `wedding_v1_rsvp_rate_${phone}`;
+    const last = localStorage.getItem(key);
+    if (!last) return false;
+    return Date.now() - Number(last) < RATE_LIMIT_MS;
+  } catch { return false; }
+}
+
+/** @param {string} phone */
+function _recordRateLimit(phone) {
+  try {
+    localStorage.setItem(`wedding_v1_rsvp_rate_${phone}`, String(Date.now()));
+  } catch { /* storage full — ignore */ }
+}
+
+// ── Sprint 4: RSVP Countdown ──────────────────────────────────────────────
+
+export function renderRsvpCountdown() {
+  const el = document.getElementById("rsvpCountdown");
+  if (!el) return;
+  const info = /** @type {Record<string, string|undefined>} */ (storeGet("weddingInfo") ?? {});
+  const date = info.weddingDate;
+  if (!date) { el.textContent = ""; return; }
+  const diff = Math.ceil((new Date(date).getTime() - Date.now()) / 86400000);
+  if (diff <= 0) { el.textContent = t("countdown_today"); return; }
+  el.textContent = t("rsvp_countdown").replace("{days}", String(diff));
 }
 
 // ── S12.5 RSVP Deadline Enforcement ───────────────────────────────────────
