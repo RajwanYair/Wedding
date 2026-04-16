@@ -97,6 +97,13 @@ function extractColOrderKeys() {
   return [...block[1].matchAll(/([a-zA-Z]+)\s*:\s*\[/g)].map((m) => m[1]);
 }
 
+/** Extract _MAP_KEYS from sheets-impl.js (key-value map sheets, no _COL_ORDER) */
+function extractMapKeys() {
+  const m = SHEETS_IMPL.match(/const _MAP_KEYS\s*=\s*new Set\(\[(.*?)\]\)/);
+  if (!m) return [];
+  return [...m[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]);
+}
+
 // ── Canonical data ────────────────────────────────────────────────────────────
 
 const loaderKeys = extractLoaderKeys();
@@ -108,6 +115,7 @@ const dataTemplates = extractDataTemplates();
 const navTabs = extractNavTabs();
 const sheetNameKeys = extractSheetNameKeys();
 const colOrderKeys = extractColOrderKeys();
+const mapKeys = extractMapKeys();
 
 // ── Known exceptions ──────────────────────────────────────────────────────────
 
@@ -237,8 +245,9 @@ describe("Wiring: i18n keys for nav sections", () => {
 });
 
 describe("Wiring: Sheets sync completeness", () => {
-  // Every _SHEET_NAMES key (except weddingInfo) must have _COL_ORDER
-  const arraySheets = sheetNameKeys.filter((k) => k !== "weddingInfo");
+  // Every _SHEET_NAMES key (except _MAP_KEYS entries) must have _COL_ORDER
+  const mapKeySet = new Set(mapKeys);
+  const arraySheets = sheetNameKeys.filter((k) => !mapKeySet.has(k));
   arraySheets.forEach((key) => {
     it(`_COL_ORDER has columns for sheet "${key}"`, () => {
       expect(colOrderKeys).toContain(key);

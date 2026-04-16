@@ -39,7 +39,11 @@ const _SHEET_NAMES = {
   contacts: "Contacts",
   gallery: "Gallery",
   weddingInfo: "Config",
+  timelineDone: "TimelineDone",
 };
+
+/** Store keys that use key-value (map) format instead of array rows. */
+const _MAP_KEYS = new Set(["weddingInfo", "timelineDone"]);
 
 /**
  * Canonical ordered list of all weddingInfo keys that must always appear
@@ -174,6 +178,13 @@ export async function syncStoreKeyToSheetsImpl(storeKey) {
     );
     const extraRows = extraKeys.map((k) => [k, merged[k] ?? ""]);
     rows = [["key", "value"], ...canonicalRows, ...extraRows];
+  } else if (storeKey === "timelineDone") {
+    // timelineDone is a plain { itemId: boolean } map → key-value rows
+    const obj = /** @type {Record<string, boolean>} */ (
+      storeGet(storeKey) ?? {}
+    );
+    const dataRows = Object.entries(obj).map(([k, v]) => [k, String(v)]);
+    rows = [["itemId", "done"], ...dataRows];
   } else {
     const cols = _COL_ORDER[storeKey];
     const records = /** @type {any[]} */ (storeGet(storeKey) ?? []);
@@ -315,7 +326,7 @@ export async function pullAllFromSheetsImpl() {
 
   // Array sheets: pull each tab and merge by id
   const arraySheets = /** @type {Array<[string, string]>} */ (
-    Object.entries(_SHEET_NAMES).filter(([k]) => k !== "weddingInfo")
+    Object.entries(_SHEET_NAMES).filter(([k]) => !_MAP_KEYS.has(k))
   );
   for (const [storeKey, sheetName] of arraySheets) {
     const rows = await sheetsReadImpl(_getSpreadsheetId(), sheetName);
@@ -345,6 +356,24 @@ export async function pullAllFromSheetsImpl() {
     const current = /** @type {Record<string, unknown>} */ (storeGet("weddingInfo") ?? {});
     storeSet("weddingInfo", { ...current, ...info });
     results.weddingInfo = Object.keys(info).length;
+  }
+
+  // TimelineDone sheet: key-value rows → { itemId: boolean } map
+  try {
+    const doneRows = await sheetsReadImpl(_getSpreadsheetId(), _SHEET_NAMES.timelineDone);
+    /** @type {Record<string, boolean>} */
+    const doneMap = {};
+    doneRows.forEach((row) => {
+      const key = String(row.itemId ?? "").trim();
+      if (key) doneMap[key] = String(row.done).toLowerCase() === "true";
+    });
+    if (Object.keys(doneMap).length > 0) {
+      const current = /** @type {Record<string, boolean>} */ (storeGet("timelineDone") ?? {});
+      storeSet("timelineDone", { ...current, ...doneMap });
+      results.timelineDone = Object.keys(doneMap).length;
+    }
+  } catch {
+    // TimelineDone sheet may not exist yet — silently skip
   }
 
   return results;

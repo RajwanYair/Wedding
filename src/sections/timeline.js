@@ -298,13 +298,14 @@ export function printTimeline() {
 
 /**
  * Toggle the done state of a timeline item.
- * Persists in the "timelineDone" store key (local only, not synced).
+ * Persists in the "timelineDone" store key and syncs to Sheets.
  * @param {string} id
  */
 export function toggleTimelineDone(id) {
   const done = { .../** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {}) };
   done[id] = !done[id];
   storeSet("timelineDone", done);
+  enqueueWrite("timelineDone", () => syncStoreKeyToSheets("timelineDone"));
 }
 
 /** @param {string} s */

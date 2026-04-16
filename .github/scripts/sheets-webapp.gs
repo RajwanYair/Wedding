@@ -1,5 +1,5 @@
 /**
- * Wedding Manager — Google Apps Script Web App  v2.3.0
+ * Wedding Manager — Google Apps Script Web App  v2.4.0
  * Handles all write operations from the Wedding Manager app.
  *
  * SETUP (one-time):
@@ -21,6 +21,9 @@
  *   { action: 'ensureSheets' } — create Attendees, Tables, Config, Vendors, Expenses, RSVP_Log, Timeline, Budget, Contacts, Gallery
  *   { action: 'sendEmail',     type: 'rsvpConfirmation'|'adminRsvpNotify', to, name, ... }
  *   { action: 'savePushSubscription', subscription: {...} }
+ *
+ * NEW in v2.4.0:
+ *   • TimelineDone sheet tab added to ALLOWED_SHEETS (S25.1 timeline done sync)
  *
  * NEW in v2.3.0:
  *   • Contacts sheet tab (guest-submitted contact details)
@@ -65,7 +68,7 @@
 
 const SPREADSHEET_ID = '1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA';
 
-const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log', 'Timeline', 'Budget', 'Contacts', 'Gallery'];
+const ALLOWED_SHEETS = ['Attendees', 'Tables', 'Config', 'Vendors', 'Expenses', 'RSVP_Log', 'Timeline', 'Budget', 'Contacts', 'Gallery', 'TimelineDone'];
 
 /* ── Index constants for Attendees columns (must match GUEST_COLS in config.js) ── */
 var COL = {

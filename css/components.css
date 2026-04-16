@@ -1477,6 +1477,29 @@ body.ptr--refreshing::before {
   }
 }
 
+/* ── Top-bar Sync Button ── */
+.sync-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+  line-height: 1;
+
+  &:hover { background: rgba(255, 255, 255, 0.1); }
+  &:active { transform: scale(0.9); }
+}
+.sync-btn--spinning .sync-btn-icon {
+  display: inline-block;
+  animation: syncSpin 1s linear infinite;
+}
+@keyframes syncSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* ── RSVP Deadline Banner ── */
 .rsvp-deadline-banner--late {
   background: rgba(252, 165, 165, 0.12);

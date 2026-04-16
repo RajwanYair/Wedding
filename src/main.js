@@ -297,6 +297,7 @@ function _buildStoreDefs() {
     timeline: { value: timeline, storageKey: "timeline" },
     contacts: { value: load("contacts", []), storageKey: "contacts" },
     budget: { value: load("budget", []), storageKey: "budget" },
+    timelineDone: { value: load("timelineDone", {}), storageKey: "timelineDone" },
   };
 }
 
@@ -426,6 +427,13 @@ function _buildStoreDefs() {
     badge.textContent = labels[status] ?? "";
     badge.className = `sync-badge sync-badge--${status}`;
     badge.hidden = status === "idle";
+
+    // S25.1 — Animate the top-bar sync button
+    const btn = document.getElementById("topBarSyncBtn");
+    if (btn) {
+      btn.classList.toggle("sync-btn--spinning", status === "syncing");
+      btn.title = labels[status] || t("sync_now") || "Sync Now";
+    }
   });
 
   // 11c. S3.9 — Resume queued writes when back online
@@ -664,6 +672,16 @@ function _registerHandlers() {
   on("cycleTheme", () => cycleTheme());
   on("toggleLightMode", () => toggleLightMode());
   on("toggleMobileNav", () => toggleMobileNav());
+
+  // ── Sync ──
+  on("syncSheetsNow", async () => {
+    try {
+      await syncSheetsNow();
+      showToast(t("synced"), "success");
+    } catch (_err) {
+      showToast(t("error_save"), "error");
+    }
+  });
 
   // ── Modals ──
   on("closeModal", (el) => closeModal(el.dataset.actionArg ?? ""));
