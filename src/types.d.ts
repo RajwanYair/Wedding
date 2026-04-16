@@ -1,31 +1,43 @@
 /**
- * src/types.d.ts — Shared type definitions for the Wedding Manager (F1.3)
+ * src/types.d.ts — Shared type definitions for the Wedding Manager (v6.0)
  *
- * These JSDoc-compatible types are used across src/ modules.
- * Import with `@typedef {import('./types').Guest} Guest` etc.
+ * TypeScript-first types with discriminated unions and strict enums.
+ * Import: `import type { Guest, Table } from './types';`
  */
+
+// ── Enums (discriminated union string literals) ───────────────────────────
+
+export type GuestStatus = "pending" | "confirmed" | "declined" | "maybe";
+export type GuestSide = "groom" | "bride" | "mutual";
+export type GuestGroup = "family" | "friends" | "work" | "other";
+export type MealType = "regular" | "vegetarian" | "vegan" | "gluten_free" | "kosher";
+export type TableShape = "round" | "rect";
+export type BackendType = "sheets" | "supabase" | "both" | "none";
+export type AuthProvider = "google" | "facebook" | "apple" | "anonymous" | "email";
+
+// ── Core Data Models ──────────────────────────────────────────────────────
 
 /** Guest record stored in the reactive store. */
 export interface Guest {
-  id: string;
+  readonly id: string;
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
-  count: string | number;
-  children: string | number;
-  status: "pending" | "confirmed" | "declined" | "maybe";
-  side: "groom" | "bride" | "mutual";
-  group: "family" | "friends" | "work" | "other";
-  meal: "regular" | "vegetarian" | "vegan" | "gluten_free" | "kosher";
+  count: number;
+  children: number;
+  status: GuestStatus;
+  side: GuestSide;
+  group: GuestGroup;
+  meal: MealType;
   mealNotes: string;
   accessibility: string;
   transport: string;
   tableId: string;
   gift: string;
   notes: string;
-  sent: boolean | string;
-  checkedIn: boolean | string;
+  sent: boolean;
+  checkedIn: boolean;
   rsvpDate: string;
   rsvpSource: string;
   tags?: string[];
@@ -43,21 +55,21 @@ export interface GuestNote {
 
 /** Table record stored in the reactive store. */
 export interface Table {
-  id: string;
+  readonly id: string;
   name: string;
-  capacity: string | number;
-  shape: "round" | "rect";
+  capacity: number;
+  shape: TableShape;
 }
 
 /** Vendor record stored in the reactive store. */
 export interface Vendor {
-  id: string;
+  readonly id: string;
   category: string;
   name: string;
   contact: string;
   phone: string;
-  price: string | number;
-  paid: string | number;
+  price: number;
+  paid: number;
   dueDate: string;
   notes: string;
   contractUrl: string;
@@ -67,17 +79,17 @@ export interface Vendor {
 
 /** Expense record stored in the reactive store. */
 export interface Expense {
-  id: string;
+  readonly id: string;
   category: string;
   description: string;
-  amount: string | number;
+  amount: number;
   date: string;
   createdAt: string;
 }
 
 /** Timeline item stored in the reactive store. */
 export interface TimelineItem {
-  id: string;
+  readonly id: string;
   time: string;
   icon: string;
   title: string;
@@ -99,35 +111,20 @@ export interface WeddingInfo {
   venueAddress: string;
   venueWaze: string;
   venueMapLink: string;
-  budgetTarget: string | number;
+  budgetTarget: number;
 }
 
 /** Gallery photo entry. */
 export interface GalleryPhoto {
-  id: string;
+  readonly id: string;
   dataUrl: string;
   caption: string;
   createdAt: string;
 }
 
-/** Result type returned by save/validate functions. */
-export interface SaveResult {
-  ok: boolean;
-  errors?: string[];
-}
-
-/** Authenticated user shape returned by auth service. */
-export interface AuthUser {
-  name: string;
-  email: string;
-  picture: string;
-  isAdmin: boolean;
-  provider: string;
-}
-
 /** Budget entry. */
 export interface BudgetEntry {
-  id: string;
+  readonly id: string;
   category: string;
   label: string;
   estimate: number;
@@ -144,9 +141,28 @@ export interface ContactSubmission {
   dietaryNotes: string;
 }
 
+// ── Service Types ─────────────────────────────────────────────────────────
+
+/** Result type returned by save/validate functions. */
+export interface SaveResult {
+  ok: boolean;
+  errors?: string[];
+}
+
+/** Authenticated user shape returned by auth service. */
+export interface AuthUser {
+  name: string;
+  email: string;
+  picture: string;
+  isAdmin: boolean;
+  provider: AuthProvider;
+}
+
+// ── Store Type Map ────────────────────────────────────────────────────────
+
 /**
- * F1.3.5 — Store key → value type map.
- * Used with `@type {import('./types').StoreKeys}` for typed storeGet/storeSet.
+ * Store key → value type map.
+ * Used for typed storeGet/storeSet operations.
  */
 export interface StoreKeys {
   guests: Guest[];
@@ -157,5 +173,21 @@ export interface StoreKeys {
   gallery: GalleryPhoto[];
   weddingInfo: WeddingInfo;
   budget: BudgetEntry[];
+  contacts: ContactSubmission[];
+  timelineDone: Record<string, boolean>;
 }
+
+/** Valid store key names. */
+export type StoreKey = keyof StoreKeys;
+
+// ── Subscription Types ────────────────────────────────────────────────────
+
+/** Callback for store subscriptions. */
+export type StoreSubscriber<K extends StoreKey = StoreKey> = (value: StoreKeys[K]) => void;
+
+/** Wildcard subscriber receives key + value. */
+export type StoreWildcardSubscriber = (key: StoreKey, value: unknown) => void;
+
+/** Unsubscribe function returned by storeSubscribe. */
+export type Unsubscribe = () => void;
 

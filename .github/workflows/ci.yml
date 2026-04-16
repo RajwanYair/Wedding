@@ -36,7 +36,6 @@ jobs:
         run: npm run lint
 
       - name: Type check (tsc --noEmit)
-        continue-on-error: true
         run: npm run typecheck
 
       - name: Unit tests (Vitest)
@@ -75,7 +74,7 @@ jobs:
       - name: Check for dangerous JS patterns
         run: |
           FAILED=0
-          for f in $(find src/ -name '*.js') index.html; do
+          for f in $(find src/ -name '*.js' -o -name '*.ts') index.html; do
             if grep -n "eval(" "$f"; then
               echo "::error file=$f::eval() usage detected"
               FAILED=1
@@ -83,6 +82,24 @@ jobs:
             if grep -n "document\.write(" "$f"; then
               echo "::error file=$f::document.write() detected"
               FAILED=1
+            fi
+          done
+          # Scan HTML templates and modals for innerHTML / eval
+          for f in $(find src/templates/ src/modals/ -name '*.html' 2>/dev/null); do
+            if grep -n "innerHTML" "$f"; then
+              echo "::error file=$f::innerHTML usage detected in template"
+              FAILED=1
+            fi
+            if grep -n "eval(" "$f"; then
+              echo "::error file=$f::eval() usage detected in template"
+              FAILED=1
+            fi
+            if grep -n "javascript:" "$f"; then
+              echo "::error file=$f::javascript: URI detected in template"
+              FAILED=1
+            fi
+            if grep -n "on[a-z]*=" "$f"; then
+              echo "::warning file=$f::Inline event handler detected (prefer data-action)"
             fi
           done
           [ "$FAILED" -eq 0 ] && echo "Security scan passed."
@@ -132,6 +149,19 @@ jobs:
 
       - name: Generate size report
         run: node scripts/size-report.mjs | tee size-report.txt
+
+      - name: Bundle size budget gate
+        run: |
+          # Fail CI if main bundle exceeds 50 KB gzip (target: <30 KB, hard limit: 50 KB)
+          npm run build 2>/dev/null || true
+          MAIN_SIZE=$(find dist/assets -name '*.js' -type f -exec gzip -c {} \; | wc -c | sort -rn | head -1)
+          MAIN_KB=$((MAIN_SIZE / 1024))
+          echo "Largest JS chunk: ${MAIN_KB} KB gzip"
+          if [ "$MAIN_KB" -gt 50 ]; then
+            echo "::error::Bundle size ${MAIN_KB} KB exceeds 50 KB budget"
+            exit 1
+          fi
+          echo "Bundle size within budget."
 
       - name: Upload size report artifact
         uses: actions/upload-artifact@v4
