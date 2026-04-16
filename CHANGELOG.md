@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed — Phase 1 Foundations (v5.0 prep)
+
+- **F1.1 Break up god module**: Extract 5 handler modules from main.js → `src/handlers/` (guest, table, vendor, section, settings). Create `src/core/constants.js` (single source of truth for sections). Create `src/utils/form-helpers.js` (shared `openAddModal` + `getVal`). main.js reduced from 1,720 → 707 lines (59% reduction).
+- **F1.2 Partial js/ deprecation**: Migrate `js/i18n/*.json` → `src/i18n/`. Update inject-config.mjs to only patch `src/core/config.js`. Remove `js/` from tsconfig and vite coverage. Update CI security scan to scan `src/` instead of `js/`.
+- **F1.3 Type safety**: Create `src/types.d.ts` with 11 shared interfaces (Guest, Table, Vendor, Expense, etc.). Update `tsconfig.json` to include `src/**/*.js` and `src/**/*.d.ts`.
+- **F1.4 Template auto-discovery**: Replace hardcoded `_loaders` map with `import.meta.glob("../templates/*.html")` in template-loader.js.
+- **F1.5 Error resilience**: Wrap all 4 event dispatch paths in events.js with try-catch. Add `beforeunload` flush in store.js. Add console.warn on localStorage quota errors.
+- **F1.6 Lazy section JS**: Replace 19 static section imports with `import.meta.glob("./sections/*.js")` + cached `_resolveSection()`. Add `_SECTION_ALIASES` for filename-to-section-ID mapping.
+
 ## [4.7.0] — 2025-07-22
 
 ### Added — S23 Guest Follow-Up & Table Intelligence

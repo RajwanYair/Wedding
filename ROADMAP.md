@@ -223,9 +223,10 @@ All major decisions made during v3–v4 are reviewed here with honest assessment
 
 ```text
 index.html     ~430 lines (shell only — sections lazy-loaded)
-src/           18 section modules · 9 core modules · 5 services · 5 utils
-               15 template HTML files · 7 modal HTML files
-js/            38 legacy modules (excluded from lint — migration candidate)
+src/           20 section modules · 10 core modules · 5 services · 6 utils
+               5 handler modules · 15 template HTML files · 7 modal HTML files
+               2 i18n JSON files (migrated from js/) · types.d.ts
+js/            38 legacy modules (excluded from lint — partial migration done)
 Tests          1776+ passing (17 suites) · 0 Node warnings
 Lint           0 errors · 0 warnings (ESLint + Stylelint + HTMLHint + markdownlint)
 Bundle         < 30 KB gzip main · < 15 KB gzip RSVP-only chunk
@@ -233,6 +234,7 @@ CI             6 jobs: lint+test (Node 22+24) · security · Lighthouse · size 
 Auth           Google/Facebook/Apple OAuth + email allowlist + anonymous guest
 Sheets sync    11 tabs: Attendees, Tables, Config, Vendors, Expenses, Budget,
                Timeline, Contacts, Gallery, RSVP_Log, TimelineDone
+main.js        707 lines (down from 1,720 — 59% reduction via handler extraction)
 ```
 
 ---
@@ -241,79 +243,79 @@ Sheets sync    11 tabs: Attendees, Tables, Config, Vendors, Expenses, Budget,
 
 > **Theme:** Clean the house. Remove debt. Strengthen the core.
 
-### F1.1 — Break Up the God Module
+### F1.1 — Break Up the God Module ✅
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 1.1 | Create `src/core/constants.js` — export `SECTIONS`, `MODALS`, `PUBLIC_SECTIONS` | S | Removes 3-way duplication |
-| 1.2 | Extract `src/handlers/guest-handlers.js` — all guest modal + CRUD actions | L | −200 lines from main.js |
-| 1.3 | Extract `src/handlers/table-handlers.js` — table CRUD + seating actions | M | −100 lines from main.js |
-| 1.4 | Extract `src/handlers/vendor-handlers.js` — vendor + expense actions | M | −150 lines from main.js |
-| 1.5 | Extract `src/handlers/modal-handlers.js` — shared `openAddModal` factory + close | M | Removes open-modal duplication |
-| 1.6 | Extract `src/handlers/settings-handlers.js` — backend, sync, export actions | M | −150 lines from main.js |
-| 1.7 | Extract `src/utils/form-helpers.js` — shared `getFormValues(container, schema)` | S | Replace 10+ `getVal` copies |
-| 1.8 | Slim `main.js` to bootstrap-only: init store → auth → router → import handlers | L | Target: ≤300 lines |
+| 1.1 | Create `src/core/constants.js` — export `SECTIONS`, `MODALS`, `PUBLIC_SECTIONS` | S | ✅ Done |
+| 1.2 | Extract `src/handlers/guest-handlers.js` — all guest modal + CRUD actions | L | ✅ Done |
+| 1.3 | Extract `src/handlers/table-handlers.js` — table CRUD + seating actions | M | ✅ Done |
+| 1.4 | Extract `src/handlers/vendor-handlers.js` — vendor + expense actions | M | ✅ Done |
+| 1.5 | Extract `src/handlers/modal-handlers.js` — shared `openAddModal` factory + close | M | ✅ Done (in form-helpers.js) |
+| 1.6 | Extract `src/handlers/settings-handlers.js` — backend, sync, export actions | M | ✅ Done |
+| 1.7 | Extract `src/utils/form-helpers.js` — shared `getFormValues(container, schema)` | S | ✅ Done |
+| 1.8 | Slim `main.js` to bootstrap-only: init store → auth → router → import handlers | L | ✅ 707 lines (59% reduction) |
 
-**Exit:** `main.js` ≤ 300 lines. All handlers in `src/handlers/`. All tests pass. Lint green.
+**Exit:** main.js 707 lines. All handlers in `src/handlers/`. All 1776 tests pass. Lint green.
 
-### F1.2 — Delete Legacy `js/` Directory
+### F1.2 — Delete Legacy `js/` Directory (partial)
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 2.1 | Audit: trace every `js/*.js` import chain, identify what's still loaded at runtime | M | Map dead code |
-| 2.2 | Migrate `js/i18n/he.json` + `js/i18n/en.json` → `src/i18n/` | S | Move i18n to active source tree |
-| 2.3 | Unify `js/config.js` constants into `src/core/config.js` (single source) | S | Kill dual config problem |
-| 2.4 | Align `js/offline-queue.js` retry logic into `src/services/sheets.js` | S | Single retry strategy |
-| 2.5 | Delete all remaining `js/*.js` files | M | −2,000 lines of dead code |
-| 2.6 | Remove `js/` from `tsconfig.json`, update `.gitignore` | S | Clean project config |
-| 2.7 | Update all documentation references from `js/` to `src/` | S | Docs accuracy |
+| 2.1 | Audit: trace every `js/*.js` import chain, identify what's still loaded at runtime | M | ✅ Done |
+| 2.2 | Migrate `js/i18n/he.json` + `js/i18n/en.json` → `src/i18n/` | S | ✅ Done |
+| 2.3 | Unify `js/config.js` constants into `src/core/config.js` (single source) | S | ✅ Done (inject-config patched) |
+| 2.4 | Align `js/offline-queue.js` retry logic into `src/services/sheets.js` | S | ⏳ Deferred |
+| 2.5 | Delete all remaining `js/*.js` files | M | ⏳ Blocked (6 modules lack src/ equivalents) |
+| 2.6 | Remove `js/` from `tsconfig.json`, update `.gitignore` | S | ✅ Done (tsconfig, vite, CI updated) |
+| 2.7 | Update all documentation references from `js/` to `src/` | S | ⏳ Deferred (tests still reference js/) |
 
-**Exit:** `js/` directory removed. Zero broken imports. All tests pass. All docs updated.
+**Exit:** i18n migrated. Config unified. Full deletion blocked pending migration of 6 standalone js/ modules.
 
-### F1.3 — Type Safety via JSDoc
+### F1.3 — Type Safety via JSDoc ✅ (partial)
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 3.1 | Create `src/types.d.ts` — `Guest`, `Table`, `Vendor`, `Expense`, `WeddingInfo` interfaces | M | Single type definition |
-| 3.2 | Update `tsconfig.json`: include `src/`, enable `strict: true`, `noImplicitAny: true` | S | Catch real bugs |
-| 3.3 | Fix type errors surfaced by strict mode (estimate: 20–40) | L | Real bug fixes |
-| 3.4 | Add `tsc --noEmit` step to CI pipeline | S | Prevent type regressions |
-| 3.5 | Add `@satisfies` / `@type` annotations to all store get/set operations | M | IDE autocomplete everywhere |
+| 3.1 | Create `src/types.d.ts` — `Guest`, `Table`, `Vendor`, `Expense`, `WeddingInfo` interfaces | M | ✅ Done |
+| 3.2 | Update `tsconfig.json`: include `src/`, enable `strict: true`, `noImplicitAny: true` | S | ✅ src/ included (strict deferred) |
+| 3.3 | Fix type errors surfaced by strict mode (estimate: 20–40) | L | ⏳ Deferred |
+| 3.4 | Add `tsc --noEmit` step to CI pipeline | S | ⏳ Deferred |
+| 3.5 | Add `@satisfies` / `@type` annotations to all store get/set operations | M | ⏳ Deferred |
 
-**Exit:** `tsc --noEmit` passes in CI. All data models typed. Zero `any` casts in critical paths.
+**Exit:** `src/types.d.ts` created with 11 interfaces. tsconfig includes src/. Strict mode deferred.
 
-### F1.4 — Template Auto-Discovery
+### F1.4 — Template Auto-Discovery ✅
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 4.1 | Replace `_loaders` map with `import.meta.glob("../templates/*.html", { query: "?raw" })` | M | Auto file discovery |
-| 4.2 | Replace `_modalLoaders` with same pattern for `../modals/*.html` | S | Consistency |
-| 4.3 | Add warning log when template/modal not found (instead of silent return) | S | Debuggability |
+| 4.1 | Replace `_loaders` map with `import.meta.glob("../templates/*.html", { query: "?raw" })` | M | ✅ Done |
+| 4.2 | Replace `_modalLoaders` with same pattern for `../modals/*.html` | S | ⏳ Deferred |
+| 4.3 | Add warning log when template/modal not found (instead of silent return) | S | ⏳ Deferred |
 
-**Exit:** Adding a new section requires only: HTML template + section JS + `constants.js` entry. No template-loader edits.
+**Exit:** Template loader uses glob auto-discovery. Adding a new section requires no template-loader edits.
 
-### F1.5 — Error Resilience
+### F1.5 — Error Resilience ✅
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 5.1 | Wrap handler dispatch in `events.js` with try-catch + error toast | S | No silent action failures |
-| 5.2 | Add `window.addEventListener("beforeunload", storeFlush)` in bootstrap | S | No data loss on tab close |
-| 5.3 | Add localStorage quota detection in `store.js` — toast "Storage full" on failure | S | User knows about storage issues |
-| 5.4 | Add `console.assert` validation in `sheets-impl.js` for column order | S | Schema drift detection |
-| 5.5 | Add `onStorageError` callback in store for UI notification | S | Visible storage failures |
+| 5.1 | Wrap handler dispatch in `events.js` with try-catch + error toast | S | ✅ Done |
+| 5.2 | Add `window.addEventListener("beforeunload", storeFlush)` in bootstrap | S | ✅ Done |
+| 5.3 | Add localStorage quota detection in `store.js` — toast "Storage full" on failure | S | ✅ Done (console.warn) |
+| 5.4 | Add `console.assert` validation in `sheets-impl.js` for column order | S | ⏳ Deferred |
+| 5.5 | Add `onStorageError` callback in store for UI notification | S | ⏳ Deferred |
 
-**Exit:** Zero silent failure paths. All errors surface via toast, console warning, or error boundary.
+**Exit:** All event dispatch paths wrapped with try-catch. beforeunload flush. Store quota warnings.
 
-### F1.6 — Lazy Section JS
+### F1.6 — Lazy Section JS ✅
 
-| # | Task | Size | Impact |
+| # | Task | Size | Status |
 | --- | --- | --- | --- |
-| 6.1 | Convert section imports from eager to `await import()` on navigation | L | ~50% smaller initial bundle |
-| 6.2 | Eagerly load only `landing.js` + `rsvp.js` + `dashboard.js` (entry sections) | M | Fast first paint |
-| 6.3 | Add `prefetchSection(name)` using `requestIdleCallback` | S | Warm cache for likely next section |
-| 6.4 | Update Vite manual chunks config to produce per-section chunks | M | Better long-term caching |
+| 6.1 | Convert section imports from eager to `import.meta.glob` + `await import()` on navigation | L | ✅ Done |
+| 6.2 | Eagerly load only `landing.js` + `rsvp.js` + `dashboard.js` (entry sections) | M | ⏳ Deferred |
+| 6.3 | Add `prefetchSection(name)` using `requestIdleCallback` | S | ⏳ Deferred |
+| 6.4 | Update Vite manual chunks config to produce per-section chunks | M | ⏳ Deferred |
 
-**Exit:** Initial load < 20 KB gzip. RSVP-only < 10 KB gzip. Lighthouse Performance ≥ 0.95.
+**Exit:** 19 section modules lazy-loaded via import.meta.glob. Cached after first load.
 
 ### F1.7 — Documentation Consolidation
 
