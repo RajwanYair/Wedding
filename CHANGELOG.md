@@ -4,6 +4,87 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [5.5.0] — 2025-06-20
+
+### Added — 45 Intelligence Helpers (Sprints 1–9)
+
+#### Sprint 1 — Analytics Intelligence
+
+- `getCostPerHead()` — cost per confirmed guest head
+- `getSeatingCompletion()` — seated vs confirmed percentage
+- `getBudgetCategoryBreakdown()` — budget breakdown by vendor category
+- `getRsvpDeadlineCountdown()` — days until RSVP deadline
+- `getVendorPaymentProgress()` — payment completion by vendor
+
+#### Sprint 2 — Budget Intelligence
+
+- `getBudgetVsActual()` — budgeted vs actual by category
+- `getMonthlyExpenses()` — expenses grouped by YYYY-MM
+- `getPaymentUtilization()` — payment rate by vendor category
+- `getBudgetForecast()` — monthly burn rate + months-left prediction
+- `getTopExpenses()` — combined expenses + vendors sorted by amount
+
+#### Sprint 3 — Seating Intelligence
+
+- `getTablesWithMixedDiets()` — tables with different meal types
+- `getTableUtilization()` — seats used / capacity per table
+- `getTableSideBalance()` — groom/bride/mutual count per table
+- `getOverCapacityTables()` — tables exceeding capacity
+- `getUnseatedGuestBreakdown()` — unseated confirmed guests by side/group
+
+#### Sprint 4 — Guest Insights
+
+- `getPlusOneStats()` — party size metrics for confirmed guests
+- `getGuestsMissingMeal()` — confirmed guests with no meal preference
+- `getGiftSummary()` — total/avg/max gift amounts
+- `getGuestAge()` — days since creation per guest
+- `getChildrenCount()` — children count from confirmed guests
+
+#### Sprint 5 — Vendor Intelligence
+
+- `getVendorTimeline()` — upcoming due dates sorted by urgency
+- `getVendorsByCategory()` — grouped cost/payment totals per category
+- `getVendorsMissingContract()` — vendors without contractUrl
+- `getLowRatedVendors()` — vendors rated below threshold
+- `getVendorBudgetShare()` — budget share percentage per vendor
+
+#### Sprint 6 — RSVP & WhatsApp Analytics
+
+- `getRsvpRateBySide()` — response rate by groom/bride/mutual
+- `getRsvpResponseTime()` — avg/fastest/slowest response time in days
+- `getRsvpDailyTrend()` — daily RSVP submission counts
+- `getWhatsAppSendRate()` — sent vs eligible rate
+- `getMessageStatsByGroup()` — message delivery breakdown by guest group
+
+#### Sprint 7 — Check-in Intelligence
+
+- `getCheckinRateBySide()` — check-in rate by side
+- `getCheckinRateByTable()` — arrival rate per table
+- `getVipNotCheckedIn()` — VIP guests not yet arrived
+- `getAccessibilityNotCheckedIn()` — accessibility guests not arrived
+- `getCheckinTimeline()` — check-ins bucketed by hour
+
+#### Sprint 8 — Timeline & Dashboard
+
+- `getTimelineCompletionStats()` — done/pending/rate for timeline
+- `getTimelineDuration()` — total event duration in minutes
+- `getUpcomingTimelineItems()` — next N undone timeline items
+- `getWeddingReadinessScore()` — 0-100 composite readiness score
+- `getDashboardSnapshot()` — key metrics for dashboard header
+
+#### Sprint 9 — Expenses, Gallery & Settings
+
+- `getExpenseMonthlyTrend()` — monthly expense totals
+- `getLargestExpenses()` — top N expenses by amount
+- `getGalleryStats()` — photo count, caption stats
+- `getDataCompletenessScore()` — guest data quality percentage
+- `getStoreSizes()` — store key sizes in bytes
+
+### Changed
+
+- Test count: 1779 → 1864+ (34 suites)
+- New test file: `tests/unit/settings.test.mjs`
+
 ## [5.4.0] — 2026-04-17
 
 ### Added — 50 Features (Sprints 1–9)
