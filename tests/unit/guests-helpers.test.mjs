@@ -15,6 +15,11 @@ import {
   getSeatingGaps,
   getGuestResponseTimeline,
   getDuplicateGuests,
+  getPlusOneStats,
+  getGuestsMissingMeal,
+  getGiftSummary,
+  getGuestAge,
+  getChildrenCount,
 } from "../../src/sections/guests.js";
 
 function seedStore() {
@@ -233,5 +238,107 @@ describe("getDuplicateGuests", () => {
     ]);
     const dupes = getDuplicateGuests();
     expect(dupes.filter((d) => d.reason === "phone")).toHaveLength(0);
+  });
+});
+
+// ── getPlusOneStats ───────────────────────────────────────────────────────
+describe("getPlusOneStats", () => {
+  it("returns zeros when no guests", () => {
+    storeSet("guests", []);
+    const stats = getPlusOneStats();
+    expect(stats.totalGuests).toBe(0);
+    expect(stats.avgPartySize).toBe(0);
+  });
+
+  it("calculates party size metrics for confirmed guests", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", count: 3 }),
+      makeGuest({ status: "confirmed", count: 1 }),
+      makeGuest({ status: "confirmed", count: 5 }),
+      makeGuest({ status: "pending", count: 10 }), // not counted
+    ]);
+    const stats = getPlusOneStats();
+    expect(stats.totalGuests).toBe(3);
+    expect(stats.totalHeads).toBe(9);
+    expect(stats.largestParty).toBe(5);
+    expect(stats.avgPartySize).toBe(3);
+  });
+});
+
+// ── getGuestsMissingMeal ──────────────────────────────────────────────────
+describe("getGuestsMissingMeal", () => {
+  it("returns confirmed guests with no or 'regular' meal", () => {
+    storeSet("guests", [
+      makeGuest({ id: "g1", status: "confirmed", meal: "" }),
+      makeGuest({ id: "g2", status: "confirmed", meal: "regular" }),
+      makeGuest({ id: "g3", status: "confirmed", meal: "vegan" }),
+      makeGuest({ id: "g4", status: "pending" }),
+    ]);
+    const missing = getGuestsMissingMeal();
+    expect(missing).toHaveLength(2);
+    expect(missing.map((m) => m.id)).toContain("g1");
+    expect(missing.map((m) => m.id)).toContain("g2");
+  });
+});
+
+// ── getGiftSummary ────────────────────────────────────────────────────────
+describe("getGiftSummary", () => {
+  it("returns zeros when no gifts", () => {
+    storeSet("guests", [makeGuest({})]);
+    const s = getGiftSummary();
+    expect(s.totalGifts).toBe(0);
+    expect(s.giftCount).toBe(0);
+  });
+
+  it("summarizes gifts", () => {
+    storeSet("guests", [
+      makeGuest({ gift: 500 }),
+      makeGuest({ gift: 1000 }),
+      makeGuest({ gift: 0 }),
+    ]);
+    const s = getGiftSummary();
+    expect(s.totalGifts).toBe(1500);
+    expect(s.giftCount).toBe(2);
+    expect(s.avgGift).toBe(750);
+    expect(s.maxGift).toBe(1000);
+  });
+});
+
+// ── getGuestAge ───────────────────────────────────────────────────────────
+describe("getGuestAge", () => {
+  it("returns empty when no guests have createdAt", () => {
+    storeSet("guests", [makeGuest({})]);
+    expect(getGuestAge()).toHaveLength(0);
+  });
+
+  it("returns sorted by daysOld descending", () => {
+    const now = Date.now();
+    storeSet("guests", [
+      makeGuest({ id: "g1", firstName: "New", createdAt: new Date(now - 86400000).toISOString() }),
+      makeGuest({ id: "g2", firstName: "Old", createdAt: new Date(now - 86400000 * 30).toISOString() }),
+    ]);
+    const ages = getGuestAge();
+    expect(ages).toHaveLength(2);
+    expect(ages[0].id).toBe("g2"); // older first
+    expect(ages[0].daysOld).toBeGreaterThanOrEqual(29);
+  });
+});
+
+// ── getChildrenCount ──────────────────────────────────────────────────────
+describe("getChildrenCount", () => {
+  it("returns zeros when no confirmed guests with children", () => {
+    storeSet("guests", [makeGuest({ status: "pending", children: 3 })]);
+    expect(getChildrenCount().totalChildren).toBe(0);
+  });
+
+  it("counts children from confirmed guests", () => {
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", children: 2 }),
+      makeGuest({ status: "confirmed", children: 1 }),
+      makeGuest({ status: "confirmed", children: 0 }),
+    ]);
+    const c = getChildrenCount();
+    expect(c.totalChildren).toBe(3);
+    expect(c.guestsWithChildren).toBe(2);
   });
 });

@@ -1315,3 +1315,76 @@ export function getTransportSummary() {
   }
   return routes;
 }
+
+// ── Sprint 4: Guest Insight Helpers ──────────────────────────────────────
+
+/**
+ * Get plus-one (extra guest count) statistics.
+ * @returns {{ totalGuests: number, totalHeads: number, avgPartySize: number, largestParty: number }}
+ */
+export function getPlusOneStats() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const totalHeads = confirmed.reduce((s, g) => s + (g.count || 1), 0);
+  const avgPartySize = confirmed.length > 0 ? Math.round((totalHeads / confirmed.length) * 10) / 10 : 0;
+  const largestParty = confirmed.reduce((max, g) => Math.max(max, g.count || 1), 0);
+  return { totalGuests: confirmed.length, totalHeads, avgPartySize, largestParty };
+}
+
+/**
+ * Get guests who confirmed but have no meal preference set.
+ * @returns {Array<{ id: string, firstName: string, lastName: string }>}
+ */
+export function getGuestsMissingMeal() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests
+    .filter((g) => g.status === "confirmed" && (!g.meal || g.meal === "regular"))
+    .map((g) => ({ id: g.id, firstName: g.firstName || "", lastName: g.lastName || "" }));
+}
+
+/**
+ * Get guest gift summary.
+ * @returns {{ totalGifts: number, giftCount: number, avgGift: number, maxGift: number }}
+ */
+export function getGiftSummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const withGift = guests.filter((g) => Number(g.gift) > 0);
+  const totalGifts = withGift.reduce((s, g) => s + Number(g.gift), 0);
+  const maxGift = withGift.reduce((m, g) => Math.max(m, Number(g.gift)), 0);
+  return {
+    totalGifts,
+    giftCount: withGift.length,
+    avgGift: withGift.length > 0 ? Math.round(totalGifts / withGift.length) : 0,
+    maxGift,
+  };
+}
+
+/**
+ * Get guest RSVP age — how many days since each guest was created.
+ * @returns {Array<{ id: string, name: string, daysOld: number, status: string }>}
+ */
+export function getGuestAge() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const now = Date.now();
+  return guests
+    .filter((g) => g.createdAt)
+    .map((g) => ({
+      id: g.id,
+      name: `${g.firstName || ""} ${g.lastName || ""}`.trim(),
+      daysOld: Math.floor((now - new Date(g.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
+      status: g.status || "pending",
+    }))
+    .sort((a, b) => b.daysOld - a.daysOld);
+}
+
+/**
+ * Get children count for confirmed guests.
+ * @returns {{ totalChildren: number, guestsWithChildren: number }}
+ */
+export function getChildrenCount() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed");
+  const withKids = confirmed.filter((g) => Number(g.children) > 0);
+  const totalChildren = withKids.reduce((s, g) => s + Number(g.children), 0);
+  return { totalChildren, guestsWithChildren: withKids.length };
+}
