@@ -57,3 +57,32 @@ export function submitContactForm(data) {
 
   return { ok: true };
 }
+
+// ── Sprint 2: Contacts CSV export ─────────────────────────────────────────
+
+/**
+ * Export collected contacts as a CSV file download.
+ */
+export function exportContactsCSV() {
+  const contacts = /** @type {any[]} */ (storeGet("contacts") ?? []);
+  const header = "Name,Phone,Email,DietaryNotes,SubmittedAt";
+  const rows = contacts.map((c) =>
+    [
+      `"${`${c.firstName || ""} ${c.lastName || ""}`.trim().replace(/"/g, '""')}"`,
+      c.phone || "",
+      c.email || "",
+      `"${(c.dietaryNotes || "").replace(/"/g, '""')}"`,
+      c.submittedAt || "",
+    ].join(","),
+  );
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "contacts.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}

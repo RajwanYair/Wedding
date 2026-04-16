@@ -1034,5 +1034,11 @@
     "seating_score_pct": "Overall score",
     "seating_score_grade": "Grade",
     "seating_score_seated": "Seated",
-    "seating_score_tables": "Tables"
+    "seating_score_tables": "Tables",
+    "export_all_csv": "Export All as CSV",
+    "export_timeline_csv": "Export Timeline",
+    "export_contacts_csv": "Export Contacts",
+    "data_integrity_ok": "Data integrity OK ✓",
+    "data_integrity_issues": "Found {n} issues",
+    "check_data_integrity": "Check Data Integrity"
 }

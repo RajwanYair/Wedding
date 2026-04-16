@@ -1023,5 +1023,11 @@
     "email_subject_thankyou": "Спасибо — {groom} и {bride}",
     "funnel_clicked": "Перешли по ссылке",
     "funnel_started": "Начали заполнять",
-    "pdf_summary": "Отчёт PDF"
+    "pdf_summary": "Отчёт PDF",
+    "export_all_csv": "Экспорт всех в CSV",
+    "export_timeline_csv": "Экспорт расписания",
+    "export_contacts_csv": "Экспорт контактов",
+    "data_integrity_ok": "Данные в порядке ✓",
+    "data_integrity_issues": "Найдено {n} проблем",
+    "check_data_integrity": "Проверить целостность данных"
 }

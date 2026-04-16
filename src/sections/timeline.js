@@ -312,3 +312,27 @@ export function toggleTimelineDone(id) {
 function _esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
+
+// ── Sprint 2: Timeline CSV export ─────────────────────────────────────────
+
+/**
+ * Export timeline items as a CSV file download.
+ */
+export function exportTimelineCSV() {
+  const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
+  const done = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
+  const header = "Time,Title,Note,Icon,Done";
+  const rows = items.map((i) =>
+    [i.time, `"${(i.title || "").replace(/"/g, '""')}"`, `"${(i.note || "").replace(/"/g, '""')}"`, i.icon || "", done[i.id] ? "yes" : "no"].join(","),
+  );
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "timeline.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}

@@ -1036,5 +1036,11 @@
     "seating_score_pct": "ציון כולל",
     "seating_score_grade": "דרגה",
     "seating_score_seated": "מושבים",
-    "seating_score_tables": "שולחנות"
+    "seating_score_tables": "שולחנות",
+    "export_all_csv": "ייצוא הכל ל-CSV",
+    "export_timeline_csv": "ייצוא לוח זמנים",
+    "export_contacts_csv": "ייצוא אנשי קשר",
+    "data_integrity_ok": "הנתונים תקינים ✓",
+    "data_integrity_issues": "נמצאו {n} בעיות",
+    "check_data_integrity": "בדיקת תקינות נתונים"
 }

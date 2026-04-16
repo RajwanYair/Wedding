@@ -46,6 +46,7 @@ import {
   openTimelineForEdit,
   printTimeline,
   toggleTimelineDone,
+  exportTimelineCSV,
 } from "../sections/timeline.js";
 
 /**
@@ -194,6 +195,7 @@ export function registerSectionHandlers() {
     openModal("timelineModal");
   });
   on("printTimeline", () => printTimeline());
+  on("exportTimelineCSV", () => exportTimelineCSV());
   on("toggleTimelineDone", (el) =>
     toggleTimelineDone(el.dataset.actionArg ?? ""),
   );

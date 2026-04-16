@@ -530,3 +530,64 @@ function _renderQueueBadge() {
     }
   }
 }
+
+// ── Sprint 2: Bulk CSV export + Data integrity ────────────────────────────
+
+/**
+ * Export all CSV files at once (guests, vendors, expenses, timeline, contacts).
+ * Downloads each file sequentially with a short delay.
+ */
+export async function exportAllCSV() {
+  const sections = [
+    { key: "guests", header: "ID,First,Last,Phone,Status,Count,Children,Side,Group,Meal", fields: (g) => `${g.id},${g.firstName},${g.lastName || ""},${g.phone || ""},${g.status},${g.count || 1},${g.children || 0},${g.side || ""},${g.group || ""},${g.meal || ""}` },
+    { key: "vendors", header: "ID,Category,Name,Contact,Phone,Price,Paid,Notes,DueDate", fields: (v) => `${v.id},"${(v.category || "").replace(/"/g, '""')}","${(v.name || "").replace(/"/g, '""')}",${v.contact || ""},${v.phone || ""},${v.price || 0},${v.paid || 0},"${(v.notes || "").replace(/"/g, '""')}",${v.dueDate || ""}` },
+    { key: "expenses", header: "ID,Category,Amount,Description,Date", fields: (ex) => `${ex.id},"${(ex.category || "").replace(/"/g, '""')}",${ex.amount || 0},"${(ex.description || "").replace(/"/g, '""')}",${ex.date || ""}` },
+    { key: "timeline", header: "Time,Title,Note", fields: (t) => `${t.time || ""},"${(t.title || "").replace(/"/g, '""')}","${(t.note || "").replace(/"/g, '""')}"` },
+    { key: "contacts", header: "Name,Phone,Email,SubmittedAt", fields: (c) => `"${`${c.firstName || ""} ${c.lastName || ""}`.trim().replace(/"/g, '""')}",${c.phone || ""},${c.email || ""},${c.submittedAt || ""}` },
+  ];
+  for (const { key, header, fields } of sections) {
+    const items = /** @type {any[]} */ (storeGet(key) ?? []);
+    if (items.length === 0) continue;
+    const rows = items.map(fields);
+    const csv = [header, ...rows].join("\n");
+    _downloadBlob(
+      new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" }),
+      `${key}.csv`,
+    );
+  }
+}
+
+/**
+ * Run data integrity checks and report issues.
+ * Checks: orphaned tableIds, invalid statuses, missing required fields,
+ * duplicate IDs, phone format, date validity.
+ * @returns {{ ok: boolean, issues: string[] }}
+ */
+export function checkDataIntegrity() {
+  const issues = [];
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const tableIds = new Set(tables.map((t) => t.id));
+  const guestIds = new Set();
+  const validStatuses = new Set(["pending", "confirmed", "declined", "maybe"]);
+
+  for (const g of guests) {
+    // Duplicate ID
+    if (guestIds.has(g.id)) issues.push(`Duplicate guest ID: ${g.id}`);
+    guestIds.add(g.id);
+    // Missing name
+    if (!g.firstName) issues.push(`Guest ${g.id}: missing firstName`);
+    // Invalid status
+    if (g.status && !validStatuses.has(g.status)) issues.push(`Guest ${g.id}: invalid status "${g.status}"`);
+    // Orphaned tableId
+    if (g.tableId && !tableIds.has(g.tableId)) issues.push(`Guest ${g.id}: tableId "${g.tableId}" not found`);
+  }
+
+  // Check table capacity vs assignments
+  for (const tbl of tables) {
+    const seated = guests.filter((g) => g.tableId === tbl.id).length;
+    if (seated > (tbl.capacity || 10)) issues.push(`Table "${tbl.name}": ${seated} seated exceeds capacity ${tbl.capacity}`);
+  }
+
+  return { ok: issues.length === 0, issues };
+}

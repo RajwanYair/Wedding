@@ -37,6 +37,8 @@ import {
   stopAutoBackup,
   downloadAutoBackup,
   restoreAutoBackup,
+  exportAllCSV,
+  checkDataIntegrity,
 } from "../sections/settings.js";
 import * as invitationSection from "../sections/invitation.js";
 import * as contactSection from "../sections/contact-collector.js";
@@ -220,6 +222,16 @@ export function registerSettingsHandlers(ctx) {
   on("clearErrorLog", () => clearErrorLog());
   on("exportJSON", () => exportJSON());
   on("importJSON", (el) => importJSON(el));
+  on("exportAllCSV", () => exportAllCSV());
+  on("checkDataIntegrity", () => {
+    const result = checkDataIntegrity();
+    if (result.ok) {
+      showToast(t("data_integrity_ok"), "success");
+    } else {
+      showToast(t("data_integrity_issues").replace("{n}", String(result.issues.length)), "warning");
+      console.warn("[integrity]", result.issues);
+    }
+  });
   on("startAutoBackup", () => {
     const interval =
       Number(document.getElementById("autoBackupInterval")?.value) || 30;

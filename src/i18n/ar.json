@@ -1022,5 +1022,11 @@
     "email_subject_thankyou": "شكرًا — {groom} و {bride}",
     "funnel_clicked": "ضغط على الرابط",
     "funnel_started": "بدأ الملء",
-    "pdf_summary": "تقرير ملخص PDF"
+    "pdf_summary": "تقرير ملخص PDF",
+    "export_all_csv": "تصدير الكل كـ CSV",
+    "export_timeline_csv": "تصدير الجدول الزمني",
+    "export_contacts_csv": "تصدير جهات الاتصال",
+    "data_integrity_ok": "سلامة البيانات جيدة ✓",
+    "data_integrity_issues": "تم العثور على {n} مشاكل",
+    "check_data_integrity": "فحص سلامة البيانات"
 }
