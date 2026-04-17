@@ -1,4 +1,4 @@
-# Wedding Manager — Architecture (v7.9.0)
+# Wedding Manager — Architecture (v8.0.0)
 
 > Entry point: `src/main.js` · Pure ESM · Zero `window.*` side effects
 
@@ -292,4 +292,5 @@ flowchart LR
     R["@layer responsive\n768px + 480px breakpoints"] --> P
     P["@layer print\nPrint-only overrides"]
 ```
+
 

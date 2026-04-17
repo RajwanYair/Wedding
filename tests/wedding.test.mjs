@@ -57,15 +57,15 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 describe("Version", function () {
   it("src/core/config.js contains v7.0.0", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
-    assert.ok(cfg.includes("7.9.0"));
+    assert.ok(cfg.includes("8.0.0"));
   });
 
-  it("SW cache name contains v7.9.0", function () {
-    assert.ok(SW.includes("wedding-v7.9.0"));
+  it("SW cache name contains v8.0.0", function () {
+    assert.ok(SW.includes("wedding-v8.0.0"));
   });
 
-  it("package.json version is 7.9.0", function () {
-    assert.equal(PKG.version, "7.9.0");
+  it("package.json version is 8.0.0", function () {
+    assert.equal(PKG.version, "8.0.0");
   });
 });
 
@@ -753,7 +753,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v7.9.0"));
+    assert.ok(SW.includes("wedding-v8.0.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -6027,7 +6027,8 @@ describe("v3.7.0: version stamps consistent", function () {
         src.includes("v4.") ||
         src.includes("v5.") ||
         src.includes("v6.") ||
-        src.includes("v7."),
+        src.includes("v7.") ||
+        src.includes("v8."),
       "README.md version badge not updated",
     );
   });
@@ -6226,4 +6227,5 @@ describe("v3.8.0: WhatsApp char counter", function () {
     assert.ok(src.includes("wa-char-warn"), "whatsapp.js missing wa-char-warn class");
   });
 });
+
 
