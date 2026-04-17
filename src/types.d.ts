@@ -191,3 +191,197 @@ export type StoreWildcardSubscriber = (key: StoreKey, value: unknown) => void;
 /** Unsubscribe function returned by storeSubscribe. */
 export type Unsubscribe = () => void;
 
+// ── Pagination Types ──────────────────────────────────────────────────────
+
+/** Cursor-based page request. */
+export interface PageRequest {
+  cursor?: string;
+  limit: number;
+  orderBy?: string;
+  orderDir?: "asc" | "desc";
+}
+
+/** Page result with next-cursor and total count. */
+export interface PageResult<T> {
+  items: T[];
+  nextCursor: string | null;
+  total: number;
+}
+
+// ── Role-Based Access Types ───────────────────────────────────────────────
+
+/** Role for access control. */
+export type UserRole = "admin" | "guest" | "anonymous";
+
+/** Fine-grained permissions per role. */
+export type Permission =
+  | "guests:read"
+  | "guests:write"
+  | "guests:delete"
+  | "tables:read"
+  | "tables:write"
+  | "vendors:read"
+  | "vendors:write"
+  | "expenses:read"
+  | "expenses:write"
+  | "settings:write"
+  | "rsvp:submit"
+  | "checkin:write"
+  | "export:any"
+  | "audit:read";
+
+/** Role → permissions map. */
+export type RolePermissions = Record<UserRole, Set<Permission>>;
+
+// ── Message / Notification Types ─────────────────────────────────────────
+
+/** Status of a sent message. */
+export type MessageStatus = "pending" | "sent" | "failed" | "delivered" | "read";
+
+/** A reusable message template. */
+export interface MessageTemplate {
+  readonly id: string;
+  name: string;
+  channel: "whatsapp" | "email" | "sms";
+  bodyHe: string;
+  bodyEn: string;
+  variables: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Record of a single message delivery attempt. */
+export interface MessageDelivery {
+  readonly id: string;
+  guestId: string;
+  templateId: string;
+  channel: "whatsapp" | "email" | "sms";
+  status: MessageStatus;
+  sentAt: string | null;
+  error: string | null;
+  createdAt: string;
+}
+
+// ── Audit & Observability Types ───────────────────────────────────────────
+
+/** Admin action audit entry. */
+export interface AuditEntry {
+  readonly id: string;
+  action: string;
+  entity: string;
+  entityId: string;
+  before: unknown;
+  after: unknown;
+  adminEmail: string;
+  createdAt: string;
+}
+
+/** Client-side error capture entry. */
+export interface ErrorEntry {
+  readonly id: string;
+  message: string;
+  stack: string;
+  context: Record<string, unknown>;
+  url: string;
+  userAgent: string;
+  createdAt: string;
+}
+
+// ── Sync State Types ──────────────────────────────────────────────────────
+
+/** Sync status per domain key. */
+export type SyncStatus = "idle" | "syncing" | "pending" | "error" | "offline";
+
+/** Sync state metadata for a single domain key. */
+export interface SyncState {
+  key: string;
+  status: SyncStatus;
+  lastSyncAt: string | null;
+  pendingWrites: number;
+  error: string | null;
+}
+
+// ── Conflict Types ────────────────────────────────────────────────────────
+
+/** Conflict detected during sync. */
+export interface ConflictInfo {
+  key: string;
+  localValue: unknown;
+  remoteValue: unknown;
+  localUpdatedAt: string;
+  remoteUpdatedAt: string;
+}
+
+/** Resolution strategy for a conflict. */
+export type ConflictResolution = "keep_local" | "keep_remote" | "merge";
+
+// ── Section Contract Types ────────────────────────────────────────────────
+
+/** Capabilities a section can declare. */
+export interface SectionCapabilities {
+  /** Section supports offline mode. */
+  offline?: boolean;
+  /** Section is accessible to anonymous/guest users. */
+  public?: boolean;
+  /** Section has printable content. */
+  printable?: boolean;
+  /** Section supports keyboard shortcuts. */
+  shortcuts?: boolean;
+  /** Section emits analytics events. */
+  analytics?: boolean;
+}
+
+/** Formal section lifecycle interface. */
+export interface SectionLifecycle {
+  /** Mount the section into the given container. */
+  mount(container: HTMLElement): void | Promise<void>;
+  /** Unmount and clean up (unsubscribe, remove listeners). */
+  unmount(): void;
+  /** Optional capabilities metadata. */
+  capabilities?: SectionCapabilities;
+}
+
+// ── Repository Interface Types ────────────────────────────────────────────
+
+/** Base repository interface with CRUD + pagination. */
+export interface Repository<T extends { id: string }> {
+  getAll(): Promise<T[]>;
+  getById(id: string): Promise<T | null>;
+  getPage(req: PageRequest): Promise<PageResult<T>>;
+  create(item: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T>;
+  update(id: string, patch: Partial<T>): Promise<T>;
+  delete(id: string): Promise<void>;
+}
+
+/** Guest-specific repository with additional lookup methods. */
+export interface GuestRepository extends Repository<Guest> {
+  findByPhone(phone: string): Promise<Guest | null>;
+  findByStatus(status: GuestStatus): Promise<Guest[]>;
+  findByTable(tableId: string): Promise<Guest[]>;
+  bulkUpdateStatus(ids: string[], status: GuestStatus): Promise<void>;
+  bulkAssignTable(ids: string[], tableId: string): Promise<void>;
+}
+
+/** Table repository with seating helpers. */
+export interface TableRepository extends Repository<Table> {
+  findAvailable(minCapacity: number): Promise<Table[]>;
+}
+
+/** Vendor repository. */
+export interface VendorRepository extends Repository<Vendor> {
+  findByCategory(category: string): Promise<Vendor[]>;
+}
+
+/** Expense repository. */
+export interface ExpenseRepository extends Repository<Expense> {
+  sumByCategory(): Promise<Record<string, number>>;
+}
+
+// ── Data Classification ───────────────────────────────────────────────────
+
+/** Data sensitivity classification. */
+export type DataClass = "public" | "guest-private" | "admin-sensitive" | "operational";
+
+/** Store key → data classification map. */
+export type StoreDataClass = Record<keyof StoreKeys, DataClass>;
+
