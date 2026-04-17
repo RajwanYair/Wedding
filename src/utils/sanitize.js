@@ -93,7 +93,7 @@ export function sanitize(input, schema) {
       }
       case "email": {
         const em = String(raw).trim().toLowerCase().slice(0, 254);
-        if (!_EMAIL_RE.test(em)) {
+        if (_SCRIPTS_RE.test(em) || !_EMAIL_RE.test(em)) {
           errors.push(`${field} is not a valid email`);
           value[field] = "";
         } else {
