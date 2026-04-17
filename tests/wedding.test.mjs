@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v6.1.0
+// Wedding Manager — Test Suite v6.2.0
 // Run: npm test
 // 1587+ tests — core + extended + S0–S25 features
 // =============================================================================
@@ -55,17 +55,17 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe("Version", function () {
-  it("src/core/config.js contains v6.1.0", function () {
+  it("src/core/config.js contains v6.2.0", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
-    assert.ok(cfg.includes("6.1.0"));
+    assert.ok(cfg.includes("6.2.0"));
   });
 
-  it("SW cache name contains v6.1.0", function () {
-    assert.ok(SW.includes("wedding-v6.1.0"));
+  it("SW cache name contains v6.2.0", function () {
+    assert.ok(SW.includes("wedding-v6.2.0"));
   });
 
-  it("package.json version is 6.1.0", function () {
-    assert.equal(PKG.version, "6.1.0");
+  it("package.json version is 6.2.0", function () {
+    assert.equal(PKG.version, "6.2.0");
   });
 });
 
@@ -753,7 +753,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v6.1.0"));
+    assert.ok(SW.includes("wedding-v6.2.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -3881,10 +3881,6 @@ describe("Bundle Chunk Splitting (S4.5)", function () {
 describe("Integration: guest pending-sync (S3.3 + S6.7)", function () {
   const GUESTS = readFileSync(
     resolve(__dirname, "..", "src", "sections", "guests.js"),
-    "utf8",
-  );
-  const SHEETS = readFileSync(
-    resolve(__dirname, "..", "src", "services", "sheets.js"),
     "utf8",
   );
 

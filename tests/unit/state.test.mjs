@@ -11,7 +11,7 @@
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from "vitest";
 import { save, load, remove, clearAll } from "../../src/core/state.js";
 
-const PREFIX = "wedding_v1_";
+const _PREFIX = "wedding_v1_";
 
 // ── localStorage stub ─────────────────────────────────────────────────────
 // Proxy wraps _data so Object.keys(localStorage) returns stored keys.

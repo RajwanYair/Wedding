@@ -7,7 +7,7 @@
  * Run: npm test
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
 import { makeGuest } from "./helpers.js";
 import {

@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { initStore, storeGet } from "../../src/core/store.js";
 import { submitContactForm } from "../../src/sections/contact-collector.js";
 
 function seedStore() {

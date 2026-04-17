@@ -22,7 +22,6 @@ import {
   getGuestAge,
   getChildrenCount,
 } from "../../src/sections/guests.js";
-import { makeGuest } from "./helpers.js";
 
 function seedStore() {
   initStore({

@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { initStore, storeSet } from "../../src/core/store.js";
 import { makeGuest } from "./helpers.js";
 import {
   getDataCompletenessScore,

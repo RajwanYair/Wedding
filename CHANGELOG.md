@@ -4,6 +4,72 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.2.0] — 2025-07-17
+
+> **Infrastructure & Safety** — 10-sprint uplift covering section contracts, render primitives, store V2, pagination, repositories, DB migrations, RBAC, PII masking, and operations runbooks.
+
+### Sprint 11 — Section contract system (Phase 1)
+
+- `src/core/section-contract.js`: `SECTION_CAPABILITIES`, `validateSectionModule`, `buildCapabilityMap`, `getSectionsWithCapability`
+- `scripts/validate-sections.mjs`: CI validator for section lifcycle contract
+- `src/sections/guests.js`, `rsvp.js`: added `capabilities` exports
+- `package.json`: `validate:sections` script wired into `ci`
+- Tests: 17 new (section-contract.test.mjs)
+
+### Sprint 12 — Render helpers & toast system (Phase 6)
+
+- `src/utils/render-helpers.js`: `renderEmpty`, `renderLoading`, `renderError`, `renderCount` with safe ARIA roles
+- `src/utils/toast.js`: accessible toast queue — MAX_VISIBLE=4, id-dedup, persistent option, `_resetToastState` for tests
+- Tests: 33 new (render-helpers + toast)
+
+### Sprint 13 — Store V2 enhancements (Phase 2)
+
+- `src/core/store.js`: `storeSubscribeOnce`, `storeBatchAsync`, `getSubscriberStats`
+- Tests: 7 new (store-v2 Sprint 13 suite)
+
+### Sprint 14 — Pagination & virtual-list utilities (Phase 2)
+
+- `src/utils/pagination.js`: `paginateArray`, `cursorPaginateArray`, `createPageState`, `buildPageButtons`
+- `src/utils/virtual-list.js`: `createVirtualViewport` with `scrollTo`, `setItems`, `getViewport`
+- Tests: 29 new (pagination + virtual-list)
+
+### Sprint 15 — TimelineRepository + RsvpLogRepository (Phase 3)
+
+- `src/types.d.ts`: `RsvpLogEntry`, `TimelineRepository`, `RsvpLogRepository` interfaces
+- `src/services/repositories.js`: `timelineRepo` (CRUD + getOrdered + setDone), `rsvpLogRepo` (append-only + getByGuest)
+- Tests: 16 new (repositories Sprint 15 suite)
+
+### Sprint 16 — DB enum CHECK constraints (Phase 3)
+
+- `supabase/migrations/011–014`: CHECK constraints for vendors/expenses/rsvp_log/contacts; ADD COLUMN rsvp_log.children/notes; config.json_value JSONB column
+
+### Sprint 17 — Roles & permission model (Phase 4)
+
+- `src/utils/roles.js`: `ROLES`, `ROLE_PERMISSIONS`, `resolveRole`, `hasPermission`, `getRoleFromUser`, `getAccessibleSections`, `canAccessSection`
+- `src/services/audit.js`: `logAdminAction(permission, entityId, diff)`
+- Tests: 21 new (roles.test.mjs)
+
+### Sprint 18 — PII classification & masking (Phase 5)
+
+- `src/utils/pii.js`: `DATA_CLASS`, `STORE_KEY_CLASSES`, `maskPhone`, `maskEmail`, `maskName`, `classifyRecord`, `redactForLog`, `safeGuestSummary`
+- Tests: 25 new (pii.test.mjs)
+
+### Sprint 19 — Operations & integrations documentation (Phase 9)
+
+- `docs/operations/deploy-runbook.md`: GitHub Pages + Supabase deploy guide
+- `docs/operations/incident-response.md`: P0/P1/P2/P3 runbook
+- `docs/operations/migrations.md`: full migration inventory + authoring guide
+- `docs/integrations/supabase.md`: architecture, RLS, write queue, setup
+- `docs/integrations/overview.md`: all integrations, auth flow, offline support
+
+### Sprint 20 — v6.2.0 release
+
+- Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
+- Pre-existing lint fixes: unused imports, missing globals (HTMLSpanElement, TouchEvent, HashChangeEvent, global) in test ESLint config
+- Tests: 2207 passing / 53 suites (up from 2053 / 46)
+
+---
+
 ## [6.1.0] — 2025-07-13
 
 > **Foundation Hardening** — 10-sprint quality & observability uplift across types, security, a11y, and local-first data.
