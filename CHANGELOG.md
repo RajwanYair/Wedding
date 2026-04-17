@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.1.0] — 2025-08-03
+
+> **Push Notifications & Messaging** — 10-sprint batch adding Web Push subscriptions, VAPID-signed push-dispatcher Edge Function, command palette, drag-and-drop state machine, bulk selection, timeline analyzer, number formatter, and messaging pipeline integration tests. 3323 tests / 118 suites.
+
+### Sprint 101 — Web Push notification service
+
+- `src/services/push-notifications.js`: `isPushSupported`, `requestPushPermission`, `urlBase64ToUint8Array`, `subscribePush`, `unsubscribePush`, `getCachedSubscription`, `serializeSubscription`, `dispatchPush`, `sendPushToAdmins` — 12 tests
+
+### Sprint 102 — Push subscriptions migration
+
+- `supabase/migrations/020_push_subscriptions.sql`: `push_subscriptions` table + RLS + indexes
+
+### Sprint 103 — Push dispatcher Edge Function
+
+- `supabase/functions/push-dispatcher/index.ts`: Deno Edge Fn with VAPID JWT signing, multi-sub dispatch, CORS, error reporting
+
+### Sprint 104 — Command palette utility
+
+- `src/utils/command-palette.js`: `createCommandPalette` — register/search/execute, fuzzy scoring, group listing, open/close callbacks — 15 tests
+
+### Sprint 105 — Drag-and-drop seating utility
+
+- `src/utils/drag-drop.js`: `createDragDropState` — DOM-free DnD state machine, startDrag, drop, canDrop, enterDropTarget — 15 tests
+
+### Sprint 106 — Bulk selection utility
+
+- `src/utils/bulk-select.js`: `createBulkSelection` — select/deselect, selectAll, invert, range select, onChange callbacks — 19 tests
+
+### Sprint 107 — Timeline analyzer
+
+- `src/utils/timeline-analyzer.js`: `detectConflicts`, `findGaps`, `buildDaySchedule`, `totalScheduledMinutes`, `groupByCategory` — 16 tests
+
+### Sprint 108 — Number formatter
+
+- `src/utils/number-formatter.js`: `formatCurrency`, `formatPercent`, `formatCount`, `formatFileSize`, `formatCompact`, `formatInteger` — 19 tests
+
+### Sprint 109 — Messaging pipeline integration tests
+
+- `tests/integration/messaging-pipeline.test.mjs`: 18 integration tests covering WA campaign, email campaign, delivery tracking, and ad-hoc sends
+
+### Sprint 110 — v7.1.0 release
+
+- Version bump to 7.1.0 across all files; full test suite green: 3323 / 118
+
 ## [7.0.0] — 2025-08-01
 
 > **UX, Docs & Utilities** — 10-sprint batch adding Realtime presence channel, conflict-resolution UI helpers, auto-seating algorithm, CSV import/export, operations runbook, Supabase integration guide, CONTRIBUTING.md overhaul, i18n parity checker, three Architecture Decision Records, and v7.0.0 release. 3213 tests / 111 suites.

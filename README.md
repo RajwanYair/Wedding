@@ -2,10 +2,10 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v7.0.0-d4a574?style=flat-square)
+![Version](https://img.shields.io/badge/version-v7.1.0-d4a574?style=flat-square)
 ![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
 ![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-3213%2B_passing-brightgreen?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-3323%2B_passing-brightgreen?style=flat-square)
 ![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
@@ -107,7 +107,7 @@ Wedding/
 ├── supabase/             # Migrations and Edge Functions
 │   ├── migrations/       # 6 SQL migration files
 │   └── functions/        # Edge Functions
-├── tests/                # 3213+ tests: unit + integration + E2E
+├── tests/                # 3323+ tests: unit + integration + E2E
 │   ├── unit/             # 38 Vitest suite files
 │   └── e2e/              # Playwright smoke + visual regression
 └── .github/              # CI/CD workflows, Copilot instructions, agents

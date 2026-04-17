@@ -57,15 +57,15 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 describe("Version", function () {
   it("src/core/config.js contains v7.0.0", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
-    assert.ok(cfg.includes("7.0.0"));
+    assert.ok(cfg.includes("7.1.0"));
   });
 
-  it("SW cache name contains v7.0.0", function () {
-    assert.ok(SW.includes("wedding-v7.0.0"));
+  it("SW cache name contains v7.1.0", function () {
+    assert.ok(SW.includes("wedding-v7.1.0"));
   });
 
-  it("package.json version is 7.0.0", function () {
-    assert.equal(PKG.version, "7.0.0");
+  it("package.json version is 7.1.0", function () {
+    assert.equal(PKG.version, "7.1.0");
   });
 });
 
@@ -753,7 +753,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v7.0.0"));
+    assert.ok(SW.includes("wedding-v7.1.0"));
   });
 
   it("pre-caches app shell", function () {
