@@ -211,7 +211,7 @@ export function createBatcher(flushFn) {
     pending.push(item);
     if (!scheduled) {
       scheduled = true;
-      queueMicrotask(() => {
+      Promise.resolve().then(() => {
         const batch = pending;
         pending = [];
         scheduled = false;
