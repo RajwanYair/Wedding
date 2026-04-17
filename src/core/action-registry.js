@@ -178,3 +178,37 @@ export const ACTIONS = /** @type {const} */ ({
 export const ACTION_NAMES = new Map(
   Object.entries(ACTIONS).map(([k, v]) => [v, k]),
 );
+
+/** Set of all registered action string values. */
+export const ACTION_VALUES = new Set(Object.values(ACTIONS));
+
+/**
+ * Check whether a string is a registered action value.
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function validateAction(value) {
+  return typeof value === "string" && ACTION_VALUES.has(value);
+}
+
+/**
+ * Return a sorted array of all registered action string values.
+ * @returns {string[]}
+ */
+export function listActions() {
+  return [...ACTION_VALUES].sort();
+}
+
+/**
+ * @typedef {{ actions: string[], count: number, registered: Record<string, string> }} ActionReport
+ */
+
+/**
+ * Build a diagnostic report of all registered actions.
+ * @returns {ActionReport}
+ */
+export function buildActionReport() {
+  /** @type {Record<string, string>} */
+  const registered = Object.fromEntries(ACTION_NAMES);
+  return { actions: listActions(), count: ACTION_VALUES.size, registered };
+}
