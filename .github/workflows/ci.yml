@@ -1,5 +1,5 @@
 # =============================================================================
-# CI — Wedding Manager v7.8.0
+# CI — Wedding Manager v7.9.0
 # Lint (HTML + CSS + JS + Markdown), unit tests, Vite build, security scan,
 # =============================================================================
 
@@ -211,4 +211,5 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
 

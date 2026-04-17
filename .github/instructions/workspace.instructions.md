@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v7.8.0
+# Workspace — Wedding Manager v7.9.0
 
 ## Available Resources
 
@@ -134,3 +134,4 @@ Run `npm install` from `../MyScripts` to provision once.
 
 After every Copilot chat session or sprint: `git add -A && git commit -m "<type>: <summary>" && git push`
 Tags for releases: `git tag vX.Y.Z && git push --tags`
+

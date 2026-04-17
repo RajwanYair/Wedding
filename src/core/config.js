@@ -7,7 +7,7 @@
  */
 
 // ── Version ───────────────────────────────────────────────────────────────
-export const APP_VERSION = "7.8.0";
+export const APP_VERSION = "7.9.0";
 
 // ── LocalStorage ─────────────────────────────────────────────────────────
 export const STORAGE_PREFIX = "wedding_v1_";
@@ -96,3 +96,4 @@ export function getAppHealth() {
     online: navigator.onLine,
   };
 }
+

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.9.0] — 2026-04-18
+
+### Added
+- Sprints 185-195: storage-helpers, dom-helpers, status-bar, section-resolver, nav-auth, handler tests (+74 tests total)
+
 ## [7.8.0] — 2026-04-18
 
 ### Added
@@ -1844,4 +1849,5 @@ Enhanced guest model, emoji/tooltip system, Google/guest auth, Google Sheets syn
 ## [1.0.0] — 2026-04-13
 
 Initial release: dashboard, guest management, table seating, SVG invitation, WhatsApp bulk send, RSVP, CSV export, Hebrew RTL + English i18n, 5 themes, PWA (offline SW), glassmorphism design, print stylesheet, 125 unit tests, GitHub Actions CI/CD.
+
 
