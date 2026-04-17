@@ -14,7 +14,6 @@ vi.mock("../../src/core/state.js", () => ({
 }));
 
 const {
-  initStore,
   storeGet,
   storeSet,
   storeSubscribe,
