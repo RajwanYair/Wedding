@@ -182,3 +182,85 @@ export async function pushAll() {
   await _loadSheetsModule();
   return _sheetPushAll?.() ?? {};
 }
+
+// ── Edge Function helpers (Phase 7.6) ─────────────────────────────────────
+
+import { SUPABASE_URL as _EDGE_BASE_URL } from "../core/config.js";
+import { load as _edgeLoad } from "../core/state.js";
+
+/**
+ * Derive the Supabase Edge Function base URL.
+ * @returns {string}
+ */
+function _edgeFnBase() {
+  const stored = _edgeLoad("supabaseUrl", "");
+  const base = (stored && String(stored).trim()) || _EDGE_BASE_URL || "";
+  return base ? `${base}/functions/v1` : "";
+}
+
+/**
+ * Call a Supabase Edge Function by name with a JSON body.
+ * Returns null if the edge function base is not configured.
+ *
+ * @param {string} name   Function name (e.g. "health", "rsvp-email")
+ * @param {object} [body] Request body (POST) or undefined (GET)
+ * @returns {Promise<{ ok: boolean, data?: unknown, error?: string }>}
+ */
+export async function callEdgeFunction(name, body) {
+  const base = _edgeFnBase();
+  if (!base) return { ok: false, error: "not_configured" };
+
+  const method = body !== undefined ? "POST" : "GET";
+  const opts = /** @type {RequestInit} */ ({
+    method,
+    headers: { "Content-Type": "application/json" },
+  });
+  if (body !== undefined) opts.body = JSON.stringify(body);
+
+  try {
+    const resp = await fetch(`${base}/${name}`, opts);
+    const data = await resp.json().catch(() => null);
+    if (!resp.ok) return { ok: false, error: data?.error ?? `HTTP ${resp.status}` };
+    return { ok: true, data };
+  } catch (err) {
+    return { ok: false, error: String(err) };
+  }
+}
+
+/**
+ * Call the health-check Edge Function.
+ * @returns {Promise<{ ok: boolean, version?: string, uptime_ms?: number }>}
+ */
+export async function checkEdgeHealth() {
+  const result = await callEdgeFunction("health");
+  if (!result.ok) return { ok: false };
+  const d = /** @type {Record<string, unknown>} */ (result.data ?? {});
+  return {
+    ok: d.status === "ok",
+    version: /** @type {string | undefined} */ (d.version),
+    uptime_ms: /** @type {number | undefined} */ (d.uptime_ms),
+  };
+}
+
+/**
+ * Send an RSVP confirmation email via the rsvp-email Edge Function.
+ * Fire-and-forget — errors are logged but do not block the RSVP flow.
+ *
+ * @param {string} guestName
+ * @param {string} guestEmail
+ * @param {'confirmed'|'declined'|'maybe'} status
+ * @param {{ mealChoice?: string, weddingDate?: string, venue?: string, groomName?: string, brideName?: string }} [opts]
+ * @returns {Promise<void>}
+ */
+export async function sendRsvpEmail(guestName, guestEmail, status, opts = {}) {
+  if (!guestEmail) return;
+  const result = await callEdgeFunction("rsvp-email", {
+    guestName,
+    guestEmail,
+    status,
+    ...opts,
+  });
+  if (!result.ok) {
+    console.warn("[backend] sendRsvpEmail failed:", result.error);
+  }
+}
