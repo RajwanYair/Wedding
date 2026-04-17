@@ -512,3 +512,95 @@ describe("rsvpLogRepo.getByGuest", () => {
     expect(entries[0].id).toBe("log-2");
   });
 });
+
+// -- Sprint 23: Soft-delete -- guestRepo ---------------------------------
+
+describe("guestRepo.softDelete", () => {
+  beforeEach(() => seedStore({ guests: [makeGuest({ id: "g1" }), makeGuest({ id: "g2" })] }));
+
+  it("sets deleted_at on target guest", async () => {
+    await guestRepo.softDelete("g1");
+    const g = storeGet("guests").find((x) => x.id === "g1");
+    expect(g.deleted_at).toBeTruthy();
+  });
+
+  it("does not affect other guests", async () => {
+    await guestRepo.softDelete("g1");
+    expect(storeGet("guests").find((x) => x.id === "g2").deleted_at).toBeFalsy();
+  });
+
+  it("throws when guest not found", async () => {
+    await expect(guestRepo.softDelete("zzz")).rejects.toThrow("Guest not found");
+  });
+});
+
+describe("guestRepo.restore", () => {
+  beforeEach(() =>
+    seedStore({ guests: [makeGuest({ id: "g1", deleted_at: "2024-01-01T00:00:00Z" })] }),
+  );
+
+  it("clears deleted_at", async () => {
+    await guestRepo.restore("g1");
+    expect(storeGet("guests")[0].deleted_at).toBeNull();
+  });
+
+  it("throws when guest not found", async () => {
+    await expect(guestRepo.restore("zzz")).rejects.toThrow("Guest not found");
+  });
+});
+
+describe("guestRepo.listDeleted and getActive", () => {
+  beforeEach(() =>
+    seedStore({
+      guests: [
+        makeGuest({ id: "g1" }),
+        makeGuest({ id: "g2", deleted_at: "2024-01-01T00:00:00Z" }),
+      ],
+    }),
+  );
+
+  it("listDeleted returns only deleted", async () => {
+    const deleted = await guestRepo.listDeleted();
+    expect(deleted).toHaveLength(1);
+    expect(deleted[0].id).toBe("g2");
+  });
+
+  it("getActive excludes deleted", async () => {
+    const active = await guestRepo.getActive();
+    expect(active).toHaveLength(1);
+    expect(active[0].id).toBe("g1");
+  });
+});
+
+describe("vendorRepo soft-delete operations", () => {
+  beforeEach(() => seedStore({ vendors: [makeVendor({ id: "v1" }), makeVendor({ id: "v2" })] }));
+
+  it("softDelete sets deleted_at", async () => {
+    await vendorRepo.softDelete("v1");
+    expect(storeGet("vendors").find((v) => v.id === "v1").deleted_at).toBeTruthy();
+  });
+
+  it("restore clears deleted_at", async () => {
+    await vendorRepo.softDelete("v1");
+    await vendorRepo.restore("v1");
+    expect(storeGet("vendors").find((v) => v.id === "v1").deleted_at).toBeNull();
+  });
+
+  it("listDeleted returns only deleted vendors", async () => {
+    await vendorRepo.softDelete("v1");
+    const deleted = await vendorRepo.listDeleted();
+    expect(deleted).toHaveLength(1);
+    expect(deleted[0].id).toBe("v1");
+  });
+
+  it("getActive excludes deleted vendors", async () => {
+    await vendorRepo.softDelete("v1");
+    const active = await vendorRepo.getActive();
+    expect(active).toHaveLength(1);
+    expect(active[0].id).toBe("v2");
+  });
+
+  it("softDelete throws for unknown vendor", async () => {
+    await expect(vendorRepo.softDelete("zzz")).rejects.toThrow("Vendor not found");
+  });
+});

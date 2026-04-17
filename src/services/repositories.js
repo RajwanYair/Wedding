@@ -157,6 +157,53 @@ export const guestRepo = {
     );
     enqueueWrite("guests", async () => {});
   },
+
+  /**
+   * Return only non-deleted guests (deleted_at === null or undefined).
+   * @returns {Promise<import('../types').Guest[]>}
+   */
+  async getActive() {
+    const guests = await this.getAll();
+    return guests.filter((g) => !/** @type {any} */ (g).deleted_at);
+  },
+
+  /**
+   * Soft-delete a guest by setting deleted_at to now().
+   * The record is retained for audit and RSVP log integrity.
+   * @param {string} id
+   */
+  async softDelete(id) {
+    const guests = await this.getAll();
+    const idx = guests.findIndex((g) => g.id === id);
+    if (idx === -1) throw new Error(`Guest not found: ${id}`);
+    const next = [...guests];
+    next[idx] = { ...guests[idx], deleted_at: _now(), updatedAt: _now() };
+    storeSet("guests", next);
+    enqueueWrite("guests", async () => {});
+  },
+
+  /**
+   * Restore a soft-deleted guest by clearing deleted_at.
+   * @param {string} id
+   */
+  async restore(id) {
+    const guests = await this.getAll();
+    const idx = guests.findIndex((g) => g.id === id);
+    if (idx === -1) throw new Error(`Guest not found: ${id}`);
+    const next = [...guests];
+    next[idx] = { ...guests[idx], deleted_at: null, updatedAt: _now() };
+    storeSet("guests", next);
+    enqueueWrite("guests", async () => {});
+  },
+
+  /**
+   * Return all soft-deleted guests.
+   * @returns {Promise<import('../types').Guest[]>}
+   */
+  async listDeleted() {
+    const guests = await this.getAll();
+    return guests.filter((g) => Boolean(/** @type {any} */ (g).deleted_at));
+  },
 };
 
 // ── Table Repository ──────────────────────────────────────────────────────
@@ -285,6 +332,52 @@ export const vendorRepo = {
     const vendors = await this.getAll();
     storeSet("vendors", vendors.filter((v) => v.id !== id));
     enqueueWrite("vendors", async () => {});
+  },
+
+  /**
+   * Return only non-deleted vendors.
+   * @returns {Promise<import('../types').Vendor[]>}
+   */
+  async getActive() {
+    const vendors = await this.getAll();
+    return vendors.filter((v) => !/** @type {any} */ (v).deleted_at);
+  },
+
+  /**
+   * Soft-delete a vendor by setting deleted_at to now().
+   * @param {string} id
+   */
+  async softDelete(id) {
+    const vendors = await this.getAll();
+    const idx = vendors.findIndex((v) => v.id === id);
+    if (idx === -1) throw new Error(`Vendor not found: ${id}`);
+    const next = [...vendors];
+    next[idx] = { ...vendors[idx], deleted_at: _now(), updatedAt: _now() };
+    storeSet("vendors", next);
+    enqueueWrite("vendors", async () => {});
+  },
+
+  /**
+   * Restore a soft-deleted vendor by clearing deleted_at.
+   * @param {string} id
+   */
+  async restore(id) {
+    const vendors = await this.getAll();
+    const idx = vendors.findIndex((v) => v.id === id);
+    if (idx === -1) throw new Error(`Vendor not found: ${id}`);
+    const next = [...vendors];
+    next[idx] = { ...vendors[idx], deleted_at: null, updatedAt: _now() };
+    storeSet("vendors", next);
+    enqueueWrite("vendors", async () => {});
+  },
+
+  /**
+   * Return all soft-deleted vendors.
+   * @returns {Promise<import('../types').Vendor[]>}
+   */
+  async listDeleted() {
+    const vendors = await this.getAll();
+    return vendors.filter((v) => Boolean(/** @type {any} */ (v).deleted_at));
   },
 };
 
