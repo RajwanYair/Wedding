@@ -13,7 +13,7 @@ cd Wedding
 cd ../MyScripts && npm install && cd Wedding
 
 # Run tests
-npm test              # 1864+ unit tests — must all pass
+npm test              # 1957+ unit tests — must all pass
 npm run lint          # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 
 # Start dev server
@@ -24,13 +24,18 @@ npm run dev           # Vite dev server at http://localhost:5173/Wedding/
 
 ```
 src/              # ES module source — Vite entry
-  core/           # Foundation: store, events, nav, i18n, ui, dom
-  sections/       # One module per app section
-  services/       # External services: auth, sheets
-  utils/          # Pure utilities: phone, date, sanitize, misc
+  core/           # Foundation: store, events, nav, i18n, ui, dom, config, constants
+  handlers/       # Action handler registration (~7 files)
+  sections/       # One module per app section (~20 modules)
+  services/       # External services: auth, sheets, supabase, backend, presence
+  utils/          # Pure utilities: phone, date, sanitize, misc, form-helpers
+  plugins/        # Optional plugins: contact, gallery, registry
   templates/      # Lazy HTML templates (one per section)
   modals/         # Modal HTML fragments
 css/              # 7 CSS modules with @layer cascade
+supabase/
+  migrations/     # SQL migration files
+  functions/      # Edge Functions
 tests/
   unit/           # Vitest unit + integration tests (happy-dom)
   e2e/            # Playwright E2E + visual regression
@@ -44,13 +49,16 @@ tests/
 4. **Zero runtime deps** — no npm packages loaded at runtime
 5. **Named exports only** — no `window.*` assignments in `src/`
 6. **`sanitize(input, schema)`** for all user input validation at boundaries
+7. **Action registry** — add any new `data-action` value to `src/core/action-registry.js` (ACTIONS constant)
+8. **Constants** — new enums, section names, and storage keys go in `src/core/constants.js`
 
 ## Adding a Feature
 
 1. Pick the relevant `src/sections/` module (or create one)
 2. Export named functions — no default exports
-3. Register any new `data-action` handlers in `src/main.js`
-4. Add i18n keys to both `src/i18n/he.json` and `src/i18n/en.json`
+3. Add new `data-action` constant to `ACTIONS` in `src/core/action-registry.js`
+4. Register handler in the relevant `src/handlers/*.js` file
+5. Add i18n keys to both `src/i18n/he.json` and `src/i18n/en.json`
 5. Add unit tests in `tests/unit/`
 6. Add content tests in `tests/wedding.test.mjs`
 7. Run `npm run lint && npm test` — must exit 0

@@ -1,4 +1,4 @@
-# Wedding Manager — Architecture (v5.5.0)
+# Wedding Manager — Architecture (v6.0.0)
 
 > Entry point: `src/main.js` · Pure ESM · Zero `window.*` side effects
 
@@ -109,15 +109,17 @@ graph TD
 
 ## Layer Overview
 
-| Layer     | Path             | Responsibility                                       |
-| --------- | ---------------- | ---------------------------------------------------- |
-| Bootstrap | `src/main.js`    | App init, event wiring, section lifecycle            |
-| Core      | `src/core/`      | Store, events, i18n, router, UI primitives           |
-| Services  | `src/services/`  | Auth (OAuth), Google Sheets sync                     |
-| Sections  | `src/sections/`  | Feature modules — mount/unmount lifecycle            |
-| Utils     | `src/utils/`     | Pure helpers: sanitize, phone, date, uid             |
-| Templates | `src/templates/` | Lazy-loaded HTML fragments (injected on first visit) |
-| Modals    | `src/modals/`    | Reusable modal HTML fragments                        |
+| Layer     | Path             | Responsibility                                                |
+| --------- | ---------------- | ------------------------------------------------------------- |
+| Bootstrap | `src/main.js`    | App init, event wiring, section lifecycle                     |
+| Core      | `src/core/`      | Store, events, i18n, nav, UI, DOM, config, constants, actions |
+| Handlers  | `src/handlers/`  | Action handler registration; bridge between events and logic  |
+| Sections  | `src/sections/`  | Feature modules — mount/unmount lifecycle                     |
+| Services  | `src/services/`  | Auth, Sheets, Supabase, backend, presence, offline queue      |
+| Utils     | `src/utils/`     | Pure helpers: sanitize, phone, date, misc, form-helpers, undo |
+| Plugins   | `src/plugins/`   | Optional feature plugins with mount/unmount/i18n contract     |
+| Templates | `src/templates/` | Lazy-loaded HTML fragments (injected on first visit)          |
+| Modals    | `src/modals/`    | Reusable modal HTML fragments                                 |
 
 ## Data Flow
 

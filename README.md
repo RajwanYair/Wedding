@@ -6,13 +6,13 @@
 ![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
 ![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
 ![Tests](https://img.shields.io/badge/tests-1915%2B_passing-brightgreen?style=flat-square)
-![Modular](https://img.shields.io/badge/Modular-38_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
+![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
 
 **Wedding management app — RSVP, table seating, WhatsApp invitations, push notifications, E2E tests.**
-**Modular (7 CSS + 38 JS), zero-dependency, Hebrew RTL with English support.**
+**Modular (7 CSS + 50+ JS), zero-dependency, Hebrew RTL with English support.**
 
 </div>
 
@@ -65,7 +65,7 @@ npm test
 npm run lint         # HTML + CSS + JS + Markdown
 npm run lint:html    # HTMLHint    → index.html
 npm run lint:css     # Stylelint   → css/*.css
-npm run lint:js      # ESLint      → js/*.js
+npm run lint:js      # ESLint      → src/**/*.js
 npm run lint:md      # markdownlint-cli2
 ```
 
@@ -73,7 +73,7 @@ npm run lint:md      # markdownlint-cli2
 
 ```text
 Wedding/
-├── index.html            # HTML shell (links css/ and js/)
+├── index.html            # HTML shell
 ├── css/                  # 7 CSS modules
 │   ├── variables.css     # Custom properties, theme colors
 │   ├── base.css          # Reset, typography
@@ -82,42 +82,35 @@ Wedding/
 │   ├── responsive.css    # 768px + 480px breakpoints
 │   ├── print.css         # Print styles
 │   └── auth.css          # Auth overlay
-├── js/                   # 38 JS modules
-│   ├── config.js         # App constants, version, auth credentials
-│   ├── i18n.js           # Hebrew + English strings
-│   ├── dom.js            # Cached DOM refs (el object)
-│   ├── store.js          # Proxy-based reactive store with debounced persist
-│   ├── state.js          # App state (_guests, _tables, _weddingInfo)
-│   ├── utils.js          # cleanPhone, sanitize(), date helpers
-│   ├── ui.js             # Toast (stacking+progress), modal, loading, i18n apply
-│   ├── nav.js            # Tab navigation + swipe gestures + View Transitions
-│   ├── router.js         # Hash router (replaceState, back/forward)
-│   ├── dashboard.js      # Stats (IntersectionObserver), countdown, progress
-│   ├── guests.js         # Guest CRUD, filter, sort, export
-│   ├── tables.js         # Table floor plan, seating
-│   ├── invitation.js     # SVG invitation generator
-│   ├── whatsapp.js       # Message templates, wa.me bulk send
-│   ├── rsvp.js           # Public RSVP form (phone-first lookup)
-│   ├── settings.js       # Wedding info, theme, language
-│   ├── sheets.js         # Google Sheets sync (exp. backoff, write queue)
-│   ├── auth.js           # Google / Facebook / Apple / Anonymous auth
-│   ├── vendors.js        # Vendor CRUD + payment tracking
-│   ├── expenses.js       # Expense tracking
-│   ├── budget.js         # Budget overview
-│   ├── analytics.js      # SVG donut + bar charts
-│   ├── audit.js          # Audit log
-│   ├── error-monitor.js  # Client error capture
-│   ├── push.js           # Web Push notifications
-│   ├── email.js          # Email notifications via Apps Script
-│   └── app.js            # Entry point, init, SW registration
-├── sw.js                 # Service Worker (stale-while-revalidate, 5-min update poll)
-├── manifest.json         # PWA manifest
-├── package.json          # devDeps; shared node_modules in ../MyScripts/
-├── tests/
-│   ├── wedding.test.mjs  # 772+ unit tests (Vitest — 83+ suites)
-│   └── e2e/              # Playwright smoke + RSVP + navigation + a11y
-└── .github/              # Copilot instructions, agents, CI/CD workflows
-
+├── src/                  # ES module source — Vite 8 entry
+│   ├── main.js           # Bootstrap, event wiring, section lifecycle
+│   ├── core/             # Foundation modules (~18 files)
+│   │   ├── store.js      # Proxy-based reactive store V2 with batching
+│   │   ├── events.js     # data-action delegation (single listener)
+│   │   ├── i18n.js       # he/en/ar/ru with ICU plural
+│   │   ├── nav.js        # Hash router + swipe gestures + View Transitions
+│   │   ├── ui.js         # Toast, modal, theme, loading
+│   │   ├── dom.js        # Cached DOM refs (el object)
+│   │   ├── config.js     # Auth credentials + build config
+│   │   ├── constants.js  # Section lists, modal IDs, enum values
+│   │   └── action-registry.js  # All data-action constants
+│   ├── handlers/         # Action handler registration (~7 files)
+│   ├── sections/         # 20 section modules with mount/unmount lifecycle
+│   ├── services/         # auth, sheets, supabase, backend, presence, offline-queue
+│   ├── utils/            # phone, date, sanitize, misc, form-helpers, undo
+│   ├── templates/        # Lazy-loaded HTML fragments (one per section)
+│   ├── modals/           # Modal HTML fragments
+│   ├── i18n/             # he.json, en.json, ar.json, ru.json
+│   └── plugins/          # contact-plugin, gallery-plugin, registry-plugin
+├── public/               # sw.js, manifest.json, icons
+├── scripts/              # Build tools, SRI check, size report, push notifications
+├── supabase/             # Migrations and Edge Functions
+│   ├── migrations/       # 6 SQL migration files
+│   └── functions/        # Edge Functions
+├── tests/                # 1957+ tests: unit + integration + E2E
+│   ├── unit/             # 38 Vitest suite files
+│   └── e2e/              # Playwright smoke + visual regression
+└── .github/              # CI/CD workflows, Copilot instructions, agents
 ```
 
 ## Architecture
@@ -163,7 +156,7 @@ graph TD
     end
 ```
 
-## Guest Model (v1.1.0)
+## Guest Model
 
 ```text
 { id, firstName, lastName, phone, email, count, children,
@@ -171,8 +164,9 @@ graph TD
   side:   groom|bride|mutual,
   group:  family|friends|work|other,
   meal:   regular|vegetarian|vegan|gluten_free|kosher,
-  mealNotes, accessibility: boolean,
-  tableId, gift, notes, sent, rsvpDate, createdAt, updatedAt }
+  mealNotes, accessibility: string, transport: string,
+  tableId, gift, notes, sent, checkedIn, rsvpDate, rsvpSource,
+  tags?, vip?, history?, createdAt, updatedAt }
 ```
 
 ## Themes
