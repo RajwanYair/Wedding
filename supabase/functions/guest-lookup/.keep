@@ -1,0 +1,3 @@
+-- supabase/functions/guest-lookup/index.ts — Sprint 128
+-- Deno Edge Function: look up a guest by phone number or id for RSVP flows.
+-- Deployed via: supabase functions deploy guest-lookup
