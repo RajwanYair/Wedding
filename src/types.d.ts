@@ -45,6 +45,8 @@ export interface Guest {
   history?: GuestNote[];
   createdAt: string;
   updatedAt: string;
+  /** Soft-delete timestamp; null means active. */
+  deletedAt?: string | null;
 }
 
 /** A note entry in guest history. */
@@ -75,6 +77,8 @@ export interface Vendor {
   contractUrl: string;
   updatedAt: string;
   createdAt: string;
+  /** Soft-delete timestamp; null means active. */
+  deletedAt?: string | null;
 }
 
 /** Expense record stored in the reactive store. */
