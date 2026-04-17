@@ -24,6 +24,7 @@ import {
   getBudgetCategoryBreakdown,
   getRsvpDeadlineCountdown,
   getVendorPaymentProgress,
+  getErrorStats,
 } from "../../src/sections/analytics.js";
 
 function seedStore() {
@@ -32,6 +33,7 @@ function seedStore() {
     tables: { value: [] },
     vendors: { value: [] },
     expenses: { value: [] },
+    errorLog: { value: [] },
     weddingInfo: { value: {} },
   });
 }
@@ -541,5 +543,60 @@ describe("getVendorPaymentProgress", () => {
     expect(result.outstanding).toBe(30000);
     expect(result.totalCost).toBe(45000);
     expect(result.totalPaid).toBe(15000);
+  });
+});
+
+// ── Phase 10.3 — getErrorStats ────────────────────────────────────────────
+describe("getErrorStats", () => {
+  beforeEach(() => {
+    seedStore();
+  });
+
+  it("returns zero totals when errorLog is empty", () => {
+    storeSet("errorLog", []);
+    const { total, bySeverity, recent } = getErrorStats();
+    expect(total).toBe(0);
+    expect(bySeverity).toEqual({});
+    expect(recent).toHaveLength(0);
+  });
+
+  it("counts by severity level", () => {
+    storeSet("errorLog", [
+      { message: "Err1", level: "error", ts: "2025-01-01T10:00:00Z" },
+      { message: "Err2", level: "error", ts: "2025-01-01T10:01:00Z" },
+      { message: "Warn1", level: "warning", ts: "2025-01-01T10:02:00Z" },
+    ]);
+    const { total, bySeverity } = getErrorStats();
+    expect(total).toBe(3);
+    expect(bySeverity.error).toBe(2);
+    expect(bySeverity.warning).toBe(1);
+  });
+
+  it("returns at most 10 most recent entries in reverse order", () => {
+    const many = Array.from({ length: 15 }, (_, i) => ({
+      message: `e${i}`,
+      level: "error",
+      ts: `2025-01-${String(i + 1).padStart(2, "0")}T00:00:00Z`,
+    }));
+    storeSet("errorLog", many);
+    const { recent } = getErrorStats();
+    expect(recent).toHaveLength(10);
+    // Most recent should be first (reversed)
+    expect(recent[0].message).toBe("e14");
+  });
+
+  it("falls back to 'severity' field when 'level' missing", () => {
+    storeSet("errorLog", [
+      { message: "x", severity: "critical", ts: "2025-01-01T10:00:00Z" },
+    ]);
+    const { bySeverity } = getErrorStats();
+    expect(bySeverity.critical).toBe(1);
+  });
+
+  it("truncates message to 120 chars", () => {
+    const long = "x".repeat(200);
+    storeSet("errorLog", [{ message: long, level: "error" }]);
+    const { recent } = getErrorStats();
+    expect(recent[0].message.length).toBe(120);
   });
 });

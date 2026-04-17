@@ -997,6 +997,25 @@ body.light-mode .table-guests-list .tg-item { border-bottom-color: rgba(0, 0, 0,
 body.light-mode .meal-regular  { background: rgba(0, 0, 0, 0.04); }
 body.light-mode .meal-other    { background: rgba(0, 0, 0, 0.06); }
 body.light-mode .analytics-stat-box { background: rgba(0, 0, 0, 0.04); }
+
+/* Phase 10.3 — Error Analytics row */
+.analytics-error-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 260px; overflow-y: auto; }
+.analytics-error-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  font-size: 0.8rem;
+}
+.analytics-error-msg { flex: 1; overflow-wrap: break-word; }
+.analytics-error-time { white-space: nowrap; font-size: 0.7rem; }
+.badge--danger { background: var(--danger); color: #fff; }
+.badge--warn   { background: var(--warning); color: #000; }
+.badge--info   { background: var(--info); color: #fff; }
+.u-mb-sm { margin-bottom: 0.75rem; }
 body.light-mode .modal-overlay { background: rgba(0, 0, 0, 0.4); }
 body.light-mode [data-tooltip]::after {
   background: rgba(253, 247, 240, 0.98);

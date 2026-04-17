@@ -21,10 +21,14 @@ export function mount(/** @type {HTMLElement} */ _container) {
   storeSubscribeScoped("vendors", renderPaymentSchedule, _SCOPE);
   storeSubscribeScoped("guests", renderRsvpTimeline, _SCOPE);
   storeSubscribeScoped("expenses", renderExpenseDonut, _SCOPE);
-  storeSubscribeScoped("vendors", () => {
-    checkBudgetOvershoot();
-    renderArrivalForecast();
-  }, _SCOPE);
+  storeSubscribeScoped(
+    "vendors",
+    () => {
+      checkBudgetOvershoot();
+      renderArrivalForecast();
+    },
+    _SCOPE,
+  );
   storeSubscribeScoped("guests", renderArrivalForecast, _SCOPE);
   storeSubscribeScoped("tables", renderArrivalForecast, _SCOPE);
   // S22.2 expense trend chart
@@ -40,6 +44,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   // F4.3.4 seating score
   storeSubscribeScoped("guests", renderSeatingScore, _SCOPE);
   storeSubscribeScoped("tables", renderSeatingScore, _SCOPE);
+  // Phase 10.3 error analytics
+  storeSubscribeScoped("errorLog", renderErrorAnalytics, _SCOPE);
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -56,6 +62,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
   renderResponseHistogram(); // F4.3.2
   renderBudgetBurndown(); // F4.3.3
   renderSeatingScore(); // F4.3.4
+  renderErrorAnalytics(); // Phase 10.3
 }
 
 export function unmount() {
@@ -1906,4 +1913,118 @@ export function getVendorPaymentProgress() {
     totalPaid,
     outstanding: totalCost - totalPaid,
   };
+}
+
+// ── Phase 10.3 — Error Analytics Dashboard ───────────────────────────────
+
+/**
+ * Compute error statistics from the local `errorLog` store.
+ * @returns {{
+ *   total: number,
+ *   bySeverity: Record<string, number>,
+ *   recent: Array<{message: string, level: string, ts: string, url: string}>
+ * }}
+ */
+export function getErrorStats() {
+  const raw = /** @type {unknown[]} */ (storeGet("errorLog") ?? []);
+  /** @type {Record<string, number>} */
+  const bySeverity = {};
+  const recent = /** @type {Array<{message: string, level: string, ts: string, url: string}>} */ ([]);
+
+  for (const entry of raw) {
+    const e = /** @type {Record<string, unknown>} */ (entry);
+    const level = String(e.level ?? e.severity ?? "error");
+    bySeverity[level] = (bySeverity[level] ?? 0) + 1;
+    recent.push({
+      message: String(e.message ?? e.msg ?? "").slice(0, 120),
+      level,
+      ts: String(e.ts ?? e.timestamp ?? e.createdAt ?? ""),
+      url: String(e.url ?? "").slice(0, 80),
+    });
+  }
+
+  return { total: raw.length, bySeverity, recent: recent.slice(-10).reverse() };
+}
+
+/**
+ * Render the error analytics dashboard into #analyticsErrorSummary and #analyticsErrorList.
+ */
+export function renderErrorAnalytics() {
+  const { total, bySeverity, recent } = getErrorStats();
+
+  // Summary grid
+  const summaryEl = document.getElementById("analyticsErrorSummary");
+  if (summaryEl) {
+    summaryEl.textContent = "";
+
+    const severityColors = /** @type {Record<string, string>} */ ({
+      error: "var(--danger)",
+      critical: "var(--danger)",
+      high: "var(--danger)",
+      warning: "var(--warning)",
+      medium: "var(--warning)",
+      info: "var(--info)",
+      low: "var(--info)",
+    });
+
+    // Total
+    const totalBox = _createStatBox(String(total), t("error_analytics_total"), "var(--primary)");
+    summaryEl.appendChild(totalBox);
+
+    // Per severity
+    for (const [level, count] of Object.entries(bySeverity).sort((a, b) => b[1] - a[1])) {
+      const box = _createStatBox(
+        String(count),
+        level,
+        severityColors[level] ?? "var(--muted)",
+      );
+      summaryEl.appendChild(box);
+    }
+  }
+
+  // Recent errors list
+  const listEl = document.getElementById("analyticsErrorList");
+  if (listEl) {
+    listEl.textContent = "";
+    if (recent.length === 0) {
+      const p = document.createElement("p");
+      p.className = "u-text-muted";
+      p.textContent = t("error_analytics_empty");
+      listEl.appendChild(p);
+      return;
+    }
+    for (const err of recent) {
+      const row = document.createElement("div");
+      row.className = "analytics-error-row";
+      const badge = document.createElement("span");
+      badge.className = `badge badge--${err.level === "error" || err.level === "critical" ? "danger" : err.level === "warning" ? "warn" : "info"}`;
+      badge.textContent = err.level;
+      const msg = document.createElement("span");
+      msg.className = "analytics-error-msg";
+      msg.textContent = err.message;
+      const time = document.createElement("span");
+      time.className = "analytics-error-time u-text-muted";
+      time.textContent = err.ts ? new Date(err.ts).toLocaleTimeString("he-IL") : "";
+      row.appendChild(badge);
+      row.appendChild(msg);
+      row.appendChild(time);
+      listEl.appendChild(row);
+    }
+  }
+}
+
+/** Helper: create a small stat box div (reuses pattern from other analytics). */
+function _createStatBox(num, label, color) {
+  const box = document.createElement("div");
+  box.className = "analytics-stat-box";
+  const numEl = document.createElement("div");
+  numEl.className = "analytics-stat-num";
+  numEl.style.color = color;
+  numEl.textContent = num;
+  const lblEl = document.createElement("div");
+  lblEl.className = "analytics-stat-lbl";
+  lblEl.textContent = label;
+  box.appendChild(numEl);
+  box.appendChild(lblEl);
+  return box;
 }
