@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.9.0] — 2025-08-01
+
+> **Auth & Security** — 9-sprint batch adding JWT claim helpers, RLS policy audit, AES-GCM field encryption, CSP report Edge Function, rate limiter, GDPR erasure service, session security guard, admin audit pipeline, and security regression integration tests. 3152 tests / 106 suites.
+
+### Sprint 81 \u2014 JWT auth claims
+
+- `src/services/auth-claims.js` \u2014 `decodeJwtPayload`, `getClaims`, `getClaim`, `hasRole`, `isEventOwner`, `isTokenExpired`, `getUserId` + 19 tests
+
+### Sprint 82 \u2014 RLS audit helpers
+
+- `src/services/rls-audit.js` \u2014 `verifyRlsEnabled`, `listPolicies`, `verifySelectPolicies`; `REQUIRED_RLS_TABLES` + 11 tests
+
+### Sprint 83 \u2014 AES-GCM field encryption
+
+- `src/services/crypto.js` \u2014 `generateKey`, `importRawKey`, `encryptField`, `decryptField` (Web Crypto API) + 10 tests
+
+### Sprint 84 \u2014 CSP report Edge Function
+
+- `supabase/functions/csp-report/index.ts` \u2014 receives CSP violation reports, strips PII query params, logs to `csp_reports` table
+
+### Sprint 85 \u2014 Token-bucket rate limiter
+
+- `src/services/rate-limiter.js` \u2014 `createRateLimiter({limit, windowMs})` with per-key buckets, `consume`, `status`, `reset`, `clear` + 11 tests
+
+### Sprint 86 \u2014 GDPR erasure service
+
+- `src/services/gdpr-erasure.js` \u2014 `eraseGuest(supabase, guestId)` nullifies PII, logs to `erasure_log`; `isErased()` + 11 tests
+
+### Sprint 87 \u2014 Session inactivity guard
+
+- `src/services/session-security.js` \u2014 `createSessionGuard({timeoutMs, warningMs, onTimeout, onWarning})` + 7 tests
+
+### Sprint 88 \u2014 Admin audit pipeline
+
+- `src/services/audit-pipeline.js` \u2014 `createAuditPipeline(supabase, opts)` with batching, severity elevation, offline fallback + 10 tests
+
+### Sprint 89 \u2014 Security regression integration tests
+
+- `tests/integration/security-regression.test.mjs` \u2014 20 cross-service security regression tests
+
+### Sprint 90 \u2014 v6.9.0 release
+
+- Version bump to 6.9.0 across all files; full test suite green: 3152 / 106
+
 ## [6.8.0] — 2025-08-01
 
 > **Supabase Repository Layer** — 10-sprint batch adding Supabase repository pattern (base + guest + table + vendor + expense + RSVP log), DB migrations for soft-deletes (017), multi-event scoping (018), extended guest model (019), and Supabase health checker service. 3053 tests / 98 suites.

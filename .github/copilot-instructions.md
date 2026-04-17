@@ -6,12 +6,12 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v6.8.0** |
+| Version | **v6.9.0** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
 | Language | Hebrew RTL primary, English toggle (lazy JSON) |
-| Tests | `npm test` — **3053+ pass (98 suites)** · 0 Node warnings |
+| Tests | `npm test` — **3152+ pass (106 suites)** · 0 Node warnings |
 | Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 | Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |
