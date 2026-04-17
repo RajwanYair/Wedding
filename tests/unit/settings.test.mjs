@@ -8,6 +8,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { makeGuest } from "./helpers.js";
 import {
   getDataCompletenessScore,
   getStoreSizes,
@@ -25,20 +26,7 @@ function seedStore() {
   });
 }
 
-function makeGuest(overrides = {}) {
-  return {
-    id: `g-${Math.random().toString(36).slice(2)}`,
-    firstName: "Test",
-    lastName: "User",
-    phone: "972501234567",
-    status: "confirmed",
-    meal: "regular",
-    tableId: "t1",
-    ...overrides,
-  };
-}
-
-// ── getDataCompletenessScore ──────────────────────────────────────────────
+// ── getDataCompletenessScore ────────────────────────────────────────────────
 describe("getDataCompletenessScore", () => {
   beforeEach(() => seedStore());
 
@@ -49,7 +37,9 @@ describe("getDataCompletenessScore", () => {
   });
 
   it("returns 100% when all fields present", () => {
-    storeSet("guests", [makeGuest()]);
+    storeSet("guests", [
+      makeGuest({ status: "confirmed", tableId: "t1", phone: "972501234567" }),
+    ]);
     const s = getDataCompletenessScore();
     expect(s.complete).toBe(1);
     expect(s.rate).toBe(100);
@@ -58,7 +48,7 @@ describe("getDataCompletenessScore", () => {
   it("detects missing fields", () => {
     storeSet("guests", [
       makeGuest({ phone: "", meal: "" }),
-      makeGuest(),
+      makeGuest({ status: "confirmed", tableId: "t1", phone: "972501234567" }),
     ]);
     const s = getDataCompletenessScore();
     expect(s.complete).toBe(1);

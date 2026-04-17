@@ -9,6 +9,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { makeGuest } from "./helpers.js";
 import {
   buildWhatsAppMessage,
   getWhatsAppLink,
@@ -28,19 +29,7 @@ function seedStore() {
   });
 }
 
-function makeGuest(overrides = {}) {
-  return {
-    id: `g_${Math.random().toString(36).slice(2)}`,
-    firstName: "יאיר",
-    lastName: "רג'ואן",
-    phone: "972501234567",
-    status: "pending",
-    sent: false,
-    ...overrides,
-  };
-}
-
-// ── buildWhatsAppMessage ─────────────────────────────────────────────────
+// ── buildWhatsAppMessage ──────────────────────────────────────────────────────────────
 
 describe("buildWhatsAppMessage", () => {
   beforeEach(() => seedStore());
@@ -56,7 +45,7 @@ describe("buildWhatsAppMessage", () => {
   });
 
   it("returns message and link for valid guest", () => {
-    const g = makeGuest({ id: "g1" });
+    const g = makeGuest({ id: "g1", phone: "972501234567" });
     storeSet("guests", [g]);
     storeSet("weddingInfo", { groom: "אליאור", bride: "טובה" });
     const result = buildWhatsAppMessage("g1");
@@ -66,7 +55,7 @@ describe("buildWhatsAppMessage", () => {
   });
 
   it("uses custom template when provided", () => {
-    const g = makeGuest({ id: "g2", firstName: "Dan" });
+    const g = makeGuest({ id: "g2", firstName: "Dan", phone: "972501234568" });
     storeSet("guests", [g]);
     const result = buildWhatsAppMessage("g2", "Hello {name}!");
     expect(result.message).toContain("Dan");
@@ -83,7 +72,7 @@ describe("getWhatsAppLink", () => {
   });
 
   it("returns wa.me URL with encoded message", () => {
-    const g = makeGuest({ id: "g3" });
+    const g = makeGuest({ id: "g3", phone: "972501234569" });
     storeSet("guests", [g]);
     storeSet("weddingInfo", { groom: "Test", bride: "User" });
     const link = getWhatsAppLink("g3");

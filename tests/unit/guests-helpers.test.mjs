@@ -9,6 +9,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeSet } from "../../src/core/store.js";
+import { makeGuest } from "./helpers.js";
 import {
   getGuestsByGroup,
   getGuestsNeedingFollowup,
@@ -21,6 +22,7 @@ import {
   getGuestAge,
   getChildrenCount,
 } from "../../src/sections/guests.js";
+import { makeGuest } from "./helpers.js";
 
 function seedStore() {
   initStore({
@@ -30,21 +32,7 @@ function seedStore() {
   });
 }
 
-function makeGuest(overrides = {}) {
-  return {
-    id: `g_${Math.random().toString(36).slice(2)}`,
-    firstName: "Test",
-    lastName: "Guest",
-    phone: "972501234567",
-    status: "pending",
-    group: "friends",
-    side: "groom",
-    count: 1,
-    ...overrides,
-  };
-}
-
-// ── getGuestsByGroup ─────────────────────────────────────────────────────
+// ── getGuestsByGroup ───────────────────────────────────────────────────────────────
 
 describe("getGuestsByGroup", () => {
   beforeEach(() => seedStore());
@@ -307,7 +295,7 @@ describe("getGiftSummary", () => {
 // ── getGuestAge ───────────────────────────────────────────────────────────
 describe("getGuestAge", () => {
   it("returns empty when no guests have createdAt", () => {
-    storeSet("guests", [makeGuest({})]);
+    storeSet("guests", [makeGuest({ createdAt: null })]);
     expect(getGuestAge()).toHaveLength(0);
   });
 

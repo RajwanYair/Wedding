@@ -13,6 +13,7 @@ import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 import { pushUndo } from "../utils/undo.js";
+import { MEAL_TYPES } from "../core/config.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -323,7 +324,12 @@ export function renderGuests() {
       const srcBadge = document.createElement("span");
       srcBadge.className = "badge badge--info u-mr-xs";
       srcBadge.title = t("label_rsvp_source");
-      const srcIcons = /** @type {Record<string, string>} */ ({ web: "🌐", whatsapp: "💬", phone: "📞", other: "❓" });
+      const srcIcons = /** @type {Record<string, string>} */ ({
+        web: "🌐",
+        whatsapp: "💬",
+        phone: "📞",
+        other: "❓",
+      });
       srcBadge.textContent = srcIcons[g.rsvpSource] ?? "❓";
       actionsTd.appendChild(srcBadge);
     }
@@ -366,16 +372,20 @@ export function renderMealSummary() {
   const bar = document.getElementById("mealSummaryBar");
   if (!bar) return;
   const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const MEAL_TYPES = [
-    { key: "regular", icon: "🍽️" },
-    { key: "vegetarian", icon: "🥗" },
-    { key: "vegan", icon: "🌱" },
-    { key: "gluten_free", icon: "🌾" },
-    { key: "kosher", icon: "✡️" },
-    { key: "other", icon: "🍴" },
-  ];
+  const MEAL_ICONS = {
+    regular: "🍽️",
+    vegetarian: "🥗",
+    vegan: "🌱",
+    gluten_free: "🌾",
+    kosher: "✡️",
+    other: "🍴",
+  };
+  const MEAL_TYPE_LIST = [...MEAL_TYPES, "other"].map((key) => ({
+    key,
+    icon: MEAL_ICONS[key] ?? "🍴",
+  }));
   bar.textContent = "";
-  MEAL_TYPES.forEach(({ key, icon }) => {
+  MEAL_TYPE_LIST.forEach(({ key, icon }) => {
     const count = allGuests.filter((g) => (g.meal || "regular") === key).length;
     if (count === 0) return;
     const chip = document.createElement("span");

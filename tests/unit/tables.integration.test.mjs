@@ -19,6 +19,7 @@ import {
   getOverCapacityTables,
   getUnseatedGuestBreakdown,
 } from "../../src/sections/tables.js";
+import { makeGuest, makeTable } from "./helpers.js";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -31,23 +32,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function makeTable(overrides = {}) {
-  return { name: "Table 1", capacity: 8, shape: "round", ...overrides };
-}
-
-function makeGuest(overrides = {}) {
-  return {
-    id: `g${Math.random().toString(36).slice(2)}`,
-    firstName: "Test",
-    phone: "",
-    count: 1,
-    status: "confirmed",
-    group: "friends",
-    ...overrides,
-  };
-}
-
-// ── saveTable ─────────────────────────────────────────────────────────────
+// ── saveTable ─────────────────────────────────────────────────────────────────
 describe("saveTable", () => {
   it("creates a new table and returns ok:true", () => {
     const result = saveTable(makeTable());
@@ -263,10 +248,10 @@ describe("getTableSideBalance", () => {
     saveTable(makeTable());
     const tid = storeGet("tables")[0].id;
     storeSet("guests", [
-      makeGuest({ tableId: tid, side: "groom" }),
-      makeGuest({ tableId: tid, side: "bride" }),
-      makeGuest({ tableId: tid, side: "mutual" }),
-      makeGuest({ tableId: tid }), // no side = mutual
+      makeGuest({ tableId: tid, side: "groom", status: "confirmed" }),
+      makeGuest({ tableId: tid, side: "bride", status: "confirmed" }),
+      makeGuest({ tableId: tid, side: "mutual", status: "confirmed" }),
+      makeGuest({ tableId: tid, side: "mutual", status: "confirmed" }), // explicit mutual
     ]);
     const bal = getTableSideBalance();
     expect(bal[0].groom).toBe(1);

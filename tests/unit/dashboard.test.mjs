@@ -9,6 +9,7 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { makeGuest } from "./helpers.js";
 import {
   getWeddingReadinessScore,
   getDashboardSnapshot,
@@ -31,23 +32,7 @@ function seedStore(guests = [], tables = [], vendors = [], expenses = []) {
   storeSet("expenses", expenses);
 }
 
-function makeGuest(overrides = {}) {
-  return {
-    id: `g_${Math.random().toString(36).slice(2)}`,
-    firstName: "Test",
-    lastName: "Guest",
-    phone: "972501234567",
-    status: "pending",
-    count: 1,
-    children: 0,
-    side: "groom",
-    group: "friends",
-    meal: "regular",
-    ...overrides,
-  };
-}
-
-// ── Import after store init pattern ──────────────────────────────────────
+// ── Import after store init pattern ─────────────────────────────────────────────────
 // Dashboard has many DOM-dependent render functions. We test the data-logic
 // exports that don't require a full DOM tree.
 

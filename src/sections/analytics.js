@@ -7,6 +7,7 @@
 
 import { storeGet, storeSubscribeScoped, cleanupScope } from "../core/store.js";
 import { t, currentLang } from "../core/i18n.js";
+import { MEAL_TYPES } from "../core/config.js";
 
 const _SCOPE = "analytics";
 
@@ -121,7 +122,7 @@ export function renderAnalytics() {
   ]);
 
   // Meal bar chart
-  const meals = ["regular", "vegetarian", "vegan", "gluten_free", "kosher"];
+  const meals = MEAL_TYPES;
   _renderBar(
     "analyticsMealBar",
     meals.map((m) => ({
@@ -302,7 +303,7 @@ function _renderMealSummary(guests) {
   if (!container) return;
 
   const confirmed = guests.filter((g) => g.status === "confirmed");
-  const meals = ["regular", "vegetarian", "vegan", "gluten_free", "kosher", "other"];
+  const meals = [...MEAL_TYPES, "other"];
   const rows = meals
     .map((m) => ({
       label: t(`meal_${m}`),
@@ -337,7 +338,7 @@ function _renderMealPerTable() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const confirmed = guests.filter((g) => g.status === "confirmed");
-  const meals = ["regular", "vegetarian", "vegan", "gluten_free", "kosher"];
+  const meals = MEAL_TYPES;
 
   if (tables.length === 0 || confirmed.length === 0) {
     const p = document.createElement("p");
@@ -431,7 +432,7 @@ export function exportMealPerTableCSV() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const confirmed = guests.filter((g) => g.status === "confirmed");
-  const meals = ["regular", "vegetarian", "vegan", "gluten_free", "kosher"];
+  const meals = MEAL_TYPES;
   const header = ["Table", ...meals.map((m) => t(`meal_${m}`)), "Total"].join(",");
 
   const rows = tables.map((table) => {

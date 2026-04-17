@@ -23,6 +23,7 @@ import {
   getGuestStats,
   filterGuestsByStatus,
 } from "../../src/sections/guests.js";
+import { makeGuest } from "./helpers.js";
 
 // ── DOM scaffold ──────────────────────────────────────────────────────────────
 
@@ -38,21 +39,6 @@ function setupDom() {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function makeGuest(overrides = {}) {
-  return {
-    firstName: "Alice",
-    lastName: "Smith",
-    phone: "",
-    email: "",
-    count: 1,
-    children: 0,
-    status: "pending",
-    side: "groom",
-    group: "friends",
-    meal: "regular",
-    ...overrides,
-  };
-}
 
 // ── Setup ─────────────────────────────────────────────────────────────────────
 

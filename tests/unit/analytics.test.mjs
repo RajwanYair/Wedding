@@ -10,6 +10,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeSet } from "../../src/core/store.js";
+import { makeGuest } from "./helpers.js";
 import {
   computeResponseVelocity,
   getMealDistribution,
@@ -36,22 +37,6 @@ function seedStore() {
     errorLog: { value: [] },
     weddingInfo: { value: {} },
   });
-}
-
-function makeGuest(overrides = {}) {
-  return {
-    id: `g_${Math.random().toString(36).slice(2)}`,
-    firstName: "Test",
-    lastName: "Guest",
-    phone: "972501234567",
-    status: "pending",
-    count: 1,
-    children: 0,
-    side: "groom",
-    meal: "regular",
-    sent: false,
-    ...overrides,
-  };
 }
 
 // ── computeResponseVelocity ──────────────────────────────────────────────

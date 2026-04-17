@@ -63,6 +63,29 @@ export const PUBLIC_SECTIONS = new Set([
 ]);
 
 /**
+ * Valid guest side values.
+ * @type {readonly string[]}
+ */
+export const GUEST_SIDES = /** @type {const} */ (["groom", "bride", "mutual"]);
+
+/**
+ * Valid guest group values.
+ * @type {readonly string[]}
+ */
+export const GUEST_GROUPS = /** @type {const} */ ([
+  "family",
+  "friends",
+  "work",
+  "other",
+]);
+
+/**
+ * Valid table shape values.
+ * @type {readonly string[]}
+ */
+export const TABLE_SHAPES = /** @type {const} */ (["round", "rect"]);
+
+/**
  * Modal element IDs used throughout the app.
  * @type {Readonly<Record<string, string>>}
  */

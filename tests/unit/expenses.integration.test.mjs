@@ -15,6 +15,7 @@ import {
   getExpenseMonthlyTrend,
   getLargestExpenses,
 } from "../../src/sections/expenses.js";
+import { makeExpense } from "./helpers.js";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -25,16 +26,6 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers();
 });
-
-function makeExpense(overrides = {}) {
-  return {
-    category: "Catering",
-    description: "Wedding dinner",
-    amount: 10000,
-    date: "2024-06-01",
-    ...overrides,
-  };
-}
 
 // ── saveExpense ───────────────────────────────────────────────────────────────
 

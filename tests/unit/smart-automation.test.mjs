@@ -8,33 +8,9 @@ import {
   buildDayOfPlaybook,
   scoreSeatingCandidate,
 } from "../../src/utils/smart-automation.js";
+import { makeGuest, makeTable } from "./helpers.js";
 
 // ── Fixtures ──────────────────────────────────────────────────────────────
-
-function makeGuest(overrides = {}) {
-  return {
-    id: "g1",
-    firstName: "Test",
-    lastName: "Guest",
-    phone: "0541234567",
-    email: "",
-    status: "pending",
-    side: "groom",
-    group: "friends",
-    meal: "regular",
-    tableId: null,
-    sent: false,
-    rsvpDate: null,
-    checkedIn: false,
-    count: 1,
-    vip: false,
-    ...overrides,
-  };
-}
-
-function makeTable(overrides = {}) {
-  return { id: "t1", name: "Table 1", capacity: 8, shape: "round", ...overrides };
-}
 
 const DAYS_AGO = (n) => new Date(Date.now() - n * 86_400_000).toISOString();
 

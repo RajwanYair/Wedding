@@ -18,6 +18,7 @@ import {
   getLowRatedVendors,
   getVendorBudgetShare,
 } from "../../src/sections/vendors.js";
+import { makeVendor } from "./helpers.js";
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -29,20 +30,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function makeVendor(overrides = {}) {
-  return {
-    category: "Photography",
-    name: "Dan Photography",
-    contact: "",
-    phone: "",
-    price: 5000,
-    paid: 0,
-    notes: "",
-    ...overrides,
-  };
-}
-
-// ── saveVendor ────────────────────────────────────────────────────────────
+// ── saveVendor ──────────────────────────────────────────────────────────────────────
 describe("saveVendor", () => {
   it("creates a new vendor and returns ok:true", () => {
     const result = saveVendor(makeVendor());

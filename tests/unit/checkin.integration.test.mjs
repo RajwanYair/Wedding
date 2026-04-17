@@ -8,6 +8,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { makeGuest } from "./helpers.js";
 import {
   checkInGuest,
   exportCheckinReport,
@@ -30,20 +31,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function makeGuest(overrides = {}) {
-  return {
-    id: `g-${Math.random().toString(36).slice(2)}`,
-    firstName: "Test",
-    lastName: "User",
-    phone: "",
-    status: "confirmed",
-    count: 1,
-    checkedIn: false,
-    ...overrides,
-  };
-}
-
-// ── checkInGuest ──────────────────────────────────────────────────────────────
+// ── checkInGuest ────────────────────────────────────────────────────────────────────────────────
 
 describe("checkInGuest", () => {
   it("marks a guest as checked in", () => {
@@ -162,9 +150,9 @@ describe("getCheckinRateBySide", () => {
 
   it("groups check-in rate by side", () => {
     storeSet("guests", [
-      makeGuest({ side: "groom", checkedIn: true }),
-      makeGuest({ side: "groom", checkedIn: false }),
-      makeGuest({ side: "bride", checkedIn: true }),
+      makeGuest({ side: "groom", status: "confirmed", checkedIn: true }),
+      makeGuest({ side: "groom", status: "confirmed", checkedIn: false }),
+      makeGuest({ side: "bride", status: "confirmed", checkedIn: true }),
     ]);
     const rates = getCheckinRateBySide();
     const groom = rates.find((r) => r.side === "groom");
@@ -185,8 +173,8 @@ describe("getCheckinRateByTable", () => {
     initStore({ guests: { value: [] }, tables: { value: [] } });
     storeSet("tables", [{ id: "t1", name: "Head Table" }]);
     storeSet("guests", [
-      makeGuest({ tableId: "t1", checkedIn: true }),
-      makeGuest({ tableId: "t1", checkedIn: false }),
+      makeGuest({ tableId: "t1", status: "confirmed", checkedIn: true }),
+      makeGuest({ tableId: "t1", status: "confirmed", checkedIn: false }),
     ]);
     const rates = getCheckinRateByTable();
     expect(rates).toHaveLength(1);
@@ -199,9 +187,20 @@ describe("getCheckinRateByTable", () => {
 describe("getVipNotCheckedIn", () => {
   it("returns VIP confirmed guests who haven't arrived", () => {
     storeSet("guests", [
-      makeGuest({ id: "v1", vip: true, firstName: "VIP", checkedIn: false }),
-      makeGuest({ id: "v2", vip: true, checkedIn: true }),
-      makeGuest({ id: "v3", vip: false, checkedIn: false }),
+      makeGuest({
+        id: "v1",
+        vip: true,
+        firstName: "VIP",
+        status: "confirmed",
+        checkedIn: false,
+      }),
+      makeGuest({ id: "v2", vip: true, status: "confirmed", checkedIn: true }),
+      makeGuest({
+        id: "v3",
+        vip: false,
+        status: "confirmed",
+        checkedIn: false,
+      }),
     ]);
     const result = getVipNotCheckedIn();
     expect(result).toHaveLength(1);
@@ -213,9 +212,24 @@ describe("getVipNotCheckedIn", () => {
 describe("getAccessibilityNotCheckedIn", () => {
   it("returns accessibility guests not checked in", () => {
     storeSet("guests", [
-      makeGuest({ id: "a1", accessibility: "wheelchair", checkedIn: false }),
-      makeGuest({ id: "a2", accessibility: "wheelchair", checkedIn: true }),
-      makeGuest({ id: "a3", accessibility: "", checkedIn: false }),
+      makeGuest({
+        id: "a1",
+        accessibility: "wheelchair",
+        status: "confirmed",
+        checkedIn: false,
+      }),
+      makeGuest({
+        id: "a2",
+        accessibility: "wheelchair",
+        status: "confirmed",
+        checkedIn: true,
+      }),
+      makeGuest({
+        id: "a3",
+        accessibility: "",
+        status: "confirmed",
+        checkedIn: false,
+      }),
     ]);
     const result = getAccessibilityNotCheckedIn();
     expect(result).toHaveLength(1);
