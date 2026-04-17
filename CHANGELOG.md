@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.2.0] — 2025-08-03
+
+> **Offline Resilience, Accessibility & Multi-Event** — 10-sprint batch adding webhook service, notification preferences, report builder, multi-event management, budget-tracker envelopes, check-in sessions, WCAG contrast/label/ARIA audit utilities, sync-resilience integration tests, and event-metadata SQL migration. 3445 tests / 126 suites.
+
+### Sprint 111 — Webhook service
+
+- `src/services/webhook-service.js`: register webhooks, HMAC-SHA256 signatures, delivery log (17 tests)
+
+### Sprint 112 — Notification preferences
+
+- `src/services/notification-preferences.js`: per-user channel/event opt-in with defaults (16 tests)
+
+### Sprint 113 — Report builder
+
+- `src/utils/report-builder.js`: guest + budget HTML/CSV report generation (14 tests)
+
+### Sprint 114 — Multi-event manager
+
+- `src/services/multi-event.js`: CRUD events, active-event selection (12 tests)
+
+### Sprint 115 — Budget tracker
+
+- `src/services/budget-tracker.js`: envelope system, recordSpend, over-budget detection (14 tests)
+
+### Sprint 116 — Check-in session
+
+- `src/services/checkin-session.js`: day-of check-in state machine with party size (16 tests)
+
+### Sprint 117 — Accessibility audit utility
+
+- `src/utils/accessibility-audit.js`: WCAG contrast ratio, form label, image alt, ARIA role audits (22 tests)
+
+### Sprint 118 — Sync resilience integration tests
+
+- `tests/integration/sync-resilience.test.mjs`: enqueueWrite debounce, tracker transitions, dashboard health, retry backoff (17 tests)
+
+### Sprint 119 — Event metadata migration
+
+- `supabase/migrations/021_event_metadata.sql`: event_metadata table, unique constraint, RLS, auto-updated_at trigger
+
+### Sprint 120 — v7.2.0 release
+
+- Version bump to 7.2.0 across all files; full test suite green: 3445 / 126
+
 ## [7.1.0] — 2025-08-03
 
 > **Push Notifications & Messaging** — 10-sprint batch adding Web Push subscriptions, VAPID-signed push-dispatcher Edge Function, command palette, drag-and-drop state machine, bulk selection, timeline analyzer, number formatter, and messaging pipeline integration tests. 3323 tests / 118 suites.
