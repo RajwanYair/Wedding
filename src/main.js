@@ -11,7 +11,7 @@ import { PUBLIC_SECTIONS } from "./core/constants.js";
 import { initStorage, migrateFromLocalStorage } from "./core/storage.js";
 import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
-import { loadLocale, applyI18n, t } from "./core/i18n.js";
+import { loadLocale, applyI18n, t, preloadLocale } from "./core/i18n.js";
 import { initErrorMonitor } from "./utils/error-monitor.js";
 import {
   load,
@@ -127,64 +127,11 @@ import { startTimelineAlarms } from "./sections/timeline.js";
 import { initQueueMonitor } from "./sections/settings.js";
 import { popUndo } from "./utils/undo.js";
 
+// ── Default data + store definitions (extracted to core/defaults.js in v6.0-S5) ──
+import { buildStoreDefs } from "./core/defaults.js";
+
 /** @type {string|null} currently mounted section name */
 let _activeSection = null;
-
-// ── Default data factories ────────────────────────────────────────────────
-
-/** @type {Record<string,string>} */
-const _defaultWeddingInfo = {
-  groom: "",
-  bride: "",
-  groomEn: "",
-  brideEn: "",
-  date: "",
-  hebrewDate: "",
-  time: "18:00",
-  ceremonyTime: "19:30",
-  rsvpDeadline: "",
-  venue: "",
-  venueAddress: "",
-  venueWaze: "",
-  venueMapLink: "",
-  budgetTarget: "",
-};
-
-const _defaultTimeline = [
-  { id: "tl_invite", time: "18:00", title: "קבלת פנים" },
-  { id: "tl_bedeken", time: "18:40", title: "כיסוי כלה בהינומה" },
-  { id: "tl_chuppah", time: "18:50", title: "חופה" },
-];
-
-/**
- * Build store definitions from the CURRENT event's localStorage.
- * @returns {Record<string, { value: unknown, storageKey?: string }>}
- */
-function _buildStoreDefs() {
-  const savedInfo = /** @type {Record<string,string>} */ (
-    load("weddingInfo", {})
-  );
-  const weddingInfo = { ..._defaultWeddingInfo, ...savedInfo };
-
-  const savedTimeline = load("timeline", null);
-  const timeline =
-    savedTimeline && /** @type {any[]} */ (savedTimeline).length > 0
-      ? savedTimeline
-      : _defaultTimeline;
-
-  return {
-    guests: { value: load("guests", []), storageKey: "guests" },
-    tables: { value: load("tables", []), storageKey: "tables" },
-    vendors: { value: load("vendors", []), storageKey: "vendors" },
-    expenses: { value: load("expenses", []), storageKey: "expenses" },
-    weddingInfo: { value: weddingInfo, storageKey: "weddingInfo" },
-    gallery: { value: load("gallery", []), storageKey: "gallery" },
-    timeline: { value: timeline, storageKey: "timeline" },
-    contacts: { value: load("contacts", []), storageKey: "contacts" },
-    budget: { value: load("budget", []), storageKey: "budget" },
-    timelineDone: { value: load("timelineDone", {}), storageKey: "timelineDone" },
-  };
-}
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────
 (async function bootstrap() {
@@ -212,7 +159,7 @@ function _buildStoreDefs() {
   }
 
   // 3. Reactive store — seed with persisted data from localStorage
-  initStore(_buildStoreDefs());
+  initStore(buildStoreDefs());
 
   // 3a. Seed default weddingInfo for the "default" event if empty
   if (getActiveEventId() === "default") {
@@ -364,6 +311,14 @@ function _buildStoreDefs() {
   // F1.6.3 — Prefetch likely-next section templates on idle
   prefetchTemplates(["guests", "tables", "rsvp", "analytics"]);
 
+  // v6.0-S5 — Preload secondary locale on idle
+  const secondaryLocale = lang === "he" ? "en" : "he";
+  preloadLocale(secondaryLocale);
+
+  // v6.0-S5 — Preload secondary locale on idle
+  const secondaryLocale = lang === "he" ? "en" : "he";
+  preloadLocale(secondaryLocale);
+
   // Sprint 9: Performance timing end
   performance.mark("bootstrap-end");
   performance.measure("bootstrap", "bootstrap-start", "bootstrap-end");
@@ -402,7 +357,7 @@ async function _doSwitchEvent(eventId) {
   }
   // switch
   setActiveEvent(eventId);
-  reinitStore(_buildStoreDefs());
+  reinitStore(buildStoreDefs());
   // refresh UI
   const dash = await _resolveSection("dashboard");
   dash?.updateTopBar?.();

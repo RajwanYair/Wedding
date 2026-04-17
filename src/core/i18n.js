@@ -11,6 +11,9 @@ let _dict = {};
 /** @type {'he'|'en'|'ar'|'ru'} */
 let _lang = "he";
 
+/** RTL languages */
+const RTL_LANGS = new Set(["he", "ar"]);
+
 /**
  * Load a language pack via Vite dynamic import().
  * Hebrew is bundled eagerly; other locales are split into lazy chunks.
@@ -24,6 +27,7 @@ export async function loadLocale(lang, _inlineDict) {
   // Unit-test escape hatch: allow inline dict injection without hitting the file system
   if (_inlineDict) {
     _dict = _inlineDict;
+    _applyDirection(lang);
     return;
   }
   if (lang === "en") {
@@ -39,6 +43,38 @@ export async function loadLocale(lang, _inlineDict) {
     // Hebrew — bundled eagerly into the main entry chunk
     const { default: dict } = await import("../i18n/he.json");
     _dict = dict;
+  }
+  _applyDirection(lang);
+}
+
+/**
+ * Set `dir` and `lang` attributes on the document root.
+ * RTL for he/ar, LTR for en/ru.
+ * @param {'he'|'en'|'ar'|'ru'} lang
+ */
+function _applyDirection(lang) {
+  if (typeof document === "undefined") return;
+  const dir = RTL_LANGS.has(lang) ? "rtl" : "ltr";
+  document.documentElement.setAttribute("dir", dir);
+  document.documentElement.setAttribute("lang", lang);
+}
+
+/**
+ * Preload a secondary locale into the module cache during idle time.
+ * Does NOT switch the active language — just primes the dynamic import.
+ * @param {'he'|'en'|'ar'|'ru'} lang
+ */
+export function preloadLocale(lang) {
+  const loader = () => {
+    if (lang === "en") import("../i18n/en.json");
+    else if (lang === "ar") import("../i18n/ar.json");
+    else if (lang === "ru") import("../i18n/ru.json");
+    // he is bundled eagerly — no preload needed
+  };
+  if (typeof requestIdleCallback === "function") {
+    requestIdleCallback(loader, { timeout: 5000 });
+  } else {
+    setTimeout(loader, 3000);
   }
 }
 

@@ -67,6 +67,9 @@ export async function injectTemplate(container, sectionName) {
     return;
   }
 
+  // Show skeleton placeholder while template loads
+  container.classList.add("tpl-loading");
+
   try {
     const { default: html } = await loader();
     container.innerHTML = html; // safe: templates from src/templates/ (no user input)
@@ -91,6 +94,8 @@ export async function injectTemplate(container, sectionName) {
       `[template-loader] Failed to load template: ${sectionName}`,
       err,
     );
+  } finally {
+    container.classList.remove("tpl-loading");
   }
 }
 
