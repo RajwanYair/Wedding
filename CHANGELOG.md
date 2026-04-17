@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.8.0] — 2026-04-18
+
+### Added
+- Sprints 179-184: sanitize tests, number-helpers, date-range, collection-helpers, async-helpers, sheets-impl tests (+243 tests total)
+
 ## [7.7.0] — 2025-08-04
 
 > **Utility Modules & Extended Coverage** — 9-sprint batch: sync-manager orchestrator, query-builder, deep-merge, cache-manager (TTL), string-helpers, schema-validator, event-queue, data-pipeline, presence tests. 4041 tests / 167 suites.
@@ -1839,3 +1844,4 @@ Enhanced guest model, emoji/tooltip system, Google/guest auth, Google Sheets syn
 ## [1.0.0] — 2026-04-13
 
 Initial release: dashboard, guest management, table seating, SVG invitation, WhatsApp bulk send, RSVP, CSV export, Hebrew RTL + English i18n, 5 themes, PWA (offline SW), glassmorphism design, print stylesheet, 125 unit tests, GitHub Actions CI/CD.
+

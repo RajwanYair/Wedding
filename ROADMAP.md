@@ -2,7 +2,7 @@
 
 > Strategic reset for making the project a best-in-class wedding management application.
 > Last updated: 2025-07-19
-> Current baseline: v7.7.0 on main
+> Current baseline: v7.8.0 on main
 
 ---
 
@@ -711,7 +711,7 @@ This plan is outcome-based, not sprint-count-based.
 | v7.4.0 | 2025-07-20 | Platform utilities & compliance, focus trap, event bus, API client, seating constraints, 3667 tests |
 | v7.5.0 | 2025-08-03 | Form builder, retry queue, 3688 tests / 149 suites |
 | v7.6.0 | 2025-08-04 | supabase-auth, audit, view-model, list-diff, url-helpers, base-repository tests, 3844 tests / 158 suites |
-| v7.7.0 | 2025-08-04 | sync-manager, query-builder, deep-merge, cache-manager, string-helpers, schema-validator, event-queue, data-pipeline, presence tests, 4041 tests / 167 suites |
+| v7.8.0 | 2025-08-04 | sync-manager, query-builder, deep-merge, cache-manager, string-helpers, schema-validator, event-queue, data-pipeline, presence tests, 4041 tests / 167 suites |
 
 ### Recommended sequencing
 
@@ -769,7 +769,7 @@ This plan is outcome-based, not sprint-count-based.
 | Vitest | ^4.1.4 | Unit and integration tests | Keep — fast, Vite-compatible |
 | Playwright | ^1.59.1 | E2E browser tests | Keep — extend to Firefox and WebKit |
 | ESLint | ^10.2.0 (flat config) | JS lint | Keep — review rules annually |
-| Stylelint | ^17.7.0 | CSS lint | Keep |
+| Stylelint | ^17.8.0 | CSS lint | Keep |
 | HTMLHint | ^1.9.2 | HTML lint | Keep |
 | markdownlint-cli2 | ^0.22.0 | Markdown lint | Keep |
 | @axe-core/playwright | ^4.10.2 | Accessibility | Underused — promote to CI gate |

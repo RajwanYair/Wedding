@@ -6,12 +6,12 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v7.7.0** |
+| Version | **v7.8.0** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
 | Language | Hebrew RTL primary, English toggle (lazy JSON) |
-| Tests | `npm test` — **4041+ pass (167 suites)** · 0 Node warnings |
+| Tests | `npm test` — **4284+ pass (181 suites)** · 0 Node warnings |
 | Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 | Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |
@@ -33,7 +33,7 @@ src/                 # Active ESM source (Vite entry: src/main.js)
   i18n/              # 4 language files (he · en · ar · ru)
 public/              # sw.js · manifest.json · icons
 scripts/             # sri-check · inject-config · size-report · send-push · generate-icons · generate-precache
-tests/               # 4041+ tests: wedding.test.mjs + 166 unit/integration/perf files
+tests/               # 4284+ tests: wedding.test.mjs + 166 unit/integration/perf files
   e2e/               # Playwright: smoke · visual regression
 .github/             # workflows · instructions · copilot · agents · prompts · Dependabot
 .vscode/             # settings · extensions · tasks
@@ -104,7 +104,7 @@ Run before every version tag / GitHub Pages deploy. All items must be green.
 | # | Check | Command / Action |
 | --- | --- | --- |
 | 1 | **Zero lint errors/warnings** | `npm run lint` — 0 errors, 0 warnings, 0 Node warnings |
-| 2 | **Zero test failures** | `npm test` — all 4041+ pass, 0 skipped |
+| 2 | **Zero test failures** | `npm test` — all 4284+ pass, 0 skipped |
 | 3 | **Zero deprecation notices** | No `npm WARN deprecated` in `npm ci` output |
 | 4 | **No dead code/files** | No unused exports, no orphaned templates or JS modules |
 | 5 | **No eval/innerHTML** | CI security scan passes (`src/**/*.js`, `index.html`) |
