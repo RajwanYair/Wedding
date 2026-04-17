@@ -413,3 +413,59 @@ export function storeRemove(key, id) {
   storeSet(key, filtered);
   return true;
 }
+
+// ── Sprint 13 additions ───────────────────────────────────────────────────
+
+/**
+ * Subscribe to a store key for exactly one notification, then auto-unsubscribe.
+ * Useful for one-shot reactions such as "wait for this key to be hydrated".
+ *
+ * @param {string} key       Store key (or "*")
+ * @param {Function} fn      Callback (called once)
+ * @returns {() => void}     Cancel function (no-op once already fired)
+ */
+export function storeSubscribeOnce(key, fn) {
+  const unsub = storeSubscribe(key, (value) => {
+    unsub();
+    fn(value);
+  });
+  return unsub;
+}
+
+/**
+ * Execute an async function with all store notifications paused until
+ * the promise resolves or rejects. Prevents intermediate state renders
+ * during multi-step async mutations.
+ *
+ * @param {() => Promise<void>} fn   Async function performing store mutations
+ * @returns {Promise<void>}
+ */
+export async function storeBatchAsync(fn) {
+  _pauseDepth++;
+  try {
+    await fn();
+  } finally {
+    _pauseDepth--;
+    if (_pauseDepth === 0) {
+      _flushPausedNotifications();
+    }
+  }
+}
+
+/**
+ * Return detailed subscriber statistics for monitoring and leak detection.
+ * Maps key → subscriber count; includes total across all keys.
+ *
+ * @returns {{ perKey: Record<string, number>, total: number, scopes: number }}
+ */
+export function getSubscriberStats() {
+  /** @type {Record<string, number>} */
+  const perKey = {};
+  let total = 0;
+  _subs.forEach((fns, key) => {
+    const count = fns.size;
+    perKey[key] = count;
+    total += count;
+  });
+  return { perKey, total, scopes: _scopedUnsubs.size };
+}

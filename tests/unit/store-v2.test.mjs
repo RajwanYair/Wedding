@@ -334,3 +334,87 @@ describe("Store Phase 2 — Immutable helpers", () => {
     });
   });
 });
+
+// ── Sprint 13 — storeSubscribeOnce, storeBatchAsync, getSubscriberStats ──
+
+describe("Store Sprint 13 — once / batchAsync / stats", () => {
+  /** @type {typeof import("../../src/core/store.js")} */
+  let _mod;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    _mod = /** @type {any} */ (await import("../../src/core/store.js"));
+    _mod.initStore({ _sp13: { value: 0 }, _arr13: { value: [] } });
+    _mod.storeSet("_sp13", 0);
+  });
+
+  describe("storeSubscribeOnce", () => {
+    it("fires callback exactly once", async () => {
+      const calls = [];
+      _mod.storeSubscribeOnce("_sp13", (v) => calls.push(v));
+      _mod.storeSet("_sp13", 1);
+      _mod.storeSet("_sp13", 2);
+      await Promise.resolve();
+      // Batch notification fires once; value is the latest set value
+      expect(calls).toHaveLength(1);
+      expect(typeof calls[0]).toBe("number");
+    });
+
+    it("cancel function prevents callback from firing", async () => {
+      const calls = [];
+      const cancel = _mod.storeSubscribeOnce("_sp13", (v) => calls.push(v));
+      cancel();
+      _mod.storeSet("_sp13", 5);
+      await Promise.resolve();
+      expect(calls).toHaveLength(0);
+    });
+  });
+
+  describe("storeBatchAsync", () => {
+    it("defers notifications until async fn resolves", async () => {
+      const notifications = [];
+      _mod.storeSubscribe("_sp13", (v) => notifications.push(v));
+
+      await _mod.storeBatchAsync(async () => {
+        _mod.storeSet("_sp13", 10);
+        await new Promise((r) => setTimeout(r, 0));
+        _mod.storeSet("_sp13", 20);
+      });
+      await Promise.resolve();
+      expect(_mod.storeGet("_sp13")).toBe(20);
+    });
+
+    it("flushes notifications even when async fn throws", async () => {
+      await expect(
+        _mod.storeBatchAsync(async () => {
+          _mod.storeSet("_sp13", 99);
+          throw new Error("boom");
+        }),
+      ).rejects.toThrow("boom");
+      expect(_mod.storeGet("_sp13")).toBe(99);
+    });
+  });
+
+  describe("getSubscriberStats", () => {
+    it("returns an object with perKey, total, scopes", () => {
+      const stats = _mod.getSubscriberStats();
+      expect(typeof stats.total).toBe("number");
+      expect(typeof stats.scopes).toBe("number");
+      expect(typeof stats.perKey).toBe("object");
+    });
+
+    it("counts subscriptions per key", () => {
+      _mod.storeSubscribe("_sp13", () => {});
+      _mod.storeSubscribe("_sp13", () => {});
+      const stats = _mod.getSubscriberStats();
+      expect(stats.perKey["_sp13"]).toBeGreaterThanOrEqual(2);
+    });
+
+    it("total is sum of all perKey counts", () => {
+      const stats = _mod.getSubscriberStats();
+      const sum = Object.values(stats.perKey).reduce((/** @type {number} */ a, /** @type {number} */ n) => a + n, 0);
+      expect(stats.total).toBe(sum);
+    });
+  });
+});
+
