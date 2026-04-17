@@ -109,7 +109,7 @@ export function formatReport(results) {
   const failures = results.filter((r) => !r.passed).length;
   lines.push(sep);
   lines.push(`Total: ${results.length} files | ${failures} over budget`);
-  return lines.join("\n") + "\n";
+  return `${lines.join("\n")}\n`;
 }
 
 // ── Entry point ───────────────────────────────────────────────────────────────
@@ -118,7 +118,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const results = checkBudget(DIST_DIR, JS_BUDGET, CSS_BUDGET);
 
   if (JSON_MODE) {
-    process.stdout.write(JSON.stringify(results, null, 2) + "\n");
+    process.stdout.write(`${JSON.stringify(results, null, 2)}\n`);
   } else {
     process.stdout.write(formatReport(results));
   }
