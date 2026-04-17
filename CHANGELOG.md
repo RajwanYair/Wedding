@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.1.0] — 2025-07-13
+
+> **Foundation Hardening** — 10-sprint quality & observability uplift across types, security, a11y, and local-first data.
+
+### Sprint 1 — Documentation accuracy
+
+- `ARCHITECTURE.md`, `ROADMAP.md`, `docs/API.md`: corrected version refs, module counts, feature parity
+
+### Sprint 2 — TypeScript types expansion
+
+- `src/types.d.ts`: Added `AppEvent`, `SyncState`, `DataClass`, `HealthReport`, `GuestRepository`, `VendorRepository`, `TableRepository`, generic `Repository<T>`, result wrappers
+
+### Sprint 3 — Constants & action registry hardening
+
+- `src/core/constants.js`: Added `GUEST_STATUSES`, `GUEST_SIDES`, `GUEST_GROUPS`, `MEAL_TYPES`, `TABLE_SHAPES`, `VENDOR_CATEGORIES`, `EXPENSE_CATEGORIES` freeze-arrays
+- `scripts/validate-actions.mjs`: Detects data-action references not covered by ACTIONS registry
+
+### Sprint 4 — Repository interface layer
+
+- `src/services/repositories.js` (new): `GuestRepository`, `VendorRepository`, `TableRepository` wrapping store with typed CRUD + stats helpers
+
+### Sprint 5 — Store V2 immutable helpers
+
+- `src/core/store.js`: `getImmutable()`, `patchItem()`, `removeItem()`, `updateLookup()` on the store root
+
+### Sprint 6 — Local-first data discipline
+
+- `src/services/sync-tracker.js` (new): Per-domain `SyncState` tracker — `getSyncState`, `markSyncing`, `markSynced`, `markSyncError`, `markAllOffline`, `markAllOnline`, `watchSyncState`
+- `src/services/offline-queue.js`: Added `getQueueStats()` and internal `_exhaustedCount` tracking
+- 21 new tests (sync-tracker) + 10 new tests (offline-queue)
+
+### Sprint 7 — Supabase schema migrations
+
+- `supabase/migrations/007_fk_guests_table_id.sql`: FK `guests.table_id → tables(id) ON DELETE SET NULL`
+- `supabase/migrations/008_unique_guest_phone.sql`: Partial unique index on `phone WHERE phone ≠ ''`
+- `supabase/migrations/009_soft_delete.sql`: `deleted_at TIMESTAMPTZ` column on guests + vendors
+- `supabase/migrations/010_pagination_indexes.sql`: Cursor-pagination indexes for all core tables
+- `src/types.d.ts`: Added `deletedAt?: string | null` to `Guest` and `Vendor`
+
+### Sprint 8 — Security & privacy hardening
+
+- `public/_headers`: Added `https://*.supabase.co` and `wss://*.supabase.co` to CSP `connect-src`
+- `scripts/security-scan.mjs` (new): Static OWASP scanner (no-eval, no-new-function, no-document-write, no-unsafe-innerHTML, no-http-url) with `// nosec` escape hatch
+- `package.json`: Added `security-scan` script; wired into `ci` pipeline
+
+### Sprint 9 — UX & accessibility polish
+
+- `src/core/template-loader.js`: Sets `aria-busy="true"` during template load; calls `announce()` on completion
+- `src/utils/form-validator.js` (new): Accessible form validation — `validateForm()`, `clearFormErrors()`, `setFieldError()` with `aria-invalid`, `aria-describedby`, `role=alert` error spans, auto-clear on input
+- `src/utils/index.js`: Re-exports `form-validator.js`
+- 16 new tests (form-validator)
+
+### Sprint 10 — Observability & release (this release)
+
+- `src/services/health.js` (new): Session error health monitor — `captureHealthError()`, `getHealthReport()` (status: healthy/degraded/critical), `resetHealthState()`; integrates with offline-queue stats; hooks `window.onerror` / `unhandledrejection`
+- Version bumped to `6.1.0` across `package.json`, `src/core/config.js`, `public/sw.js`
+- 12 new tests (health)
+
+### Total new tests this release cycle: 1957+ (from 1915 baseline)
+
 ## [6.0.0] — 2025-07-10
 
 > **Architecture Renaissance** — Modular core, Supabase-first backend, full security hardening.
