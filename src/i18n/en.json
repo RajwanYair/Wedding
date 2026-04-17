@@ -571,6 +571,8 @@
     "col_name": "Name",
     "col_count": "Guests",
     "user_mgr_add": "Grant access",
+    "user_mgr_none": "No managers added. Add an email to grant access.",
+    "user_mgr_remove": "Revoke access",
     "user_mgr_approved_label": "Emails approved for full access:",
     "wa_api_title": "Auto-Send (Green API)",
     "wa_api_desc": "Send messages directly without manual confirmation per message. Requires Green API setup in Settings.",

@@ -8,10 +8,8 @@ const TEMP_BASE = join(tmpdir(), "wedding-dev");
 /**
  * Wedding Manager — Playwright E2E configuration.
  *
- * Starts a local static file server before the test suite and runs smoke
- * tests against Chromium only, keeping CI fast.
- *
- * Install browsers once:  npx playwright install --with-deps chromium
+ * Multi-browser (Chromium, Firefox, WebKit) + mobile viewports.
+ * Install browsers once:  npx playwright install --with-deps
  * Run tests:               npm run test:e2e
  */
 export default defineConfig({
@@ -39,6 +37,22 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+    },
+    {
+      name: "mobile-portrait",
+      use: { ...devices["iPhone 14"] },
+    },
+    {
+      name: "tablet-landscape",
+      use: { ...devices["iPad Mini landscape"] },
     },
   ],
 
