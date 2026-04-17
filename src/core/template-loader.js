@@ -18,6 +18,7 @@
  */
 
 import { applyI18n } from "./i18n.js";
+import { announce } from "./ui.js";
 
 /**
  * Auto-discovered template loaders via import.meta.glob (F1.4).
@@ -69,6 +70,7 @@ export async function injectTemplate(container, sectionName) {
 
   // Show skeleton placeholder while template loads
   container.classList.add("tpl-loading");
+  container.setAttribute("aria-busy", "true");
 
   try {
     const { default: html } = await loader();
@@ -77,6 +79,9 @@ export async function injectTemplate(container, sectionName) {
 
     // Re-apply i18n to newly injected content
     applyI18n(container);
+
+    // Announce to screen readers that the section is ready
+    announce(`${sectionName} section loaded`, "polite");
 
     // Let the rest of the app know the DOM has changed
     container.dispatchEvent(
@@ -96,6 +101,7 @@ export async function injectTemplate(container, sectionName) {
     );
   } finally {
     container.classList.remove("tpl-loading");
+    container.removeAttribute("aria-busy");
   }
 }
 

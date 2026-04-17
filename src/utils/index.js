@@ -5,3 +5,4 @@ export * from "./phone.js";
 export * from "./date.js";
 export * from "./sanitize.js";
 export * from "./misc.js";
+export * from "./form-validator.js";
