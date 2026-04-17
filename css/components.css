@@ -411,7 +411,7 @@
   border-radius: 8px 8px 0 8px;
   padding: 0.8rem 1rem;
   max-width: 85%;
-  margin-right: auto;
+  margin-inline-start: auto;
   margin-bottom: 0.5rem;
 }
 .whatsapp-preview .wa-time {
@@ -726,7 +726,7 @@
 /* ── Sortable Table Headers ── */
 .guest-table th { cursor: pointer; user-select: none; position: relative; }
 .guest-table th:hover { background: rgba(212,165,116,0.18); }
-.sort-indicator { font-size: 0.65em; opacity: 0.4; margin-right: 0.25rem; }
+.sort-indicator { font-size: 0.65em; opacity: 0.4; margin-inline-end: 0.25rem; }
 th.sort-asc  .sort-indicator { opacity: 1; }
 th.sort-desc .sort-indicator { opacity: 1; }
 
@@ -1603,7 +1603,7 @@ body.ptr--refreshing::before {
 .u-mt-lg { margin-top: 1.5rem; }
 .u-mb-sm { margin-bottom: 0.5rem; }
 .u-mb-md { margin-bottom: 1rem; }
-.u-mr-auto { margin-right: auto; margin-left: 0; }
+.u-mr-auto { margin-inline: auto 0; }
 .u-gap-sm { gap: 0.5rem; }
 .u-gap-md { gap: 0.8rem; }
 .u-gap-lg { gap: 1rem; }
@@ -1641,7 +1641,7 @@ body.ptr--refreshing::before {
 .qr-scanner-box { position: relative; max-width: 400px; margin: 0 auto 1rem; }
 .qr-video { width: 100%; border-radius: var(--border-radius); }
 .qr-close-btn { position: absolute; top: 0.5rem; right: 0.5rem; }
-.section-toolbar-start { margin-right: auto; margin-left: 0; display: flex; gap: 0.5rem; }
+.section-toolbar-start { margin-inline: auto 0; display: flex; gap: 0.5rem; }
 
 /* ── Venue Map Link (CSP) ── */
 .venue-map-link { font-size: 0.85em; color: var(--accent); }
@@ -1655,7 +1655,7 @@ body.ptr--refreshing::before {
 [id="rsvpLookupStatus"] { margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-secondary); }
 
 /* ── Budget Section (CSP) ── */
-.budget-target-row { margin-right: auto; display: flex; gap: 0.5rem; align-items: center; }
+.budget-target-row { margin-inline-start: auto; display: flex; gap: 0.5rem; align-items: center; }
 .budget-label { font-size: 0.85rem; color: var(--text-muted); }
 [id="budgetTargetInput"] { width: 120px; padding: 0.3rem 0.5rem; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-primary); font-size: 0.85rem; }
 .budget-stats-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
@@ -1667,7 +1667,7 @@ body.ptr--refreshing::before {
 .empty-emoji { font-size: 2rem; display: block; }
 .empty-emoji-lg { font-size: 2.5rem; display: block; }
 .empty-emoji-xl { font-size: 3em; display: block; margin-bottom: 0.5rem; }
-.admin-bar { margin-right: auto; margin-left: 0; }
+.admin-bar { margin-inline: auto 0; }
 .expense-stats-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
 
 /* ── Section Descriptors (CSP) ── */

@@ -26,7 +26,8 @@
         "docs": "node scripts/generate-docs.mjs",
         "typecheck": "tsc --noEmit",
         "validate": "node scripts/validate-actions.mjs",
-        "ci": "npm run lint && npm run typecheck && npm test"
+        "validate:i18n": "node scripts/validate-i18n.mjs",
+        "ci": "npm run lint && npm run typecheck && npm run validate && npm run validate:i18n && npm test"
     },
     "engines": {
         "node": ">=20.0.0"
