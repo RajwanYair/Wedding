@@ -99,6 +99,23 @@ export function audit(action, entity, entityId, diff = null) {
   });
 }
 
+// ── logAdminAction ────────────────────────────────────────────────────────
+
+/**
+ * High-level helper that maps permission-model actions to audit entries.
+ *
+ * Combines the roles module with the audit trail so callers don't need
+ * to construct action/entity strings manually.
+ *
+ * @param {string} permission  "resource:action" string from roles.js
+ * @param {string} entityId    ID of the affected record (empty string for bulk)
+ * @param {{ before?: unknown, after?: unknown } | null} [diff]
+ */
+export function logAdminAction(permission, entityId, diff = null) {
+  const [entity = "unknown", action = "unknown"] = permission.split(":");
+  audit(action.toUpperCase(), entity, entityId, diff);
+}
+
 // ── Error logger ─────────────────────────────────────────────────────
 
 /**
