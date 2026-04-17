@@ -1,8 +1,9 @@
 /**
- * tests/unit/store-v2.test.mjs — Store V2 features (v6.0-S2)
+ * tests/unit/store-v2.test.mjs — Store V2 features (v6.0-S2, Phase 2)
  *
  * Tests for storeBatch, storeSubscribeScoped, cleanupScope,
- * pauseNotifications, resumeNotifications, and storeDebug.
+ * pauseNotifications, resumeNotifications, storeDebug,
+ * storeGetBatch, storeUpdate, storeUpsert, storeRemove.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -24,6 +25,10 @@ const {
   resumeNotifications,
   storeDebug,
   reinitStore,
+  storeGetBatch,
+  storeUpdate,
+  storeUpsert,
+  storeRemove,
 } = await import("../../src/core/store.js");
 
 describe("Store V2 — Batch + Scoped Subscriptions", () => {
@@ -223,6 +228,109 @@ describe("Store V2 — Batch + Scoped Subscriptions", () => {
       expect(debug.subscriberCount.guests).toBeGreaterThanOrEqual(2);
       expect(debug.scopeCount).toBeGreaterThanOrEqual(1);
       expect(Array.isArray(debug.dirtyKeys)).toBe(true);
+    });
+  });
+});
+
+// ── Phase 2 immutable helpers ─────────────────────────────────────────────
+
+describe("Store Phase 2 — Immutable helpers", () => {
+  beforeEach(() => {
+    reinitStore({
+      items: { value: [{ id: "a", name: "Alpha" }, { id: "b", name: "Beta" }], storageKey: "items" },
+      counter: { value: 0, storageKey: "counter" },
+    });
+  });
+
+  // ── storeGetBatch ─────────────────────────────────────────────────────
+
+  describe("storeGetBatch()", () => {
+    it("returns multiple keys in one call", () => {
+      const result = storeGetBatch(["items", "counter"]);
+      expect(Array.isArray(result.items)).toBe(true);
+      expect(result.counter).toBe(0);
+    });
+
+    it("returns undefined for unknown keys", () => {
+      const result = storeGetBatch(["nonexistent"]);
+      expect(result.nonexistent).toBeUndefined();
+    });
+  });
+
+  // ── storeUpdate ───────────────────────────────────────────────────────
+
+  describe("storeUpdate()", () => {
+    it("updates a field on the matching item", () => {
+      storeUpdate("items", "a", { name: "Alpha Updated" });
+      const items = /** @type {any[]} */ (storeGet("items"));
+      expect(items.find((i) => i.id === "a").name).toBe("Alpha Updated");
+    });
+
+    it("preserves non-patched fields", () => {
+      storeUpdate("items", "a", { extra: "x" });
+      const item = /** @type {any[]} */ (storeGet("items")).find((i) => i.id === "a");
+      expect(item.name).toBe("Alpha");
+      expect(item.extra).toBe("x");
+    });
+
+    it("preserves other items in the array", () => {
+      storeUpdate("items", "a", { name: "New" });
+      const items = /** @type {any[]} */ (storeGet("items"));
+      expect(items).toHaveLength(2);
+      expect(items.find((i) => i.id === "b").name).toBe("Beta");
+    });
+
+    it("throws for non-existent id", () => {
+      expect(() => storeUpdate("items", "z", {})).toThrow("not found");
+    });
+
+    it("throws for non-array key", () => {
+      expect(() => storeUpdate("counter", "x", {})).toThrow("not an array");
+    });
+  });
+
+  // ── storeUpsert ───────────────────────────────────────────────────────
+
+  describe("storeUpsert()", () => {
+    it("updates an existing item", () => {
+      storeUpsert("items", { id: "a", name: "Alpha Upserted" });
+      const item = /** @type {any[]} */ (storeGet("items")).find((i) => i.id === "a");
+      expect(item.name).toBe("Alpha Upserted");
+    });
+
+    it("appends a new item when id not found", () => {
+      storeUpsert("items", { id: "c", name: "Gamma" });
+      const items = /** @type {any[]} */ (storeGet("items"));
+      expect(items).toHaveLength(3);
+      expect(items.find((i) => i.id === "c").name).toBe("Gamma");
+    });
+
+    it("returns the upserted item", () => {
+      const result = storeUpsert("items", { id: "a", name: "X" });
+      expect(result.id).toBe("a");
+    });
+  });
+
+  // ── storeRemove ───────────────────────────────────────────────────────
+
+  describe("storeRemove()", () => {
+    it("removes the item with matching id", () => {
+      const removed = storeRemove("items", "a");
+      expect(removed).toBe(true);
+      const items = /** @type {any[]} */ (storeGet("items"));
+      expect(items).toHaveLength(1);
+      expect(items[0].id).toBe("b");
+    });
+
+    it("returns false when id not found", () => {
+      const removed = storeRemove("items", "z");
+      expect(removed).toBe(false);
+      expect(/** @type {any[]} */ (storeGet("items"))).toHaveLength(2);
+    });
+
+    it("returns false for non-array key", () => {
+      const removed = storeRemove("counter", "x");
+      expect(removed).toBe(false);
     });
   });
 });

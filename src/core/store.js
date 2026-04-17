@@ -334,3 +334,82 @@ export function reinitStore(defs) {
     _scheduleNotify(key);
   }
 }
+
+// ── Immutable update helpers (Phase 2) ───────────────────────────────────
+
+/**
+ * Get multiple store values in one call.
+ * @param {string[]} keys
+ * @returns {Record<string, unknown>}
+ */
+export function storeGetBatch(keys) {
+  /** @type {Record<string, unknown>} */
+  const result = {};
+  for (const key of keys) {
+    result[key] = _state[key];
+  }
+  return result;
+}
+
+/**
+ * Immutably update an item with a matching `id` inside an array stored at `key`.
+ * Returns the updated item. Throws if the item is not found.
+ *
+ * @template {{ id: string }} T
+ * @param {string} key    Store key containing an array of objects with `id`
+ * @param {string} id     ID of the item to update
+ * @param {Partial<T>} patch  Fields to apply (shallow merge)
+ * @returns {T} Updated item
+ */
+export function storeUpdate(key, id, patch) {
+  const arr = /** @type {T[]} */ (_state[key]);
+  if (!Array.isArray(arr)) throw new TypeError(`storeUpdate: store["${key}"] is not an array`);
+  const idx = arr.findIndex((item) => item.id === id);
+  if (idx === -1) throw new RangeError(`storeUpdate: id "${id}" not found in store["${key}"]`);
+  const updated = /** @type {T} */ ({ ...arr[idx], ...patch, id });
+  const next = [...arr];
+  next[idx] = updated;
+  storeSet(key, next);
+  return updated;
+}
+
+/**
+ * Immutably create or update an item in an array stored at `key`.
+ * If an item with the same `id` exists, it is shallow-merged; otherwise it is appended.
+ *
+ * @template {{ id: string }} T
+ * @param {string} key   Store key containing an array of objects with `id`
+ * @param {T} item       Item to upsert
+ * @returns {T} The upserted item
+ */
+export function storeUpsert(key, item) {
+  const arr = /** @type {T[]} */ (_state[key]);
+  if (!Array.isArray(arr)) throw new TypeError(`storeUpsert: store["${key}"] is not an array`);
+  const idx = arr.findIndex((i) => i.id === item.id);
+  if (idx === -1) {
+    storeSet(key, [...arr, item]);
+  } else {
+    const updated = /** @type {T} */ ({ ...arr[idx], ...item });
+    const next = [...arr];
+    next[idx] = updated;
+    storeSet(key, next);
+  }
+  return item;
+}
+
+/**
+ * Immutably remove an item by `id` from an array stored at `key`.
+ * No-op if the item is not found.
+ *
+ * @param {string} key   Store key containing an array of objects with `id`
+ * @param {string} id    ID of the item to remove
+ * @returns {boolean}    true if an item was removed, false otherwise
+ */
+export function storeRemove(key, id) {
+  const arr = /** @type {{ id: string }[]} */ (_state[key]);
+  if (!Array.isArray(arr)) return false;
+  const filtered = arr.filter((item) => item.id !== id);
+  if (filtered.length === arr.length) return false;
+  storeSet(key, filtered);
+  return true;
+}
