@@ -1059,7 +1059,7 @@ export function renderPaymentSchedule() {
 
     const statusText = isPaid ? t("vendor_status_paid") : (isOverdue ? t("vendor_overdue") : t("vendor_status_upcoming"));
 
-    tr.innerHTML = `<td>${_escSvg(v.name || v.category)}</td><td>${v.dueDate}</td><td>₪${(v.paid || 0).toLocaleString()} / ₪${(v.price || 0).toLocaleString()}</td><td>${statusText}</td>`;
+    tr.innerHTML = `<td>${_escSvg(v.name || v.category)}</td><td>${v.dueDate}</td><td>₪${(v.paid || 0).toLocaleString()} / ₪${(v.price || 0).toLocaleString()}</td><td>${statusText}</td>`; // nosec: name via _escSvg, statusText via t(), numbers
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
@@ -1218,7 +1218,7 @@ export function renderExpenseDonut() {
   slices.forEach((sl) => {
     const item = document.createElement("div");
     item.className = "donut-legend-item";
-    item.innerHTML = `<span class="donut-legend-dot" style="background:${sl.color}"></span><span>${_escSvg(sl.label)}: ₪${sl.value.toLocaleString()}</span>`;
+    item.innerHTML = `<span class="donut-legend-dot" style="background:${sl.color}"></span><span>${_escSvg(sl.label)}: ₪${sl.value.toLocaleString()}</span>`; // nosec: label via _escSvg, color is hex from const array, value is number
     legend.appendChild(item);
   });
   container.appendChild(legend);

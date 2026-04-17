@@ -441,7 +441,7 @@ export function renderBudgetForecast() {
     lbl.textContent = label;
     const v = document.createElement("span");
     v.className = "forecast-value";
-    v.innerHTML = val; // safe: values are computed numbers / class names
+    v.innerHTML = val; // nosec: values are computed numbers / CSS class name strings
     row.appendChild(lbl);
     row.appendChild(v);
     container.appendChild(row);
@@ -712,7 +712,7 @@ export function renderInvitationStats() {
   items.forEach(({ label, val, sub }) => {
     const item = document.createElement("div");
     item.className = "invite-stat-item";
-    item.innerHTML = `<div class="invite-stat-val">${val}</div><div class="invite-stat-label">${_escDash(label)}${sub ? ` <span class="u-text-muted">(${sub})</span>` : ""}</div>`;
+    item.innerHTML = `<div class="invite-stat-val">${val}</div><div class="invite-stat-label">${_escDash(label)}${sub ? ` <span class="u-text-muted">(${sub})</span>` : ""}</div>`; // nosec: label via _escDash, val and sub are computed numeric strings
     el.appendChild(item);
   });
 }

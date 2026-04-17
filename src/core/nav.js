@@ -286,7 +286,7 @@ function _toggleShortcutsOverlay() {
   list.className = "shortcuts-list";
   for (const s of shortcuts) {
     const li = document.createElement("li");
-    li.innerHTML = s;
+    li.innerHTML = s; // nosec: static kbd/section-name strings, no user input
     list.appendChild(li);
   }
   inner.appendChild(list);

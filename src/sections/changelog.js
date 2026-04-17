@@ -20,7 +20,7 @@ export async function renderChangelog() {
   if (!el) return;
 
   if (_cached) {
-    el.innerHTML = _cached;
+    el.innerHTML = _cached; // nosec: _cached is fetched from CHANGELOG.md (own repo file, not user input)
     return;
   }
 
