@@ -469,3 +469,19 @@ export function getSubscriberStats() {
   });
   return { perKey, total, scopes: _scopedUnsubs.size };
 }
+
+/**
+ * Return the number of active subscriptions registered under a scope,
+ * or the total across all scopes when no scope is provided.
+ *
+ * @param {string} [scope]
+ * @returns {number}
+ */
+export function getSubscriptionCount(scope) {
+  if (scope !== undefined) {
+    return _scopedUnsubs.get(scope)?.size ?? 0;
+  }
+  let total = 0;
+  _scopedUnsubs.forEach((set) => { total += set.size; });
+  return total;
+}
