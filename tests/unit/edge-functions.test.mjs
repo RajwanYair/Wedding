@@ -329,3 +329,61 @@ describe("sendWhatsAppCloudMessage", () => {
     expect(result.ok).toBe(false);
   });
 });
+
+// ── Sprint 45 — send-email Edge Function via callEdgeFunction ─────────────
+describe("send-email via callEdgeFunction", () => {
+  let fetchMock;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("dispatches to send-email endpoint with html body", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: true, messageId: "msg_abc" }),
+    });
+    const result = await callEdgeFunction("send-email", {
+      to: "alice@example.com",
+      subject: "RSVP",
+      html: "<p>Hello</p>",
+    });
+    expect(result.ok).toBe(true);
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.to).toBe("alice@example.com");
+    expect(body.subject).toBe("RSVP");
+    expect(body.html).toBe("<p>Hello</p>");
+  });
+
+  it("dispatches to send-email endpoint with plain text body", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: true, messageId: "msg_xyz" }),
+    });
+    await callEdgeFunction("send-email", {
+      to: "bob@example.com",
+      subject: "Reminder",
+      text: "Please RSVP",
+    });
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.text).toBe("Please RSVP");
+  });
+
+  it("returns ok:false when Resend returns an error", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 422,
+      json: async () => ({ error: "Invalid email address" }),
+    });
+    const result = await callEdgeFunction("send-email", {
+      to: "bad", subject: "X", text: "Y",
+    });
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("Invalid");
+  });
+});
