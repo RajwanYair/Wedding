@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.5.0] — 2025-08-03
+
+> **Form Builder, Retry Queue & Housekeeping** — 2-sprint batch: declarative form-field schema builder with validation, persistent retry queue with exponential backoff. 3688 tests / 149 suites.
+
+### Sprint 150a — Form Builder
+
+- `src/utils/form-builder.js`: `createFormSchema` builder, `getRequiredFields`, `validateFormData`
+
+### Sprint 150b — Retry Queue
+
+- `src/utils/retry-queue.js`: enqueue, dueNow, markSucceeded/Failed, clearKey, `processQueue` with async handler
+
 ## [7.4.0] — 2025-08-03
 
 > **Platform Utilities & Compliance** — 20-sprint batch: color-scheme manager, share service, deep links, feature flags, A/B test utility, contact deduplication, donation tracker, seating constraints, focus trap, event bus, API client, locale detector, generate-changelog script, UX regression tests, seating constraints, compliance integration tests, ADRs 010-012, Supabase migration 022 (version matrix + feature flags), ROADMAP update. 3667 tests / 147 suites.
