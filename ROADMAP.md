@@ -1,810 +1,1072 @@
-# Wedding Manager — Roadmap v6.0.0
+# Wedding Manager Roadmap
 
-> A brutally honest strategic review and forward plan for a best-in-class wedding management SPA.
-> Last updated: 2026-04-16 · Current release: v5.5.0 · Next milestone: v6.0.0
+> Strategic reset for making the project a best-in-class wedding management application.
+> Last updated: 2026-04-17
+> Current baseline: v6.0.0 on main
 
 ---
 
 ## Table of Contents
 
-1. [Executive Summary](#executive-summary)
-2. [Current State Assessment (v5.5.0)](#current-state-assessment-v550)
-3. [Decision Audit — Everything Reconsidered](#decision-audit--everything-reconsidered)
-4. [Keep / Kill / Change Matrix](#keep--kill--change-matrix)
-5. [Completed Work (v3.0 → v5.5)](#completed-work-v30--v55)
-6. [Phase 6 — Architecture Renaissance (v6.0)](#phase-6--architecture-renaissance-v60)
-7. [Phase 7 — Backend Overhaul (v6.1)](#phase-7--backend-overhaul-v61)
-8. [Phase 8 — Security & Hardening (v6.2)](#phase-8--security--hardening-v62)
-9. [Phase 9 — UX Excellence (v6.3)](#phase-9--ux-excellence-v63)
-10. [Phase 10 — Intelligence & Automation (v6.4)](#phase-10--intelligence--automation-v64)
-11. [Phase 11 — Platform & Ecosystem (v6.5)](#phase-11--platform--ecosystem-v65)
-12. [Success Metrics](#success-metrics)
-13. [Release Schedule](#release-schedule)
-14. [Constraints (Non-Negotiable)](#constraints-non-negotiable)
-15. [Principles](#principles)
+1. Executive Summary
+2. Baseline Reality
+3. Best-in-Class Definition
+4. Decision Reset
+5. Keep, Improve, Retire
+6. Architecture Target
+7. Product Roadmap
+8. Old Roadmap Consolidation
+9. External Services and API Strategy
+10. Documentation Roadmap
+11. Quality, Security, and Operations Targets
+12. Release Plan
+13. Success Metrics
+14. Non-Negotiables
 
 ---
 
 ## Executive Summary
 
-Wedding Manager v5.5.0 is a feature-rich, zero-dependency wedding SPA. It works. But "works" is not "best in class." This roadmap re-examines **every major decision** — frontend, backend, infrastructure, tooling, API choices, security, architecture — and plots a path from "solid hobby project" to "production-grade platform."
+Wedding Manager already has a strong frontend core: modular ES modules, no runtime dependencies, a clean event delegation model, a good testing culture, multilingual support, and a surprisingly capable feature set for a static-first application.
 
-### The Honest Assessment
+The project is not yet best in class because several foundational decisions are still split between old and new directions:
 
-**We got right:** ESM modules, zero runtime deps, reactive store, `data-action` delegation, lazy templates, IndexedDB fallback, 1864+ tests, 0 lint errors.
+- The app behaves like a production product, but its primary data model still assumes Google Sheets.
+- The codebase claims a modern architecture, but some docs still describe deleted legacy paths and outdated counts.
+- Supabase exists, but it is not yet the clear source of truth.
+- The product has strong tests, but limited operational visibility and incomplete security hardening around PII.
+- The app has excellent breadth, but its roadmap still mixes completed work, deferred work, and aspirational work without enough sequencing discipline.
 
-**We got wrong (or outgrew):**
+This roadmap resets the plan around one principle:
 
-- Google Sheets as primary database (fragile schema, no real-time, 429 rate limits, no CRDTs)
-- `tsconfig.json` with `strict: false` and `target: "ES2020"` — we claim ES2025 but compile for 2020
-- Supabase integration exists but is untested, unconfigured, and has no RLS ↔ OAuth bridge
-- CSP via `<meta>` tag instead of HTTP headers — framing protection runs *before* CSP activates
-- localStorage stores guest PII (phone, email) in plaintext, readable by any XSS
-- No coverage gates in CI — coverage generates HTML report but doesn't enforce thresholds
-- E2E only Chromium, only happy path — no Firefox/Safari, no offline, no conflict, no mobile
-- `main.js` still 707 lines (target was ≤200) — handler extraction incomplete
-- No error reporting in production — if sync fails for 1,000 guests, nobody knows
-- Hardcoded GAS script URL + spreadsheet ID in config.js — if URL changes, manual localStorage edit required
-- "both" mode (Sheets + Supabase parallel write) has no consistency guarantee
-- Store subscriber cleanup not enforced — memory leak risk on repeated section nav
-- OAuth SDK versions unpinned — CDN loads breaking changes silently
-- 12+ files need manual version bump on release (even with sync-version.mjs)
-- 4 language files but Arabic/Russian have zero E2E validation
+**Stop growing surface area until the platform, data, trust, and operational model are unquestionably strong.**
+
+The next era of the project should focus on five outcomes:
+
+1. A single authoritative backend model.
+2. A stricter and more explicit frontend contract.
+3. Stronger privacy, security, and observability.
+4. Documentation that matches reality and supports contributors.
+5. Premium UX polish only after the platform is trustworthy.
 
 ---
 
-## Current State Assessment (v5.5.0)
+## Baseline Reality
+
+This roadmap is based on the code currently in the repository, not on older assumptions.
+
+### What exists today
+
+| Area | Current state |
+| --- | --- |
+| Frontend stack | HTML5, vanilla CSS, vanilla JS ES modules, Vite 8 |
+| Code organization | `src/core`, `src/handlers`, `src/sections`, `src/services`, `src/utils` |
+| Main entry | `src/main.js`, now focused on orchestration rather than a god module |
+| Data backends | Google Sheets Apps Script is primary; Supabase exists but is partial |
+| Auth | Custom Google, Facebook, Apple, email allowlist, anonymous guest mode |
+| Storage | IndexedDB primary with fallbacks; local persistence still important |
+| Testing | 1957 passing tests, coverage thresholds configured, Playwright present |
+| CI | Lint, typecheck, validation, tests, build, security scan, Lighthouse, size, E2E |
+| Hosting | GitHub Pages deploy workflow in place |
+| Security headers | `_headers` file exists with CSP and cache directives |
+| i18n | Hebrew, English, Arabic, Russian |
+| Runtime dependencies | Zero |
+
+### Where reality and intent still diverge
+
+| Topic | Current reality | Strategic issue |
+| --- | --- | --- |
+| Backend source of truth | Sheets first, Supabase partial | Split architecture and migration risk |
+| Docs accuracy | Several docs still describe `js/`, older counts, older versions | Trust erosion for maintainers |
+| Auth model | Custom provider handling in client | Too much identity logic in frontend |
+| PII model | Sensitive guest data can still live in browser storage | Privacy and incident risk |
+| Observability | Limited production telemetry | Failures can go unnoticed |
+| Roadmap shape | Mixes completed and future work | Hard to prioritize what actually matters |
+
+---
+
+## Best-in-Class Definition
+
+For this product, best in class does not mean the largest feature list. It means the app is excellent on the dimensions that matter for a real wedding workflow.
+
+### Product goals
+
+- Reliable guest and RSVP management under real event pressure.
+- Fast mobile-first experience for guests and admins.
+- Strong offline and degraded-network behavior.
+- Clean and safe collaboration for multiple admins.
+- Low operational overhead for a single-event deployment.
+- Clear upgrade path from hobby project to durable product.
+
+### Best-in-class bar
+
+| Dimension | Target |
+| --- | --- |
+| Reliability | No ambiguous source of truth, safe sync, visible failures |
+| Speed | Fast first load, responsive UI at 1,000+ guests |
+| Trust | Strong privacy model, explicit auditability, secure defaults |
+| Usability | Premium RSVP and admin UX on desktop and mobile |
+| Maintainability | Typed contracts, current docs, predictable releases |
+| Extensibility | New sections and plugins without deep rewiring |
+
+---
+
+## Decision Reset
+
+This section rethinks major project decisions, including ones that looked clean when they were made.
+
+### 1. Vanilla JS and zero runtime dependencies
+
+**Decision:** Keep.
+
+This is still a strong differentiator and remains technically defensible. Modern browser APIs, Vite, and native ES modules are enough for this product. The constraint is useful because it forces disciplined architecture.
+
+**What changes:**
+
+- Stop treating zero runtime deps as a reason to avoid stronger developer tooling.
+- Use build-time and CI-time tools aggressively where they improve safety.
+- Invest in first-party primitives where frameworks would normally help.
+
+### 2. Language strategy
+
+**Decision:** Move to a typed-first codebase, but do it pragmatically.
+
+The codebase already uses `checkJs`, `strict`, and modern TS config settings. That means the project has already outgrown the old JS-only position.
+
+**Recommended direction:**
+
+- Adopt TypeScript for new or heavily refactored core and service modules.
+- Keep small, stable, low-risk files in JS if conversion cost outweighs benefit.
+- Prioritize type-safe domain contracts over file-extension purity.
+
+**Why this is better than an all-or-nothing rewrite:**
+
+- It preserves momentum.
+- It concentrates typing effort where defects are most expensive.
+- It avoids churn in presentation-only modules.
+
+### 3. Frontend architecture
+
+**Decision:** Keep the modular SPA architecture, but formalize contracts.
+
+The current structure is one of the project's strongest decisions: sections, handlers, services, and core primitives are reasonably separated.
+
+**What must improve:**
+
+- Formal section contract: every section exposes mount, unmount, and capability metadata.
+- Formal action registry: every `data-action` value should be registered, typed, and validated.
+- Formal render contract: rendering code should be pure where possible and mutation boundaries explicit.
+
+### 4. Data and backend architecture
+
+**Decision:** Sheets should stop being the primary backend.
+
+Google Sheets was a good bootstrap decision, but it is now the main limiter across integrity, scale, realtime collaboration, and incident recovery.
+
+**Recommended direction:**
+
+- Supabase becomes the primary transactional backend.
+- Google Sheets becomes optional import and reporting export.
+- The app should support a local-first UX, but not a browser-first source of truth.
+
+### 5. Auth and identity
+
+**Decision:** Move identity out of the client.
+
+The current custom provider handling is serviceable, but it makes the client carry too much auth logic and too many trust assumptions.
+
+**Recommended direction:**
+
+- Use Supabase Auth as the primary identity layer.
+- Keep email allowlist logic, but enforce it through claims and policies rather than only client checks.
+- Preserve anonymous guest mode, but narrow its permissions sharply.
+
+### 6. Storage model
+
+**Decision:** Keep local-first behavior, but narrow what is persisted.
+
+Offline capability is valuable. Persisting too much sensitive data in the browser is not.
+
+**Recommended direction:**
+
+- Persist drafts, queues, cache, and public assets locally.
+- Avoid long-lived plaintext storage of full guest PII where possible.
+- Introduce a data classification model: public, guest-private, admin-sensitive, operational.
+
+### 7. Service worker and PWA approach
+
+**Decision:** Keep PWA support, upgrade cache strategy.
+
+Manual service worker control gave early flexibility, but the app now needs more predictable asset lifecycle management.
+
+**Recommended direction:**
+
+- Keep the custom model only if it stays small and testable.
+- Otherwise move to a generated precache strategy with a tighter upgrade protocol.
+- Add explicit offline acceptance tests and cache invalidation tests.
+
+### 8. Hosting and infrastructure
+
+**Decision:** Split static delivery from dynamic capabilities.
+
+GitHub Pages is fine for static delivery, but it is not enough to support the operational future of the app alone.
+
+**Recommended direction:**
+
+- Keep static hosting simple.
+- Use Supabase Edge Functions for trusted server-side behavior.
+- Re-evaluate Cloudflare Pages only if preview environments, edge routing, or header control become a limiting factor beyond the current setup.
+
+### 9. Documentation strategy
+
+**Decision:** Reduce vanity docs, increase living operational docs.
+
+There is a lot of documentation, but not all of it is current, and some of it optimizes for narrative completeness rather than maintainability.
+
+**Recommended direction:**
+
+- Fewer overview docs with duplicated counts and version numbers.
+- More living docs tied to actual architecture, operations, and contributor workflows.
+- Auto-generate where possible, especially API and topology references.
+
+### 10. Feature strategy
+
+**Decision:** Slow feature expansion until the platform is hardened.
+
+The app already has meaningful product breadth. The next big gains are not from adding another admin widget; they are from making the current system safer, sharper, and easier to trust.
+
+---
+
+## Keep, Improve, Retire
+
+### Keep
+
+| Area | Keep | Reason |
+| --- | --- | --- |
+| App shell | Modular section-based SPA | Good fit for this scope |
+| Event handling | `data-action` delegation | Scalable and low overhead |
+| Styling | CSS layers, custom properties, RTL-first design | Strong design-system foundation |
+| Testing culture | High automated coverage and broad test surface | Competitive advantage |
+| i18n model | `t()` plus `data-i18n` | Clear and enforceable |
+| Build model | Vite with zero runtime deps | Fast and clean |
+| Plugin concept | Lightweight internal extensibility | Good long-term leverage |
+
+### Improve
+
+| Area | Improve | Why |
+| --- | --- | --- |
+| Domain types | Shared typed schemas for guest, table, vendor, expense, timeline | Reduce drift and implicit rules |
+| Section API | Stable lifecycle and capability contract | Simplify mounting and cross-section tooling |
+| Store API | Batch updates, scoped subscriptions, immutable update helpers | Performance and leak prevention |
+| Forms | Unified form helpers, schemas, and validation messages | Less duplicated logic and fewer edge bugs |
+| Docs | Accuracy-first architecture and ops docs | Reduce contributor confusion |
+| E2E | Multi-browser, offline, auth, and conflict scenarios | Cover actual production risk |
+| CI | Faster split pipelines, stronger release gating | Improve feedback without losing rigor |
+
+### Retire
+
+| Area | Retire | Replacement |
+| --- | --- | --- |
+| Sheets-first sync model | Primary writes to Apps Script | Supabase-first transactional writes |
+| Client-auth-heavy provider flow | Frontend-managed social auth plumbing | Supabase Auth and server-side policy |
+| Repeated runtime config mutation | Ad hoc local overrides for backend secrets | Explicit environment and admin config model |
+| Stale docs with hardcoded counts | Manual narrative updates everywhere | Living docs plus generated references |
+| Browser as durable admin database | Long-lived sensitive local state | Cached operational state with classified persistence |
+
+---
+
+## Architecture Target
+
+### Target system shape
 
 ```text
-Frontend     HTML5 · vanilla CSS3 (@layer + nesting) · vanilla JS (ES2025, ESM)
-Build        Vite 8 · src/main.js entry · zero runtime deps
-Backend      Google Sheets via Apps Script Web App · optional Supabase · "both" mode
-Auth         Google GIS · Facebook SDK · Apple SDK · email allowlist · anonymous guest
-Deploy       GitHub Pages (static) · $0 infrastructure
-Tests        1864+ passing (34 suites) · Vitest 4.1 + Playwright 1.59 E2E
-Lint         0 errors · 0 warnings (ESLint 10 + Stylelint 17 + HTMLHint + markdownlint)
-Bundle       < 30 KB gzip main · < 15 KB gzip RSVP-only chunk
-Sections     20 feature modules · 5 handler modules · mount/unmount lifecycle
-Templates    15 HTML fragments · 8 modal HTML fragments (lazy-loaded)
-i18n         Hebrew RTL primary · English · Arabic · Russian (lazy JSON)
-Storage      IndexedDB primary → localStorage fallback → in-memory fallback
-PWA          Service Worker · manifest.json · offline queue · push notifications
-CI           6 jobs: lint+test (Node 22+24) · security · Lighthouse · size · E2E
-main.js      707 lines (down from 1,700 — handler extraction done, not complete)
+Client UI
+  -> Core app shell
+  -> Typed domain services
+  -> Local cache / draft queue
+  -> Supabase Auth
+  -> Supabase Postgres + Realtime + Storage + Edge Functions
+  -> Optional exports: Google Sheets, calendar, WhatsApp, email
 ```
 
-### Scoreboard
+### Preferred architectural principles
 
-| Area | Score | Detail |
+1. One source of truth per domain.
+2. One clear owner for identity and authorization.
+3. Browser cache is an optimization, not the canonical database.
+4. Domain rules live in shared contracts, not duplicated UI logic.
+5. Every external integration is optional, isolated, and failure-tolerant.
+6. Every major subsystem has observable health and explicit ownership.
+
+### Proposed domain boundaries
+
+| Boundary | Responsibility |
+| --- | --- |
+| Core shell | Boot, navigation, lifecycle, event routing, UI primitives |
+| Domain layer | Guest, RSVP, seating, vendors, expenses, timeline, messaging |
+| Data layer | Repository interfaces, sync, conflict handling, cache policy |
+| Identity layer | Session, roles, guest tokens, admin claims |
+| Integration layer | Sheets, WhatsApp, email, maps, analytics |
+| Operations layer | Audit log, error log, telemetry, health checks |
+
+### Key architectural upgrades
+
+- Introduce repository interfaces per domain instead of backend-specific calls leaking upward.
+- Define explicit DTOs and view models.
+- Centralize conflict resolution rules instead of spreading them across service and UI code.
+- Create a formal configuration system with three scopes: build, deployment, runtime-admin.
+- Separate public guest experience from admin application concerns more aggressively.
+
+---
+
+## Product Roadmap
+
+The roadmap below is sequenced by leverage. The early phases deliberately prioritize trust, correctness, and maintainability over new feature count.
+
+### Phase 0: Truth and Alignment
+
+**Goal:** Make docs, architecture claims, and release expectations match the current repository.
+
+**Priority:** P0
+
+**Deliverables:**
+
+- Rewrite `README.md` so it reflects `src/` architecture, current tests, current workflows, and current deployment reality.
+- Audit `ARCHITECTURE.md`, `CONTRIBUTING.md`, API docs, and feature claims for stale references.
+- Define official project vocabulary: section, handler, service, repository, integration, plugin.
+- Replace version-count bragging in docs with generated or scripted metadata where possible.
+- Add a docs freshness checklist to release flow.
+
+**Exit criteria:**
+
+- No top-level doc references deleted legacy paths.
+- No conflicting source-of-truth statements about backend, auth, or deployment.
+- Contributors can understand the system without reverse-engineering old docs.
+
+### Phase 1: Frontend Contracts and Domain Cleanup
+
+**Goal:** Make the frontend architecture explicit and safer to evolve.
+
+**Priority:** P0
+
+**Deliverables:**
+
+- Create typed domain models and constants for all major entities.
+- Build a formal action registry and validate templates against it.
+- Define a section contract with lifecycle hooks and optional capabilities.
+- Standardize render helpers, list diffing strategy, and empty/loading/error states.
+- Consolidate duplicated form logic, field metadata, and select option definitions.
+- Introduce repository interfaces used by sections instead of backend-specific services.
+
+**Exit criteria:**
+
+- No section depends directly on Sheets or Supabase implementation details.
+- `data-action` values are validated in CI.
+- Option lists and domain enums exist in one place.
+
+### Phase 2: Store V2 and Local-First Discipline
+
+**Goal:** Make the state layer predictable under scale and navigation churn.
+
+**Priority:** P0
+
+**Deliverables:**
+
+- Add batched mutations.
+- Add scoped subscriptions with automatic cleanup.
+- Add explicit dirty-state and sync-state metadata per domain.
+- Add immutable update helpers for high-risk collections.
+- Measure store behavior at realistic scales such as 500, 1,000, and 2,000 guests.
+- Tighten what is persisted locally and classify stored data.
+
+**Exit criteria:**
+
+- Repeated navigation does not leak subscribers.
+- Bulk guest updates trigger bounded render work.
+- Offline queues and drafts remain intact without exposing unnecessary PII.
+
+### Phase 3: Supabase-First Data Platform
+
+**Goal:** End backend ambiguity.
+
+**Priority:** P0
+
+**Deliverables:**
+
+- Design and migrate a normalized PostgreSQL schema.
+- Introduce typed repositories for guests, tables, vendors, expenses, timeline, settings, RSVP log, audit log, and error log.
+- Promote Supabase to primary write path.
+- Keep Sheets only as import/export and reporting mirror.
+- Add migrations, seed data, local-dev reproducibility, and repository integration tests.
+- Introduce clear conflict semantics for concurrent admin edits.
+
+**Exit criteria:**
+
+- Supabase is authoritative.
+- Sheets can be disabled without breaking core flows.
+- Local dev and CI can run data-layer tests deterministically.
+
+### Phase 4: Identity, Roles, and Secure Boundaries
+
+**Goal:** Make authorization real instead of implied.
+
+**Priority:** P0
+
+**Deliverables:**
+
+- Move social auth flows to Supabase Auth.
+- Implement admin and guest roles through claims and RLS.
+- Add short-lived guest access patterns for RSVP and personal lookup flows.
+- Minimize client-side trust assumptions around admin approval.
+- Add audit trails for privileged actions.
+- Define data-access rules per role and per table.
+
+**Exit criteria:**
+
+- Privileged access is server-enforced.
+- Guest access is narrow and explicit.
+- Auth logic in the frontend is materially smaller and simpler.
+
+### Phase 5: Security, Privacy, and Compliance-Lite Hardening
+
+**Goal:** Make the app safe enough for real guest data.
+
+**Priority:** P0
+
+**Deliverables:**
+
+- Introduce a PII handling policy and data retention policy.
+- Reduce plaintext sensitive storage in browser persistence.
+- Review CSP, headers, token handling, origin policy, and webhook verification.
+- Add security regression tests for auth, role leakage, and unsafe DOM patterns.
+- Create incident response notes for data exposure, bad sync, and broken messaging credentials.
+- Add privacy-focused admin UX for export, purge, and role review.
+
+**Exit criteria:**
+
+- Sensitive data handling is documented, enforced, and tested.
+- Security posture is based on controls, not assumptions.
+
+### Phase 6: Premium Admin and Guest UX
+
+**Goal:** Improve quality of experience only after platform trust is strong.
+
+**Priority:** P1
+
+**Deliverables:**
+
+- Refine information architecture between guest, family, and admin surfaces.
+- Upgrade seating workflows, vendor workflows, and timeline workflows for speed.
+- Improve RSVP mobile UX, accessibility, and recovery from partial submissions.
+- Create a clearer design system for cards, metrics, forms, toasts, and empty states.
+- Add print and export polish for seating, badges, summaries, and timeline assets.
+- Introduce perception-focused performance work: skeletons, optimistic states, chunk warmup.
+
+**Exit criteria:**
+
+- Common tasks are faster and clearer.
+- Mobile admin experience is viable, not just tolerated.
+- Guest RSVP flow feels premium, simple, and trustworthy.
+
+### Phase 7: Messaging and Communication Platform
+
+**Goal:** Turn communication into a first-class subsystem rather than scattered actions.
+
+**Priority:** P1
+
+**Deliverables:**
+
+- Create a messaging domain covering invitation, reminder, follow-up, confirmation, and thank-you flows.
+- Keep `wa.me` as baseline fallback.
+- Add optional WhatsApp Cloud API integration via server-side functions.
+- Add email sending through a server-side provider abstraction.
+- Store message templates, delivery state, and retry records.
+- Add campaign analytics and suppression controls.
+
+**Exit criteria:**
+
+- Messaging is observable, retryable, and auditable.
+- Manual links remain available when automation is not configured.
+
+### Phase 8: Observability and Operations
+
+**Goal:** Make failures visible and diagnosable.
+
+**Priority:** P1
+
+**Deliverables:**
+
+- Add structured client error capture.
+- Add server-side error and audit logs.
+- Add health endpoints for backend and integration surfaces.
+- Build admin-facing operational dashboards for sync health, failed jobs, and integration status.
+- Define release health checks and rollback guidance.
+
+**Exit criteria:**
+
+- The team can see failures before users report them.
+- Operational issues have clear traces and remediation steps.
+
+### Phase 9: Documentation and Contributor Experience
+
+**Goal:** Make the project easier to maintain than to misunderstand.
+
+**Priority:** P1
+
+**Deliverables:**
+
+- Split docs into product, architecture, integration, operations, and contributor tracks.
+- Keep auto-generated API docs, but pair them with human-maintained architecture and operating docs.
+- Add ADRs only for irreversible or expensive decisions.
+- Add deployment runbooks, migration runbooks, and integration setup guides.
+- Add a roadmap governance rule: completed items move out, deferred items get explicit reasons.
+
+**Exit criteria:**
+
+- The docs are navigable by job to be done.
+- Strategic docs stop duplicating tactical docs.
+
+### Phase 10: Ecosystem and Commercial Readiness
+
+**Goal:** Prepare the app for reuse across multiple events without poisoning the current product with premature abstraction.
+
+**Priority:** P2
+
+**Deliverables:**
+
+- Clarify whether the product remains single-event-first or becomes multi-tenant.
+- Define event provisioning, billing assumptions, and tenant boundaries if productized.
+- Harden plugin boundaries and supported extension points.
+- Add importers and exporters that support migration from spreadsheets and external tools.
+- Evaluate whether themed deployment presets or template packs are worth supporting.
+
+**Exit criteria:**
+
+- Reuse is intentional, not accidental.
+- The app can evolve into a platform without contaminating current reliability goals.
+
+---
+
+## Old Roadmap Consolidation
+
+The previous roadmap mixed completed items, active transitions, and speculative upgrades. The carry-forward items below are the ones still worth keeping.
+
+### Carry forward unchanged
+
+| Old theme | Keep? | Reason |
 | --- | --- | --- |
-| Architecture | ⭐⭐⭐⭐ | Clean ESM, Proxy store, `data-action` delegation. Subscriber leak risk. |
-| CSS | ⭐⭐⭐⭐⭐ | 7 `@layer`, native nesting, 5 themes, dark/light, glassmorphism. Excellent. |
-| Testing | ⭐⭐⭐⭐ | 1864 tests, but no coverage gate, no multi-browser E2E, no a11y gate. |
-| Security | ⭐⭐⭐ | CSP + sanitize + no innerHTML. But PII unencrypted, CSP via meta tag, no audit log. |
-| Backend | ⭐⭐ | Google Sheets works but is fragile. Supabase exists but is vapor. No real DB. |
-| Performance | ⭐⭐⭐⭐ | Lazy sections + templates. Store notification N² issue at scale. |
-| i18n | ⭐⭐⭐⭐ | 4 locales, ICU plurals. No RTL↔LTR toggle, no Hebrew calendar. |
-| DevOps | ⭐⭐⭐ | 6-job CI. No canary deploy, no error reporting, no analytics. |
-| Documentation | ⭐⭐⭐ | 5 root docs + ADRs. Version bump in 12+ places. |
-| Infrastructure | ⭐⭐ | GitHub Pages (static only). No edge functions, no real backend. |
+| Typed contracts and stronger TS posture | Yes | Still high leverage |
+| Store improvements | Yes | Needed for scale and correctness |
+| Supabase-first backend | Yes | Core strategic shift |
+| Realtime collaboration | Yes | Best fit once Supabase is primary |
+| Better testing gates | Yes | Already partly underway, should be completed |
+| Error reporting | Yes | Operational gap remains |
+| WhatsApp Cloud API as optional path | Yes | Valuable if isolated behind server-side integration |
 
----
+### Carry forward, but demote
 
-## Decision Audit — Everything Reconsidered
-
-### D1. Vanilla JS (No Framework) — KEEP ✅
-
-**Original rationale:** Zero runtime deps is core identity. Platform APIs suffice.
-**2026 reassessment:** Still valid. Native ESM, Proxy, `structuredClone`, Popover API, View Transitions, `import.meta.glob` — the platform has caught up. Framework overhead for a 20-section SPA is unjustified.
-**But:** Missing framework-level capabilities must be built ourselves: subscriber lifecycle cleanup, batch mutations, form validation DSL. Budget 1–2 sprints to harden our vanilla primitives.
-
-### D2. TypeScript vs JSDoc — CHANGE ⚠️
-
-**Original decision:** Stay JS, use JSDoc `@typedef` + `tsc --noEmit` for checking.
-**Problem exposed:** `tsconfig.json` has `strict: false`, `target: "ES2020"`. We claim ES2025 but check against 2020 types. `@type {any[]}` casts scattered everywhere. `tsc` runs `continue-on-error: true` in CI — it's not actually blocking.
-**New decision:** **Migrate to TypeScript (`.ts` files).** The zero-runtime-deps constraint applies to *shipped bundles*, not source code. TypeScript compiles away — zero bytes in dist. Benefits: strict null checks, discriminated unions for `Guest.status`, exhaustive switch checks, IDE autocomplete, refactoring confidence.
-**Migration path:** Rename files `.js` → `.ts` one module at a time. Start with `src/core/`, then `src/utils/`, then `src/services/`, then `src/sections/`. Use `strict: true`. Remove all `@type {any}` casts.
-
-### D3. Google Sheets as Primary Backend — RE-EVALUATE 🔴
-
-**Original rationale:** Free, familiar, couple sees data in spreadsheet.
-**Problems that emerged:**
-
-- Column schema drift → silent data corruption (no foreign keys, no constraints)
-- Rate limiting: Apps Script 429s with >50 concurrent users
-- No real-time: polling only (30s intervals)
-- Schema evolution requires lockstep GAS + client updates
-- No transactions, no indexes, no query language
-- Conflict resolution is last-write-wins by timestamp (unreliable for concurrent edits)
-- GAS URL hardcoded; if redeployed, every client breaks until localStorage manually edited
-**New decision:** **Supabase becomes the primary backend. Google Sheets becomes an optional export/sync target.**
-- Supabase Free Tier: 500 MB DB, unlimited API calls, Realtime channels, Row-Level Security, SQL migrations, Edge Functions, built-in auth
-- Real PostgreSQL: foreign keys, indexes, JSONB, triggers, `ON CONFLICT` upserts
-- Realtime: WebSocket channels replace 30s polling
-- Auth: Supabase Auth supports Google/Facebook/Apple natively — collapse our custom OAuth into Supabase Auth
-- Migration: Export Sheets data → import into Supabase tables → keep Sheets as read-only mirror via webhook
-**Sheets stays as:** Optional one-way sync (Supabase → Sheets via Edge Function cron). The couple can still *view* in spreadsheet but Supabase is source of truth.
-
-### D4. GitHub Pages Deploy — CHANGE TO HYBRID ⚠️
-
-**Original rationale:** $0, excellent CDN, no vendor lock-in.
-**Limitation:** Static hosting only. No server-side rendering, no edge functions, no API routes, no dynamic OG images, no webhook receivers.
-**New decision:** **Cloudflare Pages (free tier) for static + Supabase Edge Functions for dynamic.**
-
-- Cloudflare Pages: free, global CDN, branch previews per PR, custom domains, redirect rules
-- Supabase Edge Functions: webhook receivers, RSVP confirmation emails, WhatsApp Cloud API proxy
-- GitHub Pages stays as fallback / mirror if needed
-- **Cost: still $0** (Cloudflare free tier + Supabase free tier)
-
-### D5. Service Worker Strategy — CHANGE ⚠️
-
-**Current:** Manual SW with `CACHE_NAME` version bump. 5-min poll for updates. Full cache bust on any version change.
-**Problem:** CSS fix → entire cache invalidated. User re-downloads everything. No user notification before refresh.
-**New decision:** Use Workbox (build-time generation, no runtime dep). Content-hash URLs (Vite already generates these). Stale-while-revalidate for assets. Navigation preload for HTML. Broadcast-update pattern: user gets toast "New version available" with refresh button.
-
-### D6. CSP Implementation — REWRITE 🔴
-
-**Current:** CSP via `<meta http-equiv>`. Framebusting JS runs before CSP activates.
-**Problem:** `<meta>` CSP cannot set `frame-ancestors`. The inline framebusting script violates its own CSP if strictly enforced.
-**New decision:** Move CSP to HTTP response headers via Cloudflare Pages `_headers` file (already exists in `public/_headers`). Remove inline framebusting script. Add `frame-ancestors 'none'`. Add `report-uri` or `report-to` for CSP violation monitoring.
-
-### D7. PII Storage — REWRITE 🔴
-
-**Current:** Guest phone numbers, emails, and names stored as plaintext JSON in localStorage/IndexedDB.
-**Problem:** Any XSS exploit reads the entire guest list. Even without XSS, browser extensions can read localStorage.
-**New decision:** Encrypt PII fields at rest using `crypto.subtle.encrypt()` (AES-GCM, native Web Crypto API, zero deps). Key derived from admin session token via PBKDF2. Anonymous/guest users see only their own phone number (stored in sessionStorage). Full guest list only accessible to authenticated admins.
-
-### D8. OAuth Provider SDKs — PIN VERSIONS ⚠️
-
-**Current:** Google GIS, Facebook SDK, Apple SDK loaded from CDN without version pins.
-**Problem:** Provider could push breaking change; our app breaks silently.
-**New decision (interim):** Pin SDK versions via URL parameters where supported. Add periodic CI job that fetches SDK endpoints and diffs against baseline.
-**New decision (post D3):** If Supabase Auth replaces custom OAuth, this problem disappears — Supabase handles provider SDKs server-side.
-
-### D9. Store Reactivity Model — IMPROVE ⚠️
-
-**Current:** Proxy-based store with subscriber `Set<Function>` per key. No batch API. No subscriber lifecycle management. Deep object mutations don't trigger notifications.
-**Problems:**
-
-- 1000 guests × sort → 1000 set traps × 10 subscribers = 10K callbacks (N² performance)
-- Section unmount doesn't auto-unsubscribe — leak risk
-- `storeGet()` vs `state.load()` semantic confusion
-**New decision:**
-
-1. Add `store.batch(() => { mutations })` — defer notifications until batch end
-2. Add `storeSubscribeScoped(key, fn, scope)` — auto-unsubscribe when scope (section) unmounts
-3. Unify `storeGet()`/`load()` — `storeGet()` for in-memory, `persist()` for disk, no more `load()` in section code
-4. Consider deep Proxy (2 levels max) for `store.guests[0].status = x` reactivity
-
-### D10. Documentation Strategy — SIMPLIFY ⚠️
-
-**Current:** Version string in 12+ places. `sync-version.mjs` patches them, but it's fragile.
-**New decision:**
-
-1. Single source of truth: `package.json` `version` field
-2. `sync-version.mjs` reads it and patches: `config.js`, `sw.js`, CI header comment, copilot-instructions.md
-3. All other docs reference "current version" without hardcoded string — use "v{current}" with auto-replace at build
-4. `ROADMAP.md`: Strategic only — no version numbers in sprint tables (use milestone labels)
-5. `ARCHITECTURE.md`: Living doc — auto-generated where possible (mermaid from imports)
-
-### D11. Supabase Integration — PROMOTE TO PRIMARY 🔴
-
-**Current:** Empty `SUPABASE_URL`, empty `SUPABASE_ANON_KEY`. Zero tests. Zero production usage. Shallow PostgREST wrapper with no RLS↔OAuth bridge. Key-value format for weddingInfo is inefficient.
-**New decision:** See [D3](#d3-google-sheets-as-primary-backend--re-evaluate-). Supabase becomes primary backend with:
-
-- Proper SQL migrations in `supabase/migrations/`
-- RLS policies per table (admin CRUD all; guest read own row only)
-- Supabase Auth replaces custom OAuth (Google/Facebook/Apple providers built-in)
-- Realtime channels for live collaborative editing
-- Edge Functions for: RSVP confirmation emails, WhatsApp Cloud API proxy, Sheets export cron
-- `weddingInfo` as JSONB column (not key-value rows)
-
-### D12. WhatsApp Strategy — EVOLVE ⚠️
-
-**Current:** `wa.me` deep links (free, manual). Green API mentioned as optional (paid).
-**2026 assessment:** WhatsApp Business Cloud API has matured. Free tier: 1,000 service conversations/month. Official Meta API. Supports message templates, buttons, media.
-**New decision:**
-
-- Keep `wa.me` deep links as zero-config default
-- Add WhatsApp Cloud API as opt-in (configured in Supabase Edge Function, not client-side)
-- Route via Supabase Edge Function → Meta Graph API → guest WhatsApp
-- Track delivery/read status via webhook → Supabase table → dashboard analytics
-
-### D13. tsconfig Target — FIX 🔴
-
-**Current:** `target: "ES2020"`, `lib: ["ES2020", "DOM"]`. We use ES2025 features (structuredClone, at(), findLast, import.meta.glob).
-**New decision:** `target: "ES2022"` minimum (for top-level await, class fields, `at()`). `lib: ["ES2023", "DOM", "DOM.Iterable"]`. Vite's `build.target` already handles browser compat — tsconfig should match actual language usage.
-
-### D14. Testing Strategy — UPGRADE 🔴
-
-**Current:** 1864 tests in Vitest (happy-dom). Playwright E2E (Chromium only). Coverage report generated but no gate.
-**Problems:** happy-dom doesn't implement CSS layout, SVG, Service Worker. No multi-browser E2E. No a11y gate. No performance benchmarks. No visual regression.
-**New decision:**
-
-1. **Coverage gate:** Enforce `lines: 85, functions: 85, branches: 75` in Vitest config — CI fails if missed
-2. **Multi-browser E2E:** Playwright with Chromium + Firefox + WebKit (Safari)
-3. **Accessibility gate:** `@axe-core/playwright` in E2E — fail on any WCAG 2.2 AA violation
-4. **Visual regression:** Playwright screenshots compared to baseline for invitation, seating chart, print
-5. **Performance bench:** CI job measuring bundle gzip size, LCP, store mutation latency at 1000 guests
-6. **GAS backend tests:** Mock `SpreadsheetApp`, test `ensureSheets`, `replaceAll`, conflict merge. Run in CI.
-
-### D15. Error Reporting — ADD 🔴
-
-**Current:** `src/utils/error-monitor.js` exists. Errors go to `console.error`. Zero visibility in production.
-**New decision:** Add lightweight error reporting. Options (all OSS/free):
-
-- **Sentry Free Tier:** 5K errors/month, source map support, release tracking. *But: runtime SDK = dep violation.*
-- **Self-hosted via Supabase Edge Function:** Capture `window.onerror` + `unhandledrejection` → POST to Edge Function → insert into `error_log` Supabase table. Zero runtime deps. Dashboard in analytics section.
-- **Decision: Self-hosted approach.** POST errors as JSON to Edge Function. Store in Supabase. Show in admin analytics.
-
----
-
-## Keep / Kill / Change Matrix
-
-### KEEP (Validated Decisions)
-
-| Decision | Why It Works | Risk If Changed |
+| Old theme | New status | Why |
 | --- | --- | --- |
-| Vanilla JS (no framework) | Zero runtime deps. Platform APIs sufficient. | Framework would add 30–80 KB gzip, vendor lock-in. |
-| `data-action` event delegation | Single listener. HTML↔JS separation. Scalable. | Alternative is scattered addEventListener — worse. |
-| CSS `@layer` + native nesting | Future-proof. No preprocessor. Clean cascade. | None — this is the modern standard. |
-| 5 themes + glassmorphism | Visual identity. UserConfigurable. | Theme system is solid; keep enhancing. |
-| Proxy-based reactive store | Fine-grained, lightweight. No dep needed. | Improve with batch + scoped subs; don't replace. |
-| i18n: `t()` + `data-i18n` | Universal coverage. Lazy locale loading. | Keep pattern; improve plural/calendar handling. |
-| Section mount/unmount lifecycle | Clean resource management. Easy to reason about. | Keep. Enhance with auto-unsubscribe. |
-| `import.meta.glob` template discovery | Zero manual sync. New sections auto-discovered. | Keep. Extend to modal auto-discovery. |
-| Vitest for unit/integration | Fast, ESM-native, Vite-compatible. | Keep. Add coverage gates. |
-| Playwright for E2E | Cross-browser, reliable, CI-friendly. | Keep. Expand to multi-browser + a11y. |
-| SRI hashing | Integrity verification for CDN-served assets. | Keep. Move enforcement to HTTP headers. |
+| Cloudflare Pages migration | Optional | Not necessary until hosting limits are real |
+| Full TypeScript conversion of every file | Selective | Better to type high-risk modules first |
+| CSS modules and component-scoped CSS | Optional | Lower leverage than data and security work |
+| Aggressive chunk micro-optimization | Later | Not the current bottleneck |
+| Plugin ecosystem expansion | Later | Platform trust matters more than ecosystem breadth |
 
-### KILL (Remove / Sunset)
+### Retire from active roadmap
 
-| Decision | Why Kill It | Replacement |
+| Old theme | Reason for retirement |
+| --- | --- |
+| Version-heavy sprint history in roadmap | Belongs in changelog, not strategy |
+| Overly detailed completed sprint inventory | Creates maintenance noise |
+| Broad claims that migration is complete when it is not | Misleading and slows correct decisions |
+
+---
+
+## External Services and API Strategy
+
+Every integration should be evaluated by business value, failure mode, security posture, and replaceability.
+
+### Keep as core
+
+| Service | Role | Long-term status |
 | --- | --- | --- |
-| Google Sheets as *primary* backend | Fragile schema, no real-time, rate limits, no transactions | Supabase (PostgreSQL) as primary |
-| CSP via `<meta>` tag | Cannot set `frame-ancestors`. Inline script violation. | HTTP `Content-Security-Policy` header |
-| `tsc continue-on-error: true` in CI | Type checking exists but never blocks — theater | `tsc --noEmit` with `strict: true`, CI fails on error |
-| `target: "ES2020"` in tsconfig | Doesn't match actual ES2025 usage | `target: "ES2022"`, `lib: ["ES2023"]` |
-| Inline framebusting `<script>` | Runs before CSP. Redundant with `frame-ancestors`. | Delete. Use HTTP header `frame-ancestors 'none'`. |
-| `load()` for direct localStorage reads in section code | Confusing dual API with `storeGet()` | Unified `storeGet()` only. `persist()` internal. |
-| Manual SW cache versioning | Full cache bust on every release | Workbox build-time generation + content-hash |
-| GAS URL hardcoded in config.js | If redeployed, all clients break | Supabase primary; GAS URL from runtime config API |
+| Supabase | Database, auth, realtime, edge functions, storage | Primary platform dependency |
+| GitHub Actions | CI and deployment automation | Keep |
+| GitHub Pages | Static delivery | Keep while sufficient |
 
-### CHANGE (Evolve / Improve)
+### Keep as optional or transitional
 
-| Area | From | To | Why |
-| --- | --- | --- | --- |
-| **Source language** | JS + JSDoc | TypeScript (strict) | Refactoring confidence, exhaustive checks. Zero bytes in dist. |
-| **Primary backend** | Google Sheets | Supabase Free | Real DB, real-time, RLS, Edge Functions, auth |
-| **Auth** | Custom OAuth (3 SDKs) | Supabase Auth | One provider, built-in social login, JWT, RLS integration |
-| **Hosting** | GitHub Pages | Cloudflare Pages | Branch previews, `_headers`, redirects, custom domain |
-| **Service Worker** | Manual SW | Workbox (build-time) | Stale-while-revalidate, broadcast-update, zero runtime |
-| **Store** | Basic Proxy | Proxy + batch + scoped subs | Performance at scale, leak prevention |
-| **PII storage** | Plaintext JSON | AES-GCM encrypted (Web Crypto) | Security hardening |
-| **Error monitoring** | console.error only | Self-hosted via Supabase Edge | Production visibility |
-| **Testing** | 1864 tests, no gates | Coverage gate + multi-browser + a11y gate | Regression prevention |
-| **Docs versioning** | 12 manual touch points | `package.json` → auto-sync script | One source of truth |
-| **WhatsApp** | `wa.me` links only | `wa.me` + Cloud API via Edge Function | Automated messaging |
-| **CSS scoping** | 7 global files | Component-scoped CSS Modules (Vite) | No cascade surprises |
-
----
-
-## Completed Work (v3.0 → v5.5)
-
-<details>
-<summary>Click to expand full history of 24+ sprints and 5 phases</summary>
-
-### Sprints (v3.0–v4.7)
-
-| Sprint | Milestone | Version |
+| Service | Role | Long-term status |
 | --- | --- | --- |
-| S0 | Kill `window.*` — proper ESM, `import`/`export` | v3.0.0-alpha.1 |
-| S1 | Split HTML — shell + 15 lazy templates + 6 modals | v3.0.0-alpha.2 |
-| S2 | Modern UI — View Transitions, glassmorphism, swipe nav | v3.0.0-beta.1 |
-| S3 | Backend — write queue, conflict resolution, RSVP_Log sync | v3.0.0-beta.2 |
-| S4 | Security — session rotation, sanitize(), SRI, Lighthouse ≥ 0.90 | v3.0.0-rc.1 |
-| S5 | GitHub DevOps — issue templates, Dependabot, auto-release | v3.0.0-rc.1 |
-| S6 | Quality — coverage-v8, 1407+ tests, coverage gate 80%/70% | v3.0.0-rc.2 |
-| S7 | Docs — instruction files, GUIDE, ARCHITECTURE mermaid diagrams | v3.8.0 |
-| S8 | Analytics — heatmap, funnel, vendor timeline, PDF/CSV export | v3.9.0 |
-| S9 | Multi-Event — event namespace, switcher, per-event Sheets | v4.0.0 |
-| S10 | Real-time — polling sync, conflict UI, presence indicator | v4.0.0 |
-| S11 | Quick Wins — per-guest RSVP links, transport, batch ops, gifts | v4.1.0 |
-| S12 | UX Upgrades — WhatsApp reminders, QR check-in, drag-drop seating | v4.1.0 |
-| S13 | Guest Experience — countdown, plus-ones, thank-you, seating map | v4.2.0 |
-| S14 | Admin Productivity — multi-filter, budget widget, vendor due dates | v4.2.0 |
-| S15 | UX & Smart — undo stack, shortcuts, auto-backup, activity feed | v4.3.0 |
-| S16 | Day-Of — check-in sound, smart table assign, RSVP timeline | v4.3.0 |
-| S17 | Data Quality — full-text search, bulk meal, expense donut, capacity colors | v4.4.0 |
-| S18 | Sync & Forecast — queue monitor, arrival forecast, batch checkin, alarms | v4.4.0 |
-| S19 | Vendor Intelligence — quick-dial, VIP flag, category cards, follow-up | v4.5.0 |
-| S20 | Print & Reports — name badges, timeline print, expense filter | v4.5.0 |
-| S21–22 | Changelog viewer, Supabase presence, conflict modal, modal refactor | v4.6.0 |
-| S23–24 | Background sync, budget alerts, gallery lightbox v2, timeline done sync | v4.7.0 |
+| Google Sheets Apps Script | Import, export, mirror, admin familiarity | Transitional optional integration |
+| WhatsApp `wa.me` | Manual send fallback | Permanent baseline fallback |
+| WhatsApp Cloud API | Automated messaging | Optional premium integration |
+| Nominatim and map-related APIs | Address and map assistance | Optional utility integration |
 
-### Phase 1 — Foundations (v5.0) ✅
+### Reduce or remove over time
 
-- ✅ Broke up main.js god module → 5 handler files (707 lines, 59% reduction)
-- ✅ Deleted legacy `js/` directory entirely
-- ✅ Created `src/types.d.ts` with 11 interfaces; `tsc --noEmit` in CI
-- ✅ Template auto-discovery via `import.meta.glob`
-- ✅ Error boundary in `events.js` + `beforeunload` flush + storage quota detection
-- ✅ Lazy section JS via `import.meta.glob` (19 sections)
-- ✅ Doc consolidation: 8 files → 5 + `sync-version.mjs` script
+| Service | Current use | Plan |
+| --- | --- | --- |
+| Client-loaded Google, Facebook, Apple auth SDKs | Login flows | Replace with Supabase Auth flows |
+| Direct frontend handling of secrets and provider variability | Multiple config paths | Move behind server-side boundaries |
 
-### Phase 2 — Backend Evolution (v5.1) ✅
+### Integration standards
 
-- ✅ GAS schema validation + API version handshake + 429 backoff
-- ✅ IndexedDB storage layer with auto-migration + 3-tier fallback
-- ✅ Offline queue persisted to IndexedDB; drains on `navigator.onLine` + `visibilitychange`
-- ⏳ Supabase RLS policies — deferred (decision: promote to primary in v6)
-- ⏳ Supabase Realtime — deferred (decision: implement in v6.1)
-
-### Phase 3 — UX & Accessibility (v5.2) ✅
-
-- ✅ `aria-live`, `role="alert"`, `role="status"`, `:focus-visible` styles
-- ✅ 4 locales: Hebrew, English, Arabic, Russian
-- ✅ Haptic feedback, ≥48px touch targets, bottom sheet modals on mobile
-- ✅ `prefers-color-scheme` auto-detect, scroll-driven animations
-- ⏳ `@axe-core/playwright` CI gate — deferred (decision: implement in v6.3)
-- ⏳ `prefers-reduced-motion` audit — deferred
-
-### Phase 4 — Intelligence (v5.3) ✅
-
-- ✅ Auto-suggest table assignments, no-show prediction, follow-up timing
-- ✅ Budget forecast, vendor payment reminders, .ics calendar generation
-- ✅ Response time histogram (SVG), burn-down chart, seating optimization score
-
-### Phase 5 — Platform (v5.4–v5.5) ✅
-
-- ✅ Plugin architecture (`registerPlugin()` with mount/unmount/i18n)
-- ✅ ADRs for major decisions
-- ✅ Copilot custom agents (guest, vendor, analytics, designer, explore)
-- ✅ 45 intelligence helper functions (v5.5) across 12 modules + 85 tests
-- ✅ 3 built-in plugins: contact-collector, gallery, registry
-
-</details>
+1. No integration is allowed to become a hidden source of truth.
+2. Every integration must have a failure fallback or degraded mode.
+3. Every integration must have ownership, setup docs, and health checks.
+4. Credentials must be scoped, rotated, and excluded from the client whenever possible.
 
 ---
 
-## Phase 6 — Architecture Renaissance (v6.0)
+## Documentation Roadmap
 
-> **Theme:** Modernize the core. TypeScript migration. Fix the primitives.
+The project needs fewer stale overview docs and stronger, better-scoped living docs.
 
-### 6.1 — TypeScript Migration
+### Proposed doc set
 
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Update `tsconfig.json`: `strict: true`, `target: "ES2022"`, `lib: ["ES2023", "DOM"]` | S | P0 |
-| 2 | Rename `src/core/*.js` → `.ts` (13 modules). Fix all type errors. | L | P0 |
-| 3 | Rename `src/utils/*.js` → `.ts`. Add proper typed signatures. | M | P0 |
-| 4 | Rename `src/services/*.js` → `.ts`. Type all API boundaries. | L | P0 |
-| 5 | Rename `src/handlers/*.js` → `.ts`. | M | P1 |
-| 6 | Rename `src/sections/*.js` → `.ts`. | XL | P1 |
-| 7 | Convert `src/types.d.ts` interfaces to proper TS types with discriminated unions | M | P0 |
-| 8 | Remove all `/** @type {any} */` casts — fix underlying type issues | L | P1 |
-| 9 | `tsc --noEmit` in CI as blocking step (remove `continue-on-error`) | S | P0 |
-| 10 | Update ESLint config: `@typescript-eslint/parser` + rules | M | P1 |
-| 11 | Update Vite config for `.ts` entry point | S | P0 |
+| Document | Purpose |
+| --- | --- |
+| `README.md` | Accurate project overview, setup, current architecture summary |
+| `ARCHITECTURE.md` | Current system structure, boundaries, flows, and tradeoffs |
+| `ROADMAP.md` | Strategic priorities and sequencing only |
+| `docs/API.md` | Generated API reference |
+| `docs/operations/*.md` | Deploy, rollback, incident, migrations, secrets |
+| `docs/integrations/*.md` | Sheets, Supabase, WhatsApp, email, auth providers |
+| `docs/adr/*.md` | Major irreversible decisions only |
+| `CONTRIBUTING.md` | How to work in the repo today |
 
-**Exit criteria:** All `src/` files are `.ts`. `strict: true` passes. Zero `any` casts. CI blocks on type errors.
+### Documentation rules
 
-### 6.2 — Store V2 (Batch + Scoped Subscriptions)
+1. The roadmap is not a changelog.
+2. The changelog is not an architecture document.
+3. Generated docs should not carry narrative promises.
+4. Human-maintained docs should not duplicate generated references.
+5. Every release should include a docs accuracy pass.
 
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Add `store.batch(callback)` — defer all notifications until callback completes | M | P0 |
-| 2 | Add `storeSubscribeScoped(key, fn, sectionName)` — auto-cleanup on section unmount | M | P0 |
-| 3 | Add `store.pauseNotifications()` / `store.resumeNotifications()` for bulk ops | S | P1 |
-| 4 | Audit all `storeSubscribe()` calls — add unsubscribe to section `unmount()` | L | P0 |
-| 5 | Add deep Proxy (1 level) for object properties: `store.guests[0].status = x` triggers | L | P2 |
-| 6 | Unify API: deprecate `load()` in section code → `storeGet()` only | M | P1 |
-| 7 | Add store dev tools: `storeDebug()` dumps state, subscriber count, dirty keys | S | P2 |
+### Highest-value doc improvements
 
-**Exit criteria:** Batch mutations work. Subscriber leaks impossible via scoped API. sort(1000 guests) triggers 1 notification.
-
-### 6.3 — main.js → 200 Lines
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Extract remaining `on()` registrations from main.js → handler modules | M | P0 |
-| 2 | Move `_buildStoreDefs()` + `_defaultWeddingInfo` to `src/core/defaults.ts` | S | P1 |
-| 3 | Move `_resolveSection()` + section cache to `src/core/section-resolver.ts` | M | P1 |
-| 4 | Move `switchEvent()` + event management to `src/core/event-manager.ts` | M | P1 |
-| 5 | main.ts becomes: initStorage → initStore → initAuth → initRouter → initEvents | S | P0 |
-
-**Exit criteria:** `main.ts` ≤ 200 lines. Pure orchestration, zero business logic.
-
-### 6.4 — Build & Bundle Modernization
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Replace manual `manualChunks` with dynamic size-based chunking strategy | M | P1 |
-| 2 | Merge templates < 5 KB into chunk groups (reduce HTTP overhead) | S | P2 |
-| 3 | Add bundle size budget in CI (`performance.maxAssetSize` equivalent) | S | P0 |
-| 4 | Target: < 15 KB gzip initial, < 8 KB gzip RSVP-only | — | Goal |
-| 5 | Enable CSS code splitting per section (Vite CSS Modules) | M | P2 |
-| 6 | Update Workbox integration for SW (build-time precache generation) | M | P1 |
-
-**Exit criteria:** Initial load < 15 KB gzip. CI fails if bundle exceeds budget. SW uses Workbox.
-
-### 6.5 — Constants & Configuration Cleanup
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Create `src/core/action-registry.ts` — typed action constants matching `data-action` | M | P1 |
-| 2 | Pre-build validation: scan templates for orphaned `data-action` values | S | P1 |
-| 3 | Move all hardcoded strings (section names, storage keys, action names) to typed enums | L | P1 |
-| 4 | Validate `data-action` → handler mapping at compile time | M | P2 |
+- Rewrite the README first.
+- Add an operations directory next.
+- Add an integration matrix with setup state, owner, and risk.
+- Add data model docs that explain rules, not just fields.
 
 ---
 
-## Phase 7 — Backend Overhaul (v6.1)
+## Quality, Security, and Operations Targets
 
-> **Theme:** Supabase-first backend. Real database. Real-time. Real auth.
+### Testing targets
 
-### 7.1 — Supabase as Primary Backend
+| Area | Target |
+| --- | --- |
+| Unit and integration | Maintain high coverage with stronger repository and security tests |
+| E2E browsers | Chromium, Firefox, WebKit |
+| E2E flows | Guest RSVP, admin auth, sync recovery, conflict handling, offline resume |
+| Accessibility | Automated gate for critical flows plus manual spot audits |
+| Performance | Scenario-based benchmarks for 500 to 2,000 guests |
 
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Design PostgreSQL schema: `guests`, `tables`, `vendors`, `expenses`, `budget`, `timeline`, `contacts`, `gallery`, `config`, `rsvp_log`, `error_log` | L | P0 |
-| 2 | Write SQL migrations in `supabase/migrations/` (versioned, idempotent) | L | P0 |
-| 3 | Add foreign keys: `guests.tableId → tables.id` (cascading nullify) | S | P0 |
-| 4 | Add indexes: `guests(phone)`, `guests(status)`, `vendors(category)`, `rsvp_log(timestamp)` | S | P0 |
-| 5 | Store `weddingInfo` as JSONB column in `config` table (not key-value rows) | M | P0 |
-| 6 | Implement `ON CONFLICT (id) DO UPDATE` upserts (replace DELETE + INSERT) | M | P0 |
-| 7 | Add `created_at`, `updated_at` triggers on all tables | S | P0 |
-| 8 | Local dev: `supabase start` (Docker) for development/testing | M | P1 |
-| 9 | CI: Supabase local for integration tests | M | P1 |
+### Security targets
 
-**Exit criteria:** Full PostgreSQL schema with FK constraints, indexes, and atomic upserts. Migrations run cleanly.
+| Area | Target |
+| --- | --- |
+| Data exposure | Minimize sensitive browser persistence |
+| Auth | Server-enforced roles and claims |
+| Auditability | Admin actions logged and queryable |
+| Headers and CSP | Strict, reviewed, and aligned with actual integrations |
+| Secrets | Server-side wherever possible |
 
-### 7.2 — Row-Level Security (RLS)
+### Operations targets
 
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Admin policy: `USING (auth.jwt() ->> 'role' = 'admin')` — full CRUD on all tables | M | P0 |
-| 2 | Guest policy: `USING (phone = auth.jwt() ->> 'phone')` — read/update own row only | M | P0 |
-| 3 | Anonymous policy: insert into `rsvp_log` only (append-only RSVP submission) | S | P0 |
-| 4 | Service role key for Edge Functions (bypasses RLS for server-side ops) | S | P0 |
-| 5 | Test RLS: verify admin can CRUD, guest can only read self, anonymous can only RSVP | L | P0 |
-
-**Exit criteria:** RLS policies on all tables. Tested with 3 roles. No data leakage paths.
-
-### 7.3 — Supabase Auth (Replace Custom OAuth)
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Configure Supabase Auth providers: Google, Facebook, Apple | M | P0 |
-| 2 | Replace `src/services/auth.ts` OAuth SDK loading with `supabase.auth.signInWithOAuth()` | L | P0 |
-| 3 | Map Supabase user to admin/guest role via email allowlist (custom claim in JWT) | M | P0 |
-| 4 | Replace anonymous token with Supabase anonymous auth | S | P0 |
-| 5 | Session management: use Supabase refresh tokens (auto-refresh, no manual rotation) | M | P1 |
-| 6 | Remove Google GIS SDK, Facebook SDK, Apple SDK CDN loads | S | P1 |
-| 7 | Update CSP: remove `*.google.com`, `connect.facebook.net`, `appleid.cdn-apple.com` | S | P1 |
-
-**Exit criteria:** All login flows via Supabase Auth. Zero third-party SDK loading. JWT tokens carry role claim.
-
-### 7.4 — Supabase Realtime
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Subscribe to `guests` table changes (INSERT, UPDATE, DELETE) via Realtime channel | M | P0 |
-| 2 | Subscribe to `config` table (wedding info changes broadcast to all open tabs) | S | P1 |
-| 3 | Replace 30s polling with Realtime push + reconciliation | L | P0 |
-| 4 | Conflict resolution: compare `updated_at` + show conflict modal for diverged edits | L | P1 |
-| 5 | Presence: show online admins via Supabase Presence channel | M | P2 |
-| 6 | Offline graceful degradation: Realtime disconnects → queue writes locally → resync on reconnect | L | P0 |
-
-**Exit criteria:** Multi-admin real-time collaboration works. Offline → online resync tested. No polling.
-
-### 7.5 — Google Sheets as Mirror (Optional)
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Supabase Edge Function: `sync-to-sheets` — triggered by Supabase webhook on table changes | L | P2 |
-| 2 | One-way sync: Supabase → Sheets (Sheets is read-only mirror) | M | P2 |
-| 3 | UI toggle: "Enable Google Sheets export" in settings — off by default | S | P2 |
-| 4 | Migration tool: "Import from Google Sheets" — one-time import into Supabase | L | P1 |
-
-**Exit criteria:** Couple can still view data in Sheets, but writes go to Supabase only.
-
-### 7.6 — Edge Functions
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | RSVP confirmation email: Edge Function → Supabase email service or Resend (free tier) | M | P1 |
-| 2 | WhatsApp Cloud API proxy: Edge Function → Meta Graph API | L | P2 |
-| 3 | Error logging: POST from client → Edge Function → `error_log` table | M | P0 |
-| 4 | Health check endpoint: returns backend version + status | S | P1 |
-| 5 | Webhook receiver: `wa.me` click tracking, delivery receipts | M | P2 |
+| Area | Target |
+| --- | --- |
+| Error visibility | Structured client and server error pipeline |
+| Sync visibility | Queue state, failed writes, retries, and drift surfaced to admins |
+| Deployment safety | Repeatable health checks and rollback path |
+| Release discipline | Roadmap, docs, version, migrations, and health all verified |
 
 ---
 
-## Phase 8 — Security & Hardening (v6.2)
+## Release Plan
 
-> **Theme:** Production-grade security. Encrypted PII. Audit trails.
+This plan is outcome-based, not sprint-count-based.
 
-### 8.1 — CSP via HTTP Headers
+| Release train | Focus | Gate |
+| --- | --- | --- |
+| R1 | Truth and docs reset | Docs accurate, architecture terminology stable |
+| R2 | Frontend contracts and store upgrades | Action registry, section contract, store V2 |
+| R3 | Supabase-first backend | Primary write path migrated, repositories tested |
+| R4 | Auth and security hardening | Server-enforced roles, audit log, reduced PII persistence |
+| R5 | Premium UX and messaging | Faster workflows, optional Cloud API messaging, polished guest flow |
+| R6 | Observability and platform readiness | Error pipeline, health dashboards, mature operations docs |
 
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Move CSP from `<meta>` tag to Cloudflare `_headers` file | S | P0 |
-| 2 | Add `frame-ancestors 'none'` (not possible in meta tag) | S | P0 |
-| 3 | Remove inline framebusting `<script>` from index.html | S | P0 |
-| 4 | Add `report-uri` or `report-to` for CSP violation reporting | M | P1 |
-| 5 | CSP: remove CDN domains for OAuth SDKs (handled by Supabase Auth now) | S | P1 |
+### Recommended sequencing
 
-### 8.2 — PII Encryption at Rest
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Create `src/utils/crypto.ts` — AES-GCM encrypt/decrypt via `crypto.subtle` (zero deps) | M | P0 |
-| 2 | Encrypt `phone`, `email`, `firstName`, `lastName` in IndexedDB | L | P0 |
-| 3 | Derive encryption key from admin session token via PBKDF2 | M | P0 |
-| 4 | Guest (anonymous) users: only their own phone in sessionStorage | S | P0 |
-| 5 | Key rotation on session change | M | P1 |
-
-### 8.3 — Audit Trail
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | `audit_log` Supabase table: `timestamp`, `user_id`, `action`, `entity`, `entity_id`, `diff` | M | P1 |
-| 2 | Log all CRUD operations automatically via Supabase triggers | L | P1 |
-| 3 | Admin UI: view audit log in settings | M | P2 |
-
-### 8.4 — Security Scanning
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Add `innerHTML` + `eval` scan for `src/` *and* templates *and* modals | S | P0 |
-| 2 | Add npm `audit --audit-level=moderate` (stricter than current `high`) | S | P1 |
-| 3 | Add SAST step in CI (CodeQL or Semgrep OSS, free for open-source) | M | P1 |
-| 4 | Validate `_headers` CSP syntax in CI | S | P1 |
-
----
-
-## Phase 9 — UX Excellence (v6.3)
-
-> **Theme:** WCAG 2.2 AAA compliance. Multi-browser. Visual regression. i18n polish.
-
-### 9.1 — Accessibility Gate in CI
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Add `@axe-core/playwright` to E2E suite — fail on WCAG 2.2 AA violations | M | P0 |
-| 2 | `prefers-reduced-motion: reduce` — disable all CSS animations + View Transitions | M | P0 |
-| 3 | `forced-colors: active` — verify all UI in Windows High Contrast Mode | M | P1 |
-| 4 | Color contrast verification across all 5 themes + light/dark | L | P0 |
-| 5 | Verify `aria-label`, `aria-describedby`, `aria-expanded` on all interactive elements | L | P1 |
-| 6 | Target: Lighthouse Accessibility = 1.00 | — | Goal |
-
-### 9.2 — Multi-Browser E2E
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Expand Playwright: Chromium + Firefox + WebKit (Safari) | M | P0 |
-| 2 | Add mobile viewport tests (360px, 768px) | M | P0 |
-| 3 | Add offline scenario: disconnect → edit → reconnect → verify sync | L | P1 |
-| 4 | Add conflict scenario: two tabs edit same guest → conflict modal | L | P1 |
-| 5 | Visual regression: screenshot comparison for invitation, seating chart, print | L | P2 |
-
-### 9.3 — i18n Improvements
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Dynamic `dir` attribute: `dir="rtl"` for he/ar, `dir="ltr"` for en/ru | M | P0 |
-| 2 | CSS logical properties audit: replace all `margin-left/right` with `margin-inline-start/end` | L | P1 |
-| 3 | Hebrew calendar dates via Temporal API (Stage 3) or `@hebcal/hdate` library | M | P2 |
-| 4 | Preload secondary locale in `requestIdleCallback()` after 3s idle | S | P1 |
-| 5 | Plural rule tests for all 4 locales (Russian 21 guests, Arabic 101 guests) | M | P0 |
-| 6 | Validate all 4 locale JSON files have identical key sets in CI | S | P0 |
-
-### 9.4 — Performance Optimization
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Show skeleton/spinner during template injection (instead of blank) | M | P0 |
-| 2 | Open IndexedDB during bootstrap (not lazily on first access) | S | P1 |
-| 3 | Cache `el.*` DOM refs in section mount (avoid repeated getElementById in loops) | M | P1 |
-| 4 | Coalesce `enqueueWrite()` calls — batch multiple keys into single POST | L | P2 |
-| 5 | Add performance budget in CI: LCP < 1.5s, INP < 200ms, CLS < 0.1 | M | P1 |
-
----
-
-## Phase 10 — Intelligence & Automation (v6.4)
-
-> **Theme:** Smart features. Production-ready messaging. AI assist.
-
-### 10.1 — WhatsApp Cloud API Integration
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Supabase Edge Function: WhatsApp Cloud API proxy (register + send template messages) | L | P1 |
-| 2 | Message templates: RSVP reminder, confirmation, thank-you, logistics | M | P1 |
-| 3 | Delivery + read receipts via webhook → track in dashboard | M | P2 |
-| 4 | Scheduled reminders: 1 week, 3 days, 1 day before event | M | P2 |
-| 5 | Keep `wa.me` deep links as zero-config fallback | S | P0 |
-
-### 10.2 — Communication Hub
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | RSVP confirmation email via Edge Function + Resend API (free: 3K emails/month) | M | P1 |
-| 2 | Post-wedding thank-you message queue | M | P2 |
-| 3 | SMS fallback via Twilio (for guests without WhatsApp) — evaluate only | M | P3 |
-| 4 | Communication log: all sent messages tracked with status | L | P1 |
-
-### 10.3 — Advanced Analytics
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | RSVP conversion funnel: invited → opened → started → submitted | L | P1 |
-| 2 | One-page executive summary PDF (client-side, zero-dep SVG → canvas → PDF) | L | P2 |
-| 3 | Self-hosted error analytics dashboard (from `error_log` table) | M | P1 |
-| 4 | Budget forecast: ML-lite trend extrapolation from expense history | M | P2 |
-
-### 10.4 — Smart Automation
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Auto-seat algorithm v2: constraint satisfaction (side, group, meal, accessibility) | L | P2 |
-| 2 | Smart follow-up: auto-detect guests who haven't responded + suggest batch message | M | P1 |
-| 3 | Day-of playbook: auto-generate timeline checklist from vendor due dates | M | P2 |
-
----
-
-## Phase 11 — Platform & Ecosystem (v6.5)
-
-> **Theme:** From app to platform. Multi-tenant. Extensible.
-
-### 11.1 — Hosting Migration
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Set up Cloudflare Pages with branch preview deploys | M | P0 |
-| 2 | Custom domain: `wedding.rajwan.dev` or similar | S | P1 |
-| 3 | `_headers` file for CSP, HSTS, X-Frame-Options, Permissions-Policy | M | P0 |
-| 4 | Redirect rules from GitHub Pages to Cloudflare Pages | S | P1 |
-| 5 | Keep GitHub Pages as mirror / emergency fallback | S | P2 |
-
-### 11.2 — Developer Experience
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Auto-generate API docs from TypeScript (TypeDoc) | M | P2 |
-| 2 | Component gallery page (all UI states, themes, RTL/LTR) | L | P2 |
-| 3 | Storybook-lite: static HTML page rendering each section in isolation | L | P3 |
-| 4 | `npm run bench` — benchmark task for bundle size + store latency at 1K guests | M | P1 |
-| 5 | `npm run validate` — template/action/handler consistency check | M | P1 |
-
-### 11.3 — Plugin Architecture V2
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Plugin manifest: typed `PluginManifest` with version, deps, permissions | M | P2 |
-| 2 | Plugin isolation: sandboxed stores (plugin can't mutate core state directly) | L | P2 |
-| 3 | Plugin marketplace concept: load plugins from URL at runtime | L | P3 |
-| 4 | Built-in plugins: seating-chart-visualizer, thank-you-cards, registry-tracker | L | P3 |
-
-### 11.4 — Multi-Tenant (Evaluate)
-
-| # | Task | Size | Priority |
-| --- | --- | --- | --- |
-| 1 | Per-wedding custom URLs: `elior-tova.wedding.rajwan.dev` | L | P3 |
-| 2 | Template packages: pre-designed themes + default content | XL | P3 |
-| 3 | Workspace invitations: admin invites co-admin via email | L | P3 |
-| 4 | Data isolation: each wedding in separate Supabase schema or tenant ID prefix | L | P3 |
-
-### 11.5 — Future Technology Watch
-
-| Technology | Status in 2026 | Relevance | Action |
-| --- | --- | --- | --- |
-| **Temporal API** | Stage 3 / Safari shipped | Hebrew calendar, timezone-safe dates | Evaluate for v6.3 |
-| **CSS `@scope`** | Baseline 2025 | Component-scoped styles without Shadow DOM | Evaluate for CSS refactor |
-| **CSS Anchor Positioning** | Chrome shipped | Tooltip/dropdown positioning without JS | Adopt when cross-browser |
-| **View Transition L2** | Cross-document | Page transitions without JS orchestration | Already partially adopted |
-| **Popover API** | Baseline 2024 | Native modals/tooltips, replace custom modal system | Migrate modals to `popover` |
-| **`import.meta.resolve()`** | Baseline 2023 | Dynamic import path resolution | Already using `import.meta.glob` |
-| **WebAuthn / Passkeys** | Mainstream 2025 | Passwordless admin login | Add alongside Supabase Auth |
-| **OPFS (Origin Private File System)** | Baseline 2023 | Larger offline storage than IndexedDB for photos | Evaluate for gallery plugin |
-| **Shared Workers** | Broad support | Cross-tab sync without Supabase Realtime | Evaluate as offline bridge |
-| **Compression Streams API** | Baseline 2023 | Client-side gzip for large export files | Add to data export |
+1. Do not start large UX rewrites before R2 and R3 are stable.
+2. Do not expand integrations before R4 defines trust boundaries.
+3. Do not productize multi-event or tenant-level abstractions before R6.
 
 ---
 
 ## Success Metrics
 
-| Metric | v5.5.0 Actual | v6.0 Target | v6.5 Target |
+### Product metrics
+
+- RSVP completion rate.
+- Admin task completion time for common tasks.
+- Seating workflow time and error rate.
+- Message delivery success and recovery rate.
+
+### Engineering metrics
+
+- Time to diagnose sync failures.
+- Number of stale docs found during release.
+- E2E flake rate.
+- Mean bundle size trend.
+- Time to add a new section or major field without regressions.
+
+### Trust metrics
+
+- Number of privileged operations with audit coverage.
+- Percentage of sensitive data persisted locally.
+- Number of auth or policy bypass defects.
+- Recovery success after offline or conflict scenarios.
+
+---
+
+## Non-Negotiables
+
+1. Zero runtime dependencies remains a product constraint.
+2. All user-facing strings stay under i18n discipline.
+3. No unsanitized HTML injection.
+4. Security and privacy work is not optional polish.
+5. Docs must match the repository, not aspirations.
+6. One source of truth per subsystem.
+7. New features do not outrank platform trust until the backend and auth story are coherent.
+
+---
+
+## Appendix A: Toolchain Audit and Version Strategy
+
+### Current toolchain (as of v6.0.0)
+
+| Tool | Current version | Role | Assessment |
 | --- | --- | --- | --- |
-| `main.ts` lines | ~707 | ≤ 200 | ≤ 150 |
-| Source language | JS + JSDoc | TypeScript (strict) | TypeScript (strict) |
-| Type coverage | partial | 100% (`strict: true`) | 100% |
-| Initial bundle (gzip) | < 30 KB | < 15 KB | < 12 KB |
-| RSVP-only bundle (gzip) | < 15 KB | < 8 KB | < 6 KB |
-| Lighthouse Performance | ≥ 0.90 | ≥ 0.95 | ≥ 0.98 |
-| Lighthouse Accessibility | ≥ 0.95 | 1.00 | 1.00 |
-| Test count | 1,864+ | 2,500+ | 3,000+ |
-| Coverage (lines) | ≥ 80% (no gate) | ≥ 85% (CI gate) | ≥ 90% (CI gate) |
-| Coverage (branches) | unknown | ≥ 75% (CI gate) | ≥ 80% (CI gate) |
-| E2E browsers | 1 (Chromium) | 3 (Cr + FF + WK) | 3 + mobile viewports |
-| Primary backend | Google Sheets | Supabase | Supabase + Edge Functions |
-| Real-time sync | 30s polling | Supabase Realtime | Realtime + offline resync |
-| Auth providers | 3 custom SDKs | Supabase Auth | Supabase Auth + Passkeys |
-| CSP delivery | `<meta>` tag | HTTP headers | HTTP headers + report-to |
-| PII encryption | plaintext | AES-GCM (Web Crypto) | AES-GCM + audit trail |
-| Error monitoring | console.error | Self-hosted (Edge + DB) | Alerting + dashboard |
-| Store subscriber leaks | possible | prevented (scoped API) | zero |
-| Deploy platform | GitHub Pages | Cloudflare Pages | CF Pages + Supabase Edge |
-| WhatsApp | `wa.me` links | `wa.me` + Cloud API | Cloud API + templates |
-| Service Worker | manual versioning | Workbox build-time | Workbox + background sync |
-| Bundle size gate | none | CI enforced | CI enforced |
-| Locales validated | he (manual) | 4 locales (CI key-set check) | 4 locales (CI + plural tests) |
+| Vite | ^8.0.8 | Build, dev server, HMR | Keep — best ESM-native bundler |
+| Vitest | ^4.1.4 | Unit and integration tests | Keep — fast, Vite-compatible |
+| Playwright | ^1.59.1 | E2E browser tests | Keep — extend to Firefox and WebKit |
+| ESLint | ^10.2.0 (flat config) | JS lint | Keep — review rules annually |
+| Stylelint | ^17.7.0 | CSS lint | Keep |
+| HTMLHint | ^1.9.2 | HTML lint | Keep |
+| markdownlint-cli2 | ^0.22.0 | Markdown lint | Keep |
+| @axe-core/playwright | ^4.10.2 | Accessibility | Underused — promote to CI gate |
+| @vitest/coverage-v8 | ^4.1.4 | Coverage | Keep — thresholds enforced |
+| web-push | ^3.6.7 | Push notification tooling | Keep for scripts |
+| TypeScript | via checkJs + tsconfig | Type checking | Upgrade to full `.ts` for core modules |
+| Node.js | >=20 (CI: 22 + 24) | Runtime for CI and scripts | Keep — evaluate Node 24 LTS adoption |
 
----
+### Version policy
 
-## Release Schedule
+- Pin major versions in `package.json` using caret ranges.
+- Run `npm audit` monthly and in CI.
+- Upgrade Playwright and Vitest with each release train.
+- Track Vite major releases and evaluate within 30 days of release.
+- Never add runtime dependencies. Dev dependencies are infrastructure, not product.
 
-| Version | Phase | Theme | Key Deliverables |
-| --- | --- | --- | --- |
-| **v6.0** | Phase 6 | Architecture Renaissance | TypeScript migration, Store V2, main.ts ≤ 200, bundle optimization |
-| **v6.1** | Phase 7 | Backend Overhaul | Supabase primary, RLS, Realtime, Supabase Auth, Edge Functions, Sheets as mirror |
-| **v6.2** | Phase 8 | Security & Hardening | CSP via headers, PII encryption, audit trail, SAST in CI |
-| **v6.3** | Phase 9 | UX Excellence | axe-core gate, multi-browser E2E, i18n RTL/LTR, performance budgets |
-| **v6.4** | Phase 10 | Intelligence & Automation | WhatsApp Cloud API, communication hub, advanced analytics, smart automation |
-| **v6.5** | Phase 11 | Platform & Ecosystem | Cloudflare Pages, plugin v2, developer experience, multi-tenant evaluation |
+### Tools to evaluate
 
----
-
-## Constraints (Non-Negotiable)
-
-| Constraint | Detail |
-| --- | --- |
-| Runtime deps | **Zero** — TypeScript compiles away. All third-party is devDeps or server-side (Edge Functions) only. |
-| Cost | **$0** — Cloudflare Pages free + Supabase free + Resend free. No paid infrastructure required. |
-| Language | Hebrew RTL primary, English + Arabic + Russian lazy-loaded |
-| Build | Vite — single `dist/` output. Pure ESM. |
-| Auth | Supabase Auth (Google, Facebook, Apple, anonymous). Email allowlist for admin role. |
-| Data ownership | Couple owns their data. Export to CSV/JSON/Sheets always available. No vendor lock-in. |
-| Browser support | Last 2 versions of Chrome, Firefox, Safari, Edge |
-| Accessibility | WCAG 2.2 AA minimum. Target AAA on core flows (RSVP, check-in). |
-| Tests | All pass, 0 skip, 0 Node warnings. Coverage gates enforce thresholds. |
-| Lint | 0 errors, 0 warnings (ESLint + Stylelint + HTMLHint + markdownlint). |
-
----
-
-## Principles
-
-1. **Zero runtime deps** — ship only our code. Build tools, test runners, linters are devDeps.
-2. **TypeScript strict** — catch bugs at compile time. No `any`. Discriminated unions for domain types.
-3. **Explicit > implicit** — `import { fn }` not `window.fn()`. Typed constants not magic strings.
-4. **Lazy by default** — sections load JS + HTML on first visit. Locales on demand. Templates on navigation.
-5. **Reactive store** — single source of truth. Batch mutations. Scoped subscriptions. Zero leaks.
-6. **Security at every layer** — CSP headers, PII encryption, RLS, audit trail, sanitize all input.
-7. **Mobile-first** — design for 360px, enhance for desktop. Touch targets ≥ 48px.
-8. **Offline-capable** — IndexedDB + write queue + SW. Graceful online/offline transitions.
-9. **Real-time collaborative** — Supabase Realtime for live updates. Conflict resolution for diverged edits.
-10. **i18n everywhere** — `t()` for JS, `data-i18n` for HTML. ICU plurals. RTL↔LTR dynamic.
-11. **Tested at every layer** — unit + integration + E2E + a11y + visual + performance. Gates in CI.
-12. **$0 infrastructure** — free tiers only. Cloudflare + Supabase + Resend. No credit card required.
-13. **Data ownership** — couple can export everything. Sheets mirror optional. No lock-in.
-
----
-
-## Google Sheets Schema (Legacy / Migration Reference)
-
-| Tab | Columns | Direction |
+| Tool | Purpose | When to evaluate |
 | --- | --- | --- |
-| Attendees | Id · FirstName · LastName · Phone · Email · Count · Children · Status · Side · Group · Meal · MealNotes · Accessibility · Transport · TableId · Gift · Notes · Sent · CheckedIn · RsvpDate · CreatedAt · UpdatedAt | Read + Write |
-| Tables | Id · Name · Capacity · Shape | Read + Write |
-| Config | Key · Value (wedding info key-value pairs) | Read + Write |
-| Vendors | Id · Category · Name · Contact · Phone · Price · Paid · Notes · DueDate · CreatedAt · UpdatedAt | Write |
-| Expenses | Id · Category · Amount · Description · Date · CreatedAt | Write |
-| Budget | Id · Category · Amount · Description · Date · CreatedAt | Write |
-| Timeline | Id · Time · Title | Write |
-| Contacts | Id · Name · Phone · Email · Notes | Write |
-| Gallery | Id · Url · Caption · UploadedAt | Write |
-| RSVP_Log | Timestamp · Phone · Name · Status · Count · Meal | Append-only |
-| TimelineDone | Key · Value (done state map) | Read + Write |
+| Workbox (build-time) | Generated SW precache manifest | Phase 2 (store and cache discipline) |
+| supabase CLI | Local dev, migrations, type generation | Phase 3 (Supabase-first backend) |
+| @typescript-eslint | Parser and rules for `.ts` files | Phase 1 (typed domain contracts) |
+| Lighthouse CI | Automated performance and a11y budget | Already in CI — tighten thresholds |
+| Bundlewatch or size-limit | Bundle budget enforcement | Phase 2 |
 
-> This schema is preserved for migration reference. New development targets Supabase PostgreSQL (see Phase 7).
+---
+
+## Appendix B: Database and Schema Design
+
+### Current state
+
+Six SQL migrations exist in `supabase/migrations/`:
+
+| Migration | Content |
+| --- | --- |
+| `001_create_tables.sql` | 10 tables: guests, tables, vendors, expenses, budget, timeline, contacts, gallery, config, rsvp_log |
+| `002_rls_policies.sql` | RLS enabled on all tables; `is_admin()` helper; admin full access; anon read/update guests, insert contacts and rsvp_log |
+| `003_triggers.sql` | `updated_at` auto-touch trigger |
+| `004_audit_log.sql` | Audit log table for admin action tracking |
+| `005_error_log.sql` | Client error capture table |
+| `006_weddinginfo_config.sql` | JSONB config approach |
+
+### Schema gaps to address in Phase 3
+
+| Gap | Detail | Fix |
+| --- | --- | --- |
+| No FK from guests to tables | `table_id TEXT` with no constraint | Add `REFERENCES tables(id) ON DELETE SET NULL` |
+| No unique constraint on guest phone | Duplicates possible at DB level | Add conditional unique index `WHERE phone != ''` |
+| Config as key-value vs JSONB | Migration 006 exists but client still uses KV | Complete JSONB migration and client code path |
+| No pagination support | All reads are `SELECT *` | Add cursor-based pagination for guests and rsvp_log |
+| No event scoping | Tables are single-event | Add `event_id TEXT` column for multi-event support in Phase 10 |
+| No soft delete | Hard deletes lose audit trail | Add `deleted_at TIMESTAMPTZ` and filter active rows |
+
+### Target schema principles
+
+1. All tables have `id TEXT PRIMARY KEY`, `created_at TIMESTAMPTZ`, `updated_at TIMESTAMPTZ`.
+2. All enum columns use `CHECK` constraints matching TypeScript union types.
+3. All foreign keys are explicit with appropriate cascade behavior.
+4. Indexes exist for every column used in WHERE, ORDER BY, or JOIN.
+5. RLS policies enforce admin/guest/anon boundaries at the database level.
+6. Migrations are idempotent and forward-only.
+
+---
+
+## Appendix C: Code Architecture and Methods
+
+### Current module inventory
+
+| Layer | Modules | Primary patterns |
+| --- | --- | --- |
+| Core | config, constants, defaults, dom, events, i18n, nav, nav-auth, plugins, section-resolver, state, status-bar, storage, store, template-loader, ui, whats-new, conflict-resolver | Singleton services, pure functions, Proxy reactive store |
+| Handlers | guest-handlers, table-handlers, vendor-handlers, section-handlers, settings-handlers, event-handlers, auth-handlers | Action registration via `on(action, fn)` |
+| Sections | 20 modules with mount/unmount lifecycle | Render functions, store subscriptions, DOM manipulation |
+| Services | auth, backend, offline-queue, presence, sheets, sheets-impl, supabase | Async fetch, lazy imports, dispatcher pattern |
+| Utils | date, form-helpers, misc, phone, sanitize, undo, error-monitor | Pure functions, no state |
+| Plugins | contact-plugin, gallery-plugin, registry-plugin | `registerPlugin()` with mount/unmount/i18n |
+
+### Key architectural patterns in use
+
+- **Event delegation:** Single document listener routes `data-action` clicks through `events.js`.
+- **Reactive store:** Proxy-based `store.js` with batched notifications and scoped subscriptions.
+- **Lazy templates:** HTML fragments loaded via `import.meta.glob` on first section visit.
+- **Backend dispatcher:** `backend.js` routes sync calls to sheets or supabase based on runtime config.
+- **Section lifecycle:** Each section exports `mount(container)` and `unmount()` with capability metadata.
+- **Sanitize-at-boundary:** `sanitize(input, schema)` validates all user input at entry points.
+- **i18n everywhere:** `t(key)` in JS, `data-i18n` in HTML, ICU plural support.
+
+### Patterns to introduce or strengthen
+
+| Pattern | Description | Phase |
+| --- | --- | --- |
+| Repository interface | Abstract data access behind `GuestRepository`, `TableRepository`, etc. Sections call repositories, not backend services. | Phase 1 |
+| Domain service | Business logic functions that operate on typed domain objects, independent of UI or persistence. | Phase 1 |
+| Action registry | Typed map of action names to handler functions, validated at build time against templates. | Phase 1 |
+| Optimistic update | Apply mutation to local store immediately, reconcile after server response. | Phase 2 |
+| Immutable update | Helper functions that return new arrays/objects instead of mutating in place. | Phase 2 |
+| Command/query separation | Distinguish write operations (commands) from read operations (queries) at the repository level. | Phase 3 |
+| Conflict resolution protocol | Standardized compare-and-merge logic using `updated_at` timestamps and field-level diffing. | Phase 3 |
+
+### What the codebase should stop doing
+
+- Sections should not import from `sheets.js` or `supabase.js` directly.
+- Backend selection logic should not live in section code.
+- Form field metadata should not be duplicated across section renderers.
+- Magic strings for section names, action names, and storage keys should be replaced with typed constants.
+- `load()` from `state.js` should not be used alongside `storeGet()` in section code.
+
+---
+
+## Appendix D: TypeScript Migration Strategy
+
+### Current state
+
+- `tsconfig.json` has `strict: true`, `checkJs: true`, `target: "ES2022"`, `lib: ["ES2023", "DOM"]`.
+- `src/types.d.ts` defines 15+ typed interfaces with discriminated union enums.
+- All `.js` files are type-checked via `tsc --noEmit` in CI.
+- `@type` JSDoc annotations are used throughout but some are weak (`any`, `unknown`).
+
+### Migration approach: incremental, not big-bang
+
+| Priority | Modules | Rationale |
+| --- | --- | --- |
+| P0 — Convert first | `src/core/store.js`, `src/core/config.js`, `src/core/constants.js`, `src/types.d.ts` | These define the contracts everything else depends on |
+| P0 — Convert next | `src/services/backend.js`, `src/services/supabase.js`, `src/services/auth.js` | External boundaries carry the most type-safety value |
+| P1 — Convert when touched | `src/utils/*`, `src/handlers/*` | Convert during normal feature work |
+| P2 — Convert last | `src/sections/*` | Presentation modules have lowest conversion urgency |
+
+### Rules for the migration
+
+1. New files must be `.ts`.
+2. Files being significantly refactored should be renamed to `.ts` as part of the refactoring.
+3. No `any` casts without a paired comment explaining why.
+4. Domain types in `types.d.ts` (or `.ts`) are the single source of truth.
+5. `tsc --noEmit` must remain a blocking CI step.
+
+---
+
+## Appendix E: External APIs and Integration Matrix
+
+### Active integrations
+
+| Integration | Current use | Client or server | Auth method | Free tier | Risk |
+| --- | --- | --- | --- | --- | --- |
+| Google Apps Script | Primary sync (sheets) | Client fetch | Public Web App URL | Yes | URL hardcoded, rate limits, no transactions, schema drift |
+| Google GIS SDK | OAuth login | Client SDK load | OAuth client ID | Yes | Unpinned CDN version, provider can break silently |
+| Facebook JS SDK | OAuth login | Client SDK load | App ID | Yes | Same CDN risk, GDPR consent concerns |
+| Apple SignIn SDK | OAuth login | Client SDK load | Service ID | Yes | Same CDN risk |
+| Supabase PostgREST | Data sync (partial) | Client fetch | Anon key | 500 MB DB free | Not yet primary, key exposed in client |
+| Supabase Edge Functions | Health check, RSVP email | Client fetch | Function URL | Free tier | Not yet configured in production |
+| Nominatim (OSM) | Address geocoding | Client fetch | None | Yes | Rate limited, no SLA |
+| WhatsApp `wa.me` | Message deep links | Client-side URL | None | Yes | Manual, no delivery tracking |
+
+### Target integration model
+
+| Integration | Target role | Client or server | Timeline |
+| --- | --- | --- | --- |
+| Supabase Auth | Primary identity provider | Server-side (Supabase hosted) | Phase 4 |
+| Supabase Postgres | Primary database | Server-side via PostgREST | Phase 3 |
+| Supabase Realtime | Live collaboration | Client WebSocket | Phase 3 |
+| Supabase Edge Functions | Trusted server-side operations | Server-side | Phase 3 onward |
+| Google Sheets | Optional export/mirror | Server-side Edge Function | Phase 3 |
+| WhatsApp Cloud API | Optional automated messaging | Server-side Edge Function | Phase 7 |
+| Email provider (Resend, etc.) | RSVP confirmations | Server-side Edge Function | Phase 7 |
+| Client-loaded OAuth SDKs | Remove | Not applicable | Phase 4 |
+
+### Integration safety rules
+
+1. Never expose service-role keys in client code.
+2. Every integration must have a health check callable from the admin dashboard.
+3. Every integration must degrade gracefully when unavailable.
+4. API credentials should be environment variables, not hardcoded config.
+5. Rate-limited APIs must have client-side backoff and queue discipline.
+
+---
+
+## Appendix F: Infrastructure and Deployment
+
+### Current deployment
+
+| Component | Platform | Cost |
+| --- | --- | --- |
+| Static hosting | GitHub Pages via `deploy.yml` | $0 |
+| CI/CD | GitHub Actions (6 jobs) | $0 (free tier) |
+| Database | Not yet deployed (Supabase free tier planned) | $0 |
+| CDN | GitHub Pages built-in | Included |
+| DNS | GitHub Pages default domain | $0 |
+| Secrets | GitHub Actions secrets for OAuth IDs and Sheets URLs | Included |
+
+### Current CI pipeline
+
+```text
+push to main
+  -> lint-and-test (Node 22 + 24 matrix)
+       -> lint:html, lint:css, lint:js, lint:md
+       -> tsc --noEmit (type check)
+       -> validate (action registry)
+       -> validate:i18n (locale parity)
+       -> vitest run (1957 tests)
+       -> vite build
+       -> coverage report (Node 22 only)
+  -> security-scan
+       -> npm audit
+       -> grep for eval, innerHTML, document.write, javascript: URIs
+       -> check for inline scripts in index.html
+  -> lighthouse (main branch only)
+  -> size-report (bundle budget: 50 KB gzip hard limit)
+  -> e2e (Chromium only, main branch only)
+```
+
+### Infrastructure improvements by phase
+
+| Phase | Change | Rationale |
+| --- | --- | --- |
+| Phase 0 | No infrastructure changes | Focus on docs accuracy |
+| Phase 2 | Add bundle budget enforcement with explicit size-limit config | Prevent regression |
+| Phase 3 | Provision Supabase project; add `supabase` CLI to CI for migration validation | Database-first development |
+| Phase 3 | Add Supabase local dev setup (`supabase start`) to CONTRIBUTING.md | Reproducible dev environment |
+| Phase 4 | Configure Supabase Auth providers (Google, Facebook, Apple) | Server-side identity |
+| Phase 5 | Review and tighten `_headers` CSP after removing client-loaded OAuth SDKs | Reduced attack surface |
+| Phase 7 | Deploy Edge Functions for messaging (WhatsApp, email) | Server-side trusted operations |
+| Phase 8 | Add error log and health dashboard Edge Functions | Operational visibility |
+
+### Hosting decision tree
+
+Stay on GitHub Pages unless one of these becomes a real blocker:
+
+1. Need for server-side redirects beyond `_headers` capability.
+2. Need for branch preview deployments for PRs.
+3. Need for edge-computed responses (SSR, dynamic OG images).
+4. CDN performance issues for target audience.
+
+If any of these trigger, evaluate Cloudflare Pages first (free, similar model, better header control).
+
+---
+
+## Appendix G: Security Posture Assessment
+
+### Current security controls
+
+| Control | Status | Strength |
+| --- | --- | --- |
+| CSP via `_headers` | Implemented | Good — but overly permissive `connect-src` due to Sheets and OAuth |
+| `X-Frame-Options: DENY` | Implemented | Strong |
+| `X-Content-Type-Options: nosniff` | Implemented | Strong |
+| `Referrer-Policy: strict-origin-when-cross-origin` | Implemented | Adequate |
+| `Permissions-Policy` | Implemented (camera, mic, geo denied) | Good |
+| No `innerHTML` with unsanitized data | Enforced in CI security scan | Strong |
+| No `eval()` | Enforced in CI security scan | Strong |
+| `sanitize(input, schema)` at boundaries | Implemented in code | Good pattern, needs wider adoption |
+| SRI hashing | Build-time generation | Good |
+| Session rotation | Every 2 hours for admin sessions | Adequate |
+
+### Security gaps to close
+
+| Gap | Risk | Fix | Phase |
+| --- | --- | --- | --- |
+| Guest PII in plaintext localStorage/IndexedDB | XSS reads full guest list | Encrypt sensitive fields with Web Crypto AES-GCM or move to server-only access | Phase 5 |
+| OAuth SDKs from unpinned CDNs | Supply chain attack vector | Replace with Supabase Auth (no client SDK loading) | Phase 4 |
+| Supabase anon key in client | Key exposure allows PostgREST access | RLS policies must assume anon key is public; restrict to minimum viable permissions | Phase 4 |
+| Apps Script URL hardcoded | If redeployed, all clients break | Move to server-configurable URL or eliminate Sheets as primary | Phase 3 |
+| No CSP `report-uri` or `report-to` | CSP violations invisible | Add reporting endpoint via Edge Function | Phase 5 |
+| Admin allowlist only in client | Client can be bypassed | Enforce via Supabase RLS `is_admin()` function | Phase 4 |
+| No rate limiting on client-side operations | Abuse potential | Add rate limiting at Edge Function level | Phase 5 |
+
+---
+
+## Appendix H: Data Model Detailed Review
+
+### Guest model gaps
+
+| Field | Issue | Recommendation |
+| --- | --- | --- |
+| `phone` | No format validation at DB level | Add CHECK constraint for E.164 format or allow empty |
+| `accessibility` | String field, no structure | Consider structured options or keep freeform with documented convention |
+| `transport` | String field, no enum | Define transport options if they are finite |
+| `tags` | JSONB array, no validation | Add application-level schema validation |
+| `history` | JSONB array of notes | Consider separate `guest_notes` table for queryability |
+| `gift` | Freeform string | Consider structured `gift_amount` (numeric) + `gift_notes` (text) |
+| Missing: `plus_one_names` | Plus-ones referenced in UI but not in base model | Add structured field or relation |
+| Missing: `dietary_allergies` | Separate from meal preference | Add dedicated field or merge into `mealNotes` convention |
+
+### Table model gaps
+
+| Field | Issue | Recommendation |
+| --- | --- | --- |
+| No `zone` or `location` | Tables have no spatial metadata | Add optional zone/area field for venue mapping |
+| No `assignment_priority` | Smart assign uses hardcoded rules | Add configurable priority field |
+
+### Vendor model gaps
+
+| Field | Issue | Recommendation |
+| --- | --- | --- |
+| `category` | Freeform string | Define enum or allow custom with suggested defaults |
+| No `status` field | No way to mark vendor as confirmed, pending, cancelled | Add status enum |
+| No `payment_schedule` | Single `paid` field insufficient for installments | Consider `vendor_payments` relation table |
+
+### Cross-model consistency
+
+- All models should use the same timestamp format (ISO 8601 / TIMESTAMPTZ).
+- All models should have `created_at` and `updated_at` managed by database triggers.
+- ID generation should be consistent: currently client-generated UUIDs via `uid()`.
+- Consider server-generated UUIDs for Supabase-primary tables using `gen_random_uuid()`.
+
+---
+
+## Final Direction
+
+The right next move is not a glamorous rewrite. It is a deliberate consolidation.
+
+The project already proved that a zero-runtime-dependency wedding app can be ambitious. The next step is proving it can also be operationally mature, secure, typed where it matters, and clear about its system boundaries.
+
+If we execute this roadmap in order, the application will stop feeling like a very good side project and start behaving like a disciplined product platform.
