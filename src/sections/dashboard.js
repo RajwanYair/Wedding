@@ -25,7 +25,7 @@ let _countdownTimer = null;
  * Wires store subscriptions and renders initial state.
  * @param {HTMLElement} _container
  */
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("guests", renderDashboard));
   _unsubs.push(storeSubscribe("tables", renderDashboard));
   _unsubs.push(storeSubscribe("vendors", renderDashboard)); // S17.5 budget alert
@@ -231,7 +231,7 @@ function _clearLiveCountdown() {
 
 // ── Private helpers ───────────────────────────────────────────────────────
 
-function _setText(id, value) {
+function _setText(/** @type {string} */ id, /** @type {string|number} */ value) {
   const domEl = el[id] ?? document.getElementById(id);
   if (domEl) domEl.textContent = String(value);
 }
@@ -254,7 +254,7 @@ function _animateStat(el) {
   if (!target || !Number.isFinite(target)) return;
   const duration = 600;
   const start = performance.now();
-  const step = (now) => {
+  const step = (/** @type {DOMHighResTimeStamp} */ now) => {
     const progress = Math.min((now - start) / duration, 1);
     // Ease-out cubic
     const eased = 1 - (1 - progress) ** 3;
@@ -555,7 +555,7 @@ export function renderActivityFeed() {
     container.textContent = t("activity_none");
     return;
   }
-  const icons = { guests: "👤", vendors: "🏢", tables: "🪑", expenses: "💸" };
+  const icons = /** @type {Record<string, string>} */ ({ guests: "👤", vendors: "🏢", tables: "🪑", expenses: "💸" });
   feed.slice(0, 10).forEach((entry) => {
     const row = document.createElement("div");
     row.className = "activity-feed-item";

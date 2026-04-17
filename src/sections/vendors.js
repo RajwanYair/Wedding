@@ -15,7 +15,7 @@ import { cleanPhone } from "../utils/phone.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("vendors", renderVendors));
   _unsubs.push(storeSubscribe("vendors", renderOverdueChip)); // S23.5
   renderVendors();
@@ -238,7 +238,7 @@ export function openVendorForEdit(id) {
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
   const v = vendors.find((vnd) => vnd.id === id);
   if (!v) return;
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
     const input = /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
       document.getElementById(elId)
     );

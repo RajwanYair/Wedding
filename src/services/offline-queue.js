@@ -105,6 +105,7 @@ export function flushOfflineQueue() {
     }
 
     const item = pending.shift();
+    if (!item) { next(); return; }
     _postFn(item.payload)
       .then(() => { _sent++; next(); })
       .catch(() => { failed.push(item); next(); });

@@ -28,7 +28,7 @@ let _cameraStream = null;
 /** @type {number|null} */
 let _scanIntervalId = null;
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("guests", renderCheckin));
   renderCheckin();
 }
@@ -374,7 +374,7 @@ let _audioCtx = null;
  */
 function _playCheckinSound() {
   try {
-    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || /** @type {any} */ (window).webkitAudioContext)();
     const osc = _audioCtx.createOscillator();
     const gain = _audioCtx.createGain();
     osc.connect(gain);

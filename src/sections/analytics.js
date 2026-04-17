@@ -11,7 +11,7 @@ import { t, currentLang } from "../core/i18n.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("guests", renderAnalytics));
   _unsubs.push(storeSubscribe("guests", renderSeatingMap));
   _unsubs.push(storeSubscribe("expenses", renderBudgetChart));
@@ -760,7 +760,7 @@ export function exportAnalyticsPDF() {
   const brideSide = guests.filter((g) => g.side === "bride").length;
 
   // Meal breakdown
-  const meals = {};
+  const meals = /** @type {Record<string, number>} */ ({});
   guests.forEach((g) => {
     const m = g.meal || "regular";
     meals[m] = (meals[m] || 0) + 1;
@@ -887,11 +887,16 @@ export function exportAnalyticsCSV() {
 // ── SVG escape helper ────────────────────────────────────────────────────
 
 /** @param {string} s */
+/** Escape SVG special characters.
+ * @param {string} s
+ */
 function _escSvg(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-/** Escape HTML special characters for safe insertion into generated HTML. */
+/** Escape HTML special characters for safe insertion into generated HTML.
+ * @param {string} s
+ */
 function _escHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -1134,7 +1139,7 @@ export function printDietaryCards() {
   tables.forEach((tb) => {
     const seated = guests.filter((g) => g.tableId === tb.id);
     if (seated.length === 0) return;
-    const mealCounts = {};
+    const mealCounts = /** @type {Record<string, number>} */ ({});
     seated.forEach((g) => {
       const m = g.meal || "regular";
       mealCounts[m] = (mealCounts[m] || 0) + (g.count || 1);
@@ -1434,7 +1439,7 @@ export function renderTagBreakdown() {
   const tagCounts = new Map();
   guests.forEach((g) => {
     const tags = Array.isArray(g.tags) ? g.tags : [];
-    tags.forEach((tag) => {
+    tags.forEach((/** @type {string} */ tag) => {
       const normalized = String(tag || "").trim();
       if (normalized) tagCounts.set(normalized, (tagCounts.get(normalized) ?? 0) + 1);
     });
@@ -1612,7 +1617,7 @@ function renderBudgetBurndown() {
   let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${t("budget_burndown_title")}"><title>${t("budget_burndown_title")}</title>`;
   // Target line
   svg += `<line x1="${pad}" y1="${tgtY.toFixed(1)}" x2="${w - pad}" y2="${tgtY.toFixed(1)}" stroke="var(--danger)" stroke-dasharray="4 2" stroke-width="1"/>`;
-  svg += `<text x="${w - pad}" y="${tgtY.toFixed(1) - 3}" text-anchor="end" font-size="7" fill="var(--danger)">${_escSvg(t("budget_target") || "Target")}</text>`;
+  svg += `<text x="${w - pad}" y="${(tgtY - 3).toFixed(1)}" text-anchor="end" font-size="7" fill="var(--danger)">${_escSvg(t("budget_target") || "Target")}</text>`;
   // Cumulative line
   svg += `<path d="${pathParts.join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
   // Axis labels
@@ -1656,8 +1661,8 @@ function renderSeatingScore() {
     if (tblGuests.length < 2) continue;
     tableCount++;
     // Side coherence: fraction of majority side
-    const sides = {};
-    const groups = {};
+    const sides = /** @type {Record<string, number>} */ ({});
+    const groups = /** @type {Record<string, number>} */ ({});
     for (const g of tblGuests) {
       sides[g.side || "mutual"] = (sides[g.side || "mutual"] || 0) + 1;
       groups[g.group || "other"] = (groups[g.group || "other"] || 0) + 1;
@@ -1704,7 +1709,7 @@ function renderSeatingScore() {
 export function computeResponseVelocity() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const dated = guests.filter((g) => g.rsvpDate);
-  const buckets = {};
+  const buckets = /** @type {Record<string, number>} */ ({});
   for (const g of dated) {
     const day = g.rsvpDate.slice(0, 10);
     buckets[day] = (buckets[day] || 0) + 1;
@@ -1724,7 +1729,7 @@ export function getMealDistribution() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const confirmed = guests.filter((g) => g.status === "confirmed");
   const total = confirmed.length || 1;
-  const counts = {};
+  const counts = /** @type {Record<string, number>} */ ({});
   for (const g of confirmed) {
     const m = g.meal || "regular";
     counts[m] = (counts[m] || 0) + 1;
@@ -1762,7 +1767,7 @@ export function getSideBalance() {
 export function getCheckinVelocity() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const checkedIn = guests.filter((g) => g.checkedIn && g.checkedInAt);
-  const slots = {};
+  const slots = /** @type {Record<string, number>} */ ({});
   for (const g of checkedIn) {
     const d = new Date(g.checkedInAt);
     const hh = String(d.getHours()).padStart(2, "0");

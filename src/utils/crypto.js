@@ -31,7 +31,7 @@ async function _deriveKey(passphrase, salt) {
     ["deriveKey"],
   );
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
+    { name: "PBKDF2", salt: /** @type {BufferSource} */ (salt), iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
     keyMaterial,
     { name: ALGO, length: KEY_LENGTH },
     false,

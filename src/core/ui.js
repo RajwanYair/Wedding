@@ -70,11 +70,12 @@ export function showToast(message, type = "info", duration = _TOAST_DURATION) {
 
 let _modalOpener = /** @type {HTMLElement | null} */ (null);
 
-/** @type {Record<string, () => Promise<{ default: string }>>} */
-const _modalGlob = import.meta.glob("../modals/*.html", {
-  query: "?raw",
-  eager: false,
-});
+const _modalGlob = /** @type {Record<string, () => Promise<{ default: string }>>} */ (
+  import.meta.glob("../modals/*.html", {
+    query: "?raw",
+    eager: false,
+  })
+);
 
 /** @type {Map<string, () => Promise<{ default: string }>>} */
 const _modalLoaders = new Map();

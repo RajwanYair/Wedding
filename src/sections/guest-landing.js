@@ -12,7 +12,7 @@ import { formatDateHebrew } from "../utils/date.js";
 /** @type {HTMLElement|null} */
 let _container = null;
 
-export function mount(container) {
+export function mount(/** @type {HTMLElement} */ container) {
   _container = container;
   _renderFromHash();
 }

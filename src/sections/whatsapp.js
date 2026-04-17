@@ -20,7 +20,7 @@ let _unsentOnly = false;
 /** @type {boolean} — S23.1: show only declined guests for follow-up */
 let _declinedOnly = false;
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("guests", renderWhatsApp));
   _unsubs.push(storeSubscribe("weddingInfo", renderWhatsApp));
   renderWhatsApp();
@@ -150,8 +150,8 @@ export function getWhatsAppLink(guestId) {
  *
  * Placeholder tokens: {name}, {date}, {venue}, {groom}, {bride}
  *
- * @param {string} guestId  — id of the guest
- * @param {string} [template]  — optional custom template; defaults to wa_default_template
+ * @param {string} guestId  - id of the guest
+ * @param {string} [template]  - optional custom template; defaults to wa_default_template
  * @returns {{ message: string, link: string } | null}
  */
 export function buildWhatsAppMessage(guestId, template) {
@@ -170,7 +170,7 @@ export function buildWhatsAppMessage(guestId, template) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
-function _interpolate(template, guest, info) {
+function _interpolate(/** @type {string} */ template, /** @type {any} */ guest, /** @type {Record<string,string>} */ info) {
   const baseUrl = window.location.origin + window.location.pathname;
   const rsvpLink = `${baseUrl}?guestId=${encodeURIComponent(guest.id)}#rsvp`;
   return template
@@ -183,7 +183,7 @@ function _interpolate(template, guest, info) {
     .replace(/\{rsvpLink\}/g, rsvpLink);
 }
 
-function _defaultTemplate(info) {
+function _defaultTemplate(/** @type {Record<string,string>} */ info) {
   return t("wa_default_template")
     .replace(/\{date\}/g, info.date || "")
     .replace(/\{venue\}/g, info.venue || "")
@@ -668,7 +668,7 @@ export async function sendThankYouViaApi() {
  * @param {'invitation'|'reminder'|'thankyou'} templateType
  * @returns {string|null}  mailto: URI or null if no email
  */
-export function generateMailtoLink(guest, templateType = "invitation") {
+export function generateMailtoLink(/** @type {any} */ guest, templateType = "invitation") {
   if (!guest.email) return null;
 
   const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});

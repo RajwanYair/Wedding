@@ -5,7 +5,7 @@
  * No runtime dependencies. No window.* side effects.
  */
 
-/** @typedef {{ type: 'string'|'number'|'boolean'|'phone'|'email'|'url', max?: number, min?: number, required?: boolean }} SanitizeField */
+/** @typedef {{ type: string, max?: number, maxLength?: number, min?: number, required?: boolean, values?: string[], default?: unknown }} SanitizeField */
 
 const _PHONE_RE = /^[0-9]{9,15}$/;
 const _EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,253}$/;

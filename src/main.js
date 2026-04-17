@@ -78,16 +78,18 @@ import {
 } from "./services/sheets.js";
 
 // ── Section modules (lazy-loaded via import.meta.glob) ────────────────────
-/** @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>} */
-const _sectionLoaders = import.meta.glob("./sections/*.js");
+const _sectionLoaders = /** @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>} */ (
+  import.meta.glob("./sections/*.js")
+);
 
 /**
  * Build a section-name → loader mapping from Vite glob.
  * e.g. "./sections/dashboard.js" → "dashboard"
  * Aliases handle filename-to-section-ID mismatches (e.g. contact-collector → contact-form).
- * @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>}
  */
+/** @type {Record<string, string>} */
 const _SECTION_ALIASES = { "contact-collector": "contact-form" };
+/** @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>} */
 const _sectionByName = Object.fromEntries(
   Object.entries(_sectionLoaders).map(([path, loader]) => {
     const raw = path.replace("./sections/", "").replace(".js", "");
@@ -128,7 +130,7 @@ import { initQueueMonitor } from "./sections/settings.js";
 import { popUndo } from "./utils/undo.js";
 
 // ── Default data + store definitions (extracted to core/defaults.js in v6.0-S5) ──
-import { buildStoreDefs } from "./core/defaults.js";
+import { buildStoreDefs, defaultWeddingInfo } from "./core/defaults.js";
 
 /** @type {string|null} currently mounted section name */
 let _activeSection = null;
@@ -142,7 +144,7 @@ let _activeSection = null;
   initErrorMonitor();
 
   // 1. Language
-  const lang = load("lang", "he") === "en" ? "en" : "he";
+  const lang = /** @type {"he"|"en"|"ar"|"ru"} */ (load("lang", "he") ?? "he");
   await loadLocale(lang);
 
   // 2. Apply i18n bindings
@@ -166,7 +168,7 @@ let _activeSection = null;
     const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
     if (!info.groom) {
       storeSet("weddingInfo", {
-        ..._defaultWeddingInfo,
+        ...defaultWeddingInfo,
         groom: "אליאור",
         bride: "טובה",
         groomEn: "Elior",
@@ -186,7 +188,7 @@ let _activeSection = null;
   restoreTheme();
 
   // 4a. Populate shared header with wedding info for all users (including guests)
-  const _dashMod = await _resolveSection("dashboard");
+  const _dashMod = /** @type {any} */ (await _resolveSection("dashboard"));
   _dashMod?.updateTopBar?.();
   _dashMod?.updateCountdown?.();
 
@@ -315,10 +317,6 @@ let _activeSection = null;
   const secondaryLocale = lang === "he" ? "en" : "he";
   preloadLocale(secondaryLocale);
 
-  // v6.0-S5 — Preload secondary locale on idle
-  const secondaryLocale = lang === "he" ? "en" : "he";
-  preloadLocale(secondaryLocale);
-
   // Sprint 9: Performance timing end
   performance.mark("bootstrap-end");
   performance.measure("bootstrap", "bootstrap-start", "bootstrap-end");
@@ -359,7 +357,7 @@ async function _doSwitchEvent(eventId) {
   setActiveEvent(eventId);
   reinitStore(buildStoreDefs());
   // refresh UI
-  const dash = await _resolveSection("dashboard");
+  const dash = /** @type {any} */ (await _resolveSection("dashboard"));
   dash?.updateTopBar?.();
   dash?.updateCountdown?.();
   _renderEventSwitcher();
@@ -389,7 +387,7 @@ async function _doDeleteEvent() {
     showToast(t("event_cannot_delete_default"));
     return;
   }
-  const ok = await showConfirmDialog(t("event_delete_confirm"));
+  const ok = showConfirmDialog(t("event_delete_confirm"), () => {});
   if (!ok) return;
   clearEventData(eid);
   removeEvent(eid);
@@ -434,9 +432,9 @@ function _registerHandlers() {
     const fb = /** @type {any} */ (window).FB;
     if (!fb) return;
     fb.login(
-      (response) => {
+      (/** @type {any} */ response) => {
         if (response.authResponse) {
-          fb.api("/me", { fields: "name,email,picture" }, (profile) => {
+          fb.api("/me", { fields: "name,email,picture" }, (/** @type {any} */ profile) => {
             const result = loginOAuth(
               profile.email || "",
               profile.name,
@@ -459,7 +457,7 @@ function _registerHandlers() {
     if (!AppleID) return;
     AppleID.auth
       .signIn()
-      .then((response) => {
+      .then((/** @type {any} */ response) => {
         const email = response?.user?.email ?? "";
         const name =
           `${response?.user?.name?.firstName ?? ""} ${response?.user?.name?.lastName ?? ""}`.trim();

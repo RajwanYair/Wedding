@@ -17,7 +17,7 @@ const _unsubs = [];
 /** @type {string} active expense category filter; "all" means no filter */
 let _expenseCatFilter = "all";
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("expenses", renderExpenses));
   renderExpenses();
 }
@@ -206,7 +206,7 @@ export function openExpenseForEdit(id) {
   const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
   const exp = expenses.find((e) => e.id === id);
   if (!exp) return;
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
     const input = /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
       document.getElementById(elId)
     );

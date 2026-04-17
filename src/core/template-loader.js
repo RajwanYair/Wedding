@@ -23,12 +23,12 @@ import { applyI18n } from "./i18n.js";
  * Auto-discovered template loaders via import.meta.glob (F1.4).
  * Vite resolves all *.html files in src/templates/ at build time.
  * Filenames are mapped to section names (e.g. "guests.html" → "guests").
- * @type {Record<string, () => Promise<{ default: string }>>}
  */
-const _rawGlob = import.meta.glob("../templates/*.html", {
+const _rawGlob = /** @type {Record<string, () => Promise<{ default: string }>>} */ (
+  import.meta.glob("../templates/*.html", {
   query: "?raw",
   eager: false,
-});
+}));
 
 /** @type {Map<string, () => Promise<{ default: string }>>} */
 const _loaders = new Map();

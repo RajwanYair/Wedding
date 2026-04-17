@@ -37,7 +37,7 @@ export function onSyncStatus(fn) {
   _onStatusChange = fn;
 }
 
-function _setStatus(s) {
+function _setStatus(/** @type {'idle'|'syncing'|'synced'|'error'} */ s) {
   _syncStatus = s;
   _onStatusChange?.(s);
 }
@@ -66,6 +66,7 @@ export function enqueueWrite(key, syncFn) {
 /** @type {Map<string, number>} track retry count per key */
 const _retryCount = new Map();
 
+/** @param {string} key */
 async function _flush(key) {
   const entry = _queue.get(key);
   if (!entry) return;

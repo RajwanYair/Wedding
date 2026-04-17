@@ -21,7 +21,7 @@ const _unsubs = [];
 /**
  * @param {HTMLElement} _container
  */
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("tables", renderTables));
   _unsubs.push(storeSubscribe("guests", renderTables));
   renderTables();
@@ -267,7 +267,7 @@ export function renderTables() {
 }
 
 /** Show/hide overbooking warning banner */
-function _renderOverbookingBanner(tables, guests) {
+function _renderOverbookingBanner(/** @type {any[]} */ tables, /** @type {any[]} */ guests) {
   let bannerEl = document.getElementById("overbookingBanner");
   if (!bannerEl) {
     bannerEl = document.createElement("div");
@@ -363,7 +363,7 @@ function _renderTransportManifest(guests) {
   withTransport.forEach((g) => {
     const route = g.transport;
     if (!routes.has(route)) routes.set(route, []);
-    routes.get(route).push(g);
+    routes.get(route)?.push(g);
   });
 
   routes.forEach((passengers, route) => {
@@ -458,11 +458,14 @@ export function printSeatingChart() {
 
 /**
  * Trigger browser print for place cards.
+ * @param {string} [tableId]  - optional table ID filter; if supplied, sets a data attribute for print CSS
  */
-export function printPlaceCards() {
+export function printPlaceCards(tableId = "") {
+  if (tableId) document.body.dataset.printTable = tableId;
   document.body.classList.add("print-place-cards");
   window.print();
   document.body.classList.remove("print-place-cards");
+  if (tableId) delete document.body.dataset.printTable;
 }
 
 /**
@@ -517,7 +520,7 @@ export function openTableForEdit(id) {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const tb = tables.find((t) => t.id === id);
   if (!tb) return;
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
     const input = /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
       document.getElementById(elId)
     );
@@ -581,7 +584,7 @@ export function smartAutoAssign() {
   unassigned.forEach((g) => {
     const key = `${g.side || "mutual"}_${g.group || "friends"}`;
     if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(g);
+    groups.get(key)?.push(g);
   });
 
   let assigned = 0;
@@ -721,11 +724,11 @@ export function suggestTableAssignments() {
 
 // ── Sprint 5: Dietary Icons Helper ───────────────────────────────────────
 
-const MEAL_ICONS = { vegetarian: "🥬", vegan: "🌱", gluten_free: "🚫🌾", kosher: "✡️" };
+const MEAL_ICONS = /** @type {Record<string, string>} */ ({ vegetarian: "🥬", vegan: "🌱", gluten_free: "🚫🌾", kosher: "✡️" });
 
 /** @param {any[]} tableGuests @returns {HTMLElement|null} */
 function _buildDietaryIcons(tableGuests) {
-  const counts = {};
+  const counts = /** @type {Record<string, number>} */ ({});
   for (const g of tableGuests) {
     const m = g.meal || "regular";
     if (m === "regular") continue;

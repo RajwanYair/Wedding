@@ -93,7 +93,7 @@ export function registerSettingsHandlers(ctx) {
 
   // ── Conflict resolution ──
   on("conflictAcceptAllLocal", () => {
-    closeModal();
+    closeModal("conflictModal");
     showToast(t("conflict_kept_local"), "info");
   });
   on("conflictAcceptAllRemote", () => {
@@ -101,7 +101,7 @@ export function registerSettingsHandlers(ctx) {
     if (pending.length > 0) {
       ctx.applyConflictResolutions(pending.map(() => "remote"));
     }
-    closeModal();
+    closeModal("conflictModal");
   });
   on("conflictApplySelected", () => {
     const list = document.getElementById("conflictList");
@@ -112,7 +112,7 @@ export function registerSettingsHandlers(ctx) {
       choices.push(/** @type {HTMLInputElement} */ (r).value),
     );
     ctx.applyConflictResolutions(choices);
-    closeModal();
+    closeModal("conflictModal");
     showToast(t("conflict_resolved"), "success");
   });
 
@@ -174,11 +174,8 @@ export function registerSettingsHandlers(ctx) {
   });
 
   // ── Settings / Misc ──
-  on("saveTransportSettings", (_el, e) => {
-    const form = /** @type {HTMLFormElement|null} */ (
-      /** @type {HTMLElement} */ (e.target).closest("form")
-    );
-    saveTransportSettings(form);
+  on("saveTransportSettings", () => {
+    saveTransportSettings();
     showToast(t("settings_saved"), "success");
   });
   on("addRegistryLink", () => {
@@ -201,19 +198,28 @@ export function registerSettingsHandlers(ctx) {
   on("addApprovedEmail", () => addApprovedEmail());
   on("clearAllData", () => clearAllData());
   on("switchLanguage", async () => {
-    const current = load("lang", "he");
+    const current = /** @type {string} */ (load("lang", "he") ?? "he");
     const order = ["he", "en", "ar", "ru"];
     const idx = order.indexOf(current);
-    const next = order[(idx + 1) % order.length];
+    const next = /** @type {"he"|"en"|"ar"|"ru"} */ (
+      order[(idx + 1) % order.length]
+    );
     await switchLanguage(next);
     showToast(t("language_switched"), "info");
   });
   on("toggleLanguage", async () => {
-    const current = load("lang", "he");
+    const current = /** @type {string} */ (load("lang", "he") ?? "he");
     const order = ["he", "en", "ar", "ru"];
-    const labels = { he: "EN", en: "\u0639\u0631", ar: "RU", ru: "\u05E2\u05D1" };
+    const labels = /** @type {Record<string, string>} */ ({
+      he: "EN",
+      en: "\u0639\u0631",
+      ar: "RU",
+      ru: "\u05E2\u05D1",
+    });
     const idx = order.indexOf(current);
-    const next = order[(idx + 1) % order.length];
+    const next = /** @type {"he"|"en"|"ar"|"ru"} */ (
+      order[(idx + 1) % order.length]
+    );
     await switchLanguage(next);
     const btn = document.getElementById("btnLang");
     if (btn) btn.textContent = labels[next] ?? "EN";
@@ -236,7 +242,11 @@ export function registerSettingsHandlers(ctx) {
   on("exportDebugReport", () => exportDebugReport());
   on("startAutoBackup", () => {
     const interval =
-      Number(document.getElementById("autoBackupInterval")?.value) || 30;
+      Number(
+        /** @type {HTMLInputElement|null} */ (
+          document.getElementById("autoBackupInterval")
+        )?.value,
+      ) || 30;
     startAutoBackup(interval);
     showToast(t("autobackup_started"), "success");
   });
@@ -267,7 +277,9 @@ export function registerSettingsHandlers(ctx) {
   on("updateWeddingDetails", () => invitationSection.updateWeddingDetails?.());
   on("handleInvitationUpload", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT"
+        ? e.target
+        : null
     );
     if (input) invitationSection.handleInvitationUpload?.(input);
   });

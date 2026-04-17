@@ -61,6 +61,9 @@ export default [
         indexedDB: "readonly",
         IDBDatabase: "readonly",
         IDBRequest: "readonly",
+        TextEncoder: "readonly",
+        TextDecoder: "readonly",
+        crypto: "readonly",
       },
     },
     rules: {

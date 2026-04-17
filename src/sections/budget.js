@@ -14,7 +14,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("budget", renderBudget));
   _unsubs.push(storeSubscribe("guests", renderBudget));
   _unsubs.push(storeSubscribe("weddingInfo", renderBudget));
@@ -150,9 +150,9 @@ export function renderBudget() {
   }
 }
 
-function _statText(id, value) {
+function _statText(/** @type {string} */ id, /** @type {string|number} */ value) {
   const el = document.getElementById(id);
-  if (el) el.textContent = value;
+  if (el) el.textContent = String(value);
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────

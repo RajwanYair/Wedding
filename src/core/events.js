@@ -11,6 +11,7 @@ const _handlers = new Map();
 
 let _initialized = false;
 
+/** @param {Event} e */
 function _dispatch(e) {
   const target = /** @type {HTMLElement} */ (e.target);
   const el = target.closest("[data-action]");

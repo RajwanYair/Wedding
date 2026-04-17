@@ -34,7 +34,7 @@ export function onAuthChange(fn) {
  * @returns {AuthUser | null}
  */
 export function loadSession() {
-  _user = load(SESSION_KEY, null) ?? null;
+  _user = /** @type {any} */ (load(SESSION_KEY, null)) ?? null;
   if (_user && !_user.isAdmin) _user = null; // guest sessions not persisted
   return _user;
 }

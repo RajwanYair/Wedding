@@ -69,7 +69,8 @@ async function _rest(path, opts = {}) {
     Authorization: `Bearer ${key}`,
     "Content-Type": "application/json",
     Prefer: /** @type {string} */ (
-      opts.headers?.["Prefer"] ?? "return=minimal"
+      /** @type {Record<string, string>} */ (opts.headers)?.["Prefer"] ??
+        "return=minimal"
     ),
     ...opts.headers,
   };

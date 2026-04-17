@@ -40,7 +40,7 @@ export async function showConflictModal(conflicts) {
  * @param {string[]} choices
  */
 export function applyConflictResolutions(choices) {
-  const guests = /** @type {any[]} */ ([...(storeGet("guests") ?? [])]);
+  const guests = /** @type {any[]} */ ([...(/** @type {any[]} */ (storeGet("guests") ?? []))]);
   for (let i = 0; i < _pendingConflicts.length; i++) {
     if (choices[i] === "remote") {
       const c = _pendingConflicts[i];

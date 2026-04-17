@@ -10,7 +10,7 @@ import { t } from "../core/i18n.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("weddingInfo", renderRegistry));
   renderRegistry();
 }

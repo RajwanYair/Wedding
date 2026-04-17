@@ -113,7 +113,9 @@ export function registerSectionHandlers() {
   });
   on("lookupRsvpByPhone", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT"
+        ? e.target
+        : null
     );
     if (!input) return;
     const result = lookupRsvpByPhone(input.value);
@@ -149,7 +151,9 @@ export function registerSectionHandlers() {
   );
   on("updateWaPreview", (_triggerEl, e) => {
     const input = /** @type {HTMLTextAreaElement|null} */ (
-      e.target?.tagName === "TEXTAREA" ? e.target : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "TEXTAREA"
+        ? e.target
+        : null
     );
     updateWaPreview(input?.value ?? "");
   });

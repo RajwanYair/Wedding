@@ -14,7 +14,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 /** @type {HTMLElement|null} */
 let _container = null;
 
-export function mount(container) {
+export function mount(/** @type {HTMLElement} */ container) {
   _container = container;
 }
 export function unmount() {

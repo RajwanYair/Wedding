@@ -70,7 +70,8 @@ const _pausedKeys = new Set();
  */
 export function storeSubscribe(key, fn) {
   if (!_subs.has(key)) _subs.set(key, new Set());
-  _subs.get(key).add(fn);
+  const _sub = /** @type {Set<Function>} */ (_subs.get(key));
+  _sub.add(fn);
   return () => _subs.get(key)?.delete(fn);
 }
 
@@ -87,7 +88,7 @@ export function storeSubscribe(key, fn) {
 export function storeSubscribeScoped(key, fn, scope) {
   const unsub = storeSubscribe(key, fn);
   if (!_scopedUnsubs.has(scope)) _scopedUnsubs.set(scope, new Set());
-  _scopedUnsubs.get(scope).add(unsub);
+  /** @type {Set<() => void>} */ (_scopedUnsubs.get(scope)).add(unsub);
   return unsub;
 }
 
@@ -105,6 +106,9 @@ export function cleanupScope(scope) {
   }
 }
 
+/**
+ * @param {string} key
+ */
 function _scheduleNotify(key) {
   // If notifications are paused (inside batch or manual pause), collect keys
   if (_pauseDepth > 0) {
@@ -130,7 +134,7 @@ function _scheduleNotify(key) {
       });
     });
   }
-  _notifyBatch.add(key);
+  /** @type {Set<string>} */ (_notifyBatch).add(key);
 }
 
 /**
@@ -158,6 +162,7 @@ export function onStorageError(fn) {
   _onStorageError = fn;
 }
 
+/** @param {string} key */
 function _scheduleSave(key) {
   if (_persistMap.has(key)) _dirty.add(key);
   if (_saveTimer !== null) clearTimeout(_saveTimer);

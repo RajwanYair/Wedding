@@ -100,7 +100,9 @@ export function registerGuestHandlers() {
 
   on("searchGuests", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT"
+        ? e.target
+        : null
     );
     setSearchQuery(input?.value ?? "");
   });

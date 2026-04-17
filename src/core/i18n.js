@@ -97,7 +97,7 @@ export function t(key, paramsOrFallback, fallback) {
   const isParams = paramsOrFallback !== null && typeof paramsOrFallback === "object";
   const fb = isParams ? fallback : /** @type {string|undefined} */ (paramsOrFallback);
   // Check plugin i18n overrides first, then main dict
-  const pluginDict = globalThis.__pluginI18n?.[_lang];
+  const pluginDict = /** @type {any} */ (globalThis).__pluginI18n?.[_lang];
   const template = _dict[key] ?? pluginDict?.[key] ?? fb ?? key;
   return isParams ? formatMessage(template, paramsOrFallback) : template;
 }

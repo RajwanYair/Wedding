@@ -20,7 +20,7 @@ const _unsubs = [];
 /**
  * @param {HTMLElement} _container
  */
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("weddingInfo", populateSettings));
   populateSettings();
   // Auto-generate QR code when settings section opens
@@ -305,7 +305,7 @@ export function saveBackendType() {
  * Reads directly from named input elements (no form wrapper required).
  */
 export function saveTransportSettings() {
-  const _getVal = (id) =>
+  const _getVal = (/** @type {string} */ id) =>
     /** @type {HTMLInputElement|null} */ (
       document.getElementById(id)
     )?.value?.trim() ?? "";
@@ -488,7 +488,8 @@ export function initQueueMonitor() {
   _renderQueueBadge();
   // Register status listener (replaces previous)
   _queueMonitorUnreg?.();
-  _queueMonitorUnreg = onSyncStatus(_renderQueueBadge) || null;
+  _queueMonitorUnreg = null;
+  onSyncStatus(_renderQueueBadge);
 }
 
 /** Render the pending-writes badge + F2.4.3 progress bar */
@@ -539,11 +540,11 @@ function _renderQueueBadge() {
  */
 export async function exportAllCSV() {
   const sections = [
-    { key: "guests", header: "ID,First,Last,Phone,Status,Count,Children,Side,Group,Meal", fields: (g) => `${g.id},${g.firstName},${g.lastName || ""},${g.phone || ""},${g.status},${g.count || 1},${g.children || 0},${g.side || ""},${g.group || ""},${g.meal || ""}` },
-    { key: "vendors", header: "ID,Category,Name,Contact,Phone,Price,Paid,Notes,DueDate", fields: (v) => `${v.id},"${(v.category || "").replace(/"/g, '""')}","${(v.name || "").replace(/"/g, '""')}",${v.contact || ""},${v.phone || ""},${v.price || 0},${v.paid || 0},"${(v.notes || "").replace(/"/g, '""')}",${v.dueDate || ""}` },
-    { key: "expenses", header: "ID,Category,Amount,Description,Date", fields: (ex) => `${ex.id},"${(ex.category || "").replace(/"/g, '""')}",${ex.amount || 0},"${(ex.description || "").replace(/"/g, '""')}",${ex.date || ""}` },
-    { key: "timeline", header: "Time,Title,Note", fields: (t) => `${t.time || ""},"${(t.title || "").replace(/"/g, '""')}","${(t.note || "").replace(/"/g, '""')}"` },
-    { key: "contacts", header: "Name,Phone,Email,SubmittedAt", fields: (c) => `"${`${c.firstName || ""} ${c.lastName || ""}`.trim().replace(/"/g, '""')}",${c.phone || ""},${c.email || ""},${c.submittedAt || ""}` },
+    { key: "guests", header: "ID,First,Last,Phone,Status,Count,Children,Side,Group,Meal", fields: (/** @type {any} */ g) => `${g.id},${g.firstName},${g.lastName || ""},${g.phone || ""},${g.status},${g.count || 1},${g.children || 0},${g.side || ""},${g.group || ""},${g.meal || ""}` },
+    { key: "vendors", header: "ID,Category,Name,Contact,Phone,Price,Paid,Notes,DueDate", fields: (/** @type {any} */ v) => `${v.id},"${(v.category || "").replace(/"/g, '""')}","${(v.name || "").replace(/"/g, '""')}",${v.contact || ""},${v.phone || ""},${v.price || 0},${v.paid || 0},"${(v.notes || "").replace(/"/g, '""')}",${v.dueDate || ""}` },
+    { key: "expenses", header: "ID,Category,Amount,Description,Date", fields: (/** @type {any} */ ex) => `${ex.id},"${(ex.category || "").replace(/"/g, '""')}",${ex.amount || 0},"${(ex.description || "").replace(/"/g, '""')}",${ex.date || ""}` },
+    { key: "timeline", header: "Time,Title,Note", fields: (/** @type {any} */ t) => `${t.time || ""},"${(t.title || "").replace(/"/g, '""')}","${(t.note || "").replace(/"/g, '""')}"` },
+    { key: "contacts", header: "Name,Phone,Email,SubmittedAt", fields: (/** @type {any} */ c) => `"${`${c.firstName || ""} ${c.lastName || ""}`.trim().replace(/"/g, '""')}",${c.phone || ""},${c.email || ""},${c.submittedAt || ""}` },
   ];
   for (const { key, header, fields } of sections) {
     const items = /** @type {any[]} */ (storeGet(key) ?? []);

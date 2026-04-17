@@ -38,7 +38,7 @@ let _searchQuery = "";
  * Mount the guests section.
  * @param {HTMLElement} _container
  */
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("guests", renderGuests));
   renderGuests();
 }
@@ -294,7 +294,7 @@ export function renderGuests() {
       }
       // S14.5 — Show tags in name cell
       if (ci === 0 && Array.isArray(g.tags) && g.tags.length > 0) {
-        g.tags.forEach((tag) => {
+        g.tags.forEach((/** @type {string} */ tag) => {
           const badge = document.createElement("span");
           badge.className = "badge badge--tag";
           badge.textContent = tag;
@@ -323,7 +323,7 @@ export function renderGuests() {
       const srcBadge = document.createElement("span");
       srcBadge.className = "badge badge--info u-mr-xs";
       srcBadge.title = t("label_rsvp_source");
-      const srcIcons = { web: "🌐", whatsapp: "💬", phone: "📞", other: "❓" };
+      const srcIcons = /** @type {Record<string, string>} */ ({ web: "🌐", whatsapp: "💬", phone: "📞", other: "❓" });
       srcBadge.textContent = srcIcons[g.rsvpSource] ?? "❓";
       actionsTd.appendChild(srcBadge);
     }
@@ -406,7 +406,7 @@ export function exportGuestsCsv() {
 }
 
 /** @returns {boolean} */
-export function isValidGuestPhone(phone) {
+export function isValidGuestPhone(/** @type {string} */ phone) {
   return isValidPhone(phone);
 }
 
@@ -456,7 +456,7 @@ export function printGuestsByTable() {
   for (const g of allGuests) {
     const key = g.tableId ?? null;
     if (!byTable.has(key)) byTable.set(key, []);
-    byTable.get(key).push(g);
+    byTable.get(key)?.push(g);
   }
 
   const esc = (/** @type {string} */ s) => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -546,7 +546,7 @@ export function importGuestsCSV(fileInput) {
         if (!header) return;
 
         const cols = header.split(",").map((c) => c.trim().toLowerCase());
-        const colIdx = (name) => cols.indexOf(name);
+        const colIdx = (/** @type {string} */ name) => cols.indexOf(name);
 
         const existing = /** @type {any[]} */ (storeGet("guests") ?? []);
         let added = 0;
@@ -554,7 +554,7 @@ export function importGuestsCSV(fileInput) {
 
         rows.forEach((line) => {
           const parts = line.split(",");
-          const get = (name) => parts[colIdx(name)]?.trim() ?? "";
+          const get = (/** @type {string} */ name) => parts[colIdx(name)]?.trim() ?? "";
           const phone = cleanPhone(get("phone") || get("טלפון") || "");
           if (!phone) return; // phone is required
 
@@ -626,7 +626,7 @@ export function openGuestForEdit(id) {
   const g = guests.find((guest) => guest.id === id);
   if (!g) return;
 
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
     const input =
       /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
         document.getElementById(elId)
@@ -790,7 +790,7 @@ export function getDuplicateGuests() {
     const key = g.phone.replace(/\D/g, "");
     if (!key) continue;
     if (!byPhone.has(key)) byPhone.set(key, []);
-    byPhone.get(key).push(g);
+    byPhone.get(key)?.push(g);
   }
   for (const [, group] of byPhone) {
     if (group.length > 1) dupes.push({ guests: group, reason: "phone" });
@@ -803,7 +803,7 @@ export function getDuplicateGuests() {
     const name = `${g.firstName || ""} ${g.lastName || ""}`.trim().toLowerCase();
     if (!name) continue;
     if (!byName.has(name)) byName.set(name, []);
-    byName.get(name).push(g);
+    byName.get(name)?.push(g);
   }
   for (const [, group] of byName) {
     if (group.length > 1) dupes.push({ guests: group, reason: "name" });
@@ -1139,7 +1139,7 @@ export function renderGuestHistory(guestId) {
     container.appendChild(p);
     return;
   }
-  history.slice().reverse().forEach((entry) => {
+  history.slice().reverse().forEach((/** @type {any} */ entry) => {
     const div = document.createElement("div");
     div.className = "guest-note-entry";
     const time = document.createElement("span");
@@ -1166,7 +1166,7 @@ const _multiFilter = { status: "all", side: "all", group: "all", meal: "all", ta
  */
 export function setMultiFilter(field, value) {
   if (field in _multiFilter) {
-    _multiFilter[field] = value;
+    (/** @type {Record<string, string>} */ (_multiFilter))[field] = value;
   }
   renderGuests();
 }
@@ -1210,7 +1210,7 @@ export function removeGuestTag(guestId, tag) {
   const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
   const idx = guests.findIndex((g) => g.id === guestId);
   if (idx === -1) return;
-  const tags = Array.isArray(guests[idx].tags) ? guests[idx].tags.filter((t) => t !== tag) : [];
+  const tags = Array.isArray(guests[idx].tags) ? guests[idx].tags.filter((/** @type {string} */ t) => t !== tag) : [];
   guests[idx] = { ...guests[idx], tags, updatedAt: new Date().toISOString() };
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
@@ -1247,7 +1247,7 @@ function _highlightText(container, text, query) {
  */
 export function getGuestGroupSummary() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const groups = {};
+  const groups = /** @type {Record<string, {total:number,confirmed:number,pending:number,declined:number}>} */ ({});
   for (const g of guests) {
     const grp = g.group || "other";
     if (!groups[grp]) groups[grp] = { total: 0, confirmed: 0, pending: 0, declined: 0 };
@@ -1307,7 +1307,7 @@ export function getAccessibilitySummary() {
  */
 export function getTransportSummary() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const routes = {};
+  const routes = /** @type {Record<string, number>} */ ({});
   for (const g of guests) {
     if (g.transport && g.transport !== "") {
       routes[g.transport] = (routes[g.transport] || 0) + (g.count || 1);

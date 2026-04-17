@@ -7,7 +7,7 @@
 /** @type {string|null} cached rendered HTML */
 let _cached = null;
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   renderChangelog();
 }
 

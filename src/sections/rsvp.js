@@ -15,7 +15,7 @@ import { enqueueWrite, appendToRsvpLog, syncStoreKeyToSheets } from "../services
 /** @type {HTMLElement|null} */
 let _container = null;
 
-export function mount(container) {
+export function mount(/** @type {HTMLElement} */ container) {
   _container = container;
   // S12.5 — Check RSVP deadline
   if (_isRsvpDeadlinePassed()) {
@@ -235,7 +235,7 @@ function _updatePlusOneFields() {
  * @returns {string[]}
  */
 export function collectPlusOneNames() {
-  const names = [];
+  const names = /** @type {string[]} */ ([]);
   const inputs = document.querySelectorAll("[id^=plusOneName_]");
   inputs.forEach((input) => {
     const val = /** @type {HTMLInputElement} */ (input).value.trim();
@@ -247,7 +247,7 @@ export function collectPlusOneNames() {
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 /** Pre-fill RSVP form fields from an existing guest record. */
-function _prefillForm(guest) {
+function _prefillForm(/** @type {any} */ guest) {
   /** @type {Record<string,string>} */
   const fieldMap = {
     phone: "rsvpPhone",
@@ -277,7 +277,7 @@ function _prefillForm(guest) {
 }
 
 /** Show RSVP success message with animation. */
-function _showConfirmation(status) {
+function _showConfirmation(/** @type {string} */ status) {
   const confirmEl = document.getElementById("rsvpConfirm");
   if (!confirmEl) return;
   if (status === "confirmed") {

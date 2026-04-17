@@ -14,7 +14,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("timeline", renderTimeline));
   _unsubs.push(storeSubscribe("weddingInfo", renderTimeline));
   _unsubs.push(storeSubscribe("timelineDone", renderTimeline)); // S24.1
@@ -149,7 +149,7 @@ export function openTimelineForEdit(id) {
   const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
   const item = items.find((i) => i.id === id);
   if (!item) return;
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
     const input = /** @type {HTMLInputElement|null} */ (
       document.getElementById(elId)
     );

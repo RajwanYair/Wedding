@@ -10,7 +10,7 @@ import { formatDateHebrew } from "../utils/date.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("weddingInfo", renderLanding));
   _unsubs.push(storeSubscribe("timeline", renderLanding));
   _unsubs.push(storeSubscribe("registry", renderLanding));

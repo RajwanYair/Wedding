@@ -71,7 +71,7 @@ async function _sendHeartbeat() {
 
   const entry = {
     email: user.email || "unknown",
-    name: user.displayName || user.email || "Admin",
+    name: (/** @type {any} */ (user)).displayName || user.email || "Admin",
     lastSeen: new Date().toISOString(),
   };
 

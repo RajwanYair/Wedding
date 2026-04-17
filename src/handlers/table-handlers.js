@@ -83,7 +83,7 @@ export function registerTableHandlers() {
   on("checkInGuest", (el) => checkInGuest(el.dataset.actionArg ?? ""));
   on("checkinSearch", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      (/** @type {HTMLElement|null} */ (e.target))?.tagName === "INPUT" ? e.target : null
     );
     setCheckinSearch(input?.value ?? "");
   });

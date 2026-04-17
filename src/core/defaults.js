@@ -6,7 +6,7 @@
  * that builds initial store definitions from localStorage.
  */
 
-import { load } from "./storage.js";
+import { load } from "./state.js";
 
 // ── Default data ──────────────────────────────────────────────────────────
 

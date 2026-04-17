@@ -14,13 +14,13 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
-export function mount(_container) {
+export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("gallery", renderGallery));
   // Show admin bar for authenticated users only
   const adminBar = document.getElementById("galleryAdminBar");
   if (adminBar) {
     const user = loadSession();
-    adminBar.classList.toggle("u-hidden", !user || user.role === "guest");
+    adminBar.classList.toggle("u-hidden", !user || !user.isAdmin);
   }
   renderGallery();
 }
@@ -124,7 +124,7 @@ export function openLightbox(id) {
     if (e.target === overlay) overlay.remove();
   });
   // Keyboard close
-  const keyHandler = (e) => {
+  const keyHandler = (/** @type {KeyboardEvent} */ e) => {
     if (/** @type {KeyboardEvent} */ (e).key === "Escape") {
       overlay.remove();
       document.removeEventListener("keydown", keyHandler);
@@ -139,7 +139,7 @@ export function renderGallery() {
 
   const photos = /** @type {any[]} */ (storeGet("gallery") ?? []);
   const user = loadSession();
-  const isAdmin = user && user.role !== "guest";
+  const isAdmin = user && user.isAdmin;
   const emptyEl = document.getElementById("galleryEmpty");
 
   grid.textContent = "";

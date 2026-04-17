@@ -141,9 +141,10 @@ export function resetPlugins() {
 function _mergeI18n(i18nMap) {
   // Lazy merge — will be picked up by t() on next call
   // Store on a global registry that i18n.js can read
-  if (!globalThis.__pluginI18n) globalThis.__pluginI18n = {};
+  const _g = /** @type {any} */ (globalThis);
+  if (!_g.__pluginI18n) _g.__pluginI18n = {};
   for (const [lang, keys] of Object.entries(i18nMap)) {
-    if (!globalThis.__pluginI18n[lang]) globalThis.__pluginI18n[lang] = {};
-    Object.assign(globalThis.__pluginI18n[lang], keys);
+    if (!_g.__pluginI18n[lang]) _g.__pluginI18n[lang] = {};
+    Object.assign(_g.__pluginI18n[lang], keys);
   }
 }
