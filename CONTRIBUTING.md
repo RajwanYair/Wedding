@@ -63,6 +63,75 @@ tests/
 6. Add content tests in `tests/wedding.test.mjs`
 7. Run `npm run lint && npm test` — must exit 0
 
+## Repository Pattern (Supabase)
+
+Database access uses typed repository classes.  Never call `supabase.from()`
+directly in section/handler code — always go through a repository.
+
+```text
+src/repositories/
+  supabase-base-repository.js   ← extend this for new tables
+  supabase-guest-repository.js
+  supabase-table-repository.js
+  supabase-vendor-repository.js
+  supabase-expense-repository.js
+  supabase-rsvp-log-repository.js
+```
+
+**Mock pattern for repository tests** — use the flat chainable mock
+defined in `tests/unit/supabase-repositories.test.mjs`:
+
+```js
+function makeSupabase(rows = [], singleRow = null) {
+  const chain = {};
+  const methods = ["select","insert","upsert","update","eq","is","ilike",
+                   "lt","or","order","not","neq","gte","lte","gt"];
+  for (const m of methods) chain[m] = vi.fn().mockReturnValue(chain);
+  chain.single      = vi.fn().mockResolvedValue({ data: singleRow, error: null });
+  chain.maybeSingle = vi.fn().mockResolvedValue({ data: singleRow, error: null });
+  chain.then = (resolve) => Promise.resolve({ data: rows, error: null }).then(resolve);
+  return { from: vi.fn().mockReturnValue(chain) };
+}
+```
+
+## Security Checklist for New Features
+
+Before submitting a PR that touches auth, data persistence, or user input:
+
+- [ ] No PII logged to `console.*` in production paths
+- [ ] User input validated with `sanitize(input, schema)` at boundaries
+- [ ] Rate-sensitive actions use `createRateLimiter` (see `src/services/rate-limiter.js`)
+- [ ] New DB tables have RLS enabled — verify with `verifyRlsEnabled(supabase)`
+- [ ] Audit-worthy actions logged via `createAuditPipeline` (see `src/services/audit-pipeline.js`)
+- [ ] JWT claims checked before rendering admin UI (`hasRole`, `isTokenExpired`)
+
+## Test File Naming Convention
+
+| Type | Pattern | Location |
+|------|---------|----------|
+| Unit test | `{module-name}.test.mjs` | `tests/unit/` |
+| Integration test | `{feature}-integration.test.mjs` | `tests/integration/` |
+| Regression test | `{domain}-regression.test.mjs` | `tests/integration/` |
+| E2E | `{flow}.spec.mjs` | `tests/e2e/` |
+
+Note: if a test file name would clash with an existing file, prefix with the
+source folder — e.g. `services-crypto.test.mjs` for `src/services/crypto.js`
+(because `tests/unit/crypto.test.mjs` already exists for `src/utils/crypto.js`).
+
+## CHANGELOG.md Format
+
+Every sprint entry **must** follow this exact pattern — missing blank lines
+cause Markdown lint failures:
+
+```markdown
+### Sprint N — Short title
+
+- Deliverable 1
+- Deliverable 2
+```
+
+The blank line before the bullet list is mandatory (MD022 / MD032).
+
 ## Test Requirements
 
 - **Every new feature** gets at least 2 unit tests

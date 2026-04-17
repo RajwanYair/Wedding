@@ -4,6 +4,52 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.0.0] — 2025-08-01
+
+> **UX, Docs & Utilities** — 10-sprint batch adding Realtime presence channel, conflict-resolution UI helpers, auto-seating algorithm, CSV import/export, operations runbook, Supabase integration guide, CONTRIBUTING.md overhaul, i18n parity checker, three Architecture Decision Records, and v7.0.0 release. 3213 tests / 111 suites.
+
+### Sprint 91 — Realtime presence channel
+
+- `src/services/realtime-presence.js` — `createPresenceChannel`, `countOnline`; mock-based channel wrapper for Supabase Realtime presence + 10 tests
+
+### Sprint 92 — Conflict resolution UI helpers
+
+- `src/utils/conflict-resolution-ui.js` — `buildConflictGroups`, `hasConflictForField`, `conflictSummary`, `filterManualConflicts` + 13 tests
+
+### Sprint 93 — Auto-seating algorithm
+
+- `src/utils/seating-algorithm.js` — `autoAssignSeating` (greedy bin-packing with affinity scoring), `validateSeating` + 11 tests
+
+### Sprint 94 — CSV guest import/export
+
+- `src/utils/csv-import.js` — `parseCsv`, `importGuestsFromCsv`, `exportGuestsToCsv`, `GUEST_CSV_COLUMNS` — zero-dep RFC-4180 parser + 17 tests
+
+### Sprint 95 — Operations runbook
+
+- `docs/runbooks/ops-runbook.md` — deployment checklist, DB migration runbook, RLS verification, GDPR erasure process, health check, rollback procedure, secrets management
+
+### Sprint 96 — Supabase integration guide
+
+- `docs/integration-guide.md` — environment setup, client initialisation, repository pattern usage, auth + JWT claims, Edge Functions, RLS policy setup, health checks
+
+### Sprint 97 — CONTRIBUTING.md overhaul
+
+- Added repository pattern conventions, Supabase mock pattern reference, security checklist, test file naming convention, CHANGELOG.md format rules
+
+### Sprint 98 — i18n parity checker
+
+- `scripts/check-i18n-parity.mjs` — `loadTranslations`, `findMissingKeys`, `checkParity`; CLI with `--dir`, `--primary`, `--json` flags + 10 tests
+
+### Sprint 99 — Architecture Decision Records
+
+- `docs/adr/007-event-scoping.md` — multi-event DB design decision
+- `docs/adr/008-pii-classification.md` — PII classification policy rationale
+- `docs/adr/009-optimistic-updates.md` — optimistic update pattern decision
+
+### Sprint 100 — v7.0.0 release
+
+- Version bump to 7.0.0 across all files; full test suite green: 3213 / 111
+
 ## [6.9.0] — 2025-08-01
 
 > **Auth & Security** — 9-sprint batch adding JWT claim helpers, RLS policy audit, AES-GCM field encryption, CSP report Edge Function, rate limiter, GDPR erasure service, session security guard, admin audit pipeline, and security regression integration tests. 3152 tests / 106 suites.
