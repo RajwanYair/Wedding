@@ -13,7 +13,7 @@ cd Wedding
 cd ../MyScripts && npm install && cd Wedding
 
 # Run tests
-npm test              # 1957+ unit tests — must all pass
+npm test              # 3844+ unit tests — must all pass
 npm run lint          # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 
 # Start dev server

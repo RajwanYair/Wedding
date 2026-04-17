@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.6.0] — 2025-08-04
+
+> **Test Coverage Expansion & New Utilities** — 9-sprint batch: dedicated tests for supabase-auth, audit service, base-repository, constants, whats-new, defaults. New modules: view-model DTOs, list-diff, url-helpers. 3844 tests / 158 suites.
+
+### Sprint 151 — Supabase Auth Tests
+
+- `tests/unit/supabase-auth.test.mjs`: `isSupabaseAuthConfigured`, `getSession`, `clearSession`, `isAdmin`, `handleOAuthRedirect`
+
+### Sprint 152 — Audit Service Tests
+
+- `tests/unit/audit.test.mjs`: fire-and-forget audit writes, fetch call assertions, no-op when session absent
+
+### Sprint 153 — View Model DTOs
+
+- `src/utils/view-model.js`: `toGuestViewModel`, `toTableViewModel`, `toVendorViewModel`, `toExpenseViewModel`
+
+### Sprint 154 — List Diffing
+
+- `src/utils/list-diff.js`: `diffLists`, `isItemEqual`, `getChangedItems`, `applyListDiff`
+
+### Sprint 155 — Constants Tests
+
+- `tests/unit/constants.test.mjs`: SECTION_LIST, EXTRA_SECTIONS, ALL_SECTIONS, PUBLIC_SECTIONS, domain enums
+
+### Sprint 156 — Whats New Tests
+
+- `tests/unit/whats-new.test.mjs`: `maybeShowWhatsNew` DOM interaction and version check logic
+
+### Sprint 157 — Defaults Tests
+
+- `tests/unit/defaults.test.mjs`: `defaultWeddingInfo`, `defaultTimeline`, `buildStoreDefs`
+
+### Sprint 158 — URL Helpers
+
+- `src/utils/url-helpers.js`: `buildWhatsAppUrl`, `buildMapsUrl`, `buildWazeUrl`, `appendQueryParams`, `parseQueryParams`, `buildMailtoUrl`, `isSafeUrl`
+
+### Sprint 159 — Base Repository Tests
+
+- `tests/unit/base-repository.test.mjs`: `findAll`, `findById`, `upsert`, `create`, `update`, `delete`, `count`
+
 ## [7.5.0] — 2025-08-03
 
 > **Form Builder, Retry Queue & Housekeeping** — 2-sprint batch: declarative form-field schema builder with validation, persistent retry queue with exponential backoff. 3688 tests / 149 suites.

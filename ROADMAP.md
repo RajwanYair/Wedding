@@ -2,7 +2,7 @@
 
 > Strategic reset for making the project a best-in-class wedding management application.
 > Last updated: 2025-07-19
-> Current baseline: v7.5.0 on main
+> Current baseline: v7.6.0 on main
 
 ---
 
@@ -710,6 +710,7 @@ This plan is outcome-based, not sprint-count-based.
 | v7.3.0 | 2025-07-18 | Vendor proposals, invitation analytics, SMS service, RSVP deadline, guest tagging, expense analytics, guest-lookup edge function, 3530 tests |
 | v7.4.0 | 2025-07-20 | Platform utilities & compliance, focus trap, event bus, API client, seating constraints, 3667 tests |
 | v7.5.0 | 2025-08-03 | Form builder, retry queue, 3688 tests / 149 suites |
+| v7.6.0 | 2025-08-04 | supabase-auth, audit, view-model, list-diff, url-helpers, base-repository tests, 3844 tests / 158 suites |
 
 ### Recommended sequencing
 
