@@ -66,3 +66,97 @@ function _escHtml(s) {
   d.textContent = s;
   return d.innerHTML;
 }
+
+// ── Pure logic helpers (framework-agnostic) ───────────────────────────────
+
+/**
+ * @typedef {{ id: string, field: string, localVal: unknown, remoteVal: unknown, localUpdatedAt?: string, remoteUpdatedAt?: string }} ConflictEntry
+ */
+
+/**
+ * Detect field-level conflicts between a local record and a remote record.
+ * A conflict exists when both sides have a non-null value for the same field
+ * and those values differ.
+ *
+ * @template {{ id: string }} T
+ * @param {T} local
+ * @param {T} remote
+ * @param {{ exclude?: string[] }} [opts]
+ * @returns {ConflictEntry[]}
+ */
+export function detectConflicts(local, remote, opts = {}) {
+  const exclude = new Set(["id", "updatedAt", "createdAt", ...(opts.exclude ?? [])]);
+  /** @type {ConflictEntry[]} */
+  const conflicts = [];
+
+  for (const key of Object.keys({ ...local, ...remote })) {
+    if (exclude.has(key)) continue;
+    const lv = /** @type {Record<string, unknown>} */ (local)[key];
+    const rv = /** @type {Record<string, unknown>} */ (remote)[key];
+    if (lv === rv) continue;                 // identical → no conflict
+    if (lv == null && rv == null) continue;  // both empty → no conflict
+    conflicts.push({
+      id: local.id,
+      field: key,
+      localVal: lv,
+      remoteVal: rv,
+      localUpdatedAt: /** @type {any} */ (local).updatedAt,
+      remoteUpdatedAt: /** @type {any} */ (remote).updatedAt,
+    });
+  }
+
+  return conflicts;
+}
+
+/**
+ * Merge two records at field level using a resolution strategy.
+ *
+ * @template {{ id: string }} T
+ * @param {T} local
+ * @param {T} remote
+ * @param {"local"|"remote"|"newest"} strategy
+ * @returns {T}
+ */
+export function fieldLevelMerge(local, remote, strategy) {
+  if (strategy === "local") return { ...remote, ...local, id: local.id };
+  if (strategy === "remote") return { ...local, ...remote, id: local.id };
+
+  // "newest" — per-field, pick the value from whichever record was updated more recently
+  const localTs = /** @type {any} */ (local).updatedAt ?? "0";
+  const remoteTs = /** @type {any} */ (remote).updatedAt ?? "0";
+  const base = localTs >= remoteTs ? { ...remote, ...local } : { ...local, ...remote };
+  return /** @type {T} */ ({ ...base, id: local.id });
+}
+
+/**
+ * Auto-resolve a list of conflicts according to a strategy.
+ *
+ * @param {ConflictEntry[]} conflicts
+ * @param {"local"|"remote"|"newest"} strategy
+ * @returns {Record<string, Record<string, unknown>>}
+ *   Map of `guestId → { field: chosenValue }` patches to apply
+ */
+export function autoResolve(conflicts, strategy) {
+  /** @type {Record<string, Record<string, unknown>>} */
+  const patches = {};
+
+  for (const c of conflicts) {
+    if (!patches[c.id]) patches[c.id] = {};
+
+    let chosen;
+    if (strategy === "local") {
+      chosen = c.localVal;
+    } else if (strategy === "remote") {
+      chosen = c.remoteVal;
+    } else {
+      // "newest" — pick the value from whichever record has the later timestamp
+      const lts = c.localUpdatedAt ?? "0";
+      const rts = c.remoteUpdatedAt ?? "0";
+      chosen = lts >= rts ? c.localVal : c.remoteVal;
+    }
+
+    patches[c.id][c.field] = chosen;
+  }
+
+  return patches;
+}
