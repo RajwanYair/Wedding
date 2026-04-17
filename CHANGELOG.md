@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.7.0] — 2025-07-31
+
+> **Core Infrastructure** — 9-sprint batch adding subscription lifecycle management, PII data classification, exponential backoff retry, conflict detection, TTL cache with tag invalidation, bundle budget CI script, immutable deep-path helpers, store perf benchmarks, and optimistic update service. 3021 tests / 95 suites.
+
+### Sprint 61 — SubscriptionManager
+- `src/utils/subscription-manager.js`: collects unsubscribe fns, `cleanup()` calls all, chainable API + 11 tests
+
+### Sprint 62 — Data classification policy
+- `src/services/data-classification.js`: PII/sensitive field policy, `redactPII()`, `getPIIFields()`, `getSensitiveFields()` + 19 tests
+
+### Sprint 63 — Retry with exponential backoff
+- `src/utils/retry-with-backoff.js`: `retryWithBackoff()`, `exponentialDelay()`, `buildRetryOptions()` + 12 tests
+
+### Sprint 64 — Conflict detection service
+- `src/services/conflict-detector.js`: `detectConflicts()`, `resolveConflict()`, `groupConflictById()` + 18 tests
+
+### Sprint 65 — TTL cache with tag invalidation
+- `src/utils/ttl-cache.js`: `createCache()`, `createTaggedCache()`, `withCache()` wrapper + 17 tests
+
+### Sprint 66 — Bundle budget CI script
+- `scripts/check-bundle-budget.mjs`: per-file JS/CSS size budget enforcer, JSON mode + 13 tests
+
+### Sprint 67 — Immutable deep-path helpers
+- `src/utils/immutable.js`: added `setIn()`, `updateIn()`, `deleteIn()`, `mergeDeep()` + 22 new tests (51 total)
+
+### Sprint 68 — Store performance benchmarks
+- `tests/perf/store-perf.test.mjs`: timing assertions for read/write/filter/stat operations + 7 tests
+
+### Sprint 69 — Optimistic update service
+- `src/services/optimistic-updates.js`: `applyOptimistic/rollback/commit` with snapshot tracking + 13 tests
+
+### Sprint 70 — v6.7.0 release
+- Version bump to 6.7.0 across all files; full test suite green: 3021 / 95
+
 ## [6.6.0] — 2025-07-31
 
 > **Frontend Contracts** — 9-sprint batch adding rich domain enums, action registry validation, a store-backed repository layer, form metadata consolidation, domain validation, config scopes, store batch mutations, and dirty-state tracking.
