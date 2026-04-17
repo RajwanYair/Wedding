@@ -181,3 +181,107 @@ export function pickKeys(obj, keys) {
 export function deepClone(value) {
   return JSON.parse(JSON.stringify(value));
 }
+
+// ── Deep path helpers (Sprint 67) ─────────────────────────────────────────
+
+/**
+ * Return a new object/array with the value at `path` set to `value`.
+ * Creates intermediate objects if they don't exist.
+ *
+ * @param {Record<string, unknown>} obj
+ * @param {(string|number)[]} path
+ * @param {unknown} value
+ * @returns {Record<string, unknown>}
+ */
+export function setIn(obj, path, value) {
+  if (path.length === 0) return /** @type {Record<string, unknown>} */ (value);
+  const [head, ...tail] = path;
+  const key = String(head);
+  const child = Object.prototype.hasOwnProperty.call(obj, key)
+    ? obj[key]
+    : (typeof tail[0] === "number" ? [] : {});
+  return {
+    ...obj,
+    [key]: setIn(/** @type {Record<string, unknown>} */ (child ?? {}), tail, value),
+  };
+}
+
+/**
+ * Return a new object/array with the value at `path` transformed by `updater`.
+ * If the path doesn't exist, `updater` receives `undefined`.
+ *
+ * @param {Record<string, unknown>} obj
+ * @param {(string|number)[]} path
+ * @param {(current: unknown) => unknown} updater
+ * @returns {Record<string, unknown>}
+ */
+export function updateIn(obj, path, updater) {
+  if (path.length === 0) {
+    return /** @type {Record<string, unknown>} */ (updater(obj));
+  }
+  const [head, ...tail] = path;
+  const key = String(head);
+  const child = obj[key] ?? {};
+  return {
+    ...obj,
+    [key]: updateIn(/** @type {Record<string, unknown>} */ (child), tail, updater),
+  };
+}
+
+/**
+ * Return a new object with the key at `path` deleted.
+ * Ancestor objects are shallow-cloned.
+ *
+ * @param {Record<string, unknown>} obj
+ * @param {(string|number)[]} path
+ * @returns {Record<string, unknown>}
+ */
+export function deleteIn(obj, path) {
+  if (path.length === 0) return obj;
+  const [head, ...tail] = path;
+  const key = String(head);
+  if (!Object.prototype.hasOwnProperty.call(obj, key)) return obj;
+  if (tail.length === 0) {
+    const copy = { ...obj };
+    delete copy[key];
+    return copy;
+  }
+  return {
+    ...obj,
+    [key]: deleteIn(/** @type {Record<string, unknown>} */ (obj[key] ?? {}), tail),
+  };
+}
+
+/**
+ * Deep-merge `source` into `target`, returning a new object.
+ * Arrays are replaced (not concatenated).
+ *
+ * @template {Record<string, unknown>} T
+ * @param {T} target
+ * @param {Partial<T>} source
+ * @returns {T}
+ */
+export function mergeDeep(target, source) {
+  /** @type {Record<string, unknown>} */
+  const result = { ...target };
+  for (const key of Object.keys(source)) {
+    const srcVal = source[/** @type {keyof T} */ (key)];
+    const tgtVal = result[key];
+    if (
+      srcVal !== null &&
+      typeof srcVal === "object" &&
+      !Array.isArray(srcVal) &&
+      tgtVal !== null &&
+      typeof tgtVal === "object" &&
+      !Array.isArray(tgtVal)
+    ) {
+      result[key] = mergeDeep(
+        /** @type {Record<string, unknown>} */ (tgtVal),
+        /** @type {Record<string, unknown>} */ (srcVal)
+      );
+    } else {
+      result[key] = srcVal;
+    }
+  }
+  return /** @type {T} */ (result);
+}

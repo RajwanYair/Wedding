@@ -15,6 +15,10 @@ import {
   omitKeys,
   pickKeys,
   deepClone,
+  setIn,
+  updateIn,
+  deleteIn,
+  mergeDeep,
 } from "../../src/utils/immutable.js";
 
 // ── replaceById ────────────────────────────────────────────────────────────
@@ -260,5 +264,112 @@ describe("deepClone", () => {
     expect(deepClone(42)).toBe(42);
     expect(deepClone("hello")).toBe("hello");
     expect(deepClone(null)).toBeNull();
+  });
+});
+
+// ── setIn ─────────────────────────────────────────────────────────────────
+
+describe("setIn", () => {
+  it("sets a top-level key", () => {
+    const obj = { a: 1, b: 2 };
+    expect(setIn(obj, ["c"], 3)).toStrictEqual({ a: 1, b: 2, c: 3 });
+  });
+
+  it("sets a nested key", () => {
+    const obj = { a: { b: 1 } };
+    expect(setIn(obj, ["a", "b"], 99)).toStrictEqual({ a: { b: 99 } });
+  });
+
+  it("creates intermediate objects", () => {
+    const obj = {};
+    expect(setIn(obj, ["x", "y", "z"], "deep")).toStrictEqual({ x: { y: { z: "deep" } } });
+  });
+
+  it("does not mutate the original", () => {
+    const obj = { a: { b: 1 } };
+    setIn(obj, ["a", "b"], 99);
+    expect(obj.a.b).toBe(1);
+  });
+
+  it("empty path returns the value itself", () => {
+    expect(setIn({}, [], "replaced")).toBe("replaced");
+  });
+});
+
+// ── updateIn ──────────────────────────────────────────────────────────────
+
+describe("updateIn", () => {
+  it("applies updater at nested path", () => {
+    const obj = { a: { b: 5 } };
+    const result = updateIn(obj, ["a", "b"], (v) => /** @type {number} */ (v) + 1);
+    expect(result).toStrictEqual({ a: { b: 6 } });
+  });
+
+  it("does not mutate original", () => {
+    const obj = { count: 0 };
+    updateIn(obj, ["count"], (v) => /** @type {number} */ (v) + 1);
+    expect(obj.count).toBe(0);
+  });
+
+  it("empty path applies updater to root", () => {
+    const obj = { x: 1 };
+    const result = updateIn(obj, [], () => ({ replaced: true }));
+    expect(result).toStrictEqual({ replaced: true });
+  });
+});
+
+// ── deleteIn ──────────────────────────────────────────────────────────────
+
+describe("deleteIn", () => {
+  it("removes a top-level key", () => {
+    const obj = { a: 1, b: 2 };
+    expect(deleteIn(obj, ["b"])).toStrictEqual({ a: 1 });
+  });
+
+  it("removes a nested key", () => {
+    const obj = { a: { b: 1, c: 2 } };
+    expect(deleteIn(obj, ["a", "b"])).toStrictEqual({ a: { c: 2 } });
+  });
+
+  it("returns same object when path does not exist", () => {
+    const obj = { a: 1 };
+    expect(deleteIn(obj, ["missing"])).toStrictEqual({ a: 1 });
+  });
+
+  it("does not mutate original", () => {
+    const obj = { a: 1, b: 2 };
+    deleteIn(obj, ["a"]);
+    expect(obj.a).toBe(1);
+  });
+});
+
+// ── mergeDeep ─────────────────────────────────────────────────────────────
+
+describe("mergeDeep", () => {
+  it("shallow-merges top-level keys", () => {
+    expect(mergeDeep({ a: 1 }, { b: 2 })).toStrictEqual({ a: 1, b: 2 });
+  });
+
+  it("deep-merges nested objects", () => {
+    const target = { a: { x: 1, y: 2 } };
+    const source = { a: { y: 99, z: 3 } };
+    expect(mergeDeep(target, source)).toStrictEqual({ a: { x: 1, y: 99, z: 3 } });
+  });
+
+  it("replaces arrays (does not concat)", () => {
+    const target = { arr: [1, 2, 3] };
+    const source = { arr: [4, 5] };
+    expect(mergeDeep(target, source)).toStrictEqual({ arr: [4, 5] });
+  });
+
+  it("does not mutate original", () => {
+    const target = { a: { b: 1 } };
+    mergeDeep(target, { a: { b: 99 } });
+    expect(target.a.b).toBe(1);
+  });
+
+  it("handles null source values", () => {
+    const target = { a: 1, b: 2 };
+    expect(mergeDeep(target, { b: null })).toStrictEqual({ a: 1, b: null });
   });
 });
