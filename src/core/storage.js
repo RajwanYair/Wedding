@@ -120,6 +120,22 @@ const _idbAdapter = {
   async clear() {
     await _idbTx("readwrite", (s) => s.clear());
   },
+  /**
+   * Write multiple key-value pairs in a single transaction (batch write).
+   * @param {Array<[string, string]>} entries
+   * @returns {Promise<void>}
+   */
+  async setItemBatch(entries) {
+    if (entries.length === 0) return;
+    const db = await _openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(_IDB_STORE, "readwrite");
+      const store = tx.objectStore(_IDB_STORE);
+      for (const [k, v] of entries) store.put(v, k);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
 };
 
 // ── Adapter selection ─────────────────────────────────────────────────────
@@ -210,6 +226,22 @@ export async function storageGet(key) {
  */
 export async function storageSet(key, value) {
   return _adapter.setItem(key, value);
+}
+
+/**
+ * Write multiple key-value pairs in a single transaction when using IndexedDB,
+ * or falls back to sequential writes for other adapters.
+ * Cheaper than N individual storageSet() calls when writing many keys at once.
+ * @param {Array<[string, string]>} entries  Array of [key, value] tuples
+ * @returns {Promise<void>}
+ */
+export async function storageSetBatch(entries) {
+  if (entries.length === 0) return;
+  if (_adapterType === "indexeddb" && "setItemBatch" in _adapter) {
+    return /** @type {typeof _idbAdapter} */ (_adapter).setItemBatch(entries);
+  }
+  // Fallback: sequential writes
+  for (const [k, v] of entries) await _adapter.setItem(k, v);
 }
 
 /**

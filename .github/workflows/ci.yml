@@ -38,6 +38,12 @@ jobs:
       - name: Type check (tsc --noEmit)
         run: npm run typecheck
 
+      - name: Validate action registry
+        run: npm run validate
+
+      - name: Validate i18n parity
+        run: npm run validate:i18n
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
