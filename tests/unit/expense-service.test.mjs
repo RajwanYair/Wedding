@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { initStore, storeGet, storeSet } from "../../src/core/store.js";
+import { initStore, storeGet } from "../../src/core/store.js";
 import { makeExpense } from "./helpers.js";
 
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));

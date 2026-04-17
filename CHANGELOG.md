@@ -4,7 +4,63 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [6.2.0] — 2025-07-17
+## [6.3.0] — 2025-07-18
+
+> **Domain Service Layer & GDPR** — 10-sprint uplift covering immutable helpers, optimistic updates, soft-delete, store subscription tracking, guest/table/vendor/expense domain services, conflict resolution logic, and privacy admin utilities.
+
+### Sprint 21 — Immutable update helpers
+
+- `src/utils/immutable.js`: `replaceById`, `removeById`, `updateById`, `insertSorted`, `appendUnique`, `toggleIn`, `omitKeys`, `pickKeys`, `deepClone`
+- Tests: 34 new (immutable.test.mjs)
+
+### Sprint 22 — Optimistic update helpers
+
+- `src/utils/optimistic.js`: `withOptimistic`, `createOptimisticCheckpoint`, `withOptimisticBatch`, `optimisticAppend`, `optimisticRemove`
+- Tests: 19 new (optimistic.test.mjs)
+
+### Sprint 23 — Soft-delete in repositories
+
+- `src/services/repositories.js`: `getActive()`, `softDelete()`, `restore()`, `listDeleted()` on `guestRepo` and `vendorRepo`
+- `supabase/migrations/015_tables_expenses_soft_delete.sql`: `deleted_at` column for tables + expenses
+- Tests: +12 (repositories.test.mjs)
+
+### Sprint 24 — Store subscription leak tests
+
+- `src/core/store.js`: `getSubscriptionCount(scope?)` function
+- Tests: 14 new (store-subscriptions.test.mjs)
+
+### Sprint 25 — Guest domain service
+
+- `src/services/guest-service.js`: `confirmGuest`, `declineGuest`, `tentativeGuest`, `resetGuestStatus`, `assignToTable`, `unassignFromTable`, `bulkSetStatus`, `importGuests`, `getGuestStats`, `findFollowUpCandidates`, `searchGuests`
+- Tests: 30 new (guest-service.test.mjs)
+
+### Sprint 26 — Table domain service
+
+- `src/services/table-service.js`: `assignGuestToTable` (capacity guard + force mode), `unassignGuestFromTable`, `moveTable`, `getTableOccupancy`, `findAvailableTables`, `getCapacityReport`, `autoAssign`, `clearAssignments`
+- Tests: 20 new (table-service.test.mjs)
+
+### Sprint 27 — Vendor + expense domain services
+
+- `src/services/vendor-service.js`: `markVendorPaid`, `addVendorPayment`, `markVendorBooked`, `getVendorsByPaymentStatus`, `getBudgetSummary`, `getUnpaidVendors`
+- `src/services/expense-service.js`: `addExpense`, `updateExpense`, `removeExpense`, `getBudgetUsed`, `getBudgetTotal`, `getBudgetRemaining`, `getOverBudget`, `getExpenseSummary`, `getExpensesByDateRange`
+- Tests: 34 new (vendor-service + expense-service)
+
+### Sprint 28 — Conflict resolver pure logic
+
+- `src/core/conflict-resolver.js`: `detectConflicts`, `fieldLevelMerge`, `autoResolve` (framework-agnostic, no DOM dependency)
+- Tests: 18 new (conflict-resolver.test.mjs)
+
+### Sprint 29 — Privacy admin utilities
+
+- `src/utils/privacy.js`: `PII_FIELDS`, `exportGuestData` (Art. 20 GDPR), `anonymizeGuest`, `purgeGuestData` (Art. 17 GDPR), `getDataRetentionReport`
+- Tests: 16 new (privacy.test.mjs)
+
+### Sprint 30 — v6.3.0 release
+
+- Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
+- Tests: **2404 pass** / 62 suites (baseline was 2207 / 53)
+
+
 
 > **Infrastructure & Safety** — 10-sprint uplift covering section contracts, render primitives, store V2, pagination, repositories, DB migrations, RBAC, PII masking, and operations runbooks.
 
