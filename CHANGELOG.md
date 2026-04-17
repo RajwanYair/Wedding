@@ -4,6 +4,63 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.5.0] — 2025-07-19
+
+> **Communication & Developer Toolkit** — 9-sprint batch covering WhatsApp campaigns, email service, Edge Functions, delivery tracking, error pipeline, sync health dashboard, and architectural decision records.
+
+### Sprint 41 — Message template system
+
+- `src/utils/message-templates.js`: `registerTemplate`, `getTemplate`, `listTemplates`, `renderTemplate` ({{var}} + {{#if}}), `renderNamed`, 5 Hebrew built-ins
+- Tests: 24 new (message-templates.test.mjs)
+
+### Sprint 42 — Campaign state tracker
+
+- `src/services/campaign.js`: `createCampaign`, `getCampaign`, `listCampaigns`, `deleteCampaign`, `queueCampaign`, `startCampaign`, `cancelCampaign`, `recordSent`, `getCampaignStats`
+- State machine: `draft → queued → sending → completed | failed | cancelled`
+- Tests: 23 new (campaign.test.mjs)
+
+### Sprint 43 — WhatsApp campaign service
+
+- `src/services/wa-campaign.js`: `runWACampaign` (serial sends, dryRun, auto-transition), `sendAdHocWhatsApp`
+- Tests: 10 new (wa-campaign.test.mjs)
+
+### Sprint 44 — Email service
+
+- `src/services/email-service.js`: `isValidEmail`, `sendEmail`, `sendEmailBatch`, `sendEmailCampaign`
+- Tests: 14 new (email-service.test.mjs)
+
+### Sprint 45 — Edge function: send-email
+
+- `supabase/functions/send-email/index.ts`: Deno function via Resend API with validation
+- 3 tests added to edge-functions.test.mjs (21 total in file)
+
+### Sprint 46 — Delivery tracking + migration 016
+
+- `src/services/delivery-tracking.js`: `recordDelivery`, `getDeliveryHistory`, `getUndelivered`, `getLatestDelivery`, `getDeliveryStats`, `clearGuestDeliveries`
+- `supabase/migrations/016_delivery_tracking.sql`: table + RLS + indexes
+- Tests: 13 new (delivery-tracking.test.mjs)
+
+### Sprint 47 — Error pipeline service
+
+- `src/services/error-pipeline.js`: `captureError`, `getErrors`, `clearErrors`, `getErrorSummary`, `getRecentErrorCount`
+- Tests: 14 new (error-pipeline.test.mjs)
+
+### Sprint 48 — Sync health dashboard
+
+- `src/services/sync-dashboard.js`: `getSyncStatus`, `getQueueDepth`, `getLastSyncTime`, `isSyncHealthy`, `getFailedDomains`, `getPendingDomains`
+- Tests: 14 new (sync-dashboard.test.mjs)
+
+### Sprint 49 — Architectural Decision Records
+
+- `docs/adr/004-message-template-engine.md`
+- `docs/adr/005-campaign-state-machine.md`
+- `docs/adr/006-guest-token-design.md`
+
+### Sprint 50 — v6.5.0 release
+
+- Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
+- Tests: **2720 pass** / 78 suites (baseline was 2605 / 71)
+
 ## [6.4.0] — 2025-07-19
 
 > **Utility & Developer Toolkit** — 9-sprint batch covering export helpers, a11y auditing, print layouts, guest token service, token-gate utility, performance utilities, and admin debug tools.
@@ -114,8 +171,6 @@ All notable changes to this project will be documented in this file.
 
 - Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
 - Tests: **2404 pass** / 62 suites (baseline was 2207 / 53)
-
-
 
 > **Infrastructure & Safety** — 10-sprint uplift covering section contracts, render primitives, store V2, pagination, repositories, DB migrations, RBAC, PII masking, and operations runbooks.
 

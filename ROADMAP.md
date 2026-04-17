@@ -1,8 +1,8 @@
 # Wedding Manager Roadmap
 
 > Strategic reset for making the project a best-in-class wedding management application.
-> Last updated: 2026-04-17
-> Current baseline: v6.0.0 on main
+> Last updated: 2025-07-19
+> Current baseline: v6.5.0 on main
 
 ---
 
