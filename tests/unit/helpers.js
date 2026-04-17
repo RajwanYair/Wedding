@@ -103,3 +103,41 @@ export function makeExpense(overrides = {}) {
     ...overrides,
   };
 }
+
+// ── TimelineItem ──────────────────────────────────────────────────────────────
+
+/**
+ * Build a canonical TimelineItem fixture.
+ * @param {Record<string, unknown>} [overrides]
+ */
+export function makeTimelineItem(overrides = {}) {
+  return {
+    id: `tl-${Math.random().toString(36).slice(2)}`,
+    time: "18:00",
+    icon: "🎉",
+    title: "Ceremony begins",
+    note: "",
+    ...overrides,
+  };
+}
+
+// ── RsvpLogEntry ──────────────────────────────────────────────────────────────
+
+/**
+ * Build a canonical RsvpLogEntry fixture.
+ * @param {Record<string, unknown>} [overrides]
+ */
+export function makeRsvpLogEntry(overrides = {}) {
+  return {
+    id: `log-${Math.random().toString(36).slice(2)}`,
+    guestId: "g1",
+    guestName: "Test Guest",
+    phone: "+972541234567",
+    status: "confirmed",
+    count: 2,
+    children: 0,
+    timestamp: new Date().toISOString(),
+    source: "web",
+    ...overrides,
+  };
+}

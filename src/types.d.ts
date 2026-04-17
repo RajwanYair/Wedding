@@ -91,6 +91,20 @@ export interface Expense {
   createdAt: string;
 }
 
+/** RSVP log entry — immutable record of each guest response. */
+export interface RsvpLogEntry {
+  readonly id: string;
+  guestId: string;
+  guestName: string;
+  phone: string;
+  status: GuestStatus;
+  count: number;
+  children: number;
+  timestamp: string;
+  source: "web" | "manual" | "import";
+  notes?: string;
+}
+
 /** Timeline item stored in the reactive store. */
 export interface TimelineItem {
   readonly id: string;
@@ -379,6 +393,24 @@ export interface VendorRepository extends Repository<Vendor> {
 /** Expense repository. */
 export interface ExpenseRepository extends Repository<Expense> {
   sumByCategory(): Promise<Record<string, number>>;
+}
+
+/** Timeline event repository. */
+export interface TimelineRepository extends Repository<TimelineItem> {
+  /** Return all events ordered by time ascending. */
+  getOrdered(): Promise<TimelineItem[]>;
+  /** Mark an event done/undone. */
+  setDone(id: string, done: boolean): Promise<void>;
+}
+
+/** RSVP log repository — append-only guest response log. */
+export interface RsvpLogRepository {
+  /** Append a new RSVP log entry. */
+  append(entry: RsvpLogEntry): Promise<void>;
+  /** Return all log entries (most recent first). */
+  getAll(): Promise<RsvpLogEntry[]>;
+  /** Return entries for a specific guest id. */
+  getByGuest(guestId: string): Promise<RsvpLogEntry[]>;
 }
 
 // ── Data Classification ───────────────────────────────────────────────────

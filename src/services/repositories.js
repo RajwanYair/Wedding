@@ -354,3 +354,102 @@ export const expenseRepo = {
     enqueueWrite("expenses", async () => {});
   },
 };
+
+// ── Timeline Repository ───────────────────────────────────────────────────
+
+/** @implements {import('../types').TimelineRepository} */
+export const timelineRepo = {
+  /** @returns {Promise<import('../types').TimelineItem[]>} */
+  async getAll() {
+    return /** @type {import('../types').TimelineItem[]} */ (storeGet("timeline") ?? []);
+  },
+
+  /** @param {string} id @returns {Promise<import('../types').TimelineItem | null>} */
+  async getById(id) {
+    const items = await this.getAll();
+    return items.find((t) => t.id === id) ?? null;
+  },
+
+  /** @param {import('../types').PageRequest} req */
+  async getPage(req) {
+    const all = await this.getAll();
+    return _paginate(all, req);
+  },
+
+  /** @returns {Promise<import('../types').TimelineItem[]>} sorted by time ascending */
+  async getOrdered() {
+    const items = await this.getAll();
+    return [...items].sort((a, b) => a.time.localeCompare(b.time));
+  },
+
+  /** @param {Omit<import('../types').TimelineItem,'id'>} item */
+  async create(item) {
+    const items = await this.getAll();
+    const newItem = /** @type {import('../types').TimelineItem} */ ({ ...item, id: uid() });
+    storeSet("timeline", [...items, newItem]);
+    enqueueWrite("timeline", async () => {});
+    return newItem;
+  },
+
+  /** @param {string} id @param {Partial<import('../types').TimelineItem>} patch */
+  async update(id, patch) {
+    const items = await this.getAll();
+    const idx = items.findIndex((t) => t.id === id);
+    if (idx === -1) throw new Error(`Timeline item not found: ${id}`);
+    const updated = /** @type {import('../types').TimelineItem} */ ({ ...items[idx], ...patch, id });
+    const next = [...items];
+    next[idx] = updated;
+    storeSet("timeline", next);
+    enqueueWrite("timeline", async () => {});
+    return updated;
+  },
+
+  /** @param {string} id */
+  async delete(id) {
+    const items = await this.getAll();
+    storeSet("timeline", items.filter((t) => t.id !== id));
+    enqueueWrite("timeline", async () => {});
+  },
+
+  /**
+   * Mark a timeline item as done or undone.
+   * @param {string} id
+   * @param {boolean} done
+   */
+  async setDone(id, done) {
+    const current = /** @type {Record<string, boolean>} */ (storeGet("timelineDone") ?? {});
+    storeSet("timelineDone", { ...current, [id]: done });
+  },
+};
+
+// ── RSVP Log Repository (append-only) ────────────────────────────────────
+
+/** @implements {import('../types').RsvpLogRepository} */
+export const rsvpLogRepo = {
+  /** @returns {Promise<import('../types').RsvpLogEntry[]>} */
+  async getAll() {
+    return /** @type {import('../types').RsvpLogEntry[]} */ (storeGet("rsvp_log") ?? []);
+  },
+
+  /**
+   * Append a new RSVP log entry.
+   * @param {import('../types').RsvpLogEntry} entry
+   */
+  async append(entry) {
+    const log = await this.getAll();
+    storeSet("rsvp_log", [...log, entry]);
+    enqueueWrite("rsvp_log", async () => {});
+  },
+
+  /**
+   * Return entries for a specific guest id (most recent first).
+   * @param {string} guestId
+   * @returns {Promise<import('../types').RsvpLogEntry[]>}
+   */
+  async getByGuest(guestId) {
+    const log = await this.getAll();
+    return log
+      .filter((e) => e.guestId === guestId)
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+  },
+};

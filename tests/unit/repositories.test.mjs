@@ -9,7 +9,7 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { initStore, storeGet, storeSet } from "../../src/core/store.js";
-import { makeGuest, makeTable, makeVendor, makeExpense } from "./helpers.js";
+import { makeGuest, makeTable, makeVendor, makeExpense, makeTimelineItem, makeRsvpLogEntry } from "./helpers.js";
 
 // Mock enqueueWrite — we don't want real backend calls in unit tests
 vi.mock("../../src/services/sheets.js", () => ({
@@ -17,7 +17,7 @@ vi.mock("../../src/services/sheets.js", () => ({
 }));
 
 // Import after mock is set up
-const { guestRepo, tableRepo, vendorRepo, expenseRepo } = await import(
+const { guestRepo, tableRepo, vendorRepo, expenseRepo, timelineRepo, rsvpLogRepo } = await import(
   "../../src/services/repositories.js"
 );
 
@@ -27,6 +27,9 @@ function seedStore(overrides = {}) {
     tables: { value: overrides.tables ?? [] },
     vendors: { value: overrides.vendors ?? [] },
     expenses: { value: overrides.expenses ?? [] },
+    timeline: { value: overrides.timeline ?? [] },
+    timelineDone: { value: overrides.timelineDone ?? {} },
+    rsvp_log: { value: overrides.rsvp_log ?? [] },
     weddingInfo: { value: {} },
   });
 }
@@ -295,5 +298,217 @@ describe("expenseRepo.create", () => {
     });
     expect(e.id).toBeTruthy();
     expect(e.amount).toBe(500);
+  });
+});
+
+// ── Sprint 15: timelineRepo ───────────────────────────────────────────────
+
+describe("timelineRepo.getAll", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty array when no timeline items", async () => {
+    expect(await timelineRepo.getAll()).toEqual([]);
+  });
+
+  it("returns seeded timeline items", async () => {
+    const items = [makeTimelineItem({ id: "t1" }), makeTimelineItem({ id: "t2" })];
+    storeSet("timeline", items);
+    expect(await timelineRepo.getAll()).toHaveLength(2);
+  });
+});
+
+describe("timelineRepo.getOrdered", () => {
+  beforeEach(() => seedStore());
+
+  it("returns items sorted by time ascending", async () => {
+    const items = [
+      makeTimelineItem({ id: "t1", time: "20:00" }),
+      makeTimelineItem({ id: "t2", time: "18:00" }),
+      makeTimelineItem({ id: "t3", time: "19:00" }),
+    ];
+    storeSet("timeline", items);
+    const ordered = await timelineRepo.getOrdered();
+    expect(ordered.map((i) => i.time)).toEqual(["18:00", "19:00", "20:00"]);
+  });
+});
+
+describe("timelineRepo.create", () => {
+  beforeEach(() => seedStore());
+
+  it("creates item with generated id", async () => {
+    const item = await timelineRepo.create({ time: "19:00", icon: "🎶", title: "Dinner", note: "" });
+    expect(item.id).toBeTruthy();
+    expect(item.title).toBe("Dinner");
+    expect(await timelineRepo.getAll()).toHaveLength(1);
+  });
+});
+
+describe("timelineRepo.setDone", () => {
+  beforeEach(() => seedStore());
+
+  it("marks a timeline item done", async () => {
+    await timelineRepo.setDone("t1", true);
+    const done = storeGet("timelineDone");
+    expect(done?.["t1"]).toBe(true);
+  });
+
+  it("marks a timeline item undone", async () => {
+    storeSet("timelineDone", { t1: true });
+    await timelineRepo.setDone("t1", false);
+    expect(storeGet("timelineDone")?.["t1"]).toBe(false);
+  });
+});
+
+// ── Sprint 15: rsvpLogRepo ────────────────────────────────────────────────
+
+describe("rsvpLogRepo.getAll", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty array initially", async () => {
+    expect(await rsvpLogRepo.getAll()).toEqual([]);
+  });
+});
+
+describe("rsvpLogRepo.append", () => {
+  beforeEach(() => seedStore());
+
+  it("appends entry to the log", async () => {
+    const entry = makeRsvpLogEntry({ id: "log-1", guestId: "g1" });
+    await rsvpLogRepo.append(entry);
+    const log = await rsvpLogRepo.getAll();
+    expect(log).toHaveLength(1);
+    expect(log[0].id).toBe("log-1");
+  });
+
+  it("accumulates multiple entries", async () => {
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-1" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-2" }));
+    expect(await rsvpLogRepo.getAll()).toHaveLength(2);
+  });
+});
+
+describe("rsvpLogRepo.getByGuest", () => {
+  beforeEach(() => seedStore());
+
+  it("filters by guestId", async () => {
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-1", guestId: "g1" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-2", guestId: "g2" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-3", guestId: "g1" }));
+    const entries = await rsvpLogRepo.getByGuest("g1");
+    expect(entries).toHaveLength(2);
+    expect(entries.every((e) => e.guestId === "g1")).toBe(true);
+  });
+
+  it("returns most recent first", async () => {
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-1", guestId: "g1", timestamp: "2024-01-01T10:00:00Z" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-2", guestId: "g1", timestamp: "2024-01-02T10:00:00Z" }));
+    const entries = await rsvpLogRepo.getByGuest("g1");
+    expect(entries[0].id).toBe("log-2");
+  });
+});
+
+// ── Sprint 15: timelineRepo ───────────────────────────────────────────────
+
+describe("timelineRepo.getAll", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty array when no timeline items", async () => {
+    expect(await timelineRepo.getAll()).toEqual([]);
+  });
+
+  it("returns seeded timeline items", async () => {
+    const items = [makeTimelineItem({ id: "t1" }), makeTimelineItem({ id: "t2" })];
+    storeSet("timeline", items);
+    expect(await timelineRepo.getAll()).toHaveLength(2);
+  });
+});
+
+describe("timelineRepo.getOrdered", () => {
+  beforeEach(() => seedStore());
+
+  it("returns items sorted by time ascending", async () => {
+    const items = [
+      makeTimelineItem({ id: "t1", time: "20:00" }),
+      makeTimelineItem({ id: "t2", time: "18:00" }),
+      makeTimelineItem({ id: "t3", time: "19:00" }),
+    ];
+    storeSet("timeline", items);
+    const ordered = await timelineRepo.getOrdered();
+    expect(ordered.map((i) => i.time)).toEqual(["18:00", "19:00", "20:00"]);
+  });
+});
+
+describe("timelineRepo.create", () => {
+  beforeEach(() => seedStore());
+
+  it("creates item with generated id", async () => {
+    const item = await timelineRepo.create({ time: "19:00", icon: "🎶", title: "Dinner", note: "" });
+    expect(item.id).toBeTruthy();
+    expect(item.title).toBe("Dinner");
+    expect(await timelineRepo.getAll()).toHaveLength(1);
+  });
+});
+
+describe("timelineRepo.setDone", () => {
+  beforeEach(() => seedStore());
+
+  it("marks a timeline item done", async () => {
+    await timelineRepo.setDone("t1", true);
+    const done = storeGet("timelineDone");
+    expect(done?.["t1"]).toBe(true);
+  });
+
+  it("marks a timeline item undone", async () => {
+    storeSet("timelineDone", { t1: true });
+    await timelineRepo.setDone("t1", false);
+    expect(storeGet("timelineDone")?.["t1"]).toBe(false);
+  });
+});
+
+// ── Sprint 15: rsvpLogRepo ────────────────────────────────────────────────
+
+describe("rsvpLogRepo.getAll", () => {
+  beforeEach(() => seedStore());
+
+  it("returns empty array initially", async () => {
+    expect(await rsvpLogRepo.getAll()).toEqual([]);
+  });
+});
+
+describe("rsvpLogRepo.append", () => {
+  beforeEach(() => seedStore());
+
+  it("appends entry to the log", async () => {
+    const entry = makeRsvpLogEntry({ id: "log-1", guestId: "g1" });
+    await rsvpLogRepo.append(entry);
+    const log = await rsvpLogRepo.getAll();
+    expect(log).toHaveLength(1);
+    expect(log[0].id).toBe("log-1");
+  });
+
+  it("accumulates multiple entries", async () => {
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-1" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-2" }));
+    expect(await rsvpLogRepo.getAll()).toHaveLength(2);
+  });
+});
+
+describe("rsvpLogRepo.getByGuest", () => {
+  beforeEach(() => seedStore());
+
+  it("filters by guestId", async () => {
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-1", guestId: "g1" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-2", guestId: "g2" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-3", guestId: "g1" }));
+    const entries = await rsvpLogRepo.getByGuest("g1");
+    expect(entries).toHaveLength(2);
+    expect(entries.every((e) => e.guestId === "g1")).toBe(true);
+  });
+
+  it("returns most recent first", async () => {
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-1", guestId: "g1", timestamp: "2024-01-01T10:00:00Z" }));
+    await rsvpLogRepo.append(makeRsvpLogEntry({ id: "log-2", guestId: "g1", timestamp: "2024-01-02T10:00:00Z" }));
+    const entries = await rsvpLogRepo.getByGuest("g1");
+    expect(entries[0].id).toBe("log-2");
   });
 });
