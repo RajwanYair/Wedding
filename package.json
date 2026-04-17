@@ -33,6 +33,7 @@
     },
     "comment:deps": "All devDependencies are installed in the parent MyScripts/ workspace. Run `npm install` from ../MyScripts to provision. CI uses its own npm ci.",
     "devDependencies": {
+        "@axe-core/playwright": "^4.10.2",
         "@eslint/js": "^10.2.0",
         "@playwright/test": "^1.59.1",
         "@vitest/coverage-v8": "^4.1.4",
