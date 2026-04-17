@@ -69,7 +69,7 @@ jobs:
         run: npm ci
 
       - name: npm audit
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=moderate
 
       - name: Check for dangerous JS patterns
         run: |
