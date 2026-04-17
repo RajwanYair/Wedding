@@ -2,7 +2,7 @@
 
 > Strategic reset for making the project a best-in-class wedding management application.
 > Last updated: 2025-07-19
-> Current baseline: v7.3.0 on main
+> Current baseline: v7.4.0 on main
 
 ---
 
@@ -699,6 +699,16 @@ This plan is outcome-based, not sprint-count-based.
 | R4 | Auth and security hardening | Server-enforced roles, audit log, reduced PII persistence |
 | R5 | Premium UX and messaging | Faster workflows, optional Cloud API messaging, polished guest flow |
 | R6 | Observability and platform readiness | Error pipeline, health dashboards, mature operations docs |
+
+### Version History
+
+| Version | Date | Highlights |
+| --- | --- | --- |
+| v7.0.0 | 2025-07-12 | Core modular rewrite, 3213 tests / 111 suites |
+| v7.1.0 | 2025-07-18 | Push notifications, command palette, drag-drop, timeline-analyzer, 3323 tests |
+| v7.2.0 | 2025-07-18 | Webhook service, notification preferences, report builder, checkin-session, accessibility-audit, 3445 tests |
+| v7.3.0 | 2025-07-18 | Vendor proposals, invitation analytics, SMS service, RSVP deadline, guest tagging, expense analytics, guest-lookup edge function, 3530 tests |
+| v7.4.0 | 2025-07-20 | Color-scheme manager, share service, deep links, feature flags, A/B test, contact dedup, donation tracker, seating constraints, focus trap, event bus, API client, locale detector, compliance tests, ADRs 010-012, migration 022, 3650+ tests |
 
 ### Recommended sequencing
 
