@@ -1460,10 +1460,15 @@ describe("S0.11: ESM entry point switch", function () {
       resolve(__dirname, "..", "src", "main.js"),
       "utf8",
     );
-    assert.ok(srcMain.includes("signOut"), "src/main.js must handle signOut");
+    const srcAuth = readFileSync(
+      resolve(__dirname, "..", "src", "handlers", "auth-handlers.js"),
+      "utf8",
+    );
+    const combined = `${srcMain}\n${srcAuth}`;
+    assert.ok(combined.includes("signOut"), "auth handlers must handle signOut");
     assert.ok(
-      srcMain.includes("showAuthOverlay"),
-      "src/main.js must handle showAuthOverlay",
+      combined.includes("showAuthOverlay"),
+      "auth handlers must handle showAuthOverlay",
     );
   });
 });
@@ -4270,10 +4275,16 @@ describe("Sprint 0: src/services named exports", function () {
       resolve(__dirname, "..", "src", "main.js"),
       "utf8",
     );
+    const sectionResolver = readFileSync(
+      resolve(__dirname, "..", "src", "core", "section-resolver.js"),
+      "utf8",
+    );
     // Accept either import.meta.glob (lazy) or individual imports (eager)
     assert.ok(
       src.includes('import.meta.glob("./sections/') ||
-        src.includes('from "./sections/dashboard.js"'),
+        src.includes('from "./sections/dashboard.js"') ||
+        src.includes("section-resolver") ||
+        sectionResolver.includes("import.meta.glob"),
       "section loading (glob or import) missing",
     );
   });

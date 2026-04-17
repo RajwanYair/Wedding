@@ -5,44 +5,41 @@
  * No canvas, no third-party charts — pure SVG.
  */
 
-import { storeGet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSubscribeScoped, cleanupScope } from "../core/store.js";
 import { t, currentLang } from "../core/i18n.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
+const _SCOPE = "analytics";
 
 export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("guests", renderAnalytics));
-  _unsubs.push(storeSubscribe("guests", renderSeatingMap));
-  _unsubs.push(storeSubscribe("expenses", renderBudgetChart));
-  _unsubs.push(storeSubscribe("vendors", _renderVendorTimeline));
-  _unsubs.push(storeSubscribe("vendors", renderBudgetChart));
-  _unsubs.push(storeSubscribe("tables", _renderTableFill));
-  _unsubs.push(storeSubscribe("tables", renderSeatingMap));
-  _unsubs.push(storeSubscribe("vendors", renderPaymentSchedule));
-  _unsubs.push(storeSubscribe("guests", renderRsvpTimeline));
-  _unsubs.push(storeSubscribe("expenses", renderExpenseDonut));
-  _unsubs.push(
-    storeSubscribe("vendors", () => {
-      checkBudgetOvershoot();
-      renderArrivalForecast();
-    }),
-  );
-  _unsubs.push(storeSubscribe("guests", renderArrivalForecast));
-  _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
+  storeSubscribeScoped("guests", renderAnalytics, _SCOPE);
+  storeSubscribeScoped("guests", renderSeatingMap, _SCOPE);
+  storeSubscribeScoped("expenses", renderBudgetChart, _SCOPE);
+  storeSubscribeScoped("vendors", _renderVendorTimeline, _SCOPE);
+  storeSubscribeScoped("vendors", renderBudgetChart, _SCOPE);
+  storeSubscribeScoped("tables", _renderTableFill, _SCOPE);
+  storeSubscribeScoped("tables", renderSeatingMap, _SCOPE);
+  storeSubscribeScoped("vendors", renderPaymentSchedule, _SCOPE);
+  storeSubscribeScoped("guests", renderRsvpTimeline, _SCOPE);
+  storeSubscribeScoped("expenses", renderExpenseDonut, _SCOPE);
+  storeSubscribeScoped("vendors", () => {
+    checkBudgetOvershoot();
+    renderArrivalForecast();
+  }, _SCOPE);
+  storeSubscribeScoped("guests", renderArrivalForecast, _SCOPE);
+  storeSubscribeScoped("tables", renderArrivalForecast, _SCOPE);
   // S22.2 expense trend chart
-  _unsubs.push(storeSubscribe("expenses", renderExpenseTrend));
+  storeSubscribeScoped("expenses", renderExpenseTrend, _SCOPE);
   // S24.4 tag breakdown
-  _unsubs.push(storeSubscribe("guests", renderTagBreakdown));
+  storeSubscribeScoped("guests", renderTagBreakdown, _SCOPE);
   // F4.1.2 no-show prediction
-  _unsubs.push(storeSubscribe("guests", renderNoShowPrediction));
+  storeSubscribeScoped("guests", renderNoShowPrediction, _SCOPE);
   // F4.3.2 response histogram
-  _unsubs.push(storeSubscribe("guests", renderResponseHistogram));
+  storeSubscribeScoped("guests", renderResponseHistogram, _SCOPE);
   // F4.3.3 budget burn-down
-  _unsubs.push(storeSubscribe("expenses", renderBudgetBurndown));
+  storeSubscribeScoped("expenses", renderBudgetBurndown, _SCOPE);
   // F4.3.4 seating score
-  _unsubs.push(storeSubscribe("guests", renderSeatingScore));
-  _unsubs.push(storeSubscribe("tables", renderSeatingScore));
+  storeSubscribeScoped("guests", renderSeatingScore, _SCOPE);
+  storeSubscribeScoped("tables", renderSeatingScore, _SCOPE);
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -62,8 +59,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
 }
 
 export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
+  cleanupScope(_SCOPE);
 }
 
 // ── Chart rendering ───────────────────────────────────────────────────────

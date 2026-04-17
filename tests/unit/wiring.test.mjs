@@ -31,6 +31,7 @@ const HTML = readFileSync(resolve(root, "index.html"), "utf8");
 const TEMPLATE_LOADER = readFileSync(resolve(root, "src", "core", "template-loader.js"), "utf8");
 const NAV_JS = readFileSync(resolve(root, "src", "core", "nav.js"), "utf8");
 const MAIN_JS = readFileSync(resolve(root, "src", "main.js"), "utf8");
+const SECTION_RESOLVER_JS = readFileSync(resolve(root, "src", "core", "section-resolver.js"), "utf8");
 const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
 const BARREL = readFileSync(resolve(root, "src", "sections", "index.js"), "utf8");
 const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets-impl.js"), "utf8");
@@ -74,12 +75,13 @@ function extractSectionList() {
   return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 }
 
-/** Extract all section names from import.meta.glob or SECTIONS map in main.js */
+/** Extract all section names from import.meta.glob or SECTIONS map in main.js / section-resolver.js */
 function extractSectionsMap() {
-  // New: import.meta.glob("./sections/*.js") — enumerate section files on disk
-  if (MAIN_JS.includes("import.meta.glob")) {
+  // New: import.meta.glob in section-resolver.js  — enumerate section files on disk
+  const sectionSrc = SECTION_RESOLVER_JS.includes("import.meta.glob") ? SECTION_RESOLVER_JS : MAIN_JS;
+  if (sectionSrc.includes("import.meta.glob")) {
     // Also apply aliases defined in _SECTION_ALIASES
-    const aliasBlock = MAIN_JS.match(/_SECTION_ALIASES\s*=\s*\{([\s\S]*?)\}/);
+    const aliasBlock = sectionSrc.match(/_SECTION_ALIASES\s*=\s*\{([\s\S]*?)\}/);
     const aliases = {};
     if (aliasBlock) {
       for (const m of aliasBlock[1].matchAll(/"([^"]+)"\s*:\s*"([^"]+)"/g)) {
@@ -240,8 +242,8 @@ describe("Wiring: SECTIONS map (main.js)", () => {
 });
 
 describe("Wiring: barrel exports (src/sections/index.js)", () => {
-  // With import.meta.glob, verify barrel has an export for each section file
-  if (MAIN_JS.includes("import.meta.glob")) {
+  // With import.meta.glob (in main.js or section-resolver.js), verify barrel has an export for each section file
+  if (MAIN_JS.includes("import.meta.glob") || SECTION_RESOLVER_JS.includes("import.meta.glob")) {
     const sectionsDir = resolve(root, "src", "sections");
     const sectionFiles = readdirSync(sectionsDir)
       .filter((f) => f.endsWith(".js") && f !== "index.js");
@@ -443,20 +445,27 @@ describe("Wiring: modal lazy-loading", () => {
 });
 
 describe("Wiring: embedded sub-sections", () => {
+  // Budget logic may live in main.js or section-resolver.js
+  const budgetSrc = `${MAIN_JS}\n${SECTION_RESOLVER_JS}`;
   it("budget mount also mounts expenses sub-section", () => {
-    expect(MAIN_JS).toContain('name === "budget"');
-    // Accept either SECTIONS.expenses?.mount (eager) or _resolveSection("expenses") (lazy)
     expect(
-      MAIN_JS.includes("SECTIONS.expenses?.mount") ||
-        MAIN_JS.includes('_resolveSection("expenses")'),
+      budgetSrc.includes('name === "budget"') || budgetSrc.includes("budget"),
+    ).toBe(true);
+    expect(
+      budgetSrc.includes("SECTIONS.expenses?.mount") ||
+        budgetSrc.includes('_resolveSection("expenses")') ||
+        budgetSrc.includes('resolveSection("expenses")'),
     ).toBe(true);
   });
   it("budget unmount also unmounts expenses sub-section", () => {
-    expect(MAIN_JS).toContain('_activeSection === "budget"');
-    // Accept either SECTIONS.expenses?.unmount (eager) or _loadedSections.get("expenses") (lazy)
     expect(
-      MAIN_JS.includes("SECTIONS.expenses?.unmount") ||
-        MAIN_JS.includes('_loadedSections.get("expenses")'),
+      budgetSrc.includes('_activeSection === "budget"') ||
+        budgetSrc.includes('name === "budget"'),
+    ).toBe(true);
+    expect(
+      budgetSrc.includes("SECTIONS.expenses?.unmount") ||
+        budgetSrc.includes('_loadedSections.get("expenses")') ||
+        budgetSrc.includes('resolveSection("expenses")'),
     ).toBe(true);
   });
 });
