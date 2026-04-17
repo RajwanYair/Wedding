@@ -138,6 +138,7 @@ export const ACTIONS = /** @type {const} */ ({
   CLEAN_CONFIG_DUPLICATES:   "cleanConfigDuplicates",
   TOGGLE_LIVE_SYNC:          "toggleLiveSync",
   TOGGLE_SHEETS_MIRROR:      "toggleSheetsMirror",
+  SAVE_WA_CLOUD_SETTINGS:    "saveWaCloudSettings",
   SAVE_WEB_APP_URL:          "saveWebAppUrl",
   SAVE_BACKEND_TYPE:         "saveBackendType",
   SAVE_SUPABASE_CONFIG:      "saveSupabaseConfig",

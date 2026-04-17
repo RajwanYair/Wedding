@@ -103,6 +103,20 @@ export function registerSettingsHandlers(ctx) {
     );
   });
 
+  on("saveWaCloudSettings", () => {
+    const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("waPhoneNumberId"));
+    if (!idEl) return;
+    const phoneNumId = idEl.value.trim();
+    if (!phoneNumId) {
+      showToast(t("wa_cloud_id_required"), "error");
+      return;
+    }
+    try {
+      localStorage.setItem("wedding_v1_wa_phone_number_id", phoneNumId);
+    } catch { /* ignore */ }
+    showToast(t("wa_cloud_saved"), "success");
+  });
+
   // ── Conflict resolution ──
   on("conflictAcceptAllLocal", () => {
     closeModal("conflictModal");

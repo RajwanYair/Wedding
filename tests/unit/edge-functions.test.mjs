@@ -51,6 +51,7 @@ const {
   sendRsvpEmail,
   syncToSheetsEdge,
   isSheetsMirrorEnabled,
+  sendWhatsAppCloudMessage,
 } = await import("../../src/services/backend.js");
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -272,5 +273,59 @@ describe("isSheetsMirrorEnabled", () => {
   it("returns false when key set to 'false'", () => {
     localStorage.setItem("wedding_v1_sheets_mirror", "false");
     expect(isSheetsMirrorEnabled()).toBe(false);
+  });
+});
+
+// ── Phase 10.1 — sendWhatsAppCloudMessage ─────────────────────────────────
+describe("sendWhatsAppCloudMessage", () => {
+  let fetchMock;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("calls whatsapp-send edge function with text message", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: true, messageId: "wamid.abc123" }),
+    });
+    const result = await sendWhatsAppCloudMessage("972501234567", { text: "שלום!" });
+    expect(result.ok).toBe(true);
+    const call = fetchMock.mock.calls[0];
+    expect(call[0]).toContain("whatsapp-send");
+    const body = JSON.parse(call[1].body);
+    expect(body.to).toBe("972501234567");
+    expect(body.text).toBe("שלום!");
+  });
+
+  it("calls whatsapp-send edge function with template message", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: true, messageId: "wamid.def456" }),
+    });
+    const result = await sendWhatsAppCloudMessage("972501234567", {
+      template: "rsvp_confirmation",
+      lang: "he",
+      params: ["Alice", "10:00"],
+    });
+    expect(result.ok).toBe(true);
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.template).toBe("rsvp_confirmation");
+    expect(body.params).toHaveLength(2);
+  });
+
+  it("returns ok:false on WA API error", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      json: async () => ({ ok: false, waError: { message: "Invalid phone" } }),
+    });
+    const result = await sendWhatsAppCloudMessage("bad", { text: "hi" });
+    expect(result.ok).toBe(false);
   });
 });

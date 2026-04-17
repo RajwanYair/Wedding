@@ -630,6 +630,31 @@
       </div>
     </div>
 
+    <!-- Phase 10.1 — WhatsApp Cloud API -->
+    <div class="settings-card" id="waCloudCard">
+      <h3>🟢 <span data-i18n="wa_cloud_title">WhatsApp Cloud API</span></h3>
+      <p data-i18n="wa_cloud_desc">
+        שלח הודעות דרך WhatsApp Cloud API — צור Edge Function בסופאבייס עם
+        WA_ACCESS_TOKEN ו-WA_PHONE_NUMBER_ID כ-Secrets.
+      </p>
+      <div class="sheets-url-row">
+        <label for="waPhoneNumberId" class="sheets-label" data-i18n="wa_phone_number_id_label">Phone Number ID</label>
+        <input
+          type="text"
+          id="waPhoneNumberId"
+          class="form-input"
+          data-i18n-placeholder="ph_wa_phone_number_id"
+          autocomplete="off"
+        >
+        <button class="btn btn-secondary" data-action="saveWaCloudSettings">
+          <span data-i18n="wa_cloud_save_btn">שמור</span>
+        </button>
+      </div>
+      <p class="text-hint" data-i18n="wa_cloud_hint">
+        ה-Token נשמר רק בסביבת Supabase Edge Function (לא בדפדפן).
+      </p>
+    </div>
+
     <!-- Danger Zone -->
     <div class="settings-card settings-card--danger">
       <h3>⚠️ <span data-i18n="clear_data_title">מחיקת נתונים</span></h3>

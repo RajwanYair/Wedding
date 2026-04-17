@@ -293,3 +293,16 @@ export function isSheetsMirrorEnabled() {
     return false;
   }
 }
+
+// ── Phase 10.1 — WhatsApp Cloud API client helper ─────────────────────────
+
+/**
+ * Send a WhatsApp message via the `whatsapp-send` Edge Function.
+ *
+ * @param {string} to - recipient E.164 phone number (digits only, no +)
+ * @param {{ text?: string, template?: string, lang?: string, params?: string[] }} msg
+ * @returns {Promise<{ok: boolean, messageId?: string, error?: string}>}
+ */
+export async function sendWhatsAppCloudMessage(to, msg) {
+  return callEdgeFunction("whatsapp-send", { to, ...msg });
+}
