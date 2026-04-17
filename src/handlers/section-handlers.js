@@ -172,19 +172,27 @@ export function registerSectionHandlers() {
   // Sprint 3: template variables, scheduling
   on("insertWaVar", (el) => {
     const varText = el.dataset.actionArg || "";
-    const textarea = /** @type {HTMLTextAreaElement|null} */ (document.getElementById("waTemplate"));
+    const textarea = /** @type {HTMLTextAreaElement|null} */ (
+      document.getElementById("waTemplate")
+    );
     if (!textarea) return;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    textarea.value = textarea.value.slice(0, start) + varText + textarea.value.slice(end);
+    textarea.value =
+      textarea.value.slice(0, start) + varText + textarea.value.slice(end);
     textarea.focus();
     textarea.setSelectionRange(start + varText.length, start + varText.length);
     updateWaPreview(textarea.value);
   });
   on("scheduleWaReminders", () => {
-    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("waScheduleDate"));
+    const input = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("waScheduleDate")
+    );
     const dateVal = input?.value;
-    if (!dateVal) { showToast(t("wa_schedule_no_date") || "Select a date first", "warning"); return; }
+    if (!dateVal) {
+      showToast(t("wa_schedule_no_date") || "Select a date first", "warning");
+      return;
+    }
     const count = scheduleReminders(new Date(dateVal).toISOString());
     showToast(t("wa_scheduled_count").replace("{n}", String(count)), "success");
     _updateScheduleStatus();
@@ -231,6 +239,31 @@ export function registerSectionHandlers() {
   on("toggleTimelineDone", (el) =>
     toggleTimelineDone(el.dataset.actionArg ?? ""),
   );
+
+  // ── Communication Hub (Phase 10.2) ──
+  on("commAddSample", () => {
+    const guests = /** @type {Array<Record<string, unknown>>} */ (
+      storeGet("guests") ?? []
+    );
+    const guest = guests[Math.floor(Math.random() * guests.length)];
+    const guestName = guest
+      ? `${guest.firstName ?? ""} ${guest.lastName ?? ""}`.trim()
+      : t("comm_sample_guest") || "אורח לדוגמה";
+    const log = /** @type {unknown[]} */ (storeGet("commLog") ?? []);
+    storeSet("commLog", [
+      ...log,
+      {
+        id: `cl_${Date.now()}`,
+        guestId: String(guest?.id ?? "test"),
+        guestName,
+        type: "whatsapp",
+        message: t("comm_sample_message"),
+        status: "pending",
+        ts: new Date().toISOString(),
+      },
+    ]);
+    showToast(t("comm_sample_added"), "success");
+  });
 }
 
 /** Update the scheduled reminders status display. */

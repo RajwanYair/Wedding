@@ -66,5 +66,6 @@ export function buildStoreDefs() {
       value: load("timelineDone", {}),
       storageKey: "timelineDone",
     },
+    commLog: { value: load("commLog", []), storageKey: "commLog" },
   };
 }

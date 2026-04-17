@@ -1016,6 +1016,24 @@ body.light-mode .analytics-stat-box { background: rgba(0, 0, 0, 0.04); }
 .badge--warn   { background: var(--warning); color: #000; }
 .badge--info   { background: var(--info); color: #fff; }
 .u-mb-sm { margin-bottom: 0.75rem; }
+
+/* Phase 10.2 — Communication Hub */
+.comm-log-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 360px; overflow-y: auto; }
+.comm-log-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+}
+.comm-log-name { font-weight: 600; }
+.comm-log-type { font-size: 0.7rem; }
+.comm-log-msg  { flex: 1; overflow-wrap: break-word; min-width: 120px; }
+.comm-log-ts   { white-space: nowrap; font-size: 0.7rem; margin-inline-start: auto; }
 body.light-mode .modal-overlay { background: rgba(0, 0, 0, 0.4); }
 body.light-mode [data-tooltip]::after {
   background: rgba(253, 247, 240, 0.98);

@@ -25,3 +25,4 @@ export * as contactSection from "./contact-collector.js";
 export * as registrySection from "./registry.js";
 export * as guestLandingSection from "./guest-landing.js";
 export * as changelogSection from "./changelog.js";
+export * as communicationSection from "./communication.js";

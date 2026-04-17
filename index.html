@@ -214,6 +214,9 @@
     <button class="nav-tab u-hidden" data-tab="whatsapp" data-admin-only data-action="showSection" data-action-arg="whatsapp" data-i18n-tooltip="tip_nav_whatsapp" data-tooltip-pos="down">
       <span>📱</span> <span data-i18n="nav_whatsapp">וואטסאפ</span>
     </button>
+    <button class="nav-tab u-hidden" data-tab="communication" data-admin-only data-action="showSection" data-action-arg="communication" data-i18n-tooltip="tip_nav_communication" data-tooltip-pos="down">
+      <span>💬</span> <span data-i18n="nav_communication">מרכז תקשורת</span>
+    </button>
     <button class="nav-tab" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp" data-i18n-tooltip="tip_nav_rsvp" data-tooltip-pos="down">
       <span>✅</span> <span data-i18n="nav_rsvp">אישור הגעה</span>
     </button>
@@ -337,6 +340,14 @@
          ══════════════════════════════════════════════════════════════════ -->
     <div class="section" id="sec-whatsapp" role="region" aria-label="וואטסאפ" data-i18n-aria="nav_whatsapp" data-template="whatsapp">
     <!-- S1: content loaded lazily — src/templates/whatsapp.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Communication Hub
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-communication" role="region" aria-label="מרכז תקשורת" data-i18n-aria="nav_communication" data-template="communication">
+    <!-- Phase 10.2: content loaded lazily — src/templates/communication.html -->
     <div class="section-skeleton" aria-hidden="true"></div>
   </div>
 

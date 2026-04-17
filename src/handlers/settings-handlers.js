@@ -8,6 +8,7 @@ import { on } from "../core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../core/ui.js";
 import { t } from "../core/i18n.js";
 import { load, save } from "../core/state.js";
+import { storeSet } from "../core/store.js";
 import {
   syncSheetsNow,
   sheetsCheckConnection,
@@ -257,6 +258,10 @@ export function registerSettingsHandlers(ctx) {
     showToast(t("audit_refresh_btn"), "info");
   });
   on("clearErrorLog", () => clearErrorLog());
+  on("clearCommLog", () => {
+    storeSet("commLog", []);
+    showToast(t("comm_cleared"), "info");
+  });
   on("exportJSON", () => exportJSON());
   on("importJSON", (el) => importJSON(el));
   on("exportAllCSV", () => exportAllCSV());
