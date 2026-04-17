@@ -48,6 +48,12 @@ const registryActions = new Set(
   ),
 );
 
+// Extract full key→value pairs from ACTIONS for duplicate value detection
+const _actionsRaw = [...registryJs.matchAll(/\b([A-Z][A-Z0-9_]+):\s*"([a-zA-Z][a-zA-Z0-9]*)"/g)]
+  .map((m) => /** @type {[string, string]} */ ([m[1], m[2]]));
+/** @type {Map<string, string>} key → value */
+const ACTIONS = new Map(_actionsRaw);
+
 // Templates + modals + index.html
 const templateSrcs = globRead("src/templates", ".html");
 const modalSrcs = globRead("src/modals", ".html");
@@ -104,9 +110,32 @@ if (unhandled === 0) {
 }
 
 // 3. Summary
+console.log("── Check 3: Duplicate action values in registry ──");
+/** @type {Map<string, string[]>} value → keys */
+const valueCounts = new Map();
+for (const [k, v] of ACTIONS) {
+  if (!valueCounts.has(v)) valueCounts.set(v, []);
+  /** @type {string[]} */ (valueCounts.get(v)).push(k);
+}
+let dupCount = 0;
+for (const [val, keys] of valueCounts) {
+  if (keys.length > 1) {
+    console.warn(`  ⚠  Duplicate value "${val}" used by: ${keys.join(", ")}`);
+    dupCount++;
+    warnings++;
+  }
+}
+if (dupCount === 0) {
+  console.log(`  ✓ No duplicate action values\n`);
+} else {
+  console.log(`  ⚠  ${dupCount} duplicate action value(s) — consolidate registry keys\n`);
+}
+
+// 4. Summary
 console.log("── Summary ──");
-console.log(`  Template actions:  ${templateActionSet.size}`);
-console.log(`  Registry actions:  ${registryActions.size}`);
+console.log(`  Template actions:    ${templateActionSet.size}`);
+console.log(`  Registry entries:    ${ACTIONS.size}`);
+console.log(`  Unique values:       ${registryActions.size}`);
 console.log(`  Registered handlers: ${registeredHandlerSet.size}`);
 if (warnings > 0) console.log(`  Warnings: ${warnings}`);
 if (failures > 0) {

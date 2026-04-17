@@ -81,7 +81,7 @@ export const ACTIONS = /** @type {const} */ ({
   PRINT_PLACE_CARDS: "printPlaceCards",
   PRINT_TABLE_SIGNS: "printTableSigns",
   PRINT_MEAL_PER_TABLE: "printMealPerTable",
-  EXPORT_MEAL_PER_TABLE: "exportMealPerTableCSV",
+  // EXPORT_MEAL_PER_TABLE alias removed — use EXPORT_MEAL_PER_TABLE_CSV
 
   // ── Check-in ───────────────────────────────────────────────────────────
   START_QR_SCAN: "startQrScan",
@@ -151,7 +151,7 @@ export const ACTIONS = /** @type {const} */ ({
   CLEAR_AUDIT_LOG: "clearAuditLog",
   REFRESH_AUDIT_LOG: "refreshAuditLog",
   CLEAR_ERROR_LOG: "clearErrorLog",
-  EXPORT_ANALYSIS_PDF: "exportAnalyticsPDF",
+  // EXPORT_ANALYSIS_PDF alias removed — use EXPORT_ANALYTICS_PDF
 
   // ── Conflict resolution ─────────────────────────────────────────────────
   CONFLICT_ACCEPT_ALL_LOCAL: "conflictAcceptAllLocal",
