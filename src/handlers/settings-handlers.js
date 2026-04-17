@@ -32,6 +32,7 @@ import {
   addApprovedEmail,
   clearAuditLog,
   clearErrorLog,
+  refreshAuditLog,
   generateRsvpQrCode,
   startAutoBackup,
   stopAutoBackup,
@@ -226,6 +227,10 @@ export function registerSettingsHandlers(ctx) {
     showToast(t("language_switched"), "info");
   });
   on("clearAuditLog", () => clearAuditLog());
+  on("refreshAuditLog", async () => {
+    await refreshAuditLog();
+    showToast(t("audit_refresh_btn"), "info");
+  });
   on("clearErrorLog", () => clearErrorLog());
   on("exportJSON", () => exportJSON());
   on("importJSON", (el) => importJSON(el));

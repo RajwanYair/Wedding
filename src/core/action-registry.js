@@ -145,6 +145,7 @@ export const ACTIONS = /** @type {const} */ ({
   ADD_APPROVED_EMAIL:        "addApprovedEmail",
   CLEAR_ALL_DATA:            "clearAllData",
   CLEAR_AUDIT_LOG:           "clearAuditLog",
+  REFRESH_AUDIT_LOG:         "refreshAuditLog",
   CLEAR_ERROR_LOG:           "clearErrorLog",
   EXPORT_ANALYSIS_PDF:       "exportAnalyticsPDF",
 

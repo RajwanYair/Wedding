@@ -533,6 +533,7 @@
     "audit_title": "יומן פעולות",
     "audit_desc": "רשימת כל הפעולות האחרונות",
     "audit_empty": "אין פעולות מתועדות עדיין",
+    "audit_refresh_btn": "טען מ-Supabase",
     "audit_clear_btn": "נקה יומן",
     "audit_clear_confirm": "למחוק את כל יומן הפעולות?",
     "audit_cleared": "יומן נוקה",

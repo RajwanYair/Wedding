@@ -529,6 +529,7 @@
     "audit_title": "Журнал действий",
     "audit_desc": "Последние действия администратора",
     "audit_empty": "Действий пока нет",
+    "audit_refresh_btn": "Загрузить из Supabase",
     "audit_clear_btn": "Очистить журнал",
     "audit_clear_confirm": "Удалить весь журнал?",
     "audit_cleared": "Журнал очищен",

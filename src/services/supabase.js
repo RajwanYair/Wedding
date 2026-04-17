@@ -172,3 +172,32 @@ export async function supabaseCheckConnection() {
     return false;
   }
 }
+
+// ── Audit log query (Phase 8.3) ──────────────────────────────────────────
+
+/**
+ * Fetch recent audit log entries from Supabase.
+ * Ordered by timestamp descending, limited to `limit` rows.
+ * Requires an admin session with RLS privileges.
+ *
+ * @param {number} [limit=200]
+ * @returns {Promise<Array<{action:string, entity:string, entity_id:string|null, user_email:string, ts:string, diff:unknown}>>}
+ */
+export async function fetchAuditLog(limit = 200) {
+  if (!isConfigured()) return [];
+  try {
+    const path = `/rest/v1/audit_log?select=action,entity,entity_id,user_email,ts,diff&order=ts.desc&limit=${limit}`;
+    const result = await _rest(path, { method: "GET", headers: { Prefer: "return=representation" } });
+    if (!Array.isArray(result)) return [];
+    return result.map((row) => ({
+      action: row.action ?? "",
+      entity: row.entity ?? "",
+      entityId: row.entity_id ?? null,
+      userEmail: row.user_email ?? "",
+      ts: row.ts ?? "",
+      diff: row.diff ?? null,
+    }));
+  } catch {
+    return [];
+  }
+}

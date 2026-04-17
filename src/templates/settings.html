@@ -545,9 +545,14 @@
           <tbody id="auditLogBody"></tbody>
         </table>
       </div>
-      <button class="btn btn-danger btn-small" data-action="clearAuditLog">
-        🗑️ <span data-i18n="audit_clear_btn">נקה יומן</span>
-      </button>
+      <div class="settings-btn-row">
+        <button class="btn btn-secondary btn-small" data-action="refreshAuditLog">
+          🔄 <span data-i18n="audit_refresh_btn">טען מ-Supabase</span>
+        </button>
+        <button class="btn btn-danger btn-small" data-action="clearAuditLog">
+          🗑️ <span data-i18n="audit_clear_btn">נקה יומן</span>
+        </button>
+      </div>
     </div>
 
     <!-- Error Monitor -->

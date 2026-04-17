@@ -22,9 +22,13 @@ const _unsubs = [];
  */
 export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("weddingInfo", populateSettings));
+  _unsubs.push(storeSubscribe("auditLog", renderAuditLog));
   populateSettings();
+  renderAuditLog();
   // Auto-generate QR code when settings section opens
   generateRsvpQrCode();
+  // Attempt to load remote audit log
+  refreshAuditLog();
 }
 
 export function unmount() {
@@ -354,10 +358,84 @@ export function clearAuditLog() {
 }
 
 /**
+ * Render local audit log entries into the #auditLogBody table.
+ * Fetches from Supabase `audit_log` table when backend is "supabase".
+ * Falls back to localStorage store when offline or not configured.
+ */
+export function renderAuditLog() {
+  const tbody = document.getElementById("auditLogBody");
+  if (!tbody) return;
+
+  const MAX = 200;
+  const raw = /** @type {unknown[]} */ (storeGet("auditLog") ?? []);
+  const entries = /** @type {Array<{action?:string, entity?:string, entityId?:string|null, userEmail?:string, ts?:string, diff?:unknown}>} */ (
+    raw.slice(-MAX).reverse()
+  );
+
+  tbody.textContent = "";
+
+  if (entries.length === 0) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "u-text-muted";
+    td.setAttribute("data-i18n", "audit_empty");
+    td.textContent = t("audit_empty");
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  for (const entry of entries) {
+    const tr = document.createElement("tr");
+
+    // Time
+    const tdTime = document.createElement("td");
+    const ts = entry.ts ? new Date(entry.ts) : null;
+    tdTime.textContent = ts
+      ? ts.toLocaleString("he-IL", { dateStyle: "short", timeStyle: "short" })
+      : "";
+    tr.appendChild(tdTime);
+
+    // Action
+    const tdAction = document.createElement("td");
+    const actionKey = `audit_action_${(entry.action ?? "").toLowerCase().replace(/[^a-z_]/g, "_")}`;
+    tdAction.textContent = t(actionKey) || String(entry.action ?? "");
+    tr.appendChild(tdAction);
+
+    // Detail (entity + entityId)
+    const tdDetail = document.createElement("td");
+    const detail = [entry.entity, entry.entityId].filter(Boolean).join(" #");
+    tdDetail.textContent = detail;
+    tr.appendChild(tdDetail);
+
+    // User
+    const tdUser = document.createElement("td");
+    tdUser.textContent = String(entry.userEmail ?? "");
+    tr.appendChild(tdUser);
+
+    tbody.appendChild(tr);
+  }
+}
+
+/**
  * Clear the error log.
  */
 export function clearErrorLog() {
   storeSet("errorLog", []);
+}
+
+/**
+ * Fetch remote audit log entries from Supabase and merge into the local store.
+ * No-op when backend is not Supabase or project is not configured.
+ */
+export async function refreshAuditLog() {
+  const { getBackendType } = await import("../services/backend.js");
+  if (getBackendType() !== "supabase") return;
+  const { fetchAuditLog } = await import("../services/supabase.js");
+  const remote = await fetchAuditLog(200);
+  if (remote.length === 0) return;
+  storeSet("auditLog", remote);
 }
 
 // ── Private helpers ───────────────────────────────────────────────────────
