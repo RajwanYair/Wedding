@@ -23,6 +23,8 @@
         "sri": "node scripts/sri-check.mjs",
         "precache": "node scripts/generate-precache.mjs",
         "size": "node scripts/size-report.mjs",
+        "bench": "node scripts/bench.mjs",
+        "typedoc": "typedoc --options .typedocrc.json",
         "docs": "node scripts/generate-docs.mjs",
         "typecheck": "tsc --noEmit",
         "validate": "node scripts/validate-actions.mjs",

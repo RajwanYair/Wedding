@@ -1,0 +1,20 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/main.js"],
+  "entryPointStrategy": "resolve",
+  "out": "docs/api",
+  "name": "Wedding Manager",
+  "readme": "README.md",
+  "includeVersion": true,
+  "searchInComments": true,
+  "githubPages": false,
+  "exclude": ["**/*.test.*", "**/*.spec.*", "tests/**"],
+  "plugin": [],
+  "navigationLinks": {
+    "GitHub": "https://github.com/rajwanyair/Wedding"
+  },
+  "customCss": "",
+  "cleanOutputDir": true,
+  "treatWarningsAsErrors": false,
+  "logLevel": "Warn"
+}
