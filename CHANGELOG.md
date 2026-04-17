@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.4.0] — 2025-07-19
+
+> **Utility & Developer Toolkit** — 9-sprint batch covering export helpers, a11y auditing, print layouts, guest token service, token-gate utility, performance utilities, and admin debug tools.
+
+### Sprint 31 — Security regression tests
+
+- `tests/unit/security.test.mjs`: 30 XSS / prototype-pollution / input-validation tests
+- Fix: `src/utils/sanitize.js` email type now checks `_SCRIPTS_RE` (XSS in email fields)
+
+### Sprint 32 — Skeleton loading states
+
+- `src/utils/skeleton.js`: `showSkeleton`, `hideSkeleton`, `isSkeletonVisible`, `createSkeletonRows`, `clearSkeletonRows`, `runWithSkeleton`
+- Tests: 19 new (skeleton.test.mjs)
+
+### Sprint 33 — Export helpers CSV/JSON
+
+- `src/utils/export-helpers.js`: `escapeCSV`, `rowsToCSV`, `guestsToCSV`, `vendorsToCSV`, `expensesToCSV`, `toJSON`, `jsonToBlob`, `downloadFile`, `parseCSV`
+- Tests: 27 new (export-helpers.test.mjs); includes round-trip guard
+
+### Sprint 34 — Accessibility audit utilities
+
+- `src/utils/a11y.js`: `auditImages`, `auditForms`, `auditHeadings`, `auditInteractive`, `auditContrast`, `auditAll`
+- Tests: 22 new (a11y.test.mjs)
+
+### Sprint 35 — Print layout utilities
+
+- `src/utils/print-helpers.js`: `buildPrintHTML`, `buildGuestListHTML`, `buildSeatingChartHTML`, `buildVendorListHTML`, `triggerPrint`, `stripTags`
+- Tests: 19 new (print-helpers.test.mjs)
+
+### Sprint 36 — Guest token service
+
+- `src/services/guest-token.js`: `generateToken`, `parseToken`, `verifyToken`, `isTokenExpired`, `revokeToken`, `isRevoked`, `clearRevokedTokens`, `getGuestByToken`, `issueGuestToken`, `recordIssuedToken`
+- Fix: `b64urlDecode` padding formula corrected from XOR formula to standard `remainder-based` padding
+- Tests: 24 new (guest-token.test.mjs)
+
+### Sprint 37 — Token-gate utility
+
+- `src/utils/token-gate.js`: `isTokenValid`, `withTokenGate`, `requireToken`, `withTokenGateAsync`, `gateElement`, `gateControl`, `watchToken`
+- Tests: 22 new (token-gate.test.mjs)
+
+### Sprint 38 — Performance utilities
+
+- `src/utils/perf.js`: `debounce` (with cancel/flush), `throttle`, `memoize`, `memoizeAsync`, `measureAsync`, `once`, `createBatcher`
+- Tests: 21 new (perf.test.mjs)
+
+### Sprint 39 — Admin debug utilities
+
+- `src/utils/admin-debug.js`: `dumpStore`, `diffStore`, `validateStoreShape`, `getStoreHealth`, `resetKey`, `setDebugFlag`, `getDebugFlag`
+- Tests: 17 new (admin-debug.test.mjs)
+
+### Sprint 40 — v6.4.0 release
+
+- Full test suite: **2605 tests / 71 suites** — all pass (0 failures)
+- Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
+
 ## [6.3.0] — 2025-07-18
 
 > **Domain Service Layer & GDPR** — 10-sprint uplift covering immutable helpers, optimistic updates, soft-delete, store subscription tracking, guest/table/vendor/expense domain services, conflict resolution logic, and privacy admin utilities.
