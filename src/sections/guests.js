@@ -50,6 +50,12 @@ export function unmount() {
   _unsubs.length = 0;
 }
 
+/**
+ * Section capabilities declaration.
+ * @type {import('../types').SectionCapabilities}
+ */
+export const capabilities = { offline: true, printable: true, analytics: true };
+
 // ── Guest CRUD ────────────────────────────────────────────────────────────
 
 /**

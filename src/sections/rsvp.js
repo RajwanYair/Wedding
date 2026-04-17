@@ -36,6 +36,12 @@ export function unmount() {
   _container = null;
 }
 
+/**
+ * Section capabilities declaration.
+ * @type {import('../types').SectionCapabilities}
+ */
+export const capabilities = { offline: true, public: true };
+
 // ── S11.1 Auto-lookup from URL ────────────────────────────────────────────
 
 /**
