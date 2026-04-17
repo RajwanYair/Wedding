@@ -4,6 +4,98 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.0.0] — 2025-07-10
+
+> **Architecture Renaissance** — Modular core, Supabase-first backend, full security hardening.
+
+### Breaking Changes
+
+- `main.js` reduced from 553 → 162 lines; section loading moved to `src/core/section-resolver.js`
+- Event handlers moved to `src/handlers/event-handlers.js`
+- Auth handlers moved to `src/handlers/auth-handlers.js`; nav-auth to `src/core/nav-auth.js`
+
+### Phase 6 — Architecture
+
+#### Sprint S6 (Phase 6.3) — main.js modularization
+
+- `src/core/section-resolver.js` — section lifecycle, lazy-loading, auth-gating
+- `src/handlers/event-handlers.js` — event switcher (doSwitchEvent, doAddEvent)
+- `src/core/nav-auth.js` — nav visibility based on auth state
+- `src/handlers/auth-handlers.js` — registerAuthHandlers() for 6 auth actions
+- 1896 tests passing (was 1864, +32 new tests)
+
+#### Sprint S7 (Phase 6.5) — Action Registry
+
+- `src/core/action-registry.js` — 108 typed `ACTIONS` constants, single source of truth
+- `scripts/validate-actions.mjs` — pre-build validation: templates vs registry vs handlers
+- `npm run validate` — exits non-zero on any mismatch
+
+### Phase 7 — Supabase Backend
+
+#### Sprint S8 (Phase 7.1) — Supabase Migrations
+
+- `supabase/migrations/003_triggers.sql` — `updated_at` auto-triggers, `upsert_guest/upsert_table`
+- `supabase/migrations/004_audit_log.sql` — audit trail table, RLS policies, diff tracking
+- `supabase/migrations/005_error_log.sql` — error log, materialized hourly summary view
+- `supabase/migrations/006_weddinginfo_config.sql` — weddingInfo as JSONB in config table
+
+#### Sprint S9 (Phase 7.3+7.4) — Supabase Auth + Realtime Services
+
+- `src/services/supabase-auth.js` — zero-dep Auth REST client (OAuth, magic link, anonymous)
+- `src/services/supabase-realtime.js` — native WebSocket Realtime client, exponential backoff
+
+### Phase 8 — Security
+
+#### Sprint S10 (Phase 8.3+8.4) — Audit Client + CodeQL
+
+- `src/services/audit.js` — fire-and-forget audit entry writer + error logger
+- `.github/workflows/codeql.yml` — CodeQL SAST (weekly + on push to main)
+- `npm audit --audit-level=moderate` (was `--audit-level=high`)
+
+### Phase 9 — UX & Accessibility
+
+#### Sprint S11 (Phase 9.1+9.2) — Mobile E2E + axe-core
+
+- `tests/e2e/mobile.spec.mjs` — mobile (360px) and tablet (768px) viewport E2E tests
+- Touch target validation (≥32px), no-overflow, reduced-motion CDP emulation
+- `@axe-core/playwright` added to devDependencies
+
+#### Sprint S12 (Phase 9.3) — i18n Parity + CSS Logical Props
+
+- `scripts/validate-i18n.mjs` — 4-locale parity validator, included in `npm run ci`
+- `scripts/_sync-i18n-parity.mjs` — synced all locales to 1048 keys each
+- 32 new keys added to he/en (plural rules, WA reminders, email templates, PDF summary)
+- 10 keys added to ar/ru (user_mgr, noshow, suggest, ics_wedding_title)
+- `margin-right/left` → `margin-inline-start/end` in components.css (6 instances)
+
+#### Sprint S13 (Phase 9.4) — Performance + CI Gates
+
+- `storageSetBatch(entries)` in `storage.js` — batch IDB writes in single transaction
+- CI: `npm run validate` + `npm run validate:i18n` gates before unit tests
+
+### Phase 10 — Intelligence & Automation
+
+#### Sprint S14 (Phase 10.4) — Smart Automation Helpers
+
+- `src/utils/smart-automation.js` — pure utility functions, no side effects
+  - `smartFollowUp(guests)` — follow-up candidates sorted by priority (high/medium/low)
+  - `summarizeFollowUp(candidates)` — {high, medium, low, total} counts
+  - `buildDayOfPlaybook(timeline, vendors)` — chronological day-of checklist
+  - `scoreSeatingCandidate(guest, table, seated)` — 0-100 seating fit score
+- `tests/unit/smart-automation.test.mjs` — 19 unit tests (39 test files total)
+
+### Statistics
+
+| Metric | v5.5.0 | v6.0.0 |
+| --- | --- | --- |
+| Tests | 1864 | **1915** |
+| Test files | 34 | **39** |
+| Source files | ~70 | **~85** |
+| i18n keys | 1016 | **1048** |
+| Supabase migrations | 2 | **6** |
+| Action constants | — | **108** |
+| CI steps | 4 | **8** |
+
 ## [5.5.0] — 2025-06-20
 
 ### Added — 45 Intelligence Helpers (Sprints 1–9)

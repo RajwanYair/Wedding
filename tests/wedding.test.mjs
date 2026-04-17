@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Test Suite v5.5.0
+// Wedding Manager — Test Suite v6.0.0
 // Run: npm test
 // 1587+ tests — core + extended + S0–S25 features
 // =============================================================================
@@ -55,17 +55,17 @@ const SRC = `${HTML}\n${CSS}\n${JS}`;
 
 // ── Version ──
 describe("Version", function () {
-  it("src/core/config.js contains v5.5.0", function () {
+  it("src/core/config.js contains v6.0.0", function () {
     const cfg = readFileSync(resolve(__dirname, "..", "src", "core", "config.js"), "utf8");
-    assert.ok(cfg.includes("5.5.0"));
+    assert.ok(cfg.includes("6.0.0"));
   });
 
-  it("SW cache name contains v5.5.0", function () {
-    assert.ok(SW.includes("wedding-v5.5.0"));
+  it("SW cache name contains v6.0.0", function () {
+    assert.ok(SW.includes("wedding-v6.0.0"));
   });
 
-  it("package.json version is 5.5.0", function () {
-    assert.equal(PKG.version, "5.5.0");
+  it("package.json version is 6.0.0", function () {
+    assert.equal(PKG.version, "6.0.0");
   });
 });
 
@@ -753,7 +753,7 @@ describe("UI Components", function () {
 // ── Service Worker ──
 describe("Service Worker", function () {
   it("has cache name with version", function () {
-    assert.ok(SW.includes("wedding-v5.5.0"));
+    assert.ok(SW.includes("wedding-v6.0.0"));
   });
 
   it("pre-caches app shell", function () {
@@ -6007,17 +6007,18 @@ describe("v3.7.0: version stamps consistent", function () {
         src.includes("3.8") ||
         src.includes("3.9") ||
         src.includes("4.") ||
-        src.includes("5."),
+        src.includes("5.") ||
+        src.includes("6."),
       "src/core/config.js APP_VERSION not updated",
     );
   });
-  it("copilot-instructions.md references v5.5.0 or later", function () {
+  it("copilot-instructions.md references v6.0.0 or later", function () {
     const src = readFileSync(
       resolve(__dirname, "..", ".github", "copilot-instructions.md"),
       "utf8",
     );
     assert.ok(
-      src.includes("4.7") || src.includes("5."),
+      src.includes("4.7") || src.includes("5.") || src.includes("6."),
       "copilot-instructions.md not updated",
     );
   });
@@ -6028,7 +6029,8 @@ describe("v3.7.0: version stamps consistent", function () {
         src.includes("v3.8") ||
         src.includes("v3.9") ||
         src.includes("v4.") ||
-        src.includes("v5."),
+        src.includes("v5.") ||
+        src.includes("v6."),
       "README.md version badge not updated",
     );
   });
