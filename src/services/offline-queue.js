@@ -13,6 +13,9 @@ import { t } from "../core/i18n.js";
 /** @type {{ type: string, payload: unknown, addedAt: string, retries: number }[]} */
 let _queue = [];
 
+/** Count of items dropped after exhausting MAX_RETRIES this session. */
+let _exhaustedCount = 0;
+
 /** @type {string | null} */
 let _webAppUrl = null;
 
@@ -88,8 +91,10 @@ export function flushOfflineQueue() {
 
   function next() {
     if (pending.length === 0) {
-      // Re-queue failed items up to MAX_RETRIES
+      // Re-queue failed items up to MAX_RETRIES; drop and count exhausted ones
       const requeue = failed.filter((item) => (item.retries ?? 0) < MAX_RETRIES);
+      const exhausted = failed.filter((item) => (item.retries ?? 0) >= MAX_RETRIES);
+      _exhaustedCount += exhausted.length;
       requeue.forEach((item) => { item.retries = (item.retries ?? 0) + 1; });
 
       if (requeue.length > 0) {
@@ -120,6 +125,18 @@ export function flushOfflineQueue() {
  */
 export function getOfflineQueueCount() {
   return _queue.length;
+}
+
+/**
+ * Get a summary of queue health.
+ * @returns {{ total: number, exhausted: number, oldestAddedAt: string | null }}
+ */
+export function getQueueStats() {
+  const oldest =
+    _queue.length > 0
+      ? _queue.reduce((a, b) => (a.addedAt < b.addedAt ? a : b)).addedAt
+      : null;
+  return { total: _queue.length, exhausted: _exhaustedCount, oldestAddedAt: oldest };
 }
 
 // ── Internal ──────────────────────────────────────────────────────────────
