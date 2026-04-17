@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.7.0] — 2025-08-04
+
+> **Utility Modules & Extended Coverage** — 9-sprint batch: sync-manager orchestrator, query-builder, deep-merge, cache-manager (TTL), string-helpers, schema-validator, event-queue, data-pipeline, presence tests. 4041 tests / 167 suites.
+
+### Sprint 161 — Sync Manager
+
+- `src/services/sync-manager.js`: `enqueueSync`, `flushSync`, `getSyncStatus`, `getPendingKeys`, `getFailedKeys`, `clearFailure`, `onSyncStatusChange`, `_resetForTesting` — debounced write queue with retry/backoff
+- `tests/unit/sync-manager.test.mjs`: 15 tests
+
+### Sprint 162 — Query Builder
+
+- `src/utils/query-builder.js`: fluent `Query` class with `where`, `whereIn`, `whereNotIn`, `filter`, `orderBy`, `limit`, `offset`, `count`, `first`
+- `tests/unit/query-builder.test.mjs`: 20 tests
+
+### Sprint 163 — Deep Merge
+
+- `src/utils/deep-merge.js`: `deepMerge`, `deepMergeAll`, `mergeArraysById`, `pick`, `omit`
+- `tests/unit/deep-merge.test.mjs`: 23 tests
+
+### Sprint 164 — Cache Manager
+
+- `src/utils/cache-manager.js`: TTL-based `CacheManager` with `set`, `get`, `has`, `delete`, `invalidatePrefix`, `invalidatePattern`, `clear`, `getOrCompute`, `onEvict`
+- `tests/unit/cache-manager.test.mjs`: 20 tests
+
+### Sprint 165 — String Helpers
+
+- `src/utils/string-helpers.js`: `capitalize`, `toTitleCase`, `truncate`, `slugify`, `padStart`, `countOccurrences`, `isBlank`, `normalizeForSearch`, `escapeRegex`, `interpolate`, `formatNumber`
+- `tests/unit/string-helpers.test.mjs`: 33 tests
+
+### Sprint 166 — Schema Validator
+
+- `src/utils/schema-validator.js`: composable validators `required`, `maxLength`, `minLength`, `min`, `max`, `pattern`, `email`, `phone`, `oneOf`, `validate`, `isValid`
+- `tests/unit/schema-validator.test.mjs`: 34 tests
+
+### Sprint 167 — Event Queue
+
+- `src/utils/event-queue.js`: Priority FIFO `EventQueue` with deduplication, size cap, `drain`, `onDrain`
+- `tests/unit/event-queue.test.mjs`: 18 tests
+
+### Sprint 168 — Data Pipeline
+
+- `src/utils/data-pipeline.js`: fluent `Pipeline` with `map`, `filter`, `sortBy`, `take`, `skip`, `unique`, `reduce`, `groupBy`, `stats`, `mapAsync`, `tap`
+- `tests/unit/data-pipeline.test.mjs`: 24 tests
+
+### Sprint 169 — Presence Tests
+
+- `tests/unit/presence.test.mjs`: `startPresence`, `stopPresence`, `getPresence`, `onPresenceChange` — 10 tests
+
 ## [7.6.0] — 2025-08-04
 
 > **Test Coverage Expansion & New Utilities** — 9-sprint batch: dedicated tests for supabase-auth, audit service, base-repository, constants, whats-new, defaults. New modules: view-model DTOs, list-diff, url-helpers. 3844 tests / 158 suites.
