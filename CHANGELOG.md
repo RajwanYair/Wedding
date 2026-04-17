@@ -4,6 +4,76 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.4.0] — 2025-08-03
+
+> **Platform Utilities & Compliance** — 20-sprint batch: color-scheme manager, share service, deep links, feature flags, A/B test utility, contact deduplication, donation tracker, seating constraints, focus trap, event bus, API client, locale detector, generate-changelog script, UX regression tests, seating constraints, compliance integration tests, ADRs 010-012, Supabase migration 022 (version matrix + feature flags), ROADMAP update. 3667 tests / 147 suites.
+
+### Sprint 131 — Color Scheme Manager
+
+- `src/utils/color-scheme-manager.js`: list themes, get/set/clear active theme, injectable storage
+
+### Sprint 132 — Share Service
+
+- `src/services/share-service.js`: native share → clipboard fallback chain, `buildShareUrl`
+
+### Sprint 133 — Deep Link Utility
+
+- `src/utils/deep-link.js`: `parseDeepLink`, `buildDeepLink`, `isKnownSection`, `validateDeepLink`
+
+### Sprint 134 — Feature Flags
+
+- `src/utils/feature-flags.js`: register/set/reset flags, `applyUrlFlags` (ff_ prefix)
+
+### Sprint 135 — A/B Test Utility
+
+- `src/utils/ab-test.js`: deterministic djb2 variant assignment, `isFeatureEnabled` rollout helper
+
+### Sprint 136 — Contact Deduplication
+
+- `src/services/contact-dedup.js`: Jaro similarity, phone normalisation, `findDuplicates`, `mergeContacts`
+
+### Sprint 137 — Donation Tracker
+
+- `src/services/donation-tracker.js`: goals, donations, stats (percentFunded, remaining, donors)
+
+### Sprint 138 — Seating Constraints
+
+- `src/services/seating-constraints.js`: near/far constraints, `validateSeating`, `suggestSwaps`
+
+### Sprint 139 — UX Regression Tests
+
+- `tests/integration/ux-regression.test.mjs`: filter persistence, sort stability, routing guard
+
+### Sprint 141 — Generate Changelog Script
+
+- `scripts/generate-changelog.mjs`: git-log-based CHANGELOG skeleton generator
+
+### Sprint 142 — API Client
+
+- `src/utils/api-client.js`: `createApiClient` with auth header, retry/backoff, timeout, AbortError guard
+
+### Sprint 143 — Locale Detector
+
+- `src/utils/locale-detector.js`: `detectLocale`, `isRtl`, `resolveAppLocale`, `getLocaleInfo`
+
+### Sprint 144 — Focus Trap
+
+- `src/utils/focus-trap.js`: WCAG 2.1-compliant modal focus trap, injectable tabbable resolver
+
+### Sprint 145 — Event Bus
+
+- `src/utils/event-bus.js`: lightweight pub/sub `on`/`once`/`off`/`emit`/`clearAll`/`activeEvents`
+
+### Sprint 146-148 — ADRs, Migration, Compliance Tests
+
+- `docs/adr/010-012`: A/B testing, focus trap, event bus architectural decisions
+- `supabase/migrations/022_version_matrix.sql`: version_matrix + feature_flags tables with RLS
+- `tests/integration/compliance.test.mjs`: PII sanitization, data model integrity, GDPR logical deletion
+
+### Sprint 149 — ROADMAP Update
+
+- ROADMAP.md: version history table, current baseline updated to v7.4.0
+
 ## [7.3.0] — 2025-08-03
 
 > **Vendor Proposals, Analytics & Outreach** — 10-sprint batch adding vendor proposal lifecycle, invitation open/click/RSVP funnel analytics, SMS service, RSVP deadline utilities, guest tagging, expense analytics, guest-lookup Edge Function, security input regression tests, and event metadata SQL. 3530 tests / 133 suites.
