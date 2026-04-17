@@ -137,6 +137,7 @@ export const ACTIONS = /** @type {const} */ ({
   CREATE_MISSING_SHEET_TABS: "createMissingSheetTabs",
   CLEAN_CONFIG_DUPLICATES:   "cleanConfigDuplicates",
   TOGGLE_LIVE_SYNC:          "toggleLiveSync",
+  TOGGLE_SHEETS_MIRROR:      "toggleSheetsMirror",
   SAVE_WEB_APP_URL:          "saveWebAppUrl",
   SAVE_BACKEND_TYPE:         "saveBackendType",
   SAVE_SUPABASE_CONFIG:      "saveSupabaseConfig",

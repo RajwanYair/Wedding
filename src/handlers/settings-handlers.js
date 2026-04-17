@@ -92,6 +92,17 @@ export function registerSettingsHandlers(ctx) {
     }
   });
 
+  on("toggleSheetsMirror", (el) => {
+    const checked = /** @type {HTMLInputElement} */ (el).checked;
+    try {
+      localStorage.setItem("wedding_v1_sheets_mirror", checked ? "true" : "false");
+    } catch { /* ignore */ }
+    showToast(
+      checked ? t("sheets_mirror_on") : t("sheets_mirror_off"),
+      checked ? "success" : "info",
+    );
+  });
+
   // ── Conflict resolution ──
   on("conflictAcceptAllLocal", () => {
     closeModal("conflictModal");

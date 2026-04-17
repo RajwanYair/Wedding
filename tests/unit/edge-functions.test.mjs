@@ -45,9 +45,13 @@ vi.mock("../../src/services/supabase.js", () => ({
   supabaseCheckConnection: vi.fn(),
 }));
 
-const { callEdgeFunction, checkEdgeHealth, sendRsvpEmail } = await import(
-  "../../src/services/backend.js"
-);
+const {
+  callEdgeFunction,
+  checkEdgeHealth,
+  sendRsvpEmail,
+  syncToSheetsEdge,
+  isSheetsMirrorEnabled,
+} = await import("../../src/services/backend.js");
 
 // ── Tests ─────────────────────────────────────────────────────────────────
 
@@ -198,5 +202,75 @@ describe("sendRsvpEmail", () => {
       sendRsvpEmail("Alice", "alice@example.com", "declined"),
     ).resolves.toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
+  });
+});
+// ── Phase 7.5 — syncToSheetsEdge / isSheetsMirrorEnabled ─────────────────
+describe("syncToSheetsEdge", () => {
+  let fetchMock;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("calls sync-to-sheets edge function with resource and rows", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: true, resource: "guests", rows: 3, updatedCells: 12 }),
+    });
+    const rows = [["id", "name"], ["1", "Alice"], ["2", "Bob"]];
+    const result = await syncToSheetsEdge("guests", rows);
+    expect(result.ok).toBe(true);
+    const call = fetchMock.mock.calls[0];
+    expect(call[0]).toContain("sync-to-sheets");
+    const body = JSON.parse(call[1].body);
+    expect(body.resource).toBe("guests");
+    expect(body.rows).toHaveLength(3);
+  });
+
+  it("returns ok:false on HTTP error from sheet sync", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 503,
+      json: async () => ({ error: "Sheets sync not configured" }),
+    });
+    const result = await syncToSheetsEdge("guests", []);
+    expect(result.ok).toBe(false);
+  });
+});
+
+describe("isSheetsMirrorEnabled", () => {
+  /** @type {Map<string, string>} */
+  let store;
+
+  beforeEach(() => {
+    store = new Map();
+    vi.stubGlobal("localStorage", {
+      getItem: (k) => store.get(k) ?? null,
+      setItem: (k, v) => store.set(k, v),
+      removeItem: (k) => store.delete(k),
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("returns false when key not set", () => {
+    expect(isSheetsMirrorEnabled()).toBe(false);
+  });
+
+  it("returns true when key set to 'true'", () => {
+    localStorage.setItem("wedding_v1_sheets_mirror", "true");
+    expect(isSheetsMirrorEnabled()).toBe(true);
+  });
+
+  it("returns false when key set to 'false'", () => {
+    localStorage.setItem("wedding_v1_sheets_mirror", "false");
+    expect(isSheetsMirrorEnabled()).toBe(false);
   });
 });

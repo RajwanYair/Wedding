@@ -264,3 +264,32 @@ export async function sendRsvpEmail(guestName, guestEmail, status, opts = {}) {
     console.warn("[backend] sendRsvpEmail failed:", result.error);
   }
 }
+
+// ── Phase 7.5 — Sheets Mirror via Edge Function ──────────────────────────
+
+/**
+ * Push a resource (guests / tables / vendors / expenses) to Google Sheets
+ * via the `sync-to-sheets` Edge Function.
+ *
+ * Pass `rows` as a 2-D array (header row first).
+ *
+ * @param {'guests'|'tables'|'vendors'|'expenses'|'rsvp_log'} resource
+ * @param {unknown[][]} rows
+ * @returns {Promise<{ok: boolean, updatedCells?: number, error?: string}>}
+ */
+export async function syncToSheetsEdge(resource, rows) {
+  return callEdgeFunction("sync-to-sheets", { resource, rows });
+}
+
+/**
+ * Check whether the Sheets mirror feature is enabled in localStorage.
+ * Controlled by the Settings section toggle.
+ * @returns {boolean}
+ */
+export function isSheetsMirrorEnabled() {
+  try {
+    return localStorage.getItem("wedding_v1_sheets_mirror") === "true";
+  } catch {
+    return false;
+  }
+}
