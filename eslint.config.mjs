@@ -16,6 +16,7 @@ export default [
         localStorage: "readonly",
         sessionStorage: "readonly",
         fetch: "readonly",
+        Headers: "readonly",
         AbortController: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
