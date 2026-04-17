@@ -2,7 +2,7 @@
 
 > Strategic reset for making the project a best-in-class wedding management application.
 > Last updated: 2025-07-19
-> Current baseline: v7.2.0 on main
+> Current baseline: v7.3.0 on main
 
 ---
 

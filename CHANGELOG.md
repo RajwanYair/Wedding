@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.3.0] — 2025-08-03
+
+> **Vendor Proposals, Analytics & Outreach** — 10-sprint batch adding vendor proposal lifecycle, invitation open/click/RSVP funnel analytics, SMS service, RSVP deadline utilities, guest tagging, expense analytics, guest-lookup Edge Function, security input regression tests, and event metadata SQL. 3530 tests / 133 suites.
+
+### Sprint 121 — Vendor proposals
+
+- `src/services/vendor-proposals.js`: draft/send/accept/decline/expire proposal lifecycle + stats (18 tests)
+
+### Sprint 122 — Invitation analytics
+
+- `src/services/invitation-analytics.js`: open/click/rsvp event tracking + funnel stats (15 tests)
+
+### Sprint 123 — SMS service
+
+- `src/services/sms-service.js`: batch SMS via sms-dispatcher Edge Function with test stub (9 tests)
+
+### Sprint 124 — RSVP deadline utilities
+
+- `src/utils/rsvp-deadline.js`: countdown, overdue detection, reminder schedule, deadline summary (16 tests)
+
+### Sprint 125 — Guest tagging
+
+- `src/utils/guest-tagging.js`: global tag registry + per-guest add/remove/search (15 tests)
+
+### Sprint 126 — (table-optimizer reserved)
+
+### Sprint 127 — Expense analytics
+
+- `src/services/expense-analytics.js`: groupByCategory, monthly totals, top categories, budget utilization (10 tests)
+
+### Sprint 128 — Guest-lookup Edge Function
+
+- `supabase/functions/guest-lookup/index.ts`: Deno Edge Function for phone/id-based guest lookup (RSVP flow)
+
+### Sprint 129 — Security input regression tests
+
+- `tests/integration/security-input.test.mjs`: XSS prevention, proto-pollution guard, phone normalisation, auth boundary, length limits (13 tests)
+
+### Sprint 130 — v7.3.0 release
+
+- Version bump to 7.3.0 across all files; full test suite green: 3530 / 133
+
 ## [7.2.0] — 2025-08-03
 
 > **Offline Resilience, Accessibility & Multi-Event** — 10-sprint batch adding webhook service, notification preferences, report builder, multi-event management, budget-tracker envelopes, check-in sessions, WCAG contrast/label/ARIA audit utilities, sync-resilience integration tests, and event-metadata SQL migration. 3445 tests / 126 suites.
