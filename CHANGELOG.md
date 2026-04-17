@@ -4,38 +4,93 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.8.0] — 2025-08-01
+
+> **Supabase Repository Layer** — 10-sprint batch adding Supabase repository pattern (base + guest + table + vendor + expense + RSVP log), DB migrations for soft-deletes (017), multi-event scoping (018), extended guest model (019), and Supabase health checker service. 3053 tests / 98 suites.
+
+### Sprint 71 \u2014 Soft-delete + active views (migration 017)
+
+- `supabase/migrations/017_soft_delete_contacts_view.sql` \u2014 `deleted_at` column on `contacts`, `active_*` security_invoker views, `purge_deleted(days_old)` PLPGSQL function
+
+### Sprint 72 \u2014 Multi-event scoping (migration 018)
+
+- `supabase/migrations/018_event_id_scoping.sql` \u2014 `events` table, `event_id` FK on all domain tables, `current_event_id()` JWT helper, updated `active_*` views with event filter
+
+### Sprint 73 \u2014 `SupabaseBaseRepository` + `SupabaseGuestRepository`
+
+- `src/repositories/supabase-base-repository.js` \u2014 generic CRUD base with soft-delete + event_id scoping
+- `src/repositories/supabase-guest-repository.js` \u2014 `findByStatus`, `findByTable`, `findByPhone`, `findBySide`, `findByGroup`, `findUncheckedIn`, `findUnassigned`, `confirmedCount`
+
+### Sprint 74 \u2014 `SupabaseTableRepository`
+
+- `src/repositories/supabase-table-repository.js` \u2014 `findByShape`, `totalCapacity`, `findByName`
+
+### Sprint 75 \u2014 `SupabaseVendorRepository`
+
+- `src/repositories/supabase-vendor-repository.js` \u2014 `findByCategory`, `findUnpaid`, `totalCost`, `totalPaid`, `outstanding`
+
+### Sprint 76 \u2014 `SupabaseExpenseRepository`
+
+- `src/repositories/supabase-expense-repository.js` \u2014 `findByCategory`, `totalAmount`, `summaryByCategory`
+
+### Sprint 77 \u2014 `SupabaseRsvpLogRepository`
+
+- `src/repositories/supabase-rsvp-log-repository.js` \u2014 `logRsvp`, `findByGuest`, `findRecent`, `findByEvent`
+
+### Sprint 78 \u2014 Extended guest model (migration 019)
+
+- `supabase/migrations/019_guest_model_extended.sql` \u2014 `language`, `whatsapp_opt_in`, `campaign_id`, `delivery_status` columns + indexes
+
+### Sprint 79 \u2014 Supabase health service
+
+- `src/services/supabase-health.js` \u2014 `checkSupabaseHealth()`, `getHealthReport()` with per-table status
+
+### Sprint 80 \u2014 v6.8.0 release
+
+- Version bump to 6.8.0 across all files; full test suite green: 3053 / 98
+
 ## [6.7.0] — 2025-07-31
 
 > **Core Infrastructure** — 9-sprint batch adding subscription lifecycle management, PII data classification, exponential backoff retry, conflict detection, TTL cache with tag invalidation, bundle budget CI script, immutable deep-path helpers, store perf benchmarks, and optimistic update service. 3021 tests / 95 suites.
 
-### Sprint 61 — SubscriptionManager
+### Sprint 61 \u2014 SubscriptionManager
+
 - `src/utils/subscription-manager.js`: collects unsubscribe fns, `cleanup()` calls all, chainable API + 11 tests
 
-### Sprint 62 — Data classification policy
+### Sprint 62 \u2014 Data classification policy
+
 - `src/services/data-classification.js`: PII/sensitive field policy, `redactPII()`, `getPIIFields()`, `getSensitiveFields()` + 19 tests
 
-### Sprint 63 — Retry with exponential backoff
+### Sprint 63 \u2014 Retry with exponential backoff
+
 - `src/utils/retry-with-backoff.js`: `retryWithBackoff()`, `exponentialDelay()`, `buildRetryOptions()` + 12 tests
 
-### Sprint 64 — Conflict detection service
+### Sprint 64 \u2014 Conflict detection service
+
 - `src/services/conflict-detector.js`: `detectConflicts()`, `resolveConflict()`, `groupConflictById()` + 18 tests
 
-### Sprint 65 — TTL cache with tag invalidation
+### Sprint 65 \u2014 TTL cache with tag invalidation
+
 - `src/utils/ttl-cache.js`: `createCache()`, `createTaggedCache()`, `withCache()` wrapper + 17 tests
 
-### Sprint 66 — Bundle budget CI script
+### Sprint 66 \u2014 Bundle budget CI script
+
 - `scripts/check-bundle-budget.mjs`: per-file JS/CSS size budget enforcer, JSON mode + 13 tests
 
-### Sprint 67 — Immutable deep-path helpers
+### Sprint 67 \u2014 Immutable deep-path helpers
+
 - `src/utils/immutable.js`: added `setIn()`, `updateIn()`, `deleteIn()`, `mergeDeep()` + 22 new tests (51 total)
 
 ### Sprint 68 — Store performance benchmarks
+
 - `tests/perf/store-perf.test.mjs`: timing assertions for read/write/filter/stat operations + 7 tests
 
 ### Sprint 69 — Optimistic update service
+
 - `src/services/optimistic-updates.js`: `applyOptimistic/rollback/commit` with snapshot tracking + 13 tests
 
 ### Sprint 70 — v6.7.0 release
+
 - Version bump to 6.7.0 across all files; full test suite green: 3021 / 95
 
 ## [6.6.0] — 2025-07-31
@@ -94,8 +149,6 @@ All notable changes to this project will be documented in this file.
 
 - Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
 - Tests: **2894 pass** / 87 suites (baseline was 2720 / 78)
-
-
 
 > **Communication & Developer Toolkit** — 9-sprint batch covering WhatsApp campaigns, email service, Edge Functions, delivery tracking, error pipeline, sync health dashboard, and architectural decision records.
 
