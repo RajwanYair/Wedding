@@ -1,4 +1,4 @@
-# Wedding Manager — Architecture (v6.5.0)
+# Wedding Manager — Architecture (v6.6.0)
 
 > Entry point: `src/main.js` · Pure ESM · Zero `window.*` side effects
 

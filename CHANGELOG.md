@@ -4,7 +4,64 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [6.5.0] — 2025-07-19
+## [6.6.0] — 2025-07-31
+
+> **Frontend Contracts** — 9-sprint batch adding rich domain enums, action registry validation, a store-backed repository layer, form metadata consolidation, domain validation, config scopes, store batch mutations, and dirty-state tracking.
+
+### Sprint 51 — Domain enum objects
+
+- `src/core/domain-enums.js`: 10 typed enum lists (GUEST_STATUS, GUEST_SIDE, GUEST_GROUP, MEAL, TABLE_SHAPE, VENDOR_CATEGORY, EXPENSE_CATEGORY, TIMELINE_CATEGORY, CAMPAIGN_TYPE, DELIVERY_STATUS) with `value/labelKey/color/icon`; `findOption`, `isValidEnumValue`
+- Tests: 31 new (domain-enums.test.mjs)
+
+### Sprint 52 — Action registry validator
+
+- `src/core/action-registry.js`: added `ACTION_VALUES` Set, `validateAction(v)`, `listActions()`, `buildActionReport()` to existing ACTIONS map
+- Tests: 18 new (action-registry.test.mjs)
+
+### Sprint 53 — Repository base + GuestRepository
+
+- `src/repositories/base-repository.js`: `BaseRepository<T>` — `findAll, findById, create, upsert, update, delete, count, clear, exists`
+- `src/repositories/guest-repository.js`: `GuestRepository` — `findByStatus, findByTable, findByPhone, findBySide, findByGroup, findUncheckedIn, findUnassigned, confirmedCount`
+- Tests: 21 new (guest-repository.test.mjs)
+
+### Sprint 54 — VendorRepository + ExpenseRepository + TableRepository
+
+- `src/repositories/vendor-repository.js`: `findByCategory, findUnpaid, totalCost, totalPaid, outstanding`
+- `src/repositories/expense-repository.js`: `findByCategory, totalAmount, summaryByCategory`
+- `src/repositories/table-repository.js`: `findByShape, totalCapacity, findByName`
+- Tests: 13 new (vendor-expense-table-repository.test.mjs)
+
+### Sprint 55 — Form metadata consolidation
+
+- `src/utils/form-metadata.js`: `GUEST_FIELDS, TABLE_FIELDS, VENDOR_FIELDS, EXPENSE_FIELDS` with `name/labelKey/type/required/options`; `getFieldMeta, listFieldNames, getRequiredFields`
+- Tests: 25 new (form-metadata.test.mjs)
+
+### Sprint 56 — Domain validation service
+
+- `src/services/domain-validator.js`: `validateGuest, validateTable, validateVendor, validateExpense` → `{ valid, errors: Record<field, string> }`
+- Tests: 28 new (domain-validator.test.mjs)
+
+### Sprint 57 — Config scopes system
+
+- `src/core/config-scopes.js`: `getConfig(key)` reads RUNTIME → BUILD → DEFAULTS; `setRuntimeConfig, resetRuntimeConfig, clearRuntimeConfig, getConfigSnapshot, listConfigKeys`
+- Tests: 11 new (config-scopes.test.mjs)
+
+### Sprint 58 — Store batch update helper
+
+- `src/utils/store-batch.js`: `storeBatchMutate(mutations[])` applies `set/upsert/update/remove` descriptors in one atomic `storeBatch()` call; factory functions `upsertMutation, updateMutation, removeMutation, setMutation`
+- Tests: 11 new (store-batch.test.mjs)
+
+### Sprint 59 — Dirty-state service
+
+- `src/services/dirty-state.js`: `markDirty, markClean, markAllClean, isDirty, hasUnsavedChanges, getDirtyKeys, dirtyCount, snapshotBaseline, checkDirty, clearBaselines, getDirtyStateSummary`
+- Tests: 16 new (dirty-state.test.mjs)
+
+### Sprint 60 — v6.6.0 release
+
+- Version bump: `package.json`, `config.js`, `sw.js`, `wedding.test.mjs`, `README.md`
+- Tests: **2894 pass** / 87 suites (baseline was 2720 / 78)
+
+
 
 > **Communication & Developer Toolkit** — 9-sprint batch covering WhatsApp campaigns, email service, Edge Functions, delivery tracking, error pipeline, sync health dashboard, and architectural decision records.
 
