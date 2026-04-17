@@ -17,7 +17,7 @@
  */
 
 import { statSync, readdirSync } from "node:fs";
-import { resolve, extname, basename } from "node:path";
+import { resolve, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -98,7 +98,8 @@ export function formatKB(bytes) {
  */
 export function formatReport(results) {
   if (results.length === 0) return "No JS/CSS assets found.\n";
-  const lines = ["Bundle Budget Report", "─".repeat(60)];
+  const sep = "─".repeat(60);
+  const lines = ["Bundle Budget Report", sep];
   for (const r of results) {
     const status = r.passed ? "✓" : "✗ OVER BUDGET";
     lines.push(
@@ -106,7 +107,7 @@ export function formatReport(results) {
     );
   }
   const failures = results.filter((r) => !r.passed).length;
-  lines.push("─".repeat(60));
+  lines.push(sep);
   lines.push(`Total: ${results.length} files | ${failures} over budget`);
   return lines.join("\n") + "\n";
 }
