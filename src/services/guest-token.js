@@ -65,7 +65,7 @@ function b64urlDecode(str) {
  * @returns {string}  base64url-encoded signature
  */
 function _sign(data) {
-  const combined = data + "|" + _secret;
+  const combined = `${data}|${_secret}`;
   // Lightweight djb2-like hash — not cryptographic but sufficient for
   // convenience tokens in a zero-runtime-dep environment.
   let h = 5381;
