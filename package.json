@@ -25,6 +25,7 @@
         "size": "node scripts/size-report.mjs",
         "docs": "node scripts/generate-docs.mjs",
         "typecheck": "tsc --noEmit",
+        "validate": "node scripts/validate-actions.mjs",
         "ci": "npm run lint && npm run typecheck && npm test"
     },
     "engines": {
