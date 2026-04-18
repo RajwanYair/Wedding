@@ -23,6 +23,7 @@ describe("defaultWeddingInfo", () => {
     expect("bride" in defaultWeddingInfo).toBe(true);
     expect("date" in defaultWeddingInfo).toBe(true);
     expect("venue" in defaultWeddingInfo).toBe(true);
+    expect("registryLinks" in defaultWeddingInfo).toBe(true);
   });
 
   it("has default time of 18:00", () => {
@@ -32,6 +33,10 @@ describe("defaultWeddingInfo", () => {
   it("starts with empty strings for names", () => {
     expect(defaultWeddingInfo.groom).toBe("");
     expect(defaultWeddingInfo.bride).toBe("");
+  });
+
+  it("defaults registryLinks to an empty JSON array string", () => {
+    expect(defaultWeddingInfo.registryLinks).toBe("[]");
   });
 });
 

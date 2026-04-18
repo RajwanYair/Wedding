@@ -8,7 +8,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { initStore, storeSet } from "../../src/core/store.js";
-import { findTableByQuery } from "../../src/sections/landing.js";
+import { findTableByQuery, renderLanding } from "../../src/sections/landing.js";
 
 function seedStore() {
   initStore({
@@ -16,7 +16,6 @@ function seedStore() {
     tables: { value: [] },
     weddingInfo: { value: {} },
     timeline: { value: [] },
-    registry: { value: [] },
   });
 }
 
@@ -92,5 +91,41 @@ describe("findTableByQuery", () => {
     ]);
     const result = findTableByQuery("Dan");
     expect(result.guest.id).toBe("g1");
+  });
+});
+
+describe("renderLanding", () => {
+  beforeEach(() => {
+    seedStore();
+    document.body.innerHTML = `
+      <section id="landingRegistrySection" class="u-hidden">
+        <div id="landingRegistryList"></div>
+      </section>
+      <div id="landingTimeline"></div>
+      <div id="landingCoupleName"></div>
+      <div id="landingHebrewDate"></div>
+      <div id="landingDate"></div>
+      <div id="landingVenue"></div>
+      <div id="landingAddress"></div>
+      <a id="landingWazeLink" class="u-hidden"></a>
+    `;
+  });
+
+  it("renders registry links from weddingInfo.registryLinks", () => {
+    storeSet("weddingInfo", {
+      registryLinks: JSON.stringify([
+        "https://example.com/list",
+        { url: "https://shop.example.com/gifts", name: "Gift Shop" },
+      ]),
+    });
+
+    renderLanding();
+
+    const section = document.getElementById("landingRegistrySection");
+    const links = [...document.querySelectorAll("#landingRegistryList a")];
+    expect(section?.classList.contains("u-hidden")).toBe(false);
+    expect(links).toHaveLength(2);
+    expect(links[0].getAttribute("href")).toBe("https://example.com/list");
+    expect(links[1].textContent).toBe("Gift Shop");
   });
 });

@@ -26,6 +26,7 @@ export const defaultWeddingInfo = {
   venueWaze: "",
   venueMapLink: "",
   budgetTarget: "",
+  registryLinks: "[]",
 };
 
 export const defaultTimeline = [

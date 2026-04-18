@@ -65,6 +65,7 @@ const _WEDDING_INFO_KEYS = [
   "venueWaze",
   "venueMapLink",
   "budgetTarget",
+  "registryLinks",
 ];
 
 /**

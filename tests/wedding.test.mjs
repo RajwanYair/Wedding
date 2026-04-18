@@ -135,6 +135,11 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes('campaigns: DATA_CLASS.ADMIN_SENSITIVE'));
   });
 
+  it("default wedding info includes registryLinks for landing and registry views", function () {
+    assert.ok(read("src/core/defaults.js").includes('registryLinks: "[]"'));
+    assert.ok(read("src/services/sheets-impl.js").includes('"registryLinks"'));
+  });
+
   it("runtime sources still include Google Sheets write queue semantics", function () {
     assert.ok(runtimeSources.includes("enqueueWrite"));
     assert.ok(runtimeSources.includes("appendToRsvpLog") || runtimeSources.includes("syncStoreKeyToSheets"));

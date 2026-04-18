@@ -13,7 +13,6 @@ const _unsubs = [];
 export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("weddingInfo", renderLanding));
   _unsubs.push(storeSubscribe("timeline", renderLanding));
-  _unsubs.push(storeSubscribe("registry", renderLanding));
   renderLanding();
 }
 
@@ -91,7 +90,7 @@ export function renderLanding() {
   const registrySection = document.getElementById("landingRegistrySection");
   const registryList = document.getElementById("landingRegistryList");
   if (registrySection && registryList) {
-    const links = /** @type {any[]} */ (storeGet("registry") ?? []);
+    const links = _getRegistryLinks(info);
     if (links.length > 0) {
       registrySection.classList.remove("u-hidden");
       registryList.textContent = "";
@@ -107,6 +106,34 @@ export function renderLanding() {
     } else {
       registrySection.classList.add("u-hidden");
     }
+  }
+}
+
+/**
+ * Parse guest-facing registry links from weddingInfo.
+ * @param {Record<string, string>} info
+ * @returns {Array<{ url: string, name: string }>}
+ */
+function _getRegistryLinks(info) {
+  try {
+    const raw = JSON.parse(info.registryLinks || "[]");
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((item) => {
+        if (typeof item === "string") {
+          return { url: item, name: item };
+        }
+        if (item && typeof item === "object") {
+          return {
+            url: typeof item.url === "string" ? item.url : "",
+            name: typeof item.name === "string" ? item.name : (typeof item.url === "string" ? item.url : ""),
+          };
+        }
+        return null;
+      })
+      .filter((item) => item && item.url.startsWith("https://"));
+  } catch {
+    return [];
   }
 }
 
