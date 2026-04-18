@@ -1,5 +1,5 @@
 // =============================================================================
-// Service Worker — Wedding Manager v5.5.0
+// Service Worker — Wedding Manager v8.0.0
 // Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
 "use strict";
@@ -186,5 +186,3 @@ self.addEventListener("notificationclick", function (e) {
       }),
   );
 });
-
-

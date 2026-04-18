@@ -11,8 +11,8 @@
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
 
-**Wedding management app — RSVP, table seating, WhatsApp invitations, push notifications, E2E tests.**
-**Modular (7 CSS + 50+ JS), zero-dependency, Hebrew RTL with English support.**
+**Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
+**Vite 8, vanilla JS/CSS, Hebrew RTL first, zero runtime dependencies.**
 
 </div>
 
@@ -31,14 +31,22 @@
 ## Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/RajwanYair/Wedding.git
+cd Wedding
 
-# Install shared dependencies (from parent directory)
-cd .. && npm install && cd Wedding
+# Install shared dependencies from the parent workspace
+cd ../MyScripts && npm install && cd Wedding
 
-# Open in browser (no build step needed!)
-open index.html
+# Start local development
+npm run dev
+```
+
+## Development
+
+```bash
+npm run lint
+npm test
+npm run build
 ```
 
 ## Auth Setup (optional)
@@ -55,63 +63,21 @@ const APPLE_SERVICE_ID  = "";   // developer.apple.com → Service ID
 
 Add SDK `<script>` tags for Facebook and Apple in `index.html` (see comments).
 
-## Development
-
-```bash
-# Tests
-npm test
-
-# Lint — all must exit 0 (0 errors, 0 warnings)
-npm run lint         # HTML + CSS + JS + Markdown
-npm run lint:html    # HTMLHint    → index.html
-npm run lint:css     # Stylelint   → css/*.css
-npm run lint:js      # ESLint      → src/**/*.js
-npm run lint:md      # markdownlint-cli2
-```
-
-## Project Structure
+## Overview
 
 ```text
-Wedding/
-├── index.html            # HTML shell
-├── css/                  # 7 CSS modules
-│   ├── variables.css     # Custom properties, theme colors
-│   ├── base.css          # Reset, typography
-│   ├── layout.css        # Grid, nav, panels
-│   ├── components.css    # Buttons, forms, cards, modals
-│   ├── responsive.css    # 768px + 480px breakpoints
-│   ├── print.css         # Print styles
-│   └── auth.css          # Auth overlay
-├── src/                  # ES module source — Vite 8 entry
-│   ├── main.js           # Bootstrap, event wiring, section lifecycle
-│   ├── core/             # Foundation modules (~18 files)
-│   │   ├── store.js      # Proxy-based reactive store V2 with batching
-│   │   ├── events.js     # data-action delegation (single listener)
-│   │   ├── i18n.js       # he/en/ar/ru with ICU plural
-│   │   ├── nav.js        # Hash router + swipe gestures + View Transitions
-│   │   ├── ui.js         # Toast, modal, theme, loading
-│   │   ├── dom.js        # Cached DOM refs (el object)
-│   │   ├── config.js     # Auth credentials + build config
-│   │   ├── constants.js  # Section lists, modal IDs, enum values
-│   │   └── action-registry.js  # All data-action constants
-│   ├── handlers/         # Action handler registration (~7 files)
-│   ├── sections/         # 20 section modules with mount/unmount lifecycle
-│   ├── services/         # auth, sheets, supabase, backend, presence, offline-queue
-│   ├── utils/            # phone, date, sanitize, misc, form-helpers, undo
-│   ├── templates/        # Lazy-loaded HTML fragments (one per section)
-│   ├── modals/           # Modal HTML fragments
-│   ├── i18n/             # he.json, en.json, ar.json, ru.json
-│   └── plugins/          # contact-plugin, gallery-plugin, registry-plugin
-├── public/               # sw.js, manifest.json, icons
-├── scripts/              # Build tools, SRI check, size report, push notifications
-├── supabase/             # Migrations and Edge Functions
-│   ├── migrations/       # 6 SQL migration files
-│   └── functions/        # Edge Functions
-├── tests/                # 3688+ tests: unit + integration + E2E
-│   ├── unit/             # 38 Vitest suite files
-│   └── e2e/              # Playwright smoke + visual regression
-└── .github/              # CI/CD workflows, Copilot instructions, agents
+index.html        HTML shell
+css/              layered stylesheets
+src/main.js       bootstrap entry
+src/core/         app primitives: store, nav, events, i18n, ui
+src/sections/     feature modules with mount/unmount lifecycle
+src/services/     auth, sheets, backend, presence, supabase
+src/templates/    lazy-loaded section markup
+src/modals/       lazy-loaded modal markup
+tests/            Vitest + Playwright coverage
 ```
+
+Detailed runtime notes live in ARCHITECTURE.md. Contributor workflow notes live in CONTRIBUTING.md.
 
 ## Architecture
 
@@ -161,12 +127,11 @@ graph TD
 ```text
 { id, firstName, lastName, phone, email, count, children,
   status: pending|confirmed|declined|maybe,
-  side:   groom|bride|mutual,
-  group:  family|friends|work|other,
-  meal:   regular|vegetarian|vegan|gluten_free|kosher,
-  mealNotes, accessibility: string, transport: string,
-  tableId, gift, notes, sent, checkedIn, rsvpDate, rsvpSource,
-  tags?, vip?, history?, createdAt, updatedAt }
+    side: groom|bride|mutual,
+    group: family|friends|work|neighbors|other,
+    meal: regular|vegetarian|vegan|gluten_free|kosher,
+    mealNotes, accessibility, transport, tableId, gift, notes,
+    sent, checkedIn, rsvpDate, createdAt, updatedAt }
 ```
 
 ## Themes
@@ -219,5 +184,3 @@ Add vendors with category, name, contact, price, and paid amount. The Budget tab
 ### Settings & Offline Mode
 
 The app works offline once loaded. Data is saved to localStorage and syncs to Google Sheets when online. Configure backend settings, themes, and language in Settings.
-
-

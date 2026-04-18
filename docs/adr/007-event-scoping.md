@@ -1,7 +1,7 @@
 # ADR 007 — Multi-Event Database Scoping
 
-**Status**: Accepted  
-**Date**: 2025  
+**Status**: Accepted
+**Date**: 2025
 **Deciders**: Core team
 
 ## Context

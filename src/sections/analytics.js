@@ -7,7 +7,7 @@
 
 import { storeGet, storeSubscribeScoped, cleanupScope } from "../core/store.js";
 import { t, currentLang } from "../core/i18n.js";
-import { MEAL_TYPES } from "../core/config.js";
+import { MEAL_TYPES, GUEST_GROUPS } from "../core/constants.js";
 
 const _SCOPE = "analytics";
 
@@ -650,7 +650,7 @@ function _renderDeliveryRate() {
  */
 function _renderGroupChart() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const groups = ["family", "friends", "work", "other"];
+  const groups = GUEST_GROUPS;
   _renderBar(
     "analyticsGroupBar",
     groups.map((g) => ({

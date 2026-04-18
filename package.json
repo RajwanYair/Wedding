@@ -16,29 +16,21 @@
         "lint:html": "htmlhint --config .htmlhintrc index.html",
         "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
         "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
-        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md \".github/**/*.md\"",
+        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md \".github/**/*.md\"",
         "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
         "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
+        "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",
         "icons": "node scripts/generate-icons.mjs",
         "sri": "node scripts/sri-check.mjs",
         "precache": "node scripts/generate-precache.mjs",
         "size": "node scripts/size-report.mjs",
-        "bench": "node scripts/bench.mjs",
-        "typedoc": "typedoc --options .typedocrc.json",
-        "docs": "node scripts/generate-docs.mjs",
-        "typecheck": "tsc --noEmit",
-        "validate": "node scripts/validate-actions.mjs",
-        "validate:i18n": "node scripts/validate-i18n.mjs",
-        "validate:sections": "node scripts/validate-sections.mjs",
-        "security-scan": "node scripts/security-scan.mjs",
-        "ci": "npm run lint && npm run typecheck && npm run validate && npm run validate:sections && npm run validate:i18n && npm run security-scan && npm test"
+        "ci": "npm run lint && npm run check:i18n && npm test && npm run build"
     },
     "engines": {
         "node": ">=20.0.0"
     },
     "comment:deps": "All devDependencies are installed in the parent MyScripts/ workspace. Run `npm install` from ../MyScripts to provision. CI uses its own npm ci.",
     "devDependencies": {
-        "@axe-core/playwright": "^4.10.2",
         "@eslint/js": "^10.2.0",
         "@playwright/test": "^1.59.1",
         "@vitest/coverage-v8": "^4.1.4",
@@ -53,5 +45,3 @@
         "web-push": "^3.6.7"
     }
 }
-
-

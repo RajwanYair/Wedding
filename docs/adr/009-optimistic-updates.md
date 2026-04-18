@@ -1,7 +1,7 @@
 # ADR 009 — Optimistic Updates Pattern
 
-**Status**: Accepted  
-**Date**: 2025  
+**Status**: Accepted
+**Date**: 2025
 **Deciders**: Core team
 
 ## Context

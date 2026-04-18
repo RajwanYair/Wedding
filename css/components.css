@@ -253,8 +253,6 @@
 .btn-green-api { background: #128c7e; color: #fff; }
 .btn-green-api:hover { background: #0e7066; }
 .btn-small { padding: 0.3rem 0.7rem; font-size: 0.78em; }
-.btn-ghost { background: transparent; border: 1px solid var(--card-border-color, #e5e7eb); color: var(--text-primary); }
-.btn-ghost:hover { background: var(--bg-card-hover); }
 
 /* ── Table Seating ── */
 .seating-floor {
@@ -411,7 +409,7 @@
   border-radius: 8px 8px 0 8px;
   padding: 0.8rem 1rem;
   max-width: 85%;
-  margin-inline-start: auto;
+  margin-right: auto;
   margin-bottom: 0.5rem;
 }
 .whatsapp-preview .wa-time {
@@ -420,14 +418,6 @@
   text-align: left;
   margin-top: 0.2rem;
 }
-.wa-vars-summary { cursor: pointer; }
-.wa-vars-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 0.5rem;
-  padding: 0.5rem;
-}
-.wa-char-warn { color: var(--negative); font-weight: 600; }
 
 /* ── Countdown ── */
 .countdown {
@@ -482,28 +472,6 @@
   border-radius: 8px;
   transition: width 0.5s ease;
   background: linear-gradient(90deg, var(--accent-dark), var(--accent));
-}
-
-/* ── Skeleton loading state (template-loader) ── */
-.tpl-loading {
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &::after {
-    content: "";
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--primary-light, rgba(255, 255, 255, 0.2));
-    border-top-color: var(--primary, #9b59b6);
-    border-radius: 50%;
-    animation: tpl-spin 0.6s linear infinite;
-  }
-}
-
-@keyframes tpl-spin {
-  to { transform: rotate(360deg); }
 }
 
 /* ── Toast ── */
@@ -587,18 +555,6 @@
 .rsvp-form {
   max-width: 500px;
   margin: 0 auto;
-}
-.rsvp-countdown {
-  font-size: 0.95em;
-  margin-bottom: 0.5rem;
-}
-.rsvp-confirm--animated {
-  animation: rsvpPop 0.5s ease-out;
-}
-@keyframes rsvpPop {
-  0%   { transform: scale(0.8); opacity: 0; }
-  60%  { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
 }
 
 /* ── Side Badges ── */
@@ -726,7 +682,7 @@
 /* ── Sortable Table Headers ── */
 .guest-table th { cursor: pointer; user-select: none; position: relative; }
 .guest-table th:hover { background: rgba(212,165,116,0.18); }
-.sort-indicator { font-size: 0.65em; opacity: 0.4; margin-inline-end: 0.25rem; }
+.sort-indicator { font-size: 0.65em; opacity: 0.4; margin-right: 0.25rem; }
 th.sort-asc  .sort-indicator { opacity: 1; }
 th.sort-desc .sort-indicator { opacity: 1; }
 
@@ -997,43 +953,6 @@ body.light-mode .table-guests-list .tg-item { border-bottom-color: rgba(0, 0, 0,
 body.light-mode .meal-regular  { background: rgba(0, 0, 0, 0.04); }
 body.light-mode .meal-other    { background: rgba(0, 0, 0, 0.06); }
 body.light-mode .analytics-stat-box { background: rgba(0, 0, 0, 0.04); }
-
-/* Phase 10.3 — Error Analytics row */
-.analytics-error-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 260px; overflow-y: auto; }
-.analytics-error-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 0.4rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--glass-border);
-  font-size: 0.8rem;
-}
-.analytics-error-msg { flex: 1; overflow-wrap: break-word; }
-.analytics-error-time { white-space: nowrap; font-size: 0.7rem; }
-.badge--danger { background: var(--danger); color: #fff; }
-.badge--warn   { background: var(--warning); color: #000; }
-.badge--info   { background: var(--info); color: #fff; }
-.u-mb-sm { margin-bottom: 0.75rem; }
-
-/* Phase 10.2 — Communication Hub */
-.comm-log-list { display: flex; flex-direction: column; gap: 0.35rem; max-height: 360px; overflow-y: auto; }
-.comm-log-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 0.4rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--glass-border);
-  font-size: 0.8rem;
-  flex-wrap: wrap;
-}
-.comm-log-name { font-weight: 600; }
-.comm-log-type { font-size: 0.7rem; }
-.comm-log-msg  { flex: 1; overflow-wrap: break-word; min-width: 120px; }
-.comm-log-ts   { white-space: nowrap; font-size: 0.7rem; margin-inline-start: auto; }
 body.light-mode .modal-overlay { background: rgba(0, 0, 0, 0.4); }
 body.light-mode [data-tooltip]::after {
   background: rgba(253, 247, 240, 0.98);
@@ -1128,14 +1047,6 @@ body.light-mode .btn-dark-mode-icon { filter: invert(0.85); }
   border-radius: 12px;
   border: var(--card-border);
   transition: transform 0.18s, box-shadow 0.18s;
-  /* F3.3.4 Scroll-driven reveal animation */
-  animation: timelineReveal linear both;
-  animation-timeline: view();
-  animation-range: entry 0% entry 30%;
-}
-@keyframes timelineReveal {
-  from { opacity: 0; transform: translateX(40px); }
-  to { opacity: 1; transform: translateX(0); }
 }
 .timeline-item:hover {
   transform: translateY(-1px);
@@ -1192,17 +1103,6 @@ body.light-mode .btn-dark-mode-icon { filter: invert(0.85); }
   color: var(--text-secondary);
 }
 .btn-icon-sm:hover { background: rgba(255, 255, 255, 0.1); }
-.btn-icon {
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  transition: background 0.15s;
-  font-size: 1em;
-  line-height: 1;
-}
-.btn-icon:hover { background: var(--bg-card-hover); border-color: var(--card-border-color, #e5e7eb); }
 
 /* ── Guest Landing Page ── */
 .guest-landing-hero {
@@ -1564,29 +1464,6 @@ body.ptr--refreshing::before {
   }
 }
 
-/* ── Top-bar Sync Button ── */
-.sync-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1em;
-  padding: 0.25rem;
-  border-radius: 50%;
-  transition: transform 0.2s, background 0.2s;
-  line-height: 1;
-
-  &:hover { background: rgba(255, 255, 255, 0.1); }
-  &:active { transform: scale(0.9); }
-}
-.sync-btn--spinning .sync-btn-icon {
-  display: inline-block;
-  animation: syncSpin 1s linear infinite;
-}
-@keyframes syncSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 /* ── RSVP Deadline Banner ── */
 .rsvp-deadline-banner--late {
   background: rgba(252, 165, 165, 0.12);
@@ -1624,9 +1501,6 @@ body.ptr--refreshing::before {
 .u-flex-wrap { display: flex; flex-wrap: wrap; }
 .u-flex-1 { flex: 1; }
 .u-flex-2 { flex: 2; }
-.u-justify-center { justify-content: center; }
-.u-pt-sm { padding-top: 0.5rem; }
-.u-pb-xs { padding-bottom: 0.3rem; }
 .u-w-full { width: 100%; }
 .u-overflow-x { overflow-x: auto; }
 .u-overflow-y { overflow-y: auto; }
@@ -1640,7 +1514,7 @@ body.ptr--refreshing::before {
 .u-mt-lg { margin-top: 1.5rem; }
 .u-mb-sm { margin-bottom: 0.5rem; }
 .u-mb-md { margin-bottom: 1rem; }
-.u-mr-auto { margin-inline: auto 0; }
+.u-mr-auto { margin-right: auto; margin-left: 0; }
 .u-gap-sm { gap: 0.5rem; }
 .u-gap-md { gap: 0.8rem; }
 .u-gap-lg { gap: 1rem; }
@@ -1678,7 +1552,7 @@ body.ptr--refreshing::before {
 .qr-scanner-box { position: relative; max-width: 400px; margin: 0 auto 1rem; }
 .qr-video { width: 100%; border-radius: var(--border-radius); }
 .qr-close-btn { position: absolute; top: 0.5rem; right: 0.5rem; }
-.section-toolbar-start { margin-inline: auto 0; display: flex; gap: 0.5rem; }
+.section-toolbar-start { margin-right: auto; margin-left: 0; display: flex; gap: 0.5rem; }
 
 /* ── Venue Map Link (CSP) ── */
 .venue-map-link { font-size: 0.85em; color: var(--accent); }
@@ -1692,7 +1566,7 @@ body.ptr--refreshing::before {
 [id="rsvpLookupStatus"] { margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-secondary); }
 
 /* ── Budget Section (CSP) ── */
-.budget-target-row { margin-inline-start: auto; display: flex; gap: 0.5rem; align-items: center; }
+.budget-target-row { margin-right: auto; display: flex; gap: 0.5rem; align-items: center; }
 .budget-label { font-size: 0.85rem; color: var(--text-muted); }
 [id="budgetTargetInput"] { width: 120px; padding: 0.3rem 0.5rem; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-primary); font-size: 0.85rem; }
 .budget-stats-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
@@ -1704,7 +1578,7 @@ body.ptr--refreshing::before {
 .empty-emoji { font-size: 2rem; display: block; }
 .empty-emoji-lg { font-size: 2.5rem; display: block; }
 .empty-emoji-xl { font-size: 3em; display: block; margin-bottom: 0.5rem; }
-.admin-bar { margin-inline: auto 0; }
+.admin-bar { margin-right: auto; margin-left: 0; }
 .expense-stats-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
 
 /* ── Section Descriptors (CSP) ── */
@@ -2184,488 +2058,5 @@ body.ptr--refreshing::before {
   font-size: 0.9rem;
 }
 
-/* ── S14.2 Budget Summary Widget ── */
-.budget-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.budget-summary-item {
-  text-align: center;
-}
-.budget-summary-label {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.25rem;
-}
-.budget-summary-value {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-/* ── S14.1 Multi-filter selects ── */
-.filter-select {
-  padding: 0.4rem 0.6rem;
-  border-radius: var(--border-radius-sm, 6px);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-primary);
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-/* ── S13.5 Guest Notes Timeline ── */
-.guest-history-log {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-top: 0.5rem;
-}
-.guest-note-entry {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid var(--border);
-
-  &:last-child { border-bottom: none; }
-}
-.guest-note-time {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  min-width: 5rem;
-}
-.guest-note-text {
-  font-size: 0.85rem;
-  color: var(--text-primary);
-}
-
-/* ── S14.5 Guest Tags ── */
-.badge--tag {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  border-radius: 99px;
-  background: var(--accent, var(--gold));
-  color: var(--bg-main, #fff);
-  font-size: 0.7rem;
-  margin-inline-end: 0.25rem;
-  cursor: pointer;
-
-  &:hover { opacity: 0.8; }
-}
-.guest-tags-cell {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem;
-}
-
-/* ── S14.3 Vendor Overdue ── */
-.vendor-row--overdue {
-  border-inline-start: 3px solid var(--color-error, #e74c3c);
-  background: color-mix(in srgb, var(--color-error, #e74c3c) 8%, transparent);
-}
-
-/* ── S13.4 Seating Map ── */
-.seating-map-container {
-  min-height: 300px;
-  overflow: auto;
-}
-.seating-map-container svg {
-  width: 100%;
-  height: auto;
-}
-
-/* ── S13.2 Plus-one Names ── */
-.plusone-names-container {
-  margin-top: 0.5rem;
-
-  & input {
-    margin-bottom: 0.4rem;
-  }
-}
-
-/* ── Modal section title ── */
-.modal-section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--gold);
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-.card-subtitle {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-top: -0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-/* ── S15.4 Activity Feed ────────────────────────────────────────── */
-.activity-feed {
-  max-height: 300px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-.activity-feed-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.85rem;
-  color: var(--text);
-  transition: background 0.2s;
-
-  &:last-child { border-bottom: none; }
-  &:hover { background: var(--bg-card-hover, rgba(255, 255, 255, 0.05)); }
-
-  & .activity-icon { font-size: 1rem; flex-shrink: 0; }
-  & .activity-time { color: var(--text-muted); font-size: 0.75rem; margin-inline-start: auto; white-space: nowrap; }
-}
-
-/* ── S15.5 Search Highlight ─────────────────────────────────────── */
-.search-highlight {
-  background: var(--warning, #ffd54f);
-  color: var(--on-warning, #000);
-  border-radius: 2px;
-  padding: 0 2px;
-}
-
-/* ── S16.1 Check-in Flash ───────────────────────────────────────── */
-.checkin-flash {
-  position: fixed;
-  top: 0;
-  inset-inline: 0;
-  z-index: 9999;
-  padding: 1rem;
-  background: var(--success, #388e3c);
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-align: center;
-  animation: flash-in 0.3s ease-out;
-}
-@keyframes flash-in {
-  from { opacity: 0; transform: translateY(-100%); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── S15.2 Shortcuts Modal Table ────────────────────────────────── */
-.shortcuts-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-
-  & th, & td {
-    padding: 0.5rem 0.75rem;
-    text-align: start;
-    border-bottom: 1px solid var(--border);
-  }
-  & th { color: var(--text-secondary); font-weight: 600; }
-}
-kbd {
-  display: inline-block;
-  padding: 2px 6px;
-  font-size: 0.8rem;
-  font-family: inherit;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-card);
-  box-shadow: 0 1px 0 var(--border);
-}
-
-/* ── S16.3 Payment Schedule ─────────────────────────────────────── */
-.payment-schedule-table {
-  & .vendor-row--overdue {
-    background: rgba(211, 47, 47, 0.1);
-
-    & td { color: var(--danger, #d32f2f); }
-  }
-  & .vendor-row--paid {
-    background: rgba(56, 142, 60, 0.05);
-
-    & td { color: var(--success, #388e3c); }
-  }
-}
-
-/* ── S17.3 Expense Donut Legend ─────────────────────────────────── */
-.donut-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-
-  & .donut-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-  & .donut-legend-dot {
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-}
-
-/* ── S17.4 Table Capacity Color Classes ─────────────────────────── */
-.table-card--full  { border-color: var(--danger, #d32f2f) !important; }
-.table-card--almost { border-color: var(--warning, #f57c00) !important; }
-.table-card--half  { border-color: var(--success, #388e3c) !important; }
-
-/* Overbooking banner */
-.overbooking-banner {
-  background: rgba(211, 47, 47, 0.12);
-  border: 1px solid var(--danger, #d32f2f);
-  border-radius: var(--radius);
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.75rem;
-  color: var(--danger, #d32f2f);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-/* ── S17.5 / S18.2 Forecast Card ────────────────────────────────── */
-.forecast-row {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  padding: 0.75rem 0;
-
-  & .forecast-item {
-    text-align: center;
-  }
-  & .forecast-num {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-  }
-  & .forecast-num--projected { color: var(--primary); }
-  & .forecast-num--over      { color: var(--danger, #d32f2f); }
-  & .forecast-label {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.2rem;
-  }
-}
-.forecast-detail {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
-  min-height: 1.2em;
-}
-
-/* ── F4.1.5 Vendor Payment Due Reminders ─────────────────────────── */
-.vendor-due-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.vendor-due-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 10px;
-  background: var(--bg-card);
-  border: var(--card-border);
-  font-size: 0.88rem;
-}
-.vendor-due-item--overdue { border-inline-start: 3px solid var(--negative); }
-.vendor-due-item--soon    { border-inline-start: 3px solid var(--warning, #f57c00); }
-.vendor-due-item--upcoming { border-inline-start: 3px solid var(--accent); }
-.vendor-due-name { font-weight: 600; flex: 1; min-width: 0; }
-.vendor-due-amount { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
-.vendor-due-badge {
-  font-size: 0.75rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 20px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.vendor-due-badge--overdue  { background: rgba(239, 68, 68, 0.15); color: var(--negative); }
-.vendor-due-badge--3d       { background: rgba(245, 124, 0, 0.15); color: var(--warning, #f57c00); }
-.vendor-due-badge--7d       { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
-
-/* ── S18.1 Sync Queue Monitor ───────────────────────────────────── */
-.sync-queue-monitor {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-
-  & .sync-queue-list {
-    font-size: 0.8rem;
-    width: 100%;
-    margin-top: 0.25rem;
-    word-break: break-all;
-  }
-}
-.badge--warn {
-  background: var(--warning, #f57c00);
-  color: #fff;
-  border-radius: 99px;
-  padding: 0.1rem 0.45rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-/* ── S18.4 Timeline Alarm Banner ────────────────────────────────── */
-.timeline-alarm-banner {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-/* S19.2 VIP star button */
-.btn-vip-active { color: var(--color-warning, #f59e0b); }
-
-/* S19.3 Vendor category list */
-.vendor-cat-list { display: flex; flex-direction: column; gap: 0.4rem; }
-.vendor-cat-row { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
-.vendor-cat-name { font-weight: 600; }
-.vendor-cat-stat { color: var(--color-muted, #6b7280); font-size: 0.8rem; }
-
-/* S19.4 Follow-up list */
-.followup-list { display: flex; flex-direction: column; gap: 0.3rem; }
-.followup-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
-.followup-name { font-weight: 600; }
-.followup-phone { color: var(--color-muted, #6b7280); }
-
-/* S20.3 Expense category chip */
-.btn-chip { padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.78rem; white-space: nowrap; cursor: pointer; }
-
-/* S20.4 Invitation stats */
-.invite-stats-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-.invite-stat-item { text-align: center; }
-.invite-stat-val { font-size: 1.75rem; font-weight: 700; color: var(--color-primary, #7c3aed); }
-.invite-stat-label { font-size: 0.8rem; color: var(--color-muted, #6b7280); }
-
-/* S21.1 Meal summary bar */
-.meal-summary-bar { display: flex; gap: 0.4rem; flex-wrap: wrap; padding: 0.35rem 0; min-height: 1.8rem; }
-.meal-chip { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; background: var(--bg-card); border: 1px solid var(--card-border); white-space: nowrap; }
-
-/* S21.5 Guest notes expandable row */
-.guest-notes-row td { background: var(--bg-secondary, #f5f5f5); }
-.guest-notes-cell { padding: 0.45rem 1rem !important; font-size: 0.85rem; color: var(--text-muted, #6b7280); border-bottom: 1px solid var(--card-border); font-style: italic; }
-
-/* S22.1 Dashboard check-in progress */
-[id="dashCheckinLabel"] { font-size: 0.85rem; color: var(--text-muted, #6b7280); margin-top: 0.25rem; }
-
-/* S22.3 Expense category breakdown table */
-.budget-vs-actual-table td { padding: 0.35rem 0.6rem; font-size: 0.875rem; border-bottom: 1px solid var(--card-border); }
-.budget-vs-actual-table thead th { padding: 0.35rem 0.6rem; font-size: 0.8rem; }
-.budget-vs-actual-total td { border-top: 2px solid var(--card-border); font-weight: 700; }
-
-/* S22.5 Guest target ring layout */
-[id="dashGuestTargetCard"] .u-flex { justify-content: center; padding: 0.5rem 0; }
-
-/* S23.3 Table dietary conflict badge */
-.table-card { position: relative; }
-.table-conflict-badge {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  font-size: 1.1em;
-  cursor: help;
-  line-height: 1;
-}
-/* Sprint 5: Table dietary icons + progress bar */
-.table-dietary-icons { display: flex; gap: 0.25rem; margin-top: 0.25rem; }
-.table-dietary-icon { font-size: 0.85em; cursor: help; }
-.progress-bar--table { height: 4px; margin-top: 0.35rem; }
-
-/* Sprint 9: Keyboard shortcuts overlay */
-.shortcuts-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-}
-.shortcuts-inner {
-  background: var(--card-bg);
-  border-radius: var(--radius, 12px);
-  padding: 2rem;
-  max-width: 400px;
-  width: 90%;
-  color: var(--text);
-}
-.shortcuts-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-.shortcuts-list li {
-  padding: 0.35rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-.shortcuts-list kbd {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 0.1rem 0.4rem;
-  font-family: monospace;
-  font-size: 0.85em;
-  margin-inline-end: 0.5rem;
-}
-
-/* S23.4 Suggested actions card */
-.suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  background: var(--bg-card);
-  border: var(--card-border);
-  width: 100%;
-  text-align: right;
-  margin-bottom: 0.5rem;
-  transition: background 0.15s;
-
-  &:hover { background: var(--bg-hover, color-mix(in srgb, var(--primary) 8%, transparent)); }
-}
-.suggestion-icon { font-size: 1.4em; flex-shrink: 0; }
-.suggestion-text { flex: 1; font-size: 0.95em; }
-
-/* S24.1 Timeline done state */
-.timeline-item--done .timeline-title { text-decoration: line-through; opacity: 0.5; }
-
-/* S24.4 Tag breakdown chart */
-.tag-breakdown-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.4rem;
-}
-.tag-breakdown-label { min-width: 100px; font-size: 0.9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tag-breakdown-bar-wrap { flex: 1; background: var(--bg-subtle, #f0f0f0); border-radius: 4px; height: 12px; }
-.tag-breakdown-bar { background: var(--primary); height: 100%; border-radius: 4px; transition: width 0.3s; }
-.tag-breakdown-count { min-width: 30px; text-align: center; font-size: 0.9em; font-weight: 600; }
-
-/* S24.5 Next event widget */
-.next-event-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 1rem;
-  padding: 0.5rem 0;
-}
-.next-event-icon { font-size: 1.6em; flex-shrink: 0; }
-.next-event-title { flex: 1; font-weight: 600; }
-.next-event-time { font-size: 0.9em; }
 } /* end @layer components */
 

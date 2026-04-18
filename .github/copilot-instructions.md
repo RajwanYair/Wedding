@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v5.5.0
+# GitHub Copilot Instructions — Wedding Manager v8.0.0
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
@@ -57,7 +57,7 @@ tests/               # 4401+ tests: wedding.test.mjs + 166 unit/integration/perf
 ```text
 Guest:  { id, firstName, lastName, phone, email, count, children,
           status: pending|confirmed|declined|maybe,
-          side: groom|bride|mutual, group: family|friends|work|other,
+          side: groom|bride|mutual, group: family|friends|work|neighbors|other,
           meal: regular|vegetarian|vegan|gluten_free|kosher,
           mealNotes, accessibility, tableId, gift, notes, sent, checkedIn,
           rsvpDate, createdAt, updatedAt }
@@ -152,5 +152,3 @@ getExpenseSummary()             // total · byCategory
 filterGuestsByStatus(status?)   // filter guests by status or return all
 initKeyboardShortcuts()         // Alt+1–9 section navigation (returns cleanup fn)
 ```
-
-

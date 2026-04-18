@@ -19,16 +19,13 @@ let _searchQuery = "";
 /** @type {boolean} */
 let _giftMode = false;
 
-/** @type {boolean} S20.5 show accessibility-needed guests only */
-let _accessibilityOnly = false;
-
 /** @type {MediaStream|null} */
 let _cameraStream = null;
 
 /** @type {number|null} */
 let _scanIntervalId = null;
 
-export function mount(/** @type {HTMLElement} */ _container) {
+export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderCheckin));
   renderCheckin();
 }
@@ -74,11 +71,6 @@ export function checkInGuest(guestId) {
     };
     storeSet("guests", guests);
     enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-    // S16.1 — Sound + visual alert on check-in
-    _playCheckinSound();
-    _flashCheckinAlert(guests[idx]);
-    // F3.3 — Haptic feedback on mobile check-in
-    if (navigator.vibrate) navigator.vibrate(50);
   }
 }
 
@@ -97,11 +89,6 @@ export function renderCheckin() {
           .toLowerCase()
           .includes(_searchQuery) || (g.phone || "").includes(_searchQuery),
     );
-  }
-
-  // S20.5 Accessibility-only filter
-  if (_accessibilityOnly) {
-    guests = guests.filter((g) => g.accessibility || (g.notes || "").toLowerCase().includes("wheelchair") || (g.notes || "").toLowerCase().includes("נגיש"));
   }
 
   list.textContent = "";
@@ -258,6 +245,97 @@ export function getCheckinStats() {
   };
 }
 
+/**
+ * Group check-in rate by guest side.
+ * @returns {Array<{ side: string, total: number, checkedIn: number, rate: number }>}
+ */
+export function getCheckinRateBySide() {
+  const confirmed = /** @type {any[]} */ (storeGet("guests") ?? []).filter((guest) => guest.status === "confirmed");
+  /** @type {Map<string, { total: number, checkedIn: number }>} */
+  const bySide = new Map();
+  for (const guest of confirmed) {
+    const side = guest.side || "mutual";
+    const entry = bySide.get(side) ?? { total: 0, checkedIn: 0 };
+    entry.total += 1;
+    if (guest.checkedIn) entry.checkedIn += 1;
+    bySide.set(side, entry);
+  }
+  return [...bySide.entries()].map(([side, values]) => ({
+    side,
+    total: values.total,
+    checkedIn: values.checkedIn,
+    rate: values.total ? Math.round((values.checkedIn / values.total) * 100) : 0,
+  }));
+}
+
+/**
+ * Group check-in rate by table.
+ * @returns {Array<{ tableId: string, tableName: string, total: number, checkedIn: number, rate: number }>}
+ */
+export function getCheckinRateByTable() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (guest) => guest.status === "confirmed" && guest.tableId,
+  );
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  /** @type {Map<string, { total: number, checkedIn: number }>} */
+  const byTable = new Map();
+  for (const guest of guests) {
+    const tableId = guest.tableId;
+    const entry = byTable.get(tableId) ?? { total: 0, checkedIn: 0 };
+    entry.total += 1;
+    if (guest.checkedIn) entry.checkedIn += 1;
+    byTable.set(tableId, entry);
+  }
+  return [...byTable.entries()].map(([tableId, values]) => ({
+    tableId,
+    tableName: tables.find((table) => table.id === tableId)?.name || tableId,
+    total: values.total,
+    checkedIn: values.checkedIn,
+    rate: values.total ? Math.round((values.checkedIn / values.total) * 100) : 0,
+  }));
+}
+
+/**
+ * Return confirmed VIP guests who have not checked in.
+ * @returns {any[]}
+ */
+export function getVipNotCheckedIn() {
+  return /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (guest) => guest.status === "confirmed" && guest.vip && !guest.checkedIn,
+  );
+}
+
+/**
+ * Return confirmed accessibility guests who have not checked in.
+ * @returns {any[]}
+ */
+export function getAccessibilityNotCheckedIn() {
+  return /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (guest) => guest.status === "confirmed" && guest.accessibility && !guest.checkedIn,
+  );
+}
+
+/**
+ * Bucket check-ins by hour.
+ * @returns {Array<{ hour: string, count: number }>}
+ */
+export function getCheckinTimeline() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  /** @type {Map<string, number>} */
+  const byHour = new Map();
+  for (const guest of guests) {
+    const rawTime = guest.checkedInAt || guest.checkinTime;
+    if (!guest.checkedIn || !rawTime) continue;
+    const date = new Date(rawTime);
+    if (Number.isNaN(date.getTime())) continue;
+    const hour = `${String(date.getUTCHours()).padStart(2, "0")}:00`;
+    byHour.set(hour, (byHour.get(hour) ?? 0) + 1);
+  }
+  return [...byHour.entries()]
+    .map(([hour, count]) => ({ hour, count }))
+    .sort((a, b) => a.hour.localeCompare(b.hour));
+}
+
 // ── S11.5 Gift Mode ───────────────────────────────────────────────────────
 
 /**
@@ -362,203 +440,4 @@ export function getGuestQrUrl(guestId) {
   const baseUrl = window.location.origin + window.location.pathname;
   const checkinUrl = `${baseUrl}?guestId=${encodeURIComponent(guestId)}&action=checkin`;
   return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkinUrl)}`;
-}
-
-// ── S16.1 Check-in Sound & Visual Alerts ─────────────────────────────────
-
-/** @type {AudioContext|null} */
-let _audioCtx = null;
-
-/**
- * Play a short pleasant confirmation beep using Web Audio API.
- */
-function _playCheckinSound() {
-  try {
-    if (!_audioCtx) _audioCtx = new (window.AudioContext || /** @type {any} */ (window).webkitAudioContext)();
-    const osc = _audioCtx.createOscillator();
-    const gain = _audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(_audioCtx.destination);
-    osc.frequency.value = 800;
-    osc.type = "sine";
-    gain.gain.setValueAtTime(0.3, _audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, _audioCtx.currentTime + 0.3);
-    osc.start(_audioCtx.currentTime);
-    osc.stop(_audioCtx.currentTime + 0.3);
-  } catch {
-    // Audio not available — silently skip
-  }
-}
-
-/**
- * Flash a visual alert banner for the checked-in guest.
- * @param {Record<string,unknown>} guest
- */
-function _flashCheckinAlert(guest) {
-  const banner = document.createElement("div");
-  banner.className = "checkin-flash";
-  banner.textContent = `✅ ${guest.firstName} ${guest.lastName || ""} ${t("checkin_arrived")}`;
-  const anchor = document.getElementById("checkinList") ?? document.body;
-  anchor.parentElement?.insertBefore(banner, anchor);
-  setTimeout(() => banner.remove(), 3000);
-}
-
-// ── S18.3 Batch Check-in by Table ────────────────────────────────────────
-
-/**
- * Check in all confirmed guests assigned to a given table at once.
- * @param {string} tableId
- */
-export function checkInByTable(tableId) {
-  if (!tableId) return;
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  let changed = false;
-  for (let i = 0; i < guests.length; i++) {
-    if (
-      guests[i].tableId === tableId &&
-      guests[i].status === "confirmed" &&
-      !guests[i].checkedIn
-    ) {
-      guests[i] = {
-        ...guests[i],
-        checkedIn: true,
-        checkedInAt: new Date().toISOString(),
-      };
-      changed = true;
-    }
-  }
-  if (changed) {
-    storeSet("guests", guests);
-    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-  }
-}
-
-/**
- * S21.3 — Export guests who received gifts as a CSV download.
- */
-export function exportGiftsCSV() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const gifted = guests.filter((g) => g.gift && String(g.gift).trim() !== "");
-  const header = "\uFEFFשם,טלפון,מתנה,הגיע?,זמן כניסה";
-  const rows = gifted.map((g) =>
-    [
-      `"${[g.firstName, g.lastName].filter(Boolean).join(" ").replace(/"/g, '""')}"`,
-      `"${g.phone || ""}"`,
-      `"${String(g.gift || "").replace(/"/g, '""')}"`,
-      g.checkedIn ? "כן" : "לא",
-      g.checkedInAt ? new Date(g.checkedInAt).toLocaleString("he-IL") : "",
-    ].join(","),
-  );
-  const csv = [header, ...rows].join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "gifts.csv";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-// ── S20.5 Accessibility Filter ───────────────────────────────────────────
-
-/**
- * Toggle accessibility-needs-only filter in the check-in list.
- */
-export function toggleAccessibilityFilter() {
-  _accessibilityOnly = !_accessibilityOnly;
-  const btn = document.getElementById("accessibilityFilterBtn");
-  if (btn) btn.classList.toggle("btn-primary", _accessibilityOnly);
-  renderCheckin();
-}
-
-/**
- * Check-in rate by side (groom/bride/mutual).
- * @returns {{ side: string, total: number, checkedIn: number, rate: number }[]}
- */
-export function getCheckinRateBySide() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? [])
-    .filter((g) => g.status === "confirmed");
-  /** @type {Map<string, { total: number, checkedIn: number }>} */
-  const map = new Map();
-  for (const g of guests) {
-    const side = g.side || "mutual";
-    const entry = map.get(side) ?? { total: 0, checkedIn: 0 };
-    entry.total += 1;
-    if (g.checkedIn) entry.checkedIn += 1;
-    map.set(side, entry);
-  }
-  return [...map.entries()].map(([side, d]) => ({
-    side,
-    total: d.total,
-    checkedIn: d.checkedIn,
-    rate: d.total ? Math.round((d.checkedIn / d.total) * 100) : 0,
-  }));
-}
-
-/**
- * Check-in rate by table — how full is each table at the event.
- * @returns {{ tableId: string, tableName: string, seated: number, arrived: number, rate: number }[]}
- */
-export function getCheckinRateByTable() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? [])
-    .filter((g) => g.status === "confirmed" && g.tableId);
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const tableMap = new Map(tables.map((tbl) => [tbl.id, tbl.name || tbl.id]));
-  /** @type {Map<string, { seated: number, arrived: number }>} */
-  const map = new Map();
-  for (const g of guests) {
-    const entry = map.get(g.tableId) ?? { seated: 0, arrived: 0 };
-    entry.seated += 1;
-    if (g.checkedIn) entry.arrived += 1;
-    map.set(g.tableId, entry);
-  }
-  return [...map.entries()].map(([tableId, d]) => ({
-    tableId,
-    tableName: tableMap.get(tableId) || tableId,
-    seated: d.seated,
-    arrived: d.arrived,
-    rate: d.seated ? Math.round((d.arrived / d.seated) * 100) : 0,
-  }));
-}
-
-/**
- * VIP guests not yet checked in.
- * @returns {{ id: string, firstName: string, lastName: string, phone: string }[]}
- */
-export function getVipNotCheckedIn() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return guests
-    .filter((g) => g.vip && g.status === "confirmed" && !g.checkedIn)
-    .map((g) => ({ id: g.id, firstName: g.firstName || "", lastName: g.lastName || "", phone: g.phone || "" }));
-}
-
-/**
- * Guests with accessibility needs who are confirmed but not checked in.
- * @returns {{ id: string, firstName: string, lastName: string, accessibility: string }[]}
- */
-export function getAccessibilityNotCheckedIn() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return guests
-    .filter((g) => g.accessibility && g.status === "confirmed" && !g.checkedIn)
-    .map((g) => ({ id: g.id, firstName: g.firstName || "", lastName: g.lastName || "", accessibility: g.accessibility }));
-}
-
-/**
- * Arrival timeline — check-ins bucketed by hour of day.
- * @returns {{ hour: number, count: number }[]}
- */
-export function getCheckinTimeline() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  /** @type {Map<number, number>} */
-  const map = new Map();
-  for (const g of guests) {
-    if (!g.checkedIn || !g.checkinTime) continue;
-    const hour = new Date(g.checkinTime).getHours();
-    map.set(hour, (map.get(hour) ?? 0) + 1);
-  }
-  return [...map.entries()]
-    .map(([hour, count]) => ({ hour, count }))
-    .sort((a, b) => a.hour - b.hour);
 }

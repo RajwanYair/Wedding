@@ -13,33 +13,19 @@ cd Wedding
 cd ../MyScripts && npm install && cd Wedding
 
 # Run tests
-npm test              # 3844+ unit tests — must all pass
+npm test              # full Vitest suite — must pass
 npm run lint          # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 
 # Start dev server
 npm run dev           # Vite dev server at http://localhost:5173/Wedding/
 ```
 
-## Project Structure
+## Project References
 
-```
-src/              # ES module source — Vite entry
-  core/           # Foundation: store, events, nav, i18n, ui, dom, config, constants
-  handlers/       # Action handler registration (~7 files)
-  sections/       # One module per app section (~20 modules)
-  services/       # External services: auth, sheets, supabase, backend, presence
-  utils/          # Pure utilities: phone, date, sanitize, misc, form-helpers
-  plugins/        # Optional plugins: contact, gallery, registry
-  templates/      # Lazy HTML templates (one per section)
-  modals/         # Modal HTML fragments
-css/              # 7 CSS modules with @layer cascade
-supabase/
-  migrations/     # SQL migration files
-  functions/      # Edge Functions
-tests/
-  unit/           # Vitest unit + integration tests (happy-dom)
-  e2e/            # Playwright E2E + visual regression
-```
+- README.md: public overview and quick start
+- ARCHITECTURE.md: runtime structure and data flow
+- .github/copilot-instructions.md: canonical project rules and release checklist
+- .github/instructions/workspace.instructions.md: workspace-specific context for automation
 
 ## Development Rules
 
@@ -49,21 +35,20 @@ tests/
 4. **Zero runtime deps** — no npm packages loaded at runtime
 5. **Named exports only** — no `window.*` assignments in `src/`
 6. **`sanitize(input, schema)`** for all user input validation at boundaries
-7. **Action registry** — add any new `data-action` value to `src/core/action-registry.js` (ACTIONS constant)
-8. **Constants** — new enums, section names, and storage keys go in `src/core/constants.js`
+7. **Constants first** — new enums, section names, and storage keys go in `src/core/constants.js`
+8. **Prefer current runtime paths** — if a legacy helper exists outside the runtime path, do not extend it by default
 
 ## Adding a Feature
 
 1. Pick the relevant `src/sections/` module (or create one)
 2. Export named functions — no default exports
 3. Add new `data-action` constant to `ACTIONS` in `src/core/action-registry.js`
-4. Register handler in the relevant `src/handlers/*.js` file
-5. Add i18n keys to both `src/i18n/he.json` and `src/i18n/en.json`
+4. Add i18n keys to both `src/i18n/he.json` and `src/i18n/en.json`
 5. Add unit tests in `tests/unit/`
-6. Add content tests in `tests/wedding.test.mjs`
+6. Update `tests/wedding.test.mjs` only when public-facing repo assertions need to change
 7. Run `npm run lint && npm test` — must exit 0
 
-## Repository Pattern (Supabase)
+## Supabase Pattern (when touched)
 
 Database access uses typed repository classes.  Never call `supabase.from()`
 directly in section/handler code — always go through a repository.
@@ -137,11 +122,11 @@ The blank line before the bullet list is mandatory (MD022 / MD032).
 - **Every new feature** gets at least 2 unit tests
 - **DOM interactions** use `@vitest-environment happy-dom`
 - **E2E** for user-facing flows — add to `tests/e2e/smoke.spec.mjs`
-- Test count in `tests/wedding.test.mjs` header comment must stay current
+- Keep `tests/wedding.test.mjs` focused on current repo-level sanity checks, not deleted legacy architecture
 
 ## Commit Convention
 
-```
+```text
 type(scope): short description
 
 feat(guests): add accessibility labels to guest table rows
@@ -165,9 +150,9 @@ Types: `feat` · `fix` · `test` · `docs` · `chore` · `refactor` · `perf`
 ## Review Process
 
 PRs require at least one review approval and all CI checks to pass before merging.
-The CI runs: lint → type check → unit tests → Vite build → coverage → security scan → bundle size.
+The CI runs: lint → i18n parity → unit tests → Vite build → security scan → bundle size.
 
-## Tutorial: Adding a New Section
+## Adding a Section
 
 Follow these steps to add a new section (e.g. "gifts"):
 

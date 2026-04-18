@@ -1,6 +1,6 @@
 # Wedding Manager — Architecture (v8.0.0)
 
-> Entry point: `src/main.js` · Pure ESM · Zero `window.*` side effects
+> Runtime entry: `src/main.js` · Pure ESM · Vite 8 · Google Sheets remains the active backend path
 
 ## Module Dependency Graph
 
@@ -109,21 +109,21 @@ graph TD
 
 ## Layer Overview
 
-| Layer     | Path             | Responsibility                                                |
-| --------- | ---------------- | ------------------------------------------------------------- |
-| Bootstrap | `src/main.js`    | App init, event wiring, section lifecycle                     |
-| Core      | `src/core/`      | Store, events, i18n, nav, UI, DOM, config, constants, actions |
-| Handlers  | `src/handlers/`  | Action handler registration; bridge between events and logic  |
-| Sections  | `src/sections/`  | Feature modules — mount/unmount lifecycle                     |
-| Services  | `src/services/`  | Auth, Sheets, Supabase, backend, presence, offline queue      |
-| Utils     | `src/utils/`     | Pure helpers: sanitize, phone, date, misc, form-helpers, undo |
-| Plugins   | `src/plugins/`   | Optional feature plugins with mount/unmount/i18n contract     |
-| Templates | `src/templates/` | Lazy-loaded HTML fragments (injected on first visit)          |
-| Modals    | `src/modals/`    | Reusable modal HTML fragments                                 |
+| Layer | Path | Responsibility |
+| --- | --- | --- |
+| Bootstrap | `src/main.js` | App init, event wiring, section lifecycle |
+| Core | `src/core/` | Store, events, i18n, nav, UI, DOM, config, constants |
+| Sections | `src/sections/` | Feature modules mounted from the runtime entry |
+| Services | `src/services/` | Auth, Sheets, backend, presence, Supabase integrations |
+| Utils | `src/utils/` | Pure helpers and reusable primitives |
+| Templates | `src/templates/` | Lazy-loaded section markup |
+| Modals | `src/modals/` | Lazy-loaded modal markup |
+
+Legacy or experimental modules may still exist elsewhere in `src/`, but the production path should be traced from `src/main.js` first.
 
 ## Data Flow
 
-```
+```text
 User Action (click/submit)
   → data-action attribute
   → events.js delegation
@@ -231,7 +231,7 @@ erDiagram
         int children
         string status "pending|confirmed|declined|maybe"
         string side "groom|bride|mutual"
-        string group "family|friends|work|other"
+        string group "family|friends|work|neighbors|other"
         string meal "regular|vegetarian|vegan|gluten_free|kosher"
         string mealNotes
         boolean accessibility
@@ -292,5 +292,3 @@ flowchart LR
     R["@layer responsive\n768px + 480px breakpoints"] --> P
     P["@layer print\nPrint-only overrides"]
 ```
-
-

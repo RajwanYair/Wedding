@@ -12,8 +12,12 @@ import { uid } from "../utils/misc.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
-import { pushUndo } from "../utils/undo.js";
-import { MEAL_TYPES } from "../core/config.js";
+import {
+  GUEST_STATUSES,
+  GUEST_SIDES,
+  GUEST_GROUPS,
+  MEAL_TYPES,
+} from "../core/constants.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -23,9 +27,6 @@ const _pendingSync = new Set();
 
 /** @type {string} current filter: "all" | status | side | group */
 let _filter = "all";
-
-/** @type {boolean} show VIP guests only */
-let _vipOnly = false;
 
 /** @type {string} current sort field */
 let _sortField = "lastName";
@@ -39,7 +40,7 @@ let _searchQuery = "";
  * Mount the guests section.
  * @param {HTMLElement} _container
  */
-export function mount(/** @type {HTMLElement} */ _container) {
+export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderGuests));
   renderGuests();
 }
@@ -49,12 +50,6 @@ export function unmount() {
   _unsubs.forEach((fn) => fn());
   _unsubs.length = 0;
 }
-
-/**
- * Section capabilities declaration.
- * @type {import('../types').SectionCapabilities}
- */
-export const capabilities = { offline: true, printable: true, analytics: true };
 
 // ── Guest CRUD ────────────────────────────────────────────────────────────
 
@@ -74,28 +69,23 @@ export function saveGuest(data, existingId = null) {
     children: { type: "number", min: 0, max: 20, default: 0 },
     status: {
       type: "enum",
-      values: ["pending", "confirmed", "declined", "maybe"],
+      values: [...GUEST_STATUSES],
       default: "pending",
     },
     side: {
       type: "enum",
-      values: ["groom", "bride", "mutual"],
+      values: [...GUEST_SIDES],
       default: "mutual",
     },
     group: {
       type: "enum",
-      values: ["family", "friends", "work", "other"],
+      values: [...GUEST_GROUPS],
       default: "friends",
     },
     meal: {
       type: "enum",
-      values: ["regular", "vegetarian", "vegan", "gluten_free", "kosher"],
+      values: [...MEAL_TYPES],
       default: "regular",
-    },
-    rsvpSource: {
-      type: "enum",
-      values: ["web", "whatsapp", "phone", "manual", "other"],
-      default: "manual",
     },
   };
   const { value, errors } = sanitize(data, schema);
@@ -141,16 +131,9 @@ export function saveGuest(data, existingId = null) {
  * @param {string} id
  */
 export function deleteGuest(id) {
-  const all = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const victim = all.find((g) => g.id === id);
-  if (victim) {
-    pushUndo(
-      `Delete guest ${victim.firstName}`,
-      "guests",
-      JSON.parse(JSON.stringify(all)),
-    );
-  }
-  const guests = all.filter((g) => g.id !== id);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (g) => g.id !== id,
+  );
   storeSet("guests", guests);
   _pendingSync.delete(id);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
@@ -206,53 +189,20 @@ export function renderGuests() {
 
   let guests = /** @type {any[]} */ (storeGet("guests") ?? []);
 
-  // S14.1 Multi-criteria filter
+  // Filter
   if (_filter !== "all") {
     guests = guests.filter(
       (g) => g.status === _filter || g.side === _filter || g.group === _filter,
     );
   }
-  if (_multiFilter.status !== "all") {
-    guests = guests.filter((g) => g.status === _multiFilter.status);
-  }
-  if (_multiFilter.side !== "all") {
-    guests = guests.filter((g) => g.side === _multiFilter.side);
-  }
-  if (_multiFilter.group !== "all") {
-    guests = guests.filter(
-      (g) => (g.group || "friends") === _multiFilter.group,
-    );
-  }
-  if (_multiFilter.meal !== "all") {
-    guests = guests.filter((g) => (g.meal || "regular") === _multiFilter.meal);
-  }
-  if (_multiFilter.table !== "all") {
-    if (_multiFilter.table === "unassigned") {
-      guests = guests.filter((g) => !g.tableId);
-    } else {
-      guests = guests.filter((g) => g.tableId === _multiFilter.table);
-    }
-  }
 
-  // S17.1 Full-text search (name, phone, email, notes, group, meal, tags)
+  // Search
   if (_searchQuery) {
     guests = guests.filter(
       (g) =>
         `${g.firstName} ${g.lastName}`.toLowerCase().includes(_searchQuery) ||
-        (g.phone || "").includes(_searchQuery) ||
-        (g.email || "").toLowerCase().includes(_searchQuery) ||
-        (g.notes || "").toLowerCase().includes(_searchQuery) ||
-        (g.meal || "").toLowerCase().includes(_searchQuery) ||
-        (g.group || "").toLowerCase().includes(_searchQuery) ||
-        (Array.isArray(g.tags) ? g.tags.join(" ") : "")
-          .toLowerCase()
-          .includes(_searchQuery),
+        (g.phone || "").includes(_searchQuery),
     );
-  }
-
-  // S19.2 VIP-only filter
-  if (_vipOnly) {
-    guests = guests.filter((g) => g.vip === true);
   }
 
   // Sort
@@ -291,62 +241,15 @@ export function renderGuests() {
       t(`status_${g.status}`) || g.status,
       table ? table.name : "",
     ];
-    cells.forEach((txt, ci) => {
+    cells.forEach((txt) => {
       const td = document.createElement("td");
-      // S15.5 — Highlight search terms in name, phone columns
-      if (_searchQuery && (ci === 0 || ci === 2)) {
-        _highlightText(td, txt, _searchQuery);
-      } else {
-        td.textContent = txt;
-      }
-      // S14.5 — Show tags in name cell
-      if (ci === 0 && Array.isArray(g.tags) && g.tags.length > 0) {
-        g.tags.forEach((/** @type {string} */ tag) => {
-          const badge = document.createElement("span");
-          badge.className = "badge badge--tag";
-          badge.textContent = tag;
-          td.appendChild(document.createTextNode(" "));
-          td.appendChild(badge);
-        });
-      }
+      td.textContent = txt;
       tr.appendChild(td);
     });
 
     // Actions cell
     const actionsTd = document.createElement("td");
     actionsTd.className = "u-text-nowrap";
-    // S21.5 Notes expand button
-    if (g.notes) {
-      const notesBtn = document.createElement("button");
-      notesBtn.className = "btn btn-icon btn-small u-mr-xs";
-      notesBtn.title = t("guest_notes_expand");
-      notesBtn.textContent = "📝";
-      notesBtn.dataset.action = "toggleGuestNotes";
-      notesBtn.dataset.actionArg = g.id;
-      actionsTd.appendChild(notesBtn);
-    }
-    // S22.4 RSVP source badge
-    if (g.rsvpSource && g.rsvpSource !== "manual") {
-      const srcBadge = document.createElement("span");
-      srcBadge.className = "badge badge--info u-mr-xs";
-      srcBadge.title = t("label_rsvp_source");
-      const srcIcons = /** @type {Record<string, string>} */ ({
-        web: "🌐",
-        whatsapp: "💬",
-        phone: "📞",
-        other: "❓",
-      });
-      srcBadge.textContent = srcIcons[g.rsvpSource] ?? "❓";
-      actionsTd.appendChild(srcBadge);
-    }
-    // S19.2 VIP star button
-    const vipBtn = document.createElement("button");
-    vipBtn.className = `btn btn-icon btn-small u-mr-xs${g.vip ? " btn-vip-active" : ""}`;
-    vipBtn.title = t("guest_vip_toggle");
-    vipBtn.textContent = g.vip ? "⭐" : "☆";
-    vipBtn.dataset.action = "toggleGuestVip";
-    vipBtn.dataset.actionArg = g.id;
-    actionsTd.appendChild(vipBtn);
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
     editBtn.textContent = t("btn_edit");
@@ -367,39 +270,6 @@ export function renderGuests() {
   if (empty) {
     empty.classList.toggle("u-hidden", guests.length > 0);
   }
-  renderMealSummary();
-}
-
-/**
- * S21.1 — Render a meal-type summary bar in #mealSummaryBar.
- * Shows counts for each meal type across ALL guests (not filtered).
- */
-export function renderMealSummary() {
-  const bar = document.getElementById("mealSummaryBar");
-  if (!bar) return;
-  const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const MEAL_ICONS = {
-    regular: "🍽️",
-    vegetarian: "🥗",
-    vegan: "🌱",
-    gluten_free: "🌾",
-    kosher: "✡️",
-    other: "🍴",
-  };
-  const MEAL_TYPE_LIST = [...MEAL_TYPES, "other"].map((key) => ({
-    key,
-    icon: MEAL_ICONS[key] ?? "🍴",
-  }));
-  bar.textContent = "";
-  MEAL_TYPE_LIST.forEach(({ key, icon }) => {
-    const count = allGuests.filter((g) => (g.meal || "regular") === key).length;
-    if (count === 0) return;
-    const chip = document.createElement("span");
-    chip.className = "meal-chip";
-    chip.title = t(`meal_${key}`);
-    chip.textContent = `${icon} ${t(`meal_${key}`)} ${count}`;
-    bar.appendChild(chip);
-  });
 }
 
 /**
@@ -422,7 +292,7 @@ export function exportGuestsCsv() {
 }
 
 /** @returns {boolean} */
-export function isValidGuestPhone(/** @type {string} */ phone) {
+export function isValidGuestPhone(phone) {
   return isValidPhone(phone);
 }
 
@@ -454,61 +324,6 @@ export function setSideFilter(side) {
  */
 export function printGuests() {
   window.print();
-}
-
-/**
- * S23.2 — Open a print window with guests grouped by table assignment.
- * Confirmed guests first, then others; unseated guests in a separate section.
- */
-export function printGuestsByTable() {
-  const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const tableNames = new Map(tables.map((tb) => [tb.id, tb.name]));
-
-  /** @type {Map<string|null, any[]>} */
-  const byTable = new Map();
-  byTable.set(null, []);
-  for (const tb of tables) byTable.set(tb.id, []);
-  for (const g of allGuests) {
-    const key = g.tableId ?? null;
-    if (!byTable.has(key)) byTable.set(key, []);
-    byTable.get(key)?.push(g);
-  }
-
-  const esc = (/** @type {string} */ s) => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  let html = `<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="UTF-8">
-<title>${t("print_guests_by_table")}</title>
-<style>body{font-family:Arial,sans-serif;direction:rtl;padding:1rem}
-h1{text-align:center;margin-bottom:.5rem}
-.subtitle{text-align:center;color:#666;margin-bottom:1.5rem}
-h2{background:#f0f0f0;padding:4px 10px;margin:1rem 0 4px;border-radius:4px}
-table{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:.9rem}
-th,td{padding:5px 8px;border:1px solid #ccc;text-align:right}
-th{background:#e8e8e8}
-.un{font-style:italic;color:#888}
-@media print{button{display:none}}</style></head><body>
-<h1>${esc(t("print_guests_by_table"))}</h1>
-<p class="subtitle">${new Date().toLocaleDateString("he-IL")} \u2022 ${allGuests.length} ${esc(t("stat_guests"))}</p>
-<button onclick="window.print()" style="margin-bottom:1rem">🖨️ ${esc(t("action_print"))}</button>`;
-
-  for (const [tableId, guestList] of byTable) {
-    if (guestList.length === 0) continue;
-    const tableName = tableId ? (tableNames.get(tableId) ?? tableId) : t("print_unseated");
-    html += `<h2>${esc(String(tableName))} (${guestList.length})</h2>
-<table><thead><tr><th>#</th><th>${esc(t("label_first_name"))}</th><th>${esc(t("label_last_name"))}</th><th>${esc(t("label_phone"))}</th><th>${esc(t("label_meal"))}</th><th>${esc(t("label_status"))}</th></tr></thead><tbody>`;
-    const sorted = [...guestList].sort((a, b) =>
-      (a.lastName ?? "").localeCompare(b.lastName ?? "", "he"),
-    );
-    sorted.forEach((g, i) => {
-      html += `<tr${!tableId ? ' class="un"' : ""}><td>${i + 1}</td><td>${esc(g.firstName ?? "")}</td><td>${esc(g.lastName ?? "")}</td><td>${esc(g.phone ?? "")}</td><td>${esc(g.meal ?? "")}</td><td>${esc(g.status ?? "")}</td></tr>`;
-    });
-    html += `</tbody></table>`;
-  }
-
-  html += `</body></html>`;
-  const win = window.open("", "_blank");
-  if (win) { win.document.write(html); win.document.close(); }
 }
 
 /**
@@ -562,7 +377,7 @@ export function importGuestsCSV(fileInput) {
         if (!header) return;
 
         const cols = header.split(",").map((c) => c.trim().toLowerCase());
-        const colIdx = (/** @type {string} */ name) => cols.indexOf(name);
+        const colIdx = (name) => cols.indexOf(name);
 
         const existing = /** @type {any[]} */ (storeGet("guests") ?? []);
         let added = 0;
@@ -570,7 +385,7 @@ export function importGuestsCSV(fileInput) {
 
         rows.forEach((line) => {
           const parts = line.split(",");
-          const get = (/** @type {string} */ name) => parts[colIdx(name)]?.trim() ?? "";
+          const get = (name) => parts[colIdx(name)]?.trim() ?? "";
           const phone = cleanPhone(get("phone") || get("טלפון") || "");
           if (!phone) return; // phone is required
 
@@ -586,19 +401,17 @@ export function importGuestsCSV(fileInput) {
             count: Number(get("count") || get("מוזמנים") || 1) || 1,
             children: Number(get("children") || get("ילדים") || 0) || 0,
             status: /** @type {any} */ (
-              ["pending", "confirmed", "declined", "maybe"].includes(
-                get("status"),
-              )
+              GUEST_STATUSES.includes(/** @type {any} */ (get("status")))
                 ? get("status")
                 : "pending"
             ),
             side: /** @type {any} */ (
-              ["groom", "bride", "mutual"].includes(get("side"))
+              GUEST_SIDES.includes(/** @type {any} */ (get("side")))
                 ? get("side")
                 : "mutual"
             ),
             group: /** @type {any} */ (
-              ["family", "friends", "work", "other"].includes(get("group"))
+              GUEST_GROUPS.includes(/** @type {any} */ (get("group")))
                 ? get("group")
                 : "other"
             ),
@@ -642,7 +455,7 @@ export function openGuestForEdit(id) {
   const g = guests.find((guest) => guest.id === id);
   if (!g) return;
 
-  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
+  const setVal = (elId, val) => {
     const input =
       /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
         document.getElementById(elId)
@@ -725,63 +538,63 @@ export function filterGuestsByStatus(status) {
   return guests.filter((g) => g.status === status);
 }
 
-// ── Sprint 5: Guest Data Helpers ──────────────────────────────────────────
-
 /**
- * Group guests by their group field (family/friends/work/other).
+ * Group guests by their group field.
  * @returns {Record<string, any[]>}
  */
 export function getGuestsByGroup() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   /** @type {Record<string, any[]>} */
-  const groups = { family: [], friends: [], work: [], other: [] };
-  for (const g of guests) {
-    const key = groups[g.group] ? g.group : "other";
-    groups[key].push(g);
+  const groups = { family: [], friends: [], work: [], neighbors: [], other: [] };
+  for (const guest of guests) {
+    const key = groups[guest.group] ? guest.group : "other";
+    groups[key].push(guest);
   }
   return groups;
 }
 
 /**
- * Find pending guests whose RSVP is overdue (past the RSVP deadline).
+ * Find pending guests whose RSVP deadline has passed.
  * @returns {any[]}
  */
 export function getGuestsNeedingFollowup() {
-  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
   const deadline = info.rsvpDeadline;
   if (!deadline) return [];
-  const now = new Date();
-  const dl = new Date(deadline);
-  if (isNaN(dl.getTime()) || now < dl) return [];
+  const deadlineDate = new Date(deadline);
+  if (Number.isNaN(deadlineDate.getTime()) || new Date() < deadlineDate) return [];
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return guests.filter((g) => g.status === "pending" && g.phone);
+  return guests.filter((guest) => guest.status === "pending" && guest.phone);
 }
 
 /**
- * Find tables with remaining capacity (empty seats).
+ * Find tables with remaining capacity.
  * @returns {Array<{ table: any, assigned: number, remaining: number }>}
  */
 export function getSeatingGaps() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return tables.map((tb) => {
-    const assigned = guests.filter((g) => g.tableId === tb.id)
-      .reduce((s, g) => s + (g.count || 1), 0);
-    return { table: tb, assigned, remaining: (tb.capacity || 0) - assigned };
-  }).filter((r) => r.remaining > 0);
+  return tables
+    .map((table) => {
+      const assigned = guests
+        .filter((guest) => guest.tableId === table.id)
+        .reduce((sum, guest) => sum + (guest.count || 1), 0);
+      return { table, assigned, remaining: (table.capacity || 0) - assigned };
+    })
+    .filter((row) => row.remaining > 0);
 }
 
 /**
- * Build a daily RSVP response timeline (count per day).
+ * Build a daily RSVP response timeline.
  * @returns {Array<{ date: string, count: number }>}
  */
 export function getGuestResponseTimeline() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   /** @type {Record<string, number>} */
   const byDay = {};
-  for (const g of guests) {
-    if (!g.rsvpDate) continue;
-    const day = g.rsvpDate.slice(0, 10);
+  for (const guest of guests) {
+    if (!guest.rsvpDate) continue;
+    const day = String(guest.rsvpDate).slice(0, 10);
     byDay[day] = (byDay[day] || 0) + 1;
   }
   return Object.entries(byDay)
@@ -790,42 +603,121 @@ export function getGuestResponseTimeline() {
 }
 
 /**
- * Find potential duplicate guests (same phone or same full name).
+ * Find potential duplicate guests by phone or full name.
  * @returns {Array<{ guests: any[], reason: string }>}
  */
 export function getDuplicateGuests() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   /** @type {Array<{ guests: any[], reason: string }>} */
-  const dupes = [];
+  const duplicates = [];
 
-  // By phone
   /** @type {Map<string, any[]>} */
   const byPhone = new Map();
-  for (const g of guests) {
-    if (!g.phone) continue;
-    const key = g.phone.replace(/\D/g, "");
+  for (const guest of guests) {
+    if (!guest.phone) continue;
+    const key = String(guest.phone).replace(/\D/g, "");
     if (!key) continue;
     if (!byPhone.has(key)) byPhone.set(key, []);
-    byPhone.get(key)?.push(g);
+    byPhone.get(key)?.push(guest);
   }
-  for (const [, group] of byPhone) {
-    if (group.length > 1) dupes.push({ guests: group, reason: "phone" });
+  for (const group of byPhone.values()) {
+    if (group.length > 1) duplicates.push({ guests: group, reason: "phone" });
   }
 
-  // By name
   /** @type {Map<string, any[]>} */
   const byName = new Map();
-  for (const g of guests) {
-    const name = `${g.firstName || ""} ${g.lastName || ""}`.trim().toLowerCase();
-    if (!name) continue;
-    if (!byName.has(name)) byName.set(name, []);
-    byName.get(name)?.push(g);
+  for (const guest of guests) {
+    const fullName = `${guest.firstName || ""} ${guest.lastName || ""}`.trim().toLowerCase();
+    if (!fullName) continue;
+    if (!byName.has(fullName)) byName.set(fullName, []);
+    byName.get(fullName)?.push(guest);
   }
-  for (const [, group] of byName) {
-    if (group.length > 1) dupes.push({ guests: group, reason: "name" });
+  for (const group of byName.values()) {
+    if (group.length > 1) duplicates.push({ guests: group, reason: "name" });
   }
 
-  return dupes;
+  return duplicates;
+}
+
+/**
+ * Compute plus-one stats for confirmed guests.
+ * @returns {{ totalGuests: number, totalHeads: number, avgPartySize: number, largestParty: number }}
+ */
+export function getPlusOneStats() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((guest) => guest.status === "confirmed");
+  const totalHeads = confirmed.reduce((sum, guest) => sum + (guest.count || 1), 0);
+  const largestParty = confirmed.reduce((max, guest) => Math.max(max, guest.count || 1), 0);
+  return {
+    totalGuests: confirmed.length,
+    totalHeads,
+    avgPartySize: confirmed.length > 0 ? Math.round((totalHeads / confirmed.length) * 10) / 10 : 0,
+    largestParty,
+  };
+}
+
+/**
+ * Get confirmed guests that are missing a meaningful meal selection.
+ * @returns {Array<{ id: string, firstName: string, lastName: string }>}
+ */
+export function getGuestsMissingMeal() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return guests
+    .filter((guest) => guest.status === "confirmed" && (!guest.meal || guest.meal === "regular"))
+    .map((guest) => ({
+      id: guest.id,
+      firstName: guest.firstName || "",
+      lastName: guest.lastName || "",
+    }));
+}
+
+/**
+ * Summarize recorded gifts.
+ * @returns {{ totalGifts: number, giftCount: number, avgGift: number, maxGift: number }}
+ */
+export function getGiftSummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const gifted = guests.filter((guest) => Number(guest.gift) > 0);
+  const totalGifts = gifted.reduce((sum, guest) => sum + Number(guest.gift), 0);
+  const maxGift = gifted.reduce((max, guest) => Math.max(max, Number(guest.gift)), 0);
+  return {
+    totalGifts,
+    giftCount: gifted.length,
+    avgGift: gifted.length > 0 ? Math.round(totalGifts / gifted.length) : 0,
+    maxGift,
+  };
+}
+
+/**
+ * Get guest age since creation.
+ * @returns {Array<{ id: string, name: string, daysOld: number, status: string }>}
+ */
+export function getGuestAge() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const now = Date.now();
+  return guests
+    .filter((guest) => guest.createdAt)
+    .map((guest) => ({
+      id: guest.id,
+      name: `${guest.firstName || ""} ${guest.lastName || ""}`.trim(),
+      daysOld: Math.floor((now - new Date(guest.createdAt).getTime()) / 86400000),
+      status: guest.status || "pending",
+    }))
+    .sort((a, b) => b.daysOld - a.daysOld);
+}
+
+/**
+ * Count confirmed guests with children.
+ * @returns {{ totalChildren: number, guestsWithChildren: number }}
+ */
+export function getChildrenCount() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((guest) => guest.status === "confirmed");
+  const withChildren = confirmed.filter((guest) => Number(guest.children) > 0);
+  return {
+    totalChildren: withChildren.reduce((sum, guest) => sum + Number(guest.children), 0),
+    guestsWithChildren: withChildren.length,
+  };
 }
 
 // ── S11.4 Batch Operations ────────────────────────────────────────────────
@@ -889,111 +781,6 @@ export function batchDeleteGuests() {
   );
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-}
-
-// ── S17.2 Bulk Meal Assignment ────────────────────────────────────────────
-
-/**
- * Set meal type for all selected guests.
- * @param {string} meal
- */
-export function batchSetMeal(meal) {
-  if (!meal) return;
-  const ids = new Set(_getSelectedIds());
-  if (ids.size === 0) return;
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
-    ids.has(g.id) ? { ...g, meal, updatedAt: new Date().toISOString() } : g,
-  );
-  storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-}
-
-// ── S19.2 Guest VIP Flag ──────────────────────────────────────────────────
-
-/**
- * Toggle the VIP flag on a single guest.
- * @param {string} guestId
- */
-export function toggleGuestVip(guestId) {
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const idx = guests.findIndex((g) => g.id === guestId);
-  if (idx === -1) return;
-  guests[idx] = {
-    ...guests[idx],
-    vip: !guests[idx].vip,
-    updatedAt: new Date().toISOString(),
-  };
-  storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-}
-
-/**
- * Toggle the VIP-only filter and re-render.
- */
-export function toggleVipFilter() {
-  _vipOnly = !_vipOnly;
-  const btn = document.getElementById("vipFilterBtn");
-  if (btn) btn.classList.toggle("btn-primary", _vipOnly);
-  renderGuests();
-}
-
-// ── S19.5 Bulk Mark as Unsent ─────────────────────────────────────────────
-
-/**
- * Reset the `sent` flag for all selected guests (mark as not yet sent).
- */
-export function batchMarkUnsent() {
-  const ids = new Set(_getSelectedIds());
-  if (ids.size === 0) return;
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
-    ids.has(g.id) ? { ...g, sent: false, updatedAt: new Date().toISOString() } : g,
-  );
-  storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-}
-
-// ── S20.1 Guest Name Badges Print ────────────────────────────────────────
-
-/**
- * Open a print window with a 2-column badge grid for all filtered/confirmed guests.
- */
-export function printGuestBadges() {
-  const allGuests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const guests = allGuests.filter((g) => g.status === "confirmed");
-
-  const badgeHTML = guests.map((g) => {
-    const tbl = tables.find((tb) => tb.id === g.tableId);
-    const tableName = tbl ? tbl.name : "—";
-    const name = `${g.firstName} ${g.lastName || ""}`.trim();
-    return `<div class="badge-card">
-      <div class="badge-name">${_escHtml(name)}</div>
-      <div class="badge-table">${_escHtml(t("col_table") || "שולחן")} ${_escHtml(tableName)}</div>
-      ${g.meal && g.meal !== "regular" ? `<div class="badge-meal">${_escHtml(t(`meal_${g.meal}`) || g.meal)}</div>` : ""}
-    </div>`;
-  }).join("");
-
-  const win = window.open("", "_blank");
-  if (!win) return;
-  win.document.write(`<!DOCTYPE html><html dir="rtl"><head>
-    <meta charset="utf-8"><title>Guest Badges</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 0; }
-      .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5cm; padding: 1cm; }
-      .badge-card { border: 1px solid #999; border-radius: 8px; padding: 0.8cm; text-align: center; page-break-inside: avoid; min-height: 4cm; display: flex; flex-direction: column; justify-content: center; }
-      .badge-name { font-size: 18pt; font-weight: bold; margin-bottom: 0.3cm; }
-      .badge-table { font-size: 13pt; color: #555; }
-      .badge-meal { font-size: 10pt; color: #888; margin-top: 0.2cm; }
-      @media print { body { margin: 0; } }
-    </style>
-  </head><body><div class="badge-grid">${badgeHTML}</div></body></html>`);
-  win.document.close();
-  win.print();
-}
-
-/** @param {string} s */
-function _escHtml(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 // ── S12.2 Duplicate Detection ─────────────────────────────────────────────
@@ -1110,297 +897,4 @@ export function renderDuplicates() {
 
     container.appendChild(card);
   });
-}
-
-// ── S13.5 Guest Notes Timeline ────────────────────────────────────────────
-
-/**
- * Add a timestamped note to a guest's history log.
- * @param {string} guestId
- * @param {string} noteText
- * @returns {{ ok: boolean }}
- */
-export function addGuestNote(guestId, noteText) {
-  if (!noteText.trim()) return { ok: false };
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const idx = guests.findIndex((g) => g.id === guestId);
-  if (idx === -1) return { ok: false };
-  const history = Array.isArray(guests[idx].history) ? [...guests[idx].history] : [];
-  history.push({
-    text: noteText.trim().slice(0, 500),
-    timestamp: new Date().toISOString(),
-  });
-  guests[idx] = { ...guests[idx], history, updatedAt: new Date().toISOString() };
-  storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-  return { ok: true };
-}
-
-/**
- * Render guest notes history in the modal.
- * @param {string} guestId
- */
-export function renderGuestHistory(guestId) {
-  const container = document.getElementById("guestHistoryLog");
-  if (!container) return;
-  container.textContent = "";
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const guest = guests.find((g) => g.id === guestId);
-  if (!guest) return;
-  const history = Array.isArray(guest.history) ? guest.history : [];
-  if (history.length === 0) {
-    const p = document.createElement("p");
-    p.className = "u-text-muted";
-    p.textContent = t("guest_no_notes");
-    container.appendChild(p);
-    return;
-  }
-  history.slice().reverse().forEach((/** @type {any} */ entry) => {
-    const div = document.createElement("div");
-    div.className = "guest-note-entry";
-    const time = document.createElement("span");
-    time.className = "guest-note-time";
-    time.textContent = new Date(entry.timestamp).toLocaleString("he-IL");
-    div.appendChild(time);
-    const text = document.createElement("span");
-    text.className = "guest-note-text";
-    text.textContent = entry.text;
-    div.appendChild(text);
-    container.appendChild(div);
-  });
-}
-
-// ── S14.1 Multi-Criteria Guest Filter ─────────────────────────────────────
-
-/** @type {{ status: string, side: string, group: string, meal: string, table: string }} */
-const _multiFilter = { status: "all", side: "all", group: "all", meal: "all", table: "all" };
-
-/**
- * Set a multi-criteria filter and re-render.
- * @param {string} field — filter dimension (status|side|group|meal|table)
- * @param {string} value — filter value or "all"
- */
-export function setMultiFilter(field, value) {
-  if (field in _multiFilter) {
-    (/** @type {Record<string, string>} */ (_multiFilter))[field] = value;
-  }
-  renderGuests();
-}
-
-/**
- * Get current multi-filter state (for UI highlighting).
- * @returns {typeof _multiFilter}
- */
-export function getMultiFilter() {
-  return { ..._multiFilter };
-}
-
-// ── S14.5 Guest Tags ──────────────────────────────────────────────────────
-
-/**
- * Add a tag to a guest.
- * @param {string} guestId
- * @param {string} tag
- */
-export function addGuestTag(guestId, tag) {
-  if (!tag.trim()) return;
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const idx = guests.findIndex((g) => g.id === guestId);
-  if (idx === -1) return;
-  const tags = Array.isArray(guests[idx].tags) ? [...guests[idx].tags] : [];
-  const normalized = tag.trim().toLowerCase().slice(0, 30);
-  if (!tags.includes(normalized)) {
-    tags.push(normalized);
-    guests[idx] = { ...guests[idx], tags, updatedAt: new Date().toISOString() };
-    storeSet("guests", guests);
-    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-  }
-}
-
-/**
- * Remove a tag from a guest.
- * @param {string} guestId
- * @param {string} tag
- */
-export function removeGuestTag(guestId, tag) {
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const idx = guests.findIndex((g) => g.id === guestId);
-  if (idx === -1) return;
-  const tags = Array.isArray(guests[idx].tags) ? guests[idx].tags.filter((/** @type {string} */ t) => t !== tag) : [];
-  guests[idx] = { ...guests[idx], tags, updatedAt: new Date().toISOString() };
-  storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-}
-
-// ── S15.5 Search Highlight Helper ────────────────────────────────────────
-
-/**
- * Render text into an element with the search query highlighted.
- * @param {HTMLElement} container
- * @param {string} text
- * @param {string} query  Lowercase query string
- */
-function _highlightText(container, text, query) {
-  const lower = text.toLowerCase();
-  const idx = lower.indexOf(query);
-  if (idx === -1) {
-    container.textContent = text;
-    return;
-  }
-  container.appendChild(document.createTextNode(text.slice(0, idx)));
-  const mark = document.createElement("mark");
-  mark.className = "search-highlight";
-  mark.textContent = text.slice(idx, idx + query.length);
-  container.appendChild(mark);
-  container.appendChild(document.createTextNode(text.slice(idx + query.length)));
-}
-
-// ── Sprint 7: Guest Group Summary ───────────────────────────────────────
-
-/**
- * Get guest counts broken down by group.
- * @returns {Record<string, { total: number, confirmed: number, pending: number, declined: number }>}
- */
-export function getGuestGroupSummary() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const groups = /** @type {Record<string, {total:number,confirmed:number,pending:number,declined:number}>} */ ({});
-  for (const g of guests) {
-    const grp = g.group || "other";
-    if (!groups[grp]) groups[grp] = { total: 0, confirmed: 0, pending: 0, declined: 0 };
-    groups[grp].total++;
-    if (g.status === "confirmed") groups[grp].confirmed++;
-    else if (g.status === "declined") groups[grp].declined++;
-    else groups[grp].pending++;
-  }
-  return groups;
-}
-
-// ── Sprint 7: Export by Group ───────────────────────────────────────────
-
-/**
- * Export guest list filtered by group as CSV.
- * @param {string} group
- */
-export function exportGuestsByGroup(group) {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const filtered = group === "all" ? guests : guests.filter((g) => (g.group || "other") === group);
-  const header = "FirstName,LastName,Phone,Status,Count,Meal,Side";
-  const rows = filtered.map((g) =>
-    [g.firstName || "", g.lastName || "", g.phone || "", g.status || "pending", g.count || 1, g.meal || "regular", g.side || "mutual"].join(","),
-  );
-  const csv = [header, ...rows].join("\n");
-  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `guests-${group}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-// ── Sprint 7: Accessibility Summary ─────────────────────────────────────
-
-/**
- * Get accessibility needs summary.
- * @returns {{ total: number, needsAccess: number, withTransport: number }}
- */
-export function getAccessibilitySummary() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return {
-    total: guests.length,
-    needsAccess: guests.filter((g) => g.accessibility).length,
-    withTransport: guests.filter((g) => g.transport && g.transport !== "").length,
-  };
-}
-
-// ── Sprint 7: Transport Summary ─────────────────────────────────────────
-
-/**
- * Get transport breakdown by route.
- * @returns {Record<string, number>}
- */
-export function getTransportSummary() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const routes = /** @type {Record<string, number>} */ ({});
-  for (const g of guests) {
-    if (g.transport && g.transport !== "") {
-      routes[g.transport] = (routes[g.transport] || 0) + (g.count || 1);
-    }
-  }
-  return routes;
-}
-
-// ── Sprint 4: Guest Insight Helpers ──────────────────────────────────────
-
-/**
- * Get plus-one (extra guest count) statistics.
- * @returns {{ totalGuests: number, totalHeads: number, avgPartySize: number, largestParty: number }}
- */
-export function getPlusOneStats() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const confirmed = guests.filter((g) => g.status === "confirmed");
-  const totalHeads = confirmed.reduce((s, g) => s + (g.count || 1), 0);
-  const avgPartySize = confirmed.length > 0 ? Math.round((totalHeads / confirmed.length) * 10) / 10 : 0;
-  const largestParty = confirmed.reduce((max, g) => Math.max(max, g.count || 1), 0);
-  return { totalGuests: confirmed.length, totalHeads, avgPartySize, largestParty };
-}
-
-/**
- * Get guests who confirmed but have no meal preference set.
- * @returns {Array<{ id: string, firstName: string, lastName: string }>}
- */
-export function getGuestsMissingMeal() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return guests
-    .filter((g) => g.status === "confirmed" && (!g.meal || g.meal === "regular"))
-    .map((g) => ({ id: g.id, firstName: g.firstName || "", lastName: g.lastName || "" }));
-}
-
-/**
- * Get guest gift summary.
- * @returns {{ totalGifts: number, giftCount: number, avgGift: number, maxGift: number }}
- */
-export function getGiftSummary() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const withGift = guests.filter((g) => Number(g.gift) > 0);
-  const totalGifts = withGift.reduce((s, g) => s + Number(g.gift), 0);
-  const maxGift = withGift.reduce((m, g) => Math.max(m, Number(g.gift)), 0);
-  return {
-    totalGifts,
-    giftCount: withGift.length,
-    avgGift: withGift.length > 0 ? Math.round(totalGifts / withGift.length) : 0,
-    maxGift,
-  };
-}
-
-/**
- * Get guest RSVP age — how many days since each guest was created.
- * @returns {Array<{ id: string, name: string, daysOld: number, status: string }>}
- */
-export function getGuestAge() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const now = Date.now();
-  return guests
-    .filter((g) => g.createdAt)
-    .map((g) => ({
-      id: g.id,
-      name: `${g.firstName || ""} ${g.lastName || ""}`.trim(),
-      daysOld: Math.floor((now - new Date(g.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
-      status: g.status || "pending",
-    }))
-    .sort((a, b) => b.daysOld - a.daysOld);
-}
-
-/**
- * Get children count for confirmed guests.
- * @returns {{ totalChildren: number, guestsWithChildren: number }}
- */
-export function getChildrenCount() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const confirmed = guests.filter((g) => g.status === "confirmed");
-  const withKids = confirmed.filter((g) => Number(g.children) > 0);
-  const totalChildren = withKids.reduce((s, g) => s + Number(g.children), 0);
-  return { totalChildren, guestsWithChildren: withKids.length };
 }

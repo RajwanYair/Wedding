@@ -1,7 +1,7 @@
 # ADR-006: Guest Token Design
 
-**Status:** Accepted  
-**Date:** 2025-06-15  
+**Status:** Accepted
+**Date:** 2025-06-15
 **Context:** Wedding Manager v6.5.0 — Sprint 36–37
 
 ## Problem

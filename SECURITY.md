@@ -4,8 +4,8 @@
 
 | Version | Supported     |
 | ------- | ------------- |
-| 5.x     | ✅ Active     |
-| < 5.0   | ❌ No support |
+| 8.x     | ✅ Active     |
+| < 8.0   | ❌ No support |
 
 ## Reporting a Vulnerability
 

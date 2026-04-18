@@ -9,7 +9,7 @@
 
 export type GuestStatus = "pending" | "confirmed" | "declined" | "maybe";
 export type GuestSide = "groom" | "bride" | "mutual";
-export type GuestGroup = "family" | "friends" | "work" | "other";
+export type GuestGroup = "family" | "friends" | "work" | "neighbors" | "other";
 export type MealType = "regular" | "vegetarian" | "vegan" | "gluten_free" | "kosher";
 export type TableShape = "round" | "rect";
 export type BackendType = "sheets" | "supabase" | "both" | "none";

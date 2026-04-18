@@ -23,9 +23,8 @@ import {
   AUTH_SESSION_DURATION_MS,
   TOAST_DURATION_MS,
   DEBOUNCE_MS,
-  GUEST_STATUSES,
-  MEAL_TYPES,
 } from "../../src/core/config.js";
+import { GUEST_STATUSES, MEAL_TYPES } from "../../src/core/constants.js";
 
 // ── Version ──────────────────────────────────────────────────────────────
 describe("APP_VERSION", () => {

@@ -15,19 +15,13 @@ import { enqueueWrite, appendToRsvpLog, syncStoreKeyToSheets } from "../services
 /** @type {HTMLElement|null} */
 let _container = null;
 
-export function mount(/** @type {HTMLElement} */ container) {
+export function mount(container) {
   _container = container;
   // S12.5 — Check RSVP deadline
   if (_isRsvpDeadlinePassed()) {
     _showDeadlineMessage();
     return;
   }
-  // S13.2 — Wire plus-one name fields
-  _wirePlusOneFields();
-  // F4.3.1 — Wire form-start funnel tracking
-  _wireFormStartTracking();
-  // Sprint 4 — Countdown to wedding on RSVP page
-  renderRsvpCountdown();
   // S11.1 — Auto-lookup from URL guestId param
   _autoLookupFromUrl();
 }
@@ -35,12 +29,6 @@ export function mount(/** @type {HTMLElement} */ container) {
 export function unmount() {
   _container = null;
 }
-
-/**
- * Section capabilities declaration.
- * @type {import('../types').SectionCapabilities}
- */
-export const capabilities = { offline: true, public: true };
 
 // ── S11.1 Auto-lookup from URL ────────────────────────────────────────────
 
@@ -56,8 +44,6 @@ function _autoLookupFromUrl() {
     const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
     const guest = guests.find((g) => g.id === guestId);
     if (guest) {
-      // F4.3.1 — Track link click for funnel analytics
-      _trackFunnelStage(guest.id, "linkClicked");
       _prefillForm(guest);
       const statusEl = document.getElementById("rsvpLookupStatus");
       if (statusEl) {
@@ -72,8 +58,6 @@ function _autoLookupFromUrl() {
     const phoneInput = /** @type {HTMLInputElement|null} */ (document.getElementById("rsvpPhone"));
     if (phoneInput) phoneInput.value = phone;
     if (result.found) {
-      // F4.3.1 — Track link click for funnel analytics
-      if (result.guest) _trackFunnelStage(result.guest.id, "linkClicked");
       const statusEl = document.getElementById("rsvpLookupStatus");
       if (statusEl) {
         statusEl.classList.remove("u-hidden");
@@ -108,12 +92,6 @@ export function lookupRsvpByPhone(rawPhone) {
  * @returns {{ ok: boolean, errors?: string[] }}
  */
 export function submitRsvp(data) {
-  // Sprint 4: Rate limiting — 1 submission per phone per hour
-  const rawPhone = cleanPhone(String(data.phone || ""));
-  if (rawPhone && _isRateLimited(rawPhone)) {
-    return { ok: false, errors: [t("rsvp_rate_limited")] };
-  }
-
   const { value, errors } = sanitize(data, {
     phone: { type: "string", required: true },
     firstName: { type: "string", required: false, maxLength: 80 },
@@ -155,7 +133,6 @@ export function submitRsvp(data) {
       ...(value.side ? { side: value.side } : {}),
       accessibility: value.accessibility === "true",
       transport: value.transport ?? guests[idx].transport,
-      plusOneNames: collectPlusOneNames(),
       rsvpDate: now,
       updatedAt: now,
     };
@@ -174,7 +151,6 @@ export function submitRsvp(data) {
       accessibility: value.accessibility === "true",
       transport: value.transport || "",
       notes: value.notes ?? "",
-      plusOneNames: collectPlusOneNames(),
       rsvpDate: now,
       createdAt: now,
       updatedAt: now,
@@ -191,69 +167,14 @@ export function submitRsvp(data) {
     count: Number(value.count ?? 1),
     timestamp: now,
   }));
-  _recordRateLimit(phone);
   _showConfirmation(/** @type {string} */ (value.status));
   return { ok: true };
-}
-
-// ── S13.2 Plus-one name fields ────────────────────────────────────────────
-
-/**
- * Wire the guest count input to dynamically show name fields for plus-ones.
- */
-function _wirePlusOneFields() {
-  const guestCountInput = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("rsvpGuests")
-  );
-  if (!guestCountInput) return;
-  guestCountInput.addEventListener("input", _updatePlusOneFields);
-}
-
-/**
- * Update the plus-one name fields based on the current guest count.
- */
-function _updatePlusOneFields() {
-  const guestCountInput = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("rsvpGuests")
-  );
-  const container = document.getElementById("plusOneNames");
-  if (!guestCountInput || !container) return;
-  const count = Math.min(parseInt(guestCountInput.value, 10) || 1, 20);
-  container.textContent = "";
-  if (count <= 1) return;
-  const heading = document.createElement("p");
-  heading.className = "u-text-muted u-mb-xs";
-  heading.textContent = t("rsvp_plusone_heading");
-  container.appendChild(heading);
-  for (let i = 2; i <= count; i++) {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.className = "u-w-full u-mb-xs";
-    input.id = `plusOneName_${i}`;
-    input.placeholder = `${t("rsvp_plusone_name")} ${i}`;
-    input.maxLength = 80;
-    container.appendChild(input);
-  }
-}
-
-/**
- * Collect plus-one names from the dynamic fields.
- * @returns {string[]}
- */
-export function collectPlusOneNames() {
-  const names = /** @type {string[]} */ ([]);
-  const inputs = document.querySelectorAll("[id^=plusOneName_]");
-  inputs.forEach((input) => {
-    const val = /** @type {HTMLInputElement} */ (input).value.trim();
-    if (val) names.push(val);
-  });
-  return names;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 /** Pre-fill RSVP form fields from an existing guest record. */
-function _prefillForm(/** @type {any} */ guest) {
+function _prefillForm(guest) {
   /** @type {Record<string,string>} */
   const fieldMap = {
     phone: "rsvpPhone",
@@ -282,8 +203,8 @@ function _prefillForm(/** @type {any} */ guest) {
   if (formBody) formBody.classList.remove("u-hidden");
 }
 
-/** Show RSVP success message with animation. */
-function _showConfirmation(/** @type {string} */ status) {
+/** Show RSVP success message. */
+function _showConfirmation(status) {
   const confirmEl = document.getElementById("rsvpConfirm");
   if (!confirmEl) return;
   if (status === "confirmed") {
@@ -294,44 +215,8 @@ function _showConfirmation(/** @type {string} */ status) {
     confirmEl.textContent = t("saved");
   }
   confirmEl.classList.remove("u-hidden");
-  // Sprint 4: Success animation
-  confirmEl.classList.add("rsvp-confirm--animated");
   const details = document.getElementById("rsvpDetails");
   if (details) details.classList.add("u-hidden");
-}
-
-// ── Sprint 4: Rate Limiting ───────────────────────────────────────────────
-
-const RATE_LIMIT_MS = 60 * 60 * 1000; // 1 hour
-
-/** @param {string} phone */
-function _isRateLimited(phone) {
-  try {
-    const key = `wedding_v1_rsvp_rate_${phone}`;
-    const last = localStorage.getItem(key);
-    if (!last) return false;
-    return Date.now() - Number(last) < RATE_LIMIT_MS;
-  } catch { return false; }
-}
-
-/** @param {string} phone */
-function _recordRateLimit(phone) {
-  try {
-    localStorage.setItem(`wedding_v1_rsvp_rate_${phone}`, String(Date.now()));
-  } catch { /* storage full — ignore */ }
-}
-
-// ── Sprint 4: RSVP Countdown ──────────────────────────────────────────────
-
-export function renderRsvpCountdown() {
-  const el = document.getElementById("rsvpCountdown");
-  if (!el) return;
-  const info = /** @type {Record<string, string|undefined>} */ (storeGet("weddingInfo") ?? {});
-  const date = info.weddingDate;
-  if (!date) { el.textContent = ""; return; }
-  const diff = Math.ceil((new Date(date).getTime() - Date.now()) / 86400000);
-  if (diff <= 0) { el.textContent = t("countdown_today"); return; }
-  el.textContent = t("rsvp_countdown").replace("{days}", String(diff));
 }
 
 // ── S12.5 RSVP Deadline Enforcement ───────────────────────────────────────
@@ -372,104 +257,47 @@ function _showDeadlineMessage() {
   }
 }
 
-// ── F4.3.1 RSVP Funnel Tracking ──────────────────────────────────────────
-
 /**
- * Track a funnel stage for a guest (persists to guest record).
- * Stages: linkClicked → formStarted → submitted (submitted is already handled by submitRsvp).
- * @param {string} guestId
- * @param {'linkClicked'|'formStarted'} stage
- */
-function _trackFunnelStage(guestId, stage) {
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const idx = guests.findIndex((g) => g.id === guestId);
-  if (idx === -1) return;
-
-  const field = stage === "linkClicked" ? "rsvpLinkClicked" : "rsvpFormStarted";
-  if (guests[idx][field]) return; // Already tracked
-
-  guests[idx] = {
-    ...guests[idx],
-    [field]: true,
-    [`${field}At`]: new Date().toISOString(),
-  };
-  storeSet("guests", guests);
-}
-
-/**
- * Wire form-start tracking: first interaction with any RSVP form field.
- * Listens for focus/change on RSVP inputs and tracks once per guest.
- */
-function _wireFormStartTracking() {
-  if (!_container) return;
-  let tracked = false;
-  const handler = () => {
-    if (tracked) return;
-    tracked = true;
-    // Try to identify the guest from pre-filled data
-    const params = new URLSearchParams(window.location.search);
-    const guestId = params.get("guestId");
-    if (guestId) _trackFunnelStage(guestId, "formStarted");
-  };
-  _container.addEventListener("focusin", handler);
-  _container.addEventListener("change", handler);
-}
-
-/**
- * Get RSVP funnel stats for analytics.
- * @returns {{ invited: number, sent: number, linkClicked: number, formStarted: number, submitted: number, checkedIn: number }}
- */
-export function getRsvpFunnelStats() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return {
-    invited: guests.length,
-    sent: guests.filter((g) => g.sent).length,
-    linkClicked: guests.filter((g) => g.rsvpLinkClicked).length,
-    formStarted: guests.filter((g) => g.rsvpFormStarted).length,
-    submitted: guests.filter((g) => g.status === "confirmed" || g.status === "declined" || g.status === "maybe").length,
-    checkedIn: guests.filter((g) => g.checkedIn).length,
-  };
-}
-
-/**
- * Response rate by side (groom/bride/mutual).
+ * Response rate by side.
  * @returns {{ side: string, total: number, responded: number, rate: number }[]}
  */
 export function getRsvpRateBySide() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   /** @type {Map<string, { total: number, responded: number }>} */
   const map = new Map();
-  for (const g of guests) {
-    const side = g.side || "mutual";
+  for (const guest of guests) {
+    const side = guest.side || "mutual";
     const entry = map.get(side) ?? { total: 0, responded: 0 };
     entry.total += 1;
-    if (g.status === "confirmed" || g.status === "declined" || g.status === "maybe") {
+    if (["confirmed", "declined", "maybe"].includes(guest.status)) {
       entry.responded += 1;
     }
     map.set(side, entry);
   }
-  return [...map.entries()].map(([side, d]) => ({
+  return [...map.entries()].map(([side, values]) => ({
     side,
-    total: d.total,
-    responded: d.responded,
-    rate: d.total ? Math.round((d.responded / d.total) * 100) : 0,
+    total: values.total,
+    responded: values.responded,
+    rate: values.total ? Math.round((values.responded / values.total) * 100) : 0,
   }));
 }
 
 /**
- * Average response time (days between createdAt and rsvpDate) for guests who responded.
+ * Average response time in days.
  * @returns {{ avgDays: number, fastest: number, slowest: number, count: number }}
  */
 export function getRsvpResponseTime() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const times = guests
-    .filter((g) => g.createdAt && g.rsvpDate)
-    .map((g) => (new Date(g.rsvpDate).getTime() - new Date(g.createdAt).getTime()) / 86400000)
-    .filter((d) => d >= 0);
-  if (times.length === 0) return { avgDays: 0, fastest: 0, slowest: 0, count: 0 };
-  const sum = times.reduce((s, d) => s + d, 0);
+    .filter((guest) => guest.createdAt && guest.rsvpDate)
+    .map((guest) => (new Date(guest.rsvpDate).getTime() - new Date(guest.createdAt).getTime()) / 86400000)
+    .filter((days) => days >= 0);
+  if (times.length === 0) {
+    return { avgDays: 0, fastest: 0, slowest: 0, count: 0 };
+  }
+  const total = times.reduce((sum, days) => sum + days, 0);
   return {
-    avgDays: Math.round(sum / times.length),
+    avgDays: Math.round(total / times.length),
     fastest: Math.round(Math.min(...times)),
     slowest: Math.round(Math.max(...times)),
     count: times.length,
@@ -477,19 +305,19 @@ export function getRsvpResponseTime() {
 }
 
 /**
- * RSVP daily submission counts for trend charting.
+ * RSVP submissions per day.
  * @returns {{ date: string, count: number }[]}
  */
 export function getRsvpDailyTrend() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   /** @type {Map<string, number>} */
-  const map = new Map();
-  for (const g of guests) {
-    if (!g.rsvpDate) continue;
-    const day = g.rsvpDate.slice(0, 10);
-    map.set(day, (map.get(day) ?? 0) + 1);
+  const byDay = new Map();
+  for (const guest of guests) {
+    if (!guest.rsvpDate) continue;
+    const day = String(guest.rsvpDate).slice(0, 10);
+    byDay.set(day, (byDay.get(day) ?? 0) + 1);
   }
-  return [...map.entries()]
+  return [...byDay.entries()]
     .map(([date, count]) => ({ date, count }))
     .sort((a, b) => a.date.localeCompare(b.date));
 }

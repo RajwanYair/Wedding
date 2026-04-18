@@ -64,6 +64,17 @@ export const PUBLIC_SECTIONS = new Set([
 ]);
 
 /**
+ * Valid guest status values.
+ * @type {readonly string[]}
+ */
+export const GUEST_STATUSES = /** @type {const} */ ([
+  "pending",
+  "confirmed",
+  "declined",
+  "maybe",
+]);
+
+/**
  * Valid guest side values.
  * @type {readonly string[]}
  */
@@ -77,6 +88,7 @@ export const GUEST_GROUPS = /** @type {const} */ ([
   "family",
   "friends",
   "work",
+  "neighbors",
   "other",
 ]);
 

@@ -1,7 +1,7 @@
 # ADR-011: Focus Trap Pattern for Modal Accessibility
 
-**Status:** Accepted  
-**Date:** 2025-01-01  
+**Status:** Accepted
+**Date:** 2025-01-01
 **Deciders:** Engineering Team
 
 ## Context

@@ -53,18 +53,11 @@ document.addEventListener('click', e => {
 ## JS Patterns
 
 ```js
-// DOM — always from `el` object, never getElementById inline
-el.statTotal.textContent = n;
-
 // i18n
 t('key')                          // JS string lookup
 data-i18n="key"                   // HTML attribute binding
 data-i18n-placeholder="key"       // input placeholder
 data-i18n-tooltip="key"           // tooltip text
-
-// Storage
-saveAll()                         // persists _guests, _tables, _weddingInfo, _vendors
-const g = _guests.find(x => x.id === id);
 
 // Phone
 cleanPhone('054-123-4567')        // → '972541234567' (wa.me ready)
@@ -80,37 +73,4 @@ const x = obj?.prop ?? defaultVal;
 - Both `he` and `en` entries required in the `I18N` object
 - Language and theme both persisted in `localStorage`
 
-## Data Models
-
-### Guest (v1.1.0)
-
-```text
-{
-  id, firstName, lastName, phone, email,
-  count, children,
-  status: 'pending'|'confirmed'|'declined'|'maybe',
-  side:   'groom'|'bride'|'mutual',
-  group:  'family'|'friends'|'work'|'other',
-  relationship,
-  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',  // label 'מהדרין/Mehadrin'
-  mealNotes, accessibility: boolean,
-  tableId, gift, notes, sent: boolean,
-  rsvpDate, createdAt, updatedAt
-}
-```
-
-### Vendor
-
-```text
-{
-  id, category, name, contact, phone,
-  price: number, paid: number,
-  notes, updatedAt, createdAt
-}
-```
-
-### Table
-
-```text
-{ id, name, capacity, shape: 'round'|'rect' }
-```
+Project-wide data models and release rules are defined in `.github/copilot-instructions.md`.

@@ -1,7 +1,7 @@
 # ADR-012: Event Bus for Cross-Module Communication
 
-**Status:** Accepted  
-**Date:** 2025-01-01  
+**Status:** Accepted
+**Date:** 2025-01-01
 **Deciders:** Engineering Team
 
 ## Context

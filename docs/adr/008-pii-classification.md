@@ -1,7 +1,7 @@
 # ADR 008 — PII Classification Policy
 
-**Status**: Accepted  
-**Date**: 2025  
+**Status**: Accepted
+**Date**: 2025
 **Deciders**: Core team
 
 ## Context

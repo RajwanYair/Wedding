@@ -11,7 +11,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
-import { pushUndo } from "../utils/undo.js";
+import { TABLE_SHAPES } from "../core/constants.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -21,7 +21,7 @@ const _unsubs = [];
 /**
  * @param {HTMLElement} _container
  */
-export function mount(/** @type {HTMLElement} */ _container) {
+export function mount(_container) {
   _unsubs.push(storeSubscribe("tables", renderTables));
   _unsubs.push(storeSubscribe("guests", renderTables));
   renderTables();
@@ -43,8 +43,7 @@ export function saveTable(data, existingId = null) {
   const { value, errors } = sanitize(data, {
     name: { type: "string", required: true, maxLength: 60 },
     capacity: { type: "number", required: true, min: 1, max: 50 },
-    shape: { type: "enum", values: ["round", "rect"], default: "round" },
-    notes: { type: "string", required: false, maxLength: 200 },
+    shape: { type: "enum", values: [...TABLE_SHAPES], default: "round" },
   });
   if (errors.length) return { ok: false, errors };
 
@@ -68,10 +67,6 @@ export function saveTable(data, existingId = null) {
  * @param {string} id
  */
 export function deleteTable(id) {
-  // Snapshot for undo
-  const allTables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const victim = allTables.find((tb) => tb.id === id);
-  if (victim) pushUndo(`Delete table ${victim.name}`, "tables", JSON.parse(JSON.stringify(allTables)));
   // Unassign any seated guests
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
     g.tableId === id ? { ...g, tableId: null } : g,
@@ -141,42 +136,10 @@ export function renderTables() {
 
   floor.textContent = "";
   tables.forEach((tb) => {
-    const seated = guests
-      .filter((g) => g.tableId === tb.id)
-      .reduce((s, g) => s + (g.count || 1), 0);
-    const cap = tb.capacity || 1;
-    const fillPct = Math.round((seated / cap) * 100);
-    const fillClass =
-      fillPct >= 100
-        ? "table-card--full"
-        : fillPct >= 85
-          ? "table-card--almost"
-          : fillPct >= 50
-            ? "table-card--half"
-            : "";
+    const seated = guests.filter((g) => g.tableId === tb.id).length;
     const card = document.createElement("div");
-    card.className =
-      `table-card table-card--${tb.shape || "round"} ${fillClass}`.trim();
+    card.className = `table-card table-card--${tb.shape || "round"}`;
     card.dataset.id = tb.id;
-
-    // S23.3 — Detect dietary conflict (vegan/vegetarian + non-veg at same table)
-    const tableGuests = guests.filter((g) => g.tableId === tb.id);
-    const meals = tableGuests.map((g) => g.meal || "regular");
-    const hasVegOrVegan = meals.some(
-      (m) => m === "vegan" || m === "vegetarian",
-    );
-    const hasNonVeg = meals.some(
-      (m) => m === "regular" || m === "kosher" || m === "gluten_free",
-    );
-    const hasDietaryConflict =
-      hasVegOrVegan && hasNonVeg && tableGuests.length > 1;
-    if (hasDietaryConflict) {
-      const conflictBadge = document.createElement("span");
-      conflictBadge.className = "table-conflict-badge";
-      conflictBadge.title = t("table_dietary_conflict");
-      conflictBadge.textContent = "⚠️";
-      card.appendChild(conflictBadge);
-    }
 
     const name = document.createElement("h3");
     name.textContent = tb.name;
@@ -184,30 +147,7 @@ export function renderTables() {
 
     const info = document.createElement("p");
     info.textContent = `${seated}/${tb.capacity} ${t("seated")}`;
-    if (fillPct >= 100) info.className = "u-text-danger";
-    else if (fillPct >= 85) info.className = "u-text-warning";
     card.appendChild(info);
-
-    // Sprint 5: Capacity progress bar
-    const bar = document.createElement("div");
-    bar.className = "progress-bar progress-bar--table";
-    const fill = document.createElement("div");
-    fill.className = "progress-fill";
-    fill.style.width = `${Math.min(fillPct, 100)}%`;
-    bar.appendChild(fill);
-    card.appendChild(bar);
-
-    // Sprint 5: Dietary summary icons
-    const dietaryIcons = _buildDietaryIcons(tableGuests);
-    if (dietaryIcons) card.appendChild(dietaryIcons);
-
-    // Sprint 5: Table notes
-    if (tb.notes) {
-      const notesEl = document.createElement("p");
-      notesEl.className = "u-text-muted u-text-sm";
-      notesEl.textContent = tb.notes;
-      card.appendChild(notesEl);
-    }
 
     // Action buttons
     const actions = document.createElement("div");
@@ -218,14 +158,6 @@ export function renderTables() {
     editBtn.dataset.action = "openEditTableModal";
     editBtn.dataset.actionArg = tb.id;
     actions.appendChild(editBtn);
-    // S21.4 Per-table place-card print button
-    const printCardsBtn = document.createElement("button");
-    printCardsBtn.className = "btn btn-small btn-ghost u-ml-xs";
-    printCardsBtn.title = t("print_place_cards");
-    printCardsBtn.textContent = "🃏";
-    printCardsBtn.dataset.action = "printTablePlaceCards";
-    printCardsBtn.dataset.actionArg = tb.id;
-    actions.appendChild(printCardsBtn);
     const delBtn = document.createElement("button");
     delBtn.className = "btn btn-small btn-danger u-ml-xs";
     delBtn.textContent = t("btn_delete");
@@ -256,36 +188,11 @@ export function renderTables() {
     el.tablesEmpty.classList.toggle("u-hidden", tables.length > 0);
   }
 
-  // S17.4 Overbooking banner
-  _renderOverbookingBanner(tables, guests);
-
   // Unassigned guests list
   _renderUnassigned(guests);
 
   // S11.2 Transport manifest
   _renderTransportManifest(guests);
-}
-
-/** Show/hide overbooking warning banner */
-function _renderOverbookingBanner(/** @type {any[]} */ tables, /** @type {any[]} */ guests) {
-  let bannerEl = document.getElementById("overbookingBanner");
-  if (!bannerEl) {
-    bannerEl = document.createElement("div");
-    bannerEl.id = "overbookingBanner";
-    bannerEl.className = "alert alert--warning u-hidden";
-    const floor = el.seatingFloor;
-    if (floor?.parentElement) floor.parentElement.insertBefore(bannerEl, floor);
-  }
-  const overbooked = tables.filter((tb) => {
-    const seated = guests.filter((g) => g.tableId === tb.id).reduce((s, g) => s + (g.count || 1), 0);
-    return seated > (tb.capacity || 0);
-  });
-  if (overbooked.length > 0) {
-    bannerEl.textContent = `⚠️ ${t("tables_overbooked")}: ${overbooked.map((tb) => tb.name).join(", ")}`;
-    bannerEl.classList.remove("u-hidden");
-  } else {
-    bannerEl.classList.add("u-hidden");
-  }
 }
 
 /** @param {any[]} guests */
@@ -363,7 +270,7 @@ function _renderTransportManifest(guests) {
   withTransport.forEach((g) => {
     const route = g.transport;
     if (!routes.has(route)) routes.set(route, []);
-    routes.get(route)?.push(g);
+    routes.get(route).push(g);
   });
 
   routes.forEach((passengers, route) => {
@@ -458,14 +365,11 @@ export function printSeatingChart() {
 
 /**
  * Trigger browser print for place cards.
- * @param {string} [tableId]  - optional table ID filter; if supplied, sets a data attribute for print CSS
  */
-export function printPlaceCards(tableId = "") {
-  if (tableId) document.body.dataset.printTable = tableId;
+export function printPlaceCards() {
   document.body.classList.add("print-place-cards");
   window.print();
   document.body.classList.remove("print-place-cards");
-  if (tableId) delete document.body.dataset.printTable;
 }
 
 /**
@@ -520,7 +424,7 @@ export function openTableForEdit(id) {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const tb = tables.find((t) => t.id === id);
   if (!tb) return;
-  const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
+  const setVal = (elId, val) => {
     const input = /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
       document.getElementById(elId)
     );
@@ -558,257 +462,37 @@ export function getTableStats() {
   };
 }
 
-// ── S16.2 Smart Table Optimizer ─────────────────────────────────────────
-
 /**
- * Smart table auto-assign that balances guests by side, group, and dietary.
- * Groups guests by (side + group), then assigns each group to the best-fit table,
- * keeping same-side/group guests together and considering dietary preferences.
- */
-export function smartAutoAssign() {
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-
-  /** @type {Map<string, number>} */
-  const usage = new Map(tables.map((tb) => [tb.id, 0]));
-  guests.filter((g) => g.tableId).forEach((g) => {
-    usage.set(g.tableId, (usage.get(g.tableId) ?? 0) + (g.count || 1));
-  });
-
-  const unassigned = guests.filter((g) => !g.tableId && g.status !== "declined");
-  if (unassigned.length === 0) return 0;
-
-  // Group by side+group key
-  /** @type {Map<string, any[]>} */
-  const groups = new Map();
-  unassigned.forEach((g) => {
-    const key = `${g.side || "mutual"}_${g.group || "friends"}`;
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)?.push(g);
-  });
-
-  let assigned = 0;
-  // Sort groups by size (largest first for best packing)
-  const sortedGroups = [...groups.entries()].sort((a, b) => b[1].length - a[1].length);
-
-  for (const [_key, groupGuests] of sortedGroups) {
-    // Find best-fit table: closest capacity to needed, preferring tables with same-side occupants
-    const side = groupGuests[0]?.side || "mutual";
-    const bestTable = tables
-      .filter((tb) => (tb.capacity || 0) - (usage.get(tb.id) ?? 0) >= 1)
-      .sort((a, b) => {
-        const freeA = (a.capacity || 0) - (usage.get(a.id) ?? 0);
-        const freeB = (b.capacity || 0) - (usage.get(b.id) ?? 0);
-        // Prefer tables with same-side guests already
-        const sameA = guests.filter((g) => g.tableId === a.id && g.side === side).length;
-        const sameB = guests.filter((g) => g.tableId === b.id && g.side === side).length;
-        if (sameB !== sameA) return sameB - sameA; // more same-side = better
-        return freeA - freeB; // tighter fit = better
-      });
-
-    // Assign guests from this group to the best available tables
-    for (const g of groupGuests) {
-      const cnt = g.count || 1;
-      const table = bestTable.find((tb) => (tb.capacity || 0) - (usage.get(tb.id) ?? 0) >= cnt);
-      if (table) {
-        const idx = guests.findIndex((ug) => ug.id === g.id);
-        if (idx !== -1) { guests[idx] = { ...guests[idx], tableId: table.id }; assigned++; }
-        usage.set(table.id, (usage.get(table.id) ?? 0) + cnt);
-      }
-    }
-  }
-
-  storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-  return assigned;
-}
-
-// ── F4.1.1 Table Assignment Suggestions ──────────────────────────────────
-
-/**
- * Return table assignment suggestions without applying them.
- * Each suggestion includes the guest, recommended table, and reasoning.
- * @returns {{ guestId: string, guestName: string, tableId: string, tableName: string, reason: string }[]}
- */
-export function suggestTableAssignments() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-
-  /** @type {Map<string, number>} */
-  const usage = new Map(tables.map((tb) => [tb.id, 0]));
-  guests.filter((g) => g.tableId).forEach((g) => {
-    usage.set(g.tableId, (usage.get(g.tableId) ?? 0) + (g.count || 1));
-  });
-
-  const unassigned = guests.filter(
-    (g) => !g.tableId && g.status !== "declined",
-  );
-
-  /** @type {{ guestId: string, guestName: string, tableId: string, tableName: string, reason: string }[]} */
-  const suggestions = [];
-
-  for (const g of unassigned) {
-    const side = g.side || "mutual";
-    const group = g.group || "friends";
-    const meal = g.meal || "regular";
-    const cnt = g.count || 1;
-
-    // Score each table
-    let bestTable = null;
-    let bestScore = -Infinity;
-    let bestReason = "";
-
-    for (const tb of tables) {
-      const free = (tb.capacity || 0) - (usage.get(tb.id) ?? 0);
-      if (free < cnt) continue;
-
-      let score = 0;
-      const reasons = [];
-
-      // Same side bonus
-      const sameSide = guests.filter(
-        (og) => og.tableId === tb.id && og.side === side,
-      ).length;
-      if (sameSide > 0) {
-        score += sameSide * 3;
-        reasons.push(t("suggest_same_side") || "אותו צד");
-      }
-
-      // Same group bonus
-      const sameGroup = guests.filter(
-        (og) => og.tableId === tb.id && og.group === group,
-      ).length;
-      if (sameGroup > 0) {
-        score += sameGroup * 2;
-        reasons.push(t("suggest_same_group") || "אותה קבוצה");
-      }
-
-      // Meal compatibility bonus (avoid mixing special diets)
-      const isSpecialMeal = meal !== "regular";
-      if (isSpecialMeal) {
-        const sameMeal = guests.filter(
-          (og) => og.tableId === tb.id && og.meal === meal,
-        ).length;
-        if (sameMeal > 0) {
-          score += 2;
-          reasons.push(t("suggest_same_meal") || "העדפת תזונה דומה");
-        }
-      }
-
-      // Tighter fit = slightly better (avoids spreading across many tables)
-      score += (1 - free / (tb.capacity || 1));
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestTable = tb;
-        bestReason = reasons.length > 0 ? reasons.join(", ") : (t("suggest_best_fit") || "מקום פנוי");
-      }
-    }
-
-    if (bestTable) {
-      const name = [g.firstName, g.lastName].filter(Boolean).join(" ") || g.id;
-      suggestions.push({
-        guestId: g.id,
-        guestName: name,
-        tableId: bestTable.id,
-        tableName: String(bestTable.name || bestTable.id),
-        reason: bestReason,
-      });
-      // Track projected usage to avoid over-suggesting the same table
-      usage.set(bestTable.id, (usage.get(bestTable.id) ?? 0) + cnt);
-    }
-  }
-
-  return suggestions;
-}
-
-// ── Sprint 5: Dietary Icons Helper ───────────────────────────────────────
-
-const MEAL_ICONS = /** @type {Record<string, string>} */ ({ vegetarian: "🥬", vegan: "🌱", gluten_free: "🚫🌾", kosher: "✡️" });
-
-/** @param {any[]} tableGuests @returns {HTMLElement|null} */
-function _buildDietaryIcons(tableGuests) {
-  const counts = /** @type {Record<string, number>} */ ({});
-  for (const g of tableGuests) {
-    const m = g.meal || "regular";
-    if (m === "regular") continue;
-    counts[m] = (counts[m] || 0) + 1;
-  }
-  const keys = Object.keys(counts);
-  if (!keys.length) return null;
-  const wrap = document.createElement("div");
-  wrap.className = "table-dietary-icons";
-  for (const k of keys) {
-    const sp = document.createElement("span");
-    sp.className = "table-dietary-icon";
-    sp.title = `${t(`meal_${k}`)} (${counts[k]})`;
-    sp.textContent = MEAL_ICONS[k] || "🍽️";
-    wrap.appendChild(sp);
-  }
-  return wrap;
-}
-
-// ── Sprint 5: Export single table CSV ────────────────────────────────────
-
-/**
- * Export a single table's guest list as CSV.
- * @param {string} tableId
- */
-export function exportTableCSV(tableId) {
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const table = tables.find((tb) => tb.id === tableId);
-  if (!table) return;
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const seated = guests.filter((g) => g.tableId === tableId);
-  const header = "FirstName,LastName,Count,Meal,Status";
-  const rows = seated.map((g) =>
-    [g.firstName || "", g.lastName || "", g.count || 1, g.meal || "regular", g.status || "pending"].join(","),
-  );
-  const csv = [header, ...rows].join("\n");
-  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `table-${table.name || tableId}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-// ── Sprint 3: Seating Intelligence Helpers ────────────────────────────────
-
-/**
- * Find tables with mixed dietary needs (potential conflicts).
+ * Find tables with mixed dietary needs.
  * @returns {Array<{ tableId: string, tableName: string, meals: string[] }>}
  */
 export function getTablesWithMixedDiets() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const result = [];
-  for (const tbl of tables) {
-    const seated = guests.filter((g) => g.tableId === tbl.id);
-    const meals = [...new Set(seated.map((g) => g.meal || "regular"))];
+  for (const table of tables) {
+    const seated = guests.filter((guest) => guest.tableId === table.id);
+    const meals = [...new Set(seated.map((guest) => guest.meal || "regular"))];
     if (meals.length > 1) {
-      result.push({ tableId: tbl.id, tableName: tbl.name || tbl.id, meals });
+      result.push({ tableId: table.id, tableName: table.name || table.id, meals });
     }
   }
   return result;
 }
 
 /**
- * Get table utilization — seats used / capacity for each table.
+ * Compute table utilization percentages.
  * @returns {Array<{ tableId: string, name: string, capacity: number, seated: number, utilization: number }>}
  */
 export function getTableUtilization() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return tables.map((tbl) => {
-    const seated = guests.filter((g) => g.tableId === tbl.id).length;
-    const capacity = tbl.capacity || 10;
+  return tables.map((table) => {
+    const seated = guests.filter((guest) => guest.tableId === table.id).length;
+    const capacity = table.capacity || 10;
     return {
-      tableId: tbl.id,
-      name: tbl.name || tbl.id,
+      tableId: table.id,
+      name: table.name || table.id,
       capacity,
       seated,
       utilization: Math.round((seated / capacity) * 100),
@@ -817,57 +501,57 @@ export function getTableUtilization() {
 }
 
 /**
- * Get side balance per table (groom, bride, mutual).
+ * Count side balance per table.
  * @returns {Array<{ tableId: string, name: string, groom: number, bride: number, mutual: number }>}
  */
 export function getTableSideBalance() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return tables.map((tbl) => {
-    const seated = guests.filter((g) => g.tableId === tbl.id);
+  return tables.map((table) => {
+    const seated = guests.filter((guest) => guest.tableId === table.id);
     return {
-      tableId: tbl.id,
-      name: tbl.name || tbl.id,
-      groom: seated.filter((g) => g.side === "groom").length,
-      bride: seated.filter((g) => g.side === "bride").length,
-      mutual: seated.filter((g) => g.side === "mutual" || !g.side).length,
+      tableId: table.id,
+      name: table.name || table.id,
+      groom: seated.filter((guest) => guest.side === "groom").length,
+      bride: seated.filter((guest) => guest.side === "bride").length,
+      mutual: seated.filter((guest) => guest.side === "mutual" || !guest.side).length,
     };
   });
 }
 
 /**
- * Detect over-capacity tables (more guests assigned than capacity).
+ * Detect over-capacity tables.
  * @returns {Array<{ tableId: string, name: string, capacity: number, seated: number, over: number }>}
  */
 export function getOverCapacityTables() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const over = [];
-  for (const tbl of tables) {
-    const seated = guests.filter((g) => g.tableId === tbl.id).length;
-    const capacity = tbl.capacity || 10;
+  const overbooked = [];
+  for (const table of tables) {
+    const seated = guests.filter((guest) => guest.tableId === table.id).length;
+    const capacity = table.capacity || 10;
     if (seated > capacity) {
-      over.push({ tableId: tbl.id, name: tbl.name || tbl.id, capacity, seated, over: seated - capacity });
+      overbooked.push({ tableId: table.id, name: table.name || table.id, capacity, seated, over: seated - capacity });
     }
   }
-  return over;
+  return overbooked;
 }
 
 /**
- * Get unseated guests grouped by side and group.
+ * Count unseated confirmed guests by side and group.
  * @returns {{ total: number, bySide: Record<string, number>, byGroup: Record<string, number> }}
  */
 export function getUnseatedGuestBreakdown() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const unseated = guests.filter((g) => g.status === "confirmed" && !g.tableId);
+  const unseated = guests.filter((guest) => guest.status === "confirmed" && !guest.tableId);
   /** @type {Record<string, number>} */
   const bySide = {};
   /** @type {Record<string, number>} */
   const byGroup = {};
-  for (const g of unseated) {
-    const side = g.side || "mutual";
+  for (const guest of unseated) {
+    const side = guest.side || "mutual";
     bySide[side] = (bySide[side] || 0) + 1;
-    const group = g.group || "other";
+    const group = guest.group || "other";
     byGroup[group] = (byGroup[group] || 0) + 1;
   }
   return { total: unseated.length, bySide, byGroup };

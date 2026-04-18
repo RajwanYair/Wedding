@@ -35,13 +35,6 @@ import { cleanPhone } from "./phone.js";
  * }} GuestViewModel
  */
 
-const STATUS_LABELS = {
-  confirmed: "confirmed",
-  pending: "pending",
-  declined: "declined",
-  maybe: "maybe",
-};
-
 /**
  * @param {Guest} guest
  * @returns {GuestViewModel}
@@ -52,14 +45,15 @@ export function toGuestViewModel(guest) {
     id: guest.id,
     fullName: guestFullName(guest),
     displayPhone: guest.phone ? cleanPhone(guest.phone) : "",
-    statusLabel: STATUS_LABELS[guest.status] ?? guest.status ?? "pending",
+    statusLabel: guest.status ?? "pending",
     seatLabel: guest.tableId ? `Table ${guest.tableId}` : "Unseated",
     totalPeople,
     isConfirmed: guest.status === "confirmed",
     isPending: guest.status === "pending" || !guest.status,
     isDeclined: guest.status === "declined",
     hasDietaryNeeds:
-      Boolean(guest.meal && guest.meal !== "regular") || Boolean(guest.mealNotes),
+      Boolean(guest.meal && guest.meal !== "regular") ||
+      Boolean(guest.mealNotes),
     rawGuest: guest,
   };
 }

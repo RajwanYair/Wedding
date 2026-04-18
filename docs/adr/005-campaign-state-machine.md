@@ -1,7 +1,7 @@
 # ADR-005: Campaign State Machine Design
 
-**Status:** Accepted  
-**Date:** 2025-06-15  
+**Status:** Accepted
+**Date:** 2025-06-15
 **Context:** Wedding Manager v6.5.0 — Sprint 42–43
 
 ## Problem

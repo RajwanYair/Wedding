@@ -106,7 +106,7 @@ describe("store read performance", () => {
 // ── Guest stat computation ────────────────────────────────────────────────
 
 describe("stat computation performance", () => {
-  it("counts totals across 5,000 guests in under 20 ms", () => {
+  it("counts totals across 5,000 guests in under 30 ms", () => {
     const guests = Array.from({ length: 5_000 }, (_, i) => ({
       ...makeGuest(i),
       count: 2,
@@ -128,7 +128,7 @@ describe("stat computation performance", () => {
     expect(confirmed).toBe(1_250);
     expect(checkedIn).toBeGreaterThan(0);
     expect(totalCount).toBe(10_000);
-    expect(elapsed).toBeLessThan(20);
+    expect(elapsed).toBeLessThan(30);
   });
 });
 

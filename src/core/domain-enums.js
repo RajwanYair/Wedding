@@ -48,10 +48,36 @@ export const GUEST_SIDE_VALUES = new Set(GUEST_SIDE_OPTIONS.map((o) => o.value))
 
 /** @type {readonly EnumOption[]} */
 export const GUEST_GROUP_OPTIONS = /** @type {const} */ ([
-  { value: "family",  labelKey: "group_family",  color: "var(--color-rose)",     icon: "👨‍👩‍👧‍👦" },
-  { value: "friends", labelKey: "group_friends", color: "var(--color-blue)",     icon: "👥" },
-  { value: "work",    labelKey: "group_work",    color: "var(--color-purple)",   icon: "💼" },
-  { value: "other",   labelKey: "group_other",   color: "var(--color-neutral)",  icon: "🔖" },
+  {
+    value: "family",
+    labelKey: "group_family",
+    color: "var(--color-rose)",
+    icon: "👨‍👩‍👧‍👦",
+  },
+  {
+    value: "friends",
+    labelKey: "group_friends",
+    color: "var(--color-blue)",
+    icon: "👥",
+  },
+  {
+    value: "work",
+    labelKey: "group_work",
+    color: "var(--color-purple)",
+    icon: "💼",
+  },
+  {
+    value: "neighbors",
+    labelKey: "group_neighbors",
+    color: "var(--color-green)",
+    icon: "🏠",
+  },
+  {
+    value: "other",
+    labelKey: "group_other",
+    color: "var(--color-neutral)",
+    icon: "🔖",
+  },
 ]);
 
 export const GUEST_GROUP_VALUES = new Set(GUEST_GROUP_OPTIONS.map((o) => o.value));
