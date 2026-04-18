@@ -17,9 +17,8 @@
  */
 
 import { SUPABASE_URL, SUPABASE_ANON_KEY, ADMIN_EMAILS } from "../core/config.js";
+import { STORAGE_KEYS } from "../core/constants.js";
 import { load } from "../core/state.js";
-
-const STORAGE_KEY = "supabase_session";
 
 // ── Runtime credential resolution ────────────────────────────────────────
 
@@ -52,7 +51,7 @@ export function isSupabaseAuthConfigured() {
 /** @returns {SupabaseSession | null} */
 export function getSession() {
   try {
-    const raw = localStorage.getItem(`wedding_v1_${  STORAGE_KEY}`);
+    const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_SESSION);
     if (!raw) return null;
     const sess = /** @type {SupabaseSession} */ (JSON.parse(raw));
     if (sess.expires_at && Date.now() / 1000 > sess.expires_at - 60) {
@@ -68,13 +67,13 @@ export function getSession() {
 /** @param {SupabaseSession} sess */
 function _saveSession(sess) {
   try {
-    localStorage.setItem(`wedding_v1_${  STORAGE_KEY}`, JSON.stringify(sess));
+    localStorage.setItem(STORAGE_KEYS.SUPABASE_SESSION, JSON.stringify(sess));
   } catch {}
 }
 
 export function clearSession() {
   try {
-    localStorage.removeItem(`wedding_v1_${  STORAGE_KEY}`);
+    localStorage.removeItem(STORAGE_KEYS.SUPABASE_SESSION);
   } catch {}
 }
 

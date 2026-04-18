@@ -122,6 +122,8 @@ describe("STORAGE_KEYS", () => {
     expect(STORAGE_KEYS.THEME).toBe("wedding_v1_theme");
     expect(STORAGE_KEYS.RUNTIME_CONFIG).toBe("wedding_v1_runtime_cfg");
     expect(STORAGE_KEYS.COLOR_SCHEME).toBe("wedding_v1_colorScheme");
+    expect(STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE).toBe("wedding_v1_push_sub");
+    expect(STORAGE_KEYS.REVOKED_TOKENS).toBe("wedding_v1_revoked_tokens");
   });
 });
 

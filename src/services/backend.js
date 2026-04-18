@@ -10,6 +10,7 @@
  */
 
 import { BACKEND_TYPE as _CONFIG_BACKEND } from "../core/config.js";
+import { STORAGE_KEYS } from "../core/constants.js";
 import { load } from "../core/state.js";
 
 // ── Lazy imports (avoid circular) ────────────────────────────────────────
@@ -288,7 +289,7 @@ export async function syncToSheetsEdge(resource, rows) {
  */
 export function isSheetsMirrorEnabled() {
   try {
-    return localStorage.getItem("wedding_v1_sheets_mirror") === "true";
+    return localStorage.getItem(STORAGE_KEYS.SHEETS_MIRROR) === "true";
   } catch {
     return false;
   }

@@ -11,7 +11,10 @@
  *   await sendPushToAdmins({ title: "New RSVP", body: "Alice confirmed" });
  */
 
+import { STORAGE_KEYS } from "../core/constants.js";
 import { callEdgeFunction } from "./backend.js";
+
+const _CACHE_KEY = STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE;
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -94,7 +97,7 @@ export async function subscribePush(vapidPublicKey) {
 
   const data = serializeSubscription(sub);
   try {
-    localStorage.setItem("wedding_v1_push_sub", JSON.stringify(data));
+    localStorage.setItem(_CACHE_KEY, JSON.stringify(data));
   } catch {
     // storage quota - non-fatal
   }
@@ -112,7 +115,7 @@ export async function unsubscribePush() {
   if (!sub) return false;
   const ok = await sub.unsubscribe();
   if (ok) {
-    try { localStorage.removeItem("wedding_v1_push_sub"); } catch { /**/ }
+    try { localStorage.removeItem(_CACHE_KEY); } catch { /**/ }
   }
   return ok;
 }
@@ -123,7 +126,7 @@ export async function unsubscribePush() {
  */
 export function getCachedSubscription() {
   try {
-    const raw = localStorage?.getItem("wedding_v1_push_sub");
+    const raw = localStorage?.getItem(_CACHE_KEY);
     if (!raw) return null;
     return JSON.parse(raw);
   } catch {

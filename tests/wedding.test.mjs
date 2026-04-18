@@ -130,6 +130,16 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes("neighbors"));
   });
 
+  it("centralizes remaining direct-storage keys for auth, diagnostics, and push cache", function () {
+    assert.ok(constantsSource.includes('PUSH_SUBSCRIPTION_CACHE: "wedding_v1_push_sub"'));
+    assert.ok(constantsSource.includes('REVOKED_TOKENS: "wedding_v1_revoked_tokens"'));
+    assert.ok(read("src/services/push-notifications.js").includes("STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE"));
+    assert.ok(read("src/services/guest-token.js").includes("STORAGE_KEYS.REVOKED_TOKENS"));
+    assert.ok(read("src/services/supabase-auth.js").includes("STORAGE_KEYS.SUPABASE_SESSION"));
+    assert.ok(read("src/services/backend.js").includes("STORAGE_KEYS.SHEETS_MIRROR"));
+    assert.ok(read("src/utils/error-monitor.js").includes("STORAGE_KEYS.ERRORS"));
+  });
+
   it("defaults and constants include canonical campaign store support", function () {
     assert.ok(read("src/core/defaults.js").includes('campaigns: { value: load("campaigns", []), storageKey: "campaigns" }'));
     assert.ok(constantsSource.includes('campaigns: DATA_CLASS.ADMIN_SENSITIVE'));

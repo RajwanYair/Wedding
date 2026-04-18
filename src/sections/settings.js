@@ -8,6 +8,7 @@
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n } from "../core/i18n.js";
+import { STORAGE_KEYS } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets, queueSize, queueKeys, onSyncStatus } from "../services/sheets.js";
@@ -678,7 +679,7 @@ export function checkDataIntegrity() {
 export function exportDebugReport() {
   let errors = [];
   try {
-    const raw = localStorage.getItem("wedding_v1_errors");
+    const raw = localStorage.getItem(STORAGE_KEYS.ERRORS);
     if (raw) errors = JSON.parse(raw);
   } catch { /* ignore corrupt data */ }
 

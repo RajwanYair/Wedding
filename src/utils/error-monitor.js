@@ -5,7 +5,9 @@
  * (ring-buffer, max 50). Surfaced in Settings for admin debugging.
  */
 
-const STORAGE_KEY = "wedding_v1_errors";
+import { STORAGE_KEYS } from "../core/constants.js";
+
+const STORAGE_KEY = STORAGE_KEYS.ERRORS;
 const MAX_ENTRIES = 50;
 
 /** @type {Array<{ts:string, message:string, source:string, stack:string}>} */

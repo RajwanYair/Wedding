@@ -18,11 +18,12 @@
  *        Override via `setTokenSecret(secret)` before use.
  */
 
+import { STORAGE_KEYS } from "../core/constants.js";
 import { storeGet, storeSet } from "../core/store.js";
 
 // ── Config ─────────────────────────────────────────────────────────────────
 
-const REVOKED_STORE_KEY = "wedding_v1_revoked_tokens";
+const REVOKED_STORE_KEY = STORAGE_KEYS.REVOKED_TOKENS;
 const DEFAULT_TTL_DAYS = 1;
 
 let _secret = "wedding-secret";

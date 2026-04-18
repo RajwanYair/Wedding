@@ -186,6 +186,8 @@ export const STORAGE_KEYS = /** @type {const} */ ({
   GREEN_API_TOKEN: "wedding_v1_greenApiToken",
   REMINDER_QUEUE: "wedding_v1_reminderQueue",
   COLOR_SCHEME: "wedding_v1_colorScheme",
+  PUSH_SUBSCRIPTION_CACHE: "wedding_v1_push_sub",
+  REVOKED_TOKENS: "wedding_v1_revoked_tokens",
 });
 
 /**
