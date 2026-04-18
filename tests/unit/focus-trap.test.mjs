@@ -1,5 +1,5 @@
 /**
- * tests/unit/focus-trap.test.mjs — Sprint 144
+ * tests/unit/focus-trap.test.mjs — Sprint 144 + Sprint 10 (session)
  * @vitest-environment happy-dom
  */
 
@@ -35,6 +35,20 @@ describe("getFocusableElements", () => {
     expect(result).toHaveLength(1);
     expect(result[0]).toBe(el2);
   });
+
+  it("returns empty array when all elements are hidden", () => {
+    const el1 = Object.assign(makeEl(), { hidden: true });
+    const container = { querySelectorAll: vi.fn().mockReturnValue([el1]) };
+    const result = getFocusableElements(/** @type {any} */ (container));
+    expect(result).toHaveLength(0);
+  });
+
+  it("returns all elements when none are hidden", () => {
+    const elements = [makeEl(), makeEl(), makeEl()];
+    const container = { querySelectorAll: vi.fn().mockReturnValue(elements) };
+    const result = getFocusableElements(/** @type {any} */ (container));
+    expect(result).toHaveLength(3);
+  });
 });
 
 describe("createFocusTrap", () => {
@@ -44,7 +58,7 @@ describe("createFocusTrap", () => {
   let last;
   /** @type {any} */
   let container;
-  /** @type {import("../../src/utils/focus-trap.js").createFocusTrap} */
+  /** @type {any} */
   let trap;
 
   beforeEach(() => {
@@ -70,5 +84,44 @@ describe("createFocusTrap", () => {
     t.activate();
     t.deactivate();
     expect(trigger.focus).toHaveBeenCalledOnce();
+  });
+
+  it("activate then deactivate does not throw", () => {
+    expect(() => {
+      trap.activate();
+      trap.deactivate();
+    }).not.toThrow();
+  });
+
+  it("Tab on last element wraps to first", () => {
+    trap.activate();
+    // Simulate Tab keydown with focus on last element
+    Object.defineProperty(document, "activeElement", {
+      get: () => last,
+      configurable: true,
+    });
+    const e = Object.assign(new KeyboardEvent("keydown", { key: "Tab", bubbles: true }), {
+      preventDefault: vi.fn(),
+    });
+    document.dispatchEvent(e);
+    expect(first.focus).toHaveBeenCalled();
+  });
+
+  it("Shift+Tab on first element wraps to last", () => {
+    trap.activate();
+    Object.defineProperty(document, "activeElement", {
+      get: () => first,
+      configurable: true,
+    });
+    const e = Object.assign(
+      new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true }),
+      { preventDefault: vi.fn() },
+    );
+    document.dispatchEvent(e);
+    expect(last.focus).toHaveBeenCalled();
+  });
+
+  it("deactivate can be called without prior activate without throwing", () => {
+    expect(() => trap.deactivate()).not.toThrow();
   });
 });

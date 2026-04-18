@@ -1,5 +1,5 @@
 /**
- * tests/unit/status-bar.test.mjs — Sprint 188
+ * tests/unit/status-bar.test.mjs — Sprint 188 + Sprint 11 (session)
  * @vitest-environment happy-dom
  */
 
@@ -65,4 +65,43 @@ describe("updateStatusBar", () => {
     });
     expect(() => updateStatusBar(null)).not.toThrow();
   });
+
+  it("shows guest role when user has isAdmin=false", () => {
+    updateStatusBar({ isAdmin: false, email: "user@example.com" });
+    expect(document.getElementById("statusRole")?.textContent).toContain("role_guest");
+  });
+
+  it("version element contains the APP_VERSION value", () => {
+    updateStatusBar(null);
+    const text = document.getElementById("statusVersion")?.textContent ?? "";
+    expect(text).toMatch(/^v\d/);
+  });
+
+  it("admin name includes admin i18n key", () => {
+    updateStatusBar({ isAdmin: true, name: "Test Admin" });
+    const text = document.getElementById("statusRole")?.textContent ?? "";
+    expect(text).toContain("role_admin");
+  });
+
+  it("GAS element is empty string initially with no fetch", () => {
+    updateStatusBar({ isAdmin: true });
+    // _gasVersion starts empty — element text should be ""
+    expect(document.getElementById("statusGas")?.textContent).toBe("");
+  });
+
+  it("can be called multiple times without error", () => {
+    expect(() => {
+      updateStatusBar(null);
+      updateStatusBar({ isAdmin: true });
+      updateStatusBar(null);
+    }).not.toThrow();
+  });
+
+  it("statusRole element exists and has textContent after call", () => {
+    updateStatusBar({ isAdmin: false });
+    const el = document.getElementById("statusRole");
+    expect(el).not.toBeNull();
+    expect(el?.textContent?.length).toBeGreaterThan(0);
+  });
 });
+
