@@ -2,8 +2,8 @@
  * src/utils/pii.js — PII classification & masking utilities (Sprint 18 / Phase 5)
  *
  * Provides:
- *  - DATA_CLASS: sensitivity constants (public / guest-private / admin-sensitive / operational)
- *  - STORE_KEY_CLASSES: data class for each store key
+ *  - DATA_CLASS: canonical sensitivity constants from src/core/constants.js
+ *  - STORE_KEY_CLASSES: data class for each store/localStorage key
  *  - maskPhone(raw): mask phone number leaving last 3 digits
  *  - maskEmail(raw): mask email leaving first char + domain
  *  - maskName(raw): mask name leaving first letter
@@ -16,43 +16,26 @@
  *  - No re-identified data shall be sent to Supabase in error payloads
  */
 
-// ── Data class constants ──────────────────────────────────────────────────
+import {
+  DATA_CLASS as SHARED_DATA_CLASS,
+  STORE_DATA_CLASS,
+} from "../core/constants.js";
 
-/**
- * Sensitivity tiers for personal data fields.
- * Maps to the DataClass type in src/types.d.ts.
- *
- * @type {Readonly<Record<"PUBLIC" | "GUEST_PRIVATE" | "ADMIN_SENSITIVE" | "OPERATIONAL", import('../types.js').DataClass>>}
- */
-export const DATA_CLASS = Object.freeze({
-  PUBLIC:          "public",
-  GUEST_PRIVATE:   "guest-private",
-  ADMIN_SENSITIVE: "admin-sensitive",
-  OPERATIONAL:     "operational",
-});
+export const DATA_CLASS = SHARED_DATA_CLASS;
 
 // ── Store key → data class mapping ───────────────────────────────────────
 
 /**
- * Maps every store key to its data sensitivity class.
+ * Maps store keys and direct localStorage/sessionStorage keys to data sensitivity.
  * Used by logError to decide what to strip before writing to error_log.
  *
  * @type {Record<string, import('../types.js').DataClass>}
  */
-export const STORE_KEY_CLASSES = {
-  // PII-heavy keys
-  guests:       DATA_CLASS.GUEST_PRIVATE,
-  rsvp_log:     DATA_CLASS.GUEST_PRIVATE,
-  contacts:     DATA_CLASS.GUEST_PRIVATE,
+export const STORE_KEY_CLASSES = Object.freeze({
+  ...STORE_DATA_CLASS,
 
-  // Admin-visible operational data
-  tables:       DATA_CLASS.ADMIN_SENSITIVE,
-  vendors:      DATA_CLASS.ADMIN_SENSITIVE,
-  expenses:     DATA_CLASS.ADMIN_SENSITIVE,
-  budget:       DATA_CLASS.ADMIN_SENSITIVE,
-  timeline:     DATA_CLASS.ADMIN_SENSITIVE,
-  gallery:      DATA_CLASS.ADMIN_SENSITIVE,
-  weddingInfo:  DATA_CLASS.ADMIN_SENSITIVE,
+  // Non-store PII-heavy keys
+  rsvp_log:     DATA_CLASS.GUEST_PRIVATE,
   settings:     DATA_CLASS.ADMIN_SENSITIVE,
 
   // Operational / non-sensitive
@@ -64,7 +47,7 @@ export const STORE_KEY_CLASSES = {
   // Public
   landing:      DATA_CLASS.PUBLIC,
   invitation:   DATA_CLASS.PUBLIC,
-};
+});
 
 // ── Masking helpers ───────────────────────────────────────────────────────
 

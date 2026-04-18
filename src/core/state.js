@@ -6,7 +6,9 @@
  * No window.* side effects.
  */
 
-const _BASE_PREFIX = "wedding_v1_";
+import { STORAGE_PREFIX } from "./config.js";
+
+const _BASE_PREFIX = STORAGE_PREFIX;
 
 /** @type {string} Active event ID — "default" for backward compat */
 let _activeEventId = "default";

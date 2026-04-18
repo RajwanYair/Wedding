@@ -16,8 +16,10 @@
  *   resetRuntimeConfig("defaultLang");            // clear override
  */
 
+import { STORAGE_KEYS } from "./constants.js";
+
 /** Storage key for persisted runtime overrides. */
-const RUNTIME_KEY = "wedding_v1_runtime_cfg";
+const RUNTIME_KEY = STORAGE_KEYS.RUNTIME_CONFIG;
 
 /**
  * Default values for all known config keys.

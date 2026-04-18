@@ -3,9 +3,12 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
+import { STORAGE_KEYS } from "../../src/core/constants.js";
 import {
   listThemes, getActiveTheme, setActiveTheme, clearTheme, isValidTheme,
 } from "../../src/utils/color-scheme-manager.js";
+
+const COLOR_SCHEME_KEY = STORAGE_KEYS.COLOR_SCHEME;
 
 /** Minimal localStorage stub */
 function makeStorage() {
@@ -39,12 +42,12 @@ describe("getActiveTheme", () => {
   });
 
   it("returns stored theme", () => {
-    storage.setItem("wedding_v1_colorScheme", "gold");
+    storage.setItem(COLOR_SCHEME_KEY, "gold");
     expect(getActiveTheme({ storage })).toBe("gold");
   });
 
   it("falls back to purple for unknown stored value", () => {
-    storage.setItem("wedding_v1_colorScheme", "neon");
+    storage.setItem(COLOR_SCHEME_KEY, "neon");
     expect(getActiveTheme({ storage })).toBe("purple");
   });
 });
@@ -52,7 +55,7 @@ describe("getActiveTheme", () => {
 describe("setActiveTheme", () => {
   it("stores valid theme and returns true", () => {
     expect(setActiveTheme("emerald", { storage })).toBe(true);
-    expect(storage.getItem("wedding_v1_colorScheme")).toBe("emerald");
+    expect(storage.getItem(COLOR_SCHEME_KEY)).toBe("emerald");
   });
 
   it("returns false for invalid theme", () => {

@@ -6,7 +6,9 @@
  * Pure — no DOM events, no side-effects beyond storage reads/writes.
  */
 
-const PREFIX = "wedding_v1_";
+import { STORAGE_PREFIX } from "../core/config.js";
+
+const PREFIX = STORAGE_PREFIX;
 
 /**
  * @template T

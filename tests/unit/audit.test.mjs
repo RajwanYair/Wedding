@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { STORAGE_KEYS } from "../../src/core/constants.js";
 
 vi.mock("../../src/core/config.js", () => ({
   BACKEND_TYPE: "supabase",
@@ -26,7 +27,7 @@ vi.stubGlobal("localStorage", {
 
 import { audit } from "../../src/services/audit.js";
 
-const SESSION_KEY = "wedding_v1_supabase_session";
+const SESSION_KEY = STORAGE_KEYS.SUPABASE_SESSION;
 
 beforeEach(() => {
   _store = {};

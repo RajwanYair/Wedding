@@ -11,6 +11,7 @@
  * No window.* side effects — consumers import and call directly.
  */
 
+import { STORAGE_PREFIX } from "./config.js";
 import { getActiveEventId } from "./state.js";
 
 /** @type {Map<string, Set<Function>>} */
@@ -32,7 +33,7 @@ let _saveTimer = null;
 const _state = {};
 
 /** Base prefix */
-const _BASE_PREFIX = "wedding_v1_";
+const _BASE_PREFIX = STORAGE_PREFIX;
 
 /**
  * Get the current storage prefix scoped to the active event.

@@ -178,6 +178,25 @@ export const STORAGE_KEYS = /** @type {const} */ ({
   LAST_SEEN_VERSION: "wedding_v1_lastSeenVersion",
   ERRORS: "wedding_v1_errors",
   ERROR_SESSION_ID: "wedding_v1_error_session_id",
+  THEME: "wedding_v1_theme",
+  LIGHT_MODE: "wedding_v1_lightMode",
+  INSTALL_DISMISSED_UNTIL: "wedding_v1_install_dismissed_until",
+  RUNTIME_CONFIG: "wedding_v1_runtime_cfg",
+  GREEN_API_INSTANCE_ID: "wedding_v1_greenApiInstanceId",
+  GREEN_API_TOKEN: "wedding_v1_greenApiToken",
+  REMINDER_QUEUE: "wedding_v1_reminderQueue",
+  COLOR_SCHEME: "wedding_v1_colorScheme",
+});
+
+/**
+ * Canonical data sensitivity values used across store/privacy helpers.
+ * @type {Readonly<Record<"PUBLIC" | "GUEST_PRIVATE" | "ADMIN_SENSITIVE" | "OPERATIONAL", import("../types.js").DataClass>>}
+ */
+export const DATA_CLASS = Object.freeze({
+  PUBLIC: "public",
+  GUEST_PRIVATE: "guest-private",
+  ADMIN_SENSITIVE: "admin-sensitive",
+  OPERATIONAL: "operational",
 });
 
 /**
@@ -191,14 +210,15 @@ export const STORAGE_KEYS = /** @type {const} */ ({
  * @type {Readonly<Record<string, string>>}
  */
 export const STORE_DATA_CLASS = /** @type {const} */ ({
-  guests: "admin-sensitive",
-  tables: "admin-sensitive",
-  vendors: "admin-sensitive",
-  expenses: "admin-sensitive",
-  timeline: "public",
-  gallery: "public",
-  weddingInfo: "public",
-  budget: "admin-sensitive",
-  contacts: "guest-private",
-  timelineDone: "operational",
+  guests: DATA_CLASS.ADMIN_SENSITIVE,
+  tables: DATA_CLASS.ADMIN_SENSITIVE,
+  vendors: DATA_CLASS.ADMIN_SENSITIVE,
+  expenses: DATA_CLASS.ADMIN_SENSITIVE,
+  timeline: DATA_CLASS.PUBLIC,
+  gallery: DATA_CLASS.PUBLIC,
+  weddingInfo: DATA_CLASS.PUBLIC,
+  budget: DATA_CLASS.ADMIN_SENSITIVE,
+  contacts: DATA_CLASS.GUEST_PRIVATE,
+  timelineDone: DATA_CLASS.OPERATIONAL,
+  commLog: DATA_CLASS.ADMIN_SENSITIVE,
 });

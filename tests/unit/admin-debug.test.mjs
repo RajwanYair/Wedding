@@ -31,6 +31,7 @@ function seedStore(overrides = {}) {
     budget: { value: 0 },
     contacts: { value: [] },
     timelineDone: { value: {} },
+    commLog: { value: [] },
     debugMode: { value: false },
     ...overrides,
   });

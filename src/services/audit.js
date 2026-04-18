@@ -15,6 +15,7 @@
  */
 
 import { BACKEND_TYPE, APP_VERSION } from "../core/config.js";
+import { STORAGE_KEYS } from "../core/constants.js";
 import { load } from "../core/state.js";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "../core/config.js";
 
@@ -32,7 +33,7 @@ function _key() {
 
 function _getAdminEmail() {
   try {
-    const raw = localStorage.getItem("wedding_v1_supabase_session");
+    const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_SESSION);
     if (!raw) return null;
     const sess = JSON.parse(raw);
     return sess?.user?.email ?? null;
@@ -45,7 +46,7 @@ function _getAdminEmail() {
 
 function _getAccessToken() {
   try {
-    const raw = localStorage.getItem("wedding_v1_supabase_session");
+    const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_SESSION);
     if (!raw) return null;
     const sess = JSON.parse(raw);
     return sess?.access_token ?? null;
@@ -160,10 +161,10 @@ let _sessionId = "";
 function _getSessionId() {
   if (!_sessionId) {
     try {
-      _sessionId = sessionStorage.getItem("wedding_v1_error_session_id") ?? "";
+      _sessionId = sessionStorage.getItem(STORAGE_KEYS.ERROR_SESSION_ID) ?? "";
       if (!_sessionId) {
         _sessionId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-        sessionStorage.setItem("wedding_v1_error_session_id", _sessionId);
+        sessionStorage.setItem(STORAGE_KEYS.ERROR_SESSION_ID, _sessionId);
       }
     } catch {
       _sessionId = `${Date.now()}`;

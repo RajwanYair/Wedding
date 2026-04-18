@@ -7,6 +7,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 vi.mock("../../src/core/config.js", () => ({
   APP_VERSION: "6.4.0",
+  STORAGE_PREFIX: "wedding_v1_",
   BACKEND_TYPE: "supabase",
   SUPABASE_URL: "",
   SUPABASE_ANON_KEY: "",

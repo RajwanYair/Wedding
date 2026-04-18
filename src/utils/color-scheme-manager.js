@@ -6,7 +6,9 @@
  * No DOM side-effects at module-load time.
  */
 
-const _KEY = "wedding_v1_colorScheme";
+import { STORAGE_KEYS } from "../core/constants.js";
+
+const _KEY = STORAGE_KEYS.COLOR_SCHEME;
 
 const THEMES = ["purple", "rosegold", "gold", "emerald", "royal"];
 

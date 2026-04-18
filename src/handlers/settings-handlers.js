@@ -5,6 +5,7 @@
  */
 
 import { on } from "../core/events.js";
+import { STORAGE_KEYS } from "../core/constants.js";
 import { showToast, closeModal, showConfirmDialog } from "../core/ui.js";
 import { t } from "../core/i18n.js";
 import { load, save } from "../core/state.js";
@@ -96,7 +97,7 @@ export function registerSettingsHandlers(ctx) {
   on("toggleSheetsMirror", (el) => {
     const checked = /** @type {HTMLInputElement} */ (el).checked;
     try {
-      localStorage.setItem("wedding_v1_sheets_mirror", checked ? "true" : "false");
+      localStorage.setItem(STORAGE_KEYS.SHEETS_MIRROR, checked ? "true" : "false");
     } catch { /* ignore */ }
     showToast(
       checked ? t("sheets_mirror_on") : t("sheets_mirror_off"),
@@ -113,7 +114,7 @@ export function registerSettingsHandlers(ctx) {
       return;
     }
     try {
-      localStorage.setItem("wedding_v1_wa_phone_number_id", phoneNumId);
+      localStorage.setItem(STORAGE_KEYS.WA_PHONE_NUMBER_ID, phoneNumId);
     } catch { /* ignore */ }
     showToast(t("wa_cloud_saved"), "success");
   });

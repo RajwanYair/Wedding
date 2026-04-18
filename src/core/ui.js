@@ -5,6 +5,7 @@
  * No window.* side effects.
  */
 
+import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
 
 // ── Toast ─────────────────────────────────────────────────────────────────
@@ -233,7 +234,7 @@ export function cycleTheme() {
     .trim();
   if (theme !== "default") document.body.classList.add(`theme-${theme}`);
   try {
-    localStorage.setItem("wedding_v1_theme", theme);
+    localStorage.setItem(STORAGE_KEYS.THEME, theme);
   } catch {
     // storage unavailable
   }
@@ -246,7 +247,7 @@ export function toggleLightMode() {
   document.body.classList.toggle("light-mode");
   try {
     localStorage.setItem(
-      "wedding_v1_lightMode",
+      STORAGE_KEYS.LIGHT_MODE,
       String(document.body.classList.contains("light-mode")),
     );
   } catch {
@@ -266,13 +267,13 @@ export function toggleMobileNav() {
  */
 export function restoreTheme() {
   try {
-    const theme = localStorage.getItem("wedding_v1_theme") ?? "default";
+    const theme = localStorage.getItem(STORAGE_KEYS.THEME) ?? "default";
     const idx = THEMES.indexOf(theme);
     if (idx !== -1) {
       _themeIdx = idx;
       if (theme !== "default") document.body.classList.add(`theme-${theme}`);
     }
-    const savedLight = localStorage.getItem("wedding_v1_lightMode");
+    const savedLight = localStorage.getItem(STORAGE_KEYS.LIGHT_MODE);
     if (savedLight === "true") {
       document.body.classList.add("light-mode");
     } else if (savedLight === null) {
@@ -405,7 +406,7 @@ export function initSW() {
 
 // ── PWA Install Prompt ────────────────────────────────────────────────────
 
-const _INSTALL_DISMISSED_KEY = "wedding_v1_install_dismissed_until";
+const _INSTALL_DISMISSED_KEY = STORAGE_KEYS.INSTALL_DISMISSED_UNTIL;
 const _INSTALL_SNOOZE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const _INSTALL_DELAY_MS = 30_000; // show after 30 s of use
 

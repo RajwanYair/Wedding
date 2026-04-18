@@ -10,7 +10,7 @@
  *   5. index.html                   (section containers + data-template + nav tabs)
  *   6. src/templates/*.html          (template files exist on disk)
  *   7. src/services/sheets-impl.js  (_SHEET_NAMES + _COL_ORDER)
- *   8. js/i18n/he.json + en.json   (i18n keys for nav)
+ *   8. src/i18n/he.json + en.json  (i18n keys for nav)
  *
  * These tests read source files as text and verify cross-references.
  * If you add a new section, these tests tell you EXACTLY what else needs wiring.

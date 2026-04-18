@@ -2,6 +2,7 @@
  * tests/unit/pii.test.mjs — Sprint 18 PII classification & masking
  */
 import { describe, it, expect } from "vitest";
+import { STORE_DATA_CLASS } from "../../src/core/constants.js";
 import {
   DATA_CLASS,
   STORE_KEY_CLASSES,
@@ -27,8 +28,9 @@ describe("DATA_CLASS constants", () => {
 });
 
 describe("STORE_KEY_CLASSES", () => {
-  it("guests is guest-private", () => {
-    expect(STORE_KEY_CLASSES.guests).toBe("guest-private");
+  it("reuses the canonical store data-class map", () => {
+    expect(STORE_KEY_CLASSES.guests).toBe(STORE_DATA_CLASS.guests);
+    expect(STORE_KEY_CLASSES.commLog).toBe(STORE_DATA_CLASS.commLog);
   });
 
   it("vendors is admin-sensitive", () => {

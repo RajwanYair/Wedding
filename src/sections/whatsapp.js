@@ -5,6 +5,7 @@
  * Phone numbers normalised via cleanPhone() → wa.me ready.
  */
 
+import { STORAGE_KEYS } from "../core/constants.js";
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
@@ -326,8 +327,8 @@ export function saveGreenApiConfig(form) {
     )?.value?.trim() ?? "";
 
   try {
-    localStorage.setItem("wedding_v1_greenApiInstanceId", instanceId);
-    localStorage.setItem("wedding_v1_greenApiToken", token);
+    localStorage.setItem(STORAGE_KEYS.GREEN_API_INSTANCE_ID, instanceId);
+    localStorage.setItem(STORAGE_KEYS.GREEN_API_TOKEN, token);
   } catch {
     // storage unavailable
   }
@@ -389,7 +390,7 @@ export function updateReminderCount() {
 
 /** @typedef {{ id: string, scheduledAt: string, sentAt?: string, type: 'reminder'|'thankyou', template?: string }} ScheduledMsg */
 
-const _QUEUE_KEY = "wedding_v1_reminderQueue";
+const _QUEUE_KEY = STORAGE_KEYS.REMINDER_QUEUE;
 
 /**
  * Get the scheduled reminder queue.

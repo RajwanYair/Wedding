@@ -10,6 +10,8 @@ import {
   PUBLIC_SECTIONS,
   MODALS,
   STORAGE_KEYS,
+  DATA_CLASS,
+  STORE_DATA_CLASS,
   MEAL_TYPES,
   GUEST_SIDES,
   GUEST_GROUPS,
@@ -114,6 +116,25 @@ describe("STORAGE_KEYS", () => {
       expect(typeof val).toBe("string");
       expect(val.length).toBeGreaterThan(0);
     }
+  });
+
+  it("includes centralized direct-storage keys used by UI/runtime modules", () => {
+    expect(STORAGE_KEYS.THEME).toBe("wedding_v1_theme");
+    expect(STORAGE_KEYS.RUNTIME_CONFIG).toBe("wedding_v1_runtime_cfg");
+    expect(STORAGE_KEYS.COLOR_SCHEME).toBe("wedding_v1_colorScheme");
+  });
+});
+
+describe("DATA_CLASS", () => {
+  it("exports the canonical data sensitivity values", () => {
+    expect(DATA_CLASS.PUBLIC).toBe("public");
+    expect(DATA_CLASS.GUEST_PRIVATE).toBe("guest-private");
+    expect(DATA_CLASS.ADMIN_SENSITIVE).toBe("admin-sensitive");
+    expect(DATA_CLASS.OPERATIONAL).toBe("operational");
+  });
+
+  it("classifies commLog as admin-sensitive", () => {
+    expect(STORE_DATA_CLASS.commLog).toBe(DATA_CLASS.ADMIN_SENSITIVE);
   });
 });
 
