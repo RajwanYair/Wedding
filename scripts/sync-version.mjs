@@ -97,9 +97,9 @@ patch("tests/wedding.test.mjs", [
   [/APP_VERSION = "[\d.]+"/, `APP_VERSION = "${ver}"`],
   [/serviceWorker\.includes\("wedding-v[\d.]+"\)/, `serviceWorker.includes("wedding-v${ver}")`],
   [/readme\.includes\("version-v[\d.]+"\)/, `readme.includes("version-v${ver}")`],
-  [/copilotInstructions\.includes\("# GitHub Copilot Instructions — Wedding Manager v[\d.]+"\)/, `copilotInstructions.includes("# GitHub Copilot Instructions — Wedding Manager v${ver}")`],
+  [/copilotInstructions\.includes\(\s*"# GitHub Copilot Instructions — Wedding Manager v[\d.]+",?\s*\)/s, `copilotInstructions.includes(\n        "# GitHub Copilot Instructions — Wedding Manager v${ver}",\n      )`],
   [/architecture\.includes\("# Wedding Manager — Architecture \(v[\d.]+\)"\)/, `architecture.includes("# Wedding Manager — Architecture (v${ver})")`],
-  [/typesSource\.includes\("src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v[\d.]+\)"\)/, `typesSource.includes("src/types.d.ts — Shared type definitions for the Wedding Manager (v${ver})")`],
+  [/typesSource\.includes\(\s*"src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v[\d.]+\)",?\s*\)/s, `typesSource.includes(\n        "src/types.d.ts — Shared type definitions for the Wedding Manager (v${ver})",\n      )`],
 ]);
 
 // CHANGELOG.md — header (informational only)

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.7] — 2026-05-01
+
+### Added
+
+- `tests/unit/supabase-repositories.test.mjs` expanded with 19 additional test cases covering `SupabaseBaseRepository` (`findById`, `update`, `delete`, `upsert`, `count`, `exists`, event-scoped constructor), `SupabaseGuestRepository` (`findByGroup`, `findUncheckedIn`, `confirmedCount`), `SupabaseTableRepository` (`findByShape`, `findByName`), `SupabaseVendorRepository` (`findUnpaid`, `totalCost`, `totalPaid`), and `SupabaseExpenseRepository` (`findByCategory`).
+- `tests/unit/changelog.test.mjs` — 6 new happy-dom unit tests for `src/sections/changelog.js`: `renderChangelog` success/failure/missing-element paths and `mount`/`unmount` smoke tests.
+- `tests/unit/backend.test.mjs` — 7 new unit tests for `backend.js` `getBackendType()`: priority order (localStorage → config → default), all four backend variants, whitespace trimming, and unknown-value fallback.
+- `tests/unit/utils-barrel.test.mjs` — 15 structural smoke tests verifying `src/utils/index.js` correctly re-exports symbols from `phone`, `date`, `sanitize`, `misc`, `roles`, and `pagination` sub-modules.
+- `tests/unit/in-memory-repositories.test.mjs` — 15 new unit tests for `ExpenseRepository` (`findByCategory`, `totalAmount`, `summaryByCategory`) and `VendorRepository` (`findByCategory`, `findUnpaid`, `totalCost`, `totalPaid`, `outstanding`) using an in-memory store stub.
+
 ## [8.0.6] — 2026-04-18
 
 ### Added
