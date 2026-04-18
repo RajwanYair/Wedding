@@ -1,5 +1,5 @@
 /**
- * tests/unit/section-resolver.test.mjs — Sprint 189
+ * tests/unit/section-resolver.test.mjs — Sprint 189 + Sprint 8 (session)
  * @vitest-environment happy-dom
  */
 
@@ -31,13 +31,16 @@ vi.mock("../../src/services/auth.js", () => ({
   currentUser: vi.fn(() => null),
 }));
 
-import { getActiveSection, preloadSections } from "../../src/core/section-resolver.js";
+import {
+  getActiveSection, preloadSections, resolveSection, switchSection,
+} from "../../src/core/section-resolver.js";
+import { currentUser } from "../../src/services/auth.js";
+import { injectTemplate } from "../../src/core/template-loader.js";
+import { showToast } from "../../src/core/ui.js";
 
 describe("getActiveSection", () => {
   it("returns null before any section is switched to", () => {
-    // Module-level _activeSection starts null on first import
     const result = getActiveSection();
-    // It may be null or a string depending on previous state — just verify it's a string or null
     expect(result === null || typeof result === "string").toBe(true);
   });
 });
@@ -50,4 +53,54 @@ describe("preloadSections", () => {
   it("accepts empty array", () => {
     expect(() => preloadSections([])).not.toThrow();
   });
+
+  it("accepts known section names without throwing", () => {
+    expect(() => preloadSections(["landing", "rsvp"])).not.toThrow();
+  });
+
+  it("accepts an array with mixed known/unknown names", () => {
+    expect(() => preloadSections(["landing", "no-such-section"])).not.toThrow();
+  });
 });
+
+describe("resolveSection", () => {
+  it("returns undefined for unknown section name", async () => {
+    const result = await resolveSection("no-such-section-xyz");
+    expect(result).toBeUndefined();
+  });
+
+  it("is a function", () => {
+    expect(typeof resolveSection).toBe("function");
+  });
+});
+
+describe("switchSection — auth gating", () => {
+  beforeEach(() => {
+    vi.mocked(showToast).mockReset();
+    vi.mocked(injectTemplate).mockResolvedValue(undefined);
+  });
+
+  it("does not call injectTemplate when unauthenticated and redirected for private section", async () => {
+    vi.mocked(currentUser).mockReturnValue(null);
+    vi.mocked(injectTemplate).mockClear();
+    await switchSection("dashboard");
+    // Unauthenticated users are redirected to landing — no template inject for dashboard
+    expect(injectTemplate).not.toHaveBeenCalledWith(expect.stringContaining("dashboard"), expect.anything());
+  });
+
+  it("does not show auth-required toast for public sections (landing)", async () => {
+    vi.mocked(currentUser).mockReturnValue(null);
+    await switchSection("landing");
+    // landing is PUBLIC_SECTION — landing redirect happens, then container check fails → toast about section not found (not auth)
+    const authToastCalls = vi.mocked(showToast).mock.calls.filter(([msg]) =>
+      typeof msg === "string" && msg.includes("auth"),
+    );
+    expect(authToastCalls).toHaveLength(0);
+  });
+
+  it("allows admin users to call switchSection without throwing", async () => {
+    vi.mocked(currentUser).mockReturnValue({ isAdmin: true, name: "Admin" });
+    await expect(switchSection("dashboard")).resolves.not.toThrow();
+  });
+});
+
