@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.1] — 2026-04-18
+
+### Fixed
+
+- Canonicalized direct-storage keys and data classification so runtime modules, privacy helpers, and tests reuse shared constants instead of duplicating localStorage keys and store sensitivity maps.
+- Promoted `campaigns` into the canonical store defaults, type surface, and data-class map so messaging campaigns are a first-class store domain.
+- Fixed landing-page registry rendering to read from `weddingInfo.registryLinks`, added the field to default wedding info, and extended the Sheets config schema to keep registry links in sync.
+- Aligned diagnostics on the `appErrors` store key so analytics, settings cleanup actions, and error-pipeline storage all use the same error source of truth.
+
 ### Changed
 
 - Removed unused maintenance scripts and an orphaned bundle-budget test that were no longer part of the package, CI, or runtime path.

@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Repo Sanity Suite v8.0.0
+// Wedding Manager — Repo Sanity Suite v8.0.1
 // Keeps high-level repo assertions aligned with the current src/ architecture.
 // =============================================================================
 
@@ -46,20 +46,20 @@ const runtimeSources = [
 const allHtml = [indexHtml, readHtmlDir("src/templates"), readHtmlDir("src/modals")].join("\n");
 
 describe("Version alignment", function () {
-  it("package.json is v8.0.0", function () {
-    assert.equal(packageJson.version, "8.0.0");
+  it("package.json is v8.0.1", function () {
+    assert.equal(packageJson.version, "8.0.1");
   });
 
-  it("src/core/config.js exports APP_VERSION v8.0.0", function () {
-    assert.ok(read("src/core/config.js").includes('APP_VERSION = "8.0.0"'));
+  it("src/core/config.js exports APP_VERSION v8.0.1", function () {
+    assert.ok(read("src/core/config.js").includes('APP_VERSION = "8.0.1"'));
   });
 
-  it("public/sw.js uses wedding-v8.0.0 cache", function () {
-    assert.ok(serviceWorker.includes("wedding-v8.0.0"));
+  it("public/sw.js uses wedding-v8.0.1 cache", function () {
+    assert.ok(serviceWorker.includes("wedding-v8.0.1"));
   });
 
-  it("README version badge references v8.0.0", function () {
-    assert.ok(readme.includes("version-v8.0.0"));
+  it("README version badge references v8.0.1", function () {
+    assert.ok(readme.includes("version-v8.0.1"));
   });
 });
 

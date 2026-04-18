@@ -34,7 +34,7 @@
 | S11 — Quick Wins | Per-guest RSVP links, transport manifest, meal-per-table, batch ops, gift recording | v4.1.0 | ✅ Done |
 | S12 — UX Upgrades | WhatsApp reminders, duplicate detection, QR check-in, drag-drop seating, RSVP deadline | v4.1.0 | ✅ Done |
 
-### Current State (v8.0.0)
+### Current State (v8.0.1)
 
 ```text
 index.html     ~425 lines (shell only — sections lazy-loaded)
@@ -66,7 +66,8 @@ This roadmap now keeps release-line history and guardrails only.
 | v3.9.0 | S8 | ✅ Released |
 | v4.0.0 | S9 + S10 | ✅ Released |
 | v4.1.0 | S11 + S12 | ✅ Released |
-| v8.0.0 | production cleanup baseline | ✅ Current |
+| v8.0.0 | production cleanup baseline | ✅ Released |
+| v8.0.1 | canonical store cleanup follow-up | ✅ Current |
 
 ---
 
