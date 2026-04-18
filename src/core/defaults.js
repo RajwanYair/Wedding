@@ -59,6 +59,7 @@ export function buildStoreDefs() {
     tables: { value: load("tables", []), storageKey: "tables" },
     vendors: { value: load("vendors", []), storageKey: "vendors" },
     expenses: { value: load("expenses", []), storageKey: "expenses" },
+    appErrors: { value: load("appErrors", []), storageKey: "appErrors" },
     weddingInfo: { value: weddingInfo, storageKey: "weddingInfo" },
     gallery: { value: load("gallery", []), storageKey: "gallery" },
     timeline: { value: timeline, storageKey: "timeline" },

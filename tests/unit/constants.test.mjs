@@ -140,6 +140,10 @@ describe("DATA_CLASS", () => {
   it("classifies campaigns as admin-sensitive", () => {
     expect(STORE_DATA_CLASS.campaigns).toBe(DATA_CLASS.ADMIN_SENSITIVE);
   });
+
+  it("classifies appErrors as operational", () => {
+    expect(STORE_DATA_CLASS.appErrors).toBe(DATA_CLASS.OPERATIONAL);
+  });
 });
 
 describe("Domain enums", () => {

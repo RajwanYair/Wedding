@@ -20,15 +20,7 @@ const MAX_STORED_ERRORS = 200;
 
 // ── Types ──────────────────────────────────────────────────────────────────
 /**
- * @typedef {{
- *   id: string,
- *   type: string,
- *   message: string,
- *   stack?: string,
- *   context: Record<string, unknown>,
- *   version: string,
- *   ts: number,
- * }} AppError
+ * @typedef {import('../types').AppError} AppError
  */
 
 // ── Helpers ────────────────────────────────────────────────────────────────

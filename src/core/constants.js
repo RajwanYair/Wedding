@@ -215,6 +215,7 @@ export const STORE_DATA_CLASS = /** @type {const} */ ({
   tables: DATA_CLASS.ADMIN_SENSITIVE,
   vendors: DATA_CLASS.ADMIN_SENSITIVE,
   expenses: DATA_CLASS.ADMIN_SENSITIVE,
+  appErrors: DATA_CLASS.OPERATIONAL,
   timeline: DATA_CLASS.PUBLIC,
   gallery: DATA_CLASS.PUBLIC,
   weddingInfo: DATA_CLASS.PUBLIC,

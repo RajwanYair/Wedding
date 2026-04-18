@@ -135,6 +135,11 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes('campaigns: DATA_CLASS.ADMIN_SENSITIVE'));
   });
 
+  it("defaults and constants include canonical appErrors support", function () {
+    assert.ok(read("src/core/defaults.js").includes('appErrors: { value: load("appErrors", []), storageKey: "appErrors" }'));
+    assert.ok(constantsSource.includes('appErrors: DATA_CLASS.OPERATIONAL'));
+  });
+
   it("default wedding info includes registryLinks for landing and registry views", function () {
     assert.ok(read("src/core/defaults.js").includes('registryLinks: "[]"'));
     assert.ok(read("src/services/sheets-impl.js").includes('"registryLinks"'));

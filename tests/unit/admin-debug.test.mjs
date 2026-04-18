@@ -26,6 +26,7 @@ function seedStore(overrides = {}) {
     tables: { value: [] },
     vendors: { value: [] },
     expenses: { value: [] },
+    appErrors: { value: [] },
     timeline: { value: [] },
     gallery: { value: [] },
     weddingInfo: { value: {} },

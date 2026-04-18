@@ -1919,7 +1919,7 @@ export function getVendorPaymentProgress() {
 // ── Phase 10.3 — Error Analytics Dashboard ───────────────────────────────
 
 /**
- * Compute error statistics from the local `errorLog` store.
+ * Compute error statistics from the local `appErrors` store.
  * @returns {{
  *   total: number,
  *   bySeverity: Record<string, number>,
@@ -1927,7 +1927,7 @@ export function getVendorPaymentProgress() {
  * }}
  */
 export function getErrorStats() {
-  const raw = /** @type {unknown[]} */ (storeGet("errorLog") ?? []);
+  const raw = /** @type {unknown[]} */ (storeGet("appErrors") ?? []);
   /** @type {Record<string, number>} */
   const bySeverity = {};
   const recent = /** @type {Array<{message: string, level: string, ts: string, url: string}>} */ ([]);
@@ -2014,7 +2014,13 @@ export function renderErrorAnalytics() {
   }
 }
 
-/** Helper: create a small stat box div (reuses pattern from other analytics). */
+/**
+ * Helper: create a small stat box div (reuses pattern from other analytics).
+ * @param {string} num
+ * @param {string} label
+ * @param {string} color
+ * @returns {HTMLDivElement}
+ */
 function _createStatBox(num, label, color) {
   const box = document.createElement("div");
   box.className = "analytics-stat-box";

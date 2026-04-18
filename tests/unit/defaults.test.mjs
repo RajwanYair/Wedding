@@ -87,6 +87,7 @@ describe("buildStoreDefs", () => {
     const defs = buildStoreDefs();
     expect(defs.vendors).toBeDefined();
     expect(defs.expenses).toBeDefined();
+    expect(defs.appErrors).toBeDefined();
     expect(defs.weddingInfo).toBeDefined();
   });
 

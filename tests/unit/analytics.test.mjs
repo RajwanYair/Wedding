@@ -34,7 +34,7 @@ function seedStore() {
     tables: { value: [] },
     vendors: { value: [] },
     expenses: { value: [] },
-    errorLog: { value: [] },
+    appErrors: { value: [] },
     weddingInfo: { value: {} },
   });
 }
@@ -537,8 +537,8 @@ describe("getErrorStats", () => {
     seedStore();
   });
 
-  it("returns zero totals when errorLog is empty", () => {
-    storeSet("errorLog", []);
+  it("returns zero totals when appErrors is empty", () => {
+    storeSet("appErrors", []);
     const { total, bySeverity, recent } = getErrorStats();
     expect(total).toBe(0);
     expect(bySeverity).toEqual({});
@@ -546,7 +546,7 @@ describe("getErrorStats", () => {
   });
 
   it("counts by severity level", () => {
-    storeSet("errorLog", [
+    storeSet("appErrors", [
       { message: "Err1", level: "error", ts: "2025-01-01T10:00:00Z" },
       { message: "Err2", level: "error", ts: "2025-01-01T10:01:00Z" },
       { message: "Warn1", level: "warning", ts: "2025-01-01T10:02:00Z" },
@@ -563,7 +563,7 @@ describe("getErrorStats", () => {
       level: "error",
       ts: `2025-01-${String(i + 1).padStart(2, "0")}T00:00:00Z`,
     }));
-    storeSet("errorLog", many);
+    storeSet("appErrors", many);
     const { recent } = getErrorStats();
     expect(recent).toHaveLength(10);
     // Most recent should be first (reversed)
@@ -571,7 +571,7 @@ describe("getErrorStats", () => {
   });
 
   it("falls back to 'severity' field when 'level' missing", () => {
-    storeSet("errorLog", [
+    storeSet("appErrors", [
       { message: "x", severity: "critical", ts: "2025-01-01T10:00:00Z" },
     ]);
     const { bySeverity } = getErrorStats();
@@ -580,7 +580,7 @@ describe("getErrorStats", () => {
 
   it("truncates message to 120 chars", () => {
     const long = "x".repeat(200);
-    storeSet("errorLog", [{ message: long, level: "error" }]);
+    storeSet("appErrors", [{ message: long, level: "error" }]);
     const { recent } = getErrorStats();
     expect(recent[0].message.length).toBe(120);
   });

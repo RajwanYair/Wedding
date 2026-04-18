@@ -193,6 +193,17 @@ export interface Campaign {
   completedAt: number | null;
 }
 
+/** Application error captured by the client error pipeline. */
+export interface AppError {
+  id: string;
+  type: string;
+  message: string;
+  stack?: string;
+  context: Record<string, unknown>;
+  version: string;
+  ts: number;
+}
+
 // ── Service Types ─────────────────────────────────────────────────────────
 
 /** Result type returned by save/validate functions. */
@@ -222,6 +233,7 @@ export interface StoreKeys {
   tables: Table[];
   vendors: Vendor[];
   expenses: Expense[];
+  appErrors: AppError[];
   timeline: TimelineItem[];
   gallery: GalleryPhoto[];
   weddingInfo: WeddingInfo;
