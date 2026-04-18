@@ -46,7 +46,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
   storeSubscribeScoped("guests", renderSeatingScore, _SCOPE);
   storeSubscribeScoped("tables", renderSeatingScore, _SCOPE);
   // Phase 10.3 error analytics
-  storeSubscribeScoped("errorLog", renderErrorAnalytics, _SCOPE);
+  storeSubscribeScoped("appErrors", renderErrorAnalytics, _SCOPE);
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();

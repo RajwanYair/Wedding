@@ -422,7 +422,7 @@ export function renderAuditLog() {
  * Clear the error log.
  */
 export function clearErrorLog() {
-  storeSet("errorLog", []);
+  storeSet("appErrors", []);
 }
 
 /**
