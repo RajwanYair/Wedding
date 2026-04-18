@@ -1,10 +1,10 @@
 // =============================================================================
-// Service Worker — Wedding Manager v8.0.5
+// Service Worker — Wedding Manager v8.0.6
 // Stale-while-revalidate for app shell + offline fallback + update detection
 // =============================================================================
 "use strict";
 
-const CACHE_NAME = "wedding-v8.0.5";
+const CACHE_NAME = "wedding-v8.0.6";
 // Static assets to pre-cache. Vite-built JS/CSS have hashed filenames and are
 // cached on first fetch by the non-shell handler (cache-first with network fallback).
 const APP_SHELL = [

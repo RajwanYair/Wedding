@@ -34,7 +34,7 @@
 | S11 — Quick Wins | Per-guest RSVP links, transport manifest, meal-per-table, batch ops, gift recording | v4.1.0 | ✅ Done |
 | S12 — UX Upgrades | WhatsApp reminders, duplicate detection, QR check-in, drag-drop seating, RSVP deadline | v4.1.0 | ✅ Done |
 
-### Current State (v8.0.5)
+### Current State (v8.0.6)
 
 ```text
 index.html     ~425 lines (shell only — sections lazy-loaded)
@@ -71,7 +71,8 @@ This roadmap now keeps release-line history and guardrails only.
 | v8.0.2 | runtime store and multi-event persistence cleanup | ✅ Released |
 | v8.0.3 | direct storage key cleanup follow-up | ✅ Released |
 | v8.0.4 | release sync and version guardrail cleanup | ✅ Released |
-| v8.0.5 | decouple semantic test fixtures from release sync | ✅ Current |
+| v8.0.5 | decouple semantic test fixtures from release sync | ✅ Released |
+| v8.0.6 | test coverage for compose, md-to-html, supabase-realtime, guest-landing | ✅ Current |
 
 ---
 

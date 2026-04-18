@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.6] — 2026-04-18
+
+### Added
+
+- `src/utils/compose.js` — `pipe`, `compose`, `curry2`, `curry3`, `memoize`, `memoizeKey`, `partial`, `onceOnly`, `noop`, `identity`, `tap` now have comprehensive unit test coverage (`tests/unit/compose.test.mjs`, 34 cases).
+- `src/utils/md-to-html.js` — new pure utility extracted from `src/sections/changelog.js`, with full unit test coverage (`tests/unit/md-to-html.test.mjs`, 26 cases) including HTML-escaping security cases.
+- `tests/unit/supabase-realtime.test.mjs` — 13 unit tests for subscription registry, unsubscribe, connection-state API, and store-integration helpers; runs without a live WebSocket.
+- `tests/unit/guest-landing.test.mjs` — 11 unit tests (happy-dom) for guest-landing lifecycle, data-* DOM slot rendering, table lookup, RSVP status, and graceful degradation when slots are absent.
+
+### Changed
+
+- `src/sections/changelog.js` now imports `mdToHtml` from `src/utils/md-to-html.js` instead of embedding the private converter inline.
+
 ## [8.0.5] — 2026-04-18
 
 ### Changed
