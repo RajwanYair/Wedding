@@ -136,6 +136,10 @@ describe("DATA_CLASS", () => {
   it("classifies commLog as admin-sensitive", () => {
     expect(STORE_DATA_CLASS.commLog).toBe(DATA_CLASS.ADMIN_SENSITIVE);
   });
+
+  it("classifies campaigns as admin-sensitive", () => {
+    expect(STORE_DATA_CLASS.campaigns).toBe(DATA_CLASS.ADMIN_SENSITIVE);
+  });
 });
 
 describe("Domain enums", () => {

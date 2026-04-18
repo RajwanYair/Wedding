@@ -67,6 +67,12 @@ describe("buildStoreDefs", () => {
     expect(Array.isArray(defs.guests.value)).toBe(true);
   });
 
+  it("includes campaigns key with value array", () => {
+    const defs = buildStoreDefs();
+    expect(defs.campaigns).toBeDefined();
+    expect(Array.isArray(defs.campaigns.value)).toBe(true);
+  });
+
   it("includes tables key with value array", () => {
     const defs = buildStoreDefs();
     expect(Array.isArray(defs.tables.value)).toBe(true);

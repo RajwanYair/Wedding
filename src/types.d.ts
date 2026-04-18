@@ -168,6 +168,31 @@ export interface ContactSubmission {
   dietaryNotes: string;
 }
 
+/** Campaign delivery status per guest. */
+export type CampaignDeliveryResult = "pending" | "sent" | "failed";
+
+/** Campaign lifecycle status. */
+export type CampaignStatus = "draft" | "queued" | "sending" | "completed" | "failed" | "cancelled";
+
+/** Supported campaign channels. */
+export type CampaignType = "whatsapp" | "email" | "sms";
+
+/** Outbound messaging campaign persisted in store. */
+export interface Campaign {
+  id: string;
+  name: string;
+  type: CampaignType;
+  templateName: string;
+  guestIds: string[];
+  status: CampaignStatus;
+  sentCount: number;
+  failedCount: number;
+  results: Record<string, CampaignDeliveryResult>;
+  createdAt: number;
+  startedAt: number | null;
+  completedAt: number | null;
+}
+
 // ── Service Types ─────────────────────────────────────────────────────────
 
 /** Result type returned by save/validate functions. */
@@ -193,6 +218,7 @@ export interface AuthUser {
  */
 export interface StoreKeys {
   guests: Guest[];
+  campaigns: Campaign[];
   tables: Table[];
   vendors: Vendor[];
   expenses: Expense[];

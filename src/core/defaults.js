@@ -54,6 +54,7 @@ export function buildStoreDefs() {
 
   return {
     guests: { value: load("guests", []), storageKey: "guests" },
+    campaigns: { value: load("campaigns", []), storageKey: "campaigns" },
     tables: { value: load("tables", []), storageKey: "tables" },
     vendors: { value: load("vendors", []), storageKey: "vendors" },
     expenses: { value: load("expenses", []), storageKey: "expenses" },

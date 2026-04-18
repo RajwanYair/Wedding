@@ -211,6 +211,7 @@ export const DATA_CLASS = Object.freeze({
  */
 export const STORE_DATA_CLASS = /** @type {const} */ ({
   guests: DATA_CLASS.ADMIN_SENSITIVE,
+  campaigns: DATA_CLASS.ADMIN_SENSITIVE,
   tables: DATA_CLASS.ADMIN_SENSITIVE,
   vendors: DATA_CLASS.ADMIN_SENSITIVE,
   expenses: DATA_CLASS.ADMIN_SENSITIVE,

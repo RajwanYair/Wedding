@@ -130,6 +130,11 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes("neighbors"));
   });
 
+  it("defaults and constants include canonical campaign store support", function () {
+    assert.ok(read("src/core/defaults.js").includes('campaigns: { value: load("campaigns", []), storageKey: "campaigns" }'));
+    assert.ok(constantsSource.includes('campaigns: DATA_CLASS.ADMIN_SENSITIVE'));
+  });
+
   it("runtime sources still include Google Sheets write queue semantics", function () {
     assert.ok(runtimeSources.includes("enqueueWrite"));
     assert.ok(runtimeSources.includes("appendToRsvpLog") || runtimeSources.includes("syncStoreKeyToSheets"));

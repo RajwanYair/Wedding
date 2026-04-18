@@ -22,6 +22,7 @@ import { makeGuest } from "./helpers.js";
 function seedStore(overrides = {}) {
   initStore({
     guests: { value: [] },
+    campaigns: { value: [] },
     tables: { value: [] },
     vendors: { value: [] },
     expenses: { value: [] },
