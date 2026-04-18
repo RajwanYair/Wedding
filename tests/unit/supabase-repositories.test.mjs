@@ -168,3 +168,161 @@ describe("SupabaseExpenseRepository", () => {
     expect(typeof total).toBe("number");
   });
 });
+
+// ── Sprint 1 extended: SupabaseBaseRepository additional methods ──────────
+
+describe("SupabaseBaseRepository — extended", () => {
+  it("constructs with eventId scope", () => {
+    const sb = makeSupabase();
+    const repo = new SupabaseBaseRepository(sb, "guests", "evt-1");
+    expect(repo._eventId).toBe("evt-1");
+  });
+
+  it("findById returns the matched record", async () => {
+    const sb = makeSupabase([], { id: "g1", name: "Alice" });
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    const result = await repo.findById("g1");
+    expect(result).toMatchObject({ id: "g1" });
+  });
+
+  it("findById returns null when record not found", async () => {
+    const sb = makeSupabase([], null);
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    const result = await repo.findById("missing");
+    expect(result).toBeNull();
+  });
+
+  it("update calls from/update/eq and returns updated record", async () => {
+    const sb = makeSupabase([], { id: "g1", status: "confirmed" });
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    const result = await repo.update("g1", { status: "confirmed" });
+    expect(sb.from).toHaveBeenCalledWith("guests");
+    expect(result).toMatchObject({ id: "g1" });
+  });
+
+  it("delete soft-deletes record without throwing", async () => {
+    const sb = makeSupabase([]);
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    await expect(repo.delete("g1")).resolves.toBeUndefined();
+    expect(sb.from).toHaveBeenCalledWith("guests");
+  });
+
+  it("upsert returns the upserted record", async () => {
+    const sb = makeSupabase([], { id: "g2", status: "pending" });
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    const result = await repo.upsert({ id: "g2", status: "pending" });
+    expect(result).toMatchObject({ id: "g2" });
+  });
+
+  it("count returns a non-negative number", async () => {
+    const sb = makeSupabase([{ id: "g1" }, { id: "g2" }]);
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    const result = await repo.count();
+    expect(typeof result).toBe("number");
+    expect(result).toBeGreaterThanOrEqual(0);
+  });
+
+  it("exists returns true when record is found", async () => {
+    const sb = makeSupabase([], { id: "g1" });
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    expect(await repo.exists("g1")).toBe(true);
+  });
+
+  it("exists returns false when record is not found", async () => {
+    const sb = makeSupabase([], null);
+    const repo = new SupabaseBaseRepository(sb, "guests");
+    expect(await repo.exists("missing")).toBe(false);
+  });
+});
+
+// ── Sprint 1 extended: SupabaseGuestRepository additional methods ─────────
+
+describe("SupabaseGuestRepository — extended", () => {
+  it("findByGroup filters guests by group", async () => {
+    const sb = makeSupabase([{ id: "g1", group: "family" }]);
+    const repo = new SupabaseGuestRepository(sb);
+    const result = await repo.findByGroup("family");
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("findUncheckedIn returns confirmed unchecked-in guests", async () => {
+    const sb = makeSupabase([{ id: "g1", status: "confirmed", checked_in: false }]);
+    const repo = new SupabaseGuestRepository(sb);
+    const result = await repo.findUncheckedIn();
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("confirmedCount sums the count column across confirmed guests", async () => {
+    const sb = makeSupabase([{ count: 3 }, { count: 5 }]);
+    const repo = new SupabaseGuestRepository(sb);
+    const result = await repo.confirmedCount();
+    expect(typeof result).toBe("number");
+    expect(result).toBe(8);
+  });
+});
+
+// ── Sprint 1 extended: SupabaseTableRepository additional methods ─────────
+
+describe("SupabaseTableRepository — extended", () => {
+  it("findByShape filters tables by shape", async () => {
+    const sb = makeSupabase([{ id: "t1", shape: "round" }]);
+    const repo = new SupabaseTableRepository(sb);
+    const result = await repo.findByShape("round");
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("findByName returns the matching table via ilike", async () => {
+    const sb = makeSupabase([], { id: "t1", name: "Head Table" });
+    const repo = new SupabaseTableRepository(sb);
+    const result = await repo.findByName("Head Table");
+    expect(result).toMatchObject({ name: "Head Table" });
+  });
+
+  it("findByName returns null when no match", async () => {
+    const sb = makeSupabase([], null);
+    const repo = new SupabaseTableRepository(sb);
+    const result = await repo.findByName("Nonexistent");
+    expect(result).toBeNull();
+  });
+});
+
+// ── Sprint 1 extended: SupabaseVendorRepository additional methods ────────
+
+describe("SupabaseVendorRepository — extended", () => {
+  it("findUnpaid returns only vendors with paid < price", async () => {
+    const sb = makeSupabase([
+      { id: "v1", price: 1000, paid: 400 },
+      { id: "v2", price: 500, paid: 500 },
+    ]);
+    const repo = new SupabaseVendorRepository(sb);
+    const result = await repo.findUnpaid();
+    expect(Array.isArray(result)).toBe(true);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe("v1");
+  });
+
+  it("totalCost sums all vendor prices", async () => {
+    const sb = makeSupabase([{ price: 1000 }, { price: 500 }]);
+    const repo = new SupabaseVendorRepository(sb);
+    const result = await repo.totalCost();
+    expect(result).toBe(1500);
+  });
+
+  it("totalPaid sums all paid amounts", async () => {
+    const sb = makeSupabase([{ paid: 400 }, { paid: 200 }]);
+    const repo = new SupabaseVendorRepository(sb);
+    const result = await repo.totalPaid();
+    expect(result).toBe(600);
+  });
+});
+
+// ── Sprint 1 extended: SupabaseExpenseRepository additional methods ───────
+
+describe("SupabaseExpenseRepository — extended", () => {
+  it("findByCategory filters expenses by category", async () => {
+    const sb = makeSupabase([{ id: "e1", category: "food", amount: 300 }]);
+    const repo = new SupabaseExpenseRepository(sb);
+    const result = await repo.findByCategory("food");
+    expect(Array.isArray(result)).toBe(true);
+  });
+});
