@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/rsvp-analytics.test.mjs — Sprint 13 (session)
  *
  * Tests for src/utils/rsvp-analytics.js — computeRsvpRates,
@@ -7,6 +7,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { makeGuest } from "./helpers.js";
 import {
   computeRsvpRates,
   computeMealDistribution,
@@ -15,19 +16,6 @@ import {
   guestStatsBySide,
 } from "../../src/utils/rsvp-analytics.js";
 
-// ── Fixtures ───────────────────────────────────────────────────────────
-
-function g(overrides = {}) {
-  return {
-    status: "pending",
-    side: "groom",
-    meal: "regular",
-    count: 1,
-    children: 0,
-    rsvpDate: null,
-    ...overrides,
-  };
-}
 
 // ── computeRsvpRates ───────────────────────────────────────────────────
 
@@ -40,7 +28,7 @@ describe("computeRsvpRates", () => {
   });
 
   it("counts confirmed guests correctly", () => {
-    const guests = [g({ status: "confirmed" }), g({ status: "confirmed" }), g({ status: "pending" })];
+    const guests = [makeGuest({ status: "confirmed" }), makeGuest({ status: "confirmed" }), makeGuest({ status: "pending" })];
     const r = computeRsvpRates(guests);
     expect(r.confirmed).toBe(2);
     expect(r.pending).toBe(1);
@@ -48,35 +36,35 @@ describe("computeRsvpRates", () => {
   });
 
   it("counts declined guests correctly", () => {
-    const guests = [g({ status: "declined" }), g({ status: "confirmed" })];
+    const guests = [makeGuest({ status: "declined" }), makeGuest({ status: "confirmed" })];
     const r = computeRsvpRates(guests);
     expect(r.declined).toBe(1);
   });
 
   it("counts maybe guests correctly", () => {
-    const guests = [g({ status: "maybe" }), g({ status: "maybe" })];
+    const guests = [makeGuest({ status: "maybe" }), makeGuest({ status: "maybe" })];
     const r = computeRsvpRates(guests);
     expect(r.maybe).toBe(2);
   });
 
   it("responseRate is 100 when all confirmed", () => {
-    const guests = [g({ status: "confirmed" }), g({ status: "confirmed" })];
+    const guests = [makeGuest({ status: "confirmed" }), makeGuest({ status: "confirmed" })];
     expect(computeRsvpRates(guests).responseRate).toBe(100);
   });
 
   it("responseRate is 0 when all pending", () => {
-    const guests = [g({ status: "pending" }), g({ status: "pending" })];
+    const guests = [makeGuest({ status: "pending" }), makeGuest({ status: "pending" })];
     expect(computeRsvpRates(guests).responseRate).toBe(0);
   });
 
   it("responseRate rounds to nearest integer", () => {
     // 1 confirmed out of 3 = 33.33% → 33
-    const guests = [g({ status: "confirmed" }), g({ status: "pending" }), g({ status: "pending" })];
+    const guests = [makeGuest({ status: "confirmed" }), makeGuest({ status: "pending" }), makeGuest({ status: "pending" })];
     expect(computeRsvpRates(guests).confirmationRate).toBe(33);
   });
 
   it("declineRate is 50 when half declined", () => {
-    const guests = [g({ status: "declined" }), g({ status: "confirmed" })];
+    const guests = [makeGuest({ status: "declined" }), makeGuest({ status: "confirmed" })];
     expect(computeRsvpRates(guests).declineRate).toBe(50);
   });
 });
@@ -90,8 +78,8 @@ describe("computeMealDistribution", () => {
 
   it("only counts confirmed guests", () => {
     const guests = [
-      g({ status: "confirmed", meal: "regular" }),
-      g({ status: "pending", meal: "vegan" }),
+      makeGuest({ status: "confirmed", meal: "regular" }),
+      makeGuest({ status: "pending", meal: "vegan" }),
     ];
     const dist = computeMealDistribution(guests);
     expect(dist.regular).toBe(1);
@@ -100,9 +88,9 @@ describe("computeMealDistribution", () => {
 
   it("groups by meal type", () => {
     const guests = [
-      g({ status: "confirmed", meal: "vegetarian" }),
-      g({ status: "confirmed", meal: "vegetarian" }),
-      g({ status: "confirmed", meal: "vegan" }),
+      makeGuest({ status: "confirmed", meal: "vegetarian" }),
+      makeGuest({ status: "confirmed", meal: "vegetarian" }),
+      makeGuest({ status: "confirmed", meal: "vegan" }),
     ];
     const dist = computeMealDistribution(guests);
     expect(dist.vegetarian).toBe(2);
@@ -110,7 +98,7 @@ describe("computeMealDistribution", () => {
   });
 
   it("defaults to 'regular' when meal is missing", () => {
-    const guests = [g({ status: "confirmed", meal: null })];
+    const guests = [makeGuest({ status: "confirmed", meal: null })];
     expect(computeMealDistribution(guests).regular).toBe(1);
   });
 });
@@ -123,15 +111,15 @@ describe("rsvpSubmissionsByDate", () => {
   });
 
   it("skips guests without rsvpDate", () => {
-    const guests = [g({ rsvpDate: null }), g({ rsvpDate: undefined })];
+    const guests = [makeGuest({ rsvpDate: null }), makeGuest({ rsvpDate: undefined })];
     expect(rsvpSubmissionsByDate(guests)).toEqual({});
   });
 
   it("counts submissions per date", () => {
     const guests = [
-      g({ rsvpDate: "2024-06-01T10:00:00" }),
-      g({ rsvpDate: "2024-06-01T14:00:00" }),
-      g({ rsvpDate: "2024-06-02T09:00:00" }),
+      makeGuest({ rsvpDate: "2024-06-01T10:00:00" }),
+      makeGuest({ rsvpDate: "2024-06-01T14:00:00" }),
+      makeGuest({ rsvpDate: "2024-06-02T09:00:00" }),
     ];
     const result = rsvpSubmissionsByDate(guests);
     expect(result["2024-06-01"]).toBe(2);
@@ -139,7 +127,7 @@ describe("rsvpSubmissionsByDate", () => {
   });
 
   it("normalizes datetime to date-only string", () => {
-    const guests = [g({ rsvpDate: "2024-07-15T23:59:59Z" })];
+    const guests = [makeGuest({ rsvpDate: "2024-07-15T23:59:59Z" })];
     const result = rsvpSubmissionsByDate(guests);
     expect(result["2024-07-15"]).toBe(1);
   });
@@ -153,17 +141,17 @@ describe("totalExpectedCount", () => {
   });
 
   it("sums guest count + children", () => {
-    const guests = [g({ count: 2, children: 1 }), g({ count: 3, children: 0 })];
+    const guests = [makeGuest({ count: 2, children: 1 }), makeGuest({ count: 3, children: 0 })];
     expect(totalExpectedCount(guests)).toBe(6);
   });
 
   it("defaults missing count to 1", () => {
-    const guests = [g({ count: null })];
+    const guests = [makeGuest({ count: null })];
     expect(totalExpectedCount(guests)).toBe(1);
   });
 
   it("defaults missing children to 0", () => {
-    const guests = [g({ count: 2, children: undefined })];
+    const guests = [makeGuest({ count: 2, children: undefined })];
     expect(totalExpectedCount(guests)).toBe(2);
   });
 });
@@ -177,9 +165,9 @@ describe("guestStatsBySide", () => {
 
   it("groups by side", () => {
     const guests = [
-      g({ side: "groom", status: "confirmed" }),
-      g({ side: "bride", status: "pending" }),
-      g({ side: "groom", status: "pending" }),
+      makeGuest({ side: "groom", status: "confirmed" }),
+      makeGuest({ side: "bride", status: "pending" }),
+      makeGuest({ side: "groom", status: "pending" }),
     ];
     const stats = guestStatsBySide(guests);
     expect(stats.groom.total).toBe(2);
@@ -190,14 +178,14 @@ describe("guestStatsBySide", () => {
   });
 
   it("defaults unknown side to 'unknown'", () => {
-    const guests = [g({ side: null, status: "confirmed" })];
+    const guests = [makeGuest({ side: null, status: "confirmed" })];
     const stats = guestStatsBySide(guests);
     expect(stats.unknown.total).toBe(1);
   });
 
   it("counts all three sides independently", () => {
     const guests = [
-      g({ side: "groom" }), g({ side: "bride" }), g({ side: "mutual" }),
+      makeGuest({ side: "groom" }), makeGuest({ side: "bride" }), makeGuest({ side: "mutual" }),
     ];
     const stats = guestStatsBySide(guests);
     expect(Object.keys(stats)).toHaveLength(3);

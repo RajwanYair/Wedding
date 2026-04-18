@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/settings-handlers.test.mjs — Sprint 194 + Sprint 5 (session)
  *
  * Expanded: tests now invoke handler callbacks to verify behavior.
@@ -35,6 +35,7 @@ vi.mock("../../src/sections/contact-collector.js", () => ({}));
 vi.mock("../../src/sections/registry.js", () => ({}));
 vi.mock("../../src/sections/landing.js", () => ({}));
 
+import { getHandler } from "./helpers.js";
 import { registerSettingsHandlers } from "../../src/handlers/settings-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast } from "../../src/core/ui.js";
@@ -49,12 +50,6 @@ const ctx = {
   pendingConflicts: vi.fn(() => []),
   applyConflictResolutions: vi.fn(),
 };
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler for "${action}"`);
-  return call[1];
-}
 
 describe("registerSettingsHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -83,78 +78,78 @@ describe("registerSettingsHandlers — handler behavior", () => {
   });
 
   it("addApprovedEmail handler calls addApprovedEmail()", () => {
-    getHandler("addApprovedEmail")();
+    getHandler(on, "addApprovedEmail")();
     expect(addApprovedEmail).toHaveBeenCalledOnce();
   });
 
   it("clearAllData handler calls clearAllData()", () => {
-    getHandler("clearAllData")();
+    getHandler(on, "clearAllData")();
     expect(clearAllData).toHaveBeenCalledOnce();
   });
 
   it("exportJSON handler calls exportJSON()", () => {
-    getHandler("exportJSON")();
+    getHandler(on, "exportJSON")();
     expect(exportJSON).toHaveBeenCalledOnce();
   });
 
   it("importJSON handler passes element to importJSON()", () => {
     const el = { files: [] };
-    getHandler("importJSON")(el);
+    getHandler(on, "importJSON")(el);
     expect(importJSON).toHaveBeenCalledWith(el);
   });
 
   it("copyRsvpLink handler calls copyRsvpLink()", () => {
-    getHandler("copyRsvpLink")();
+    getHandler(on, "copyRsvpLink")();
     expect(copyRsvpLink).toHaveBeenCalledOnce();
   });
 
   it("copyContactLink handler calls copyContactLink()", () => {
-    getHandler("copyContactLink")();
+    getHandler(on, "copyContactLink")();
     expect(copyContactLink).toHaveBeenCalledOnce();
   });
 
   it("clearAuditLog handler calls clearAuditLog()", () => {
-    getHandler("clearAuditLog")();
+    getHandler(on, "clearAuditLog")();
     expect(clearAuditLog).toHaveBeenCalledOnce();
   });
 
   it("clearErrorLog handler calls clearErrorLog()", () => {
-    getHandler("clearErrorLog")();
+    getHandler(on, "clearErrorLog")();
     expect(clearErrorLog).toHaveBeenCalledOnce();
   });
 
   it("exportAllCSV handler calls exportAllCSV()", () => {
-    getHandler("exportAllCSV")();
+    getHandler(on, "exportAllCSV")();
     expect(exportAllCSV).toHaveBeenCalledOnce();
   });
 
   it("checkDataIntegrity handler calls checkDataIntegrity()", () => {
-    getHandler("checkDataIntegrity")();
+    getHandler(on, "checkDataIntegrity")();
     expect(checkDataIntegrity).toHaveBeenCalledOnce();
   });
 
   it("exportDebugReport handler calls exportDebugReport()", () => {
-    getHandler("exportDebugReport")();
+    getHandler(on, "exportDebugReport")();
     expect(exportDebugReport).toHaveBeenCalledOnce();
   });
 
   it("generateRsvpQrCode handler calls generateRsvpQrCode()", () => {
-    getHandler("generateRsvpQrCode")();
+    getHandler(on, "generateRsvpQrCode")();
     expect(generateRsvpQrCode).toHaveBeenCalledOnce();
   });
 
   it("startAutoBackup handler calls startAutoBackup()", () => {
-    getHandler("startAutoBackup")();
+    getHandler(on, "startAutoBackup")();
     expect(startAutoBackup).toHaveBeenCalledOnce();
   });
 
   it("stopAutoBackup handler calls stopAutoBackup()", () => {
-    getHandler("stopAutoBackup")();
+    getHandler(on, "stopAutoBackup")();
     expect(stopAutoBackup).toHaveBeenCalledOnce();
   });
 
   it("downloadAutoBackup handler calls downloadAutoBackup()", () => {
-    getHandler("downloadAutoBackup")();
+    getHandler(on, "downloadAutoBackup")();
     expect(downloadAutoBackup).toHaveBeenCalledOnce();
   });
 });

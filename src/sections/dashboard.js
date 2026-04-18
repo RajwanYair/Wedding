@@ -11,6 +11,7 @@ import { t } from "../core/i18n.js";
 import { daysUntil, formatDateHebrew } from "../utils/date.js";
 import { load, save } from "../core/state.js";
 import { renderArrivalForecast } from "./analytics.js";
+import { RSVP_RESPONSE_STATUSES } from "../core/constants.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -988,7 +989,7 @@ export function getWeddingReadinessScore() {
   const timeline = /** @type {any[]} */ (storeGet("timeline") ?? []);
   const done = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
 
-  const responded = guests.filter((g) => g.status === "confirmed" || g.status === "declined" || g.status === "maybe").length;
+  const responded = guests.filter((g) => RSVP_RESPONSE_STATUSES.includes(g.status)).length;
   const rsvpRate = guests.length ? Math.round((responded / guests.length) * 100) : 0;
 
   const confirmed = guests.filter((g) => g.status === "confirmed");

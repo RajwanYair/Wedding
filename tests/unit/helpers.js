@@ -141,3 +141,25 @@ export function makeRsvpLogEntry(overrides = {}) {
     ...overrides,
   };
 }
+
+// ── Handler test helper ───────────────────────────────────────────────────────
+
+/**
+ * Given a mocked `on` event-registrar, return the registered callback for `action`.
+ *
+ * Centralises the boilerplate used in every *-handlers.test.mjs so the pattern
+ * never diverges across files.
+ *
+ * Usage:
+ *   import { getHandler } from "./helpers.js";
+ *   const handler = getHandler(on, "saveGuest");
+ *
+ * @param {{ mock: { calls: Array<[string, Function]> } }} mockedOn
+ * @param {string} action
+ * @returns {Function}
+ */
+export function getHandler(mockedOn, action) {
+  const call = mockedOn.mock.calls.find(([a]) => a === action);
+  if (!call) throw new Error(`No handler for "${action}"`);
+  return call[1];
+}

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/section-handlers.test.mjs — Sprint 199 + Sprint 6 (session)
  *
  * Expanded: tests now invoke handler callbacks to verify behavior.
@@ -40,6 +40,7 @@ vi.mock("../../src/sections/timeline.js", () => ({
   toggleTimelineDone: vi.fn(), exportTimelineCSV: vi.fn(),
 }));
 
+import { getHandler } from "./helpers.js";
 import { registerSectionHandlers } from "../../src/handlers/section-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, showConfirmDialog } from "../../src/core/ui.js";
@@ -54,12 +55,6 @@ import {
   downloadCalendarInvite, sendWhatsAppReminder,
 } from "../../src/sections/whatsapp.js";
 import { printTimeline, exportTimelineCSV, toggleTimelineDone } from "../../src/sections/timeline.js";
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler for "${action}"`);
-  return call[1];
-}
 
 describe("registerSectionHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -89,91 +84,91 @@ describe("registerSectionHandlers — handler behavior", () => {
   });
 
   it("renderBudgetProgress handler calls renderBudgetProgress()", () => {
-    getHandler("renderBudgetProgress")();
+    getHandler(on, "renderBudgetProgress")();
     expect(renderBudgetProgress).toHaveBeenCalledOnce();
   });
 
   it("exportAnalyticsPDF handler calls exportAnalyticsPDF()", () => {
-    getHandler("exportAnalyticsPDF")();
+    getHandler(on, "exportAnalyticsPDF")();
     expect(exportAnalyticsPDF).toHaveBeenCalledOnce();
   });
 
   it("exportAnalyticsCSV handler calls exportAnalyticsCSV()", () => {
-    getHandler("exportAnalyticsCSV")();
+    getHandler(on, "exportAnalyticsCSV")();
     expect(exportAnalyticsCSV).toHaveBeenCalledOnce();
   });
 
   it("exportMealPerTableCSV handler calls exportMealPerTableCSV()", () => {
-    getHandler("exportMealPerTableCSV")();
+    getHandler(on, "exportMealPerTableCSV")();
     expect(exportMealPerTableCSV).toHaveBeenCalledOnce();
   });
 
   it("printMealPerTable handler calls printMealPerTable()", () => {
-    getHandler("printMealPerTable")();
+    getHandler(on, "printMealPerTable")();
     expect(printMealPerTable).toHaveBeenCalledOnce();
   });
 
   it("renderSeatingMap handler calls renderSeatingMap()", () => {
-    getHandler("renderSeatingMap")();
+    getHandler(on, "renderSeatingMap")();
     expect(renderSeatingMap).toHaveBeenCalledOnce();
   });
 
   it("exportEventSummary handler calls exportEventSummary()", () => {
-    getHandler("exportEventSummary")();
+    getHandler(on, "exportEventSummary")();
     expect(exportEventSummary).toHaveBeenCalledOnce();
   });
 
   it("printDietaryCards handler calls printDietaryCards()", () => {
-    getHandler("printDietaryCards")();
+    getHandler(on, "printDietaryCards")();
     expect(printDietaryCards).toHaveBeenCalledOnce();
   });
 
   it("handleGalleryUpload handler calls handleGalleryUpload()", () => {
     const el = { files: [] };
-    getHandler("handleGalleryUpload")(el);
+    getHandler(on, "handleGalleryUpload")(el);
     expect(handleGalleryUpload).toHaveBeenCalledWith(el);
   });
 
   it("openLightbox handler passes actionArg to openLightbox()", () => {
     const el = { dataset: { actionArg: "photo1.jpg" } };
-    getHandler("openLightbox")(el);
+    getHandler(on, "openLightbox")(el);
     expect(openLightbox).toHaveBeenCalledWith("photo1.jpg");
   });
 
   it("deleteGalleryPhoto handler calls showConfirmDialog", () => {
     const el = { dataset: { actionArg: "p1" } };
-    getHandler("deleteGalleryPhoto")(el);
+    getHandler(on, "deleteGalleryPhoto")(el);
     expect(showConfirmDialog).toHaveBeenCalled();
   });
 
   it("sendWhatsAppAll handler passes actionArg to sendWhatsAppAll()", () => {
     const el = { dataset: { actionArg: "confirmed" } };
-    getHandler("sendWhatsAppAll")(el);
+    getHandler(on, "sendWhatsAppAll")(el);
     expect(sendWhatsAppAll).toHaveBeenCalledWith("confirmed");
   });
 
   it("checkGreenApiConnection handler calls checkGreenApiConnection()", () => {
-    getHandler("checkGreenApiConnection")();
+    getHandler(on, "checkGreenApiConnection")();
     expect(checkGreenApiConnection).toHaveBeenCalledOnce();
   });
 
   it("toggleDeclinedFilter handler calls toggleDeclinedFilter()", () => {
-    getHandler("toggleDeclinedFilter")();
+    getHandler(on, "toggleDeclinedFilter")();
     expect(toggleDeclinedFilter).toHaveBeenCalledOnce();
   });
 
   it("downloadCalendarInvite handler calls downloadCalendarInvite()", () => {
-    getHandler("downloadCalendarInvite")();
+    getHandler(on, "downloadCalendarInvite")();
     expect(downloadCalendarInvite).toHaveBeenCalledOnce();
   });
 
   it("printTimeline handler calls printTimeline()", () => {
-    getHandler("printTimeline")();
+    getHandler(on, "printTimeline")();
     expect(printTimeline).toHaveBeenCalledOnce();
   });
 
   it("exportTimelineCSV handler calls exportTimelineCSV()", () => {
-    getHandler("exportTimelineCSV")();
+    getHandler(on, "exportTimelineCSV")();
     expect(exportTimelineCSV).toHaveBeenCalledOnce();
   });
 });

@@ -11,6 +11,7 @@ import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { nowISOJerusalem } from "../utils/date.js";
 import { enqueueWrite, appendToRsvpLog, syncStoreKeyToSheets } from "../services/sheets.js";
+import { GUEST_SIDES, RSVP_RESPONSE_STATUSES, MEAL_TYPES } from "../core/constants.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -96,17 +97,17 @@ export function submitRsvp(data) {
     phone: { type: "string", required: true },
     firstName: { type: "string", required: false, maxLength: 80 },
     lastName: { type: "string", required: false, maxLength: 80 },
-    side: { type: "enum", values: ["groom", "bride", "mutual"], default: "mutual" },
+    side: { type: "enum", values: [...GUEST_SIDES], default: "mutual" },
     status: {
       type: "enum",
-      values: ["confirmed", "declined", "maybe"],
+      values: [...RSVP_RESPONSE_STATUSES],
       required: true,
     },
     count: { type: "number", min: 1, max: 50, default: 1 },
     children: { type: "number", min: 0, max: 20, default: 0 },
     meal: {
       type: "enum",
-      values: ["regular", "vegetarian", "vegan", "gluten_free", "kosher", "other"],
+      values: [...MEAL_TYPES, "other"],
       default: "regular",
     },
     accessibility: { type: "string", required: false, maxLength: 10 },
@@ -269,7 +270,7 @@ export function getRsvpRateBySide() {
     const side = guest.side || "mutual";
     const entry = map.get(side) ?? { total: 0, responded: 0 };
     entry.total += 1;
-    if (["confirmed", "declined", "maybe"].includes(guest.status)) {
+    if (RSVP_RESPONSE_STATUSES.includes(guest.status)) {
       entry.responded += 1;
     }
     map.set(side, entry);

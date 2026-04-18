@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/event-handlers.test.mjs — Sprint 198 + Sprint 7 (session)
  *
  * Expanded: tests now invoke handler callbacks and also test exported fns.
@@ -36,12 +36,7 @@ import { showToast, showConfirmDialog } from "../../src/core/ui.js";
 import { setActiveEvent, getActiveEventId, removeEvent, clearEventData } from "../../src/core/state.js";
 import { reinitStore } from "../../src/core/store.js";
 import { switchSection } from "../../src/core/section-resolver.js";
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler for "${action}"`);
-  return call[1];
-}
+import { getHandler } from "./helpers.js";
 
 describe("registerEventHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -73,7 +68,7 @@ describe("registerEventHandlers — handler behavior", () => {
   it("switchEvent handler calls doSwitchEvent with element value", async () => {
     vi.mocked(getActiveEventId).mockReturnValue("default");
     const el = { value: "evt_abc" };
-    await getHandler("switchEvent")(el);
+    await getHandler(on, "switchEvent")(el);
     expect(setActiveEvent).toHaveBeenCalledWith("evt_abc");
   });
 
@@ -81,7 +76,7 @@ describe("registerEventHandlers — handler behavior", () => {
     vi.mocked(getActiveEventId).mockReturnValue("default");
     vi.mocked(setActiveEvent).mockClear();
     const el = { value: "default" };
-    await getHandler("switchEvent")(el);
+    await getHandler(on, "switchEvent")(el);
     expect(setActiveEvent).not.toHaveBeenCalled();
   });
 });

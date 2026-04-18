@@ -6,6 +6,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { makeGuest } from "./helpers.js";
 import {
   normalizeSearch,
   guestMatchesQuery,
@@ -15,32 +16,11 @@ import {
 
 // ── Sample Fixtures ─────────────────────────────────────────────────────
 
-function make(overrides = {}) {
-  return {
-    id: "g1",
-    firstName: "Avi",
-    lastName: "Cohen",
-    phone: "0541234567",
-    email: "avi@example.com",
-    status: "confirmed",
-    side: "groom",
-    group: "family",
-    meal: "regular",
-    tableId: "t1",
-    accessibility: false,
-    checkedIn: false,
-    notes: "",
-    createdAt: "2024-01-01",
-    updatedAt: "2024-01-02",
-    ...overrides,
-  };
-}
-
 const GUESTS = [
-  make({ id: "g1", firstName: "Avi", lastName: "Cohen", status: "confirmed", side: "groom" }),
-  make({ id: "g2", firstName: "Sara", lastName: "Levi", status: "pending", side: "bride", meal: "vegetarian" }),
-  make({ id: "g3", firstName: "Dan", lastName: "Shapiro", status: "declined", side: "mutual", group: "work", accessibility: true }),
-  make({ id: "g4", firstName: "Rina", lastName: "Cohen", status: "confirmed", side: "bride", checkedIn: true, tableId: "t2" }),
+  makeGuest({ id: "g1", firstName: "Avi", lastName: "Cohen", status: "confirmed", side: "groom" }),
+  makeGuest({ id: "g2", firstName: "Sara", lastName: "Levi", status: "pending", side: "bride", meal: "vegetarian" }),
+  makeGuest({ id: "g3", firstName: "Dan", lastName: "Shapiro", status: "declined", side: "mutual", group: "work", accessibility: true }),
+  makeGuest({ id: "g4", firstName: "Rina", lastName: "Cohen", status: "confirmed", side: "bride", checkedIn: true, tableId: "t2" }),
 ];
 
 // ── normalizeSearch ────────────────────────────────────────────────────
@@ -71,7 +51,7 @@ describe("normalizeSearch", () => {
 // ── guestMatchesQuery ──────────────────────────────────────────────────
 
 describe("guestMatchesQuery", () => {
-  const guest = make({ firstName: "Avi", lastName: "Cohen", phone: "054-123-4567", email: "avi@test.com", notes: "VIP" });
+  const guest = makeGuest({ firstName: "Avi", lastName: "Cohen", phone: "054-123-4567", email: "avi@test.com", notes: "VIP" });
 
   it("returns true for empty query", () => {
     expect(guestMatchesQuery(guest, "")).toBe(true);
@@ -206,7 +186,7 @@ describe("sortGuests", () => {
   });
 
   it("handles field with undefined values gracefully", () => {
-    const guests = [make({ notes: undefined }), make({ notes: "hello" })];
+    const guests = [makeGuest({ notes: undefined }), makeGuest({ notes: "hello" })];
     expect(() => sortGuests(guests, "notes")).not.toThrow();
   });
 });

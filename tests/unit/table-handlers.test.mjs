@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/table-handlers.test.mjs — Sprint 193 + Sprint 2 (session)
  *
  * Expanded: tests now invoke handler callbacks to verify behavior.
@@ -39,6 +39,7 @@ vi.mock("../../src/sections/checkin.js", () => ({
   toggleAccessibilityFilter: vi.fn(),
 }));
 
+import { getHandler } from "./helpers.js";
 import { registerTableHandlers } from "../../src/handlers/table-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../../src/core/ui.js";
@@ -51,12 +52,6 @@ import {
   checkInGuest, exportCheckinReport, exportGiftsCSV, resetAllCheckins,
   toggleGiftMode, startQrScan, stopQrScan, toggleAccessibilityFilter,
 } from "../../src/sections/checkin.js";
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler for "${action}"`);
-  return call[1];
-}
 
 describe("registerTableHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -88,112 +83,112 @@ describe("registerTableHandlers — handler behavior", () => {
   });
 
   it("saveTable handler calls saveTable() with form data", () => {
-    getHandler("saveTable")();
+    getHandler(on, "saveTable")();
     expect(saveTable).toHaveBeenCalled();
   });
 
   it("saveTable handler closes modal and shows success toast on ok", () => {
-    getHandler("saveTable")();
+    getHandler(on, "saveTable")();
     expect(closeModal).toHaveBeenCalledWith("tableModal");
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
   });
 
   it("saveTable handler shows error toast on failure", () => {
     vi.mocked(saveTable).mockReturnValue({ ok: false, errors: ["Name required"] });
-    getHandler("saveTable")();
+    getHandler(on, "saveTable")();
     expect(showToast).toHaveBeenCalledWith(expect.stringContaining("Name required"), "error");
   });
 
   it("autoAssignTables handler calls autoAssignTables()", () => {
-    getHandler("autoAssignTables")();
+    getHandler(on, "autoAssignTables")();
     expect(autoAssignTables).toHaveBeenCalledOnce();
   });
 
   it("smartAutoAssign handler calls smartAutoAssign and shows toast", () => {
     vi.mocked(smartAutoAssign).mockReturnValue(3);
-    getHandler("smartAutoAssign")();
+    getHandler(on, "smartAutoAssign")();
     expect(smartAutoAssign).toHaveBeenCalledOnce();
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
     expect(renderTables).toHaveBeenCalledOnce();
   });
 
   it("printSeatingChart handler calls printSeatingChart()", () => {
-    getHandler("printSeatingChart")();
+    getHandler(on, "printSeatingChart")();
     expect(printSeatingChart).toHaveBeenCalledOnce();
   });
 
   it("printPlaceCards handler calls printPlaceCards()", () => {
-    getHandler("printPlaceCards")();
+    getHandler(on, "printPlaceCards")();
     expect(printPlaceCards).toHaveBeenCalledOnce();
   });
 
   it("printTableSigns handler calls printTableSigns()", () => {
-    getHandler("printTableSigns")();
+    getHandler(on, "printTableSigns")();
     expect(printTableSigns).toHaveBeenCalledOnce();
   });
 
   it("exportTransportCSV handler calls exportTransportCSV()", () => {
-    getHandler("exportTransportCSV")();
+    getHandler(on, "exportTransportCSV")();
     expect(exportTransportCSV).toHaveBeenCalledOnce();
   });
 
   it("exportTableCSV handler passes actionArg to exportTableCSV()", () => {
     const el = { dataset: { actionArg: "t1" } };
-    getHandler("exportTableCSV")(el);
+    getHandler(on, "exportTableCSV")(el);
     expect(exportTableCSV).toHaveBeenCalledWith("t1");
   });
 
   it("printTransportManifest handler calls printTransportManifest()", () => {
-    getHandler("printTransportManifest")();
+    getHandler(on, "printTransportManifest")();
     expect(printTransportManifest).toHaveBeenCalledOnce();
   });
 
   it("deleteTable handler calls showConfirmDialog", () => {
     const el = { dataset: { actionArg: "t1" } };
-    getHandler("deleteTable")(el);
+    getHandler(on, "deleteTable")(el);
     expect(showConfirmDialog).toHaveBeenCalled();
   });
 
   it("deleteTable handler calls deleteTable() after confirm", () => {
     vi.mocked(showConfirmDialog).mockImplementation((_msg, cb) => cb());
     const el = { dataset: { actionArg: "t1" } };
-    getHandler("deleteTable")(el);
+    getHandler(on, "deleteTable")(el);
     expect(deleteTable).toHaveBeenCalledWith("t1");
   });
 
   it("checkInGuest handler passes actionArg to checkInGuest()", () => {
     const el = { dataset: { actionArg: "g1" } };
-    getHandler("checkInGuest")(el);
+    getHandler(on, "checkInGuest")(el);
     expect(checkInGuest).toHaveBeenCalledWith("g1");
   });
 
   it("exportCheckinReport handler calls exportCheckinReport()", () => {
-    getHandler("exportCheckinReport")();
+    getHandler(on, "exportCheckinReport")();
     expect(exportCheckinReport).toHaveBeenCalledOnce();
   });
 
   it("exportGiftsCSV handler calls exportGiftsCSV()", () => {
-    getHandler("exportGiftsCSV")();
+    getHandler(on, "exportGiftsCSV")();
     expect(exportGiftsCSV).toHaveBeenCalledOnce();
   });
 
   it("toggleGiftMode handler calls toggleGiftMode()", () => {
-    getHandler("toggleGiftMode")();
+    getHandler(on, "toggleGiftMode")();
     expect(toggleGiftMode).toHaveBeenCalledOnce();
   });
 
   it("startQrScan handler calls startQrScan()", () => {
-    getHandler("startQrScan")();
+    getHandler(on, "startQrScan")();
     expect(startQrScan).toHaveBeenCalledOnce();
   });
 
   it("stopQrScan handler calls stopQrScan()", () => {
-    getHandler("stopQrScan")();
+    getHandler(on, "stopQrScan")();
     expect(stopQrScan).toHaveBeenCalledOnce();
   });
 
   it("toggleAccessibilityFilter handler calls toggleAccessibilityFilter()", () => {
-    getHandler("toggleAccessibilityFilter")();
+    getHandler(on, "toggleAccessibilityFilter")();
     expect(toggleAccessibilityFilter).toHaveBeenCalledOnce();
   });
 });

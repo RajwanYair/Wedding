@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/vendor-handlers.test.mjs — Sprint 192 + Sprint 3 (session)
  *
  * Expanded: tests now invoke handler callbacks to verify behavior.
@@ -30,6 +30,7 @@ vi.mock("../../src/sections/expenses.js", () => ({
   openExpenseForEdit: vi.fn(),
 }));
 
+import { getHandler } from "./helpers.js";
 import { registerVendorHandlers } from "../../src/handlers/vendor-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../../src/core/ui.js";
@@ -41,12 +42,6 @@ import {
   saveExpense, deleteExpense, exportExpensesCSV,
   filterExpensesByCategory, setExpenseCategoryFilter,
 } from "../../src/sections/expenses.js";
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler for "${action}"`);
-  return call[1];
-}
 
 describe("registerVendorHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -79,101 +74,101 @@ describe("registerVendorHandlers — handler behavior", () => {
   });
 
   it("saveVendor handler calls saveVendor()", () => {
-    getHandler("saveVendor")();
+    getHandler(on, "saveVendor")();
     expect(saveVendor).toHaveBeenCalled();
   });
 
   it("saveVendor handler closes modal and shows success toast on ok", () => {
-    getHandler("saveVendor")();
+    getHandler(on, "saveVendor")();
     expect(closeModal).toHaveBeenCalledWith("vendorModal");
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
   });
 
   it("saveVendor handler shows error toast on failure", () => {
     vi.mocked(saveVendor).mockReturnValue({ ok: false, errors: ["Name required"] });
-    getHandler("saveVendor")();
+    getHandler(on, "saveVendor")();
     expect(showToast).toHaveBeenCalledWith(expect.stringContaining("Name required"), "error");
   });
 
   it("deleteVendor handler calls showConfirmDialog", () => {
     const el = { dataset: { actionArg: "v1" } };
-    getHandler("deleteVendor")(el);
+    getHandler(on, "deleteVendor")(el);
     expect(showConfirmDialog).toHaveBeenCalled();
   });
 
   it("deleteVendor handler calls deleteVendor() after confirm", () => {
     vi.mocked(showConfirmDialog).mockImplementation((_msg, cb) => cb());
     const el = { dataset: { actionArg: "v1" } };
-    getHandler("deleteVendor")(el);
+    getHandler(on, "deleteVendor")(el);
     expect(deleteVendor).toHaveBeenCalledWith("v1");
   });
 
   it("exportVendorsCSV handler calls exportVendorsCSV()", () => {
-    getHandler("exportVendorsCSV")();
+    getHandler(on, "exportVendorsCSV")();
     expect(exportVendorsCSV).toHaveBeenCalledOnce();
   });
 
   it("exportVendorPaymentsCSV handler calls exportVendorPaymentsCSV()", () => {
-    getHandler("exportVendorPaymentsCSV")();
+    getHandler(on, "exportVendorPaymentsCSV")();
     expect(exportVendorPaymentsCSV).toHaveBeenCalledOnce();
   });
 
   it("setVendorPaymentFilter handler passes filter value to setVendorPaymentFilter()", () => {
     const el = { dataset: { actionArg: "unpaid" }, value: "unpaid" };
-    getHandler("setVendorPaymentFilter")(el);
+    getHandler(on, "setVendorPaymentFilter")(el);
     expect(setVendorPaymentFilter).toHaveBeenCalled();
   });
 
   it("filterVendorsByCategory handler passes category to filterVendorsByCategory()", () => {
     const el = { dataset: { actionArg: "catering" }, value: "catering" };
-    getHandler("filterVendorsByCategory")(el);
+    getHandler(on, "filterVendorsByCategory")(el);
     expect(filterVendorsByCategory).toHaveBeenCalled();
   });
 
   it("saveExpense handler calls saveExpense()", () => {
-    getHandler("saveExpense")();
+    getHandler(on, "saveExpense")();
     expect(saveExpense).toHaveBeenCalled();
   });
 
   it("saveExpense handler closes modal and shows success toast on ok", () => {
-    getHandler("saveExpense")();
+    getHandler(on, "saveExpense")();
     expect(closeModal).toHaveBeenCalledWith("expenseModal");
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
   });
 
   it("saveExpense handler shows error toast on failure", () => {
     vi.mocked(saveExpense).mockReturnValue({ ok: false, errors: ["Amount required"] });
-    getHandler("saveExpense")();
+    getHandler(on, "saveExpense")();
     expect(showToast).toHaveBeenCalledWith(expect.stringContaining("Amount required"), "error");
   });
 
   it("deleteExpense handler calls showConfirmDialog", () => {
     const el = { dataset: { actionArg: "e1" } };
-    getHandler("deleteExpense")(el);
+    getHandler(on, "deleteExpense")(el);
     expect(showConfirmDialog).toHaveBeenCalled();
   });
 
   it("deleteExpense handler calls deleteExpense() after confirm", () => {
     vi.mocked(showConfirmDialog).mockImplementation((_msg, cb) => cb());
     const el = { dataset: { actionArg: "e1" } };
-    getHandler("deleteExpense")(el);
+    getHandler(on, "deleteExpense")(el);
     expect(deleteExpense).toHaveBeenCalledWith("e1");
   });
 
   it("exportExpensesCSV handler calls exportExpensesCSV()", () => {
-    getHandler("exportExpensesCSV")();
+    getHandler(on, "exportExpensesCSV")();
     expect(exportExpensesCSV).toHaveBeenCalledOnce();
   });
 
   it("filterExpensesByCategory handler calls filterExpensesByCategory()", () => {
     const el = { dataset: { actionArg: "food" }, value: "food" };
-    getHandler("filterExpensesByCategory")(el);
+    getHandler(on, "filterExpensesByCategory")(el);
     expect(filterExpensesByCategory).toHaveBeenCalled();
   });
 
   it("setExpenseCategoryFilter handler calls setExpenseCategoryFilter()", () => {
     const el = { dataset: { actionArg: "music" }, value: "music" };
-    getHandler("setExpenseCategoryFilter")(el);
+    getHandler(on, "setExpenseCategoryFilter")(el);
     expect(setExpenseCategoryFilter).toHaveBeenCalled();
   });
 });

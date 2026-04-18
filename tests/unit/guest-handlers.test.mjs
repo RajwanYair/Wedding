@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/guest-handlers.test.mjs — Sprint 191 + Sprint 1 (session)
  *
  * Expanded: tests now invoke handler callbacks to verify behavior.
@@ -47,6 +47,7 @@ vi.mock("../../src/sections/guests.js", () => ({
   exportGuestsByGroup: vi.fn(),
 }));
 
+import { getHandler } from "./helpers.js";
 import { registerGuestHandlers } from "../../src/handlers/guest-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../../src/core/ui.js";
@@ -55,14 +56,6 @@ import {
   exportGuestsByGroup, setFilter, setSideFilter, batchMarkUnsent, renderDuplicates,
   printGuestBadges, printGuestsByTable, setSortField, toggleVipFilter, downloadCSVTemplate,
 } from "../../src/sections/guests.js";
-
-// ── helper: find the registered callback for an action ───────────────────
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler registered for "${action}"`);
-  return call[1];
-}
 
 describe("registerGuestHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -105,59 +98,59 @@ describe("registerGuestHandlers — handler behavior", () => {
 
   it("saveGuest handler calls saveGuest() with form data", () => {
     vi.mocked(saveGuest).mockReturnValue({ ok: true });
-    getHandler("saveGuest")();
+    getHandler(on, "saveGuest")();
     expect(saveGuest).toHaveBeenCalled();
   });
 
   it("saveGuest handler closes modal and shows success toast on ok", () => {
     vi.mocked(saveGuest).mockReturnValue({ ok: true });
-    getHandler("saveGuest")();
+    getHandler(on, "saveGuest")();
     expect(closeModal).toHaveBeenCalledWith("guestModal");
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
   });
 
   it("saveGuest handler shows error toast on failure", () => {
     vi.mocked(saveGuest).mockReturnValue({ ok: false, errors: ["Name required"] });
-    getHandler("saveGuest")();
+    getHandler(on, "saveGuest")();
     expect(showToast).toHaveBeenCalledWith(expect.stringContaining("Name required"), "error");
   });
 
   it("exportGuestsCSV handler calls exportGuestsCSV()", () => {
-    getHandler("exportGuestsCSV")();
+    getHandler(on, "exportGuestsCSV")();
     expect(exportGuestsCSV).toHaveBeenCalledOnce();
   });
 
   it("printGuests handler calls printGuests()", () => {
-    getHandler("printGuests")();
+    getHandler(on, "printGuests")();
     expect(printGuests).toHaveBeenCalledOnce();
   });
 
   it("toggleSelectAll handler calls toggleSelectAll()", () => {
-    getHandler("toggleSelectAll")();
+    getHandler(on, "toggleSelectAll")();
     expect(toggleSelectAll).toHaveBeenCalledOnce();
   });
 
   it("setFilter handler passes dataset.filter to setFilter()", () => {
     const el = { dataset: { filter: "confirmed" } };
-    getHandler("setFilter")(el);
+    getHandler(on, "setFilter")(el);
     expect(setFilter).toHaveBeenCalledWith("confirmed");
   });
 
   it("setFilter handler defaults to 'all' when dataset.filter is absent", () => {
     const el = { dataset: {} };
-    getHandler("setFilter")(el);
+    getHandler(on, "setFilter")(el);
     expect(setFilter).toHaveBeenCalledWith("all");
   });
 
   it("setSideFilter handler passes dataset.side to setSideFilter()", () => {
     const el = { dataset: { side: "bride" } };
-    getHandler("setSideFilter")(el);
+    getHandler(on, "setSideFilter")(el);
     expect(setSideFilter).toHaveBeenCalledWith("bride");
   });
 
   it("deleteGuest handler calls showConfirmDialog", () => {
     const el = { dataset: { actionArg: "g1" } };
-    getHandler("deleteGuest")(el);
+    getHandler(on, "deleteGuest")(el);
     expect(showConfirmDialog).toHaveBeenCalled();
   });
 
@@ -165,49 +158,49 @@ describe("registerGuestHandlers — handler behavior", () => {
     // Make showConfirmDialog invoke its callback immediately
     vi.mocked(showConfirmDialog).mockImplementation((_msg, cb) => cb());
     const el = { dataset: { actionArg: "g1" } };
-    getHandler("deleteGuest")(el);
+    getHandler(on, "deleteGuest")(el);
     expect(deleteGuest).toHaveBeenCalledWith("g1");
   });
 
   it("printGuestBadges handler calls printGuestBadges()", () => {
-    getHandler("printGuestBadges")();
+    getHandler(on, "printGuestBadges")();
     expect(printGuestBadges).toHaveBeenCalledOnce();
   });
 
   it("printGuestsByTable handler calls printGuestsByTable()", () => {
-    getHandler("printGuestsByTable")();
+    getHandler(on, "printGuestsByTable")();
     expect(printGuestsByTable).toHaveBeenCalledOnce();
   });
 
   it("scanDuplicates handler calls renderDuplicates()", () => {
-    getHandler("scanDuplicates")();
+    getHandler(on, "scanDuplicates")();
     expect(renderDuplicates).toHaveBeenCalledOnce();
   });
 
   it("sortGuestsBy handler passes actionArg to setSortField()", () => {
     const el = { dataset: { actionArg: "firstName" } };
-    getHandler("sortGuestsBy")(el);
+    getHandler(on, "sortGuestsBy")(el);
     expect(setSortField).toHaveBeenCalledWith("firstName");
   });
 
   it("toggleVipFilter handler calls toggleVipFilter()", () => {
-    getHandler("toggleVipFilter")();
+    getHandler(on, "toggleVipFilter")();
     expect(toggleVipFilter).toHaveBeenCalledOnce();
   });
 
   it("downloadCSVTemplate handler calls downloadCSVTemplate()", () => {
-    getHandler("downloadCSVTemplate")();
+    getHandler(on, "downloadCSVTemplate")();
     expect(downloadCSVTemplate).toHaveBeenCalledOnce();
   });
 
   it("exportGuestsByGroup handler passes actionArg to exportGuestsByGroup()", () => {
     const el = { dataset: { actionArg: "family" } };
-    getHandler("exportGuestsByGroup")(el);
+    getHandler(on, "exportGuestsByGroup")(el);
     expect(exportGuestsByGroup).toHaveBeenCalledWith("family");
   });
 
   it("batchMarkUnsent handler calls batchMarkUnsent and shows toast", () => {
-    getHandler("batchMarkUnsent")();
+    getHandler(on, "batchMarkUnsent")();
     expect(batchMarkUnsent).toHaveBeenCalledOnce();
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
   });

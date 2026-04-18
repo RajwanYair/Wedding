@@ -1,4 +1,4 @@
-/**
+﻿/**
  * tests/unit/auth-handlers.test.mjs — Sprint 196 + Sprint 4 (session)
  *
  * Expanded: tests now invoke handler callbacks to verify behavior.
@@ -17,17 +17,12 @@ vi.mock("../../src/services/auth.js", () => ({
 }));
 vi.mock("../../src/core/section-resolver.js", () => ({ switchSection: vi.fn() }));
 
+import { getHandler } from "./helpers.js";
 import { registerAuthHandlers } from "../../src/handlers/auth-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, openModal, closeModal } from "../../src/core/ui.js";
 import { loginOAuth, clearSession, loginAnonymous } from "../../src/services/auth.js";
 import { switchSection } from "../../src/core/section-resolver.js";
-
-function getHandler(action) {
-  const call = vi.mocked(on).mock.calls.find(([a]) => a === action);
-  if (!call) throw new Error(`No handler for "${action}"`);
-  return call[1];
-}
 
 describe("registerAuthHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
@@ -70,70 +65,70 @@ describe("registerAuthHandlers — handler behavior", () => {
 
   it("submitEmailLogin calls loginOAuth with trimmed email", () => {
     document.getElementById("adminLoginEmail").value = "  test@test.com  ";
-    getHandler("submitEmailLogin")();
+    getHandler(on, "submitEmailLogin")();
     expect(loginOAuth).toHaveBeenCalledWith("test@test.com", "test@test.com", "", "email");
   });
 
   it("submitEmailLogin shows error toast when loginOAuth returns falsy", () => {
     vi.mocked(loginOAuth).mockReturnValue(false);
-    getHandler("submitEmailLogin")();
+    getHandler(on, "submitEmailLogin")();
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "error");
   });
 
   it("submitEmailLogin closes modal and switches to dashboard on success", () => {
     vi.mocked(loginOAuth).mockReturnValue({ name: "Admin" });
-    getHandler("submitEmailLogin")();
+    getHandler(on, "submitEmailLogin")();
     expect(closeModal).toHaveBeenCalledWith("authOverlay");
     expect(switchSection).toHaveBeenCalledWith("dashboard");
   });
 
   it("submitEmailLogin shows success toast when loginOAuth succeeds", () => {
     vi.mocked(loginOAuth).mockReturnValue({ name: "Admin" });
-    getHandler("submitEmailLogin")();
+    getHandler(on, "submitEmailLogin")();
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "success");
   });
 
   it("signOut handler calls clearSession()", () => {
-    getHandler("signOut")();
+    getHandler(on, "signOut")();
     expect(clearSession).toHaveBeenCalledOnce();
   });
 
   it("signOut handler calls loginAnonymous()", () => {
-    getHandler("signOut")();
+    getHandler(on, "signOut")();
     expect(loginAnonymous).toHaveBeenCalledOnce();
   });
 
   it("signOut handler switches to landing section", () => {
-    getHandler("signOut")();
+    getHandler(on, "signOut")();
     expect(switchSection).toHaveBeenCalledWith("landing");
   });
 
   it("signOut handler shows info toast", () => {
-    getHandler("signOut")();
+    getHandler(on, "signOut")();
     expect(showToast).toHaveBeenCalledWith(expect.anything(), "info");
   });
 
   it("showAuthOverlay handler opens authOverlay modal", () => {
-    getHandler("showAuthOverlay")();
+    getHandler(on, "showAuthOverlay")();
     expect(openModal).toHaveBeenCalledWith("authOverlay");
   });
 
   it("hideAuthOverlay handler closes authOverlay modal", () => {
-    getHandler("hideAuthOverlay")();
+    getHandler(on, "hideAuthOverlay")();
     expect(closeModal).toHaveBeenCalledWith("authOverlay");
   });
 
   it("loginFacebook handler returns early if window.FB is absent", () => {
     const orig = window.FB;
     delete window.FB;
-    expect(() => getHandler("loginFacebook")()).not.toThrow();
+    expect(() => getHandler(on, "loginFacebook")()).not.toThrow();
     if (orig !== undefined) window.FB = orig;
   });
 
   it("loginApple handler returns early if window.AppleID is absent", () => {
     const orig = window.AppleID;
     delete window.AppleID;
-    expect(() => getHandler("loginApple")()).not.toThrow();
+    expect(() => getHandler(on, "loginApple")()).not.toThrow();
     if (orig !== undefined) window.AppleID = orig;
   });
 });

@@ -75,6 +75,16 @@ export const GUEST_STATUSES = /** @type {const} */ ([
 ]);
 
 /**
+ * Guest statuses that represent an explicit response (i.e. not still pending).
+ * Used in RSVP submission validation and "responded" calculations.
+ * Equals GUEST_STATUSES minus "pending".
+ * @type {readonly string[]}
+ */
+export const RSVP_RESPONSE_STATUSES = /** @type {const} */ (
+  GUEST_STATUSES.filter((s) => s !== "pending")
+);
+
+/**
  * Valid guest side values.
  * @type {readonly string[]}
  */

@@ -8,7 +8,7 @@
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n } from "../core/i18n.js";
-import { STORAGE_KEYS } from "../core/constants.js";
+import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets, queueSize, queueKeys, onSyncStatus } from "../services/sheets.js";
@@ -649,7 +649,7 @@ export function checkDataIntegrity() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const tableIds = new Set(tables.map((t) => t.id));
   const guestIds = new Set();
-  const validStatuses = new Set(["pending", "confirmed", "declined", "maybe"]);
+  const validStatuses = new Set(GUEST_STATUSES);
 
   for (const g of guests) {
     // Duplicate ID
