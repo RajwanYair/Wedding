@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.8] — 2026-05-17
+
+### Added
+
+- `src/utils/guest-search.js` — new pure utility: `normalizeSearch`, `guestMatchesQuery`, `filterGuests` (multi-criteria AND logic: status, side, group, meal, tableId, accessibility, checkedIn, query), `sortGuests`.
+- `src/utils/rsvp-analytics.js` — new pure utility: `computeRsvpRates`, `computeMealDistribution`, `rsvpSubmissionsByDate`, `totalExpectedCount`, `guestStatsBySide`.
+- `tests/unit/guest-search.test.mjs` — 30 unit tests covering all guest-search functions.
+- `tests/unit/rsvp-analytics.test.mjs` — 24 unit tests covering all rsvp-analytics functions.
+- Expanded `tests/unit/guest-handlers.test.mjs` from 5 to 24 tests — invokes registered callbacks, verifies `saveGuest` success/failure paths, delete confirm flow, filter/sort/export functions.
+- Expanded `tests/unit/table-handlers.test.mjs` from 5 to 25 tests — saveTable, autoAssign, smartAutoAssign, print/export, deleteTable confirm, checkInGuest, QR scan, accessibility filter.
+- Expanded `tests/unit/vendor-handlers.test.mjs` from 5 to 22 tests — saveVendor, saveExpense, delete with confirm, export, filter by category.
+- Expanded `tests/unit/auth-handlers.test.mjs` from 5 to 17 tests — email login success/failure, signOut, modal open/close, FB/Apple guard.
+- Expanded `tests/unit/settings-handlers.test.mjs` from 5 to 20 tests — addApprovedEmail, clearAllData, export/import JSON, backup lifecycle, checkDataIntegrity.
+- Expanded `tests/unit/section-handlers.test.mjs` from 5 to 22 tests — analytics export, gallery upload/delete/lightbox, WhatsApp, timeline, budget.
+- Expanded `tests/unit/event-handlers.test.mjs` from 5 to 13 tests — switchEvent, deleteEvent, doSwitchEvent (same-id guard, state/reinitStore), doDeleteEvent (default guard, confirmDialog).
+- Expanded `tests/unit/section-resolver.test.mjs` from 3 to 10 tests — preloadSections, resolveSection, switchSection auth gating, admin access.
+- Expanded `tests/unit/template-loader.test.mjs` from 3 to 12 tests — injectTemplate skip-if-loaded, Promise return, tpl-loading class lifecycle, prefetchTemplates.
+- Expanded `tests/unit/focus-trap.test.mjs` from 4 to 10 tests — Tab/Shift+Tab wrapping, empty focusable list, activate/deactivate lifecycle.
+- Expanded `tests/unit/status-bar.test.mjs` from 5 to 12 tests — admin/guest role display, multi-call stability, GAS empty state.
+
+### Stats
+
+- **Test files**: 214 (was 212)  
+- **Tests**: 4047 (was 3857) — **+190 tests this release**
+
 ## [8.0.7] — 2026-05-01
 
 ### Added

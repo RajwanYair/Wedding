@@ -1,4 +1,4 @@
-# Wedding Manager — Architecture (v8.0.7)
+# Wedding Manager — Architecture (v8.0.8)
 
 > Runtime entry: `src/main.js` · Pure ESM · Vite 8 · Google Sheets remains the active backend path
 
