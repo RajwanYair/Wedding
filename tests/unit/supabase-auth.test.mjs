@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { STORAGE_KEYS } from "../../src/core/constants.js";
 
 vi.mock("../../src/core/config.js", () => ({
   SUPABASE_URL: "https://test.supabase.co",
@@ -24,7 +25,7 @@ import {
   handleOAuthRedirect,
 } from "../../src/services/supabase-auth.js";
 
-const SESSION_KEY = "wedding_v1_supabase_session";
+const SESSION_KEY = STORAGE_KEYS.SUPABASE_SESSION;
 
 // ── localStorage mock ──────────────────────────────────────────────────────
 let _store = {};

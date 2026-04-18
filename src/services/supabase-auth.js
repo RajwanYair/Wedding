@@ -13,7 +13,7 @@
  *   1. Admin calls signInWithProvider("google"|"facebook"|"apple")
  *   2. Supabase redirects to provider OAuth page, returns JWT on success
  *   3. JWT contains `email` claim; we check against ADMIN_EMAILS allowlist
- *   4. Session stored in localStorage (`wedding_v1_supabase_session`)
+ *   4. Session stored in localStorage via STORAGE_KEYS.SUPABASE_SESSION
  */
 
 import { SUPABASE_URL, SUPABASE_ANON_KEY, ADMIN_EMAILS } from "../core/config.js";
