@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Removed unused maintenance scripts and an orphaned bundle-budget test that were no longer part of the package, CI, or runtime path.
+- Deleted stale evaluation docs whose decisions were already captured by the active production docs.
+- Simplified contributor and automation docs to remove stale test-count claims, legacy `js/` references, and incomplete agent inventory.
+- Standardized the supported Node runtime on 22+ in package metadata and repo guidance.
+
 ## [4.1.0] — 2025-07-14
 
 ### Added — S11 Quick Wins + Day-of Essentials

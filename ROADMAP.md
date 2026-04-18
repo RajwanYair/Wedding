@@ -40,7 +40,7 @@
 index.html     ~425 lines (shell only — sections lazy-loaded)
 src/           18 section modules · 9 core modules · 2 services · 5 utils
                15 template HTML files · 6 modal HTML files
-Tests          4401+ passing (181 suites) · 0 Node warnings
+Tests          Current repo sanity + unit/integration/e2e suite passing · 0 Node warnings
 Lint           0 errors · 0 warnings (ESLint + Stylelint + HTMLHint + markdownlint)
 Bundle         < 30 KB gzip main · < 15 KB gzip RSVP-only chunk
 CI             6 jobs: lint+test (Node 22+24) · security · Lighthouse · size · E2E
@@ -49,47 +49,12 @@ Auth           Google/Facebook/Apple OAuth + email allowlist + anonymous guest
 
 ---
 
-## Active and Upcoming
+## Active Focus
 
-### S8 — Analytics and Reporting
+This roadmap now keeps release-line history and guardrails only.
 
-Richer dashboards with exportable reports.
-
-| # | Task | Size |
-| --- | --- | --- |
-| 8.1 | Guest origin heatmap (groom/bride side by table) | M |
-| 8.2 | RSVP funnel report (invited → confirmed → checked-in) | M |
-| 8.3 | Vendor payment timeline chart | M |
-| 8.4 | Export PDF report (print CSS optimized) | L |
-| 8.5 | WhatsApp delivery rate tracking | S |
-
-**Exit**: Analytics charts exportable as SVG/PDF. CI green.
-
-### S9 — Multi-Event Support
-
-Support managing multiple weddings from one app instance.
-
-| # | Task | Size |
-| --- | --- | --- |
-| 9.1 | Event namespace in localStorage (`wedding_v1_{eventId}_*`) | L |
-| 9.2 | Event switcher UI (top-bar selector) | M |
-| 9.3 | Per-event Google Sheet binding | M |
-| 9.4 | Import/export zip per event | M |
-
-**Exit**: 2+ events can coexist. All data isolated by eventId. CI green.
-
-### S10 — Real-time Collaboration
-
-Live updates between multiple admin devices.
-
-| # | Task | Size |
-| --- | --- | --- |
-| 10.1 | Polling-based live sync (30 s interval, configurable) | M |
-| 10.2 | Conflict resolution UI (diff view + accept/reject) | L |
-| 10.3 | Presence indicator (who is editing) | M |
-| 10.4 | WebSocket upgrade path via Apps Script | XL |
-
-**Exit**: Two admins can edit simultaneously without data loss. CI green.
+- Use CHANGELOG.md for shipped work and repo cleanup history.
+- Use GitHub issues and pull requests for current implementation backlog.
 
 ---
 
@@ -107,18 +72,14 @@ Live updates between multiple admin devices.
 
 ## Success Metrics
 
-| Metric | v2 baseline | v3.8.0 actual | Target |
-| --- | --- | --- | --- |
-| `index.html` lines | 1 774 | ~425 | < 250 |
-| Initial bundle (gzip) | ~45 KB | < 30 KB | < 30 KB ✅ |
-| RSVP-only bundle | ~45 KB | < 15 KB | < 15 KB ✅ |
-| Lighthouse Performance | 0.85 | ≥ 0.90 | ≥ 0.95 |
-| Lighthouse Accessibility | 0.90 | ≥ 0.95 | ≥ 0.95 ✅ |
-| Test count | 689 | 4 401+ | ≥ 1 400 ✅ |
-| Coverage (lines) | ~60% | ≥ 80% | ≥ 80% ✅ |
-| `window.*` cross-module | ~200 | 0 | 0 ✅ |
-| ESLint varsIgnorePattern | 70+ prefixes | `^_` only | `^_` ✅ |
-| Node warnings in `npm test` | 1 | 0 | 0 ✅ |
+| Metric | Current Target |
+| --- | --- |
+| Initial bundle (gzip) | < 30 KB |
+| RSVP-only bundle | < 15 KB |
+| Lighthouse Performance | ≥ 0.95 |
+| Lighthouse Accessibility | ≥ 0.95 |
+| `window.*` cross-module usage | 0 |
+| Node warnings in `npm test` | 0 |
 
 ---
 

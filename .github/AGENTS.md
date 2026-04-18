@@ -14,6 +14,18 @@ Guest management specialist for RSVP workflows, table seating logic, WhatsApp me
 
 **Use when**: adding guest features, modifying RSVP flow, table assignment logic, WhatsApp integration, data import/export.
 
+### `@vendor-agent`
+
+Vendor management specialist for vendor records, payment workflows, budget tracking, and expense reporting.
+
+**Use when**: adding vendor features, adjusting payment flows, expanding budget tooling, or auditing expense logic.
+
+### `@analytics-agent`
+
+Analytics specialist for dashboards, funnels, exports, and reporting views.
+
+**Use when**: building charts, guest metrics, budget analytics, or export/reporting workflows.
+
 ## Available Prompts (type `/` in chat)
 
 | Prompt | Purpose |

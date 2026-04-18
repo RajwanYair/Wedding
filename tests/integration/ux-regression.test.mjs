@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { PUBLIC_SECTIONS } from "../../src/core/constants.js";
 
 // ── Stub store ──────────────────────────────────────────────────────────────
 
@@ -99,9 +100,6 @@ describe("Table assignment logic", () => {
 });
 
 describe("Section routing guard", () => {
-  /** Minimal section registry */
-  const PUBLIC_SECTIONS = new Set(["landing", "rsvp", "invitation"]);
-
   function canAccess(sectionId, isLoggedIn) {
     if (PUBLIC_SECTIONS.has(sectionId)) return true;
     return isLoggedIn;
@@ -109,11 +107,11 @@ describe("Section routing guard", () => {
 
   it("public sections accessible without auth", () => {
     expect(canAccess("landing", false)).toBe(true);
-    expect(canAccess("rsvp",    false)).toBe(true);
+    expect(canAccess("rsvp", false)).toBe(true);
   });
 
   it("private sections require auth", () => {
-    expect(canAccess("guests",   false)).toBe(false);
+    expect(canAccess("guests", false)).toBe(false);
     expect(canAccess("settings", false)).toBe(false);
   });
 

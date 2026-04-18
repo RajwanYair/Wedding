@@ -6,10 +6,8 @@
  */
 
 import { APP_VERSION } from "./config.js";
+import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
-
-/** Storage key for last-seen version */
-const _LAST_SEEN_KEY = "wedding_v1_lastSeenVersion";
 
 /**
  * Show What's New dialog if the user hasn't seen the current version.
@@ -18,7 +16,7 @@ const _LAST_SEEN_KEY = "wedding_v1_lastSeenVersion";
  */
 export function maybeShowWhatsNew(user) {
   if (!user?.isAdmin) return;
-  const lastSeen = localStorage.getItem(_LAST_SEEN_KEY) ?? "";
+  const lastSeen = localStorage.getItem(STORAGE_KEYS.LAST_SEEN_VERSION) ?? "";
   if (lastSeen === APP_VERSION) return;
 
   const items = [
@@ -57,14 +55,14 @@ export function maybeShowWhatsNew(user) {
   btn.style.cssText = "display:block;margin:0 auto";
   btn.textContent = t("whats_new_dismiss") || "Got it!";
   btn.addEventListener("click", () => {
-    localStorage.setItem(_LAST_SEEN_KEY, APP_VERSION);
+    localStorage.setItem(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
     overlay.remove();
   });
   card.appendChild(btn);
   overlay.appendChild(card);
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) {
-      localStorage.setItem(_LAST_SEEN_KEY, APP_VERSION);
+      localStorage.setItem(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
       overlay.remove();
     }
   });

@@ -12,7 +12,7 @@ description: "Use when: editing CI/CD workflows, GitHub Actions, or any YAML con
 - Install deps via `npm ci`; use `cache: 'npm'` in `setup-node` (CI creates its own `node_modules/`; locally deps resolve from parent `../MyScripts/node_modules/`)
 - Lint via `npm run lint` — must exit 0 with **0 errors, 0 warnings** (ESLint `--max-warnings 0`)
 - i18n parity: `npm run check:i18n`
-- Unit tests: `npm test` (Vitest, 4401+ tests) — Node matrix: `["22", "24"]`
+- Unit tests: `npm test` (Vitest, current suite) — Node matrix: `["22", "24"]`
 - **Never** use `npx vitest run` — use `npm test` to avoid DEPRECATED cache warning
 - Deploy via GitHub Pages on push to `main`
 - Release: `release.yml` auto-attaches artifacts on tags (`vX.Y.Z`)

@@ -4,7 +4,8 @@
  * Ensures that sections are properly wired across all layers:
  *   1. src/core/template-loader.js  (_loaders map)
  *   2. src/core/nav.js              (_sections array)
- *   3. src/main.js                  (SECTIONS map + PUBLIC_SECTIONS)
+ *   3. src/main.js                  (SECTIONS map)
+ *      src/core/constants.js        (PUBLIC_SECTIONS)
  *   4. src/sections/index.js        (barrel exports)
  *   5. index.html                   (section containers + data-template + nav tabs)
  *   6. src/templates/*.html          (template files exist on disk)
@@ -102,17 +103,15 @@ function extractSectionsMap() {
   return [...block[1].matchAll(/["']?([a-z][-a-z]*)["']?\s*:/g)].map((m) => m[1]);
 }
 
-/** Extract PUBLIC_SECTIONS — may be in main.js or constants.js */
+/** Extract PUBLIC_SECTIONS from the canonical constants module. */
 function extractPublicSections() {
-  // Try constants.js first
-  const constBlock = CONSTANTS_JS.match(/PUBLIC_SECTIONS\s*=\s*new Set\(\[([\s\S]*?)\]\)/);
+  const constBlock = CONSTANTS_JS.match(
+    /PUBLIC_SECTIONS\s*=\s*new Set\(\[([\s\S]*?)\]\)/,
+  );
   if (constBlock) {
     return [...constBlock[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
   }
-  // Fallback: main.js
-  const block = MAIN_JS.match(/const PUBLIC_SECTIONS\s*=\s*new Set\(\[([\s\S]*?)\]\)/);
-  if (!block) return [];
-  return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  return [];
 }
 
 /** Extract sec-XXX container IDs from index.html */

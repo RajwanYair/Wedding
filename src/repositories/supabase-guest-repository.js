@@ -20,7 +20,7 @@ export class SupabaseGuestRepository extends SupabaseBaseRepository {
   }
 
   /**
-   * @param {"pending"|"confirmed"|"declined"|"maybe"} status
+   * @param {import("../types.d.ts").GuestStatus} status
    * @returns {Promise<Record<string, unknown>[]>}
    */
   async findByStatus(status) {
@@ -54,7 +54,7 @@ export class SupabaseGuestRepository extends SupabaseBaseRepository {
   }
 
   /**
-   * @param {"groom"|"bride"|"mutual"} side
+   * @param {import("../types.d.ts").GuestSide} side
    * @returns {Promise<Record<string, unknown>[]>}
    */
   async findBySide(side) {
@@ -64,7 +64,7 @@ export class SupabaseGuestRepository extends SupabaseBaseRepository {
   }
 
   /**
-   * @param {"family"|"friends"|"work"|"other"} group
+   * @param {import("../types.d.ts").GuestGroup} group
    * @returns {Promise<Record<string, unknown>[]>}
    */
   async findByGroup(group) {

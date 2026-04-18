@@ -119,6 +119,8 @@ graph TD
 | Templates | `src/templates/` | Lazy-loaded section markup |
 | Modals | `src/modals/` | Lazy-loaded modal markup |
 
+Canonical shared definitions live in `src/core/constants.js` for section names and domain enums, and in `src/core/defaults.js` for initial store data.
+
 Legacy or experimental modules may still exist elsewhere in `src/`, but the production path should be traced from `src/main.js` first.
 
 ## Data Flow

@@ -110,6 +110,20 @@ describe("Current architecture", function () {
     assert.ok(mainSource.includes('from "./sections/tables.js"'));
   });
 
+  it("main.js reuses canonical defaults and public section config", function () {
+    assert.ok(mainSource.includes('from "./core/defaults.js"'));
+    assert.ok(mainSource.includes('from "./core/constants.js"'));
+    assert.ok(mainSource.includes("buildStoreDefs("));
+    assert.ok(!mainSource.includes("const _defaultWeddingInfo = {"));
+    assert.ok(!mainSource.includes("const PUBLIC_SECTIONS = new Set(["));
+  });
+
+  it("main.js reuses auth UI helpers from src/core", function () {
+    assert.ok(mainSource.includes('from "./core/nav-auth.js"'));
+    assert.ok(mainSource.includes('from "./core/status-bar.js"'));
+    assert.ok(!mainSource.includes("function _maybeShowWhatsNew(user)"));
+  });
+
   it("constants define centralized guest enums", function () {
     assert.ok(constantsSource.includes("GUEST_STATUSES"));
     assert.ok(constantsSource.includes("GUEST_GROUPS"));
@@ -145,9 +159,15 @@ describe("Docs sanity", function () {
 
 describe("Quality scripts", function () {
   it("package.json exposes lint, test, build, i18n parity, and ci scripts", function () {
-    ["lint", "test", "build", "check:i18n", "ci"].forEach((script) => {
-      assert.ok(packageJson.scripts[script], `missing script ${script}`);
-    });
+    ["lint", "test", "build", "check:i18n", "sync:version", "ci"].forEach(
+      (script) => {
+        assert.ok(packageJson.scripts[script], `missing script ${script}`);
+      },
+    );
+  });
+
+  it("package.json targets Node 22+", function () {
+    assert.equal(packageJson.engines.node, ">=22.0.0");
   });
 
   it("CI workflow uses npm ci and npm test", function () {

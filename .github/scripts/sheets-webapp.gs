@@ -294,7 +294,7 @@ function _savePushSubscription(data) {
   return jsonResponse({ ok: true, action: 'savePushSubscription', count: current.length });
 }
 
-/** Return all stored push subscriptions (consumed by scripts/send-push.mjs). */
+/** Return all stored push subscriptions. */
 function _getPushSubscriptions() {
   var props = PropertiesService.getScriptProperties();
   var raw   = props.getProperty('push_subscriptions');

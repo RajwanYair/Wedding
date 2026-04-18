@@ -205,8 +205,8 @@ Add keys to all 4 locale files:
 
 - `src/i18n/he.json` — Hebrew translations
 - `src/i18n/en.json` — English translations
-- `js/i18n/he.json` — Legacy Hebrew
-- `js/i18n/en.json` — Legacy English
+- `src/i18n/ar.json` — Arabic translations
+- `src/i18n/ru.json` — Russian translations
 
 ### 4. Register navigation
 

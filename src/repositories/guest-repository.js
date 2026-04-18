@@ -29,7 +29,7 @@ export class GuestRepository extends BaseRepository {
 
   /**
    * Find guests by RSVP status.
-   * @param {string} status
+   * @param {import("../types.d.ts").GuestStatus} status
    * @returns {Guest[]}
    */
   findByStatus(status) {
@@ -60,8 +60,8 @@ export class GuestRepository extends BaseRepository {
   }
 
   /**
-   * Find guests by wedding side ("groom" | "bride" | "mutual").
-   * @param {string} side
+   * Find guests by wedding side.
+   * @param {import("../types.d.ts").GuestSide} side
    * @returns {Guest[]}
    */
   findBySide(side) {
@@ -69,8 +69,8 @@ export class GuestRepository extends BaseRepository {
   }
 
   /**
-   * Find guests by group ("family" | "friends" | "work" | "other").
-   * @param {string} group
+   * Find guests by group.
+   * @param {import("../types.d.ts").GuestGroup} group
    * @returns {Guest[]}
    */
   findByGroup(group) {

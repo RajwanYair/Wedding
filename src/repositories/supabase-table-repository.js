@@ -14,7 +14,7 @@ export class SupabaseTableRepository extends SupabaseBaseRepository {
   }
 
   /**
-   * @param {"round"|"rect"} shape
+   * @param {import("../types.d.ts").TableShape} shape
    * @returns {Promise<Record<string, unknown>[]>}
    */
   async findByShape(shape) {
@@ -30,7 +30,10 @@ export class SupabaseTableRepository extends SupabaseBaseRepository {
   async totalCapacity() {
     const { data, error } = await this._query().select("capacity");
     if (error) throw error;
-    return (data ?? []).reduce((sum, row) => sum + (Number(row.capacity) || 0), 0);
+    return (data ?? []).reduce(
+      (sum, row) => sum + (Number(row.capacity) || 0),
+      0,
+    );
   }
 
   /**

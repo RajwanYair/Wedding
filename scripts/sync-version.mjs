@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sync-version.mjs — Reads version from package.json and patches all doc/config files.
+ * sync-version.mjs — Reads version from package.json and patches current doc/config files.
  * Usage: node scripts/sync-version.mjs [--dry-run]
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -12,7 +12,7 @@ const root = resolve(__dirname, "..");
 
 const dryRun = process.argv.includes("--dry-run");
 const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
-const ver = pkg.version; // e.g. "5.1.0"
+const ver = pkg.version;
 
 /** Replace patterns in a file. Each rule: [regex, replacement string]. */
 function patch(relPath, rules) {
@@ -64,6 +64,26 @@ patch("README.md", [
 // .github/copilot-instructions.md — Quick Facts version
 patch(".github/copilot-instructions.md", [
   [/\| Version \| \*\*v[\d.]+\*\*/, `| Version | **v${ver}**`],
+]);
+
+// .github/copilot/config.json — welcome message version
+patch(".github/copilot/config.json", [
+  [/Wedding Manager v[\d.]+/, `Wedding Manager v${ver}`],
+]);
+
+// .github/instructions/workspace.instructions.md — title version
+patch(".github/instructions/workspace.instructions.md", [
+  [/# Workspace — Wedding Manager v[\d.]+/, `# Workspace — Wedding Manager v${ver}`],
+]);
+
+// .github/workflows/ci.yml — header version
+patch(".github/workflows/ci.yml", [
+  [/# CI — Wedding Manager v[\d.]+/, `# CI — Wedding Manager v${ver}`],
+]);
+
+// tests/wedding.test.mjs — repo sanity suite version
+patch("tests/wedding.test.mjs", [
+  [/Repo Sanity Suite v[\d.]+/, `Repo Sanity Suite v${ver}`],
 ]);
 
 // CHANGELOG.md — header (informational only)

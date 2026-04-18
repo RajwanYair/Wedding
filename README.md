@@ -5,7 +5,7 @@
 ![Version](https://img.shields.io/badge/version-v8.0.0-d4a574?style=flat-square)
 ![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
 ![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-4401%2B_passing-brightgreen?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-CI_green-brightgreen?style=flat-square)
 ![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
 ![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
@@ -13,6 +13,8 @@
 
 **Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
 **Vite 8, vanilla JS/CSS, Hebrew RTL first, zero runtime dependencies.**
+
+Node 22+ is the supported local and CI runtime.
 
 </div>
 

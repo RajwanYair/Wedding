@@ -1,17 +1,26 @@
 /**
- * src/types.d.ts — Shared type definitions for the Wedding Manager (v6.0)
+ * src/types.d.ts — Shared type definitions for the Wedding Manager (v8.0.0)
  *
- * TypeScript-first types with discriminated unions and strict enums.
+ * TypeScript-first types with discriminated unions derived from canonical
+ * constants where possible.
  * Import: `import type { Guest, Table } from './types';`
  */
 
+import {
+  GUEST_GROUPS,
+  GUEST_SIDES,
+  GUEST_STATUSES,
+  MEAL_TYPES,
+  TABLE_SHAPES,
+} from "./core/constants.js";
+
 // ── Enums (discriminated union string literals) ───────────────────────────
 
-export type GuestStatus = "pending" | "confirmed" | "declined" | "maybe";
-export type GuestSide = "groom" | "bride" | "mutual";
-export type GuestGroup = "family" | "friends" | "work" | "neighbors" | "other";
-export type MealType = "regular" | "vegetarian" | "vegan" | "gluten_free" | "kosher";
-export type TableShape = "round" | "rect";
+export type GuestStatus = (typeof GUEST_STATUSES)[number];
+export type GuestSide = (typeof GUEST_SIDES)[number];
+export type GuestGroup = (typeof GUEST_GROUPS)[number];
+export type MealType = (typeof MEAL_TYPES)[number];
+export type TableShape = (typeof TABLE_SHAPES)[number];
 export type BackendType = "sheets" | "supabase" | "both" | "none";
 export type AuthProvider = "google" | "facebook" | "apple" | "anonymous" | "email";
 

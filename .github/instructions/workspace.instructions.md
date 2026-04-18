@@ -8,7 +8,7 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 
 | Type | Available |
 | --- | --- |
-| Agents | `@wedding-designer` — CSS/UI/themes; `@guest-manager` — data/RSVP/tables |
+| Agents | `@wedding-designer` — CSS/UI/themes; `@guest-manager` — data/RSVP/tables; `@vendor-agent` — vendors/budget; `@analytics-agent` — dashboards/reports |
 | Prompts | `/add-feature` — scaffold new section; `/code-review` — full audit |
 | Instructions | `wedding` (*.html) — HTML patterns; `cicd` (*.yml) — CI/CD standards |
 | MCP | `filesystem` — scoped project read/write; `fetch` — test endpoints |
