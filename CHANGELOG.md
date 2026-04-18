@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.3] — 2026-04-18
+
+### Changed
+
+- Centralized the remaining hardcoded direct-storage keys for push subscription cache, revoked guest tokens, Supabase session persistence, Sheets mirror toggle reads, and exported error diagnostics through the shared `STORAGE_KEYS` map.
+- Added guardrail coverage so the repo sanity suite and constant tests catch future reintroduction of direct `wedding_v1_*` literals for those auth, diagnostics, and push-storage paths.
+
 ## [8.0.2] — 2026-04-18
 
 ### Changed
