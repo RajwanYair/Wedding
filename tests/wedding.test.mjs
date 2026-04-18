@@ -28,11 +28,13 @@ function readHtmlDir(relativeDir) {
 const indexHtml = read("index.html");
 const readme = read("README.md");
 const architecture = read("ARCHITECTURE.md");
+const copilotInstructions = read(".github/copilot-instructions.md");
 const contributing = read("CONTRIBUTING.md");
 const roadmap = read("ROADMAP.md");
 const packageJson = JSON.parse(read("package.json"));
 const serviceWorker = read("public/sw.js");
 const mainSource = read("src/main.js");
+const typesSource = read("src/types.d.ts");
 const constantsSource = read("src/core/constants.js");
 const runtimeSources = [
   read("src/main.js"),
@@ -60,6 +62,18 @@ describe("Version alignment", function () {
 
   it("README version badge references v8.0.3", function () {
     assert.ok(readme.includes("version-v8.0.3"));
+  });
+
+  it("Copilot instructions title references v8.0.3", function () {
+    assert.ok(copilotInstructions.includes("# GitHub Copilot Instructions — Wedding Manager v8.0.3"));
+  });
+
+  it("ARCHITECTURE.md header references v8.0.3", function () {
+    assert.ok(architecture.includes("# Wedding Manager — Architecture (v8.0.3)"));
+  });
+
+  it("src/types.d.ts header references v8.0.3", function () {
+    assert.ok(typesSource.includes("src/types.d.ts — Shared type definitions for the Wedding Manager (v8.0.3)"));
   });
 });
 
