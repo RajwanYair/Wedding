@@ -14,7 +14,7 @@ All database schema changes are tracked as numbered SQL migration files in `supa
 supabase/migrations/NNN_description.sql
 ```
 
-- `NNN` — zero-padded 3-digit sequence number (001, 002, … 014, …)
+- `NNN` — zero-padded 3-digit sequence number (001, 002, … 022, …)
 - `description` — snake_case summary of what the migration does
 - Each file is idempotent where possible (`CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, `ADD CONSTRAINT IF NOT EXISTS`)
 
@@ -38,6 +38,14 @@ supabase/migrations/NNN_description.sql
 | `012_expense_category_constraint.sql` | CHECK on `expenses.category` — 16 valid values |
 | `013_rsvp_log_constraints.sql` | ADD COLUMN children+notes + CHECK on status+source |
 | `014_contacts_side_and_config_jsonb.sql` | CHECK on `contacts.side` + ADD COLUMN config.json_value JSONB |
+| `015_tables_expenses_soft_delete.sql` | `deleted_at` soft-delete column on `tables` and `expenses` |
+| `016_delivery_tracking.sql` | `delivery_tracking` table for WhatsApp/email delivery status |
+| `017_soft_delete_contacts_view.sql` | Soft delete for contacts + `active_*` views for each domain |
+| `018_event_id_scoping.sql` | Multi-event support — `event_id` FK added to all domain tables |
+| `019_guest_model_extended.sql` | Extended guest fields: `language`, WhatsApp opt-in, `campaign_id`, `delivery_status` |
+| `020_push_subscriptions.sql` | `push_subscriptions` table for Web Push (VAPID) notifications |
+| `021_event_metadata.sql` | `event_metadata` table for flexible per-event key-value metadata |
+| `022_version_matrix.sql` | `version_matrix` table for deployed version tracking and feature flags |
 
 ---
 
