@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.2] — 2026-04-18
+
+### Changed
+
+- Canonicalized active runtime store domains used by settings and service modules so defaults, data classification, admin-debug, and repo guardrails all cover the same persisted keys.
+- Added first-class type coverage for runtime store domains such as RSVP logs, delivery tracking, notification preferences, webhook state, donation tracking, budget envelopes, and communication logs.
+- Removed ad hoc `initStore()` calls from donation and seating-constraint services so those domains now depend on the shared bootstrap path instead of local service initialization.
+- Moved multi-event persistence off the event-scoped reactive store and onto the global state layer so event registry data and active-event selection stay aligned with cross-event storage semantics.
+
 ## [8.0.1] — 2026-04-18
 
 ### Fixed
