@@ -10,6 +10,7 @@ import { describe, it, expect, vi } from "vitest";
 
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 
+import { isApprovedAdmin } from "../../src/services/auth.js";
 import { sanitize } from "../../src/utils/sanitize.js";
 import { cleanPhone } from "../../src/utils/phone.js";
 
@@ -78,13 +79,11 @@ describe("prototype pollution", () => {
 // ── Auth boundary (stub) ──────────────────────────────────────────────────
 
 describe("auth boundary — admin email allowlist", () => {
-  it("isApprovedAdmin returns false for unknown email", async () => {
-    const { isApprovedAdmin } = await import("../../src/services/auth.js");
+  it("isApprovedAdmin returns false for unknown email", () => {
     expect(isApprovedAdmin("attacker@evil.com")).toBe(false);
   });
 
-  it("isApprovedAdmin returns false for empty string", async () => {
-    const { isApprovedAdmin } = await import("../../src/services/auth.js");
+  it("isApprovedAdmin returns false for empty string", () => {
     expect(isApprovedAdmin("")).toBe(false);
   });
 });

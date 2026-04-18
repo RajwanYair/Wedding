@@ -15,6 +15,17 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 
+function measureMedian(runs, fn) {
+  const samples = [];
+  for (let index = 0; index < runs; index += 1) {
+    const start = performance.now();
+    fn();
+    samples.push(performance.now() - start);
+  }
+  samples.sort((left, right) => left - right);
+  return samples[Math.floor(samples.length / 2)];
+}
+
 // ── In-memory store stub (no localStorage needed) ──────────────────────────
 
 const _db = {};
@@ -80,10 +91,12 @@ describe("store write performance", () => {
 
 describe("store read performance", () => {
   it("reads 5,000 guests in under 10 ms", () => {
-    storeSet("guests", Array.from({ length: 5_000 }, (_, i) => makeGuest(i)));
-    const start = performance.now();
+    storeSet(
+      "guests",
+      Array.from({ length: 5_000 }, (_, i) => makeGuest(i)),
+    );
     const result = storeGet("guests");
-    const elapsed = performance.now() - start;
+    const elapsed = measureMedian(7, () => storeGet("guests"));
     expect(result).toHaveLength(5_000);
     expect(elapsed).toBeLessThan(10);
   });

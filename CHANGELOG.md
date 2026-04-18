@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.5] — 2026-04-18
+
+### Changed
+
+- Decoupled the Sheets schema-handshake major-version mismatch fixture from the current app patch version so patch releases no longer churn that unit test.
+- Removed `tests/unit/sheets-impl.test.mjs` from `scripts/sync-version.mjs`, keeping release sync focused on real metadata surfaces instead of semantic test data.
+
 ## [8.0.4] — 2026-04-18
 
 ### Changed
