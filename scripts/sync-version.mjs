@@ -117,10 +117,4 @@ patch("src/types.d.ts", [
   [/(src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v)[\d.]+(\))/, `$1${ver}$2`],
 ]);
 
-// tests/unit/sheets-impl.test.mjs — version mismatch fixture
-patch("tests/unit/sheets-impl.test.mjs", [
-  [/version: "[\d.]+", status: "ok"/, `version: "${ver}", status: "ok"`],
-  [/serverVersion\)\.toBe\("[\d.]+"\)/, `serverVersion).toBe("${ver}")`],
-]);
-
 console.log("\nDone.");
