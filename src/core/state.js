@@ -115,6 +115,15 @@ function _saveGlobal(key, value) {
 }
 
 /**
+ * Save a value to global (non-event-scoped) storage.
+ * @param {string} key
+ * @param {unknown} value
+ */
+export function saveGlobal(key, value) {
+  _saveGlobal(key, value);
+}
+
+/**
  * Load a value from global (non-event-scoped) storage.
  * @template T
  * @param {string} key
@@ -129,6 +138,17 @@ function _loadGlobal(key, fallback) {
   } catch {
     return fallback;
   }
+}
+
+/**
+ * Load a value from global (non-event-scoped) storage.
+ * @template T
+ * @param {string} key
+ * @param {T} [fallback]
+ * @returns {T | undefined}
+ */
+export function loadGlobal(key, fallback) {
+  return _loadGlobal(key, fallback);
 }
 
 // ── Per-event storage ─────────────────────────────────────────────────────

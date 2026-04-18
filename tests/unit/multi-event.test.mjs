@@ -3,9 +3,21 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { initStore } from "../../src/core/store.js";
+const globalState = {
+  events: [],
+  activeEventId: "default",
+};
 
-vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
+vi.mock("../../src/core/state.js", () => ({
+  loadGlobal: vi.fn((key, fallback) => globalState[key] ?? fallback),
+  saveGlobal: vi.fn((key, value) => {
+    globalState[key] = value;
+  }),
+  getActiveEventId: vi.fn(() => globalState.activeEventId),
+  setActiveEvent: vi.fn((eventId) => {
+    globalState.activeEventId = eventId;
+  }),
+}));
 
 const {
   createEvent, getEvent, listEvents, updateEvent,
@@ -13,12 +25,8 @@ const {
 } = await import("../../src/services/multi-event.js");
 
 function seed() {
-  initStore({
-    events:        { value: [] },
-    activeEventId: { value: null },
-    guests:        { value: [] },
-    weddingInfo:   { value: {} },
-  });
+  globalState.events = [];
+  globalState.activeEventId = "default";
 }
 
 beforeEach(seed);

@@ -4,14 +4,20 @@
  * Allows the app to track multiple wedding events (ceremony, reception,
  * shabbat dinner, etc.) and switch the active event context.
  *
- * Persisted under "events" in the store.  The active event id is stored
- * under "activeEventId".
+ * Persisted under the global "events" state key. The active event id is
+ * managed by the global state layer so event switching stays aligned with the
+ * store/storage prefix.
  *
  * Usage:
  *   import { createEvent, listEvents, setActiveEvent, getActiveEvent } from "./multi-event.js";
  */
 
-import { storeGet, storeSet } from "../core/store.js";
+import {
+  getActiveEventId as getGlobalActiveEventId,
+  loadGlobal,
+  saveGlobal,
+  setActiveEvent as setGlobalActiveEvent,
+} from "../core/state.js";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -22,6 +28,7 @@ import { storeGet, storeSet } from "../core/store.js";
  *   date?:       string,          // ISO date string
  *   venue?:      string,
  *   description?: string,
+ *   label?:      string,
  *   createdAt:   number,
  *   updatedAt:   number,
  * }} WeddingEvent
@@ -31,12 +38,12 @@ import { storeGet, storeSet } from "../core/store.js";
 
 /** @returns {WeddingEvent[]} */
 function _getEvents() {
-  return /** @type {WeddingEvent[]} */ (storeGet("events") ?? []);
+  return /** @type {WeddingEvent[]} */ (loadGlobal("events", []) ?? []);
 }
 
 /** @param {WeddingEvent[]} events */
 function _save(events) {
-  storeSet("events", events);
+  saveGlobal("events", events);
 }
 
 function _id() {
@@ -55,6 +62,7 @@ export function createEvent(opts) {
   const event = /** @type {WeddingEvent} */ ({
     id:          _id(),
     name:        opts.name.trim(),
+    label:       opts.name.trim(),
     date:        opts.date       ?? null,
     venue:       opts.venue      ?? null,
     description: opts.description ?? null,
@@ -97,7 +105,9 @@ export function updateEvent(id, patch) {
   const events = _getEvents();
   const idx = events.findIndex((e) => e.id === id);
   if (idx === -1) return false;
-  events[idx] = { ...events[idx], ...patch, updatedAt: Date.now() };
+  const next = { ...events[idx], ...patch, updatedAt: Date.now() };
+  if (typeof patch.name === "string") next.label = patch.name.trim();
+  events[idx] = next;
   _save(events);
   return true;
 }
@@ -113,7 +123,7 @@ export function deleteEvent(id) {
   if (filtered.length === events.length) return false;
   _save(filtered);
   // If we deleted the active event, clear active
-  if (storeGet("activeEventId") === id) storeSet("activeEventId", null);
+  if (getGlobalActiveEventId() === id) setGlobalActiveEvent("default");
   return true;
 }
 
@@ -126,7 +136,7 @@ export function deleteEvent(id) {
  */
 export function setActiveEvent(id) {
   if (!getEvent(id)) return false;
-  storeSet("activeEventId", id);
+  setGlobalActiveEvent(id);
   return true;
 }
 
@@ -135,8 +145,8 @@ export function setActiveEvent(id) {
  * @returns {WeddingEvent | null}
  */
 export function getActiveEvent() {
-  const id = storeGet("activeEventId");
-  if (!id) return null;
+  const id = getGlobalActiveEventId();
+  if (!id || id === "default") return null;
   return getEvent(/** @type {string} */ (id));
 }
 
@@ -144,5 +154,5 @@ export function getActiveEvent() {
  * Clear the active event selection.
  */
 export function clearActiveEvent() {
-  storeSet("activeEventId", null);
+  setGlobalActiveEvent("default");
 }

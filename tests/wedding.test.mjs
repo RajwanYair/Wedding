@@ -189,6 +189,18 @@ describe("Current architecture", function () {
     assert.ok(!read("src/services/seating-constraints.js").includes("initStore("));
   });
 
+  it("multi-event state relies on the global state layer instead of event-scoped store keys", function () {
+    const multiEvent = read("src/services/multi-event.js");
+    const stateSource = read("src/core/state.js");
+    assert.ok(multiEvent.includes('from "../core/state.js"'));
+    assert.ok(multiEvent.includes("loadGlobal"));
+    assert.ok(multiEvent.includes("saveGlobal"));
+    assert.ok(!multiEvent.includes('storeGet("events")'));
+    assert.ok(!multiEvent.includes('storeSet("events"'));
+    assert.ok(stateSource.includes("export function loadGlobal"));
+    assert.ok(stateSource.includes("export function saveGlobal"));
+  });
+
   it("default wedding info includes registryLinks for landing and registry views", function () {
     assert.ok(read("src/core/defaults.js").includes('registryLinks: "[]"'));
     assert.ok(read("src/services/sheets-impl.js").includes('"registryLinks"'));
