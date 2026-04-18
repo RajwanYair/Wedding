@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.0.4] — 2026-04-18
+
+### Changed
+
+- Expanded `scripts/sync-version.mjs` so release sync now updates the Service Worker header, Copilot instructions title, repo sanity version assertions, shared types header, architecture header, and the Sheets version fixture without manual patch follow-up.
+- Added repo sanity coverage for the Copilot instructions title, architecture header, and shared types header so version-metadata drift fails fast in CI.
+- Removed the remaining hardcoded Supabase session storage literal from tests and service documentation so that path also follows `STORAGE_KEYS` as the single source of truth.
+
 ## [8.0.3] — 2026-04-18
 
 ### Changed

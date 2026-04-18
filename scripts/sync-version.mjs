@@ -88,12 +88,18 @@ patch("tests/wedding.test.mjs", [
   [/Repo Sanity Suite v[\d.]+/, `Repo Sanity Suite v${ver}`],
   [/(package\.json is v)[\d.]+/, `$1${ver}`],
   [/(APP_VERSION v)[\d.]+/, `$1${ver}`],
-  [/(wedding-v)[\d.]+( cache)/, `$1${ver}$2`],
+  [/(public\/sw\.js uses wedding-v)[\d.]+( cache)/, `$1${ver}$2`],
   [/(version badge references v)[\d.]+/, `$1${ver}`],
+  [/(Copilot instructions title references v)[\d.]+/, `$1${ver}`],
+  [/(ARCHITECTURE\.md header references v)[\d.]+/, `$1${ver}`],
+  [/(src\/types\.d\.ts header references v)[\d.]+/, `$1${ver}`],
   [/assert\.equal\(packageJson\.version, "[\d.]+"\);/, `assert.equal(packageJson.version, "${ver}");`],
   [/APP_VERSION = "[\d.]+"/, `APP_VERSION = "${ver}"`],
-  [/wedding-v[\d.]+/, `wedding-v${ver}`],
-  [/version-v[\d.]+/, `version-v${ver}`],
+  [/serviceWorker\.includes\("wedding-v[\d.]+"\)/, `serviceWorker.includes("wedding-v${ver}")`],
+  [/readme\.includes\("version-v[\d.]+"\)/, `readme.includes("version-v${ver}")`],
+  [/copilotInstructions\.includes\("# GitHub Copilot Instructions — Wedding Manager v[\d.]+"\)/, `copilotInstructions.includes("# GitHub Copilot Instructions — Wedding Manager v${ver}")`],
+  [/architecture\.includes\("# Wedding Manager — Architecture \(v[\d.]+\)"\)/, `architecture.includes("# Wedding Manager — Architecture (v${ver})")`],
+  [/typesSource\.includes\("src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v[\d.]+\)"\)/, `typesSource.includes("src/types.d.ts — Shared type definitions for the Wedding Manager (v${ver})")`],
 ]);
 
 // CHANGELOG.md — header (informational only)

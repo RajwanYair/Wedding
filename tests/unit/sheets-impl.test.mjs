@@ -100,12 +100,12 @@ describe("schemaHandshake", () => {
   it("reports major version mismatch", async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
-      json: async () => ({ version: "8.0.3", status: "ok" }),
+      json: async () => ({ version: "8.0.4", status: "ok" }),
     });
     const result = await schemaHandshake("7.7.0");
     expect(result.ok).toBe(false);
     expect(result.errors.some((e) => e.includes("Major version mismatch"))).toBe(true);
-    expect(result.serverVersion).toBe("8.0.3");
+    expect(result.serverVersion).toBe("8.0.4");
   });
 
   it("ok:true when major versions match and no colOrder", async () => {
