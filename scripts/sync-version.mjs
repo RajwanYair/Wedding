@@ -53,6 +53,7 @@ patch("src/core/config.js", [
 
 // public/sw.js — CACHE_NAME
 patch("public/sw.js", [
+  [/(Service Worker — Wedding Manager v)[\d.]+/, `$1${ver}`],
   [/CACHE_NAME\s*=\s*["']wedding-v[^"']+["']/, `CACHE_NAME = "wedding-v${ver}"`],
 ]);
 
@@ -61,8 +62,9 @@ patch("README.md", [
   [/version-v[\d.]+-d4a574/, `version-v${ver}-d4a574`],
 ]);
 
-// .github/copilot-instructions.md — Quick Facts version
+// .github/copilot-instructions.md — title + Quick Facts version
 patch(".github/copilot-instructions.md", [
+  [/# GitHub Copilot Instructions — Wedding Manager v[\d.]+/, `# GitHub Copilot Instructions — Wedding Manager v${ver}`],
   [/\| Version \| \*\*v[\d.]+\*\*/, `| Version | **v${ver}**`],
 ]);
 
@@ -81,9 +83,17 @@ patch(".github/workflows/ci.yml", [
   [/# CI — Wedding Manager v[\d.]+/, `# CI — Wedding Manager v${ver}`],
 ]);
 
-// tests/wedding.test.mjs — repo sanity suite version
+// tests/wedding.test.mjs — repo sanity suite version + version alignment assertions
 patch("tests/wedding.test.mjs", [
   [/Repo Sanity Suite v[\d.]+/, `Repo Sanity Suite v${ver}`],
+  [/(package\.json is v)[\d.]+/, `$1${ver}`],
+  [/(APP_VERSION v)[\d.]+/, `$1${ver}`],
+  [/(wedding-v)[\d.]+( cache)/, `$1${ver}$2`],
+  [/(version badge references v)[\d.]+/, `$1${ver}`],
+  [/assert\.equal\(packageJson\.version, "[\d.]+"\);/, `assert.equal(packageJson.version, "${ver}");`],
+  [/APP_VERSION = "[\d.]+"/, `APP_VERSION = "${ver}"`],
+  [/wedding-v[\d.]+/, `wedding-v${ver}`],
+  [/version-v[\d.]+/, `version-v${ver}`],
 ]);
 
 // CHANGELOG.md — header (informational only)
@@ -93,7 +103,18 @@ patch("CHANGELOG.md", [
 
 // ARCHITECTURE.md — h1 version
 patch("ARCHITECTURE.md", [
-  [/v[\d.]+\s*$/, `v${ver}`],
+  [/(# Wedding Manager — Architecture \(v)[\d.]+(\))/, `$1${ver}$2`],
+]);
+
+// src/types.d.ts — header version
+patch("src/types.d.ts", [
+  [/(src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v)[\d.]+(\))/, `$1${ver}$2`],
+]);
+
+// tests/unit/sheets-impl.test.mjs — version mismatch fixture
+patch("tests/unit/sheets-impl.test.mjs", [
+  [/version: "[\d.]+", status: "ok"/, `version: "${ver}", status: "ok"`],
+  [/serverVersion\)\.toBe\("[\d.]+"\)/, `serverVersion).toBe("${ver}")`],
 ]);
 
 console.log("\nDone.");

@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v8.0.1
+# GitHub Copilot Instructions — Wedding Manager v8.0.3
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
