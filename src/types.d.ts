@@ -139,6 +139,7 @@ export interface WeddingInfo {
   venueWaze: string;
   venueMapLink: string;
   budgetTarget: number;
+  registryLinks: string;
 }
 
 /** Gallery photo entry. */
@@ -204,6 +205,142 @@ export interface AppError {
   ts: number;
 }
 
+export interface AuditLogEntry {
+  action?: string;
+  entity?: string;
+  entityId?: string | null;
+  userEmail?: string;
+  ts?: string;
+  diff?: unknown;
+}
+
+export interface BudgetEnvelopeEntry {
+  amount: number;
+  note?: string;
+  ts: number;
+}
+
+export interface BudgetEnvelope {
+  category: string;
+  limit: number;
+  spent: number;
+  entries: BudgetEnvelopeEntry[];
+  updatedAt: number;
+}
+
+export interface CheckinSession {
+  id: string;
+  eventId: string;
+  startedAt: number;
+  endedAt?: number | null;
+  checkIns: Record<string, { ts: number; partySize: number }>;
+  active: boolean;
+}
+
+export interface CommunicationLogEntry {
+  id: string;
+  guestId: string;
+  guestName: string;
+  type: "sms" | "whatsapp" | "email";
+  message: string;
+  status: "pending" | "sent" | "failed";
+  ts: string;
+}
+
+export type DeliveryStatus = "sent" | "delivered" | "read" | "failed" | "bounced";
+export type DeliveryChannel = "whatsapp" | "email" | "sms";
+
+export interface DeliveryRecord {
+  id: string;
+  guestId: string;
+  channel: DeliveryChannel;
+  status: DeliveryStatus;
+  messageId?: string;
+  campaignId?: string;
+  ts: number;
+}
+
+export interface DonationGoal {
+  id: string;
+  name: string;
+  target: number;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Donation {
+  id: string;
+  goalId: string;
+  amount: number;
+  donorName: string;
+  note: string;
+  createdAt: string;
+}
+
+export interface IssuedToken {
+  guestId: string;
+  token: string;
+  issuedAt: number;
+}
+
+export type NotificationChannel = "push" | "email" | "whatsapp" | "sms";
+export type NotificationEvent =
+  | "rsvp_confirmed"
+  | "rsvp_reminder"
+  | "table_assigned"
+  | "campaign"
+  | "system";
+
+export interface NotificationPrefs {
+  userId: string;
+  channels: Record<NotificationChannel, boolean>;
+  events: Record<NotificationEvent, boolean>;
+  updatedAt: number;
+}
+
+export interface OfflineQueueItem {
+  type: string;
+  payload: unknown;
+  addedAt: string;
+  retries: number;
+}
+
+export interface PushSubscriptionData {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  expirationTime: number | null;
+}
+
+export interface SeatingConstraint {
+  id: string;
+  guestId: string;
+  type: "near" | "far";
+  targetGuestId: string;
+  createdAt: string;
+}
+
+export interface Webhook {
+  id: string;
+  url: string;
+  events: string[];
+  secret?: string | null;
+  active: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface WebhookDelivery {
+  id: string;
+  webhookId: string;
+  event: string;
+  payload: unknown;
+  status: "pending" | "delivered" | "failed";
+  statusCode?: number;
+  error?: string;
+  ts: number;
+}
+
 // ── Service Types ─────────────────────────────────────────────────────────
 
 /** Result type returned by save/validate functions. */
@@ -230,16 +367,36 @@ export interface AuthUser {
 export interface StoreKeys {
   guests: Guest[];
   campaigns: Campaign[];
+  approvedEmails: string[];
+  auditLog: AuditLogEntry[];
+  backendType: BackendType | "";
   tables: Table[];
   vendors: Vendor[];
   expenses: Expense[];
+  donationGoals: DonationGoal[];
+  donations: Donation[];
   appErrors: AppError[];
   timeline: TimelineItem[];
   gallery: GalleryPhoto[];
   weddingInfo: WeddingInfo;
   budget: BudgetEntry[];
+  budgetEnvelopes: Record<string, BudgetEnvelope>;
+  checkinSessions: CheckinSession[];
+  commLog: CommunicationLogEntry[];
   contacts: ContactSubmission[];
+  deliveries: DeliveryRecord[];
+  issuedTokens: IssuedToken[];
+  notificationPreferences: Record<string, NotificationPrefs>;
+  offline_queue: OfflineQueueItem[];
+  push_subscriptions: PushSubscriptionData[];
+  rsvp_log: RsvpLogEntry[];
+  seatingConstraints: SeatingConstraint[];
+  sheetsWebAppUrl: string;
+  supabaseAnonKey: string;
+  supabaseUrl: string;
   timelineDone: Record<string, boolean>;
+  webhookDeliveries: WebhookDelivery[];
+  webhooks: Webhook[];
 }
 
 /** Valid store key names. */

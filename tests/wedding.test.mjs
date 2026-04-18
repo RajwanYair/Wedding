@@ -140,6 +140,55 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes('appErrors: DATA_CLASS.OPERATIONAL'));
   });
 
+  it("defaults, constants, and types include canonical support for runtime service domains", function () {
+    const defaultsSource = read("src/core/defaults.js");
+    const typesSource = read("src/types.d.ts");
+
+    [
+      'approvedEmails: {',
+      'auditLog: {',
+      'budgetEnvelopes: {',
+      'checkinSessions: {',
+      'deliveries: {',
+      'donationGoals: {',
+      'donations: {',
+      'notificationPreferences: {',
+      'offline_queue: {',
+      'push_subscriptions: {',
+      'rsvp_log: {',
+      'seatingConstraints: {',
+      'webhookDeliveries: {',
+      'webhooks: {',
+    ].forEach((snippet) => {
+      assert.ok(defaultsSource.includes(snippet), `missing default ${snippet}`);
+    });
+
+    [
+      'approvedEmails: DATA_CLASS.ADMIN_SENSITIVE',
+      'auditLog: DATA_CLASS.ADMIN_SENSITIVE',
+      'notificationPreferences: DATA_CLASS.GUEST_PRIVATE',
+      'offline_queue: DATA_CLASS.GUEST_PRIVATE',
+      'rsvp_log: DATA_CLASS.ADMIN_SENSITIVE',
+      'webhooks: DATA_CLASS.ADMIN_SENSITIVE',
+    ].forEach((snippet) => {
+      assert.ok(constantsSource.includes(snippet), `missing data class ${snippet}`);
+    });
+
+    [
+      'commLog: CommunicationLogEntry[];',
+      'rsvp_log: RsvpLogEntry[];',
+      'notificationPreferences: Record<string, NotificationPrefs>;',
+      'webhooks: Webhook[];',
+    ].forEach((snippet) => {
+      assert.ok(typesSource.includes(snippet), `missing type ${snippet}`);
+    });
+  });
+
+  it("store-backed services rely on canonical bootstrap instead of local initStore calls", function () {
+    assert.ok(!read("src/services/donation-tracker.js").includes("initStore("));
+    assert.ok(!read("src/services/seating-constraints.js").includes("initStore("));
+  });
+
   it("default wedding info includes registryLinks for landing and registry views", function () {
     assert.ok(read("src/core/defaults.js").includes('registryLinks: "[]"'));
     assert.ok(read("src/services/sheets-impl.js").includes('"registryLinks"'));

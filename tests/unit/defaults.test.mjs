@@ -91,6 +91,34 @@ describe("buildStoreDefs", () => {
     expect(defs.weddingInfo).toBeDefined();
   });
 
+  it("includes canonical runtime support keys used by services and settings", () => {
+    const defs = buildStoreDefs();
+    [
+      "approvedEmails",
+      "auditLog",
+      "backendType",
+      "budgetEnvelopes",
+      "checkinSessions",
+      "deliveries",
+      "donationGoals",
+      "donations",
+      "issuedTokens",
+      "notificationPreferences",
+      "offline_queue",
+      "push_subscriptions",
+      "rsvp_log",
+      "seatingConstraints",
+      "sheetsWebAppUrl",
+      "supabaseAnonKey",
+      "supabaseUrl",
+      "webhookDeliveries",
+      "webhooks",
+    ].forEach((key) => {
+      expect(defs[key]).toBeDefined();
+      expect(typeof defs[key].storageKey).toBe("string");
+    });
+  });
+
   it("weddingInfo merges defaultWeddingInfo", () => {
     const defs = buildStoreDefs();
     expect(defs.weddingInfo.value).toMatchObject({ time: "18:00" });

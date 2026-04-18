@@ -4,9 +4,7 @@
  * Seating constraint engine: enforce "near" / "far" guest relationships.
  */
 
-import { initStore, storeGet, storeSet } from "../core/store.js";
-
-initStore({ seatingConstraints: { value: [] } });
+import { storeGet, storeSet } from "../core/store.js";
 
 /**
  * @typedef {{ id: string, guestId: string, type: "near"|"far", targetGuestId: string, createdAt: string }} SeatingConstraint

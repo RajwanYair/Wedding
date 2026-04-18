@@ -56,19 +56,74 @@ export function buildStoreDefs() {
   return {
     guests: { value: load("guests", []), storageKey: "guests" },
     campaigns: { value: load("campaigns", []), storageKey: "campaigns" },
+    approvedEmails: {
+      value: load("approvedEmails", []),
+      storageKey: "approvedEmails",
+    },
+    auditLog: { value: load("auditLog", []), storageKey: "auditLog" },
+    backendType: { value: load("backendType", ""), storageKey: "backendType" },
     tables: { value: load("tables", []), storageKey: "tables" },
     vendors: { value: load("vendors", []), storageKey: "vendors" },
     expenses: { value: load("expenses", []), storageKey: "expenses" },
+    donationGoals: {
+      value: load("donationGoals", []),
+      storageKey: "donationGoals",
+    },
+    donations: { value: load("donations", []), storageKey: "donations" },
     appErrors: { value: load("appErrors", []), storageKey: "appErrors" },
     weddingInfo: { value: weddingInfo, storageKey: "weddingInfo" },
     gallery: { value: load("gallery", []), storageKey: "gallery" },
     timeline: { value: timeline, storageKey: "timeline" },
     contacts: { value: load("contacts", []), storageKey: "contacts" },
     budget: { value: load("budget", []), storageKey: "budget" },
+    budgetEnvelopes: {
+      value: load("budgetEnvelopes", {}),
+      storageKey: "budgetEnvelopes",
+    },
+    checkinSessions: {
+      value: load("checkinSessions", []),
+      storageKey: "checkinSessions",
+    },
+    deliveries: { value: load("deliveries", []), storageKey: "deliveries" },
+    issuedTokens: {
+      value: load("issuedTokens", []),
+      storageKey: "issuedTokens",
+    },
+    notificationPreferences: {
+      value: load("notificationPreferences", {}),
+      storageKey: "notificationPreferences",
+    },
+    offline_queue: {
+      value: load("offline_queue", []),
+      storageKey: "offline_queue",
+    },
+    push_subscriptions: {
+      value: load("push_subscriptions", []),
+      storageKey: "push_subscriptions",
+    },
+    rsvp_log: { value: load("rsvp_log", []), storageKey: "rsvp_log" },
+    seatingConstraints: {
+      value: load("seatingConstraints", []),
+      storageKey: "seatingConstraints",
+    },
+    sheetsWebAppUrl: {
+      value: load("sheetsWebAppUrl", ""),
+      storageKey: "sheetsWebAppUrl",
+    },
+    supabaseAnonKey: {
+      value: load("supabaseAnonKey", ""),
+      storageKey: "supabaseAnonKey",
+    },
+    supabaseUrl: { value: load("supabaseUrl", ""), storageKey: "supabaseUrl" },
     timelineDone: {
       value: load("timelineDone", {}),
       storageKey: "timelineDone",
     },
     commLog: { value: load("commLog", []), storageKey: "commLog" },
+    webhookDeliveries: {
+      value: load("webhookDeliveries", []),
+      storageKey: "webhookDeliveries",
+    },
+    webhooks: { value: load("webhooks", []), storageKey: "webhooks" },
   };
 }

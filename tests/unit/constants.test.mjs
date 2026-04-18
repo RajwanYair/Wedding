@@ -144,6 +144,26 @@ describe("DATA_CLASS", () => {
   it("classifies appErrors as operational", () => {
     expect(STORE_DATA_CLASS.appErrors).toBe(DATA_CLASS.OPERATIONAL);
   });
+
+  it("classifies runtime settings keys consistently", () => {
+    expect(STORE_DATA_CLASS.backendType).toBe(DATA_CLASS.OPERATIONAL);
+    expect(STORE_DATA_CLASS.sheetsWebAppUrl).toBe(DATA_CLASS.OPERATIONAL);
+    expect(STORE_DATA_CLASS.supabaseUrl).toBe(DATA_CLASS.OPERATIONAL);
+    expect(STORE_DATA_CLASS.supabaseAnonKey).toBe(DATA_CLASS.OPERATIONAL);
+  });
+
+  it("classifies admin audit and webhook domains as admin-sensitive", () => {
+    expect(STORE_DATA_CLASS.auditLog).toBe(DATA_CLASS.ADMIN_SENSITIVE);
+    expect(STORE_DATA_CLASS.webhooks).toBe(DATA_CLASS.ADMIN_SENSITIVE);
+    expect(STORE_DATA_CLASS.webhookDeliveries).toBe(DATA_CLASS.ADMIN_SENSITIVE);
+    expect(STORE_DATA_CLASS.rsvp_log).toBe(DATA_CLASS.ADMIN_SENSITIVE);
+  });
+
+  it("classifies guest and queue domains conservatively", () => {
+    expect(STORE_DATA_CLASS.notificationPreferences).toBe(DATA_CLASS.GUEST_PRIVATE);
+    expect(STORE_DATA_CLASS.offline_queue).toBe(DATA_CLASS.GUEST_PRIVATE);
+    expect(STORE_DATA_CLASS.push_subscriptions).toBe(DATA_CLASS.OPERATIONAL);
+  });
 });
 
 describe("Domain enums", () => {

@@ -4,15 +4,10 @@
  * Track monetary donation goals and individual donations toward those goals.
  */
 
-import { initStore, storeGet, storeSet } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
 
 const GOALS_KEY = "donationGoals";
 const DONATIONS_KEY = "donations";
-
-initStore({
-  [GOALS_KEY]:   { value: [] },
-  [DONATIONS_KEY]: { value: [] },
-});
 
 /**
  * @typedef {{
