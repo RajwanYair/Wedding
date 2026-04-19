@@ -4,9 +4,15 @@
  * All dates use the Asia/Jerusalem timezone.
  */
 
-import { formatDate } from "../core/i18n.js";
+import { formatDate, currentLang } from "../core/i18n.js";
 
 const TZ = "Asia/Jerusalem";
+
+/** Map lang code → BCP-47 locale string */
+function _locale() {
+  const map = /** @type {Record<string, string>} */ ({ he: "he-IL", en: "en-IL", ar: "ar-IL", ru: "ru-IL" });
+  return map[currentLang()] ?? "he-IL";
+}
 
 /**
  * Format an ISO date string (or Date) in the current app locale.
@@ -38,4 +44,32 @@ export function daysUntil(targetIso) {
  */
 export function nowISOJerusalem() {
   return new Date().toLocaleString("sv-SE", { timeZone: TZ }).replace(" ", "T");
+}
+
+/**
+ * Format a date relative to now using Intl.RelativeTimeFormat (S22a).
+ * Returns a locale-aware string such as "לפני 3 ימים", "in 2 weeks", etc.
+ * @param {string|Date} iso
+ * @returns {string}
+ */
+export function formatRelative(iso) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const locale = _locale();
+  const diffMs = d.getTime() - Date.now();
+  const diffSec = Math.round(diffMs / 1000);
+  const diffMin = Math.round(diffSec / 60);
+  const diffHr  = Math.round(diffMin / 60);
+  const diffDay = Math.round(diffHr / 24);
+  const diffWk  = Math.round(diffDay / 7);
+  const diffMo  = Math.round(diffDay / 30);
+
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+
+  if (Math.abs(diffSec) < 60)   return rtf.format(diffSec, "second");
+  if (Math.abs(diffMin) < 60)   return rtf.format(diffMin, "minute");
+  if (Math.abs(diffHr)  < 24)   return rtf.format(diffHr,  "hour");
+  if (Math.abs(diffDay) < 14)   return rtf.format(diffDay, "day");
+  if (Math.abs(diffWk)  < 8)    return rtf.format(diffWk,  "week");
+  return rtf.format(diffMo, "month");
 }

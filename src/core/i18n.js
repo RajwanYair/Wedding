@@ -268,3 +268,27 @@ export function formatNumber(value, opts) {
 export function formatCurrency(value, currency = "ILS") {
   return new Intl.NumberFormat(_locale(), { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
 }
+
+/**
+ * Format a list of strings using Intl.ListFormat (S22a).
+ * e.g. ["Alice", "Bob", "Carla"] → "Alice, Bob, and Carla" (en) / "Alice, Bob, ו-Carla" (he)
+ * @param {string[]} items
+ * @param {"conjunction"|"disjunction"|"unit"} [type]
+ * @returns {string}
+ */
+export function formatList(items, type = "conjunction") {
+  if (items.length === 0) return "";
+  const lf = new Intl.ListFormat(_locale(), { style: "long", type });
+  return lf.format(items);
+}
+
+/**
+ * Format a number using Intl.PluralRules (S22a) — returns the plural category.
+ * Useful for a11y text: "1 אורח" vs "2 אורחים".
+ * @param {number} count
+ * @returns {"zero"|"one"|"two"|"few"|"many"|"other"}
+ */
+export function pluralCategory(count) {
+  const pr = new Intl.PluralRules(_locale());
+  return /** @type {"zero"|"one"|"two"|"few"|"many"|"other"} */ (pr.select(count));
+}
