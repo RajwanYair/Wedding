@@ -1087,5 +1087,9 @@
   "push_disabled": "Push subscription cancelled",
   "push_enable_fail": "Failed to subscribe to push",
   "push_disable_fail": "Failed to unsubscribe",
-  "push_vapid_required": "VAPID key is required"
+  "push_vapid_required": "VAPID key is required",
+  "nfc_not_supported": "NFC not supported on this device",
+  "nfc_scanning": "NFC scanning active — hold device near tag",
+  "nfc_scan_error": "NFC scan failed",
+  "checkin_nfc_success": "Guest checked in via NFC"
 }

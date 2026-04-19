@@ -1087,5 +1087,9 @@
   "push_disabled": "הרשמה להתראות בוטלה",
   "push_enable_fail": "ההרשמה להתראות נכשלה",
   "push_disable_fail": "ביטול ההרשמה נכשל",
-  "push_vapid_required": "נדרש מפתח VAPID"
+  "push_vapid_required": "נדרש מפתח VAPID",
+  "nfc_not_supported": "NFC אינו נתמך במכשיר זה",
+  "nfc_scanning": "סריקת NFC פעילה — הצמד את המכשיר לתג",
+  "nfc_scan_error": "שגיאה בסריקת NFC",
+  "checkin_nfc_success": "האורח צוין כהגיע דרך NFC"
 }

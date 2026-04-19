@@ -10,6 +10,8 @@ import { t } from "../core/i18n.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 import { announce } from "../core/ui.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
+import { isNFCSupported, startNFCScan } from "../services/nfc.js";
+import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -26,6 +28,9 @@ let _cameraStream = null;
 /** @type {number|null} */
 let _scanIntervalId = null;
 
+/** @type {(() => void)|null} */
+let _stopNFCScan = null;
+
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderCheckin));
   renderCheckin();
@@ -36,6 +41,7 @@ export function unmount() {
   _unsubs.length = 0;
   _giftMode = false;
   stopQrScan();
+  stopNFCCheckin();
 }
 
 /**
@@ -387,6 +393,7 @@ export async function startQrScan() {
     });
     video.srcObject = _cameraStream;
     box.classList.remove("u-hidden");
+    await lockOrientation("portrait"); // S23g lock viewport during QR scan
 
     const detector = new /** @type {any} */ (window).BarcodeDetector({
       formats: ["qr_code"],
@@ -431,6 +438,42 @@ export function stopQrScan() {
   }
   const box = document.getElementById("qrScannerBox");
   if (box) box.classList.add("u-hidden");
+  unlockOrientation();
+}
+
+// ── S23b NFC Check-in ─────────────────────────────────────────────────────
+
+/**
+ * Start NFC scanning for tap-to-check-in (requires Web NFC support).
+ * Announces availability or falls back gracefully.
+ */
+export async function startNFCCheckin() {
+  if (!isNFCSupported()) {
+    announce(t("nfc_not_supported") || "NFC not supported on this device");
+    return;
+  }
+  try {
+    _stopNFCScan = await startNFCScan((payload) => {
+      const { guestId } = payload;
+      if (guestId) {
+        checkInGuest(guestId);
+        announce(t("checkin_nfc_success") || "Guest checked in via NFC");
+      }
+    });
+    announce(t("nfc_scanning") || "NFC scanning active — hold device near tag");
+  } catch {
+    announce(t("nfc_scan_error") || "NFC scan failed");
+  }
+}
+
+/**
+ * Stop NFC check-in scanning.
+ */
+export function stopNFCCheckin() {
+  if (_stopNFCScan) {
+    _stopNFCScan();
+    _stopNFCScan = null;
+  }
 }
 
 /**

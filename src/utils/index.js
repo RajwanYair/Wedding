@@ -13,3 +13,4 @@ export * from "./virtual-list.js";
 export * from "./roles.js";
 export * from "./pii.js";
 export * from "./haptic.js";
+export * from "./orientation.js";
