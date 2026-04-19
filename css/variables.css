@@ -35,6 +35,20 @@
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
+
+  /* Semantic tints using color-mix() (S19c) */
+  --accent-subtle: color-mix(in sRGB, var(--accent) 15%, transparent);
+  --accent-tint: color-mix(in sRGB, var(--accent) 25%, transparent);
+  --accent-muted: color-mix(in sRGB, var(--accent) 40%, var(--bg-secondary));
+  --positive-tint: color-mix(in sRGB, var(--positive) 18%, transparent);
+  --negative-tint: color-mix(in sRGB, var(--negative) 18%, transparent);
+  --warning-tint: color-mix(in sRGB, var(--warning) 18%, transparent);
+  --focus-ring: color-mix(in sRGB, var(--accent) 70%, transparent);
+
+  /* Container query breakpoints (logical, for @container use) */
+  --cq-sm: 320px;
+  --cq-md: 480px;
+  --cq-lg: 720px;
 }
 
 /* ── Theme: Rose Gold ── */

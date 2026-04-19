@@ -2058,5 +2058,166 @@ body.ptr--refreshing::before {
   font-size: 0.9rem;
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   S19: CSS Modern Features
+   • Container queries (S19a)
+   • @starting-style entry animations (S19b)
+   • color-mix() semantic variants (S19c)
+   • prefers-reduced-motion comprehensive sweep (S19d)
+   • :has() form/state patterns (S19e)
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── S19a: Container query contexts ── */
+/* Any element with class .cq becomes an inline-size container */
+.cq { container-type: inline-size; }
+
+/* Stats grid parent — enables child card @container queries */
+.stats-grid {
+  container-type: inline-size;
+  container-name: stats-grid;
+}
+
+/* Section pane — enables content-aware layouts */
+.section {
+  container-type: inline-size;
+  container-name: section-pane;
+}
+
+/* ── S19a: Container-aware stat cards ── */
+/* When the stats-grid is narrow (≤ 380px), stack stat cards compactly */
+@container stats-grid (max-width: 380px) {
+  .stat-card {
+    display: flex;
+    align-items: center;
+    text-align: start;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+
+    & .stat-icon { font-size: 1.8em; margin-bottom: 0; }
+    & .stat-icon-bg { display: none; }
+  }
+  .stat-number { font-size: 1.8em; }
+  .stat-label  { font-size: 0.8em; }
+}
+
+/* When the section pane is narrow, use a single column for form rows */
+@container section-pane (max-width: 500px) {
+  .form-row { grid-template-columns: 1fr; }
+  .form-cols { flex-direction: column; }
+  .action-bar { flex-wrap: wrap; }
+}
+
+/* ── S19b: @starting-style — modal entrance without JS animation class ── */
+/* Animate the backdrop overlay open */
+.modal-overlay {
+  transition: opacity var(--transition-normal), backdrop-filter var(--transition-normal);
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+/* Animate the modal dialog scale-in */
+.modal {
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.92) translateY(16px);
+  }
+}
+
+/* ── S19b: @starting-style — toast slide-in ── */
+.toast {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  @starting-style {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+}
+
+/* ── S19c: color-mix() semantic card variants ── */
+/* Success / positive data highlight */
+.card--positive {
+  border-color: color-mix(in sRGB, var(--positive) 35%, transparent);
+  background: color-mix(in sRGB, var(--positive) 8%, var(--bg-card));
+}
+/* Warning data highlight */
+.card--warning {
+  border-color: color-mix(in sRGB, var(--warning) 35%, transparent);
+  background: color-mix(in sRGB, var(--warning) 8%, var(--bg-card));
+}
+/* Error / danger data highlight */
+.card--danger {
+  border-color: color-mix(in sRGB, var(--negative) 35%, transparent);
+  background: color-mix(in sRGB, var(--negative) 8%, var(--bg-card));
+}
+
+/* Focus ring using color-mix — consistent across all interactive elements */
+:focus-visible {
+  outline: 2px solid color-mix(in sRGB, var(--accent) 80%, transparent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── S19d: Comprehensive prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  /* Kill all animations globally */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Skeleton still needs to work (opacity only, no translate) */
+  .skeleton { animation: none; background: var(--bg-card); }
+
+  /* Pull-to-refresh hint */
+  .pull-refresh-hint { transition: none; }
+
+  /* View transitions — disable crossfade */
+  ::view-transition-old(section-content),
+  ::view-transition-new(section-content) { animation: none; }
+}
+
+/* ── S19e: :has() – form validation states ── */
+/* Form group that contains an invalid input gets accent border */
+.form-group:has(input:invalid:not(:placeholder-shown)) > label {
+  color: var(--negative);
+}
+.form-group:has(input:invalid:not(:placeholder-shown)) > input,
+.form-group:has(input:invalid:not(:placeholder-shown)) > select {
+  border-color: color-mix(in sRGB, var(--negative) 60%, transparent);
+}
+
+/* Card that contains a focused input should visually elevate */
+.card:has(:focus-visible) {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px color-mix(in sRGB, var(--accent) 25%, transparent);
+}
+
+/* Nav tab that links to active section — use :has() for parent state */
+.nav-tab:has(+ .nav-tab.active),
+.nav-tab.active {
+  /* Already styled elsewhere, but :has() enables sibling-aware states */
+}
+
+/* ── S19e: light-dark() – improved light mode adaptations ── */
+.stat-card {
+  background: light-dark(
+    rgba(255, 255, 255, 0.65),
+    var(--bg-card)
+  );
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in sRGB, var(--accent) 30%, transparent);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in sRGB, var(--accent) 50%, transparent);
+}
+
 } /* end @layer components */
 
