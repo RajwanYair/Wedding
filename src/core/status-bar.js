@@ -5,8 +5,8 @@
  */
 
 import { APP_VERSION } from "./config.js";
+import { getSheetsWebAppUrl } from "./app-config.js";
 import { t } from "./i18n.js";
-import { load } from "./state.js";
 
 /** @type {string} */
 let _gasVersion = "";
@@ -17,9 +17,7 @@ let _gasVersion = "";
  */
 export async function fetchGasVersion(user) {
   try {
-    const url =
-      load("sheetsWebAppUrl", "") ||
-      (await import("./config.js")).SHEETS_WEBAPP_URL;
+    const url = getSheetsWebAppUrl();
     if (!url) return;
     const resp = await fetch(/** @type {string} */ (url), { method: "GET", cache: "no-store" });
     if (!resp.ok) return;

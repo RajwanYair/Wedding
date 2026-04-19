@@ -5,8 +5,7 @@
  * without circular dependencies. NOT imported by sections directly.
  */
 
-import { SHEETS_WEBAPP_URL as _CONFIG_URL, SPREADSHEET_ID as _CONFIG_SID } from "../core/config.js";
-import { load } from "../core/state.js";
+import { getSheetsWebAppUrl, getSpreadsheetId } from "../core/app-config.js";
 import { storeGet, storeSet } from "../core/store.js";
 
 /**
@@ -14,8 +13,7 @@ import { storeGet, storeSet } from "../core/store.js";
  * @returns {string}
  */
 function _getWebAppUrl() {
-  const stored = load("sheetsWebAppUrl", "");
-  return (stored && String(stored).trim()) || _CONFIG_URL || "";
+  return getSheetsWebAppUrl();
 }
 
 /**
@@ -23,8 +21,7 @@ function _getWebAppUrl() {
  * @returns {string}
  */
 function _getSpreadsheetId() {
-  const stored = load("sheetsSpreadsheetId", "");
-  return (stored && String(stored).trim()) || _CONFIG_SID || "";
+  return getSpreadsheetId();
 }
 
 // ── Sheet name mapping ──────────────────────────────────────────────────

@@ -6,7 +6,7 @@
  * No window.* side effects.
  */
 
-import { ADMIN_EMAILS } from "../core/config.js";
+import { getApprovedAdminEmails } from "../core/app-config.js";
 import { save, load } from "../core/state.js";
 import { storeGet } from "../core/store.js";
 
@@ -74,14 +74,12 @@ export function currentUser() {
 export function isApprovedAdmin(email) {
   if (!email) return false;
   const norm = email.trim().toLowerCase();
-  // Check build-time allowlist (src/core/config.js / inject-config.mjs)
-  if (ADMIN_EMAILS.map((e) => e.trim().toLowerCase()).includes(norm))
-    return true;
-  // Check runtime allowlist (Settings → "Add Approved Email")
+  const merged = getApprovedAdminEmails();
+  if (merged.includes(norm)) return true;
   const runtime = /** @type {string[]} */ (
     storeGet("approvedEmails") ?? load("approvedEmails", []) ?? []
   );
-  return runtime.map((e) => e.trim().toLowerCase()).includes(norm);
+  return runtime.map((entry) => entry.trim().toLowerCase()).includes(norm);
 }
 
 /**

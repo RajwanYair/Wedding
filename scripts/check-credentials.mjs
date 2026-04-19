@@ -27,6 +27,8 @@ const WARN_ONLY = process.argv.includes("--warn");
  * They should be injected at deploy time via inject-config.mjs.
  */
 const MUST_BE_EMPTY = [
+  "SHEETS_WEBAPP_URL",
+  "SPREADSHEET_ID",
   "SUPABASE_URL",
   "SUPABASE_ANON_KEY",
   "GOOGLE_CLIENT_ID",
@@ -39,10 +41,7 @@ const MUST_BE_EMPTY = [
  * Add the constant name here to exempt it from the check.
  */
 const ALLOW_LIST = new Set([
-  "SHEETS_WEBAPP_URL",    // Acceptable for local dev; rotated at deploy
-  "SPREADSHEET_ID",       // Same
-  "ADMIN_EMAILS",         // Validated separately (array check)
-  "BACKEND_TYPE",         // 'sheets'|'supabase'|'none' — not secret
+  "BACKEND_TYPE", // 'sheets'|'supabase'|'none' — not secret
   "APP_VERSION",
   "STORAGE_PREFIX",
   "SHEETS_GUESTS_TAB",
@@ -84,12 +83,14 @@ const adminMatch = adminRe.exec(src);
 if (adminMatch) {
   const entries = adminMatch[1].match(/"([^"]+)"/g) ?? [];
   if (entries.length > 0) {
-    console.warn(
-      `check-credentials: [WARN] ADMIN_EMAILS contains ${entries.length} hardcoded email(s).`,
+    const level = WARN_ONLY ? "WARN" : "ERROR";
+    console.error(
+      `check-credentials: [${level}] ADMIN_EMAILS contains ${entries.length} hardcoded email(s).`,
     );
-    console.warn(
-      `  → Set GH_ADMIN_EMAILS secret (comma-separated) to override at deploy time.`,
+    console.error(
+      `  → Set GH_ADMIN_EMAILS secret (comma-separated) to inject the allowlist at deploy time.`,
     );
+    if (!WARN_ONLY) failed++;
   }
 }
 

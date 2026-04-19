@@ -10,8 +10,8 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./config.js";
-import { load } from "./state.js";
+import { getSupabaseAnonKey, getSupabaseUrl } from "./app-config.js";
+import { STORAGE_KEYS } from "./constants.js";
 
 /** @type {import("@supabase/supabase-js").SupabaseClient | null} */
 let _client = null;
@@ -20,14 +20,12 @@ let _client = null;
 
 /** @returns {string} */
 function _url() {
-  const stored = /** @type {string} */ (load("supabaseUrl", "") ?? "");
-  return stored.trim() || SUPABASE_URL || "";
+  return getSupabaseUrl();
 }
 
 /** @returns {string} */
 function _key() {
-  const stored = /** @type {string} */ (load("supabaseAnonKey", "") ?? "");
-  return stored.trim() || SUPABASE_ANON_KEY || "";
+  return getSupabaseAnonKey();
 }
 
 // ── Public API ─────────────────────────────────────────────────────────────
@@ -57,14 +55,14 @@ export function getSupabaseClient() {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
-        storageKey: "wedding_v1_supabase_auth",
+        storageKey: STORAGE_KEYS.SUPABASE_AUTH,
       },
       realtime: {
         params: { eventsPerSecond: 10 },
       },
       db: { schema: "public" },
       global: {
-        headers: { "x-app-version": /** @type {string} */ (SUPABASE_URL ? "wedding-manager" : "") },
+        headers: { "x-app-version": url ? "wedding-manager" : "" },
       },
     });
   }

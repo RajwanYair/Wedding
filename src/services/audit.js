@@ -14,21 +14,22 @@
  *   audit('UPDATE', 'guests', guestId, { before: oldGuest, after: newGuest });
  */
 
-import { BACKEND_TYPE, APP_VERSION } from "../core/config.js";
+import { APP_VERSION } from "../core/config.js";
+import {
+  getBackendTypeConfig,
+  getSupabaseAnonKey,
+  getSupabaseUrl,
+} from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
-import { load } from "../core/state.js";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "../core/config.js";
 
 // ── Runtime credential helpers ─────────────────────────────────────────
 
 function _url() {
-  const stored = load("supabaseUrl", "");
-  return (stored && String(stored).trim()) || SUPABASE_URL || "";
+  return getSupabaseUrl();
 }
 
 function _key() {
-  const stored = load("supabaseAnonKey", "");
-  return (stored && String(stored).trim()) || SUPABASE_ANON_KEY || "";
+  return getSupabaseAnonKey();
 }
 
 function _getAdminEmail() {
@@ -65,7 +66,7 @@ function _getAccessToken() {
  * @returns {void}
  */
 export function audit(action, entity, entityId, diff = null) {
-  if (BACKEND_TYPE !== "supabase") return;
+  if (getBackendTypeConfig() !== "supabase") return;
   const baseUrl = _url();
   const key = _key();
   if (!baseUrl || !key) return;
@@ -125,7 +126,7 @@ export function logAdminAction(permission, entityId, diff = null) {
  * @param {{ context?: string, url?: string }} [opts]
  */
 export function logError(err, opts = {}) {
-  if (BACKEND_TYPE !== "supabase") return;
+  if (getBackendTypeConfig() !== "supabase") return;
   const baseUrl = _url();
   const key = _key();
   if (!baseUrl || !key) return;

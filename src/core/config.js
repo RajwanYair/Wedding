@@ -7,15 +7,14 @@
  */
 
 // ── Version ───────────────────────────────────────────────────────────────
-export const APP_VERSION = "8.1.0";
+export const APP_VERSION = "8.2.0";
 
 // ── LocalStorage ─────────────────────────────────────────────────────────
 export const STORAGE_PREFIX = "wedding_v1_";
 
 // ── Sheets ───────────────────────────────────────────────────────────────
-export const SHEETS_WEBAPP_URL =
-  "https://script.google.com/macros/s/AKfycbxGYuciHXLurYbZn9s-Gx8uMmBSn1dZ20xOFoZkk3JXg3RrzR741jz2tsIKgLtN8cHQ/exec";
-export const SPREADSHEET_ID = "1hgAD078LFdzPEUKb3vgv8KXMd09n9EUlHR3ANP9SBMA";
+export const SHEETS_WEBAPP_URL = "";
+export const SPREADSHEET_ID = "";
 export const SHEETS_GUESTS_TAB = "Attendees";
 export const SHEETS_TABLES_TAB = "Tables";
 export const SHEETS_CONFIG_TAB = "Config";
@@ -38,12 +37,7 @@ export const FB_APP_ID = "";
 export const APPLE_SERVICE_ID = "";
 
 /** @type {string[]} */
-export const ADMIN_EMAILS = [
-  "yair.rajwan@gmail.com",
-  "ylipman@gmail.com",
-  "elior.rajwan@gmail.com",
-  "anat.rajwan@gmail.com",
-];
+export const ADMIN_EMAILS = [];
 
 /** Session rotation interval: 2 hours (S4.1) */
 export const AUTH_SESSION_DURATION_MS = 2 * 60 * 60 * 1000;

@@ -6,8 +6,13 @@
  */
 
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import {
+  getBackendTypeConfig,
+  getSheetsWebAppUrl,
+  getSpreadsheetId,
+} from "../core/app-config.js";
 import { el } from "../core/dom.js";
-import { t, loadLocale, applyI18n } from "../core/i18n.js";
+import { t, loadLocale, applyI18n, normalizeUiLanguage } from "../core/i18n.js";
 import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { sanitize } from "../utils/sanitize.js";
@@ -78,12 +83,9 @@ export function saveWeddingInfo(data) {
  * @param {"he"|"en"|"ar"|"ru"} lang
  */
 export async function switchLanguage(lang) {
-  const supported = ["he", "en", "ar", "ru"];
-  if (!supported.includes(lang)) return;
-  await loadLocale(lang);
-  save("lang", lang);
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === "he" || lang === "ar" ? "rtl" : "ltr";
+  const nextLang = normalizeUiLanguage(lang);
+  await loadLocale(nextLang);
+  save("lang", nextLang);
   applyI18n();
 }
 
@@ -108,12 +110,34 @@ export function populateSettings() {
   updateDataSummary();
 
   // Populate Sheets Web App URL if saved
-  const sheetsUrl = load("sheetsWebAppUrl", "");
+  const sheetsUrl = getSheetsWebAppUrl();
   if (sheetsUrl) {
     const urlInput = /** @type {HTMLInputElement|null} */ (
       document.getElementById("sheetsWebAppUrl")
     );
     if (urlInput && !urlInput.value) urlInput.value = sheetsUrl;
+  }
+
+  const backendSelect = /** @type {HTMLSelectElement|null} */ (
+    document.getElementById("backendTypeSelect")
+  );
+  if (backendSelect) backendSelect.value = getBackendTypeConfig();
+
+  const sheetId = getSpreadsheetId();
+  const sheetIdEl = document.getElementById("sheetsSpreadsheetIdValue");
+  if (sheetIdEl) sheetIdEl.textContent = sheetId || "\u2014";
+
+  const sheetLinkEl = /** @type {HTMLAnchorElement|null} */ (
+    document.getElementById("sheetsSpreadsheetLink")
+  );
+  if (sheetLinkEl) {
+    if (sheetId) {
+      sheetLinkEl.href = `https://docs.google.com/spreadsheets/d/${encodeURIComponent(sheetId)}`;
+      sheetLinkEl.classList.remove("u-hidden");
+    } else {
+      sheetLinkEl.removeAttribute("href");
+      sheetLinkEl.classList.add("u-hidden");
+    }
   }
 
   // Populate approved emails list

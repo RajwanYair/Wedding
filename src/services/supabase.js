@@ -9,23 +9,17 @@
  * Row-Level Security (RLS) should be configured on the Supabase project.
  */
 
-import {
-  SUPABASE_URL as _CONFIG_URL,
-  SUPABASE_ANON_KEY as _CONFIG_KEY,
-} from "../core/config.js";
-import { load } from "../core/state.js";
+import { getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { storeGet } from "../core/store.js";
 
 // ── Runtime-overridable credentials ──────────────────────────────────────
 
 function _getUrl() {
-  const stored = load("supabaseUrl", "");
-  return (stored && String(stored).trim()) || _CONFIG_URL || "";
+  return getSupabaseUrl();
 }
 
 function _getKey() {
-  const stored = load("supabaseAnonKey", "");
-  return (stored && String(stored).trim()) || _CONFIG_KEY || "";
+  return getSupabaseAnonKey();
 }
 
 /** @returns {boolean} */

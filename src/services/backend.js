@@ -9,7 +9,7 @@
  * delegates via this module.
  */
 
-import { BACKEND_TYPE as _CONFIG_BACKEND } from "../core/config.js";
+import { getBackendTypeConfig, getSupabaseUrl } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
 import { load } from "../core/state.js";
 
@@ -41,7 +41,7 @@ let _sbCheck = null;
  */
 export function getBackendType() {
   const stored = /** @type {string} */ (load("backendType", "") ?? "");
-  const val = stored.trim() || _CONFIG_BACKEND || "sheets";
+  const val = stored.trim() || getBackendTypeConfig();
   if (val === "supabase" || val === "none" || val === "both") return val;
   return "sheets";
 }
@@ -186,7 +186,6 @@ export async function pushAll() {
 
 // ── Edge Function helpers (Phase 7.6) ─────────────────────────────────────
 
-import { SUPABASE_URL as _EDGE_BASE_URL } from "../core/config.js";
 import { load as _edgeLoad } from "../core/state.js";
 
 /**
@@ -195,7 +194,7 @@ import { load as _edgeLoad } from "../core/state.js";
  */
 function _edgeFnBase() {
   const stored = _edgeLoad("supabaseUrl", "");
-  const base = (stored && String(stored).trim()) || _EDGE_BASE_URL || "";
+  const base = (stored && String(stored).trim()) || getSupabaseUrl() || "";
   return base ? `${base}/functions/v1` : "";
 }
 

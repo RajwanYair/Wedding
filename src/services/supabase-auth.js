@@ -16,20 +16,21 @@
  *   4. Session stored in localStorage via STORAGE_KEYS.SUPABASE_SESSION
  */
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY, ADMIN_EMAILS } from "../core/config.js";
+import {
+  getApprovedAdminEmails,
+  getSupabaseAnonKey,
+  getSupabaseUrl,
+} from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
-import { load } from "../core/state.js";
 
 // ── Runtime credential resolution ────────────────────────────────────────
 
 function _url() {
-  const stored = load("supabaseUrl", "");
-  return (stored && String(stored).trim()) || SUPABASE_URL || "";
+  return getSupabaseUrl();
 }
 
 function _key() {
-  const stored = load("supabaseAnonKey", "");
-  return (stored && String(stored).trim()) || SUPABASE_ANON_KEY || "";
+  return getSupabaseAnonKey();
 }
 
 /** @returns {boolean} */
@@ -231,6 +232,7 @@ export function handleOAuthRedirect() {
  */
 export function isAdmin(sess) {
   if (!sess?.user?.email) return false;
-  return ADMIN_EMAILS.includes(sess.user.email.toLowerCase()) ||
-         ADMIN_EMAILS.includes(sess.user.email);
+  return getApprovedAdminEmails().includes(
+    sess.user.email.trim().toLowerCase(),
+  );
 }

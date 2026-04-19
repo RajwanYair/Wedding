@@ -19,20 +19,17 @@
  *   - On reconnect, reconciles remote state vs local (last-write-wins by updated_at)
  */
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "../core/config.js";
-import { load } from "../core/state.js";
+import { getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { storeGet, storeSet } from "../core/store.js";
 
 // ── Runtime credential resolution ────────────────────────────────────────
 
 function _url() {
-  const stored = load("supabaseUrl", "");
-  return (stored && String(stored).trim()) || SUPABASE_URL || "";
+  return getSupabaseUrl();
 }
 
 function _key() {
-  const stored = load("supabaseAnonKey", "");
-  return (stored && String(stored).trim()) || SUPABASE_ANON_KEY || "";
+  return getSupabaseAnonKey();
 }
 
 // ── Channel registry ─────────────────────────────────────────────────────
