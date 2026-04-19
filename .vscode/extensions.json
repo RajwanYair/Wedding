@@ -25,7 +25,10 @@
         "Gruntfuggly.todo-tree",
         "mhutchie.git-graph",
         "christian-kohler.path-intellisense",
-        "DavidAnson.vscode-markdownlint"
+        "DavidAnson.vscode-markdownlint",
+        "jock.svg",
+        "bierner.markdown-mermaid",
+        "ms-vscode.vscode-js-profile-flame"
     ],
     "unwantedRecommendations": []
 }
