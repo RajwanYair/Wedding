@@ -352,6 +352,11 @@ let _activeSection = null;
 
   // 11f. Fetch GAS version for status bar (fire-and-forget)
   fetchGasVersion(currentUser());
+
+  // 11g. S17 — Activate Supabase Realtime when backend is configured
+  import("./services/supabase-realtime.js").then(({ activateRealtimeSync }) => {
+    activateRealtimeSync(["guests", "tables", "config"]).catch(() => {});
+  });
 })();
 
 // ── S9.2 Event Switcher ──────────────────────────────────────────────────

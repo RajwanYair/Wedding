@@ -66,7 +66,7 @@ function _execCommandCopy(text) {
   try {
     ok = document.execCommand("copy");
   } catch {
-    ok = false;
+    // execCommand failed — ok stays false
   }
   document.body.removeChild(el);
   return ok;

@@ -37,14 +37,13 @@ test.describe("Accessibility — axe-core WCAG AA", () => {
       const report = critical
         .map(
           (v) =>
-            `[${v.impact}] ${v.id}: ${v.description}\n` +
-            v.nodes
+            `[${v.impact}] ${v.id}: ${v.description}\n${v.nodes
               .slice(0, 3)
               .map((n) => `  → ${n.html}`)
-              .join("\n"),
+              .join("\n")}`,
         )
         .join("\n\n");
-      // eslint-disable-next-line no-console
+       
       console.error(`A11y violations:\n${report}`);
     }
 

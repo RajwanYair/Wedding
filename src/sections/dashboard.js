@@ -491,7 +491,8 @@ export function renderVendorDueReminders() {
     const item = document.createElement("div");
     let cls = "vendor-due-item";
     let badgeCls = "vendor-due-badge";
-    let badgeText = "";
+    /** @type {string} */
+    let badgeText;
     if (daysLeft < 0) {
       cls += " vendor-due-item--overdue";
       badgeCls += " vendor-due-badge--overdue";
