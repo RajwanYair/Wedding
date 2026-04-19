@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.2.2] — 2026-04-19
+
+### Changed
+
+- Centralized browser persistence access behind `src/core/storage.js` helpers and migrated core config, audit, push, settings, error-monitor, Supabase auth, WhatsApp queue/config, guest-token revocation, and IndexedDB migration-marker flows off direct `localStorage` and `sessionStorage` calls.
+- Updated the prefixed storage helper layer to delegate to the canonical core storage surface instead of maintaining a separate raw browser-storage implementation.
+- Localized the What’s New release items and PWA update/install dismiss labels so the admin release surface stays aligned with the bilingual UI requirement.
+- Added focused unit coverage for the storage centralization path and the translated What’s New / PWA banner behavior, including Supabase auth, backend mirror, guest-token, and WhatsApp storage callers.
+
 ## [8.2.1] — 2026-04-19
 
 ### Changed
