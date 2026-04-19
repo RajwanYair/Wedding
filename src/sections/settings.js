@@ -12,6 +12,13 @@ import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets, queueSize, queueKeys, onSyncStatus } from "../services/sheets.js";
+import {
+  isPushSupported,
+  requestPushPermission,
+  subscribePush,
+  unsubscribePush,
+  getCachedSubscription,
+} from "../services/push-notifications.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -30,6 +37,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   generateRsvpQrCode();
   // Attempt to load remote audit log
   refreshAuditLog();
+  // Wire push notification UI (S18d)
+  _renderPushCard();
 }
 
 export function unmount() {
@@ -747,4 +756,89 @@ export function getStoreSizes() {
       return { key, bytes };
     })
     .sort((a, b) => b.bytes - a.bytes);
+}
+
+// ── S18d — Push Notification UI ───────────────────────────────────────────
+
+/**
+ * Render the push notification card inside #pushSettingsCard.
+ * Shows enable/disable toggle plus VAPID key input.
+ */
+function _renderPushCard() {
+  const container = document.getElementById("pushSettingsCard");
+  if (!container) return;
+
+  if (!isPushSupported()) {
+    container.textContent = t("push_not_supported");
+    return;
+  }
+
+  const isSubscribed = !!getCachedSubscription();
+  const vapidKey = /** @type {string} */ (load("vapidPublicKey", ""));
+
+  // VAPID input row
+  const vapidLabel = document.createElement("label");
+  vapidLabel.className = "settings-label";
+  vapidLabel.setAttribute("for", "vapidKeyInput");
+  const vapidSpan = document.createElement("span");
+  vapidSpan.setAttribute("data-i18n", "push_vapid_label");
+  vapidSpan.textContent = t("push_vapid_label");
+  const vapidInput = document.createElement("input");
+  vapidInput.type = "text";
+  vapidInput.id = "vapidKeyInput";
+  vapidInput.className = "settings-input";
+  vapidInput.placeholder = t("push_vapid_placeholder");
+  vapidInput.value = typeof vapidKey === "string" ? vapidKey : "";
+  vapidInput.addEventListener("change", () => {
+    save("vapidPublicKey", vapidInput.value.trim());
+  });
+  vapidLabel.appendChild(vapidSpan);
+  vapidLabel.appendChild(vapidInput);
+
+  // Status msg
+  const statusMsg = document.createElement("p");
+  statusMsg.className = "status-msg";
+  statusMsg.setAttribute("aria-live", "polite");
+  statusMsg.textContent = isSubscribed ? t("push_status_active") : t("push_status_inactive");
+
+  // Toggle button
+  const toggleBtn = document.createElement("button");
+  toggleBtn.className = isSubscribed ? "btn btn-danger btn-small" : "btn btn-primary btn-small";
+  toggleBtn.textContent = isSubscribed ? t("push_btn_disable") : t("push_btn_enable");
+  toggleBtn.addEventListener("click", async () => {
+    toggleBtn.disabled = true;
+    if (getCachedSubscription()) {
+      const ok = await unsubscribePush();
+      statusMsg.textContent = ok ? t("push_disabled") : t("push_disable_fail");
+      toggleBtn.textContent = t("push_btn_enable");
+      toggleBtn.className = "btn btn-primary btn-small";
+    } else {
+      save("vapidPublicKey", vapidInput.value.trim());
+      if (!vapidInput.value.trim()) {
+        statusMsg.textContent = t("push_vapid_required");
+        toggleBtn.disabled = false;
+        return;
+      }
+      const perm = await requestPushPermission();
+      if (perm !== "granted") {
+        statusMsg.textContent = t("push_permission_denied");
+        toggleBtn.disabled = false;
+        return;
+      }
+      const sub = await subscribePush(vapidInput.value.trim());
+      if (sub) {
+        statusMsg.textContent = t("push_enabled");
+        toggleBtn.textContent = t("push_btn_disable");
+        toggleBtn.className = "btn btn-danger btn-small";
+      } else {
+        statusMsg.textContent = t("push_enable_fail");
+      }
+    }
+    toggleBtn.disabled = false;
+  });
+
+  container.textContent = "";
+  container.appendChild(vapidLabel);
+  container.appendChild(statusMsg);
+  container.appendChild(toggleBtn);
 }

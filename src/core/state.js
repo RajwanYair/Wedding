@@ -224,3 +224,58 @@ export function clearEventData(eventId) {
       .forEach((k) => localStorage.removeItem(k));
   } catch {}
 }
+
+// ── S16b — Async storage wrappers ────────────────────────────────────────
+//
+// These use the async IndexedDB adapter from storage.js when available,
+// falling back to synchronous localStorage. Callers that can afford to
+// await should prefer these over the sync `load`/`save` variants.
+
+import * as _asyncStorage from "./storage.js";
+
+/**
+ * Async load — uses the IndexedDB adapter when initialised, else `load()`.
+ * @template T
+ * @param {string} key
+ * @param {T} [fallback]
+ * @returns {Promise<T | undefined>}
+ */
+export async function loadAsync(key, fallback) {
+  try {
+    const raw = await _asyncStorage.storageGet(_prefix() + key);
+    if (raw === null || raw === undefined) return fallback;
+    return /** @type {T} */ (JSON.parse(raw));
+  } catch {
+    return load(key, fallback);
+  }
+}
+
+/**
+ * Async save — uses the IndexedDB adapter when initialised, else `save()`.
+ * @param {string} key
+ * @param {unknown} value
+ * @returns {Promise<void>}
+ */
+export async function saveAsync(key, value) {
+  try {
+    await _asyncStorage.storageSet(_prefix() + key, JSON.stringify(value));
+    // Also mirror to sync localStorage so sync callers still work
+    try { localStorage.setItem(_prefix() + key, JSON.stringify(value)); } catch {}
+  } catch {
+    save(key, value);
+  }
+}
+
+/**
+ * Async remove — uses the IndexedDB adapter when initialised.
+ * @param {string} key
+ * @returns {Promise<void>}
+ */
+export async function removeAsync(key) {
+  try {
+    await _asyncStorage.storageRemove(_prefix() + key);
+    try { localStorage.removeItem(_prefix() + key); } catch {}
+  } catch {
+    remove(key);
+  }
+}

@@ -292,3 +292,22 @@ export function pluralCategory(count) {
   const pr = new Intl.PluralRules(_locale());
   return /** @type {"zero"|"one"|"two"|"few"|"many"|"other"} */ (pr.select(count));
 }
+
+// ── S22b — RTL helpers (explicit per-locale) ─────────────────────────────
+
+/**
+ * Whether the current locale uses right-to-left text direction.
+ * Explicit: `he` and `ar` are RTL; `en` and `ru` are LTR.
+ * @returns {boolean}
+ */
+export function isRTL() {
+  return RTL_LANGS.has(_lang);
+}
+
+/**
+ * The logical text direction for the current locale.
+ * @returns {'rtl' | 'ltr'}
+ */
+export function textDir() {
+  return isRTL() ? "rtl" : "ltr";
+}
