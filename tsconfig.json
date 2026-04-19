@@ -11,8 +11,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "exactOptionalPropertyTypes": false,
-    "target": "ES2022",
-    "module": "ES2022",
+    "target": "ES2025",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -20,7 +20,7 @@
       "vite/client"
     ],
     "lib": [
-      "ES2023",
+      "ES2025",
       "DOM",
       "DOM.Iterable"
     ]
