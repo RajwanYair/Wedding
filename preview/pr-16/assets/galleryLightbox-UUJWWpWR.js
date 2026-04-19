@@ -1,0 +1,12 @@
+var e=`<div class="modal-overlay" id="galleryLightbox" role="dialog" aria-modal="true"
+    aria-label="תמונה מוגדלת" aria-hidden="true"
+    data-action="closeGalleryLightbox" data-action-self>
+    <div class="gallery-lightbox-inner">
+      <button class="modal-close gallery-lightbox-close" data-action="closeGalleryLightbox"
+        aria-label="סגור" data-i18n-aria="gallery_close_lightbox">&times;</button>
+      <img id="galleryLightboxImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="gallery-lightbox-img" decoding="async">
+      <div id="galleryLightboxCaption" class="gallery-lightbox-caption"></div>
+    </div>
+  </div>
+`;export{e as default};
+//# sourceMappingURL=galleryLightbox-UUJWWpWR.js.map
