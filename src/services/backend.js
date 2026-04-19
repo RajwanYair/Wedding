@@ -12,6 +12,7 @@
 import { getBackendTypeConfig, getSupabaseUrl } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
 import { load } from "../core/state.js";
+import { readBrowserStorage } from "../core/storage.js";
 
 // ── Lazy imports (avoid circular) ────────────────────────────────────────
 /** @type {typeof import('./sheets.js').syncStoreKeyToSheets | null} */
@@ -287,11 +288,7 @@ export async function syncToSheetsEdge(resource, rows) {
  * @returns {boolean}
  */
 export function isSheetsMirrorEnabled() {
-  try {
-    return localStorage.getItem(STORAGE_KEYS.SHEETS_MIRROR) === "true";
-  } catch {
-    return false;
-  }
+  return readBrowserStorage(STORAGE_KEYS.SHEETS_MIRROR) === "true";
 }
 
 // ── Phase 10.1 — WhatsApp Cloud API client helper ─────────────────────────

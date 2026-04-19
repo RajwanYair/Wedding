@@ -9,6 +9,7 @@ import { STORAGE_KEYS } from "../core/constants.js";
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
+import { readBrowserStorageJson, writeBrowserStorage } from "../core/storage.js";
 import { cleanPhone } from "../utils/phone.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
@@ -327,8 +328,8 @@ export function saveGreenApiConfig(form) {
     )?.value?.trim() ?? "";
 
   try {
-    localStorage.setItem(STORAGE_KEYS.GREEN_API_INSTANCE_ID, instanceId);
-    localStorage.setItem(STORAGE_KEYS.GREEN_API_TOKEN, token);
+    writeBrowserStorage(STORAGE_KEYS.GREEN_API_INSTANCE_ID, instanceId);
+    writeBrowserStorage(STORAGE_KEYS.GREEN_API_TOKEN, token);
   } catch {
     // storage unavailable
   }
@@ -397,11 +398,7 @@ const _QUEUE_KEY = STORAGE_KEYS.REMINDER_QUEUE;
  * @returns {ScheduledMsg[]}
  */
 export function getScheduledQueue() {
-  try {
-    return JSON.parse(localStorage.getItem(_QUEUE_KEY) || "[]");
-  } catch {
-    return [];
-  }
+  return readBrowserStorageJson(_QUEUE_KEY, []);
 }
 
 /**

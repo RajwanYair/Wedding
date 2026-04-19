@@ -19,6 +19,7 @@
  */
 
 import { STORAGE_KEYS } from "../core/constants.js";
+import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage.js";
 import { storeGet, storeSet } from "../core/store.js";
 
 // ── Config ─────────────────────────────────────────────────────────────────
@@ -144,15 +145,14 @@ export function verifyToken(token) {
  * @returns {string[]}
  */
 function _getRevokedSet() {
-  const raw = localStorage.getItem(REVOKED_STORE_KEY);
-  return raw ? JSON.parse(raw) : [];
+  return readBrowserStorageJson(REVOKED_STORE_KEY, []);
 }
 
 /**
  * @param {string[]} set
  */
 function _saveRevokedSet(set) {
-  localStorage.setItem(REVOKED_STORE_KEY, JSON.stringify(set));
+  writeBrowserStorageJson(REVOKED_STORE_KEY, set);
 }
 
 /**

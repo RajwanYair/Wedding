@@ -22,6 +22,11 @@ import {
   getSupabaseUrl,
 } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
+import {
+  readBrowserStorageJson,
+  removeBrowserStorage,
+  writeBrowserStorageJson,
+} from "../core/storage.js";
 
 // ── Runtime credential resolution ────────────────────────────────────────
 
@@ -51,31 +56,22 @@ export function isSupabaseAuthConfigured() {
 
 /** @returns {SupabaseSession | null} */
 export function getSession() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_SESSION);
-    if (!raw) return null;
-    const sess = /** @type {SupabaseSession} */ (JSON.parse(raw));
-    if (sess.expires_at && Date.now() / 1000 > sess.expires_at - 60) {
-      // Token expired (or expiring in 60s) — attempt silent refresh
-      _refreshSession(sess.refresh_token).catch(() => clearSession());
-    }
-    return sess;
-  } catch {
-    return null;
+  const sess = readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null);
+  if (!sess) return null;
+  if (sess.expires_at && Date.now() / 1000 > sess.expires_at - 60) {
+    // Token expired (or expiring in 60s) — attempt silent refresh
+    _refreshSession(sess.refresh_token).catch(() => clearSession());
   }
+  return sess;
 }
 
 /** @param {SupabaseSession} sess */
 function _saveSession(sess) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.SUPABASE_SESSION, JSON.stringify(sess));
-  } catch {}
+  writeBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, sess);
 }
 
 export function clearSession() {
-  try {
-    localStorage.removeItem(STORAGE_KEYS.SUPABASE_SESSION);
-  } catch {}
+  removeBrowserStorage(STORAGE_KEYS.SUPABASE_SESSION);
 }
 
 // ── REST helpers ─────────────────────────────────────────────────────────

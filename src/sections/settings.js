@@ -15,6 +15,7 @@ import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n, normalizeUiLanguage } from "../core/i18n.js";
 import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
+import { readBrowserStorageJson } from "../core/storage.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets, queueSize, queueKeys, onSyncStatus } from "../services/sheets.js";
 import {
@@ -728,11 +729,10 @@ export function checkDataIntegrity() {
  * Sprint 9 — DX: debug report for admin troubleshooting.
  */
 export function exportDebugReport() {
-  let errors = [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.ERRORS);
-    if (raw) errors = JSON.parse(raw);
-  } catch { /* ignore corrupt data */ }
+  /** @type {any[]} */
+  const errors = STORAGE_KEYS.ERRORS
+    ? readBrowserStorageJson(STORAGE_KEYS.ERRORS, [])
+    : [];
 
   const report = {
     timestamp: new Date().toISOString(),

@@ -19,7 +19,13 @@ import {
   nextUiLanguage,
 } from "./core/i18n.js";
 import { updateNavForAuth } from "./core/nav-auth.js";
-import { initStorage, migrateFromLocalStorage, getAdapterType } from "./core/storage.js";
+import {
+  initStorage,
+  migrateFromLocalStorage,
+  getAdapterType,
+  readBrowserStorage,
+  writeBrowserStorage,
+} from "./core/storage.js";
 import {
   load,
   save,
@@ -229,11 +235,11 @@ let _activeSection = null;
   // 0a. One-time migration from localStorage → IndexedDB (S16)
   if (
     getAdapterType() === "indexeddb" &&
-    localStorage.getItem(STORAGE_KEYS.IDB_MIGRATED) !== "1"
+    readBrowserStorage(STORAGE_KEYS.IDB_MIGRATED) !== "1"
   ) {
     const migrated = await migrateFromLocalStorage();
     if (migrated > 0) {
-      localStorage.setItem(STORAGE_KEYS.IDB_MIGRATED, "1");
+      writeBrowserStorage(STORAGE_KEYS.IDB_MIGRATED, "1");
     }
   }
 
