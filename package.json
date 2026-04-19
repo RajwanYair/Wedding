@@ -14,7 +14,7 @@
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
         "test:e2e": "playwright test",
-        "lint:html": "htmlhint --config .htmlhintrc index.html",
+        "lint:html": "htmlhint --config ../tooling/htmlhint/.htmlhintrc index.html",
         "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
         "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
         "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md \".github/**/*.md\"",
@@ -32,7 +32,16 @@
         "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm test && npm run build"
     },
     "engines": {
-        "node": ">=22.0.0"
+        "node": ">=22.0.0",
+        "npm": ">=11.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RajwanYair/Wedding.git"
+    },
+    "homepage": "https://rajwanyair.github.io/Wedding",
+    "bugs": {
+        "url": "https://github.com/RajwanYair/Wedding/issues"
     },
     "comment:deps": "Runtime deps in parent MyScripts/ workspace. Run npm install from ../MyScripts. CI uses its own npm ci.",
     "devDependencies": {
