@@ -32,6 +32,11 @@
         "${workspaceFolder}"
       ],
       "description": "Scoped read/write access to the Wedding workspace."
+    },
+    "gitkraken": {
+      "type": "http",
+      "url": "https://mcp.gitkraken.com/sse",
+      "description": "GitKraken git history, blame, branch, and launchpad context in chat."
     }
   }
 }
