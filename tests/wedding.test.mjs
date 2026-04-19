@@ -219,7 +219,6 @@ describe("Current architecture", function () {
   });
 
   it("store-backed services rely on canonical bootstrap instead of local initStore calls", function () {
-    assert.ok(!read("src/services/donation-tracker.js").includes("initStore("));
     assert.ok(!read("src/services/seating-constraints.js").includes("initStore("));
   });
 

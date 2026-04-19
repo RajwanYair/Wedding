@@ -294,3 +294,37 @@ flowchart LR
     R["@layer responsive\n768px + 480px breakpoints"] --> P
     P["@layer print\nPrint-only overrides"]
 ```
+
+---
+
+## Dead Export Audit (S21a — v8.2.0)
+
+Run: `npm run audit:dead` via `scripts/dead-export-check.mjs`
+
+| Metric | Value |
+| ------ | ----- |
+| Total exported symbols | 1330 |
+| Imported somewhere | 1084 (81%) |
+| Dead (no import found) | 246 (19%) |
+| Files audited | 213 source files |
+
+### Removed Aspirational Files
+
+The following files were explicitly flagged in the roadmap (Part I, Section 10) as aspirational with no active consumers and removed in v8.2.0:
+
+| File | Justification |
+| ---- | ------------- |
+| `src/services/donation-tracker.js` | No UI, no section, no activation plan |
+| `src/services/vendor-proposals.js` | No UI, no section, no activation plan |
+| `src/services/sms-service.js` | Redundant with WhatsApp path; no activation plan |
+| `src/core/plugins.js` | Plugin system designed but never had real consumers |
+
+### Remaining Dead Exports
+
+246 symbols have no `import` reference anywhere. They fall into three categories:
+
+1. **Section analytics helpers** (e.g. `getCheckinRateByTable`, `getRsvpDailyTrend`) — exported for future dashboard wiring; retain
+2. **Service utilities** (e.g. `logAdminAction`, `getClaims`) — exported for Supabase activation (v8.3+); retain
+3. **Truly orphaned utilities** — quarterly review target; remove if no activation plan within 90 days
+
+Re-run quarterly: `npm run audit:dead`

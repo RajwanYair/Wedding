@@ -24,6 +24,7 @@
     "sync:version": "node scripts/sync-version.mjs",
     "icons": "node scripts/generate-icons.mjs",
     "sri": "node scripts/sri-check.mjs",
+    "audit:dead": "node scripts/dead-export-check.mjs",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
     "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm test && npm run build"
