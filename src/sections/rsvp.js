@@ -12,6 +12,7 @@ import { sanitize } from "../utils/sanitize.js";
 import { nowISOJerusalem } from "../utils/date.js";
 import { enqueueWrite, appendToRsvpLog, syncStoreKeyToSheets } from "../services/sheets.js";
 import { GUEST_SIDES, RSVP_RESPONSE_STATUSES, MEAL_TYPES } from "../core/constants.js";
+import { vibrate, HAPTIC } from "../utils/haptic.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -180,6 +181,7 @@ export function submitRsvp(data) {
       .catch(() => {/* Background Sync not available */});
   }
 
+  vibrate(HAPTIC.SUCCESS); // S23 haptic feedback on RSVP submit
   _showConfirmation(/** @type {string} */ (value.status));
   return { ok: true };
 }

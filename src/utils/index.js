@@ -12,3 +12,4 @@ export * from "./pagination.js";
 export * from "./virtual-list.js";
 export * from "./roles.js";
 export * from "./pii.js";
+export * from "./haptic.js";

@@ -9,6 +9,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 import { announce } from "../core/ui.js";
+import { vibrate, HAPTIC } from "../utils/haptic.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -71,6 +72,7 @@ export function checkInGuest(guestId) {
     };
     storeSet("guests", guests);
     enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+    vibrate(HAPTIC.SUCCESS); // S23 haptic feedback on check-in
   }
 }
 
