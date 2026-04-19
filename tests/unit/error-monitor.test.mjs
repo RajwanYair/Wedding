@@ -7,9 +7,24 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 let initErrorMonitor, getClientErrors, clearClientErrors;
+let _store = {};
+
+vi.stubGlobal("localStorage", {
+  getItem: (key) => (_store[key] ?? null),
+  setItem: (key, value) => {
+    _store[key] = String(value);
+  },
+  removeItem: (key) => {
+    delete _store[key];
+  },
+  clear: () => {
+    _store = {};
+  },
+});
 
 beforeEach(async () => {
   vi.resetModules();
+  _store = {};
   ({ initErrorMonitor, getClientErrors, clearClientErrors } =
     await import("../../src/utils/error-monitor.js"));
   clearClientErrors();

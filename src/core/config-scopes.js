@@ -17,6 +17,11 @@
  */
 
 import { STORAGE_KEYS } from "./constants.js";
+import {
+  readBrowserStorageJson,
+  removeBrowserStorage,
+  writeBrowserStorageJson,
+} from "./storage.js";
 
 /** Storage key for persisted runtime overrides. */
 const RUNTIME_KEY = STORAGE_KEYS.RUNTIME_CONFIG;
@@ -45,13 +50,7 @@ const DEFAULTS = {
  * @returns {Record<string, unknown>}
  */
 function readRuntime() {
-  try {
-    const raw = localStorage.getItem(RUNTIME_KEY);
-    if (!raw) return {};
-    return /** @type {Record<string, unknown>} */ (JSON.parse(raw));
-  } catch {
-    return {};
-  }
+  return readBrowserStorageJson(RUNTIME_KEY, {});
 }
 
 /**
@@ -59,11 +58,7 @@ function readRuntime() {
  * @param {Record<string, unknown>} cfg
  */
 function writeRuntime(cfg) {
-  try {
-    localStorage.setItem(RUNTIME_KEY, JSON.stringify(cfg));
-  } catch {
-    // storage may be full/unavailable — silently ignore
-  }
+  writeBrowserStorageJson(RUNTIME_KEY, cfg);
 }
 
 // ── Public API ─────────────────────────────────────────────────────────────
@@ -117,11 +112,7 @@ export function resetRuntimeConfig(key) {
  * Remove ALL runtime overrides.
  */
 export function clearRuntimeConfig() {
-  try {
-    localStorage.removeItem(RUNTIME_KEY);
-  } catch {
-    // ignore
-  }
+  removeBrowserStorage(RUNTIME_KEY);
 }
 
 /**

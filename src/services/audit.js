@@ -21,6 +21,11 @@ import {
   getSupabaseUrl,
 } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
+import {
+  readBrowserStorageJson,
+  readSessionStorage,
+  writeSessionStorage,
+} from "../core/storage.js";
 
 // ── Runtime credential helpers ─────────────────────────────────────────
 
@@ -33,27 +38,15 @@ function _key() {
 }
 
 function _getAdminEmail() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_SESSION);
-    if (!raw) return null;
-    const sess = JSON.parse(raw);
-    return sess?.user?.email ?? null;
-  } catch {
-    return null;
-  }
+  const sess = readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null);
+  return sess?.user?.email ?? null;
 }
 
 // ── Session token for RLS ──────────────────────────────────────────────
 
 function _getAccessToken() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_SESSION);
-    if (!raw) return null;
-    const sess = JSON.parse(raw);
-    return sess?.access_token ?? null;
-  } catch {
-    return null;
-  }
+  const sess = readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null);
+  return sess?.access_token ?? null;
 }
 
 // ── Fire-and-forget write ─────────────────────────────────────────────
@@ -161,13 +154,16 @@ export function logError(err, opts = {}) {
 let _sessionId = "";
 function _getSessionId() {
   if (!_sessionId) {
-    try {
-      _sessionId = sessionStorage.getItem(STORAGE_KEYS.ERROR_SESSION_ID) ?? "";
-      if (!_sessionId) {
+    _sessionId = readSessionStorage(STORAGE_KEYS.ERROR_SESSION_ID, "") ?? "";
+    if (!_sessionId) {
+      try {
         _sessionId = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-        sessionStorage.setItem(STORAGE_KEYS.ERROR_SESSION_ID, _sessionId);
+        writeSessionStorage(STORAGE_KEYS.ERROR_SESSION_ID, _sessionId);
+      } catch {
+        _sessionId = `${Date.now()}`;
       }
-    } catch {
+    }
+    if (!_sessionId) {
       _sessionId = `${Date.now()}`;
     }
   }

@@ -6,6 +6,7 @@
  */
 
 import { STORAGE_KEYS } from "../core/constants.js";
+import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage.js";
 
 const STORAGE_KEY = STORAGE_KEYS.ERRORS;
 const MAX_ENTRIES = 50;
@@ -15,17 +16,12 @@ let _errors = [];
 
 /** Load previously stored errors from localStorage. */
 function _load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) _errors = JSON.parse(raw);
-  } catch { /* ignore corrupt data */ }
+  _errors = readBrowserStorageJson(STORAGE_KEY, []);
 }
 
 /** Persist current errors to localStorage. */
 function _persist() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(_errors));
-  } catch { /* quota exceeded — silently drop */ }
+  writeBrowserStorageJson(STORAGE_KEY, _errors);
 }
 
 /**

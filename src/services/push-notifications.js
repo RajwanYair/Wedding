@@ -12,6 +12,11 @@
  */
 
 import { STORAGE_KEYS } from "../core/constants.js";
+import {
+  readBrowserStorageJson,
+  removeBrowserStorage,
+  writeBrowserStorageJson,
+} from "../core/storage.js";
 import { callEdgeFunction } from "./backend.js";
 
 const _CACHE_KEY = STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE;
@@ -96,11 +101,7 @@ export async function subscribePush(vapidPublicKey) {
   });
 
   const data = serializeSubscription(sub);
-  try {
-    localStorage.setItem(_CACHE_KEY, JSON.stringify(data));
-  } catch {
-    // storage quota - non-fatal
-  }
+  writeBrowserStorageJson(_CACHE_KEY, data);
   return data;
 }
 
@@ -114,9 +115,7 @@ export async function unsubscribePush() {
   const sub = await reg.pushManager.getSubscription();
   if (!sub) return false;
   const ok = await sub.unsubscribe();
-  if (ok) {
-    try { localStorage.removeItem(_CACHE_KEY); } catch { /**/ }
-  }
+  if (ok) removeBrowserStorage(_CACHE_KEY);
   return ok;
 }
 
@@ -125,13 +124,7 @@ export async function unsubscribePush() {
  * @returns {PushSubscriptionData | null}
  */
 export function getCachedSubscription() {
-  try {
-    const raw = localStorage?.getItem(_CACHE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
+  return readBrowserStorageJson(_CACHE_KEY, null);
 }
 
 // ── Serialization ──────────────────────────────────────────────────────────

@@ -7,6 +7,13 @@
  */
 
 import { STORAGE_PREFIX } from "../core/config.js";
+import {
+  listBrowserStorageKeys,
+  readBrowserStorage,
+  readBrowserStorageJson,
+  removeBrowserStorage,
+  writeBrowserStorageJson,
+} from "../core/storage.js";
 
 const PREFIX = STORAGE_PREFIX;
 
@@ -18,9 +25,7 @@ const PREFIX = STORAGE_PREFIX;
  * @param {T} value
  */
 export function storageSet(key, value) {
-  try {
-    localStorage.setItem(PREFIX + key, JSON.stringify(value));
-  } catch { /* quota exceeded — ignore */ }
+  writeBrowserStorageJson(PREFIX + key, value);
 }
 
 /**
@@ -32,13 +37,7 @@ export function storageSet(key, value) {
  * @returns {T}
  */
 export function storageGet(key, defaultValue = undefined) {
-  try {
-    const raw = localStorage.getItem(PREFIX + key);
-    if (raw === null) return /** @type {T} */ (defaultValue);
-    return /** @type {T} */ (JSON.parse(raw));
-  } catch {
-    return /** @type {T} */ (defaultValue);
-  }
+  return readBrowserStorageJson(PREFIX + key, /** @type {T} */ (defaultValue));
 }
 
 /**
@@ -46,9 +45,7 @@ export function storageGet(key, defaultValue = undefined) {
  * @param {string} key  Without prefix
  */
 export function storageRemove(key) {
-  try {
-    localStorage.removeItem(PREFIX + key);
-  } catch { /* ignore */ }
+  removeBrowserStorage(PREFIX + key);
 }
 
 /**
@@ -57,11 +54,7 @@ export function storageRemove(key) {
  * @returns {boolean}
  */
 export function storageHas(key) {
-  try {
-    return localStorage.getItem(PREFIX + key) !== null;
-  } catch {
-    return false;
-  }
+  return readBrowserStorage(PREFIX + key) !== null;
 }
 
 /**
@@ -69,14 +62,7 @@ export function storageHas(key) {
  * @returns {string[]}
  */
 export function storageKeys() {
-  const keys = [];
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith(PREFIX)) keys.push(k.slice(PREFIX.length));
-    }
-  } catch { /* ignore */ }
-  return keys;
+  return listBrowserStorageKeys(PREFIX).map((key) => key.slice(PREFIX.length));
 }
 
 /**

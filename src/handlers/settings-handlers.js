@@ -9,6 +9,7 @@ import { STORAGE_KEYS } from "../core/constants.js";
 import { showToast, closeModal, showConfirmDialog } from "../core/ui.js";
 import { t, normalizeUiLanguage, nextUiLanguage } from "../core/i18n.js";
 import { load, save } from "../core/state.js";
+import { writeBrowserStorage } from "../core/storage.js";
 import { storeSet } from "../core/store.js";
 import {
   syncSheetsNow,
@@ -96,9 +97,7 @@ export function registerSettingsHandlers(ctx) {
 
   on("toggleSheetsMirror", (el) => {
     const checked = /** @type {HTMLInputElement} */ (el).checked;
-    try {
-      localStorage.setItem(STORAGE_KEYS.SHEETS_MIRROR, checked ? "true" : "false");
-    } catch { /* ignore */ }
+    writeBrowserStorage(STORAGE_KEYS.SHEETS_MIRROR, checked ? "true" : "false");
     showToast(
       checked ? t("sheets_mirror_on") : t("sheets_mirror_off"),
       checked ? "success" : "info",
@@ -113,9 +112,7 @@ export function registerSettingsHandlers(ctx) {
       showToast(t("wa_cloud_id_required"), "error");
       return;
     }
-    try {
-      localStorage.setItem(STORAGE_KEYS.WA_PHONE_NUMBER_ID, phoneNumId);
-    } catch { /* ignore */ }
+    writeBrowserStorage(STORAGE_KEYS.WA_PHONE_NUMBER_ID, phoneNumId);
     showToast(t("wa_cloud_saved"), "success");
   });
 

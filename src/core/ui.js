@@ -7,6 +7,11 @@
 
 import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
+import {
+  readBrowserStorage,
+  removeBrowserStorage,
+  writeBrowserStorage,
+} from "./storage.js";
 
 // ── Toast ─────────────────────────────────────────────────────────────────
 
@@ -233,11 +238,7 @@ export function cycleTheme() {
     .replace(/\btheme-\S+/g, "")
     .trim();
   if (theme !== "default") document.body.classList.add(`theme-${theme}`);
-  try {
-    localStorage.setItem(STORAGE_KEYS.THEME, theme);
-  } catch {
-    // storage unavailable
-  }
+  writeBrowserStorage(STORAGE_KEYS.THEME, theme);
 }
 
 /**
@@ -245,14 +246,10 @@ export function cycleTheme() {
  */
 export function toggleLightMode() {
   document.body.classList.toggle("light-mode");
-  try {
-    localStorage.setItem(
-      STORAGE_KEYS.LIGHT_MODE,
-      String(document.body.classList.contains("light-mode")),
-    );
-  } catch {
-    // storage unavailable
-  }
+  writeBrowserStorage(
+    STORAGE_KEYS.LIGHT_MODE,
+    String(document.body.classList.contains("light-mode")),
+  );
 }
 
 /**
@@ -266,24 +263,20 @@ export function toggleMobileNav() {
  * Restore persisted theme + light-mode on startup.
  */
 export function restoreTheme() {
-  try {
-    const theme = localStorage.getItem(STORAGE_KEYS.THEME) ?? "default";
-    const idx = THEMES.indexOf(theme);
-    if (idx !== -1) {
-      _themeIdx = idx;
-      if (theme !== "default") document.body.classList.add(`theme-${theme}`);
-    }
-    const savedLight = localStorage.getItem(STORAGE_KEYS.LIGHT_MODE);
-    if (savedLight === "true") {
+  const theme = readBrowserStorage(STORAGE_KEYS.THEME, "default") ?? "default";
+  const idx = THEMES.indexOf(theme);
+  if (idx !== -1) {
+    _themeIdx = idx;
+    if (theme !== "default") document.body.classList.add(`theme-${theme}`);
+  }
+  const savedLight = readBrowserStorage(STORAGE_KEYS.LIGHT_MODE);
+  if (savedLight === "true") {
+    document.body.classList.add("light-mode");
+  } else if (savedLight === null) {
+    // F3.3 — Auto-detect system preference when no explicit choice was saved
+    if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
       document.body.classList.add("light-mode");
-    } else if (savedLight === null) {
-      // F3.3 — Auto-detect system preference when no explicit choice was saved
-      if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
-        document.body.classList.add("light-mode");
-      }
     }
-  } catch {
-    // storage unavailable
   }
 }
 
@@ -428,7 +421,7 @@ export function initInstallPrompt() {
   // Already installed — nothing to do
   if (window.matchMedia("(display-mode: standalone)").matches) return;
   // User dismissed recently
-  const until = Number(localStorage.getItem(_INSTALL_DISMISSED_KEY) ?? 0);
+  const until = Number(readBrowserStorage(_INSTALL_DISMISSED_KEY, "0") ?? 0);
   if (until > Date.now()) return;
 
   /** @type {any} */ let _deferredPrompt = null;
@@ -464,7 +457,7 @@ export function initInstallPrompt() {
         const { outcome } = await _deferredPrompt.userChoice;
         _deferredPrompt = null;
         if (outcome === "accepted") {
-          localStorage.removeItem(_INSTALL_DISMISSED_KEY);
+          removeBrowserStorage(_INSTALL_DISMISSED_KEY);
         }
       });
 
@@ -475,7 +468,7 @@ export function initInstallPrompt() {
       dismiss.addEventListener("click", () => {
         banner.remove();
         _deferredPrompt = null;
-        localStorage.setItem(
+        writeBrowserStorage(
           _INSTALL_DISMISSED_KEY,
           String(Date.now() + _INSTALL_SNOOZE_MS),
         );

@@ -180,6 +180,186 @@ async function _detectAdapter() {
   return "memory";
 }
 
+// ── Browser storage helpers ───────────────────────────────────────────────
+
+/**
+ * @param {"local" | "session"} scope
+ * @returns {Storage | null}
+ */
+function _getBrowserStorage(scope) {
+  try {
+    const storage = scope === "session" ? globalThis.sessionStorage : globalThis.localStorage;
+    return storage ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * @template T
+ * @param {string | null | undefined} raw
+ * @param {T} fallback
+ * @returns {T}
+ */
+function _parseJson(raw, fallback) {
+  if (raw === null || raw === undefined) return fallback;
+  try {
+    return /** @type {T} */ (JSON.parse(raw));
+  } catch {
+    return fallback;
+  }
+}
+
+/**
+ * Read a raw string value from localStorage.
+ * @param {string} key
+ * @param {string | null} [fallback=null]
+ * @returns {string | null}
+ */
+export function readBrowserStorage(key, fallback = null) {
+  try {
+    const storage = _getBrowserStorage("local");
+    if (!storage) return fallback;
+    return storage.getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+/**
+ * Persist a raw string value to localStorage.
+ * @param {string} key
+ * @param {string} value
+ */
+export function writeBrowserStorage(key, value) {
+  try {
+    _getBrowserStorage("local")?.setItem(key, value);
+  } catch {
+    // storage unavailable
+  }
+}
+
+/**
+ * Remove a value from localStorage.
+ * @param {string} key
+ */
+export function removeBrowserStorage(key) {
+  try {
+    _getBrowserStorage("local")?.removeItem(key);
+  } catch {
+    // storage unavailable
+  }
+}
+
+/**
+ * Read and parse JSON from localStorage.
+ * @template T
+ * @param {string} key
+ * @param {T} fallback
+ * @returns {T}
+ */
+export function readBrowserStorageJson(key, fallback) {
+  return _parseJson(readBrowserStorage(key), fallback);
+}
+
+/**
+ * Persist JSON to localStorage.
+ * @param {string} key
+ * @param {unknown} value
+ */
+export function writeBrowserStorageJson(key, value) {
+  try {
+    writeBrowserStorage(key, JSON.stringify(value));
+  } catch {
+    // storage unavailable
+  }
+}
+
+/**
+ * List browser storage keys, optionally filtered by prefix.
+ * @param {string} [prefix=""]
+ * @returns {string[]}
+ */
+export function listBrowserStorageKeys(prefix = "") {
+  const storage = _getBrowserStorage("local");
+  if (!storage) return [];
+  const keys = [];
+  try {
+    for (let index = 0; index < storage.length; index += 1) {
+      const key = storage.key(index);
+      if (key && key.startsWith(prefix)) keys.push(key);
+    }
+  } catch {
+    return [];
+  }
+  return keys;
+}
+
+/**
+ * Read a raw string value from sessionStorage.
+ * @param {string} key
+ * @param {string | null} [fallback=null]
+ * @returns {string | null}
+ */
+export function readSessionStorage(key, fallback = null) {
+  try {
+    const storage = _getBrowserStorage("session");
+    if (!storage) return fallback;
+    return storage.getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+/**
+ * Persist a raw string value to sessionStorage.
+ * @param {string} key
+ * @param {string} value
+ */
+export function writeSessionStorage(key, value) {
+  try {
+    _getBrowserStorage("session")?.setItem(key, value);
+  } catch {
+    // storage unavailable
+  }
+}
+
+/**
+ * Remove a value from sessionStorage.
+ * @param {string} key
+ */
+export function removeSessionStorage(key) {
+  try {
+    _getBrowserStorage("session")?.removeItem(key);
+  } catch {
+    // storage unavailable
+  }
+}
+
+/**
+ * Read and parse JSON from sessionStorage.
+ * @template T
+ * @param {string} key
+ * @param {T} fallback
+ * @returns {T}
+ */
+export function readSessionStorageJson(key, fallback) {
+  return _parseJson(readSessionStorage(key), fallback);
+}
+
+/**
+ * Persist JSON to sessionStorage.
+ * @param {string} key
+ * @param {unknown} value
+ */
+export function writeSessionStorageJson(key, value) {
+  try {
+    writeSessionStorage(key, JSON.stringify(value));
+  } catch {
+    // storage unavailable
+  }
+}
+
 // ── Public API ────────────────────────────────────────────────────────────
 
 /** @type {boolean} */
