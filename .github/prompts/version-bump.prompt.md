@@ -49,6 +49,6 @@ npm run lint && npm test
 
 Both must exit 0 before committing. Commit message format:
 
-```
+```text
 chore(release): bump version to vX.Y.Z
 ```

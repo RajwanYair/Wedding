@@ -12,6 +12,7 @@ Refactor the section `${input:sectionName}` (`src/sections/${input:sectionName}.
 Every section must:
 
 ### Exports
+
 ```js
 export function mount() { /* ... */ }    // required
 export function unmount() { /* ... */ }  // required
@@ -19,6 +20,7 @@ export function render<Name>() { /* ... */ }  // at least one render fn
 ```
 
 ### `mount()` Pattern
+
 ```js
 const _unsubs = [];
 
@@ -29,6 +31,7 @@ export function mount() {
 ```
 
 ### `unmount()` Pattern
+
 ```js
 export function unmount() {
   _unsubs.forEach(fn => fn());
@@ -56,6 +59,7 @@ npm run lint && npm test
 ```
 
 Both must exit 0. Commit:
-```
+
+```text
 refactor(<sectionName>): align section to mount/unmount/render contract
 ```

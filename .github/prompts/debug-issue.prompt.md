@@ -10,12 +10,15 @@ Investigate and fix the reported issue: `${input:issueDescription}`
 ## Investigation Steps
 
 ### 1. Reproduce
+
 - Identify which section(s) are affected
 - Check if the issue is auth-gated (admin only vs guest)
 - Check if it is RTL/Hebrew-specific or language-agnostic
 
 ### 2. Locate the Code
+
 Search for relevant code using these patterns:
+
 - Section module: `src/sections/<name>.js`
 - Action handler: `src/handlers/<domain>-handlers.js`
 - Store key: `storeGet('<key>')` / `storeSet('<key>', ...)`
@@ -35,19 +38,24 @@ Search for relevant code using these patterns:
 | Modal not opening | Is `openModal('<modalName>')` called with the correct modal name from `MODAL_NAMES`? |
 
 ### 4. Write a Failing Test
+
 Before fixing, add a test in the relevant `tests/unit/<name>.test.mjs` that reproduces the bug.
 
 ### 5. Fix
+
 Apply the minimal change required. Do not refactor unrelated code.
 
 ### 6. Verify
+
 ```bash
 npm run lint && npm test
 ```
+
 Both must exit 0.
 
 ### 7. Commit
-```
+
+```text
 fix(<scope>): <short description>
 
 Closes #<issue-number>
