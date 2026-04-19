@@ -4,7 +4,7 @@
  * S2.1  View Transitions API (graceful fallback)
  * S2.7  Swipe-left / swipe-right between sections
  * S2.8  Pull-to-refresh gesture -> triggers sync callback
- * Router: hash-based section routing with replaceState
+ * Router: hash-based section routing with pushState (back/forward button supported)
  *
  * Named exports only — no window.* side effects.
  */
@@ -38,13 +38,17 @@ function _withViewTransition(fn) {
 }
 
 /**
- * Navigate to a section by name. Updates URL hash and triggers delegation.
+ * Navigate to a section by name. Pushes a history entry (back button works).
  * @param {string} name
  */
 export function navigateTo(name) {
   if (!name) return;
   _activeSection = name;
-  history.replaceState(null, "", `#${name}`);
+  // pushState adds a history entry so browser back/forward works.
+  // Guard against duplicate entries when re-navigating to the active section.
+  if (location.hash !== `#${name}`) {
+    history.pushState(null, "", `#${name}`);
+  }
   _withViewTransition(() => {
     const tab = document.querySelector(
       `[data-action="showSection"][data-action-arg="${CSS.escape(name)}"]`,
@@ -67,7 +71,8 @@ export function activeSection() {
 // ── Hash Router ───────────────────────────────────────────────────────────
 /**
  * Initialise the hash router. Reads the current URL hash on startup and
- * navigates to the matching section. Listens for hashchange (back/forward).
+ * navigates to the matching section. Listens for hashchange and popstate
+ * so both hash-link navigation and browser back/forward work correctly.
  */
 export function initRouter() {
   function _handleHash() {
@@ -83,6 +88,10 @@ export function initRouter() {
       );
   }
   window.addEventListener("hashchange", _handleHash, { passive: true });
+  // popstate fires when the user navigates back/forward via History API.
+  window.addEventListener("popstate", _handleHash, { passive: true });
+  // Use replaceState only for initial load so we don't pollute history.
+  history.replaceState(null, "", location.href);
   _handleHash();
 }
 

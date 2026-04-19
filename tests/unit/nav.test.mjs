@@ -120,6 +120,13 @@ describe("initRouter", () => {
     expect(activeSection()).toBe("tables");
   });
 
+  it("responds to popstate events (browser back/forward)", () => {
+    initRouter();
+    history.replaceState(null, "", "#budget");
+    window.dispatchEvent(new PopStateEvent("popstate", { state: null }));
+    expect(activeSection()).toBe("budget");
+  });
+
   it("does not throw when called multiple times (idempotent listeners)", () => {
     expect(() => { initRouter(); initRouter(); }).not.toThrow();
   });
