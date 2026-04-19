@@ -1,10 +1,10 @@
 // =============================================================================
-// Service Worker — Wedding Manager v8.0.8
-// Stale-while-revalidate for app shell + offline fallback + update detection
+// Service Worker — Wedding Manager v8.1.0
+// Stale-while-revalidate · offline fallback · Background Sync · update detection
 // =============================================================================
 "use strict";
 
-const CACHE_NAME = "wedding-v8.0.8";
+const CACHE_NAME = "wedding-v8.1.0";
 // Static assets to pre-cache. Vite-built JS/CSS have hashed filenames and are
 // cached on first fetch by the non-shell handler (cache-first with network fallback).
 const APP_SHELL = [
@@ -12,6 +12,7 @@ const APP_SHELL = [
   "./index.html",
   "./manifest.json",
   "./wedding.json",
+  "./offline.html",
   "./icon-192.png",
   "./icon-512.png",
 ];
@@ -140,7 +141,29 @@ self.addEventListener("fetch", function (e) {
           });
         })
         .catch(function () {
+          // For navigation requests, serve branded offline page
+          if (e.request.mode === "navigate") {
+            return caches.match("./offline.html");
+          }
           return caches.match("./index.html");
+        }),
+    );
+  }
+});
+
+// ── Background Sync: flush offline RSVP queue ────────────────────────────────
+// Tags: "rsvp-sync" (registered by rsvp.js when submission occurs offline)
+const RSVP_SYNC_TAG = "rsvp-sync";
+
+self.addEventListener("sync", function (e) {
+  if (e.tag === RSVP_SYNC_TAG) {
+    e.waitUntil(
+      self.clients
+        .matchAll({ type: "window", includeUncontrolled: true })
+        .then(function (clients) {
+          clients.forEach(function (c) {
+            c.postMessage({ type: "RSVP_SYNC_READY" });
+          });
         }),
     );
   }

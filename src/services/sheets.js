@@ -383,3 +383,14 @@ export function queueSize() {
 export function queueKeys() {
   return [..._queue.keys()];
 }
+
+/**
+ * Flush all pending write queue entries immediately.
+ * Called by the Background Sync handler in ui.js when the SW sends
+ * RSVP_SYNC_READY (i.e., network is back after an offline submission). (S18b)
+ * @returns {Promise<void>}
+ */
+export async function flushWriteQueue() {
+  const keys = [..._queue.keys()];
+  await Promise.allSettled(keys.map((k) => _flush(k)));
+}

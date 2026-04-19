@@ -43,6 +43,10 @@ jobs:
           GH_APPLE_SERVICE_ID: ${{ secrets.APPLE_SERVICE_ID }}
           GH_SHEETS_WEBAPP_URL: ${{ secrets.SHEETS_WEBAPP_URL }}
           GH_SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+          GH_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          GH_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          GH_BACKEND_TYPE: ${{ secrets.BACKEND_TYPE }}
+          GH_ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
         run: node scripts/inject-config.mjs
 
       - name: Build with Vite

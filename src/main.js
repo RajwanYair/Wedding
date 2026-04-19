@@ -13,6 +13,7 @@ import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import { loadLocale, applyI18n, t } from "./core/i18n.js";
 import { updateNavForAuth } from "./core/nav-auth.js";
+import { initStorage, migrateFromLocalStorage, getAdapterType } from "./core/storage.js";
 import {
   load,
   save,
@@ -216,6 +217,21 @@ let _activeSection = null;
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────
 (async function bootstrap() {
+  // 0. Storage layer — initialise IndexedDB / localStorage / memory adapter
+  await initStorage();
+
+  // 0a. One-time migration from localStorage → IndexedDB (S16)
+  const MIGRATION_FLAG = "wedding_v1_idb_migrated";
+  if (
+    getAdapterType() === "indexeddb" &&
+    localStorage.getItem(MIGRATION_FLAG) !== "1"
+  ) {
+    const migrated = await migrateFromLocalStorage();
+    if (migrated > 0) {
+      localStorage.setItem(MIGRATION_FLAG, "1");
+    }
+  }
+
   // 1. Language
   const lang = load("lang", "he") === "en" ? "en" : "he";
   await loadLocale(lang);

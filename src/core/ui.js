@@ -385,6 +385,12 @@ export function initSW() {
   // SW signals a content-level freshness change via postMessage
   navigator.serviceWorker.addEventListener("message", (e) => {
     if (e.data?.type === "UPDATE_AVAILABLE") _handleUpdate();
+    // Background Sync — SW notifies that rsvp-sync fired; flush the online queue (S18b)
+    if (e.data?.type === "RSVP_SYNC_READY") {
+      import("../services/sheets.js")
+        .then(({ flushWriteQueue }) => flushWriteQueue?.())
+        .catch(() => {});
+    }
   });
 
   // When the tab comes back after ≥ 5 min hidden, re-check for updates

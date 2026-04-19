@@ -15,6 +15,7 @@
  *   GH_SUPABASE_URL       → SUPABASE_URL
  *   GH_SUPABASE_ANON_KEY  → SUPABASE_ANON_KEY
  *   GH_BACKEND_TYPE       → BACKEND_TYPE
+ *   GH_ADMIN_EMAILS       → ADMIN_EMAILS  (comma-separated list → JS array literal)
  *
  * Called by .github/workflows/deploy.yml before the Pages artifact is uploaded.
  */
@@ -76,7 +77,42 @@ function patchFile(filePath, label) {
   return changed;
 }
 
-const total = patchFile(ESM_CONFIG, "src/core/config.js");
+/**
+ * Inject GH_ADMIN_EMAILS (comma-separated) into the ADMIN_EMAILS array constant.
+ * Pattern matched: `export const ADMIN_EMAILS = [...];` — full multiline array replaced.
+ * @param {string} filePath
+ * @returns {number}
+ */
+function patchAdminEmails(filePath) {
+  const raw = process.env["GH_ADMIN_EMAILS"];
+  if (!raw) return 0;
+
+  if (!existsSync(filePath)) return 0;
+  let src = readFileSync(filePath, "utf8");
+
+  const emails = raw
+    .split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
+  if (emails.length === 0) return 0;
+
+  const indent = "  ";
+  const emailLines = emails.map((e) => `${indent}"${e.replace(/"/g, '\\"')}",`).join("\n");
+  const arrayLiteral = `[\n${emailLines}\n]`;
+
+  // Replace the whole ADMIN_EMAILS array (potentially multiline)
+  const re = /(?:export\s+)?const\s+ADMIN_EMAILS\s*=\s*\[[^\]]*\]/s;
+  if (re.test(src)) {
+    src = src.replace(re, `export const ADMIN_EMAILS = ${arrayLiteral}`);
+    writeFileSync(filePath, src, "utf8");
+    console.log(`  ✓ [src/core/config.js] Injected ADMIN_EMAILS (${emails.length} entries) from $GH_ADMIN_EMAILS`);
+    return 1;
+  }
+  console.warn("  ⚠ [src/core/config.js] ADMIN_EMAILS pattern not found — skipped");
+  return 0;
+}
+
+const total = patchFile(ESM_CONFIG, "src/core/config.js") + patchAdminEmails(ESM_CONFIG);
 
 if (total > 0) {
   console.log(

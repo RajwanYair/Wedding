@@ -35,13 +35,53 @@
     "shortcuts": [
         {
             "name": "אישור הגעה",
+            "short_name": "RSVP",
             "url": "./index.html#rsvp",
             "description": "דף אישור הגעה לאורחים"
         },
         {
             "name": "רשימת אורחים",
+            "short_name": "אורחים",
             "url": "./index.html#guests",
             "description": "ניהול רשימת אורחים"
+        },
+        {
+            "name": "דשבורד",
+            "short_name": "דשבורד",
+            "url": "./index.html#dashboard",
+            "description": "סטטיסטיקות ותמונה כוללת"
+        },
+        {
+            "name": "צ'ק-אין",
+            "short_name": "צ'ק-אין",
+            "url": "./index.html#checkin",
+            "description": "קליטת אורחים בכניסה"
         }
-    ]
+    ],
+    "share_target": {
+        "action": "./index.html",
+        "method": "GET",
+        "params": {
+            "title": "share_title",
+            "text": "share_text",
+            "url": "share_url"
+        }
+    },
+    "screenshots": [
+        {
+            "src": "./screenshot-dashboard.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Wedding Manager Dashboard"
+        },
+        {
+            "src": "./screenshot-rsvp.png",
+            "sizes": "390x844",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "RSVP Form"
+        }
+    ],
+    "handle_links": "preferred"
 }

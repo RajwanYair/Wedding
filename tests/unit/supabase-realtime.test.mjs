@@ -124,7 +124,7 @@ describe("subscribeGuestChanges", () => {
     // through a spy: subscribe, capture the callback, invoke it manually.
 
     /** @type {Function | null} */
-    let capturedCb = null;
+    const capturedCb = null;
 
     // subscribeGuestChanges internally calls subscribeRealtime("guests", cb)
     // We verify the integration via the store mock after calling unsub + re-register

@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file.
 
 ### Stats
 
-- **Test files**: 214 (was 212)  
+- **Test files**: 214 (was 212)
 - **Tests**: 4047 (was 3857) — **+190 tests this release**
 
 ## [8.0.7] — 2026-05-01
