@@ -118,6 +118,13 @@ export function populateSettings() {
     if (urlInput && !urlInput.value) urlInput.value = sheetsUrl;
   }
 
+  const spreadsheetIdInput = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("sheetsSpreadsheetId")
+  );
+  if (spreadsheetIdInput && !spreadsheetIdInput.value) {
+    spreadsheetIdInput.value = getSpreadsheetId();
+  }
+
   const backendSelect = /** @type {HTMLSelectElement|null} */ (
     document.getElementById("backendTypeSelect")
   );
@@ -289,16 +296,27 @@ export function saveWebAppUrl(form) {
     form?.querySelector("[name='webAppUrl'], #sheetsWebAppUrl") ??
       document.getElementById("sheetsWebAppUrl")
   );
-  if (!input) return;
+  const spreadsheetIdInput = /** @type {HTMLInputElement|null} */ (
+    form?.querySelector("[name='spreadsheetId'], #sheetsSpreadsheetId") ??
+      document.getElementById("sheetsSpreadsheetId")
+  );
+  if (!input && !spreadsheetIdInput) return;
   const { value, errors } = sanitize(
-    { url: input.value.trim() },
     {
-      url: { type: "string", required: true, maxLength: 500 },
+      url: input?.value.trim() ?? "",
+      spreadsheetId: spreadsheetIdInput?.value.trim() ?? "",
+    },
+    {
+      url: { type: "string", required: false, maxLength: 500 },
+      spreadsheetId: { type: "string", required: false, maxLength: 120 },
     },
   );
   if (errors.length) return;
   storeSet("sheetsWebAppUrl", value.url);
   save("sheetsWebAppUrl", value.url);
+  storeSet("sheetsSpreadsheetId", value.spreadsheetId);
+  save("sheetsSpreadsheetId", value.spreadsheetId);
+  populateSettings();
 }
 
 /**
