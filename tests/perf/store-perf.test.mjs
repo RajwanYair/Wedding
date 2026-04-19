@@ -108,9 +108,8 @@ describe("store read performance", () => {
     }));
     storeSet("guests", guests);
     const all = storeGet("guests");
-    const start = performance.now();
     const confirmed = all.filter((g) => g.status === "confirmed");
-    const elapsed = performance.now() - start;
+    const elapsed = measureMedian(7, () => all.filter((g) => g.status === "confirmed"));
     expect(confirmed).toHaveLength(2_500);
     expect(elapsed).toBeLessThan(15);
   });

@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Repo Sanity Suite v8.1.0
+// Wedding Manager — Repo Sanity Suite v8.2.1
 // Keeps high-level repo assertions aligned with the current src/ architecture.
 // =============================================================================
 
@@ -48,40 +48,40 @@ const runtimeSources = [
 const allHtml = [indexHtml, readHtmlDir("src/templates"), readHtmlDir("src/modals")].join("\n");
 
 describe("Version alignment", function () {
-  it("package.json is v8.1.0", function () {
-    assert.equal(packageJson.version, "8.1.0");
+  it("package.json is v8.2.1", function () {
+    assert.equal(packageJson.version, "8.2.1");
   });
 
-  it("src/core/config.js exports APP_VERSION v8.1.0", function () {
-    assert.ok(read("src/core/config.js").includes('APP_VERSION = "8.1.0"'));
+  it("src/core/config.js exports APP_VERSION v8.2.1", function () {
+    assert.ok(read("src/core/config.js").includes('APP_VERSION = "8.2.1"'));
   });
 
-  it("public/sw.js uses wedding-v8.1.0 cache", function () {
-    assert.ok(serviceWorker.includes("wedding-v8.1.0"));
+  it("public/sw.js uses wedding-v8.2.1 cache", function () {
+    assert.ok(serviceWorker.includes("wedding-v8.2.1"));
   });
 
-  it("README version badge references v8.1.0", function () {
-    assert.ok(readme.includes("version-v8.1.0"));
+  it("README version badge references v8.2.1", function () {
+    assert.ok(readme.includes("version-v8.2.1"));
   });
 
-  it("Copilot instructions title references v8.1.0", function () {
+  it("Copilot instructions title references v8.2.1", function () {
     assert.ok(
       copilotInstructions.includes(
-        "# GitHub Copilot Instructions — Wedding Manager v8.1.0",
+        "# GitHub Copilot Instructions — Wedding Manager v8.2.1",
       ),
     );
   });
 
-  it("ARCHITECTURE.md header references v8.1.0", function () {
+  it("ARCHITECTURE.md header references v8.2.1", function () {
     assert.ok(
-      architecture.includes("# Wedding Manager — Architecture (v8.1.0)"),
+      architecture.includes("# Wedding Manager — Architecture (v8.2.1)"),
     );
   });
 
-  it("src/types.d.ts header references v8.1.0", function () {
+  it("src/types.d.ts header references v8.2.1", function () {
     assert.ok(
       typesSource.includes(
-        "src/types.d.ts — Shared type definitions for the Wedding Manager (v8.1.0)",
+        "src/types.d.ts — Shared type definitions for the Wedding Manager (v8.2.1)",
       ),
     );
   });
@@ -157,11 +157,15 @@ describe("Current architecture", function () {
   it("centralizes remaining direct-storage keys for auth, diagnostics, and push cache", function () {
     assert.ok(constantsSource.includes('PUSH_SUBSCRIPTION_CACHE: "wedding_v1_push_sub"'));
     assert.ok(constantsSource.includes('REVOKED_TOKENS: "wedding_v1_revoked_tokens"'));
+    assert.ok(constantsSource.includes('SUPABASE_AUTH: "wedding_v1_supabase_auth"'));
+    assert.ok(constantsSource.includes('IDB_MIGRATED: "wedding_v1_idb_migrated"'));
     assert.ok(read("src/services/push-notifications.js").includes("STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE"));
     assert.ok(read("src/services/guest-token.js").includes("STORAGE_KEYS.REVOKED_TOKENS"));
     assert.ok(read("src/services/supabase-auth.js").includes("STORAGE_KEYS.SUPABASE_SESSION"));
     assert.ok(read("src/services/backend.js").includes("STORAGE_KEYS.SHEETS_MIRROR"));
     assert.ok(read("src/utils/error-monitor.js").includes("STORAGE_KEYS.ERRORS"));
+    assert.ok(read("src/core/supabase-client.js").includes("STORAGE_KEYS.SUPABASE_AUTH"));
+    assert.ok(read("src/main.js").includes("STORAGE_KEYS.IDB_MIGRATED"));
   });
 
   it("defaults and constants include canonical campaign store support", function () {

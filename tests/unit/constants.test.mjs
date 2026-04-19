@@ -124,6 +124,8 @@ describe("STORAGE_KEYS", () => {
     expect(STORAGE_KEYS.COLOR_SCHEME).toBe("wedding_v1_colorScheme");
     expect(STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE).toBe("wedding_v1_push_sub");
     expect(STORAGE_KEYS.REVOKED_TOKENS).toBe("wedding_v1_revoked_tokens");
+    expect(STORAGE_KEYS.SUPABASE_AUTH).toBe("wedding_v1_supabase_auth");
+    expect(STORAGE_KEYS.IDB_MIGRATED).toBe("wedding_v1_idb_migrated");
   });
 });
 

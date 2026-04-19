@@ -11,7 +11,11 @@ vi.mock("../../src/core/events.js", () => ({ on: vi.fn() }));
 vi.mock("../../src/core/ui.js", () => ({
   showToast: vi.fn(), closeModal: vi.fn(), showConfirmDialog: vi.fn(),
 }));
-vi.mock("../../src/core/i18n.js", () => ({ t: vi.fn((k) => k) }));
+vi.mock("../../src/core/i18n.js", () => ({
+  t: vi.fn((k) => k),
+  normalizeUiLanguage: vi.fn((lang) => (lang === "en" ? "en" : "he")),
+  nextUiLanguage: vi.fn((lang) => (lang === "he" ? "en" : "he")),
+}));
 vi.mock("../../src/core/state.js", () => ({ load: vi.fn(() => ""), save: vi.fn() }));
 vi.mock("../../src/core/store.js", () => ({ storeSet: vi.fn() }));
 vi.mock("../../src/core/constants.js", () => ({ STORAGE_KEYS: {} }));
@@ -39,11 +43,12 @@ import { getHandler } from "./helpers.js";
 import { registerSettingsHandlers } from "../../src/handlers/settings-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast } from "../../src/core/ui.js";
+import { load } from "../../src/core/state.js";
 import {
   addApprovedEmail, clearAllData, exportJSON, importJSON, copyRsvpLink,
   copyContactLink, clearAuditLog, clearErrorLog, exportAllCSV,
   checkDataIntegrity, exportDebugReport, generateRsvpQrCode,
-  startAutoBackup, stopAutoBackup, downloadAutoBackup,
+  startAutoBackup, stopAutoBackup, downloadAutoBackup, switchLanguage,
 } from "../../src/sections/settings.js";
 
 const ctx = {
@@ -74,6 +79,9 @@ describe("registerSettingsHandlers — handler behavior", () => {
   beforeEach(() => {
     vi.mocked(on).mockClear();
     vi.mocked(showToast).mockReset();
+    vi.mocked(load).mockReset();
+    vi.mocked(load).mockReturnValue("he");
+    vi.mocked(switchLanguage).mockReset();
     registerSettingsHandlers(ctx);
   });
 
@@ -151,6 +159,20 @@ describe("registerSettingsHandlers — handler behavior", () => {
   it("downloadAutoBackup handler calls downloadAutoBackup()", () => {
     getHandler(on, "downloadAutoBackup")();
     expect(downloadAutoBackup).toHaveBeenCalledOnce();
+  });
+
+  it("switchLanguage handler toggles from Hebrew to English", async () => {
+    vi.mocked(load).mockReturnValue("he");
+    await getHandler(on, "switchLanguage")();
+    expect(switchLanguage).toHaveBeenCalledWith("en");
+    expect(showToast).toHaveBeenCalledWith("language_switched", "info");
+  });
+
+  it("toggleLanguage handler toggles from English to Hebrew", async () => {
+    vi.mocked(load).mockReturnValue("en");
+    await getHandler(on, "toggleLanguage")();
+    expect(switchLanguage).toHaveBeenCalledWith("he");
+    expect(showToast).toHaveBeenCalledWith("language_switched", "info");
   });
 });
 

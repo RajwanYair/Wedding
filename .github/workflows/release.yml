@@ -15,13 +15,14 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -60,6 +61,7 @@ jobs:
             Open [index.html](https://rajwanyair.github.io/Wedding) in your browser — no installation required.
           files: |
             index.html
-            sw.js
-            manifest.json
+            public/sw.js
+            public/manifest.json
+            public/wedding.json
 

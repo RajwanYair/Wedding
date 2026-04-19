@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v8.1.0
+# GitHub Copilot Instructions — Wedding Manager v8.2.1
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Zero Runtime Deps
 
@@ -6,7 +6,7 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v8.1.0** |
+| Version | **v8.2.1** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **Zero** — devDeps only (ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright) |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
@@ -54,17 +54,11 @@ tests/               # repo sanity + unit/integration/e2e coverage
 
 ## Data Models
 
-```text
-Guest:  { id, firstName, lastName, phone, email, count, children,
-          status: pending|confirmed|declined|maybe,
-          side: groom|bride|mutual, group: family|friends|work|neighbors|other,
-          meal: regular|vegetarian|vegan|gluten_free|kosher,
-          mealNotes, accessibility, tableId, gift, notes, sent, checkedIn,
-          rsvpDate, createdAt, updatedAt }
-Table:  { id, name, capacity, shape: round|rect }
-Vendor: { id, category, name, contact, phone, price, paid, notes, updatedAt, createdAt }
-Expense:{ id, category, description, amount, date, createdAt }
-```
+Canonical runtime types live in `src/types.d.ts`.
+
+- Guest/Table/Vendor/Expense enums, modal names, and storage keys live in `src/core/constants.js`
+- Store defaults and persisted store domains live in `src/core/defaults.js`
+- Prefer referencing those runtime files instead of duplicating shape definitions in new docs or agent files
 
 ## Auth Providers
 
@@ -122,7 +116,8 @@ Run before every version tag / GitHub Pages deploy. All items must be green.
 | --- | --- |
 | ESLint scope | `src/` uses `^_` varsIgnorePattern |
 | Stylelint fonts | lowercase: `tahoma` ✅; multi-word: `"Segoe UI"` ✅ |
-| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
+| GH Actions | `checkout@v6` · `setup-node@v6` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
+| Copilot customizations | Prefer `.agent.md` + `.prompt.md` + `.instructions.md` + `.vscode/mcp.json`; use Chat Customizations editor for discovery |
 | OAuth globals | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs` |
 | RSVP flow | `lookupRsvpByPhone()` fires on phone input; phone-first lookup |
 | Sheets sync | `enqueueWrite(key, fn)` only — never call `syncStoreKeyToSheets` directly |

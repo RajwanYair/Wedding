@@ -77,9 +77,6 @@ export default defineConfig({
             id.includes("email")
           )
             return "chunk-services";
-
-          // Plugin modules
-          if (id.includes("src/plugins/")) return "chunk-plugins";
         },
         /* Keep asset filenames stable for SRI hashing */
         entryFileNames: "assets/[name]-[hash].js",
@@ -93,16 +90,14 @@ export default defineConfig({
   },
   test: {
     include: ["tests/**/*.test.mjs"],
+    pool: "forks",
+    poolOptions: { forks: { execArgv: ["--no-warnings"] } },
     cacheDir: join(TEMP_BASE, "vitest-cache"),
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov", "html"],
       include: ["src/**"],
-      exclude: [
-        "tests/**",
-        "scripts/**",
-        "vite.config.js",
-      ],
+      exclude: ["tests/**", "scripts/**", "vite.config.js"],
       thresholds: {
         lines: 85,
         branches: 75,

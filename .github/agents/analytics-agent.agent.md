@@ -23,6 +23,7 @@ You are an analytics and reporting specialist for a wedding app.
 - Data stored client-side in localStorage (prefix `wedding_v1_`)
 - Hebrew RTL primary, English toggle; all strings use `data-i18n` / `t('key')`
 - CSS custom properties for all colors — never hardcode
+- Canonical type shapes and store domains live in `src/types.d.ts`, `src/core/defaults.js`, and `src/core/constants.js`
 
 ## Key Files
 

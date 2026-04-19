@@ -25,10 +25,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -50,7 +50,7 @@ jobs:
         run: node scripts/inject-config.mjs
 
       - name: Build with Vite
-        run: npx vite build
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

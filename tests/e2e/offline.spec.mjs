@@ -1,5 +1,6 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
+import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 /**
  * Wedding Manager — Offline + Service Worker E2E Tests (Phase 9.2)
@@ -56,16 +57,14 @@ test.describe("Offline behaviour (Phase 9.2)", () => {
 
   test("localStorage mutations survive page reload", async ({ page }) => {
     // Write a value to localStorage then reload and verify it persists
-    await page.evaluate(() => {
-      localStorage.setItem("wedding_v1_offline_test", "ping");
-    });
+    await page.evaluate((key) => {
+      localStorage.setItem(key, "ping");
+    }, TEST_STORAGE_KEYS.OFFLINE_PROBE);
     await page.reload();
     await page.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
-    const val = await page.evaluate(() =>
-      localStorage.getItem("wedding_v1_offline_test"),
-    );
+    const val = await page.evaluate((key) => localStorage.getItem(key), TEST_STORAGE_KEYS.OFFLINE_PROBE);
     expect(val).toBe("ping");
     // Cleanup
-    await page.evaluate(() => localStorage.removeItem("wedding_v1_offline_test"));
+    await page.evaluate((key) => localStorage.removeItem(key), TEST_STORAGE_KEYS.OFFLINE_PROBE);
   });
 });

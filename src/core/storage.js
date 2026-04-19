@@ -10,6 +10,8 @@
  * Zero runtime dependencies.
  */
 
+import { STORAGE_PREFIX } from "./config.js";
+
 /** @typedef {"indexeddb" | "localstorage" | "memory"} AdapterType */
 
 // ── In-memory adapter ─────────────────────────────────────────────────────
@@ -262,12 +264,12 @@ export async function storageClear() {
 }
 
 /**
- * Migrate all wedding_v1_* keys from localStorage to IndexedDB.
+ * Migrate all `${STORAGE_PREFIX}*` keys from localStorage to IndexedDB.
  * No-op if the active adapter is not IndexedDB.
- * @param {string} [prefix="wedding_v1_"]
+ * @param {string} [prefix=STORAGE_PREFIX]
  * @returns {Promise<number>} Number of keys migrated
  */
-export async function migrateFromLocalStorage(prefix = "wedding_v1_") {
+export async function migrateFromLocalStorage(prefix = STORAGE_PREFIX) {
   if (_adapterType !== "indexeddb") return 0;
   if (typeof localStorage === "undefined") return 0;
   let count = 0;

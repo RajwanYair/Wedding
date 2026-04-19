@@ -22,3 +22,7 @@ dist/
 *.bak
 *.tmp
 .extracted.*
+.fake
+ci_output.txt
+ci_result.txt
+test-results/

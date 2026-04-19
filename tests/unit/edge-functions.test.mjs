@@ -5,6 +5,7 @@
  */
 
 import { describe, it, beforeEach, afterEach, vi, expect } from "vitest";
+import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 // ── Module setup ──────────────────────────────────────────────────────────
 
@@ -266,12 +267,12 @@ describe("isSheetsMirrorEnabled", () => {
   });
 
   it("returns true when key set to 'true'", () => {
-    localStorage.setItem("wedding_v1_sheets_mirror", "true");
+    localStorage.setItem(TEST_STORAGE_KEYS.SHEETS_MIRROR, "true");
     expect(isSheetsMirrorEnabled()).toBe(true);
   });
 
   it("returns false when key set to 'false'", () => {
-    localStorage.setItem("wedding_v1_sheets_mirror", "false");
+    localStorage.setItem(TEST_STORAGE_KEYS.SHEETS_MIRROR, "false");
     expect(isSheetsMirrorEnabled()).toBe(false);
   });
 });

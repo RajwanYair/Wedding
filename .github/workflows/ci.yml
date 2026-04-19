@@ -1,13 +1,10 @@
 # =============================================================================
-# CI — Wedding Manager v8.2.0
+# CI — Wedding Manager v8.2.1
 # Lint, i18n parity, unit tests, Vite build, security scan, Lighthouse, size, E2E
 # =============================================================================
 
 on:
   push:
-
-      - name: Check credential hygiene
-        run: npm run check:credentials
     branches: [main]
   pull_request:
     branches: [main]
@@ -44,6 +41,9 @@ jobs:
 
       - name: Validate i18n parity
         run: npm run check:i18n
+
+      - name: Check credential hygiene
+        run: npm run check:credentials
 
       - name: Unit tests (Vitest)
         run: npm test

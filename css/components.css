@@ -223,8 +223,10 @@
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   padding: 0.5rem 1.2rem;
+  min-height: 44px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
@@ -252,7 +254,7 @@
 .btn-whatsapp:hover { background: #1fb855; }
 .btn-green-api { background: #128c7e; color: #fff; }
 .btn-green-api:hover { background: #0e7066; }
-.btn-small { padding: 0.3rem 0.7rem; font-size: 0.78em; }
+.btn-small { padding: 0.3rem 0.7rem; min-height: 36px; font-size: 0.78em; }
 
 /* ── Table Seating ── */
 .seating-floor {

@@ -13,6 +13,7 @@ let _lang = "he";
 
 /** RTL languages */
 const RTL_LANGS = new Set(["he", "ar"]);
+const BILINGUAL_LANGS = new Set(["he", "en"]);
 
 /**
  * Load a language pack via Vite dynamic import().
@@ -204,6 +205,33 @@ export function currentLang() {
 }
 
 /**
+ * Normalize the app UI language to the supported bilingual pair.
+ * @param {string | null | undefined} lang
+ * @returns {'he'|'en'}
+ */
+export function normalizeUiLanguage(lang) {
+  return lang === "en" ? "en" : "he";
+}
+
+/**
+ * Get the next language in the Hebrew/English toggle.
+ * @param {string | null | undefined} [lang]
+ * @returns {'he'|'en'}
+ */
+export function nextUiLanguage(lang = _lang) {
+  return normalizeUiLanguage(lang) === "he" ? "en" : "he";
+}
+
+/**
+ * Label shown on the language toggle button.
+ * @param {string | null | undefined} [lang]
+ * @returns {string}
+ */
+export function languageToggleLabel(lang = _lang) {
+  return normalizeUiLanguage(lang) === "he" ? "EN" : "עב";
+}
+
+/**
  * Apply translations to all elements with `data-i18n` attributes.
  * @param {Document | Element} [root]
  */
@@ -219,6 +247,18 @@ export function applyI18n(root = document) {
   root.querySelectorAll("[data-i18n-title]").forEach((el) => {
     const key = /** @type {HTMLElement} */ (el).dataset.i18nTitle;
     if (key) /** @type {HTMLElement} */ (el).title = t(key);
+  });
+  root.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+    const key = /** @type {HTMLElement} */ (el).dataset.i18nAria;
+    if (key) /** @type {HTMLElement} */ (el).setAttribute("aria-label", t(key));
+  });
+  root.querySelectorAll("[data-i18n-tooltip]").forEach((el) => {
+    const key = /** @type {HTMLElement} */ (el).dataset.i18nTooltip;
+    if (key) /** @type {HTMLElement} */ (el).title = t(key);
+  });
+  root.querySelectorAll("[data-lang-toggle-label]").forEach((el) => {
+    if (!BILINGUAL_LANGS.has(normalizeUiLanguage(_lang))) return;
+    el.textContent = languageToggleLabel(_lang);
   });
 }
 

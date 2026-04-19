@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 let initErrorMonitor, getClientErrors, clearClientErrors;
 
@@ -133,7 +134,7 @@ describe("getClientErrors", () => {
   it("handles corrupt localStorage gracefully", () => {
     // Force corrupt data by writing via the storage key used by the module
     try {
-      localStorage.setItem("wedding_v1_errors", "THIS IS NOT JSON{{");
+      localStorage.setItem(TEST_STORAGE_KEYS.ERRORS, "THIS IS NOT JSON{{");
     } catch { /* ignore if setItem fails */ }
     expect(() => getClientErrors()).not.toThrow();
   });

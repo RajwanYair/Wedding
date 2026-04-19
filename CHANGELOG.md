@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.2.1] — 2026-04-19
+
+### Changed
+
+- Finalized the production security/config cleanup by moving sensitive runtime reads behind shared config resolvers and keeping source defaults empty.
+- Completed the Settings-side Sheets fallback wiring so both the Apps Script URL and Spreadsheet ID can be configured at runtime without editing source files.
+- Tightened credential hygiene by making `npm run check:credentials` a blocking check and wiring it into CI.
+- Updated workflow/tooling configuration, modular docs, i18n/test constants, and release metadata to match the current `v8.2.x` production baseline.
+- Fixed `.github/workflows/ci.yml` structure and corrected release artifact paths in `.github/workflows/release.yml`.
+
+## [8.2.0] — 2025-07-14
+
+### Added
+
+- **S23a**: `src/utils/haptic.js` — Web Vibration API wrapper: `vibrate()`, `cancelVibration()`, `isVibrationSupported()`, `HAPTIC` frozen constants (SUCCESS/DOUBLE/ERROR/WARNING/SCAN). Uses `typeof` check (not `in` operator).
+- **S23b**: `src/services/nfc.js` — Web NFC (NDEFReader) wrapper: `startNFCScan()`, `writeNFCTag()`, `isNFCSupported()`. Uses `globalThis.NDEFReader` for test-env compatibility.
+- **S23c**: `src/sections/checkin.js` — `vibrate(HAPTIC.SUCCESS)` on guest check-in; `startNFCCheckin()` / `stopNFCCheckin()` for tap-to-check-in; `lockOrientation("portrait")` during QR scan.
+- **S23d**: `src/sections/rsvp.js` — `vibrate(HAPTIC.SUCCESS)` on RSVP submit.
+- **S23e/f**: `src/services/share.js` — Web Share API: `share()`, `isShareSupported()`, `canShareFiles()`, `shareGuestRsvpLink()`. Handles AbortError (user cancel) gracefully.
+- **S23g**: `src/utils/orientation.js` — Screen Orientation API: `lockOrientation()`, `unlockOrientation()`, `isOrientationLockSupported()`. Uses `globalThis.screen`.
+- **S21a**: `scripts/dead-export-check.mjs` — quarterly dead-export audit tool (`npm run audit:dead`). Finds 246 dead / 1084 live exports across 1330 total.
+- **Sprint 5**: `src/core/i18n.js` — `isRTL()`, `textDir()` exported helpers.
+- **Sprint 5**: `src/core/state.js` — `loadAsync()`, `saveAsync()`, `removeAsync()` via IndexedDB adapter.
+- **Sprint 5**: `src/sections/settings.js` — `_renderPushCard()` for push notification settings UI.
+- i18n: `nfc_not_supported`, `nfc_scanning`, `nfc_scan_error`, `checkin_nfc_success` keys in he + en.
+- i18n: 11 push notification keys added (Sprint 5).
+
+### Removed
+
+- **S21a**: Aspirational dead files with no UI, no imports, and no activation plan:
+  - `src/services/donation-tracker.js` (90 lines)
+  - `src/services/vendor-proposals.js` (173 lines)
+  - `src/services/sms-service.js` (65 lines)
+  - `src/core/plugins.js` (151 lines)
+  - Corresponding unit test files (44 tests)
+
+### Changed
+
+- `package.json`: Added `audit:dead` script.
+- `ARCHITECTURE.md`: Added Dead Export Audit section with findings and removal justification.
+
 ## [8.1.0] — 2026-05-25
 
 ### Added

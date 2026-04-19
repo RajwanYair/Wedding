@@ -13,6 +13,10 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # ── Deploy preview on open/sync ──────────────────────────────────────────
   deploy-preview:
@@ -20,11 +24,12 @@ jobs:
     name: Deploy PR Preview
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -61,7 +66,7 @@ jobs:
     name: Cleanup PR Preview
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: gh-pages
           fetch-depth: 0

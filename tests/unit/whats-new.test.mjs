@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 vi.mock("../../src/core/config.js", () => ({
   APP_VERSION: "7.6.0",
@@ -13,7 +14,7 @@ vi.mock("../../src/core/i18n.js", () => ({
   t: vi.fn((k) => k),
 }));
 
-const LAST_SEEN_KEY = "wedding_v1_lastSeenVersion";
+const LAST_SEEN_KEY = TEST_STORAGE_KEYS.LAST_SEEN_VERSION;
 
 // localStorage mock
 let _store = {};

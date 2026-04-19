@@ -23,20 +23,7 @@ You are a vendor management specialist for a wedding app.
 - Hebrew RTL primary, English toggle; all strings use `data-i18n` / `t('key')`
 - CSS custom properties for all colors — never hardcode
 - Zero runtime deps
-
-## Data Models
-
-```text
-Vendor: {
-  id, category, name, contact, phone,
-  price, paid, notes,
-  updatedAt, createdAt
-}
-Expense: {
-  id, category, description, amount, date,
-  createdAt
-}
-```
+- Canonical type shapes and enums live in `src/types.d.ts` and `src/core/constants.js`
 
 ## Key Files
 

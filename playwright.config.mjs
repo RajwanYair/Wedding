@@ -14,6 +14,8 @@ const TEMP_BASE = join(tmpdir(), "wedding-dev");
  */
 export default defineConfig({
   testDir: "./tests/e2e",
+  testMatch: ["**/*.spec.mjs"],
+  testIgnore: ["**/*-snapshots/**"],
   outputDir: join(TEMP_BASE, "playwright-results"),
 
   /* One minute per test; generous for slow CI containers */

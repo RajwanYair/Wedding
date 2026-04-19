@@ -50,12 +50,14 @@
         "json": true
     },
     "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "github.copilot.chat.organizationCustomAgents.enabled": true,
     "github.copilot.chat.reviewSelection.instructions": [
         {
             "file": ".github/instructions/wedding.instructions.md"
         }
     ],
     "chat.agent.enabled": true,
+    "chat.useCustomizationsInParentRepositories": true,
     "chat.instructionFilesLocations": {
         ".github/instructions": true,
         ".github/copilot-instructions.md": true
@@ -63,7 +65,8 @@
     "chat.promptFilesLocations": {
         ".github/prompts": true
     },
-    "chat.agent.agentDescriptionFiles": {
+    "chat.promptFilesRecommendations": true,
+    "chat.agentFilesLocations": {
         ".github/agents": true
     },
 
@@ -97,6 +100,7 @@
     // ── Terminal ──
     "terminal.integrated.gpuAcceleration": "on",
     "terminal.integrated.shellIntegration.enabled": true,
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
     // ── ESLint ──
     "eslint.enable": true,
     "eslint.run": "onSave",

@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 // Provide an in-memory localStorage mock so tests run in any Vitest environment.
 const _store = new Map();
@@ -40,13 +41,13 @@ describe("storageSet / storageGet", () => {
   });
 
   it("returns defaultValue on corrupt JSON", () => {
-    _store.set("wedding_v1_bad", "{{NOT JSON}}");
+    _store.set(TEST_STORAGE_KEYS.STORAGE_BAD_JSON, "{{NOT JSON}}");
     expect(storageGet("bad", null)).toBeNull();
   });
 
   it("uses wedding_v1_ prefix (verifiable via raw store)", () => {
     storageSet("x", 1);
-    expect(_store.get("wedding_v1_x")).toBe("1");
+    expect(_store.get(TEST_STORAGE_KEYS.STORAGE_WRITE_PROBE)).toBe("1");
   });
 });
 

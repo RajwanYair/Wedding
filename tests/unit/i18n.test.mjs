@@ -7,8 +7,17 @@
  * Run: npm test
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { t, loadLocale, currentLang, applyI18n, formatMessage } from "../../src/core/i18n.js";
+import { describe, it, expect, beforeEach } from "vitest";
+import {
+  t,
+  loadLocale,
+  currentLang,
+  applyI18n,
+  formatMessage,
+  languageToggleLabel,
+  normalizeUiLanguage,
+  nextUiLanguage,
+} from "../../src/core/i18n.js";
 
 const SAMPLE_DICT = {
   app_title: "ניהול חתונה",
@@ -55,15 +64,13 @@ describe("loadLocale", () => {
     expect(t("my_key")).toBe("ערך");
   });
 
-  it("switches language from he to en (mocked fetch)", async () => {
-    const enDict = { app_title: "Wedding Manager", btn_save: "Save" };
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      json: async () => enDict,
-    });
+  it("switches language from he to en", async () => {
     await loadLocale("en");
     expect(currentLang()).toBe("en");
     expect(t("app_title")).toBe("Wedding Manager");
     expect(t("btn_save")).toBe("Save");
+    expect(document.documentElement.lang).toBe("en");
+    expect(document.documentElement.dir).toBe("ltr");
   });
 
   it("uses inline dict if provided even for he", async () => {
@@ -71,10 +78,7 @@ describe("loadLocale", () => {
     expect(t("custom_key")).toBe("מפתח מותאם");
   });
 
-  it("falls back to key if fetch dict missing a key", async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      json: async () => ({ only_one: "value" }),
-    });
+  it("falls back to key if locale dict is missing a key", async () => {
     await loadLocale("en");
     expect(t("missing_in_en")).toBe("missing_in_en");
   });
@@ -88,9 +92,6 @@ describe("currentLang()", () => {
   });
 
   it("returns en after English load", async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      json: async () => ({ title: "Test" }),
-    });
     await loadLocale("en");
     expect(currentLang()).toBe("en");
   });
@@ -120,6 +121,31 @@ describe("applyI18n()", () => {
     applyI18n();
     const btn = /** @type {HTMLButtonElement} */ (document.querySelector("button"));
     expect(btn?.title).toBe("שמור");
+  });
+
+  it("sets aria-label on [data-i18n-aria] elements", () => {
+    document.body.innerHTML = '<button data-i18n-aria="btn_cancel">X</button>';
+    applyI18n();
+    const btn = /** @type {HTMLButtonElement} */ (document.querySelector("button"));
+    expect(btn?.getAttribute("aria-label")).toBe("בטל");
+  });
+
+  it("sets title on [data-i18n-tooltip] elements", () => {
+    document.body.innerHTML = '<button data-i18n-tooltip="btn_save">X</button>';
+    applyI18n();
+    const btn = /** @type {HTMLButtonElement} */ (document.querySelector("button"));
+    expect(btn?.title).toBe("שמור");
+  });
+
+  it("updates the language toggle label for the next language", async () => {
+    document.body.innerHTML = '<button id="btnLang" data-lang-toggle-label>EN</button>';
+    await loadLocale("he", { ...SAMPLE_DICT });
+    applyI18n();
+    expect(document.getElementById("btnLang")?.textContent).toBe("EN");
+
+    await loadLocale("en");
+    applyI18n();
+    expect(document.getElementById("btnLang")?.textContent).toBe("עב");
   });
 
   it("translates multiple elements at once", () => {
@@ -214,5 +240,23 @@ describe("ICU plural via t()", () => {
 
   it("backward compat: t(key) still returns key", () => {
     expect(t("missing_key")).toBe("missing_key");
+  });
+});
+
+describe("bilingual language helpers", () => {
+  it("normalizes unsupported values to Hebrew", () => {
+    expect(normalizeUiLanguage("ru")).toBe("he");
+    expect(normalizeUiLanguage(undefined)).toBe("he");
+  });
+
+  it("returns the next UI language in the Hebrew/English pair", () => {
+    expect(nextUiLanguage("he")).toBe("en");
+    expect(nextUiLanguage("en")).toBe("he");
+    expect(nextUiLanguage("ar")).toBe("en");
+  });
+
+  it("returns the correct language toggle label", () => {
+    expect(languageToggleLabel("he")).toBe("EN");
+    expect(languageToggleLabel("en")).toBe("עב");
   });
 });

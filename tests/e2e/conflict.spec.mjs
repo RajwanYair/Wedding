@@ -1,5 +1,6 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
+import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
 
 /**
  * Wedding Manager — Conflict Detection E2E Tests (Phase 9.2)
@@ -10,14 +11,13 @@ import { test, expect } from "@playwright/test";
  */
 
 test.describe("Cross-tab conflict detection (Phase 9.2)", () => {
-  test("two contexts share the same localStorage origin", async ({
+  test("two pages in the same context share the same localStorage origin", async ({
     browser,
   }) => {
-    // Both contexts write to the same origin; data should be visible in both
-    const ctx1 = await browser.newContext();
-    const ctx2 = await browser.newContext();
-    const p1 = await ctx1.newPage();
-    const p2 = await ctx2.newPage();
+    // Two pages in the same browser context share storage state for the same origin.
+    const ctx = await browser.newContext();
+    const p1 = await ctx.newPage();
+    const p2 = await ctx.newPage();
 
     await p1.goto("/");
     await p1.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
@@ -25,21 +25,18 @@ test.describe("Cross-tab conflict detection (Phase 9.2)", () => {
     await p2.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
 
     // Write in context 1
-    await p1.evaluate(() => {
-      localStorage.setItem("wedding_v1_conflict_test", JSON.stringify({ v: 1 }));
-    });
+    await p1.evaluate((key) => {
+      localStorage.setItem(key, JSON.stringify({ v: 1 }));
+    }, TEST_STORAGE_KEYS.CONFLICT_PROBE);
 
-    // Same-origin storage is shared across same-browser contexts
-    const raw = await p2.evaluate(() =>
-      localStorage.getItem("wedding_v1_conflict_test"),
-    );
+    // Same-origin storage is shared across pages in the same browser context.
+    const raw = await p2.evaluate((key) => localStorage.getItem(key), TEST_STORAGE_KEYS.CONFLICT_PROBE);
     const val = raw ? JSON.parse(raw) : null;
     expect(val?.v).toBe(1);
 
     // Cleanup
-    await p1.evaluate(() => localStorage.removeItem("wedding_v1_conflict_test"));
-    await ctx1.close();
-    await ctx2.close();
+    await p1.evaluate((key) => localStorage.removeItem(key), TEST_STORAGE_KEYS.CONFLICT_PROBE);
+    await ctx.close();
   });
 
   test("storageEvent fires on second tab when first tab writes", async ({
@@ -66,9 +63,9 @@ test.describe("Cross-tab conflict detection (Phase 9.2)", () => {
     });
 
     // Write from p1 — this triggers a storage event in p2 (cross-tab)
-    await p1.evaluate(() => {
-      localStorage.setItem("wedding_v1_xstorage_probe", "sentinel");
-    });
+    await p1.evaluate((key) => {
+      localStorage.setItem(key, "sentinel");
+    }, TEST_STORAGE_KEYS.CROSS_TAB_PROBE);
 
     // Give the browser a tick to propagate
     await p2.waitForTimeout(300);
@@ -83,7 +80,7 @@ test.describe("Cross-tab conflict detection (Phase 9.2)", () => {
     expect(Array.isArray(events)).toBe(true);
 
     // Cleanup
-    await p1.evaluate(() => localStorage.removeItem("wedding_v1_xstorage_probe"));
+    await p1.evaluate((key) => localStorage.removeItem(key), TEST_STORAGE_KEYS.CROSS_TAB_PROBE);
     await ctx.close();
   });
 

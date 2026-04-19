@@ -26,24 +26,7 @@ You are a guest management specialist for a wedding app.
 - RSVP form with auto-match to existing guests
 - CSV export with UTF-8 BOM for Hebrew
 
-## Data Model
-
-```text
-Guest: {
-  id, firstName, lastName, phone, email,
-  count, children,
-  status: 'pending'|'confirmed'|'declined'|'maybe',
-  side:   'groom'|'bride'|'mutual',
-  group:  'family'|'friends'|'work'|'other',
-  relationship,
-  meal: 'regular'|'vegetarian'|'vegan'|'gluten_free'|'kosher',  // kosher displays as 'מהדרין/Mehadrin'
-  mealNotes, accessibility: boolean,
-  tableId, gift, notes, sent: boolean,
-  rsvpDate, createdAt, updatedAt
-}
-Table: { id, name, capacity, shape: 'round'|'rect' }
-WeddingInfo: { groom, bride, date, time, venue, address }
-```
+Canonical type shapes and enums live in `src/types.d.ts` and `src/core/constants.js`.
 
 ## WhatsApp Pattern
 

@@ -1,5 +1,10 @@
 {
   "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "description": "GitHub repository, issue, and pull request context in chat."
+    },
     "fetch": {
       "type": "stdio",
       "command": "npx",
@@ -8,6 +13,15 @@
         "@modelcontextprotocol/server-fetch"
       ],
       "description": "Test API endpoints directly in chat."
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@microsoft/mcp-server-playwright"
+      ],
+      "description": "Browser automation and visual debugging in chat."
     },
     "filesystem": {
       "type": "stdio",

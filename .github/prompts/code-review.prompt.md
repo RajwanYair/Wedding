@@ -1,13 +1,13 @@
 ---
-mode: agent
+agent: agent
 description: "Full code review: security, UI, i18n, data integrity, and performance audit for the wedding app."
 ---
 
 # Code Review — Wedding Manager
 
-Read `index.html` and audit it for each category below. Report pass/fail per item with line numbers for failures.
+Review the active change set against the modular runtime, not only `index.html`. Inspect the touched `src/`, `css/`, `src/templates/`, `src/modals/`, and workflow/docs files as needed. Report findings first, ordered by severity, with file references for every failure.
 
-Review `index.html` for:
+Audit the implementation for:
 
 ## Security
 
@@ -39,3 +39,5 @@ Review `index.html` for:
 - [ ] Modal closes on Escape and overlay click
 - [ ] Print stylesheet hides interactive elements
 - [ ] `prefers-reduced-motion` respected
+
+Prefer bug risk, regression risk, missing tests, and security findings over stylistic commentary.

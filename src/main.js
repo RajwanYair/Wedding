@@ -7,11 +7,17 @@
  */
 
 // ── Foundation layer ──────────────────────────────────────────────────────
-import { PUBLIC_SECTIONS } from "./core/constants.js";
+import { PUBLIC_SECTIONS, STORAGE_KEYS } from "./core/constants.js";
 import { buildStoreDefs, defaultWeddingInfo } from "./core/defaults.js";
 import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
-import { loadLocale, applyI18n, t } from "./core/i18n.js";
+import {
+  loadLocale,
+  applyI18n,
+  t,
+  normalizeUiLanguage,
+  nextUiLanguage,
+} from "./core/i18n.js";
 import { updateNavForAuth } from "./core/nav-auth.js";
 import { initStorage, migrateFromLocalStorage, getAdapterType } from "./core/storage.js";
 import {
@@ -221,19 +227,18 @@ let _activeSection = null;
   await initStorage();
 
   // 0a. One-time migration from localStorage → IndexedDB (S16)
-  const MIGRATION_FLAG = "wedding_v1_idb_migrated";
   if (
     getAdapterType() === "indexeddb" &&
-    localStorage.getItem(MIGRATION_FLAG) !== "1"
+    localStorage.getItem(STORAGE_KEYS.IDB_MIGRATED) !== "1"
   ) {
     const migrated = await migrateFromLocalStorage();
     if (migrated > 0) {
-      localStorage.setItem(MIGRATION_FLAG, "1");
+      localStorage.setItem(STORAGE_KEYS.IDB_MIGRATED, "1");
     }
   }
 
   // 1. Language
-  const lang = load("lang", "he") === "en" ? "en" : "he";
+  const lang = normalizeUiLanguage(load("lang", "he"));
   await loadLocale(lang);
 
   // 2. Apply i18n bindings
@@ -1153,16 +1158,13 @@ function _registerHandlers() {
   });
   on("clearAllData", () => clearAllData());
   on("switchLanguage", async () => {
-    const current = load("lang", "he");
-    await switchLanguage(current === "he" ? "en" : "he");
+    const current = normalizeUiLanguage(load("lang", "he"));
+    await switchLanguage(nextUiLanguage(current));
     showToast(t("language_switched"), "info");
   });
   on("toggleLanguage", async () => {
-    const current = load("lang", "he");
-    const next = current === "he" ? "en" : "he";
-    await switchLanguage(next);
-    const btn = document.getElementById("btnLang");
-    if (btn) btn.textContent = next === "he" ? "EN" : "\u05E2\u05D1";
+    const current = normalizeUiLanguage(load("lang", "he"));
+    await switchLanguage(nextUiLanguage(current));
     showToast(t("language_switched"), "info");
   });
   on("clearAuditLog", () => clearAuditLog());
