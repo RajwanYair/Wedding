@@ -166,7 +166,7 @@ At minimum, the current hardcoded values must be rotated and the pattern changed
 
 ## Part II — Current Release State
 
-### Completed Sprints (v3.0.0 → v8.0.8)
+### Completed Sprints (v3.0.0 → v8.1.0)
 
 | Sprint | Milestone | Version |
 | --- | --- | --- |
@@ -185,8 +185,15 @@ At minimum, the current hardcoded values must be rotated and the pattern changed
 | S12 — UX Upgrades | WhatsApp reminders, duplicate detection, QR check-in, drag-drop seating | v4.1.0 |
 | S13 — Architecture | Supabase services, repositories, handlers, migrations 001–022 | v8.0.0 |
 | S14 — Test Quality | 4047 tests, 221 files, centralized helpers, domain constants | v8.0.8 |
+| S15 — Security | HSTS, COOP/COEP/CORP, ADMIN_EMAILS injection, check-credentials CI scan | v8.1.0 |
+| S16 — IndexedDB | initStorage() + migrateFromLocalStorage() wired to bootstrap | v8.1.0 |
+| S18 — PWA | offline.html, Background Sync RSVP, manifest share_target + 4 shortcuts | v8.1.0 |
+| S19 — CSS Modern | @container, @starting-style, color-mix(), :has(), light-dark(), prefers-reduced-motion | v8.1.0 |
+| S20 — TypeScript | noUncheckedIndexedAccess, Supabase types template | v8.1.0 |
+| S21 — Testing | axe-core WCAG AA E2E, LCP < 2500ms performance assertion | v8.1.0 |
+| S22 — Intl | Intl.RelativeTimeFormat, Intl.ListFormat, Intl.PluralRules | v8.1.0 |
 
-### Baseline (v8.0.8)
+### Current Release (v8.1.0)
 
 ```text
 Source         206 JS files · 37,346 LOC
@@ -483,7 +490,8 @@ Retained as the export/backup specification. Not a live sync target after v9.0.0
 | v3.9.0 | S8 | ✅ Released |
 | v4.0.0 | S9 + S10 | ✅ Released |
 | v4.1.0 | S11 + S12 | ✅ Released |
-| v8.0.0–v8.0.8 | S13–S14 | ✅ Current |
+| v8.0.0–v8.0.8 | S13–S14 | ✅ Released |
+| v8.1.0 | S15–S22 | ✅ Current |
 | v8.1.0 | S15 + S16 — Security + IndexedDB | ⏳ |
 | v8.2.0 | S17 — Supabase activation | 🔜 |
 | v8.3.0 | S18 — PWA excellence | 🔜 |

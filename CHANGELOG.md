@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.1.0] — 2026-05-25
+
+### Added
+
+- **S15 Security**: HSTS (`max-age=63072000; includeSubDomains; preload`), CORP, COOP, COEP, and `upgrade-insecure-requests` headers in `public/_headers`.
+- **S15**: `GH_ADMIN_EMAILS` GitHub Secret injection — `inject-config.mjs` now replaces the hardcoded `ADMIN_EMAILS` array at deploy time from a comma-separated secret.
+- **S15**: `scripts/check-credentials.mjs` — new CI credential hygiene scan; warns about non-empty hardcoded secrets; added to `npm run ci` via `check:credentials`.
+- **S15**: All Supabase + ADMIN_EMAILS env vars added to `deploy.yml` inject step.
+- **S16**: `initStorage()` (IndexedDB → localStorage → memory adapter) wired to `src/main.js` bootstrap — auto-selects best available storage backend.
+- **S16**: One-time `migrateFromLocalStorage()` on first IndexedDB boot (flag: `wedding_v1_idb_migrated`).
+- **S18**: `public/offline.html` — branded RTL offline fallback page with dark-mode support and retry/back buttons.
+- **S18**: Service Worker upgraded to `v8.1.0`; `offline.html` in APP_SHELL; navigation failures serve offline.html.
+- **S18**: Background Sync (`rsvp-sync`) registered on offline RSVP submission; SW broadcasts `RSVP_SYNC_READY` to flush the write queue once online.
+- **S18**: `flushWriteQueue()` exported from `services/sheets.js`; `ui.js` handles `RSVP_SYNC_READY` message.
+- **S18**: Manifest enhanced: 4 shortcuts (RSVP, guests, dashboard, check-in), `share_target`, `screenshots`, `handle_links:preferred`.
+- **S19**: Container query contexts on `.stats-grid`, `.section`, `.cq`.
+- **S19**: `@container` compact layout for stat cards ≤ 380px; single-column form layout for sections ≤ 500px.
+- **S19**: `@starting-style` on `.modal-overlay`, `.modal`, `.toast` — native entry animations without JS class toggling.
+- **S19**: `color-mix()` semantic tokens in `variables.css` (accent-subtle, accent-tint, focus-ring, positive/negative/warning-tint).
+- **S19**: `.card--positive/warning/danger` variants using `color-mix()`.
+- **S19**: Unified `:focus-visible` ring with `color-mix()`; scrollbar accent tints via `color-mix()`.
+- **S19**: Comprehensive `@media (prefers-reduced-motion)` sweep — kills all animation/transition durations globally.
+- **S19**: `:has()` form-group invalid state styling; `.card:has(:focus-visible)` elevation pattern.
+- **S19**: `light-dark()` on `.stat-card` for automatic light/dark background adaptation.
+- **S20**: `tsconfig.json` — `noUncheckedIndexedAccess`, `noImplicitReturns`, `noFallthroughCasesInSwitch`.
+- **S20**: `src/types/supabase.d.ts` — full Supabase Database type template from 22 migrations.
+- **S21**: `tests/e2e/accessibility.spec.mjs` — axe-core WCAG AA tests for landing page and RSVP section.
+- **S21**: Performance timing assertions: page load < 3s, LCP < 2500ms via `PerformanceObserver`.
+- **S22**: `src/utils/date.js` — `formatRelative()` using `Intl.RelativeTimeFormat` for locale-aware relative dates.
+- **S22**: `src/core/i18n.js` — `formatList()` using `Intl.ListFormat`; `pluralCategory()` using `Intl.PluralRules`.
+
+### Changed
+
+- `package.json`: Added `@axe-core/playwright` devDep; added `check:credentials` and updated `ci` script.
+- `copilot-instructions.md`, `workspace.instructions.md`, `config.json`, `ARCHITECTURE.md`, `README.md`, `ci.yml` bumped to v8.1.0.
+
 ## [8.0.8] — 2026-05-17
 
 ### Added
