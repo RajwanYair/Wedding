@@ -42,6 +42,7 @@ import {
   initSwipe,
   initPullToRefresh,
   initKeyboardShortcuts,
+  initShortcutsHelp,
 } from "./core/nav.js";
 import {
   showToast,
@@ -331,6 +332,7 @@ let _activeSection = null;
   // 11a. Pull-to-refresh on mobile (S2.8) — triggers immediate Sheets sync
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
+  initShortcutsHelp();
 
   // 11b. Wire sync status indicator (S3.6)
   onSyncStatus((status) => {

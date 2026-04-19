@@ -21,7 +21,6 @@ export const SHEETS_CONFIG_TAB = "Config";
 export const SHEETS_VENDORS_TAB = "Vendors";
 export const SHEETS_EXPENSES_TAB = "Expenses";
 export const SHEETS_RSVP_LOG_TAB = "RSVP_Log";
-export const SHEETS_TIMELINE_TAB = "Timeline";
 
 // ── Supabase ─────────────────────────────────────────────────────────────
 export const SUPABASE_URL = "";

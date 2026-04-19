@@ -71,9 +71,16 @@ for (const f of srcFiles) {
 const dead = [];
 
 for (const { sym, file } of allExports) {
+  // 1. Named import: import { sym } from ...
   const importRe = new RegExp(`import[^;]*\\b${sym}\\b`, "g");
   const importCount = (corpus.match(importRe) ?? []).length;
-  if (importCount === 0) dead.push({ sym, file });
+  // 2. Namespace property access: ns.sym( or ns?.sym(
+  const nsAccessRe = new RegExp(
+    `\\.${sym}[\\s\\S]{0,2}\\(|\\[['"\`]${sym}['"\`]\\]`,
+    "g",
+  );
+  const nsAccessCount = (corpus.match(nsAccessRe) ?? []).length;
+  if (importCount === 0 && nsAccessCount === 0) dead.push({ sym, file });
 }
 
 // ── Report ─────────────────────────────────────────────────────────────────
@@ -102,6 +109,8 @@ for (const [dir, entries] of Object.entries(byDir).sort()) {
   for (const e of entries) console.log(`  ${e}`);
 }
 
-console.log(`\nNote: exports used only via barrel re-export (export * from) may`);
-console.log(`appear dead if the consuming import uses the barrel path, not the`);
-console.log(`direct path. Review before removing.\n`);
+console.log(
+  `\nNote: exports used only via barrel re-export (export * from) or`,
+);
+console.log(`accessed exclusively by string key (e.g. obj["sym"]) may still`);
+console.log(`appear dead. Review before removing.\n`);
