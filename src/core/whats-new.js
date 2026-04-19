@@ -8,6 +8,7 @@
 import { APP_VERSION } from "./config.js";
 import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
+import { readBrowserStorage, writeBrowserStorage } from "./storage.js";
 
 /**
  * Show What's New dialog if the user hasn't seen the current version.
@@ -16,17 +17,17 @@ import { t } from "./i18n.js";
  */
 export function maybeShowWhatsNew(user) {
   if (!user?.isAdmin) return;
-  const lastSeen = localStorage.getItem(STORAGE_KEYS.LAST_SEEN_VERSION) ?? "";
+  const lastSeen = readBrowserStorage(STORAGE_KEYS.LAST_SEEN_VERSION, "") ?? "";
   if (lastSeen === APP_VERSION) return;
 
   const items = [
-    "\uD83D\uDCCA Budget sync to Google Sheets (two-way)",
-    "\u2705 Check-in status synced to Sheets",
-    "\uD83D\uDCF1 Richer WhatsApp templates (Hebrew + English)",
-    "\uD83D\uDCCB Status bar with version & GAS info",
-    "\uD83C\uDD95 What's New popup on login",
-    "\uD83D\uDCC4 Changelog tab for all users",
-  ];
+    "whats_new_item_budget_sync",
+    "whats_new_item_checkin_sync",
+    "whats_new_item_whatsapp_templates",
+    "whats_new_item_status_bar",
+    "whats_new_item_popup",
+    "whats_new_item_changelog",
+  ].map((key) => t(key));
 
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
@@ -55,14 +56,14 @@ export function maybeShowWhatsNew(user) {
   btn.style.cssText = "display:block;margin:0 auto";
   btn.textContent = t("whats_new_dismiss") || "Got it!";
   btn.addEventListener("click", () => {
-    localStorage.setItem(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
+    writeBrowserStorage(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
     overlay.remove();
   });
   card.appendChild(btn);
   overlay.appendChild(card);
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) {
-      localStorage.setItem(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
+      writeBrowserStorage(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
       overlay.remove();
     }
   });

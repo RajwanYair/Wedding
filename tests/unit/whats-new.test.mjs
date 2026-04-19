@@ -48,6 +48,19 @@ describe("maybeShowWhatsNew", () => {
     expect(document.body.firstElementChild.className).toContain("modal-overlay");
   });
 
+  it("renders translated release items", () => {
+    maybeShowWhatsNew({ isAdmin: true });
+    const items = [...document.body.querySelectorAll("li")].map((item) => item.textContent);
+    expect(items).toEqual([
+      "whats_new_item_budget_sync",
+      "whats_new_item_checkin_sync",
+      "whats_new_item_whatsapp_templates",
+      "whats_new_item_status_bar",
+      "whats_new_item_popup",
+      "whats_new_item_changelog",
+    ]);
+  });
+
   it("does not show overlay if version already seen", () => {
     _store[LAST_SEEN_KEY] = "7.6.0";
     maybeShowWhatsNew({ isAdmin: true });

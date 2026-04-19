@@ -319,7 +319,7 @@ export function showUpdateBanner() {
   const dismiss = document.createElement("button");
   dismiss.className = "update-banner-dismiss";
   dismiss.textContent = "\u00d7";
-  dismiss.setAttribute("aria-label", "Dismiss update notification");
+  dismiss.setAttribute("aria-label", t("sw_update_dismiss_aria"));
   dismiss.addEventListener("click", () => banner.remove());
 
   banner.appendChild(msg);
@@ -464,7 +464,7 @@ export function initInstallPrompt() {
       const dismiss = document.createElement("button");
       dismiss.className = "install-banner-dismiss";
       dismiss.textContent = "\u00d7";
-      dismiss.setAttribute("aria-label", "Dismiss install prompt");
+      dismiss.setAttribute("aria-label", t("install_banner_dismiss_aria"));
       dismiss.addEventListener("click", () => {
         banner.remove();
         _deferredPrompt = null;
