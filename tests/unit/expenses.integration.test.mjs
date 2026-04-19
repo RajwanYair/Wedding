@@ -2,7 +2,6 @@
  * tests/unit/expenses.integration.test.mjs — Integration tests for expenses section
  * Covers: saveExpense · deleteExpense · getExpenseSummary
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

@@ -2,7 +2,6 @@
  * tests/unit/tables.integration.test.mjs — Integration tests for tables section (S6.7)
  * Covers: saveTable · deleteTable · autoAssignTables · getTableStats
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

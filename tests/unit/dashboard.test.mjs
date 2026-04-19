@@ -3,7 +3,6 @@
  * Covers: renderDashboard stats · updateTopBar · updateCountdown · budget forecast ·
  *         vendor due reminders · activity feed · follow-up list
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

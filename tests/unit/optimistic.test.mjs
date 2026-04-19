@@ -1,7 +1,6 @@
 /**
  * tests/unit/optimistic.test.mjs — Unit tests for optimistic update helpers (Phase 2)
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

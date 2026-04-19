@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [8.3.0] — 2026-04-19
+
+### Added
+
+- Sprint 1: `pushState` + `popstate` router fix — browser back/forward now navigates between sections
+- Sprint 2: `tsconfig.json` aligned to ES2025 (`target`, `lib`, `module`, `moduleResolution`)
+- Sprint 3: Dead export cleanup — removed `SHEETS_TIMELINE_TAB` and `RSVP_DEADLINE`; `dead-export-check.mjs` extended with namespace-access detection to eliminate false positives
+- Sprint 4: `package.json` metadata (`engines`, `repository`, `homepage`, `bugs`); `.vscode/launch.json` Chrome + Edge debug configs with Vite source-map support
+- Sprint 5: VS Code extension recommendations — SVG preview (`jock.svg`), Mermaid in Markdown (`bierner.markdown-mermaid`), JS flame profiler (`ms-vscode.vscode-js-profile-flame`)
+- Sprint 6: Dependabot PR groups (`lint-tools`, `test-tools`, `build-tools`); YAML issue form templates replacing legacy Markdown templates
+- Sprint 7: Targeted Copilot instruction files — `javascript.instructions.md`, `css.instructions.md`, `tests.instructions.md`, `supabase.instructions.md`
+- Sprint 8: Workflow prompt files — `version-bump`, `i18n-add`, `debug-issue`, `refactor-section`, `security-audit`, `pre-release`
+- Sprint 9: README linked badges (`[![]()]()`) + Node ≥22 badge; `docs/README.md` documentation index (ADRs, integration guides, ops runbooks)
+
 ## [8.2.2] — 2026-04-19
 
 ### Changed

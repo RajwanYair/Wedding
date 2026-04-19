@@ -3,12 +3,9 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 2,
-    "editor.bracketPairColorization.enabled": true,
     "editor.linkedEditing": true,
     "editor.minimap.enabled": false,
     "editor.wordWrap": "on",
-    "editor.suggestSelection": "first",
-    "editor.inlineSuggest.enabled": true,
 
     // ── Files ──
     "files.eol": "\n",
@@ -21,7 +18,6 @@
     // ── HTML ──
     "html.format.wrapLineLength": 120,
     "html.format.indentInnerHtml": true,
-    "html.autoClosingTags": true,
 
     // ── Emmet ──
     "emmet.includeLanguages": {
@@ -98,8 +94,6 @@
         "**/node_modules": true
     },
     // ── Terminal ──
-    "terminal.integrated.gpuAcceleration": "on",
-    "terminal.integrated.shellIntegration.enabled": true,
     "terminal.integrated.defaultProfile.windows": "PowerShell",
     // ── ESLint ──
     "eslint.enable": true,

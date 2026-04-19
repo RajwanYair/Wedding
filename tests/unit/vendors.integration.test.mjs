@@ -2,7 +2,6 @@
  * tests/unit/vendors.integration.test.mjs — Integration tests for vendors section
  * Covers: saveVendor · deleteVendor · payment tracking
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

@@ -1,7 +1,5 @@
 /**
  * tests/unit/privacy.test.mjs — Unit tests for privacy admin utilities (Sprint 29)
- *
- * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";

@@ -4,7 +4,6 @@
  *         getCheckinVelocity · getRsvpConversionRate · checkBudgetOvershoot ·
  *         predictNoShowRate · computeArrivalForecast
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

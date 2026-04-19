@@ -2,7 +2,6 @@
  * tests/unit/budget.integration.test.mjs — Integration tests for budget section
  * Covers: saveBudgetEntry · deleteBudgetEntry · getBudgetSummary
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

@@ -163,6 +163,10 @@ const sheetNameKeys = extractSheetNameKeys();
 const colOrderKeys = extractColOrderKeys();
 const mapKeys = extractMapKeys();
 
+function formatList(items) {
+  return items.slice(0, 10).join(", ");
+}
+
 // ── Known exceptions ──────────────────────────────────────────────────────────
 
 /**
@@ -179,42 +183,54 @@ describe("Wiring: template-loader completeness", () => {
     expect(loaderKeys.length).toBeGreaterThanOrEqual(18);
   });
 
-  // Every data-template in HTML must have a loader
-  const templates = extractDataTemplates();
-  templates.forEach((name) => {
-    it(`_loaders has entry for data-template="${name}"`, () => {
-      expect(loaderKeys).toContain(name);
-    });
+  it("covers every data-template used in HTML", () => {
+    const missing = extractDataTemplates().filter(
+      (name) => !loaderKeys.includes(name),
+    );
+    expect(
+      missing,
+      `Missing template loaders for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
-  // Every loader must have a template file on disk
-  loaderKeys.forEach((name) => {
-    it(`src/templates/${name}.html exists for loader "${name}"`, () => {
-      expect(existsSync(resolve(root, "src", "templates", `${name}.html`))).toBe(true);
-    });
+  it("has a template file on disk for every loader", () => {
+    const missing = loaderKeys.filter(
+      (name) => !existsSync(resolve(root, "src", "templates", `${name}.html`)),
+    );
+    expect(
+      missing,
+      `Missing template files for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 
 describe("Wiring: index.html section containers", () => {
-  // Every nav section needs a container
-  navSections.forEach((name) => {
-    it(`index.html has <div id="sec-${name}"> for nav section`, () => {
-      expect(htmlContainers).toContain(name);
-    });
+  it("has a container for every nav section", () => {
+    const missing = navSections.filter(
+      (name) => !htmlContainers.includes(name),
+    );
+    expect(
+      missing,
+      `Missing nav containers for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
-  // Every SECTIONS map entry needs a container (except embedded sub-sections)
-  sectionsMap.filter((n) => !EMBEDDED_SECTIONS.has(n)).forEach((name) => {
-    it(`index.html has <div id="sec-${name}"> for SECTIONS entry`, () => {
-      expect(htmlContainers).toContain(name);
-    });
+  it("has a container for every top-level section", () => {
+    const missing = sectionsMap
+      .filter((name) => !EMBEDDED_SECTIONS.has(name))
+      .filter((name) => !htmlContainers.includes(name));
+    expect(
+      missing,
+      `Missing section containers for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
-  // Every container with data-template should have the template registered
-  dataTemplates.forEach((name) => {
-    it(`data-template="${name}" has a matching _loaders entry`, () => {
-      expect(loaderKeys).toContain(name);
-    });
+  it("registers a loader for every data-template container", () => {
+    const missing = dataTemplates.filter((name) => !loaderKeys.includes(name));
+    expect(
+      missing,
+      `Missing data-template registrations for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 
@@ -223,20 +239,24 @@ describe("Wiring: SECTIONS map (main.js)", () => {
     expect(sectionsMap.length).toBeGreaterThanOrEqual(18);
   });
 
-  // Every nav section must be in SECTIONS
-  navSections.forEach((name) => {
-    it(`SECTIONS map contains nav section "${name}"`, () => {
-      expect(sectionsMap).toContain(name);
-    });
+  it("contains every nav section", () => {
+    const missing = navSections.filter((name) => !sectionsMap.includes(name));
+    expect(
+      missing,
+      `Missing nav sections in section map: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
-  // Every SECTIONS entry must have a module file
-  sectionsMap.forEach((name) => {
-    it(`src/sections/ has module for SECTIONS entry "${name}"`, () => {
-      // contact-form → contact-collector.js, others → {name}.js
-      const fileName = name === "contact-form" ? "contact-collector.js" : `${name}.js`;
-      expect(existsSync(resolve(root, "src", "sections", fileName))).toBe(true);
+  it("has a section module for every section entry", () => {
+    const missing = sectionsMap.filter((name) => {
+      const fileName =
+        name === "contact-form" ? "contact-collector.js" : `${name}.js`;
+      return !existsSync(resolve(root, "src", "sections", fileName));
     });
+    expect(
+      missing,
+      `Missing section modules for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 
@@ -247,20 +267,28 @@ describe("Wiring: barrel exports (src/sections/index.js)", () => {
     const sectionFiles = readdirSync(sectionsDir)
       .filter((f) => f.endsWith(".js") && f !== "index.js");
 
-    sectionFiles.forEach((f) => {
-      it(`barrel references ${f}`, () => {
-        expect(BARREL).toContain(f.replace(".js", ""));
-      });
+    it("barrel references every section file", () => {
+      const missing = sectionFiles.filter(
+        (fileName) => !BARREL.includes(fileName.replace(".js", "")),
+      );
+      expect(
+        missing,
+        `Missing barrel references for: ${formatList(missing)}`,
+      ).toEqual([]);
     });
   } else {
     // Legacy: check each import * as xxxSection from "./sections/"
     const importedModules = [...MAIN_JS.matchAll(/import \* as (\w+Section) from "\.\/sections\//g)]
       .map((m) => m[1]);
 
-    importedModules.forEach((modName) => {
-      it(`barrel exports ${modName}`, () => {
-        expect(BARREL).toContain(modName);
-      });
+    it("barrel exports every imported section module", () => {
+      const missing = importedModules.filter(
+        (modName) => !BARREL.includes(modName),
+      );
+      expect(
+        missing,
+        `Missing barrel exports for: ${formatList(missing)}`,
+      ).toEqual([]);
     });
   }
 });
@@ -270,36 +298,47 @@ describe("Wiring: nav sections consistency", () => {
     expect(navSections.length).toBeGreaterThanOrEqual(14);
   });
 
-  // Every nav section needs a nav tab button (top or bottom nav)
-  navSections.forEach((name) => {
-    it(`nav tab exists for section "${name}"`, () => {
-      expect(navTabs).toContain(name);
-    });
+  it("has a nav tab for every nav section", () => {
+    const missing = navSections.filter((name) => !navTabs.includes(name));
+    expect(missing, `Missing nav tabs for: ${formatList(missing)}`).toEqual([]);
   });
 });
 
 describe("Wiring: PUBLIC_SECTIONS are valid", () => {
-  publicSections.forEach((name) => {
-    it(`PUBLIC_SECTIONS entry "${name}" exists in SECTIONS map`, () => {
-      expect(sectionsMap).toContain(name);
-    });
-    it(`PUBLIC_SECTIONS entry "${name}" has HTML container`, () => {
-      expect(htmlContainers).toContain(name);
-    });
+  it("keeps PUBLIC_SECTIONS inside the section map", () => {
+    const missing = publicSections.filter(
+      (name) => !sectionsMap.includes(name),
+    );
+    expect(
+      missing,
+      `Invalid public sections in section map: ${formatList(missing)}`,
+    ).toEqual([]);
+  });
+
+  it("has HTML containers for every public section", () => {
+    const missing = publicSections.filter(
+      (name) => !htmlContainers.includes(name),
+    );
+    expect(
+      missing,
+      `Missing public section containers for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 
 describe("Wiring: i18n keys for nav sections", () => {
-  navSections.forEach((name) => {
-    const key = `nav_${name.replace(/-/g, "_")}`;
-    // Not all sections have a nav_X key (e.g. landing uses nav_landing)
-    // but all sections that appear in top/bottom nav should have one
-    it(`he.json has i18n key "${key}" for nav section`, () => {
-      expect(I18N_HE).toHaveProperty(key);
-    });
-    it(`en.json has i18n key "${key}" for nav section`, () => {
-      expect(I18N_EN).toHaveProperty(key);
-    });
+  it("has Hebrew i18n keys for every nav section", () => {
+    const missing = navSections
+      .map((name) => `nav_${name.replace(/-/g, "_")}`)
+      .filter((key) => !(key in I18N_HE));
+    expect(missing, `Missing he nav keys: ${formatList(missing)}`).toEqual([]);
+  });
+
+  it("has English i18n keys for every nav section", () => {
+    const missing = navSections
+      .map((name) => `nav_${name.replace(/-/g, "_")}`)
+      .filter((key) => !(key in I18N_EN));
+    expect(missing, `Missing en nav keys: ${formatList(missing)}`).toEqual([]);
   });
 });
 
@@ -307,10 +346,13 @@ describe("Wiring: Sheets sync completeness", () => {
   // Every _SHEET_NAMES key (except _MAP_KEYS entries) must have _COL_ORDER
   const mapKeySet = new Set(mapKeys);
   const arraySheets = sheetNameKeys.filter((k) => !mapKeySet.has(k));
-  arraySheets.forEach((key) => {
-    it(`_COL_ORDER has columns for sheet "${key}"`, () => {
-      expect(colOrderKeys).toContain(key);
-    });
+
+  it("defines column order for every array-backed sheet", () => {
+    const missing = arraySheets.filter((key) => !colOrderKeys.includes(key));
+    expect(
+      missing,
+      `Missing _COL_ORDER entries for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
   // Every _SHEET_NAMES value must be in GAS ALLOWED_SHEETS
@@ -324,12 +366,16 @@ describe("Wiring: Sheets sync completeness", () => {
     expect(allowedSheets.length).toBeGreaterThanOrEqual(10);
   });
 
-  // Check that every _SHEET_NAMES value appears in GAS
   const sheetValues = [...SHEETS_IMPL.matchAll(/:\s*"([A-Z][a-z_]+)"/g)].map((m) => m[1]);
-  sheetValues.forEach((tabName) => {
-    it(`GAS ALLOWED_SHEETS includes "${tabName}"`, () => {
-      expect(allowedSheets).toContain(tabName);
-    });
+
+  it("keeps GAS ALLOWED_SHEETS aligned with runtime sheet names", () => {
+    const missing = sheetValues.filter(
+      (tabName) => !allowedSheets.includes(tabName),
+    );
+    expect(
+      missing,
+      `Missing GAS allowed sheets for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
   // RSVP_Log is append-only, not in _SHEET_NAMES but must be in GAS
@@ -339,18 +385,26 @@ describe("Wiring: Sheets sync completeness", () => {
 });
 
 describe("Wiring: no orphaned templates", () => {
-  // Every template file on disk should be referenced by a loader
   const templateFiles = readdirSync(resolve(root, "src", "templates"))
     .filter((f) => f.endsWith(".html"))
     .map((f) => f.replace(".html", ""));
 
-  templateFiles.forEach((name) => {
-    it(`template file "${name}.html" has a _loaders entry`, () => {
-      expect(loaderKeys).toContain(name);
-    });
-    it(`template file "${name}.html" has a sec-${name} container in HTML`, () => {
-      expect(htmlContainers).toContain(name);
-    });
+  it("registers every template file in the loader map", () => {
+    const missing = templateFiles.filter((name) => !loaderKeys.includes(name));
+    expect(
+      missing,
+      `Orphaned template files without loaders: ${formatList(missing)}`,
+    ).toEqual([]);
+  });
+
+  it("has a matching HTML container for every template file", () => {
+    const missing = templateFiles.filter(
+      (name) => !htmlContainers.includes(name),
+    );
+    expect(
+      missing,
+      `Template files missing containers: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 
@@ -404,42 +458,67 @@ const allModalHtml = readdirSync(resolve(root, "src", "modals"))
   .join("\n");
 
 describe("Wiring: data-action handlers registered", () => {
-  // Every data-action in index.html needs a handler
   const htmlActions = extractDataActions(HTML);
-  htmlActions.forEach((action) => {
-    it(`main.js has on("${action}") for index.html`, () => {
-      expect(registeredHandlers).toContain(action);
-    });
+
+  it("registers handlers for index.html actions", () => {
+    const missing = htmlActions.filter(
+      (action) => !registeredHandlers.includes(action),
+    );
+    expect(
+      missing,
+      `Missing shell action handlers for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
-  // Every data-action in section templates needs a handler
   const templateActions = extractDataActions(allTemplateHtml);
-  templateActions.forEach((action) => {
-    it(`main.js has on("${action}") for section templates`, () => {
-      expect(registeredHandlers).toContain(action);
-    });
+
+  it("registers handlers for section template actions", () => {
+    const missing = templateActions.filter(
+      (action) => !registeredHandlers.includes(action),
+    );
+    expect(
+      missing,
+      `Missing section action handlers for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 
-  // Every data-action in modal templates needs a handler
   const modalActions = extractDataActions(allModalHtml);
-  modalActions.forEach((action) => {
-    it(`main.js has on("${action}") for modal templates`, () => {
-      expect(registeredHandlers).toContain(action);
-    });
+
+  it("registers handlers for modal actions", () => {
+    const missing = modalActions.filter(
+      (action) => !registeredHandlers.includes(action),
+    );
+    expect(
+      missing,
+      `Missing modal action handlers for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 
 describe("Wiring: modal lazy-loading", () => {
-  // Every modal shell in index.html with data-modal should have a loader
-  const modalShells = [...HTML.matchAll(/data-modal="([a-zA-Z]+)"/g)].map((m) => m[1]);
+  const modalShells = [...HTML.matchAll(/data-modal="([a-zA-Z]+)"/g)].map(
+    (m) => m[1],
+  );
 
-  modalShells.forEach((modalId) => {
-    it(`_modalLoaders has entry for data-modal="${modalId}"`, () => {
-      expect(modalLoaderKeys).toContain(modalId);
-    });
-    it(`src/modals/${modalId}.html exists on disk`, () => {
-      expect(existsSync(resolve(root, "src", "modals", `${modalId}.html`))).toBe(true);
-    });
+  it("registers modal loaders for every shell", () => {
+    const missing = modalShells.filter(
+      (modalId) => !modalLoaderKeys.includes(modalId),
+    );
+    expect(
+      missing,
+      `Missing modal loaders for: ${formatList(missing)}`,
+    ).toEqual([]);
+  });
+
+  it("has modal HTML files for every shell", () => {
+    const missing = modalShells.filter(
+      (modalId) =>
+        !existsSync(resolve(root, "src", "modals", `${modalId}.html`)),
+    );
+    expect(
+      missing,
+      `Missing modal HTML files for: ${formatList(missing)}`,
+    ).toEqual([]);
   });
 });
 

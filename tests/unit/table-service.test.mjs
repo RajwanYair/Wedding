@@ -1,7 +1,5 @@
 /**
  * tests/unit/table-service.test.mjs — Unit tests for table domain service (Sprint 26)
- *
- * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";

@@ -1,7 +1,5 @@
 /**
  * tests/unit/expense-service.test.mjs — Unit tests for expense domain service (Sprint 27)
- *
- * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";

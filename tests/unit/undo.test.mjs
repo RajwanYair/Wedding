@@ -2,7 +2,6 @@
  * tests/unit/undo.test.mjs — Unit tests for undo utility
  * Covers: pushUndo · popUndo · peekUndo · undoStackSize · clearUndo
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

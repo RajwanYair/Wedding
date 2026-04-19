@@ -1,7 +1,5 @@
 /**
  * tests/unit/vendor-service.test.mjs — Unit tests for vendor domain service (Sprint 27)
- *
- * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";

@@ -123,6 +123,7 @@ describe("Store V2 — Batch + Scoped Subscriptions", () => {
 
   // ── storeSubscribeScoped ──────────────────────────────────────────────
 
+  // Detailed scope cleanup / leak tests: see store-subscriptions.test.mjs
   describe("storeSubscribeScoped()", () => {
     it("subscribes and receives notifications", async () => {
       const spy = vi.fn();
@@ -133,27 +134,6 @@ describe("Store V2 — Batch + Scoped Subscriptions", () => {
       await Promise.resolve();
 
       expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it("unsubscribes all on cleanupScope", async () => {
-      const spy1 = vi.fn();
-      const spy2 = vi.fn();
-      storeSubscribeScoped("guests", spy1, "guests-section");
-      storeSubscribeScoped("tables", spy2, "guests-section");
-
-      cleanupScope("guests-section");
-
-      storeSet("guests", [{ id: "1" }]);
-      storeSet("tables", [{ id: "t1" }]);
-      await Promise.resolve();
-      await Promise.resolve();
-
-      expect(spy1).not.toHaveBeenCalled();
-      expect(spy2).not.toHaveBeenCalled();
-    });
-
-    it("cleaning up non-existent scope is a no-op", () => {
-      expect(() => cleanupScope("nonexistent")).not.toThrow();
     });
 
     it("manual unsub works independently of scope cleanup", async () => {

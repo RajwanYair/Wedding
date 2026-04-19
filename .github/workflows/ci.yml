@@ -1,5 +1,5 @@
 # =============================================================================
-# CI — Wedding Manager v8.2.2
+# CI — Wedding Manager v8.3.0
 # Lint, i18n parity, unit tests, Vite build, security scan, Lighthouse, size, E2E
 # =============================================================================
 
@@ -35,6 +35,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Setup shared tooling (CI shim)
+        run: node scripts/ensure-shared-tooling.mjs
 
       - name: Lint (HTML + CSS + JS + Markdown)
         run: npm run lint

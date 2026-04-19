@@ -1,7 +1,6 @@
 /**
  * tests/unit/guest-service.test.mjs — Unit tests for guest domain service (Phase 1)
  *
- * @vitest-environment happy-dom
  * Run: npm test
  */
 

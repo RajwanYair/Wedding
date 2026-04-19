@@ -3,8 +3,6 @@
  *
  * Tests only the pure helper functions: detectConflicts, fieldLevelMerge, autoResolve.
  * The modal / UI layer is not tested here.
- *
- * @vitest-environment happy-dom
  */
 
 import { describe, it, expect, vi } from "vitest";
