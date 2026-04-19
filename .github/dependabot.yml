@@ -12,7 +12,13 @@ updates:
     labels:
       - "dependencies"
       - "ci"
+    reviewers:
+      - "RajwanYair"
     open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
     directory: "/"
@@ -26,8 +32,29 @@ updates:
     labels:
       - "dependencies"
       - "devDependencies"
+    reviewers:
+      - "RajwanYair"
     open-pull-requests-limit: 10
     versioning-strategy: increase
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+    groups:
+      lint-tools:
+        patterns:
+          - "eslint*"
+          - "@eslint/*"
+          - "stylelint*"
+          - "htmlhint"
+          - "markdownlint*"
+      test-tools:
+        patterns:
+          - "vitest*"
+          - "@vitest/*"
+          - "playwright*"
+          - "@playwright/*"
+          - "@axe-core/*"
+      build-tools:
+        patterns:
+          - "vite*"
+          - "@vitejs/*"
