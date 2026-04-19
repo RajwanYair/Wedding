@@ -2,14 +2,14 @@
 
 # 💍 Wedding Manager
 
-![Version](https://img.shields.io/badge/version-v8.2.2-d4a574?style=flat-square)
-![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg?style=flat-square)
-![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-CI_green-brightgreen?style=flat-square)
-![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)
-![Dependencies](https://img.shields.io/badge/Runtime_Deps-Zero-6ee7b7?style=flat-square)
-![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
+[![Version](https://img.shields.io/badge/version-v8.2.2-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
+[![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
+[![Tests](https://img.shields.io/badge/tests-4074_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
+[![Node](https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)](docs/README.md)
+[![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
+[![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)](src/i18n/he.json)
 
 **Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
 **Vite 8, vanilla JS/CSS, Hebrew RTL first, zero runtime dependencies.**
