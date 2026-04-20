@@ -98,3 +98,96 @@ export function guestStatsBySide(guests) {
   }
   return result;
 }
+
+// ── 6-Stage RSVP Funnel (Sprint 27 / Roadmap 3.2) ─────────────────────────
+
+/**
+ * @typedef {{
+ *   invited:      number,
+ *   link_sent:    number,
+ *   link_clicked: number,
+ *   form_started: number,
+ *   confirmed:    number,
+ *   checked_in:   number,
+ * }} RsvpFunnelCounts
+ *
+ * @typedef {RsvpFunnelCounts & {
+ *   conversionRates: {
+ *     linkSentRate:    number,
+ *     clickRate:       number,
+ *     formStartRate:   number,
+ *     confirmRate:     number,
+ *     checkinRate:     number,
+ *     overallRate:     number,
+ *   }
+ * }} RsvpFunnel
+ */
+
+/**
+ * Compute the 6-stage RSVP conversion funnel from a guest list.
+ *
+ * Guest fields used:
+ *  - `funnelStage` (optional string): explicit stage key if tracked
+ *  - `inviteSent` (boolean/truthy): invitation was sent
+ *  - `linkSent` (boolean/truthy): RSVP link was sent
+ *  - `linkClicked` (boolean/truthy): guest opened their RSVP link
+ *  - `formStarted` (boolean/truthy): guest began filling the form
+ *  - `status === "confirmed"`: guest confirmed attendance
+ *  - `checkedIn` (boolean/truthy): guest was checked in on event day
+ *
+ * When `funnelStage` is absent the function infers stage from the guest
+ * fields above in order of precedence.
+ *
+ * @param {any[]} guests
+ * @returns {RsvpFunnel}
+ */
+export function computeRsvpFunnel(guests) {
+  const counts = {
+    invited:      0,
+    link_sent:    0,
+    link_clicked: 0,
+    form_started: 0,
+    confirmed:    0,
+    checked_in:   0,
+  };
+
+  for (const g of guests) {
+    counts.invited += 1;
+    const stage = g.funnelStage;
+    if (stage) {
+      // Explicit stage: count all stages up to and including this one
+      if (["link_sent", "link_clicked", "form_started", "confirmed", "checked_in"].includes(stage)) counts.link_sent += 1;
+      if (["link_clicked", "form_started", "confirmed", "checked_in"].includes(stage)) counts.link_clicked += 1;
+      if (["form_started", "confirmed", "checked_in"].includes(stage)) counts.form_started += 1;
+      if (["confirmed", "checked_in"].includes(stage)) counts.confirmed += 1;
+      if (stage === "checked_in") counts.checked_in += 1;
+    } else {
+      // Infer from boolean flags + status
+      const sent    = !!(g.inviteSent   || g.linkSent);
+      const clicked = !!(g.linkClicked);
+      const started = !!(g.formStarted);
+      const conf    = g.status === "confirmed";
+      const ci      = !!(g.checkedIn);
+      if (sent    || clicked || started || conf || ci) counts.link_sent    += 1;
+      if (clicked || started || conf    || ci)         counts.link_clicked += 1;
+      if (started || conf    || ci)                    counts.form_started += 1;
+      if (conf    || ci)                               counts.confirmed    += 1;
+      if (ci)                                          counts.checked_in   += 1;
+    }
+  }
+
+  const total = counts.invited;
+  const pct = (n) => total === 0 ? 0 : Math.round((n / total) * 100);
+
+  return {
+    ...counts,
+    conversionRates: {
+      linkSentRate:   pct(counts.link_sent),
+      clickRate:      pct(counts.link_clicked),
+      formStartRate:  pct(counts.form_started),
+      confirmRate:    pct(counts.confirmed),
+      checkinRate:    pct(counts.checked_in),
+      overallRate:    pct(counts.confirmed),
+    },
+  };
+}

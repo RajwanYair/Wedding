@@ -14,6 +14,7 @@ import {
   rsvpSubmissionsByDate,
   totalExpectedCount,
   guestStatsBySide,
+  computeRsvpFunnel,
 } from "../../src/utils/rsvp-analytics.js";
 
 
@@ -189,5 +190,67 @@ describe("guestStatsBySide", () => {
     ];
     const stats = guestStatsBySide(guests);
     expect(Object.keys(stats)).toHaveLength(3);
+  });
+});
+
+// ── computeRsvpFunnel — Sprint 27 ─────────────────────────────────────────
+describe("computeRsvpFunnel()", () => {
+  it("returns all zeros for empty guest list", () => {
+    const f = computeRsvpFunnel([]);
+    expect(f.invited).toBe(0);
+    expect(f.confirmed).toBe(0);
+    expect(f.checked_in).toBe(0);
+    expect(f.conversionRates.overallRate).toBe(0);
+  });
+
+  it("counts all guests as invited", () => {
+    const guests = [makeGuest({}), makeGuest({}), makeGuest({})];
+    expect(computeRsvpFunnel(guests).invited).toBe(3);
+  });
+
+  it("infers link_sent from linkSent flag", () => {
+    const guests = [makeGuest({ linkSent: true }), makeGuest({})];
+    expect(computeRsvpFunnel(guests).link_sent).toBe(1);
+  });
+
+  it("infers confirmed from status === 'confirmed'", () => {
+    const guests = [
+      makeGuest({ status: "confirmed" }),
+      makeGuest({ status: "pending" }),
+    ];
+    const f = computeRsvpFunnel(guests);
+    expect(f.confirmed).toBe(1);
+    expect(f.link_sent).toBe(1);   // confirmed implies sent
+    expect(f.link_clicked).toBe(1);
+    expect(f.form_started).toBe(1);
+  });
+
+  it("infers checked_in from checkedIn flag", () => {
+    const guests = [makeGuest({ checkedIn: true, status: "confirmed" })];
+    const f = computeRsvpFunnel(guests);
+    expect(f.checked_in).toBe(1);
+    expect(f.confirmed).toBe(1);
+  });
+
+  it("uses explicit funnelStage when present", () => {
+    const guests = [
+      makeGuest({ funnelStage: "link_sent" }),
+      makeGuest({ funnelStage: "confirmed" }),
+    ];
+    const f = computeRsvpFunnel(guests);
+    expect(f.invited).toBe(2);
+    expect(f.link_sent).toBe(2);   // both reached at least link_sent
+    expect(f.confirmed).toBe(1);   // only one confirmed
+  });
+
+  it("confirms overallRate matches confirmRate", () => {
+    const guests = [makeGuest({ status: "confirmed" }), makeGuest({ status: "pending" })];
+    const f = computeRsvpFunnel(guests);
+    expect(f.conversionRates.overallRate).toBe(f.conversionRates.confirmRate);
+  });
+
+  it("confirmRate is 100 when all guests confirmed", () => {
+    const guests = [makeGuest({ status: "confirmed" }), makeGuest({ status: "confirmed" })];
+    expect(computeRsvpFunnel(guests).conversionRates.confirmRate).toBe(100);
   });
 });
