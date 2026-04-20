@@ -1,0 +1,48 @@
+ DEPRECATED  `test.poolOptions` was removed in Vitest 4. All previous `poolOptions` are now top-level options. Please, refer to the migration guide: https://vitest.dev/guide/migration#pool-rework
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.4 [39m[90mC:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding[39m
+
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mNOTIFICATION_TYPES[2m > [22mis frozen[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mNOTIFICATION_TYPES[2m > [22mhas guest lifecycle keys[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mNOTIFICATION_TYPES[2m > [22mhas vendor lifecycle keys[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mNOTIFICATION_TYPES[2m > [22mhas budget keys[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mNOTIFICATION_TYPES[2m > [22mhas system keys[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mSEVERITY[2m > [22mis frozen with expected values[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildRsvpNotification()[2m > [22mreturns correct shape[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildRsvpNotification()[2m > [22muses GUEST_RSVP_CONFIRMED type and success severity for confirmed[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildRsvpNotification()[2m > [22muses GUEST_RSVP_DECLINED type and info severity for declined[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildRsvpNotification()[2m > [22mdefaults to 'Guest' when name is missing[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildRsvpNotification()[2m > [22mattaches guest data[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildRsvpNotification()[2m > [22mgenerates unique IDs for successive calls[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildCheckinNotification()[2m > [22mreturns correct shape[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildCheckinNotification()[2m > [22muses GUEST_CHECKED_IN type[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildCheckinNotification()[2m > [22mincludes table number when available[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildCheckinNotification()[2m > [22momits table info when tableNumber is null[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildCheckinNotification()[2m > [22mdefaults to 'Guest' when name is missing[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildGuestNotification()[2m > [22muses GUEST_ADDED type for 'added'[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildGuestNotification()[2m > [22muses GUEST_UPDATED type for 'updated'[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildGuestNotification()[2m > [22mreturns correct shape[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildVendorNotification()[2m > [22muses VENDOR_PAYMENT_DUE type and warning severity[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildVendorNotification()[2m > [22muses VENDOR_PAYMENT_MADE type and success severity[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildVendorNotification()[2m > [22muses VENDOR_ADDED type for 'added'[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildVendorNotification()[2m > [22mincludes amount in message when provided[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildVendorNotification()[2m > [22mdefaults to 'Vendor' when name missing[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildVendorNotification()[2m > [22mreturns correct shape[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildBudgetNotification()[2m > [22mreturns BUDGET_OVER_LIMIT and error severity when over budget[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildBudgetNotification()[2m > [22mreturns BUDGET_MILESTONE and warning severity when within budget[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildBudgetNotification()[2m > [22mcalculates percentage automatically when milestone not given[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildBudgetNotification()[2m > [22mreturns correct shape[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mhandles key "sync_completed"[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mhandles key "sync_failed"[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mhandles key "update_available"[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mhandles key "offline"[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mhandles key "online"[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mfalls back gracefully for unknown keys[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mattaches optional data payload[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/notification-builder.test.mjs[2m > [22mbuildSystemNotification()[2m > [22mreturns correct shape[32m 1[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+[2m   Start at [22m 12:31:34
+[2m   Duration [22m 11.30s[2m (transform 7.86s, setup 0ms, import 8.61s, tests 54ms, environment 73ms)[22m
+

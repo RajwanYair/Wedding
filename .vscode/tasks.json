@@ -42,7 +42,7 @@
       }
     },
     {
-      "label": "Test: Unit (3957+ tests)",
+      "label": "Test: Unit (4604+ tests)",
       "type": "npm",
       "script": "test",
       "group": {

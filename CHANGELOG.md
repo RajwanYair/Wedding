@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.6.0] — 2025-07-12
+
+### Added
+
+- **Accessibility utilities** — `src/utils/a11y.js` exports `isReducedMotion`, `isHighContrast`, `isDarkMode`, `watchMotionPreference`, `watchColorScheme`, `relativeLuminance`, `computeContrastRatio`, `isWcagAA`, `isWcagAAA`, `wcagLevel`, `getImplicitAriaRole`, `buildAriaLabel`, `meetsMinTouchTarget` (Sprint 51, 44 tests)
+- **Background Sync wrapper** — `src/utils/background-sync.js` exports `isBgSyncSupported`, `isPeriodicSyncSupported`, `buildSyncTag`, `parseSyncTag`, `registerSync`, `getPendingSyncs`, `registerPeriodicSync`, `unregisterPeriodicSync`, `getPeriodicSyncs`, `enqueueSync`; namespaced `"wedding/"` tag prefix (Sprint 52, 27 tests)
+- **WhatsApp template engine** — `src/utils/whatsapp-template.js` exports `buildWaInvitationText`, `buildWaRsvpConfirmText`, `buildWaRsvpDeclineText`, `buildWaReminderText`, `buildWaDayOfText`, `buildWaLink`, `buildWaInvitationLink`, `buildWaBulkMessages`, `isOverLimit`, `truncateWaMessage`; 1024-char soft limit (Sprint 53, 47 tests)
+- **Locale-aware formatting** — `src/utils/locale-format.js` exports `formatShortDate`, `formatLongDate`, `formatTime`, `formatDateTime`, `formatRelativeTime`, `formatTimeAgo`, `formatList`, `getPluralCategory`, `pluralize`, `getCollator`, `sortLocale`, `sortByKey`, `formatLocaleNumber`, `formatPercent`; he-IL primary (Sprint 54, 52 tests)
+- **PDF layout builders** — `src/utils/pdf-layout.js` exports `buildGuestListLayout`, `buildGroupedGuestLayout`, `buildTablePlanLayout`, `buildSeatingCardLayout`, `buildVendorListLayout`, `buildRunOfShowLayout`, `buildSummaryLayout`; pure JSON, no DOM (Sprint 55, 45 tests)
+- **Client-side image compression** — `src/utils/image-compress.js` exports `computeScaledDimensions`, `estimateCompressedSize`, `formatFileSize`, `loadImage`, `compressImage`, `compressImages`, `getImageMetadata`, `compressionRatio`, `compressionSavings`; Canvas API with graceful fallback (Sprint 56, 40 tests)
+- **Service Worker cache utilities** — `src/utils/service-worker-utils.js` exports `isCacheApiSupported`, `isSwSupported`, `listCacheNames`, `getCacheUrls`, `getCacheEntryCount`, `deleteCache`, `pruneOldCaches`, `pruneVersionedCaches`, `prefetchUrls`, `isCached`, `getCachedResponse`, `postMessageToSW`, `skipWaiting` (Sprint 57, 38 tests)
+- **In-app notification builders** — `src/utils/notification-builder.js` exports `NOTIFICATION_TYPES`, `SEVERITY`, `buildRsvpNotification`, `buildCheckinNotification`, `buildGuestNotification`, `buildVendorNotification`, `buildBudgetNotification`, `buildSystemNotification`; pure data, no DOM (Sprint 58, 38 tests)
+- **Wedding event schedule builder** — `src/utils/event-schedule.js` exports `WEDDING_PHASES`, `PHASE_ORDER`, `createScheduleItem`, `sortByTime`, `getItemsByPhase`, `groupByPhase`, `estimateTotalDuration`, `addBufferTime`, `findConflicts`, `buildDaySchedule`, `formatMinuteOffset`, `parseTimeToMinutes` (Sprint 59, 48 tests)
+
 ## [9.5.0] — 2025-07-11
 
 ### Added
