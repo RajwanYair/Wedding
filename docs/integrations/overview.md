@@ -31,7 +31,7 @@ Default is `"supabase"` when `VITE_SUPABASE_URL` is set in the build environment
 
 ## Authentication Flow
 
-```
+```text
 User visits site
     ↓
 Guest auto-login (anonymous, RSVP-only)

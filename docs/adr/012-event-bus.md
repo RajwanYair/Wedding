@@ -13,6 +13,7 @@ Modules in different domains (sections, services, plugins) occasionally need to 
 Introduce a singleton in-process event bus (`src/utils/event-bus.js`) exposing `on`, `once`, `off`, `emit`, `clearAll`, and `activeEvents`. The bus is a simple `Map<string, Set<handler>>` — no external library.
 
 Rules for use:
+
 - Use `data-action` for user-initiated DOM events (existing pattern, unchanged).
 - Use the event bus only for programmatic module-to-module notifications.
 - The store (`store.js`) remains the single source of truth for state; the bus carries signals, not data.
@@ -20,11 +21,13 @@ Rules for use:
 ## Consequences
 
 **Positive:**
+
 - Decouples emitter and subscriber modules.
 - Errors in one handler are caught and do not propagate to other handlers.
 - `clearAll()` provides easy test isolation.
 
 **Negative:**
+
 - Two event systems now coexist; developers must choose deliberately.
 - No persistent history — late subscribers miss past events.
 

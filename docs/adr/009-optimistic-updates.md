@@ -59,11 +59,13 @@ reconnect the queue is drained in FIFO order.  Stale writes older than
 ## Consequences
 
 **Positive:**
+
 - Instant UI feedback — no spinner for common operations.
 - Works offline; syncs on reconnect.
 - Improved check-in throughput at the venue (~40 guests/minute vs 15).
 
 **Negative:**
+
 - Rollback logic must exist for every optimistic write path.
 - Concurrent edits from two admin browsers can still conflict; the conflict
   modal mitigates but does not eliminate this.

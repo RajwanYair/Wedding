@@ -10,7 +10,7 @@ All database schema changes are tracked as numbered SQL migration files in `supa
 
 ## Migration File Convention
 
-```
+```text
 supabase/migrations/NNN_description.sql
 ```
 

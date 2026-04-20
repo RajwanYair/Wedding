@@ -40,11 +40,13 @@ Implement `src/utils/message-templates.js` as a **Mustache-inspired micro-templa
 ## Consequences
 
 **Positive:**
+
 - Zero runtime deps maintained
 - Templates are unit-testable strings
 - Human-editable in i18n files or Settings UI
 
 **Negative:**
+
 - No loops, partials, or HTML escaping — advanced use cases not supported
 - Template syntax not validated at registration time
 

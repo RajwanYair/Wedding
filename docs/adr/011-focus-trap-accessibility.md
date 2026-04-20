@@ -20,11 +20,13 @@ Implement a pure-JS `createFocusTrap(container, opts)` utility (`src/utils/focus
 ## Consequences
 
 **Positive:**
+
 - Fully keyboard-accessible modals with no ARIA role changes required.
 - Testable in happy-dom without a real browser.
 - Zero dependencies.
 
 **Negative:**
+
 - Requires callers to call `activate()` / `deactivate()` at the right lifecycle moments.
 - Does not handle `aria-hidden` on background content — callers must manage that separately if needed.
 

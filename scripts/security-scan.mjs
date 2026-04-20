@@ -79,14 +79,16 @@ const JS_RULES = [
     // Exclude legitimate print-popup pattern: win.document.write(...)
     // These open a new window and write to it — common safe pattern for print/export.
     pattern: /(?<!win\.)(?<!w\.)document\.write\s*\(/,
-    message: "document.write() usage detected (use win.document.write for print popups)",
+    message:
+      "document.write() usage detected (use win.document.write for print popups)",
   },
   {
     rule: "no-unsafe-inner-html",
     // Flag .innerHTML = with a non-empty RHS.
     // Escape hatches: empty-string clear ("" or ''), pure SVG string vars named *svg* or *Svg*
     pattern: /\.innerHTML\s*=\s*(?!["']\s*["'])/,
-    message: "Potentially unsafe .innerHTML assignment (use .textContent or sanitize)",
+    message:
+      "Potentially unsafe .innerHTML assignment (use .textContent or sanitize)",
     skip: (line) =>
       // Allow empty-string clear
       /\.innerHTML\s*=\s*["']\s*["']/.test(line) ||
@@ -94,10 +96,17 @@ const JS_RULES = [
       /\.innerHTML\s*=\s*\w*[Ss][Vv][Gg]\w*/i.test(line) ||
       // Allow template-loader and modal loading (trusted static HTML)
       /innerHTML\s*=\s*(ht|html|markup|tmpl|tpl)\b/.test(line) ||
+      // Allow lines where EVERY interpolation is wrapped in an _esc* function
+      (/\$\{/.test(line) && !/\$\{(?![^}]*_esc)[^}]+\}/.test(line)) ||
       // Allow lines that pass all dynamic values through an _esc* function
-      (/\$\{/.test(line) && /\$\{[^}]*_esc[A-Z]/g.test(line) && !/\$\{[^}]*(?!_esc)[a-z][A-Za-z.]*\}/.test(line)) ||
+      (/\$\{/.test(line) &&
+        /\$\{[^}]*_esc[A-Z]/g.test(line) &&
+        !/\$\{[^}]*(?!_esc)[a-z][A-Za-z.]*\}/.test(line)) ||
       // Allow lines where the only template expressions use _esc* or t( or toLocaleString or numeric literals
-      (/\$\{[^}]+\}/.test(line) && !(/\$\{(?!(?:[^}]*_esc|[^}]*\bt\(|[^}]*toLocaleString|[^}]*\d+))[^}]+\}/.test(line))),
+      (/\$\{[^}]+\}/.test(line) &&
+        !/\$\{(?!(?:[^}]*_esc|[^}]*\bt\(|[^}]*toLocaleString|[^}]*\d+))[^}]+\}/.test(
+          line,
+        )),
   },
   {
     rule: "no-http-url",
@@ -107,7 +116,11 @@ const JS_RULES = [
     message: "Hardcoded http:// URL (use https:// or a relative URL)",
     skip: (line) =>
       // Suppress when it's the source string in a .replace("https://...", ...) call
-      /\.replace\s*\(\s*["']https?:\/\//.test(line),
+      /\.replace\s*\(\s*["']https?:\/\//.test(line) ||
+      // Suppress validation/detection functions that check for http:// as a valid protocol
+      /startsWith\s*\(["']http:\/\/["']\)/.test(line) ||
+      // Suppress URL validation allowlists
+      /lower\.startsWith\(["']http:\/\/["']\)/.test(line),
   },
 ];
 

@@ -32,6 +32,7 @@ npm run sri           # SRI hashes valid
 ```
 
 Also confirm:
+
 - [ ] `public/sw.js` `CACHE_NAME` matches new version
 - [ ] `CHANGELOG.md` entry written for this release
 - [ ] All `t('key')` have both `he` + `en` translations
@@ -47,6 +48,7 @@ npx serve dist/        # local preview before push
 ```
 
 Check that:
+
 - Service worker registers without console errors
 - All fonts/icons load
 - Auth providers load (Google / Facebook / Apple buttons visible)

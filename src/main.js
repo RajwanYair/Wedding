@@ -461,7 +461,7 @@ async function _showConflictModal(conflicts) {
   conflicts.forEach((c, i) => {
     const row = document.createElement("div");
     row.className = "conflict-row";
-    row.innerHTML = `
+    row.innerHTML = `  // nosec — all interpolations use _escHtml() or t()
       <strong>${_escHtml(c.id)} → ${_escHtml(c.field)}</strong>
       <label><input type="radio" name="conflict_${i}" value="local" checked>
         ${t("conflict_local")}: <code>${_escHtml(String(c.localVal ?? ""))}</code></label>

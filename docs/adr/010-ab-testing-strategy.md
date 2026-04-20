@@ -15,11 +15,13 @@ Implement client-side deterministic A/B assignment using a djb2 hash of `experim
 ## Consequences
 
 **Positive:**
+
 - Zero runtime dependencies, consistent with ADR-001.
 - Reproducible: same subject always receives the same variant.
 - Testable: pure functions with no side effects.
 
 **Negative:**
+
 - No real-time operator control (change requires a code deploy).
 - No server-side event collection — analytics must be wired separately.
 

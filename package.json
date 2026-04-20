@@ -17,7 +17,7 @@
         "lint:html": "htmlhint --config ../tooling/htmlhint/.htmlhintrc index.html",
         "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
         "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
-        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md \".github/**/*.md\"",
+        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md AGENTS.md \"docs/**/*.md\" \".github/**/*.md\"",
         "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
         "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
         "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",
@@ -27,9 +27,12 @@
         "icons": "node scripts/generate-icons.mjs",
         "sri": "node scripts/sri-check.mjs",
         "audit:dead": "node scripts/dead-export-check.mjs",
+        "audit:security": "node scripts/security-scan.mjs",
+        "audit:sections": "node scripts/validate-sections.mjs",
+        "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections",
         "precache": "node scripts/generate-precache.mjs",
         "size": "node scripts/size-report.mjs",
-        "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm test && npm run build"
+        "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run audit:security && npm run audit:sections && npm test && npm run build"
     },
     "engines": {
         "node": ">=22.0.0",

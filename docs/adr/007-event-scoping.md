@@ -27,12 +27,14 @@ by `isEventOwner(session, eventId)` in `src/services/auth-claims.js`.
 ## Consequences
 
 **Positive:**
+
 - A single Supabase project serves all events with no cross-contamination.
 - Repository pattern hides the scoping: callers pass `eventId` at
   construction time and never repeat it in queries.
 - RLS is the safety net if the application-level scope is ever bypassed.
 
 **Negative:**
+
 - All migration files must remember to add `event_id` to new tables.
 - `COUNT(*)` queries that aggregate across events (e.g. platform analytics)
   must explicitly omit the event filter — this is done via raw SQL, not

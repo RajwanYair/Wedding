@@ -21,13 +21,13 @@ using a djb2-style HMAC substitute.
 
 ### Token format
 
-```
+```text
 base64url( guestId + "|" + exp_ms )|djb2_hash(guestId + "|" + exp_ms + "|" + secret)
 ```
 
 Encoded as two base64url segments joined by `.`:
 
-```
+```text
 <b64url(payload)>.<b64url(signature)>
 ```
 
@@ -39,7 +39,7 @@ Encoded as two base64url segments joined by `.`:
 | Expiry | Configurable TTL (default 30 days) | Matches RSVP window |
 | Revocation | Revoked IDs stored in `localStorage` | No DB round-trip; revocation is infrequent |
 | Secret | Set via `setTokenSecret(s)` at app init | Avoids hard-coding; rotatable |
-| Padding | `"=".repeat(4 - (len%4)) || ""` | Correct base64 re-padding formula |
+| Padding | `"=`.repeat(4 - (len%4)) \|\| ""` | Correct base64 re-padding formula |
 
 ### Security properties
 
@@ -50,11 +50,13 @@ Encoded as two base64url segments joined by `.`:
 ## Consequences
 
 **Positive:**
+
 - Zero runtime deps maintained
 - Works offline (no server needed to verify)
 - Easy to generate and distribute via WhatsApp
 
 **Negative:**
+
 - djb2 is not cryptographically secure — determined attacker could forge tokens
 - Revocation is per-device (localStorage); not globally enforced
 - Secret stored in memory — lost on page refresh unless persisted

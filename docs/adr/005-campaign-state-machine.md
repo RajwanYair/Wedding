@@ -17,7 +17,7 @@ Implement `src/services/campaign.js` as a **finite state machine** with explicit
 
 ### State Machine
 
-```
+```text
 draft ──queueCampaign──► queued ──startCampaign──► sending
   │                                                   │
   │           cancelCampaign (from draft or queued)   ├── recordSent (all done, any failed) ──► failed
@@ -50,11 +50,13 @@ If yes, transitions to `"completed"` (all sent) or `"failed"` (at least one fail
 ## Consequences
 
 **Positive:**
+
 - Invalid transitions throw immediately (fail fast)
 - `getCampaignStats` always consistent with `results` map
 - Integration with `wa-campaign.js` and `email-service.js` is clean (protocol-agnostic)
 
 **Negative:**
+
 - Campaigns stored in `localStorage` — not suitable for campaigns with thousands of guests
 - No retry-at-campaign-level (only per-guest retry in wa-campaign)
 

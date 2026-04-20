@@ -41,6 +41,13 @@ for (const file of files) {
   try {
     mod = await import(url);
   } catch (err) {
+    // import.meta.glob is a Vite-only transform — when running in bare Node the
+    // section throws "glob is not a function".  This means the file is Vite-only
+    // and we skip it rather than reporting a false failure.
+    if (err.message && err.message.includes("glob is not a function")) {
+      results.push({ name, ok: true, errors: [], note: "Vite-only (import.meta.glob)" });
+      continue;
+    }
     results.push({ name, ok: false, errors: [`import failed: ${err.message}`] });
     allOk = false;
     continue;

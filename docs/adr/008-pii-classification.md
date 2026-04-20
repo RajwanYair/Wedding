@@ -48,12 +48,14 @@ an immediate flush to the audit log.
 ## Consequences
 
 **Positive:**
+
 - Clear, code-enforced definition of PII prevents accidental omissions.
 - Single function to erase PII simplifies compliance requests.
 - Non-PII fields retained enables ongoing analytics without re-identifying
   the erased guest.
 
 **Negative:**
+
 - We must keep `PII_COLUMNS` in sync with database schema — a migration that
   adds a new PII column must also update the constant.
 - Field-level encryption adds latency (~1 ms per field) and requires key

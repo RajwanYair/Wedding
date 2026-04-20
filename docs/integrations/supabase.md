@@ -10,7 +10,7 @@ Supabase provides optional persistence, real-time sync, and auth for Wedding Man
 
 ## Architecture
 
-```
+```text
 Browser (localStorage)
        ↕  enqueueWrite / sheets-impl
    sheets.js (write queue)
@@ -23,6 +23,7 @@ Browser (localStorage)
 ```
 
 Data flow:
+
 1. All reads come from the **reactive store** (localStorage-backed)
 2. All writes go through `enqueueWrite(key, fn)` — debounced, deduped
 3. `sheets-impl.js` calls Supabase REST API to sync changes
@@ -45,7 +46,7 @@ Apply all SQL files in `supabase/migrations/` in order (see [migrations.md](migr
 
 Add to your repository secrets (Settings → Secrets → Actions):
 
-```
+```text
 VITE_SUPABASE_URL       = https://<project>.supabase.co
 VITE_SUPABASE_ANON_KEY  = eyJ...
 ```
@@ -53,6 +54,7 @@ VITE_SUPABASE_ANON_KEY  = eyJ...
 ### 4. Configure in-app settings
 
 In the deployed app → Settings section:
+
 - Paste your Supabase URL and anon key
 - These are stored in `localStorage` and used at runtime
 
@@ -74,6 +76,7 @@ RLS is enabled on all tables. Policies (migration 002):
 | contacts | — | INSERT (contact collector) |
 
 Guest users (anonymous) can:
+
 - Read public wedding info (config)
 - Submit RSVP entries (rsvp_log insert)
 - View gallery
@@ -97,6 +100,7 @@ await supabaseFetch("/guests", { method: "PATCH", ... });
 ```
 
 The queue:
+
 - Debounces writes per key (300ms default)
 - Retries up to 3× on network failure
 - Falls back gracefully if Supabase is unreachable

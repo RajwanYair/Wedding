@@ -26,3 +26,8 @@ dist/
 ci_output.txt
 ci_result.txt
 test-results/
+
+# Temp lint/build outputs
+lint_*.txt
+release_notes.md
+playwright-report/

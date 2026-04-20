@@ -48,6 +48,12 @@ jobs:
       - name: Check credential hygiene
         run: npm run check:credentials
 
+      - name: Security scan (innerHTML / eval / http:// patterns)
+        run: npm run audit:security
+
+      - name: Section contract validation
+        run: npm run audit:sections
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
