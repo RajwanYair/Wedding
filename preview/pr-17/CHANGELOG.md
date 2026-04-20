@@ -4,6 +4,89 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.3.0] — 2026-05-19
+
+### Added
+
+- **Background Sync tag registration** — `_registerSyncTag()` in `src/services/offline-queue.js` registers the `"rsvp-sync"` SW Background Sync tag whenever an item is queued offline; SW message listener handles `RSVP_SYNC_READY` (Sprint 21)
+- **File Handling API** — `public/manifest.json` declares `file_handlers` for `.csv`, `.xls`, `.xlsx`; `src/main.js` wires `window.launchQueue.setConsumer()` to navigate to the guests section and dispatch a `launchFile` CustomEvent (Sprint 22)
+- **Locale-aware currency default** — `formatCurrency()` in `src/core/i18n.js` now auto-selects the currency symbol via `getLocaleCurrency(locale)` from `src/utils/locale-detector.js` when no explicit currency is passed (Sprint 23)
+- **`formatShortDate()`** — exported from `src/core/i18n.js`; uses `Intl.DateTimeFormat` with `dateStyle: "short"` and `Asia/Jerusalem` timezone for locale-aware short date rendering (Sprint 24)
+- **Google Calendar deep link + ICS download** — `src/utils/calendar-link.js` exports `buildGoogleCalendarLink(event)`, `buildIcsContent(event)`, and `buildIcsDataUrl(event)` for RFC 5545-compliant calendar invites (Sprint 25)
+- **Venue navigation deep links** — `src/utils/venue-navigation.js` exports `buildWazeLink(venue)`, `buildGoogleMapsLink(venue, opts?)`, and `buildNavLinks(venue, opts?)` for one-tap Waze/Google Maps navigation to the venue (Sprint 26)
+- **6-stage RSVP conversion funnel** — `computeRsvpFunnel(guests)` in `src/utils/rsvp-analytics.js` tracks invited → link_sent → link_clicked → form_started → confirmed → checked_in and returns counts + conversion rates (Sprint 27)
+- **Dietary breakdown for catering** — `computeDietaryBreakdown(guests)` in `src/utils/rsvp-analytics.js` returns meal-type counts weighted by head count, accessibility tallies, per-table breakdowns, and confirmed vs total head counts (Sprint 28)
+- **Budget burn-down chart utility** — `src/utils/budget-burndown.js` exports `computeBudgetBurndown(expenses, totalBudget)` (chronological data points with cumulative spend, remaining, and percentage), `sliceBurndownUpTo(points, date)`, and `projectFinalSpend(points, totalDays)` (Sprint 29)
+
+## [9.2.0] — 2026-05-12
+
+### Added
+
+- **PWA App Badging API** — `src/utils/app-badge.js` wraps `navigator.setAppBadge`; main.js subscribes to guest store and badges the app icon with pending RSVP count (Sprint 11)
+- **Browser locale auto-detection** — `main.js` step 1 now calls `resolveAppLocale(detectLocale())` on first visit when no stored language preference exists (Sprint 12)
+- **i18n English fallback dictionary** — `loadFallbackLocale()` exported from `src/core/i18n.js`; `t()` checks `_fallbackDict` before returning raw key; called at boot for all non-English locales (Sprint 13)
+- **Diacritic-normalized guest search** — `src/sections/guests.js` now imports `guestMatchesQuery()` from `src/utils/guest-search.js`; search matches first/last name, full name, phone, email, and notes with diacritic stripping (Sprint 14)
+- **Command palette Ctrl+K / Cmd+K** — `initCommandPaletteTrigger(openFn)` exported from `src/core/nav.js`; wired in main.js to open search modal (Sprint 15)
+- **NFC check-in action handlers** — `on("startNFCCheckin")`, `on("stopNFCCheckin")`, and `on("writeNFCForGuest")` wired in main.js `_registerHandlers()`; dynamic import of `src/services/nfc.js` for write-tag action (Sprint 16)
+- **App-level RSVP deadline banner** — `#appRsvpDeadlineBanner` added to `index.html` outside section templates; `_updateAppRsvpDeadlineBanner()` in main.js shows amber/red banner when `weddingInfo.rsvpDeadline` is ≤ 7 days away or overdue; subscribes to `weddingInfo` store for live updates (Sprint 17)
+- **ARIA section announce on navigation** — `_switchSection()` in main.js calls `announce(t("nav_<name>"))` after mounting each section (WCAG 2.4.2 compliance) (Sprint 18)
+- **Locale contribution guide** — `docs/locale-guide.md` with step-by-step instructions for adding new languages: file format, ICU plurals, RTL config, parity check, PR checklist (Sprint 19)
+
+### Changed
+
+- `src/main.js` — `storeSubscribe` now imported at module level (replaces dynamic inner import used by badge wiring)
+- `src/core/i18n.js` — `t()` lookup order: `_dict → _fallbackDict → pluginDict → fallback → key`
+
+## [9.1.0] — 2026-05-05
+
+### Added
+
+- **Network status indicator** — online/offline toast notifications wired at boot (Sprint 3); `initNetworkStatus()` now called from `src/main.js`
+- **High-contrast theme** — 6th theme `body.theme-high-contrast` added with WCAG AAA palette; `@media (prefers-contrast: more)` auto-applies; cycleTheme updated to include it
+- **Session timeout enforcement** — `isSessionExpired()` export in `src/services/auth.js`; 15-min interval signs out expired admin sessions with `session_expired` toast
+- **RSVP guest token deep links** — `issueGuestToken()` called on new guest save in `src/handlers/guest-handlers.js`; `?token=` query param handled in `src/core/nav.js` routes to RSVP section with pre-fill context
+- **Client-side QR code generator** — new `src/utils/qr-code.js` with `renderQrToCanvas()` and `buildCheckinUrl()`; `getGuestQrUrl()` in checkin.js now uses it; `showGuestQr()` renders to DOM canvas
+- **Expense analytics wiring** — `src/sections/analytics.js` imports `getTopCategories`, `getMonthlyTotals`, `getBudgetUtilization` from `src/services/expense-analytics.js` (Sprint 127); `renderExpenseDonut`, `renderExpenseTrend`, and `checkBudgetOvershoot` now use the service
+- **320px breakpoint** — `@media (max-width: 320px)` added to `css/responsive.css` for very small phones
+- **Container queries** — `.main-content` and `.card` now use `container-type: inline-size`; `@container` queries adapt stats grid and form-row dynamically
+- **Version sync hook** — `"version"` npm lifecycle script added to `package.json`; `sync-version.mjs` extended to patch `AGENTS.md` and `ROADMAP.md`
+
+### Removed
+
+- Dead export `RSVP_DEADLINE` from `src/core/config.js`
+
+### Changed
+
+- `src/sections/analytics.js` — expense charts use `expense-analytics.js` service instead of inline calculations
+- `src/core/ui.js` — theme cycle updated from 5 → 6 themes (adds `high-contrast`)
+
+### Fixed
+
+- `src/utils/retry-policy.js` — `sleep()` is no longer exported (internal helper only)
+- `src/core/nav.js` — `?token=` deep links now route guest to RSVP section
+
+## [9.0.0] — 2026-04-20
+
+### Changed
+
+- **BREAKING**: Major version bump v8.3.0 → v9.0.0
+- Vitest pool switched from `forks` to `vmThreads` — test suite 65% faster (52s → 18s)
+- Consolidated crypto tests into parameterized `it.each` patterns
+- Fixed global stub isolation in push-notification and share tests for vmThreads compatibility
+
+### Removed
+
+- Removed deprecated `eslint.useFlatConfig` VS Code setting
+- Cleaned temp lint output artifacts from repo root
+- Removed empty `src/plugins/` and `docs/runbooks/` directories
+
+### Improved
+
+- Updated `.gitignore` to exclude temp lint/release artifacts and Playwright reports
+- VS Code task labels aligned with current test count (3720+)
+- README test badge updated to reflect actual test count
+- All version references synchronized across 14+ files
+
 ## [8.3.0] — 2026-04-19
 
 ### Added
