@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <!-- ── Security: CSP meta fallback (authoritative CSP is in public/_headers with frame-ancestors) ── -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com https://connect.facebook.net https://appleid.cdn-apple.com; style-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org; font-src 'self'; worker-src 'self'; frame-src https://accounts.google.com https://appleid.apple.com https://www.facebook.com https://staticxx.facebook.com https://www.openstreetmap.org; base-uri 'self'; form-action 'self'; object-src 'none';">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="חתונת אליאור וטובה — כ׳ באייר התשפ״ו | ניהול אורחים, אישורי הגעה, סידורי שולחנות">
+  <meta name="theme-color" content="#1a0a2e">
+  <!-- S2.9: color-scheme for native form controls + system font optimization -->
+  <meta name="color-scheme" content="dark light">
+  <!-- SEO: Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="אליאור וטובה | ניהול חתונה">
+  <meta property="og:description" content="חתונת אליאור וטובה — כ׳ באייר התשפ״ו | ניהול אורחים, אישורי הגעה, סידורי שולחנות">
+  <meta property="og:url" content="https://rajwanyair.github.io/Wedding/">
+  <meta property="og:image" content="https://rajwanyair.github.io/Wedding/icon-512.png">
+  <meta property="og:locale" content="he_IL">
+  <meta property="og:site_name" content="Wedding Manager">
+  <!-- SEO: Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="אליאור וטובה | ניהול חתונה">
+  <meta name="twitter:description" content="חתונת אליאור וטובה — כ׳ באייר התשפ״ו | ניהול אורחים, אישורי הגעה, סידורי שולחנות">
+  <meta name="twitter:image" content="https://rajwanyair.github.io/Wedding/icon-512.png">
+  <!-- SEO: Canonical + Robots -->
+  <link rel="canonical" href="https://rajwanyair.github.io/Wedding/">
+  <meta name="robots" content="index, follow">
+  <title>אליאור &amp; טובה | ניהול חתונה</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Wedding">
+  <link rel="manifest" href="./manifest.json">
+  <!-- Preconnect to external origins used at startup -->
+  <link rel="preconnect" href="https://accounts.google.com" crossorigin>
+  <link rel="dns-prefetch" href="//api.qrserver.com">
+  <link rel="dns-prefetch" href="//script.google.com">
+  <link rel="stylesheet" href="data:text/css;base64,QGxheWVyIHByaW50IHsKCi8qIOKUgOKUgCBQcmludCBTdHlsZXMgKHYxLjE2LjApIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogICBPcHRpbWlzZWQgcHJpbnQgbGF5b3V0cyBmb3I6IGd1ZXN0IGxpc3QsIHBsYWNlIGNhcmRzLCB0YWJsZSBzaWducy4KICAgTG9hZCBvcmRlcjogYWZ0ZXIgY29tcG9uZW50cy5jc3MgYW5kIGJlZm9yZSBhdXRoLmNzcy4KICAg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAICovCgovKiDilIDilIAgQmFzZSBwcmludCByZXNldCDilIDilIAgKi8KQG1lZGlhIHByaW50IHsKICAvKiBIaWRlIGNocm9tZSBlbGVtZW50cyAqLwogIC5uYXYtc2lkZWJhciwKICAuYm90dG9tLW5hdiwKICAudG9wLWJhciwKICAuYXV0aC1vdmVybGF5LAogIC5tb2RhbC1vdmVybGF5LAogIC50b2FzdC1jb250YWluZXIsCiAgLnVwZGF0ZS1iYW5uZXIsCiAgW2lkPSJ1cGRhdGVCYW5uZXIiXSwKICAuYWRtaW4tYmFyLAogIC5ndWVzdC1maWx0ZXJzLAogIC50YWJsZS1hY3Rpb25zLAogIC5idG4sCiAgW2lkPSJleHBlbnNlQWRtaW5CYXIiXSwKICBbaWQ9InRpbWVsaW5lQWRtaW5CYXIiXSwKICAubmF2LXRhYiB7CiAgICBkaXNwbGF5OiBub25lICFpbXBvcnRhbnQ7CiAgfQoKICAvKiBSZW1vdmUgZ2xhc3Ntb3JwaGlzbSBiYWNrZHJvcCAqLwogIGJvZHkgewogICAgYmFja2dyb3VuZDogd2hpdGUgIWltcG9ydGFudDsKICAgIGNvbG9yOiBibGFjayAhaW1wb3J0YW50OwogIH0KCiAgLmNhcmQsCiAgLnNlY3Rpb24gewogICAgYmFja2dyb3VuZDogd2hpdGUgIWltcG9ydGFudDsKICAgIGJvcmRlcjogbm9uZSAhaW1wb3J0YW50OwogICAgYm94LXNoYWRvdzogbm9uZSAhaW1wb3J0YW50OwogICAgYmFja2Ryb3AtZmlsdGVyOiBub25lICFpbXBvcnRhbnQ7CiAgICAtd2Via2l0LWJhY2tkcm9wLWZpbHRlcjogbm9uZSAhaW1wb3J0YW50OwogIH0KCiAgLm1haW4tY29udGVudCB7CiAgICBtYXJnaW46IDAgIWltcG9ydGFudDsKICAgIHBhZGRpbmc6IDAgIWltcG9ydGFudDsKICB9Cn0KCi8qIOKUgOKUgCBHdWVzdCBsaXN0IHByaW50IOKUgOKUgCAqLwpAbWVkaWEgcHJpbnQgewogIC5wcmludC1ndWVzdC1saXN0IC5zZWN0aW9uIHsKICAgIGRpc3BsYXk6IGJsb2NrICFpbXBvcnRhbnQ7CiAgfQoKICAuZ3Vlc3QtdGFibGUgewogICAgd2lkdGg6IDEwMCU7CiAgICBib3JkZXItY29sbGFwc2U6IGNvbGxhcHNlOwogICAgZm9udC1zaXplOiA5cHQ7CiAgfQoKICAuZ3Vlc3QtdGFibGUgdGgsCiAgLmd1ZXN0LXRhYmxlIHRkIHsKICAgIHBhZGRpbmc6IDRweCA2cHg7CiAgICBib3JkZXI6IDFweCBzb2xpZCAjY2NjOwogICAgY29sb3I6IGJsYWNrOwogIH0KCiAgLmd1ZXN0LXRhYmxlIHRoZWFkIHsKICAgIGJhY2tncm91bmQ6ICNmMGYwZjAgIWltcG9ydGFudDsKICAgIC13ZWJraXQtcHJpbnQtY29sb3ItYWRqdXN0OiBleGFjdDsKICAgIHByaW50LWNvbG9yLWFkanVzdDogZXhhY3Q7CiAgfQp9CgovKiDilIDilIAgUGxhY2UgY2FyZHMgbGF5b3V0IOKUgOKUgCAqLwoucGxhY2UtY2FyZHMtZ3JpZCB7CiAgZGlzcGxheTogbm9uZTsKfQoKQG1lZGlhIHByaW50IHsKICAucGxhY2UtY2FyZHMtZ3JpZCB7CiAgICBkaXNwbGF5OiBncmlkOwogICAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiByZXBlYXQoMywgMWZyKTsKICAgIGdhcDogMDsKICAgIHdpZHRoOiAxMDAlOwogIH0KCiAgLnBsYWNlLWNhcmQgewogICAgd2lkdGg6IDMuNWluOwogICAgaGVpZ2h0OiAyaW47CiAgICBib3JkZXI6IDFweCBkYXNoZWQgI2NjYzsKICAgIHBhZGRpbmc6IDAuMjVpbjsKICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7CiAgICBkaXNwbGF5OiBmbGV4OwogICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsKICAgIGp1c3RpZnktY29udGVudDogY2VudGVyOwogICAgYWxpZ24taXRlbXM6IGNlbnRlcjsKICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgIGJyZWFrLWluc2lkZTogYXZvaWQ7CiAgfQoKICAucGxhY2UtY2FyZC1uYW1lIHsKICAgIGZvbnQtc2l6ZTogMTRwdDsKICAgIGZvbnQtd2VpZ2h0OiA3MDA7CiAgICBjb2xvcjogYmxhY2s7CiAgICBtYXJnaW4tYm90dG9tOiAwLjFpbjsKICB9CgogIC5wbGFjZS1jYXJkLXRhYmxlIHsKICAgIGZvbnQtc2l6ZTogMTBwdDsKICAgIGNvbG9yOiAjNDQ0OwogIH0KCiAgLnBsYWNlLWNhcmQtY291bnQgewogICAgZm9udC1zaXplOiA4cHQ7CiAgICBjb2xvcjogIzY2NjsKICAgIG1hcmdpbi10b3A6IDRwdDsKICB9Cn0KCi8qIOKUgOKUgCBUYWJsZSBzaWducyBsYXlvdXQg4pSA4pSAICovCi50YWJsZS1zaWducy1ncmlkIHsKICBkaXNwbGF5OiBub25lOwp9CgpAbWVkaWEgcHJpbnQgewogIC50YWJsZS1zaWducy1ncmlkIHsKICAgIGRpc3BsYXk6IGdyaWQ7CiAgICBncmlkLXRlbXBsYXRlLWNvbHVtbnM6IHJlcGVhdCgyLCAxZnIpOwogICAgZ2FwOiAwOwogIH0KCiAgLnRhYmxlLXNpZ24gewogICAgd2lkdGg6IDVpbjsKICAgIGhlaWdodDogM2luOwogICAgYm9yZGVyOiAycHggc29saWQgIzAwMDsKICAgIHBhZGRpbmc6IDAuM2luOwogICAgYm94LXNpemluZzogYm9yZGVyLWJveDsKICAgIGRpc3BsYXk6IGZsZXg7CiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uOwogICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7CiAgICBhbGlnbi1pdGVtczogY2VudGVyOwogICAgdGV4dC1hbGlnbjogY2VudGVyOwogICAgYnJlYWstaW5zaWRlOiBhdm9pZDsKICB9CgogIC50YWJsZS1zaWduLW51bWJlciB7CiAgICBmb250LXNpemU6IDQ4cHQ7CiAgICBmb250LXdlaWdodDogNzAwOwogICAgY29sb3I6IGJsYWNrOwogICAgbGluZS1oZWlnaHQ6IDE7CiAgfQoKICAudGFibGUtc2lnbi1uYW1lIHsKICAgIGZvbnQtc2l6ZTogMThwdDsKICAgIGNvbG9yOiAjMjIyOwogICAgbWFyZ2luLXRvcDogMTJwdDsKICB9CgogIC50YWJsZS1zaWduLWNhcGFjaXR5IHsKICAgIGZvbnQtc2l6ZTogMTBwdDsKICAgIGNvbG9yOiAjNTU1OwogICAgbWFyZ2luLXRvcDogOHB0OwogIH0KfQoKLyog4pSA4pSAIFByZS1wcmludCBoZWxwZXIgY2xhc3NlcyAoc2NyZWVuIG9ubHkpIOKUgOKUgCAqLwpAbWVkaWEgc2NyZWVuIHsKICAucGxhY2UtY2FyZHMtZ3JpZCwKICAudGFibGUtc2lnbnMtZ3JpZCB7CiAgICBkaXNwbGF5OiBub25lOwogIH0KfQoKLyog4pSA4pSAIEFuYWx5dGljcyBQcmludCAoUzguNCkg4pSA4pSAICovCkBtZWRpYSBwcmludCB7CiAgLnNlY3Rpb25bZGF0YS1zZWN0aW9uPSJhbmFseXRpY3MiXSAuY2FyZCB7CiAgICBicmVhay1pbnNpZGU6IGF2b2lkOwogICAgYm94LXNoYWRvdzogbm9uZTsKICAgIGJhY2tkcm9wLWZpbHRlcjogbm9uZTsKICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7CiAgICBiYWNrZ3JvdW5kOiAjZmZmOwogIH0KICAuc2VjdGlvbltkYXRhLXNlY3Rpb249ImFuYWx5dGljcyJdIHN2ZyB7CiAgICBtYXgtd2lkdGg6IDEwMCU7CiAgICBwcmludC1jb2xvci1hZGp1c3Q6IGV4YWN0OwogICAgLXdlYmtpdC1wcmludC1jb2xvci1hZGp1c3Q6IGV4YWN0OwogIH0KICAuc2VjdGlvbltkYXRhLXNlY3Rpb249ImFuYWx5dGljcyJdIC5hbmFseXRpY3MtYWN0aXZpdHktbGlzdCBsaSB7CiAgICBib3JkZXItY29sb3I6ICNjY2M7CiAgICBjb2xvcjogIzAwMDsKICB9CiAgLnNlY3Rpb25bZGF0YS1zZWN0aW9uPSJhbmFseXRpY3MiXSAuYnRuIHsKICAgIGRpc3BsYXk6IG5vbmU7CiAgfQp9Cgp9IC8qIGVuZCBAbGF5ZXIgcHJpbnQgKi8K" media="print" fetchpriority="low">
+  <!-- Google Identity Services — Sign In with Google -->
+  <!-- Setup: https://console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0 Client ID (Web application) -->
+  <script src="https://accounts.google.com/gsi/client" async defer crossorigin="anonymous" fetchpriority="low"></script>
+  <!-- Structured Data: Event (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "חתונת אליאור וטובה",
+    "startDate": "2026-05-16",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "image": "https://rajwanyair.github.io/Wedding/icon-512.png",
+    "organizer": {
+      "@type": "Person",
+      "name": "אליאור וטובה"
+    },
+    "inLanguage": "he"
+  }
+  </script>
+  <script type="module" crossorigin src="/Wedding/assets/index-BDHzVY4l.js"></script>
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/rolldown-runtime-lhHHWwHU.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/chunk-public-ealGaJQZ.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/chunk-services-DD3-r11c.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-budget-B-QvXCby.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-checkin-DyVwZSZR.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-analytics-BWSyxGix.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-changelog-Cx9x2_Ml.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-dashboard-z69Dz7o2.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-expenses-DRVnsnoJ.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-gallery-DgNNUM1k.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-guests-BkTbgSX6.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-invitation-BJ5ajV70.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-settings-C4wXP1El.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-tables-CggvVUx3.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-timeline-BsE68CHO.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-vendors-b4z6KpK2.js">
+  <link rel="modulepreload" crossorigin href="/Wedding/assets/sec-whatsapp-Bf-ZkpzC.js">
+  <link rel="stylesheet" crossorigin href="/Wedding/assets/chunk-services-BJ7fXmoG.css">
+  <link rel="stylesheet" crossorigin href="/Wedding/assets/index-ozMb7pq8.css">
+</head>
+<body>
+  <!-- A11y: skip-to-main link (S7.9) -->
+  <a href="#sec-dashboard" class="skip-to-main" data-i18n="skip_to_main">דלג לתוכן הראשי</a>
+  <noscript>
+    <div role="alert" class="noscript-msg">
+      <h1>💍 Wedding Manager</h1>
+      <p>יש להפעיל JavaScript כדי להשתמש באפליקציה.</p>
+      <p>Please enable JavaScript to use this application.</p>
+    </div>
+  </noscript>
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main-content" class="skip-link" data-i18n="skip_to_content">דלג לתוכן</a>
+  <!-- ── Admin Sign-In Modal ── -->
+  <div class="auth-overlay auth-hidden" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-card">
+      <div class="auth-logo-icon">💍</div>
+      <h2 class="auth-card-title" id="authTitle" data-i18n="auth_title">ניהול חתונה</h2>
+      <p class="auth-card-sub" data-i18n="auth_admin_login_sub">הזן את האימייל שלך לגישה מלאה</p>
+      <div class="auth-providers">
+        <input type="email" id="adminLoginEmail" class="auth-email-input"
+          data-i18n-placeholder="ph_approve_email" placeholder="your@email.com"
+          autocomplete="email"
+          data-on-enter="submitEmailLogin">
+        <button class="btn btn-primary btn-auth-wide" data-action="submitEmailLogin">
+          🔑 <span data-i18n="auth_sign_in_btn">כניסה כמנהל</span>
+        </button>
+        <div class="auth-divider-line"><span data-i18n="auth_or_social">── או התחבר עם ──</span></div>
+        <div id="googleSignInBtn"></div>
+        <button class="auth-social-btn btn-facebook" data-action="loginFacebook" data-i18n="auth_continue_fb">📘 המשך עם Facebook</button>
+        <button class="auth-social-btn btn-apple" data-action="loginApple" data-i18n="auth_continue_apple">🍎 המשך עם Apple</button>
+        <div class="auth-divider-line"><span data-i18n="auth_or">או</span></div>
+        <button class="auth-social-btn btn-guest" data-action="hideAuthOverlay">
+          <span data-i18n="auth_back_guest">👤 חזור לאורח</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Decorative Particles ── -->
+  <div class="particles" id="particles"></div>
+
+  <!-- ── Top Bar ── -->
+  <div class="top-bar">
+    <div class="top-bar-group">
+      <button class="btn-lang" id="btnLang" data-lang-toggle-label data-action="toggleLanguage" data-i18n-tooltip="tip_btn_lang" data-i18n-aria="tip_btn_lang" data-tooltip-pos="down">EN</button>
+      <button class="btn-icon" id="btnTheme" data-action="cycleTheme" aria-label="החלף ערכת צבעים" data-i18n-tooltip="tip_btn_theme" data-i18n-aria="tip_btn_theme" data-tooltip-pos="down">🎨</button>
+      <button class="btn-icon" id="btnDarkLight" data-action="toggleLightMode" aria-label="החלף מצב בהיר/כהה" data-i18n-tooltip="tip_btn_dark_light" data-i18n-aria="tip_btn_dark_light" data-tooltip-pos="down">☀️</button>
+    </div>
+    <!-- User info / Sign-in strip (always visible) -->
+    <div class="top-bar-group user-chip" id="userBarGroup">
+      <img id="userAvatar" class="user-avatar-sm u-hidden" alt="" width="36" height="36">
+      <span id="userDisplayName" class="user-display-name"></span>
+      <span id="userRoleBadge" class="user-role-chip"></span>
+      <button class="user-signout-btn u-hidden" id="btnSignOut" data-action="signOut" data-i18n-tooltip="tip_sign_out" data-i18n-aria="tip_sign_out" data-tooltip-pos="down">↩</button>
+      <button class="user-signout-btn" id="btnSignIn" data-action="showAuthOverlay" data-i18n="auth_sign_in" data-tooltip-pos="down">🔑 כניסה</button>
+    </div>
+    <div class="top-bar-group">
+      <span id="topBarCouple"></span>
+      <!-- S9.2 Event switcher (admin only) -->
+      <div class="event-switcher u-hidden" id="eventSwitcher" data-admin-only>
+        <select id="eventSelect" data-action="switchEvent" aria-label="בחר אירוע" data-i18n-aria="event_select_label"></select>
+        <button class="btn-icon btn-xs" id="btnAddEvent" data-action="addNewEvent" title="אירוע חדש" data-i18n-title="event_add_label" data-i18n-aria="event_add_label">+</button>
+      </div>
+      <span id="syncStatusBadge" class="sync-badge" role="status" hidden aria-live="polite"></span>
+      <button class="sync-btn btn-icon" id="topBarSyncBtn" data-action="syncSheetsNow" title="Sync Now" aria-label="Sync Now" data-i18n-title="sync_now" data-i18n-aria="sync_now">
+        <span class="sync-btn-icon">🔄</span>
+      </button>
+      <span id="presenceBadge" class="presence-badge u-hidden" data-admin-only title="" aria-live="polite"></span>
+      <span id="offlineBadge" class="offline-badge u-hidden"></span>
+    </div>
+  </div>
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <!-- Floating sparkle accents -->
+    <div class="header-sparkles" aria-hidden="true">
+      <span class="hdr-spark">✦</span>
+      <span class="hdr-spark">✦</span>
+      <span class="hdr-spark">✦</span>
+      <span class="hdr-spark">✦</span>
+      <span class="hdr-spark hdr-spark-lg">💎</span>
+      <span class="hdr-spark">✦</span>
+      <span class="hdr-spark">✦</span>
+    </div>
+
+    <!-- Animated wave ornament -->
+    <div class="header-ornament">
+      <svg class="hdr-wave" viewBox="0 0 120 22" fill="none"><path d="M0 11 Q15 1 30 11 Q45 21 60 11 Q75 1 90 11 Q105 21 120 11" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      <span class="hdr-rings-icon">💍</span>
+      <svg class="hdr-wave" viewBox="0 0 120 22" fill="none"><path d="M0 11 Q15 21 30 11 Q45 1 60 11 Q75 21 90 11 Q105 1 120 11" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+    </div>
+
+    <!-- App label (h1 kept for semantics) -->
+    <h1 data-i18n="app_title">ניהול חתונה</h1>
+
+    <!-- Couple names — visual hero with shimmer animation -->
+    <div class="couple-names" id="coupleNames" contenteditable="false">שם חתן ❤ שם כלה</div>
+
+    <!-- Animated gold divider -->
+    <div class="header-divider" aria-hidden="true">
+      <span class="hdr-diamond">◆</span>
+      <span class="hdr-diamond">◆</span>
+      <span class="hdr-diamond">◆</span>
+    </div>
+
+    <!-- Hebrew date badge -->
+    <div class="header-hebrew-date" id="hebrewDateDisplay"></div>
+
+    <!-- Wedding details chips -->
+    <div class="header-info-bar">
+      <div class="header-info-chip">
+        <span>📅</span>
+        <span id="weddingDateDisplay"></span>
+      </div>
+      <div class="header-info-chip">
+        <span>🕐</span>
+        <span id="headerReception"></span>
+      </div>
+      <div class="header-info-chip u-hidden" id="headerVenueChip">
+        <span>📍</span>
+        <span id="headerVenueText"></span>
+      </div>
+    </div>
+
+    <!-- Live countdown -->
+    <div class="countdown" id="countdown"></div>
+  </header>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav-tabs" id="navTabs" role="tablist" aria-label="ניווט ראשי" data-i18n-aria="nav_aria_main">
+    <button class="nav-tab" role="tab" data-tab="landing" data-action="showSection" data-action-arg="landing" data-i18n-tooltip="tip_nav_landing" data-tooltip-pos="down">
+      <span>🏠</span> <span data-i18n="nav_landing">בית</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="dashboard" data-admin-only data-action="showSection" data-action-arg="dashboard" data-i18n-tooltip="tip_nav_dashboard" data-tooltip-pos="down">
+      <span>📊</span> <span data-i18n="nav_dashboard">לוח בקרה</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="guests" data-admin-only data-action="showSection" data-action-arg="guests" data-i18n-tooltip="tip_nav_guests" data-tooltip-pos="down">
+      <span>👥</span> <span data-i18n="nav_guests">אורחים</span>
+      <span class="badge" id="guestCount">0</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="tables" data-admin-only data-action="showSection" data-action-arg="tables" data-i18n-tooltip="tip_nav_tables" data-tooltip-pos="down">
+      <span>🪑</span> <span data-i18n="nav_tables">שולחנות</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="invitation" data-admin-only data-action="showSection" data-action-arg="invitation" data-i18n-tooltip="tip_nav_invitation" data-tooltip-pos="down">
+      <span>💌</span> <span data-i18n="nav_invitation">הזמנה</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="whatsapp" data-admin-only data-action="showSection" data-action-arg="whatsapp" data-i18n-tooltip="tip_nav_whatsapp" data-tooltip-pos="down">
+      <span>📱</span> <span data-i18n="nav_whatsapp">וואטסאפ</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="communication" data-admin-only data-action="showSection" data-action-arg="communication" data-i18n-tooltip="tip_nav_communication" data-tooltip-pos="down">
+      <span>💬</span> <span data-i18n="nav_communication">מרכז תקשורת</span>
+    </button>
+    <button class="nav-tab" role="tab" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp" data-i18n-tooltip="tip_nav_rsvp" data-tooltip-pos="down">
+      <span>✅</span> <span data-i18n="nav_rsvp">אישור הגעה</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="budget" data-admin-only data-action="showSection" data-action-arg="budget" data-i18n-tooltip="tip_nav_budget" data-tooltip-pos="down">
+      <span>🎁</span> <span data-i18n="nav_budget">מתנות</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="analytics" data-admin-only data-action="showSection" data-action-arg="analytics" data-i18n-tooltip="tip_nav_analytics" data-tooltip-pos="down">
+      <span>📈</span> <span data-i18n="nav_analytics">ניתוחים</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="timeline" data-admin-only data-action="showSection" data-action-arg="timeline" data-i18n-tooltip="tip_nav_timeline" data-tooltip-pos="down">
+      <span>📅</span> <span data-i18n="nav_timeline">לוח זמנים</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="checkin" data-admin-only data-action="showSection" data-action-arg="checkin" data-i18n-tooltip="tip_nav_checkin" data-tooltip-pos="down">
+      <span>✅</span> <span data-i18n="nav_checkin">ציון נכחים</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="gallery" data-admin-only data-action="showSection" data-action-arg="gallery" data-i18n-tooltip="tip_nav_gallery" data-tooltip-pos="down">
+      <span>📸</span> <span data-i18n="nav_gallery">גלריה</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="vendors" data-admin-only data-action="showSection" data-action-arg="vendors" data-i18n-tooltip="tip_nav_vendors" data-tooltip-pos="down">
+      <span>🏪</span> <span data-i18n="nav_vendors">ספקים</span>
+    </button>
+    <button class="nav-tab u-hidden" role="tab" data-tab="settings" data-admin-only data-action="showSection" data-action-arg="settings" data-i18n-tooltip="tip_nav_settings" data-tooltip-pos="down">
+      <span>⚙️</span> <span data-i18n="nav_settings">הגדרות</span>
+    </button>
+    <button class="nav-tab" role="tab" data-tab="changelog" data-action="showSection" data-action-arg="changelog" data-i18n-tooltip="tip_nav_changelog" data-tooltip-pos="down">
+      <span>📋</span> <span data-i18n="nav_changelog">עדכונים</span>
+    </button>
+  </nav>
+
+  <!-- ── Mobile Bottom Navigation ── -->
+  <nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="ניווט תחתון" data-i18n-aria="nav_aria_bottom">
+    <button class="bottom-nav-item" data-tab="landing" data-action="showSection" data-action-arg="landing">
+      <span class="bn-icon" aria-hidden="true">🏠</span>
+      <span data-i18n="nav_landing">בית</span>
+    </button>
+    <button class="bottom-nav-item u-hidden" data-tab="dashboard" data-admin-only data-action="showSection" data-action-arg="dashboard">
+      <span class="bn-icon" aria-hidden="true">📊</span>
+      <span data-i18n="nav_dashboard">לוח בקרה</span>
+    </button>
+    <button class="bottom-nav-item u-hidden" data-tab="guests" data-admin-only data-action="showSection" data-action-arg="guests">
+      <span class="bn-icon" aria-hidden="true">👥</span>
+      <span data-i18n="nav_guests">אורחים</span>
+    </button>
+    <button class="bottom-nav-item u-hidden" data-tab="timeline" data-admin-only data-action="showSection" data-action-arg="timeline">
+      <span class="bn-icon" aria-hidden="true">📅</span>
+      <span data-i18n="nav_timeline">לוח זמנים</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="rsvp" data-action="showSection" data-action-arg="rsvp">
+      <span class="bn-icon" aria-hidden="true">✅</span>
+      <span data-i18n="nav_rsvp">אישור הגעה</span>
+    </button>
+    <button class="bottom-nav-item u-hidden" data-tab="settings" data-admin-only data-action="showSection" data-action-arg="settings">
+      <span class="bn-icon" aria-hidden="true">⚙️</span>
+      <span data-i18n="nav_settings">הגדרות</span>
+    </button>
+    <button class="bottom-nav-item u-hidden" data-tab="vendors" data-admin-only data-action="showSection" data-action-arg="vendors">
+      <span class="bn-icon" aria-hidden="true">🏪</span>
+      <span data-i18n="nav_vendors">ספקים</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="changelog" data-action="showSection" data-action-arg="changelog">
+      <span class="bn-icon" aria-hidden="true">📋</span>
+      <span data-i18n="nav_changelog">עדכונים</span>
+    </button>
+    <button class="bottom-nav-item u-hidden" id="btnMobileMore" data-admin-only data-action="toggleMobileNav" aria-expanded="false">
+      <span class="bn-icon" aria-hidden="true">≡</span>
+      <span data-i18n="nav_more">עוד</span>
+    </button>
+  </nav>
+  <main class="main-content" id="main-content" role="main">
+    <!-- Sprint 17: App-level RSVP deadline banner (shown when deadline ≤ 7 days / overdue) -->
+    <div id="appRsvpDeadlineBanner" class="rsvp-deadline-banner" hidden aria-live="polite" role="status"></div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Guest Landing (public-facing home for non-admin guests)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-landing" role="region" aria-label="בית" data-i18n-aria="nav_landing" data-template="landing">
+    <!-- S1: content loaded lazily — src/templates/landing.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Guest Personalised Landing (?guestId=xxx invitation link)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-guest-landing" role="region" aria-label="ההזמנה שלך" data-i18n-aria="guest_landing_title" data-template="guest-landing">
+    <!-- S1: content loaded lazily — src/templates/guest-landing.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Dashboard
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-dashboard" role="region" aria-label="לוח בקרה" data-i18n-aria="nav_dashboard" data-template="dashboard">
+    <!-- S1: content loaded lazily — src/templates/dashboard.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Guests
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-guests" role="region" aria-label="אורחים" data-i18n-aria="nav_guests" data-template="guests">
+    <!-- S1: content loaded lazily — src/templates/guests.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Tables
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-tables" role="region" aria-label="שולחנות" data-i18n-aria="nav_tables" data-template="tables">
+    <!-- S1: content loaded lazily — src/templates/tables.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Invitation
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-invitation" role="region" aria-label="הזמנה" data-i18n-aria="nav_invitation" data-template="invitation">
+    <!-- S1: content loaded lazily — src/templates/invitation.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: WhatsApp
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-whatsapp" role="region" aria-label="וואטסאפ" data-i18n-aria="nav_whatsapp" data-template="whatsapp">
+    <!-- S1: content loaded lazily — src/templates/whatsapp.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Communication Hub
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-communication" role="region" aria-label="מרכז תקשורת" data-i18n-aria="nav_communication" data-template="communication">
+    <!-- Phase 10.2: content loaded lazily — src/templates/communication.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: RSVP (Public-facing)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-rsvp" role="region" aria-label="אישור הגעה" data-i18n-aria="nav_rsvp" data-template="rsvp">
+    <!-- S1: content loaded lazily — src/templates/rsvp.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Budget & Gifts
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-budget" role="region" aria-label="מתנות" data-i18n-aria="nav_budget" data-template="budget">
+    <!-- S1: content loaded lazily — src/templates/budget.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Analytics
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-analytics" role="region" aria-label="ניתוחים" data-i18n-aria="nav_analytics" data-template="analytics">
+    <!-- S1: content loaded lazily — src/templates/analytics.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Timeline (Wedding Day Schedule)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-timeline" role="region" aria-label="לוח זמנים" data-i18n-aria="nav_timeline" data-template="timeline">
+    <!-- S1: content loaded lazily — src/templates/timeline.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Check-in (admin)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-checkin" role="region" aria-label="ציון נכחים" data-i18n-aria="nav_checkin" data-template="checkin">
+    <!-- S1: content loaded lazily — src/templates/checkin.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Photo Gallery
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-gallery" role="region" aria-label="גלריה" data-i18n-aria="nav_gallery" data-template="gallery">
+    <!-- S1: content loaded lazily — src/templates/gallery.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Contact Collector (public shareable form)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-contact-form" role="region" aria-label="פרטי קשר" data-i18n-aria="contact_title" data-template="contact-form">
+    <!-- S1: content loaded lazily — src/templates/contact-form.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Vendors
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-vendors" role="region" aria-label="ספקים" data-i18n-aria="nav_vendors" data-template="vendors">
+    <!-- S1: content loaded lazily — src/templates/vendors.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Settings
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-settings" role="region" aria-label="הגדרות" data-i18n-aria="nav_settings" data-template="settings">
+    <!-- S1: content loaded lazily — src/templates/settings.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Gift Registry (public)
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-registry" role="region" aria-label="רשימת מתנות" data-i18n-aria="nav_registry" data-template="registry">
+    <!-- S1: content loaded lazily — src/templates/registry.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION: Changelog
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="section" id="sec-changelog" role="region" aria-label="שינויים ועדכונים" data-i18n-aria="nav_changelog" data-template="changelog">
+    <!-- S1: content loaded lazily — src/templates/changelog.html -->
+    <div class="section-skeleton" aria-hidden="true"></div>
+  </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       MODALS
+       ══════════════════════════════════════════════════════════════════ -->
+
+  <!-- Add/Edit Guest Modal -->
+    <!-- S1: guestModal loaded lazily — src/modals/guestModal.html -->
+  <div id="guestModal" class="modal-overlay" data-modal="guestModal" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- Add/Edit Table Modal -->
+    <!-- S1: tableModal loaded lazily — src/modals/tableModal.html -->
+  <div id="tableModal" class="modal-overlay" data-modal="tableModal" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- ── Vendor Modal ── -->
+    <!-- S1: vendorModal loaded lazily — src/modals/vendorModal.html -->
+  <div id="vendorModal" class="modal-overlay" data-modal="vendorModal" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- Gallery Lightbox -->
+    <!-- S1: galleryLightbox loaded lazily — src/modals/galleryLightbox.html -->
+  <div id="galleryLightbox" class="modal-overlay" data-modal="galleryLightbox" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- Print grids (hidden on screen, visible in print) -->
+  <div id="placeCardsGrid" class="place-cards-grid" aria-hidden="true"></div>
+  <div id="tableSignsGrid" class="table-signs-grid" aria-hidden="true"></div>
+
+  <!-- Expense Modal -->
+    <!-- S1: expenseModal loaded lazily — src/modals/expenseModal.html -->
+  <div id="expenseModal" class="modal-overlay" data-modal="expenseModal" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- Timeline Item Modal -->
+    <!-- S1: timelineModal loaded lazily — src/modals/timelineModal.html -->
+  <div id="timelineModal" class="modal-overlay" data-modal="timelineModal" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" role="region" aria-live="polite" aria-atomic="false" aria-label="Notifications" data-i18n-aria="notifications_region"></div>
+
+  <!-- ── Status Bar ── -->
+  <footer class="status-bar" id="statusBar" role="contentinfo">
+    <span id="statusVersion" class="status-bar-item"></span>
+    <span id="statusGas" class="status-bar-item"></span>
+    <span id="statusRole" class="status-bar-item"></span>
+  </footer>
+
+</body>
+</html>
