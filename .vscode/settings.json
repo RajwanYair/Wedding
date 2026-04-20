@@ -104,7 +104,6 @@
     "eslint.options": {
         "overrideConfigFile": "eslint.config.mjs"
     },
-    "eslint.useFlatConfig": true,
     "eslint.lintTask.enable": true,
     "eslint.onIgnoredFiles": "off",
     // ── Stylelint ──
