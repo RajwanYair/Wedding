@@ -4,6 +4,96 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [10.0.0] — 2025-07-17
+
+### Changed (Production Hardening)
+
+- **Repo cleanup** — Removed tracked junk files (`config-output.json`, `test_output.txt`, `test_results.txt`); updated `.gitignore` to prevent future commits of these artifacts
+- **SVG diagrams moved to `docs/`** — `architecture.svg`, `auth-flow.svg`, `features-grid.svg`, `rsvp-flow.svg` relocated from root to `docs/`; README references updated
+- **Doc accuracy: runtime deps** — All "Zero Runtime Deps" references corrected to "Minimal Runtime Deps (3)" across `copilot-instructions.md`, `AGENTS.md`, `CONTRIBUTING.md`, agent files, and README to reflect the actual `@supabase/supabase-js`, `dompurify`, and `valibot` dependencies
+- **VS Code formatter** — Removed orphaned `esbenp.prettier-vscode` default formatter (Prettier not in devDependencies); replaced with built-in VS Code formatters per language
+- **CI bundle size gate fixed** — Rewrote the broken shell pipeline (`wc -c | sort -rn | head -1` computed total bytes, not per-file max) to correctly check each JS chunk individually with a clear error message per offending file
+- **Test file renamed** — `tests/unit/sprint5.test.mjs` → `tests/unit/i18n-rtl-state-async.test.mjs` (describes actual coverage: i18n RTL helpers + async state wrappers)
+
+### Stats
+
+- **5284 tests** (266 test files) · 0 lint errors · 0 warnings
+
+## [9.8.0] — 2025-07-14
+
+### Added
+
+- **Guest lifecycle state machine** — `src/utils/guest-lifecycle.js` exports `LIFECYCLE_STAGES`, `TERMINAL_STAGES`, `ALLOWED_TRANSITIONS`, `canTransition`, `transitionGuest`, `forceStage`, `stageOrdinal`, `isLaterStage`, `isTerminal`, `isCheckedIn`, `isConfirmed`, `groupByStage`, `buildLifecycleSummary`, `guestsBeforeStage`; pure data, no DOM (Sprint 71, 46 tests)
+- **Budget allocation and variance analysis** — `src/utils/budget-planner.js` exports `BUDGET_CATEGORIES`, `buildDefaultBudgetPlan`, `createBudgetLine`, `summarizeBudget`, `getOverBudgetLines`, `computeVariances`, `reallocateSurplus`, `formatBudgetAmount`, `budgetLineStatus`, `sortByVariance`; traffic-light status, non-mutating (Sprint 72, 39 tests)
+- **Event template cloning** — `src/utils/event-template.js` exports `TEMPLATE_SECTIONS`, `createTemplate`, `instantiateTemplate`, `describeTemplate`, `getTemplateSections`, `mergeTemplates`, `omitSection`; strips PII, regenerates IDs, non-mutating (Sprint 73, 32 tests)
+- **Payment deep-links** — `src/utils/payment-link.js` exports `PAYMENT_PLATFORMS`, `isValidAmount`, `normalizePaymentPhone`, `buildBitLink`, `buildPayBoxLink`, `buildPayPalLink`, `buildRevolutLink`, `buildBankTransferData`, `buildPaymentLink`, `platformLabel`; Israeli (Bit, PayBox) + international platforms (Sprint 74, 37 tests)
+- **Photo gallery metadata** — `src/utils/photo-gallery.js` exports `createPhotoEntry`, `buildAlbum`, `groupByTag`, `filterByTag`, `sortAlbumByDate`, `buildGalleryManifest`, `estimateStorageSize`, `getAlbumStats`; pure data album organisation (Sprint 75, 29 tests)
+- **Campaign send tracker** — `src/utils/campaign-tracker.js` exports `CAMPAIGN_STATUSES`, `RECIPIENT_STATUSES`, `createCampaign`, `addCampaignRecipient`, `updateRecipientStatus`, `getCampaignStats`, `getDeliveryRate`, `getReadRate`, `filterByStatus`, `buildCampaignReport`; WhatsApp/SMS blast tracking (Sprint 76, 28 tests)
+- **WhatsApp delivery status helpers** — `src/utils/whatsapp-status.js` exports `WA_STATUS`, `isDelivered`, `isRead`, `isFailed`, `parseStatusWebhook`, `buildStatusTimeline`, `getLatestStatus`, `summarizeStatuses`; webhook parsing + rate calculations (Sprint 77, 31 tests)
+- **Seating chart exporter** — `src/utils/seating-exporter.js` exports `exportSeatingToCsv`, `exportSeatingToJson`, `buildSeatingMatrix`, `buildTableManifest`, `buildEscortCardData`, `buildPlaceCardData`, `groupExportByTable`; CSV/JSON/card formats (Sprint 78, 25 tests)
+- **Wedding website builder** — `src/utils/wedding-website.js` exports `WEBSITE_SECTIONS`, `createWebsiteSection`, `buildWebsiteConfig`, `buildRsvpFormConfig`, `buildVenueSection`, `buildGallerySection`, `buildRegistrySection`, `validateWebsiteConfig`; pure data section config (Sprint 79, 29 tests)
+
+### Stats
+
+- **+296 tests** (5284 total, 266 test files)
+- All 9 new utility modules: zero runtime deps, pure data, ESLint clean, non-mutating
+
+## [9.7.0] — 2025-07-13
+
+### Added
+
+- **AI message drafter** — `src/utils/ai-draft.js` exports `AI_TONES`, `AI_LANGUAGES`, `DRAFT_CONTEXTS`, `buildSystemPrompt`, `buildInvitationPrompt`, `buildRsvpReminderPrompt`, `buildRsvpConfirmationPrompt`, `buildDayOfPrompt`, `buildThankYouPrompt`, `buildVendorOutreachPrompt`, `parseAiResponse`, `sanitizeAiOutput`, `estimateTokenCount`, `estimatePromptTokens`, `buildBulkInvitationPrompts`; LLM-agnostic prompt builder, no network calls (Sprint 61, 51 tests)
+- **WhatsApp Cloud API helper** — `src/utils/whatsapp-cloud-api.js` exports `WA_API_VERSION`, `WABA_BASE_URL`, `DELIVERY_STATUSES`, `MESSAGE_TYPES`, `INTERACTIVE_TYPES`, `isValidPhoneForWaba`, `formatPhoneForWaba`, `buildTextMessage`, `buildTemplateMessage`, `buildInteractiveMessage`, `buildMediaMessage`, `parseWebhookPayload`, `parseDeliveryStatus`, `buildStatusWebhook`, `buildMessagesEndpoint`, `isWebhookVerification`; pure data, no network (Sprint 62, 50 tests)
+- **File System Access API utilities** — `src/utils/file-handler.js` exports `isFileSystemApiSupported`, `ACCEPTED_MIME_TYPES`, `MAX_FILE_SIZE_BYTES`, `validateFileType`, `validateFileSize`, `formatBytes`, `parseDroppedFiles`, `readFileAsText`, `readFileAsJson`, `splitCsvFile`, `buildFileMetadata`, `getMimeTypeForExtension`; drag-drop and file validation helpers (Sprint 63, 50 tests)
+- **Web Push subscription manager** — `src/utils/push-manager.js` exports `PUSH_PERMISSION`, `PUSH_SERVICES`, `isPushSupported`, `getPermissionState`, `serializeSubscription`, `deserializeSubscription`, `compareSubscriptions`, `isSubscriptionExpired`, `isValidVapidKey`, `buildApplicationServerKey`, `buildPushEndpointInfo`, `buildVapidAuthHeader`; VAPID + subscription lifecycle helpers (Sprint 64, 40 tests)
+- **In-app onboarding tour builder** — `src/utils/tour-guide.js` exports `TOUR_STEPS`, `TOUR_ROLES`, `createTourStep`, `buildTour`, `filterStepsForRole`, `getTourProgress`, `markStepComplete`, `isTourComplete`, `resetTour`, `buildTourSummary`; pure data, no DOM (Sprint 65, 32 tests)
+- **Error classification & retry helpers** — `src/utils/error-recovery.js` exports `ERROR_CLASSES`, `RETRY_STRATEGIES`, `classifyError`, `isNetworkError`, `isAuthError`, `isQuotaError`, `isNotFoundError`, `isRateLimitError`, `isTimeoutError`, `isRetryable`, `getRetryDelay`, `buildErrorReport`, `withTimeout`, `withFallback`; pure data, no DOM (Sprint 66, 55 tests)
+- **Batch print job scheduler** — `src/utils/print-queue.js` exports `PRINT_TYPES`, `PRINT_STATUS`, `createPrintJob`, `buildPrintQueue`, `sortPrintQueue`, `chunkPrintQueue`, `estimatePrintTime`, `summarizePrintQueue`, `filterPrintJobsByType`, `getPrintJobsByGuest`; deduplicates by guestId+type (Sprint 67, 36 tests)
+- **CHANGELOG.md parser** — `src/utils/changelog-parser.js` exports `parseVersionEntry`, `parseChangelog`, `getLatestEntry`, `getEntriesSince`, `compareVersions`, `isNewerVersion`, `formatEntryForDisplay`, `getNewFeaturesSince`; structured changelog for the What's New UI (Sprint 68, 34 tests)
+- **Client-side full-text search index** — `src/utils/search-index.js` exports `createIndex`, `indexDocument`, `indexDocuments`, `removeDocument`, `searchIndex`, `rankResults`, `buildGuestIndex`, `buildVendorIndex`, `highlightMatches`, `normalizeSearchQuery`; prefix-aware ranked search, no DOM (Sprint 69, 36 tests)
+
+## [9.6.0] — 2025-07-12
+
+### Added
+
+- **Accessibility utilities** — `src/utils/a11y.js` exports `isReducedMotion`, `isHighContrast`, `isDarkMode`, `watchMotionPreference`, `watchColorScheme`, `relativeLuminance`, `computeContrastRatio`, `isWcagAA`, `isWcagAAA`, `wcagLevel`, `getImplicitAriaRole`, `buildAriaLabel`, `meetsMinTouchTarget` (Sprint 51, 44 tests)
+- **Background Sync wrapper** — `src/utils/background-sync.js` exports `isBgSyncSupported`, `isPeriodicSyncSupported`, `buildSyncTag`, `parseSyncTag`, `registerSync`, `getPendingSyncs`, `registerPeriodicSync`, `unregisterPeriodicSync`, `getPeriodicSyncs`, `enqueueSync`; namespaced `"wedding/"` tag prefix (Sprint 52, 27 tests)
+- **WhatsApp template engine** — `src/utils/whatsapp-template.js` exports `buildWaInvitationText`, `buildWaRsvpConfirmText`, `buildWaRsvpDeclineText`, `buildWaReminderText`, `buildWaDayOfText`, `buildWaLink`, `buildWaInvitationLink`, `buildWaBulkMessages`, `isOverLimit`, `truncateWaMessage`; 1024-char soft limit (Sprint 53, 47 tests)
+- **Locale-aware formatting** — `src/utils/locale-format.js` exports `formatShortDate`, `formatLongDate`, `formatTime`, `formatDateTime`, `formatRelativeTime`, `formatTimeAgo`, `formatList`, `getPluralCategory`, `pluralize`, `getCollator`, `sortLocale`, `sortByKey`, `formatLocaleNumber`, `formatPercent`; he-IL primary (Sprint 54, 52 tests)
+- **PDF layout builders** — `src/utils/pdf-layout.js` exports `buildGuestListLayout`, `buildGroupedGuestLayout`, `buildTablePlanLayout`, `buildSeatingCardLayout`, `buildVendorListLayout`, `buildRunOfShowLayout`, `buildSummaryLayout`; pure JSON, no DOM (Sprint 55, 45 tests)
+- **Client-side image compression** — `src/utils/image-compress.js` exports `computeScaledDimensions`, `estimateCompressedSize`, `formatFileSize`, `loadImage`, `compressImage`, `compressImages`, `getImageMetadata`, `compressionRatio`, `compressionSavings`; Canvas API with graceful fallback (Sprint 56, 40 tests)
+- **Service Worker cache utilities** — `src/utils/service-worker-utils.js` exports `isCacheApiSupported`, `isSwSupported`, `listCacheNames`, `getCacheUrls`, `getCacheEntryCount`, `deleteCache`, `pruneOldCaches`, `pruneVersionedCaches`, `prefetchUrls`, `isCached`, `getCachedResponse`, `postMessageToSW`, `skipWaiting` (Sprint 57, 38 tests)
+- **In-app notification builders** — `src/utils/notification-builder.js` exports `NOTIFICATION_TYPES`, `SEVERITY`, `buildRsvpNotification`, `buildCheckinNotification`, `buildGuestNotification`, `buildVendorNotification`, `buildBudgetNotification`, `buildSystemNotification`; pure data, no DOM (Sprint 58, 38 tests)
+- **Wedding event schedule builder** — `src/utils/event-schedule.js` exports `WEDDING_PHASES`, `PHASE_ORDER`, `createScheduleItem`, `sortByTime`, `getItemsByPhase`, `groupByPhase`, `estimateTotalDuration`, `addBufferTime`, `findConflicts`, `buildDaySchedule`, `formatMinuteOffset`, `parseTimeToMinutes` (Sprint 59, 48 tests)
+
+## [9.5.0] — 2025-07-11
+
+### Added
+
+- **IndexedDB adapter** — `src/utils/idb-store.js` exports `openDB`, `idbGet`, `idbSet`, `idbDel`, `idbGetAll`, `idbSetMany`, `idbDelMany`, `idbCount`, `idbClear`, and more; Promise-based thin wrapper over raw IDB API (Sprint 41)
+- **Storage quota detection** — `src/utils/storage-quota.js` exports `getLocalStorageSize`, `getStorageEstimate`, `isStorageCritical`, `requestPersistentStorage`, `buildStorageReport`, and more; uses StorageManager API with graceful fallback (Sprint 42)
+- **Session timeout enforcement** — `src/utils/session-timer.js` exports `createSessionTimer` (start/stop/reset/getRemainingMs) and `createActivityTimer` (DOM-event-driven auto-reset); activity-aware with warning callbacks (Sprint 43)
+- **Constraint-based seating AI** — `src/utils/seating-ai.js` exports `suggestSeating(guests, tables, opts?)`, `scoreSeatingPlan`, and `diffSeatingPlans`; greedy algorithm respecting group cohesion and table capacity (Sprint 44)
+- **Per-guest RSVP token builder** — `src/utils/rsvp-token.js` exports `generateToken`, `generateSignedToken`, `verifySignedToken`, `buildRsvpLink`, `parseRsvpLink`, and `generateBulkTokens`; optional HMAC-SHA256 signing via Web Crypto (Sprint 45)
+- **Web Push payload builder** — `src/utils/push-payload.js` exports `buildRsvpConfirmedPayload`, `buildCheckinPayload`, `buildVendorDuePayload`, `buildBudgetAlertPayload`, `buildRsvpDeadlinePayload`, `validatePushPayload`, and `PUSH_TAGS`; pure builder, no network (Sprint 46)
+- **Analytics CSV/JSON export** — `src/utils/analytics-export.js` exports `exportGuestsCsv`, `exportVendorsCsv`, `exportExpensesCsv`, `exportGuestsJson`, `exportVendorsJson`, `exportExpensesJson`, `exportSummaryJson`, and `exportFullJson`; UTF-8 BOM for Excel compatibility (Sprint 47)
+- **Currency formatter** — `src/utils/currency.js` exports `formatCurrency`, `formatCurrencyCompact`, `formatNumber`, `parseCurrencyInput`, `addCurrency`, `subtractCurrency`, `percentOf`, and `convertCurrency`; ILS (₪) primary with USD/EUR/GBP support; float-safe arithmetic (Sprint 48)
+- **Invitation batch scheduler** — `src/utils/invitation-scheduler.js` exports `buildInvitationBatch`, `prioritizeBatch`, `splitBatchByChannel`, `chunkBatch`, `getChunkSizeForChannel`, `estimateSendDuration`, `summarizeBatch`, and `countUnreachable`; WhatsApp/SMS/email channel routing with rate-limit compliance (Sprint 49)
+
+## [9.4.0] — 2025-07-10
+
+### Added
+
+- **QR code test suite** — 12 tests for `src/utils/qr-code.js` covering `buildCheckinUrl`, `renderQrToCanvas`, and `getQrDataUrl` including fallback path and canvas context edge cases (Sprint 31)
+- **Table utilization heatmap** — `src/utils/seating-analytics.js` exports `computeSeatingHeatmap(guests, tables)` (per-table occupancy %, heat levels, meal breakdown, balance score) and `getImbalancedTables(tables, n)` (Sprint 32)
+- **Vendor payment timeline analytics** — `src/utils/vendor-analytics.js` exports `computeVendorPaymentStats(vendors)`, `computeVendorPaymentTimeline(vendors)` (monthly cash-flow buckets), and `sortVendorsByUrgency(vendors)` (Sprint 33)
+- **Spotify playlist oEmbed utility** — `src/utils/spotify-embed.js` exports `extractSpotifyResource(url)`, `buildSpotifyEmbedUrl(url)`, `buildSpotifyIframeAttrs(url, opts?)`, and `isSpotifyUrl(url)` for safe iframe embeds; strips `?si=` and `utm_*` params (Sprint 34)
+- **vCard 3.0 contact exporter** — `src/utils/vcard.js` exports `buildVCard(guest)`, `buildVCardDataUrl(guest)`, `buildBulkVCard(guests)`, and `buildBulkVCardFilename(count)` for RFC 6350-compatible download links (Sprint 35)
+- **Wedding countdown utility** — `src/utils/wedding-countdown.js` exports `computeCountdown(weddingDate, now?)` and `formatCountdownHuman(countdown, locale?)` using Asia/Jerusalem timezone (Sprint 36)
+- **Smart message personalizer** — `src/utils/message-personalizer.js` exports `personalizeMessage(template, guest, weddingInfo?)`, `validateTemplate(template)`, `getAvailableTokens()`, and `personalizeBulk(template, guests)` with 9 supported tokens (Sprint 37)
+- **WhatsApp Business Cloud API stub** — `src/services/whatsapp-business.js` exports `isBusinessAPIConfigured(config)`, `buildApiEndpoint(config)`, `buildTemplatePayload(to, templateRef)`, `buildTextPayload(to, text)`, and `sendTemplateMessage(...)` dry-run helper (Sprint 38)
+- **Guest relationship graph** — `src/utils/guest-relationships.js` exports `buildRelationshipGraph(guests)`, `findSeparatedGroupMembers(guests, graph)`, `getClusterStats(guests)`, and `suggestTableConsolidation(guests, tables)` for seating conflict detection (Sprint 39)
+
 ## [9.3.0] — 2026-05-19
 
 ### Added
