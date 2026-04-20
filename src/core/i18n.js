@@ -342,6 +342,27 @@ export function formatList(items, type = "conjunction") {
 }
 
 /**
+ * Format a date using the locale-appropriate short format.
+ * Hebrew / Arabic / Russian → DD/MM/YYYY  (Intl adapts automatically)
+ * English → MM/DD/YYYY
+ *
+ * Examples:
+ *   he-IL: "15/6/2025"   (day/month/year)
+ *   en-IL: "6/15/2025"   (month/day/year)
+ *
+ * @param {string | Date | number} value  ISO string, Date object, or timestamp
+ * @returns {string}
+ */
+export function formatShortDate(value) {
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return String(value);
+  return new Intl.DateTimeFormat(_locale(), {
+    dateStyle: "short",
+    timeZone: "Asia/Jerusalem",
+  }).format(d);
+}
+
+/**
  * Format a number using Intl.PluralRules (S22a) — returns the plural category.
  * Useful for a11y text: "1 אורח" vs "2 אורחים".
  * @param {number} count

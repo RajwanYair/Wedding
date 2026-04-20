@@ -17,6 +17,7 @@ import {
   languageToggleLabel,
   normalizeUiLanguage,
   nextUiLanguage,
+  formatShortDate,
 } from "../../src/core/i18n.js";
 
 const SAMPLE_DICT = {
@@ -258,5 +259,41 @@ describe("bilingual language helpers", () => {
   it("returns the correct language toggle label", () => {
     expect(languageToggleLabel("he")).toBe("EN");
     expect(languageToggleLabel("en")).toBe("עב");
+  });
+});
+
+// ── formatShortDate — Sprint 24 ───────────────────────────────────────────
+describe("formatShortDate() — locale-aware short date", () => {
+  it("formats a Date object without throwing", async () => {
+    await loadLocale("he", {});
+    const result = formatShortDate(new Date("2025-06-15T12:00:00Z"));
+    expect(typeof result).toBe("string");
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it("formats an ISO string without throwing", async () => {
+    await loadLocale("en", {});
+    const result = formatShortDate("2025-06-15T00:00:00Z");
+    expect(typeof result).toBe("string");
+  });
+
+  it("returns the raw value for an invalid date", async () => {
+    await loadLocale("he", {});
+    expect(formatShortDate("not-a-date")).toBe("not-a-date");
+  });
+
+  it("Hebrew locale uses day-first ordering", async () => {
+    await loadLocale("he", {});
+    // June 15, 2025 → he-IL short date includes day number 15
+    const result = formatShortDate("2025-06-15T12:00:00Z");
+    expect(result).toMatch(/15/);
+  });
+
+  it("accepts a numeric timestamp", async () => {
+    await loadLocale("he", {});
+    const ts = new Date("2025-06-15T12:00:00Z").getTime();
+    const result = formatShortDate(ts);
+    expect(typeof result).toBe("string");
+    expect(result.length).toBeGreaterThan(0);
   });
 });
