@@ -9,6 +9,7 @@ import {
   detectLocale,
   resolveAppLocale,
   getLocaleInfo,
+  getLocaleCurrency,
 } from "../../src/utils/locale-detector.js";
 
 describe("primaryLang", () => {
@@ -90,5 +91,35 @@ describe("getLocaleInfo", () => {
     const info = getLocaleInfo({ languages: ["en-US"] });
     expect(info.isRtl).toBe(false);
     expect(info.appLocale).toBe("en");
+  });
+});
+
+describe("getLocaleCurrency — Sprint 23", () => {
+  it("returns ILS for Hebrew locale", () => {
+    expect(getLocaleCurrency("he")).toBe("ILS");
+    expect(getLocaleCurrency("he-IL")).toBe("ILS");
+  });
+
+  it("returns ILS for Arabic locale", () => {
+    expect(getLocaleCurrency("ar")).toBe("ILS");
+  });
+
+  it("returns USD for English locale", () => {
+    expect(getLocaleCurrency("en")).toBe("USD");
+    expect(getLocaleCurrency("en-US")).toBe("USD");
+  });
+
+  it("returns RUB for Russian locale", () => {
+    expect(getLocaleCurrency("ru")).toBe("RUB");
+  });
+
+  it("returns EUR for German/French locales", () => {
+    expect(getLocaleCurrency("de")).toBe("EUR");
+    expect(getLocaleCurrency("fr")).toBe("EUR");
+  });
+
+  it("falls back to ILS for unknown locale", () => {
+    expect(getLocaleCurrency("xx")).toBe("ILS");
+    expect(getLocaleCurrency("")).toBe("ILS");
   });
 });

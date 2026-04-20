@@ -62,3 +62,48 @@ export function getLocaleInfo(nav) {
   const appLocale = resolveAppLocale(raw);
   return { raw, primary, isRtl: rtl, appLocale };
 }
+
+// ── Currency mapping ───────────────────────────────────────────────────────
+
+/**
+ * Map from BCP-47 primary language subtag to ISO 4217 currency code.
+ * Covers the app's four supported locales plus common Western currencies.
+ * @type {Readonly<Record<string, string>>}
+ */
+const _LOCALE_CURRENCY = Object.freeze({
+  he: "ILS", // Hebrew → Israeli New Shekel
+  ar: "ILS", // Arabic (Israel) → ILS; override per region if needed
+  ru: "RUB", // Russian → Russian Ruble (common default)
+  en: "USD", // English → US Dollar
+  de: "EUR",
+  fr: "EUR",
+  es: "EUR",
+  it: "EUR",
+  pt: "EUR",
+  nl: "EUR",
+  pl: "PLN",
+  tr: "TRY",
+  ja: "JPY",
+  ko: "KRW",
+  zh: "CNY",
+  uk: "UAH",
+  cs: "CZK",
+  hu: "HUF",
+  ro: "RON",
+  sv: "SEK",
+  no: "NOK",
+  da: "DKK",
+});
+
+/**
+ * Return the most likely ISO 4217 currency code for a given locale.
+ * Strips region subtag and looks up primary language; falls back to "ILS"
+ * (the app's home currency).
+ *
+ * @param {string} [locale] BCP-47 locale string (e.g. "he", "en-US", "ru-RU")
+ * @returns {string} ISO 4217 currency code (e.g. "ILS", "USD", "EUR")
+ */
+export function getLocaleCurrency(locale) {
+  const lang = primaryLang(locale ?? "");
+  return _LOCALE_CURRENCY[lang] ?? "ILS";
+}

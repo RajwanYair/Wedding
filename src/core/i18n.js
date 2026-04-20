@@ -6,6 +6,8 @@
  * No window.* side effects — consumers import `t()` and `applyI18n()`.
  */
 
+import { getLocaleCurrency } from "../utils/locale-detector.js";
+
 /** @type {Record<string, string>} */
 let _dict = {};
 /** @type {Record<string, string>} */
@@ -314,13 +316,16 @@ export function formatNumber(value, opts) {
 }
 
 /**
- * Format a number as currency (ILS by default).
+ * Format a number as currency.
+ * Defaults to the ISO 4217 code for the current locale (e.g. ILS for he,
+ * USD for en, EUR for de/fr/es). Pass an explicit code to override.
  * @param {number} value
- * @param {string} [currency]
+ * @param {string} [currency]  ISO 4217 code; auto-detected from locale when omitted
  * @returns {string}
  */
-export function formatCurrency(value, currency = "ILS") {
-  return new Intl.NumberFormat(_locale(), { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
+export function formatCurrency(value, currency) {
+  const cur = currency ?? getLocaleCurrency(_locale());
+  return new Intl.NumberFormat(_locale(), { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(value);
 }
 
 /**
