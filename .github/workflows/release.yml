@@ -19,20 +19,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Setup shared tooling (CI shim)
-        run: node scripts/ensure-shared-tooling.mjs
-
-      - name: Run CI checks
-        run: npm run ci
-
       - name: Generate changelog
         id: changelog
         run: |
