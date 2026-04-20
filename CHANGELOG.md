@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.2.0] — 2026-05-12
+
+### Added
+
+- **PWA App Badging API** — `src/utils/app-badge.js` wraps `navigator.setAppBadge`; main.js subscribes to guest store and badges the app icon with pending RSVP count (Sprint 11)
+- **Browser locale auto-detection** — `main.js` step 1 now calls `resolveAppLocale(detectLocale())` on first visit when no stored language preference exists (Sprint 12)
+- **i18n English fallback dictionary** — `loadFallbackLocale()` exported from `src/core/i18n.js`; `t()` checks `_fallbackDict` before returning raw key; called at boot for all non-English locales (Sprint 13)
+- **Diacritic-normalized guest search** — `src/sections/guests.js` now imports `guestMatchesQuery()` from `src/utils/guest-search.js`; search matches first/last name, full name, phone, email, and notes with diacritic stripping (Sprint 14)
+- **Command palette Ctrl+K / Cmd+K** — `initCommandPaletteTrigger(openFn)` exported from `src/core/nav.js`; wired in main.js to open search modal (Sprint 15)
+- **NFC check-in action handlers** — `on("startNFCCheckin")`, `on("stopNFCCheckin")`, and `on("writeNFCForGuest")` wired in main.js `_registerHandlers()`; dynamic import of `src/services/nfc.js` for write-tag action (Sprint 16)
+- **App-level RSVP deadline banner** — `#appRsvpDeadlineBanner` added to `index.html` outside section templates; `_updateAppRsvpDeadlineBanner()` in main.js shows amber/red banner when `weddingInfo.rsvpDeadline` is ≤ 7 days away or overdue; subscribes to `weddingInfo` store for live updates (Sprint 17)
+- **ARIA section announce on navigation** — `_switchSection()` in main.js calls `announce(t("nav_<name>"))` after mounting each section (WCAG 2.4.2 compliance) (Sprint 18)
+- **Locale contribution guide** — `docs/locale-guide.md` with step-by-step instructions for adding new languages: file format, ICU plurals, RTL config, parity check, PR checklist (Sprint 19)
+
+### Changed
+
+- `src/main.js` — `storeSubscribe` now imported at module level (replaces dynamic inner import used by badge wiring)
+- `src/core/i18n.js` — `t()` lookup order: `_dict → _fallbackDict → pluginDict → fallback → key`
+
 ## [9.1.0] — 2026-05-05
 
 ### Added

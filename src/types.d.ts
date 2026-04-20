@@ -1,5 +1,5 @@
 /**
- * src/types.d.ts — Shared type definitions for the Wedding Manager (v9.1.0)
+ * src/types.d.ts — Shared type definitions for the Wedding Manager (v9.2.0)
  *
  * TypeScript-first types with discriminated unions derived from canonical
  * constants where possible.

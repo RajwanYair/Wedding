@@ -80,7 +80,8 @@ function _encodeV1(text) {
   const reserved = new Uint8Array(SIZE * SIZE); // 1=reserved (can't set)
 
   const _set = (r, c, dark) => {
-    if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) modules[r * SIZE + c] = dark ? 1 : 0;
+    if (r >= 0 && r < SIZE && c >= 0 && c < SIZE)
+      modules[r * SIZE + c] = dark ? 1 : 0;
   };
   const _reserve = (r, c) => {
     if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) reserved[r * SIZE + c] = 1;
@@ -91,7 +92,11 @@ function _encodeV1(text) {
   function _drawFinder(tr, tc) {
     for (let r = -1; r <= 7; r++) {
       for (let c = -1; c <= 7; c++) {
-        const dark = r === 0 || r === 6 || c === 0 || c === 6 ||
+        const dark =
+          r === 0 ||
+          r === 6 ||
+          c === 0 ||
+          c === 6 ||
           (r >= 2 && r <= 4 && c >= 2 && c <= 4);
         _set(tr + r, tc + c, dark);
         _reserve(tr + r, tc + c);
@@ -132,7 +137,8 @@ function _encodeV1(text) {
   dataBytes.push((bytes[bytes.length - 1] & 0xf) << 4);
   // Pad to 19 codewords
   const PAD = [0xec, 0x11];
-  while (dataBytes.length < 19) dataBytes.push(PAD[dataBytes.length % 2 === 0 ? 0 : 1]);
+  while (dataBytes.length < 19)
+    dataBytes.push(PAD[dataBytes.length % 2 === 0 ? 0 : 1]);
 
   // ECC (V1-L uses 7 ECC codewords, generator poly degree 7)
   const _POLY_7 = [1, 127, 122, 154, 164, 11, 68, 117];
@@ -151,7 +157,9 @@ function _encodeV1(text) {
         if (!_isReserved(r, c)) {
           const byteIdx = bitIdx >> 3;
           const bitOff = 7 - (bitIdx & 7);
-          const dark = byteIdx < allBytes.length && ((allBytes[byteIdx] >> bitOff) & 1) === 1;
+          const dark =
+            byteIdx < allBytes.length &&
+            ((allBytes[byteIdx] >> bitOff) & 1) === 1;
           _set(r, c, dark);
           bitIdx++;
         }
@@ -196,9 +204,10 @@ function _encodeV1(text) {
  * @returns {string}
  */
 export function buildCheckinUrl(guestId) {
-  const base = typeof window !== "undefined"
-    ? window.location.origin + window.location.pathname
-    : "https://rajwanyair.github.io/Wedding/";
+  const base =
+    typeof window !== "undefined"
+      ? window.location.origin + window.location.pathname
+      : "https://rajwanyair.github.io/Wedding/";
   return `${base}?guestId=${encodeURIComponent(guestId)}&action=checkin`;
 }
 
@@ -238,7 +247,12 @@ export function renderQrToCanvas(text, canvas, cellSize = 8) {
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       if (modules[r * size + c]) {
-        ctx.fillRect(off + c * cellSize, off + r * cellSize, cellSize, cellSize);
+        ctx.fillRect(
+          off + c * cellSize,
+          off + r * cellSize,
+          cellSize,
+          cellSize,
+        );
       }
     }
   }

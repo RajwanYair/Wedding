@@ -225,7 +225,14 @@ export function showConfirmDialog(message, onConfirm) {
 
 // ── Theme ─────────────────────────────────────────────────────────────────
 
-const THEMES = ["default", "rosegold", "gold", "emerald", "royal", "high-contrast"];
+const THEMES = [
+  "default",
+  "rosegold",
+  "gold",
+  "emerald",
+  "royal",
+  "high-contrast",
+];
 let _themeIdx = 0;
 
 /**
