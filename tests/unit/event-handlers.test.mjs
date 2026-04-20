@@ -36,24 +36,18 @@ import { showToast, showConfirmDialog } from "../../src/core/ui.js";
 import { setActiveEvent, getActiveEventId, removeEvent, clearEventData } from "../../src/core/state.js";
 import { reinitStore } from "../../src/core/store.js";
 import { switchSection } from "../../src/core/section-resolver.js";
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 
 describe("registerEventHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => { expect(typeof registerEventHandlers).toBe("function"); });
-  it("registers handlers via on()", () => {
-    registerEventHandlers();
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-  it("does not throw", () => { expect(() => registerEventHandlers()).not.toThrow(); });
-  it("registers switchEvent handler", () => {
-    registerEventHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("switchEvent");
-  });
-  it("registers deleteEvent handler", () => {
-    registerEventHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("deleteEvent");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerEventHandlers",
+      register: registerEventHandlers,
+      on, vi,
+      actions: ["switchEvent", "deleteEvent"],
+    })).toBe(true);
   });
 });
 

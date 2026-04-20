@@ -142,7 +142,7 @@ export function makeRsvpLogEntry(overrides = {}) {
   };
 }
 
-// ── Handler test helper ───────────────────────────────────────────────────────
+// ── Handler test helpers ──────────────────────────────────────────────────────
 
 /**
  * Given a mocked `on` event-registrar, return the registered callback for `action`.
@@ -162,4 +162,47 @@ export function getHandler(mockedOn, action) {
   const call = mockedOn.mock.calls.find(([a]) => a === action);
   if (!call) throw new Error(`No handler for "${action}"`);
   return call[1];
+}
+
+/**
+ * Standard registration tests shared by all *-handlers.test.mjs files.
+ *
+ * Replaces 5 repetitive tests per handler module with a single parameterized
+ * block: "is a function", "registers via on()", "does not throw", plus
+ * `it.each` for required action names.
+ *
+ * @param {object}   opts
+ * @param {string}   opts.name        — e.g. "registerAuthHandlers"
+ * @param {Function} opts.register    — the register function under test
+ * @param {{ mock: { calls: Array<[string, Function]> } }} opts.on — mocked `on`
+ * @param {string[]} opts.actions     — action names that must be registered
+ * @param {Array}    [opts.args=[]]   — args to pass to register()
+ * @param {object}   opts.vi          — vitest vi object
+ */
+export function assertHandlerRegistration({ name, register, on, actions, args = [], vi }) {
+  vi.mocked(on).mockClear();
+
+  // is a function
+  if (typeof register !== "function") {
+    throw new Error(`${name} is not a function`);
+  }
+
+  // does not throw
+  register(...args);
+
+  // registers handlers via on()
+  const calls = vi.mocked(on).mock.calls;
+  if (calls.length === 0) {
+    throw new Error(`${name} did not register any handlers`);
+  }
+
+  // check required actions
+  const registered = calls.map((c) => c[0]);
+  for (const action of actions) {
+    if (!registered.includes(action)) {
+      throw new Error(`${name} did not register "${action}" handler`);
+    }
+  }
+
+  return true;
 }

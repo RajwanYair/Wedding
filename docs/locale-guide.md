@@ -61,7 +61,7 @@ Add:
 else if (lang === "fr") import("../i18n/fr.json");
 ```
 
-### 4 — `src/core/main.js` — auto-detect
+### 4 — `src/main.js` — auto-detect
 
 Pass your locale code into `resolveAppLocale()`:
 

@@ -39,7 +39,7 @@ vi.mock("../../src/sections/contact-collector.js", () => ({}));
 vi.mock("../../src/sections/registry.js", () => ({}));
 vi.mock("../../src/sections/landing.js", () => ({}));
 
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 import { registerSettingsHandlers } from "../../src/handlers/settings-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast } from "../../src/core/ui.js";
@@ -59,19 +59,14 @@ const ctx = {
 describe("registerSettingsHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => { expect(typeof registerSettingsHandlers).toBe("function"); });
-  it("registers handlers via on()", () => {
-    registerSettingsHandlers(ctx);
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-  it("does not throw", () => { expect(() => registerSettingsHandlers(ctx)).not.toThrow(); });
-  it("registers syncSheetsNow handler", () => {
-    registerSettingsHandlers(ctx);
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("syncSheetsNow");
-  });
-  it("registers switchLanguage handler", () => {
-    registerSettingsHandlers(ctx);
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("switchLanguage");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerSettingsHandlers",
+      register: registerSettingsHandlers,
+      on, vi,
+      actions: ["syncSheetsNow", "switchLanguage"],
+      args: [ctx],
+    })).toBe(true);
   });
 });
 

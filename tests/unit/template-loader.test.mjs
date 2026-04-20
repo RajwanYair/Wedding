@@ -1,6 +1,6 @@
 /**
- * tests/unit/template-loader.test.mjs — Sprint 189 + Sprint 9 (session)
- * Covers: onTemplateLoaded, injectTemplate, prefetchTemplates
+ * tests/unit/template-loader.test.mjs — Sprint 189 + Sprint 9 (session) + retry tests
+ * Covers: onTemplateLoaded, injectTemplate, prefetchTemplates, timeout + retry
  *
  * @vitest-environment happy-dom
  * Run: npm test
@@ -9,6 +9,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   onTemplateLoaded, injectTemplate, prefetchTemplates,
+  TEMPLATE_MAX_RETRIES, TEMPLATE_RETRY_BASE_MS, TEMPLATE_TIMEOUT_MS,
 } from "../../src/core/template-loader.js";
 
 vi.mock("../../src/core/i18n.js", () => ({ applyI18n: vi.fn() }));
@@ -90,5 +91,19 @@ describe("prefetchTemplates", () => {
 
   it("does not throw for unknown section names", () => {
     expect(() => prefetchTemplates(["no-such-section-xyz"])).not.toThrow();
+  });
+});
+
+describe("retry configuration constants", () => {
+  it("TEMPLATE_MAX_RETRIES is 2", () => {
+    expect(TEMPLATE_MAX_RETRIES).toBe(2);
+  });
+
+  it("TEMPLATE_RETRY_BASE_MS is 1000", () => {
+    expect(TEMPLATE_RETRY_BASE_MS).toBe(1_000);
+  });
+
+  it("TEMPLATE_TIMEOUT_MS is 10000", () => {
+    expect(TEMPLATE_TIMEOUT_MS).toBe(10_000);
   });
 });

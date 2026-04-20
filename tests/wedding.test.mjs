@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Repo Sanity Suite v10.0.0
+// Wedding Manager — Repo Sanity Suite v11.0.0
 // Keeps high-level repo assertions aligned with the current src/ architecture.
 // =============================================================================
 
@@ -48,40 +48,40 @@ const runtimeSources = [
 const allHtml = [indexHtml, readHtmlDir("src/templates"), readHtmlDir("src/modals")].join("\n");
 
 describe("Version alignment", function () {
-  it("package.json is v9.8.0", function () {
-    assert.equal(packageJson.version, "9.8.0");
+  it("package.json is v11.0.0", function () {
+    assert.equal(packageJson.version, "11.0.0");
   });
 
-  it("src/core/config.js exports APP_VERSION v9.8.0", function () {
-    assert.ok(read("src/core/config.js").includes('APP_VERSION = "9.8.0"'));
+  it("src/core/config.js exports APP_VERSION v11.0.0", function () {
+    assert.ok(read("src/core/config.js").includes('APP_VERSION = "11.0.0"'));
   });
 
-  it("public/sw.js uses wedding-v9.8.0 cache", function () {
-    assert.ok(serviceWorker.includes("wedding-v9.8.0"));
+  it("public/sw.js uses wedding-v11.0.0 cache", function () {
+    assert.ok(serviceWorker.includes("wedding-v11.0.0"));
   });
 
-  it("README version badge references v9.8.0", function () {
-    assert.ok(readme.includes("version-v9.8.0"));
+  it("README version badge references v11.0.0", function () {
+    assert.ok(readme.includes("version-v11.0.0"));
   });
 
-  it("Copilot instructions title references v9.8.0", function () {
+  it("Copilot instructions title references v11.0.0", function () {
     assert.ok(
       copilotInstructions.includes(
-        "# GitHub Copilot Instructions — Wedding Manager v9.8.0",
+        "# GitHub Copilot Instructions — Wedding Manager v11.0.0",
       ),
     );
   });
 
-  it("ARCHITECTURE.md header references v9.8.0", function () {
+  it("ARCHITECTURE.md header references v11.0.0", function () {
     assert.ok(
-      architecture.includes("# Wedding Manager — Architecture (v9.8.0)"),
+      architecture.includes("# Wedding Manager — Architecture (v11.0.0)"),
     );
   });
 
-  it("src/types.d.ts header references v9.8.0", function () {
+  it("src/types.d.ts header references v11.0.0", function () {
     assert.ok(
       typesSource.includes(
-        "src/types.d.ts — Shared type definitions for the Wedding Manager (v9.8.0)",
+        "src/types.d.ts — Shared type definitions for the Wedding Manager (v11.0.0)",
       ),
     );
   });
@@ -163,7 +163,6 @@ describe("Current architecture", function () {
     assert.ok(read("src/services/guest-token.js").includes("STORAGE_KEYS.REVOKED_TOKENS"));
     assert.ok(read("src/services/supabase-auth.js").includes("STORAGE_KEYS.SUPABASE_SESSION"));
     assert.ok(read("src/services/backend.js").includes("STORAGE_KEYS.SHEETS_MIRROR"));
-    assert.ok(read("src/utils/error-monitor.js").includes("STORAGE_KEYS.ERRORS"));
     assert.ok(read("src/core/supabase-client.js").includes("STORAGE_KEYS.SUPABASE_AUTH"));
     assert.ok(read("src/main.js").includes("STORAGE_KEYS.IDB_MIGRATED"));
   });

@@ -17,7 +17,7 @@ vi.mock("../../src/services/auth.js", () => ({
 }));
 vi.mock("../../src/core/section-resolver.js", () => ({ switchSection: vi.fn() }));
 
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 import { registerAuthHandlers } from "../../src/handlers/auth-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, openModal, closeModal } from "../../src/core/ui.js";
@@ -27,19 +27,13 @@ import { switchSection } from "../../src/core/section-resolver.js";
 describe("registerAuthHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => { expect(typeof registerAuthHandlers).toBe("function"); });
-  it("registers handlers via on()", () => {
-    registerAuthHandlers();
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-  it("does not throw", () => { expect(() => registerAuthHandlers()).not.toThrow(); });
-  it("registers submitEmailLogin handler", () => {
-    registerAuthHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("submitEmailLogin");
-  });
-  it("registers signOut handler", () => {
-    registerAuthHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("signOut");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerAuthHandlers",
+      register: registerAuthHandlers,
+      on, vi,
+      actions: ["submitEmailLogin", "signOut"],
+    })).toBe(true);
   });
 });
 

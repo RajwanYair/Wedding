@@ -1,6 +1,6 @@
 # Documentation Index — Wedding Manager
 
-> v9.0.0 · [Live App](https://rajwanyair.github.io/Wedding) · [GitHub](https://github.com/RajwanYair/Wedding)
+> v10.1.0 · [Live App](https://rajwanyair.github.io/Wedding) · [GitHub](https://github.com/RajwanYair/Wedding)
 
 This directory contains all architecture, integration, and operational documentation for the Wedding Manager project.
 

@@ -145,16 +145,4 @@ describe("stat computation performance", () => {
   });
 });
 
-// ── Array mutation helpers performance ────────────────────────────────────
 
-describe("immutable replaceById performance", () => {
-  it("replaces 1 item in array of 2,000 in under 10 ms", async () => {
-    const { replaceById } = await import("../../src/utils/immutable.js");
-    const guests = Array.from({ length: 2_000 }, (_, i) => makeGuest(i));
-    const start = performance.now();
-    const result = replaceById(guests, "g999", { status: "confirmed" });
-    const elapsed = performance.now() - start;
-    expect(result.find((g) => g.id === "g999")?.status).toBe("confirmed");
-    expect(elapsed).toBeLessThan(10);
-  });
-});

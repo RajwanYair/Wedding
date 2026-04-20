@@ -4,6 +4,57 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.0.0] — 2025-07-18
+
+### Changed (Production Cleanup — Dead Code Purge)
+
+- **112 dead utils removed** — Audit script identified 126 `src/utils/*.js` files; only 15 are imported by production `src/` code. The other 112 (and their 112 test files) were deleted. Categories removed: analytics helpers, lifecycle/state machines, validation chains, formatting pipelines, encryption/hashing, accessibility/animation/gesture utils, queue/cache/rate-limit/circuit-breaker infrastructure, and unused barrel files
+- **Handler test consolidation** — 7 handler test files (`auth`, `guest`, `event`, `vendor`, `table`, `section`, `settings`) refactored to use shared `assertHandlerRegistration()` helper, reducing 28 repetitive tests to 7 parameterized assertions
+- **Version bump** — v10.1.0 → v11.0.0 across all 14+ version-bearing files
+- **Docs updated** — ARCHITECTURE.md dead-export table, ROADMAP metrics, PR template test counts, tasks.json label, copilot instructions all aligned to new footprint
+
+### Stats
+
+- **2318 tests** (141 test files) · 0 lint errors · 0 warnings · 131 source files · 179 dead exports (20%)
+
+### Footprint Reduction
+
+| Metric | Before (v10.1.0) | After (v11.0.0) | Change |
+| --- | --- | --- | --- |
+| Source files | 242 | 131 | −111 |
+| Test files | 252 | 141 | −111 |
+| Total exports | 1665 | 904 | −761 |
+| Dead exports | 209 (13%) | 179 (20%) | −30 (ratio higher due to fewer total) |
+| Tests | 5050 | 2318 | −2732 (all removed tests were for dead code) |
+| Utils files | 126 | 15 | −111 |
+
+## [10.1.0] — 2026-04-20
+
+### Changed (Sprint Consolidation — 20-Task Audit)
+
+- **Deduplicated overlapping utils** — Removed 14 source files (retry ×3, form ×3, event ×3, storage ×2, number ×2, barrel) and 13 corresponding test files. All were completely unused in production code, superseded by core modules (`core/events.js`, `core/storage.js`, `form-helpers.js`, `currency.js`)
+- **Version alignment fixed** — Test assertions in `wedding.test.mjs` were stuck at v9.8.0 while the repo was at v10.0.0; `types.d.ts` header also updated. All 8 version guard tests now pass
+- **Stale Prettier recommendation removed** — `esbenp.prettier-vscode` dropped from `.vscode/extensions.json` (no Prettier config or devDep; project uses built-in VS Code formatters + EditorConfig)
+- **AGENTS.md version updated** — Was still v9.8.0; now v10.1.0
+- **Dead Export Audit refreshed** — ARCHITECTURE.md table updated from stale v8.2.0 numbers (246/1330 = 19%) to current (209/1665 = 13%); added removal table for all 18 files cleaned since v8.2.0
+- **ADR-012 marked superseded** — `event-bus.js` was removed; ADR status changed to "Superseded (module removed in v10.1.0)"
+- **Documentation fixes** — `docs/README.md` version updated; `docs/locale-guide.md` broken path `src/core/main.js` → `src/main.js`; README troubleshooting row clarified
+- **ROADMAP updated** — v10.1.0 sprint checklist added (20 tasks, all complete); dead-export metric corrected; release line updated
+
+### Stats
+
+- **5050 tests** (252 test files) · 0 lint errors · 0 warnings · 242 source files · 209 dead exports (13%)
+
+### Footprint Reduction
+
+| Metric | Before (v10.0.0) | After (v10.1.0) | Change |
+| --- | --- | --- | --- |
+| Source files | 256 | 242 | −14 |
+| Test files | 266 | 252 | −14 |
+| Total exports | 1735 | 1665 | −70 |
+| Dead exports | 211 (12%) | 209 (13%) | −2 (ratio higher due to fewer total) |
+| Tests | 5284 | 5050 | −234 (all removed tests were for dead code) |
+
 ## [10.0.0] — 2025-07-17
 
 ### Changed (Production Hardening)

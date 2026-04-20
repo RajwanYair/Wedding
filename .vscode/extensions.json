@@ -4,7 +4,6 @@
         "vitest.explorer",
         "ms-playwright.playwright",
         "ritwickdey.LiveServer",
-        "esbenp.prettier-vscode",
         "HTMLHint.vscode-htmlhint",
         "stylelint.vscode-stylelint",
         "dbaeumer.vscode-eslint",

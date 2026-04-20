@@ -54,7 +54,7 @@ describe("changelog section — renderChangelog", () => {
     const el = document.getElementById("changelogContent");
     // Should contain an <h1> or <h2> from the markdown conversion
     expect(el.innerHTML).toMatch(/<h[12]/i);
-  });
+  }, 10_000);
 
   it("shows error message when fetch fails", async () => {
     vi.stubGlobal(

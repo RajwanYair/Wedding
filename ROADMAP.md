@@ -42,7 +42,7 @@ Best-in-class wedding management platforms and what we can learn from each.
 
 ---
 
-## Current State (v10.0.0)
+## Current State (v11.0.0)
 
 | Dimension | Status | Assessment |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ Best-in-class wedding management platforms and what we can learn from each.
 | **State** | Proxy-based store + localStorage + debounced persistence | Excellent batching; no offline write queue persistence |
 | **i18n** | 4 locales, ICU plurals, Intl APIs, lazy loading | World-class for minimal-deps; missing compile-time key validation |
 | **Router** | Hash-based + View Transitions + swipe + keyboard shortcuts | `pushState` + `popstate` — browser back/forward works |
-| **Testing** | 5284 Vitest unit tests + Playwright E2E + a11y (266 test files) | Strong coverage; integration tests for backend paths present |
+| **Testing** | 2318 Vitest unit tests + Playwright E2E + a11y (141 test files) | Strong coverage; integration tests for backend paths present |
 | **PWA** | Service Worker + manifest + offline fallback + install prompt | Good foundation; sync queue not persistent across crashes |
 | **CI/CD** | 7 GitHub Actions workflows, Node 22+24 matrix, CodeQL | Solid; bundle size gate fixed; dependency review in place |
 | **Docs** | 12 ADRs, ops runbooks, integration guides, Mermaid diagrams | Excellent culture; version spread across 9+ files is fragile |
@@ -360,8 +360,35 @@ Decision: Evaluate Preact Signals for reactive primitives without full framework
 | --- | --- | --- |
 | **v8.2.x** | Security hardening, dead code cleanup, storage centralization | **Done** |
 | **v8.3.x** | Foundation hardening: router fix, dead exports, DX tooling, Copilot instructions | **Done** |
-| **v9.0.x** | Production readiness: test consolidation, config modernization, repo cleanup, release prep | **Active** |
-| **v10.x** | Multi-tenant, native-quality PWA, API integrations, infra hardening | Future |
+| **v9.0.x** | Production readiness: test consolidation, config modernization, repo cleanup, release prep | **Done** |
+| **v10.0.0** | Multi-tenant, native-quality PWA, API integrations, infra hardening | **Done** |
+| **v10.1.0** | Sprint consolidation: deduplicated utils, dead-code removal, doc hygiene, version alignment | **Done** |
+| **v11.0.0** | Production cleanup: 112 dead utils purged, handler test consolidation, version bump | **Active** |
+
+### v10.1.0 Sprint — 20-Task Consolidation Checklist
+
+| # | Task | Status | Notes |
+|---|------|--------|-------|
+| 1 | Remove non-web code paths | Done | No Python/Go/Rust/desktop code found; supabase/ is active backend |
+| 2 | Remove Python scripts | Done | Zero .py files; all scripts are .mjs |
+| 3 | Define ARCHITECTURE.md | Done | 9 Mermaid diagrams, module graph, data flow, build/release pipeline |
+| 4 | Standardize build system | Done | npm@11.11.0 pinned, package-lock.json, engines ≥22 |
+| 5 | Clean project structure | Done | src/, public/, tests/, docs/, .github/ — no junk dirs |
+| 6 | Deduplicate utilities | Done | Removed 14 overlapping modules (retry ×3, form ×3, event ×3, storage ×2, number ×2, barrel) |
+| 7 | Warnings-as-errors | Done | --max-warnings 0 on ESLint + Stylelint |
+| 8 | Fix all warnings | Done | 0 eslint-disable in src/; 1 justified stylelint-disable in variables.css |
+| 9 | Formatting + linting standards | Done | ESLint + Stylelint + HTMLHint + markdownlint; removed stale Prettier recommendation |
+| 10 | GitHub Actions CI | Done | install → lint → i18n → security → test → build → coverage → Lighthouse |
+| 11 | GitHub Actions Release | Done | On v* tag → build → zip + sha256 → GitHub Release |
+| 12 | .vscode workspace standards | Done | settings + extensions + tasks + launch + mcp |
+| 13 | .github hygiene | Done | Issue templates + PR template + CODEOWNERS + CONTRIBUTING + SECURITY |
+| 14 | Dependabot | Done | npm + github-actions ecosystems, weekly, grouped updates |
+| 15 | Update README | Done | Features, quick start, dev/build/deploy, troubleshooting, themes |
+| 16 | Update CHANGELOG | Done | v10.1.0 entry added with dedup stats |
+| 17 | Diagrams (Mermaid) | Done | 9 Mermaid diagrams in ARCHITECTURE.md + SVGs in docs/ |
+| 18 | Merge redundant configs | Done | Single ESLint + Stylelint + Vite + tsconfig — no duplicates |
+| 19 | Consolidate documentation | Done | Fixed stale versions in docs/README.md, locale-guide.md, ADR-012; updated dead-export audit |
+| 20 | Final consolidation pass | Done | Removed 14 source + 13 test files; dead exports 246→209 (19%→13%) |
 
 ---
 
@@ -373,7 +400,7 @@ Decision: Evaluate Preact Signals for reactive primitives without full framework
 | **Lighthouse Accessibility** | ~90 (est.) | above 95 | 100 |
 | **Bundle size (gzip)** | ~45 KB (est.) | below 50 KB | below 60 KB (with AI features) |
 | **Test coverage (lines)** | ~70% (est.) | above 80% | above 85% |
-| **Dead exports** | 19% (246/1330) | below 5% | below 3% |
+| **Dead exports** | 13% (209/1665) | below 5% | below 3% |
 | **Time to interactive** | ~1.5s (est.) | below 1s | below 1s |
 | **Offline RSVP** | Partial (no persistent queue) | Full (IndexedDB queue) | Full + Background Sync |
 | **Concurrent users** | 1 (localStorage) | 2+ (Supabase Realtime) | 10+ (multi-tenant) |

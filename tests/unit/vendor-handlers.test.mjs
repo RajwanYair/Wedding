@@ -30,7 +30,7 @@ vi.mock("../../src/sections/expenses.js", () => ({
   openExpenseForEdit: vi.fn(),
 }));
 
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 import { registerVendorHandlers } from "../../src/handlers/vendor-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../../src/core/ui.js";
@@ -46,19 +46,13 @@ import {
 describe("registerVendorHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => { expect(typeof registerVendorHandlers).toBe("function"); });
-  it("registers handlers via on()", () => {
-    registerVendorHandlers();
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-  it("does not throw", () => { expect(() => registerVendorHandlers()).not.toThrow(); });
-  it("registers saveVendor handler", () => {
-    registerVendorHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("saveVendor");
-  });
-  it("registers saveExpense handler", () => {
-    registerVendorHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("saveExpense");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerVendorHandlers",
+      register: registerVendorHandlers,
+      on, vi,
+      actions: ["saveVendor", "saveExpense"],
+    })).toBe(true);
   });
 });
 

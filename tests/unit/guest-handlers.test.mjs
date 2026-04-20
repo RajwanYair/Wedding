@@ -47,7 +47,7 @@ vi.mock("../../src/sections/guests.js", () => ({
   exportGuestsByGroup: vi.fn(),
 }));
 
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 import { registerGuestHandlers } from "../../src/handlers/guest-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../../src/core/ui.js";
@@ -60,29 +60,13 @@ import {
 describe("registerGuestHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => {
-    expect(typeof registerGuestHandlers).toBe("function");
-  });
-
-  it("registers event handlers via on()", () => {
-    registerGuestHandlers();
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-
-  it("does not throw on call", () => {
-    expect(() => registerGuestHandlers()).not.toThrow();
-  });
-
-  it("registers a handler for saveGuest action", () => {
-    registerGuestHandlers();
-    const actions = vi.mocked(on).mock.calls.map((c) => c[0]);
-    expect(actions).toContain("saveGuest");
-  });
-
-  it("registers a handler for deleteGuest action", () => {
-    registerGuestHandlers();
-    const actions = vi.mocked(on).mock.calls.map((c) => c[0]);
-    expect(actions).toContain("deleteGuest");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerGuestHandlers",
+      register: registerGuestHandlers,
+      on, vi,
+      actions: ["saveGuest", "deleteGuest"],
+    })).toBe(true);
   });
 });
 

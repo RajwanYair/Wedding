@@ -7,6 +7,7 @@
  */
 
 import { getLocaleCurrency } from "../utils/locale-detector.js";
+import { formatCurrency as _formatCurrency } from "../utils/currency.js";
 
 /** @type {Record<string, string>} */
 let _dict = {};
@@ -317,15 +318,15 @@ export function formatNumber(value, opts) {
 
 /**
  * Format a number as currency.
- * Defaults to the ISO 4217 code for the current locale (e.g. ILS for he,
- * USD for en, EUR for de/fr/es). Pass an explicit code to override.
+ * Delegates to the canonical implementation in utils/currency.js,
+ * resolving the app's current locale for the currency code.
  * @param {number} value
  * @param {string} [currency]  ISO 4217 code; auto-detected from locale when omitted
  * @returns {string}
  */
 export function formatCurrency(value, currency) {
   const cur = currency ?? getLocaleCurrency(_locale());
-  return new Intl.NumberFormat(_locale(), { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(value);
+  return _formatCurrency(value, cur, _locale());
 }
 
 /**

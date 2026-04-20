@@ -40,7 +40,7 @@ vi.mock("../../src/sections/timeline.js", () => ({
   toggleTimelineDone: vi.fn(), exportTimelineCSV: vi.fn(),
 }));
 
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 import { registerSectionHandlers } from "../../src/handlers/section-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, showConfirmDialog } from "../../src/core/ui.js";
@@ -59,19 +59,13 @@ import { printTimeline, exportTimelineCSV, toggleTimelineDone } from "../../src/
 describe("registerSectionHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => { expect(typeof registerSectionHandlers).toBe("function"); });
-  it("registers handlers via on()", () => {
-    registerSectionHandlers();
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-  it("does not throw", () => { expect(() => registerSectionHandlers()).not.toThrow(); });
-  it("registers submitRSVP handler", () => {
-    registerSectionHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("submitRSVP");
-  });
-  it("registers saveTimelineItem handler", () => {
-    registerSectionHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("saveTimelineItem");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerSectionHandlers",
+      register: registerSectionHandlers,
+      on, vi,
+      actions: ["submitRSVP", "saveTimelineItem"],
+    })).toBe(true);
   });
 });
 

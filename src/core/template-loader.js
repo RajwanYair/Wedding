@@ -13,12 +13,23 @@
  *  6. Fires applyI18n() to translate injected content
  *  7. Fires the section's post-inject callback if registered
  *
+ * Timeout + retry: Each template load has a 10 s timeout via AbortController.
+ * On failure, up to 2 retries with exponential backoff (1 s → 2 s).
+ *
  * Security: Only template files we control are loaded. Template HTML is
  * trusted (authored by us, not user input) — innerHTML is safe here.
  */
 
 import { applyI18n } from "./i18n.js";
 import { announce } from "./ui.js";
+
+// ── Retry configuration ───────────────────────────────────────────────────
+/** Maximum number of retry attempts after initial failure. */
+export const TEMPLATE_MAX_RETRIES = 2;
+/** Base delay in ms before first retry (doubles each attempt). */
+export const TEMPLATE_RETRY_BASE_MS = 1_000;
+/** Timeout per load attempt in ms. */
+export const TEMPLATE_TIMEOUT_MS = 10_000;
 
 /**
  * Auto-discovered template loaders via import.meta.glob (F1.4).
@@ -52,8 +63,45 @@ export function onTemplateLoaded(sectionName, fn) {
 }
 
 /**
+ * Load a template with timeout and exponential-backoff retry.
+ * @param {() => Promise<{ default: string }>} loader
+ * @param {string} sectionName — for diagnostics only
+ * @returns {Promise<string>} resolved HTML string
+ */
+async function _loadWithRetry(loader, sectionName) {
+  let lastError;
+  for (let attempt = 0; attempt <= TEMPLATE_MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      const delay = TEMPLATE_RETRY_BASE_MS * 2 ** (attempt - 1);
+      await new Promise((r) => setTimeout(r, delay));
+    }
+    try {
+      const result = await Promise.race([
+        loader(),
+        new Promise((_r, reject) =>
+          setTimeout(
+            () => reject(new Error(`Template "${sectionName}" timed out`)),
+            TEMPLATE_TIMEOUT_MS,
+          ),
+        ),
+      ]);
+      return /** @type {{ default: string }} */ (result).default;
+    } catch (err) {
+      lastError = err;
+      console.warn(
+        `[template-loader] Attempt ${attempt + 1}/${TEMPLATE_MAX_RETRIES + 1} failed for ${sectionName}`,
+        err,
+      );
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Inject the HTML template for the given section into its container element.
  * Skips injection if already done (data-loaded="1").
+ * Includes timeout per attempt and up to TEMPLATE_MAX_RETRIES retry attempts
+ * with exponential backoff.
  *
  * @param {HTMLElement} container   The <div class="section" id="sec-xxx"> element
  * @param {string} sectionName      e.g. "guests"
@@ -73,7 +121,7 @@ export async function injectTemplate(container, sectionName) {
   container.setAttribute("aria-busy", "true");
 
   try {
-    const { default: html } = await loader();
+    const html = await _loadWithRetry(loader, sectionName);
     container.innerHTML = html; // safe: templates from src/templates/ (no user input)
     container.dataset.loaded = "1";
 
@@ -94,9 +142,9 @@ export async function injectTemplate(container, sectionName) {
     // Fire post-inject callback
     _callbacks.get(sectionName)?.();
   } catch (err) {
-    // Template file missing — not a fatal error; section will render empty
+    // All retries exhausted — section will render empty
     console.warn(
-      `[template-loader] Failed to load template: ${sectionName}`,
+      `[template-loader] Failed to load template after retries: ${sectionName}`,
       err,
     );
   } finally {

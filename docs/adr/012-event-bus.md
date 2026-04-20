@@ -1,6 +1,6 @@
 # ADR-012: Event Bus for Cross-Module Communication
 
-**Status:** Accepted
+**Status:** Superseded (module removed in v10.1.0 — core/events.js handles all event delegation)
 **Date:** 2025-01-01
 **Deciders:** Engineering Team
 

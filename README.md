@@ -2,10 +2,10 @@
 
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v10.0.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v11.0.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
-[![Tests](https://img.shields.io/badge/tests-5284_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
+[![Tests](https://img.shields.io/badge/tests-2318_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
 [![Node](https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)](docs/README.md)
 [![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
@@ -88,6 +88,18 @@ Detailed runtime and data-model notes intentionally live outside the README so t
 | Gold | `theme-gold` | `#f59e0b` |
 | Emerald | `theme-emerald` | `#10b981` |
 | Royal Blue | `theme-royal` | `#3b82f6` |
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `npm install` fails | Run from parent `MyScripts/` dir — deps are shared via `../MyScripts/node_modules/` |
+| Lint errors after pull | `rm -rf node_modules/.cache` then re-run `npm run lint` |
+| Tests show `pool deprecated` | Suppressed via `pool: "forks"` + `--no-warnings` — should not appear |
+| SW not updating | Bump `CACHE_NAME` in `public/sw.js` to match the new version |
+| OAuth redirect fails | Verify `GOOGLE_CLIENT_ID` / `FB_APP_ID` / `APPLE_SERVICE_ID` in `src/core/config.js` |
+| Hebrew text reversed | Ensure `dir="rtl"` and `lang="he"` on `<html>` element |
+| Vite build OOM | Increase Node memory: `NODE_OPTIONS=--max-old-space-size=4096 npm run build` |
 
 ## License
 

@@ -1,4 +1,4 @@
-# Wedding Manager — Architecture (v10.0.0)
+# Wedding Manager — Architecture (v11.0.0)
 
 > Runtime entry: `src/main.js` · Pure ESM · Vite 8 · Google Sheets remains the active backend path
 
@@ -125,16 +125,15 @@ Legacy or experimental modules may still exist elsewhere in `src/`, but the prod
 
 ## Data Flow
 
-```text
-User Action (click/submit)
-  → data-action attribute
-  → events.js delegation
-  → src/main.js handler
-  → section function (e.g., saveGuest)
-  → store.js (reactive Proxy)
-  → storeSubscribe callback → re-render
-  → sheets.js write queue (debounced 1.5 s)
-  → Google Sheets Apps Script Web App
+```mermaid
+flowchart TD
+    A["User Action\n(click / submit)"] --> B["data-action attribute"]
+    B --> C["events.js\ndelegation"]
+    C --> D["handler function\n(e.g. saveGuest)"]
+    D --> E["store.js\n(reactive Proxy)"]
+    E --> F["storeSubscribe\ncallback → re-render"]
+    E --> G["sheets.js\nwrite queue (1.5s debounce)"]
+    G --> H["Google Sheets\nApps Script Web App"]
 ```
 
 ## Build
@@ -143,6 +142,31 @@ User Action (click/submit)
 - Manual chunks: `locale-en`, `chunk-public`, `chunk-analytics`, `chunk-gallery`
 - Service Worker: `public/sw.js` with precache list
 - Deploy: GitHub Pages via `dist/`
+
+### Build Pipeline
+
+```mermaid
+flowchart LR
+    SRC["src/main.js\n(ESM entry)"] --> VITE["Vite 8\nrollup + esbuild"]
+    VITE --> CHUNKS["Manual chunks:\nlocale-en · chunk-public\nchunk-analytics · chunk-gallery"]
+    VITE --> HTML["dist/index.html\ninjected script tags"]
+    CHUNKS --> DIST["dist/assets/"]
+    HTML --> DIST
+    DIST --> SW["generate-precache\nSW cache manifest"]
+    SW --> DEPLOY["GitHub Pages\nvia deploy.yml"]
+    DEPLOY --> CDN["rajwanyair.github.io/Wedding"]
+```
+
+### Release Pipeline
+
+```mermaid
+flowchart LR
+    TAG["git tag vX.Y.Z"] --> GHA["release.yml\n(GitHub Actions)"]
+    GHA --> CI["npm ci\n+ npm run build"]
+    CI --> ZIP["zip dist/ →\nwedding-dist.zip"]
+    ZIP --> SHA["sha256sum →\n.sha256 checksum"]
+    SHA --> REL["GitHub Release\n+ attached artifacts"]
+```
 
 ---
 
@@ -297,34 +321,54 @@ flowchart LR
 
 ---
 
-## Dead Export Audit (S21a — v8.2.0)
+## Dead Export Audit (v10.1.0)
 
 Run: `npm run audit:dead` via `scripts/dead-export-check.mjs`
 
 | Metric | Value |
 | ------ | ----- |
-| Total exported symbols | 1330 |
-| Imported somewhere | 1084 (81%) |
-| Dead (no import found) | 246 (19%) |
-| Files audited | 213 source files |
+| Total exported symbols | 904 |
+| Imported somewhere | 725 (80%) |
+| Dead (no import found) | 179 (20%) |
+| Files audited | 131 source files |
 
 ### Removed Aspirational Files
 
-The following files were explicitly flagged in the roadmap (Part I, Section 10) as aspirational with no active consumers and removed in v8.2.0:
+The following files were explicitly removed as aspirational with no active consumers:
 
-| File | Justification |
-| ---- | ------------- |
-| `src/services/donation-tracker.js` | No UI, no section, no activation plan |
-| `src/services/vendor-proposals.js` | No UI, no section, no activation plan |
-| `src/services/sms-service.js` | Redundant with WhatsApp path; no activation plan |
-| `src/core/plugins.js` | Plugin system designed but never had real consumers |
+| File | Version Removed | Justification |
+| ---- | --------------- | ------------- |
+| `src/services/donation-tracker.js` | v8.2.0 | No UI, no section, no activation plan |
+| `src/services/vendor-proposals.js` | v8.2.0 | No UI, no section, no activation plan |
+| `src/services/sms-service.js` | v8.2.0 | Redundant with WhatsApp path; no activation plan |
+| `src/core/plugins.js` | v8.2.0 | Plugin system designed but never had real consumers |
+| `src/utils/retry-policy.js` | v10.1.0 | Duplicate of retry-with-backoff.js; neither imported |
+| `src/utils/retry-queue.js` | v10.1.0 | Persistent retry queue; no consumer |
+| `src/utils/retry-with-backoff.js` | v10.1.0 | Duplicate of retry-policy.js; neither imported |
+| `src/utils/form-builder.js` | v10.1.0 | Overlaps form-helpers.js (which is used); no consumer |
+| `src/utils/form-validator.js` | v10.1.0 | Overlaps form-helpers.js; no consumer |
+| `src/utils/form-metadata.js` | v10.1.0 | Overlaps form-builder.js; no consumer |
+| `src/utils/event-bus.js` | v10.1.0 | Superseded by core/events.js; no consumer |
+| `src/utils/event-emitter.js` | v10.1.0 | Superseded by core/events.js; no consumer |
+| `src/utils/event-queue.js` | v10.1.0 | Superseded by core/events.js; no consumer |
+| `src/utils/storage-helpers.js` | v10.1.0 | Superseded by core/storage.js; no consumer |
+| `src/utils/storage-quota.js` | v10.1.0 | No consumer |
+| `src/utils/number-formatter.js` | v10.1.0 | Re-exports currency.js; no direct consumer |
+| `src/utils/number-helpers.js` | v10.1.0 | Generic math utils; no consumer |
+| `src/utils/index.js` | v10.1.0 | Dead barrel; nothing imported it |
 
 ### Remaining Dead Exports
 
-246 symbols have no `import` reference anywhere. They fall into three categories:
+179 symbols have no `import` reference anywhere. They fall into three categories:
 
 1. **Section analytics helpers** (e.g. `getCheckinRateByTable`, `getRsvpDailyTrend`) — exported for future dashboard wiring; retain
 2. **Service utilities** (e.g. `logAdminAction`, `getClaims`) — exported for Supabase activation (v8.3+); retain
 3. **Truly orphaned utilities** — quarterly review target; remove if no activation plan within 90 days
+
+### v11.0.0 Dead Utils Purge
+
+112 `src/utils/*.js` files were removed (along with 112 matching test files). Only 15 production-used utils remain: `currency`, `date`, `form-helpers`, `guest-search`, `haptic`, `locale-detector`, `md-to-html`, `message-templates`, `misc`, `orientation`, `phone`, `qr-code`, `rsvp-deadline`, `sanitize`, `undo`.
+
+Categories removed: analytics/stats, lifecycle/state machines, validation chains, formatting pipelines, encryption/hashing, accessibility/animation/gesture, queue/cache/rate-limit/circuit-breaker, and unused barrels.
 
 Re-run quarterly: `npm run audit:dead`

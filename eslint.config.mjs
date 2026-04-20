@@ -34,7 +34,7 @@ const rules = shared?.baseRules ?? {
   "prefer-const": "error",
   "prefer-template": "error",
   "object-shorthand": ["error", "always"],
-  "no-console": ["warn", { allow: ["error", "warn"] }],
+  "no-console": ["error", { allow: ["error", "warn"] }],
   "no-unused-vars": [
     "error",
     {

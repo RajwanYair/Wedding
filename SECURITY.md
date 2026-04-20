@@ -4,8 +4,9 @@
 
 | Version | Supported     |
 | ------- | ------------- |
-| 8.x     | ✅ Active     |
-| < 8.0   | ❌ No support |
+| 10.x    | ✅ Active     |
+| 9.x     | ⚠️ Maintenance |
+| < 9.0   | ❌ No support |
 
 ## Reporting a Vulnerability
 
@@ -27,7 +28,7 @@ You will receive a response within 72 hours acknowledging the report.
 
 This project applies the following security practices:
 
-- **Zero runtime dependencies** — no third-party libraries in the browser bundle
+- **Minimal runtime dependencies** — only 3 vetted libraries (`@supabase/supabase-js`, `dompurify`, `valibot`)
 - **Input sanitization** — all user inputs pass through `sanitize(input, schema)` in `src/utils/sanitize.js`
 - **No `innerHTML` with user data** — `textContent` only for untrusted strings
 - **CSP-friendly** — no inline scripts or `eval()` usage

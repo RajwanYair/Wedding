@@ -39,7 +39,7 @@ vi.mock("../../src/sections/checkin.js", () => ({
   toggleAccessibilityFilter: vi.fn(),
 }));
 
-import { getHandler } from "./helpers.js";
+import { getHandler, assertHandlerRegistration } from "./helpers.js";
 import { registerTableHandlers } from "../../src/handlers/table-handlers.js";
 import { on } from "../../src/core/events.js";
 import { showToast, closeModal, showConfirmDialog } from "../../src/core/ui.js";
@@ -56,19 +56,13 @@ import {
 describe("registerTableHandlers — registration", () => {
   beforeEach(() => { vi.mocked(on).mockClear(); });
 
-  it("is a function", () => { expect(typeof registerTableHandlers).toBe("function"); });
-  it("registers handlers via on()", () => {
-    registerTableHandlers();
-    expect(vi.mocked(on).mock.calls.length).toBeGreaterThan(0);
-  });
-  it("does not throw", () => { expect(() => registerTableHandlers()).not.toThrow(); });
-  it("registers saveTable handler", () => {
-    registerTableHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("saveTable");
-  });
-  it("registers checkInGuest handler", () => {
-    registerTableHandlers();
-    expect(vi.mocked(on).mock.calls.map((c) => c[0])).toContain("checkInGuest");
+  it("registers all required handlers", () => {
+    expect(assertHandlerRegistration({
+      name: "registerTableHandlers",
+      register: registerTableHandlers,
+      on, vi,
+      actions: ["saveTable", "checkInGuest"],
+    })).toBe(true);
   });
 });
 

@@ -19,6 +19,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Package dist
+        run: |
+          cd dist
+          zip -r ../wedding-dist.zip .
+          cd ..
+          sha256sum wedding-dist.zip > wedding-dist.zip.sha256
+
       - name: Generate changelog
         id: changelog
         run: |
@@ -49,6 +66,8 @@ jobs:
             ## Quick Start
             Open [index.html](https://rajwanyair.github.io/Wedding) in your browser — no installation required.
           files: |
+            wedding-dist.zip
+            wedding-dist.zip.sha256
             index.html
             public/sw.js
             public/manifest.json
