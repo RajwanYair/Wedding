@@ -101,7 +101,13 @@ export function initRouter() {
       const guest = getGuestByToken(deepToken);
       if (guest) {
         // Store token context for rsvp section to pre-fill form
-        sessionStorage.setItem("rsvp_token_guest", JSON.stringify({ id: guest.id, name: `${guest.firstName ?? ""} ${guest.lastName ?? ""}`.trim() }));
+        sessionStorage.setItem(
+          "rsvp_token_guest",
+          JSON.stringify({
+            id: guest.id,
+            name: `${guest.firstName ?? ""} ${guest.lastName ?? ""}`.trim(),
+          }),
+        );
         location.hash = "#rsvp";
       }
     });
@@ -324,4 +330,23 @@ function _toggleShortcutsOverlay() {
     if (e.target === overlay) overlay.hidden = true;
   });
   document.body.appendChild(overlay);
+}
+
+// ── Sprint 15: Command Palette Ctrl+K / Cmd+K trigger ───────────────────
+
+/**
+ * Register a keyboard listener that opens the command palette on Ctrl+K / Cmd+K.
+ * @param {() => void} openFn  Callback invoked to open the command palette
+ * @returns {() => void} cleanup function
+ */
+export function initCommandPaletteTrigger(openFn) {
+  /** @param {KeyboardEvent} e */
+  const handler = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      e.preventDefault();
+      openFn();
+    }
+  };
+  document.addEventListener("keydown", handler);
+  return () => document.removeEventListener("keydown", handler);
 }

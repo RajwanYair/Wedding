@@ -45,6 +45,7 @@ import {
   initPullToRefresh,
   initKeyboardShortcuts,
   initShortcutsHelp,
+  initCommandPaletteTrigger,
 } from "./core/nav.js";
 import {
   showToast,
@@ -353,6 +354,8 @@ let _activeSection = null;
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
   initShortcutsHelp();
+  // Sprint 15: Ctrl+K / Cmd+K opens the search/command palette modal
+  initCommandPaletteTrigger(() => openModal("searchModal"));
 
   // 11b. Wire sync status indicator (S3.6)
   onSyncStatus((status) => {
