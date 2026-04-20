@@ -12,6 +12,7 @@ import { uid } from "../utils/misc.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { guestMatchesQuery } from "../utils/guest-search.js";
 import {
   GUEST_STATUSES,
   GUEST_SIDES,
@@ -175,7 +176,7 @@ export function setSortField(field) {
  * @param {string} query
  */
 export function setSearchQuery(query) {
-  _searchQuery = query.toLowerCase();
+  _searchQuery = query;
   renderGuests();
 }
 
@@ -198,11 +199,7 @@ export function renderGuests() {
 
   // Search
   if (_searchQuery) {
-    guests = guests.filter(
-      (g) =>
-        `${g.firstName} ${g.lastName}`.toLowerCase().includes(_searchQuery) ||
-        (g.phone || "").includes(_searchQuery),
-    );
+    guests = guests.filter((g) => guestMatchesQuery(g, _searchQuery));
   }
 
   // Sort
