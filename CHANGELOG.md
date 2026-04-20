@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.5.0] — 2025-07-11
+
+### Added
+
+- **IndexedDB adapter** — `src/utils/idb-store.js` exports `openDB`, `idbGet`, `idbSet`, `idbDel`, `idbGetAll`, `idbSetMany`, `idbDelMany`, `idbCount`, `idbClear`, and more; Promise-based thin wrapper over raw IDB API (Sprint 41)
+- **Storage quota detection** — `src/utils/storage-quota.js` exports `getLocalStorageSize`, `getStorageEstimate`, `isStorageCritical`, `requestPersistentStorage`, `buildStorageReport`, and more; uses StorageManager API with graceful fallback (Sprint 42)
+- **Session timeout enforcement** — `src/utils/session-timer.js` exports `createSessionTimer` (start/stop/reset/getRemainingMs) and `createActivityTimer` (DOM-event-driven auto-reset); activity-aware with warning callbacks (Sprint 43)
+- **Constraint-based seating AI** — `src/utils/seating-ai.js` exports `suggestSeating(guests, tables, opts?)`, `scoreSeatingPlan`, and `diffSeatingPlans`; greedy algorithm respecting group cohesion and table capacity (Sprint 44)
+- **Per-guest RSVP token builder** — `src/utils/rsvp-token.js` exports `generateToken`, `generateSignedToken`, `verifySignedToken`, `buildRsvpLink`, `parseRsvpLink`, and `generateBulkTokens`; optional HMAC-SHA256 signing via Web Crypto (Sprint 45)
+- **Web Push payload builder** — `src/utils/push-payload.js` exports `buildRsvpConfirmedPayload`, `buildCheckinPayload`, `buildVendorDuePayload`, `buildBudgetAlertPayload`, `buildRsvpDeadlinePayload`, `validatePushPayload`, and `PUSH_TAGS`; pure builder, no network (Sprint 46)
+- **Analytics CSV/JSON export** — `src/utils/analytics-export.js` exports `exportGuestsCsv`, `exportVendorsCsv`, `exportExpensesCsv`, `exportGuestsJson`, `exportVendorsJson`, `exportExpensesJson`, `exportSummaryJson`, and `exportFullJson`; UTF-8 BOM for Excel compatibility (Sprint 47)
+- **Currency formatter** — `src/utils/currency.js` exports `formatCurrency`, `formatCurrencyCompact`, `formatNumber`, `parseCurrencyInput`, `addCurrency`, `subtractCurrency`, `percentOf`, and `convertCurrency`; ILS (₪) primary with USD/EUR/GBP support; float-safe arithmetic (Sprint 48)
+- **Invitation batch scheduler** — `src/utils/invitation-scheduler.js` exports `buildInvitationBatch`, `prioritizeBatch`, `splitBatchByChannel`, `chunkBatch`, `getChunkSizeForChannel`, `estimateSendDuration`, `summarizeBatch`, and `countUnreachable`; WhatsApp/SMS/email channel routing with rate-limit compliance (Sprint 49)
+
 ## [9.4.0] — 2025-07-10
 
 ### Added
