@@ -141,8 +141,7 @@ export function guestStatsBySide(guests) {
  * @param {any[]} guests
  * @returns {RsvpFunnel}
  */
-export function computeRsvpFunnel(guests) {
-  const counts = {
+export function computeRsvpFunnel(guests) {  const counts = {
     invited:      0,
     link_sent:    0,
     link_clicked: 0,
@@ -190,4 +189,69 @@ export function computeRsvpFunnel(guests) {
       overallRate:    pct(counts.confirmed),
     },
   };
+}
+
+// ── Dietary Breakdown for Catering (Sprint 28) ────────────────────────────
+
+/**
+ * @typedef {{
+ *   byMeal:          Record<string, number>,
+ *   byAccessibility: Record<string, number>,
+ *   totalHeads:      number,
+ *   confirmedHeads:  number,
+ *   byTable:         Record<string, { byMeal: Record<string, number>, totalHeads: number }>,
+ * }} DietaryBreakdown
+ */
+
+/**
+ * Compute a comprehensive dietary breakdown for kitchen/catering planning.
+ *
+ * - `byMeal`: meal-type counts weighted by party head count (guests + children),
+ *   covering confirmed guests only.
+ * - `byAccessibility`: free-form accessibility note tallied for ALL confirmed
+ *   guests with a non-empty note.
+ * - `totalHeads`: total head count across all (confirmed + pending) guests.
+ * - `confirmedHeads`: head count for confirmed guests only.
+ * - `byTable`: per-table meal breakdown (confirmed guests only).
+ *
+ * @param {any[]} guests
+ * @returns {DietaryBreakdown}
+ */
+export function computeDietaryBreakdown(guests) {
+  /** @type {Record<string, number>} */
+  const byMeal = {};
+  /** @type {Record<string, number>} */
+  const byAccessibility = {};
+  /** @type {Record<string, { byMeal: Record<string, number>, totalHeads: number }>} */
+  const byTable = {};
+
+  let totalHeads = 0;
+  let confirmedHeads = 0;
+
+  for (const g of guests) {
+    const heads = (Number(g.count) || 1) + (Number(g.children) || 0);
+    totalHeads += heads;
+
+    if (g.status !== "confirmed") continue;
+
+    confirmedHeads += heads;
+
+    // Meal breakdown (weighted by head count)
+    const meal = g.meal || "regular";
+    byMeal[meal] = (byMeal[meal] || 0) + heads;
+
+    // Accessibility notes (per-guest, not weighted)
+    const note = typeof g.accessibility === "string" ? g.accessibility.trim() : "";
+    if (note) {
+      byAccessibility[note] = (byAccessibility[note] || 0) + 1;
+    }
+
+    // Per-table breakdown
+    const tid = g.tableId || "__unassigned__";
+    if (!byTable[tid]) byTable[tid] = { byMeal: {}, totalHeads: 0 };
+    byTable[tid].byMeal[meal] = (byTable[tid].byMeal[meal] || 0) + heads;
+    byTable[tid].totalHeads += heads;
+  }
+
+  return { byMeal, byAccessibility, totalHeads, confirmedHeads, byTable };
 }

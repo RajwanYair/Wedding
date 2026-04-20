@@ -15,6 +15,7 @@ import {
   totalExpectedCount,
   guestStatsBySide,
   computeRsvpFunnel,
+  computeDietaryBreakdown,
 } from "../../src/utils/rsvp-analytics.js";
 
 
@@ -252,5 +253,86 @@ describe("computeRsvpFunnel()", () => {
   it("confirmRate is 100 when all guests confirmed", () => {
     const guests = [makeGuest({ status: "confirmed" }), makeGuest({ status: "confirmed" })];
     expect(computeRsvpFunnel(guests).conversionRates.confirmRate).toBe(100);
+  });
+});
+
+// ── computeDietaryBreakdown — Sprint 28 ──────────────────────────────────
+describe("computeDietaryBreakdown()", () => {
+  it("returns empty breakdown for empty guest list", () => {
+    const b = computeDietaryBreakdown([]);
+    expect(b.byMeal).toEqual({});
+    expect(b.byAccessibility).toEqual({});
+    expect(b.totalHeads).toBe(0);
+    expect(b.confirmedHeads).toBe(0);
+    expect(b.byTable).toEqual({});
+  });
+
+  it("only includes confirmed guests in byMeal", () => {
+    const guests = [
+      makeGuest({ status: "confirmed", meal: "vegan", count: 1, children: 0 }),
+      makeGuest({ status: "pending",   meal: "kosher", count: 1, children: 0 }),
+    ];
+    const b = computeDietaryBreakdown(guests);
+    expect(b.byMeal.vegan).toBe(1);
+    expect(b.byMeal.kosher).toBeUndefined();
+  });
+
+  it("weights meal count by head count (count + children)", () => {
+    const guests = [makeGuest({ status: "confirmed", meal: "vegetarian", count: 2, children: 1 })];
+    expect(computeDietaryBreakdown(guests).byMeal.vegetarian).toBe(3);
+  });
+
+  it("defaults missing meal to regular", () => {
+    const guests = [makeGuest({ status: "confirmed", meal: null, count: 1, children: 0 })];
+    expect(computeDietaryBreakdown(guests).byMeal.regular).toBe(1);
+  });
+
+  it("tallies accessibility notes for confirmed guests", () => {
+    const guests = [
+      makeGuest({ status: "confirmed", accessibility: "wheelchair" }),
+      makeGuest({ status: "confirmed", accessibility: "wheelchair" }),
+      makeGuest({ status: "confirmed", accessibility: "" }),
+      makeGuest({ status: "pending",   accessibility: "deaf" }),
+    ];
+    const b = computeDietaryBreakdown(guests);
+    expect(b.byAccessibility.wheelchair).toBe(2);
+    expect(b.byAccessibility.deaf).toBeUndefined();
+    expect(Object.keys(b.byAccessibility)).toHaveLength(1);
+  });
+
+  it("totalHeads includes all guests regardless of status", () => {
+    const guests = [
+      makeGuest({ status: "confirmed", count: 2, children: 0 }),
+      makeGuest({ status: "pending",   count: 3, children: 1 }),
+    ];
+    expect(computeDietaryBreakdown(guests).totalHeads).toBe(6);
+  });
+
+  it("confirmedHeads only includes confirmed guests", () => {
+    const guests = [
+      makeGuest({ status: "confirmed", count: 2, children: 1 }),
+      makeGuest({ status: "pending",   count: 3, children: 0 }),
+    ];
+    expect(computeDietaryBreakdown(guests).confirmedHeads).toBe(3);
+  });
+
+  it("builds per-table breakdown for confirmed guests", () => {
+    const guests = [
+      makeGuest({ status: "confirmed", tableId: "t1", meal: "regular",     count: 2, children: 0 }),
+      makeGuest({ status: "confirmed", tableId: "t1", meal: "vegan",       count: 1, children: 0 }),
+      makeGuest({ status: "confirmed", tableId: "t2", meal: "vegetarian",  count: 1, children: 1 }),
+    ];
+    const b = computeDietaryBreakdown(guests);
+    expect(b.byTable.t1.byMeal.regular).toBe(2);
+    expect(b.byTable.t1.byMeal.vegan).toBe(1);
+    expect(b.byTable.t1.totalHeads).toBe(3);
+    expect(b.byTable.t2.byMeal.vegetarian).toBe(2);
+    expect(b.byTable.t2.totalHeads).toBe(2);
+  });
+
+  it("groups unassigned guests under __unassigned__", () => {
+    const guests = [makeGuest({ status: "confirmed", tableId: null, meal: "regular", count: 1, children: 0 })];
+    const b = computeDietaryBreakdown(guests);
+    expect(b.byTable.__unassigned__.totalHeads).toBe(1);
   });
 });
