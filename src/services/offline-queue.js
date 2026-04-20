@@ -39,6 +39,21 @@ export function initOfflineQueue(opts) {
     });
     window.addEventListener("offline", _updateBadge);
   }
+
+  // Listen for RSVP_SYNC_READY from the Service Worker (Background Sync API).
+  // The SW sends this when the "rsvp-sync" sync event fires.
+  try {
+    const sw = typeof navigator !== "undefined" ? navigator.serviceWorker : undefined;
+    if (sw && typeof sw.addEventListener === "function") {
+      sw.addEventListener("message", (event) => {
+        if (event.data?.type === "RSVP_SYNC_READY") {
+          flushOfflineQueue();
+        }
+      });
+    }
+  } catch {
+    // serviceWorker not available in this environment
+  }
 }
 
 /** @type {(payload: unknown) => Promise<unknown>} */
@@ -60,6 +75,8 @@ function _defaultPost(payload) {
 
 /**
  * Queue a submission for later retry.
+ * Registers the Background Sync tag so the Service Worker flushes the
+ * queue automatically when connectivity is restored, even if the tab is closed.
  * @param {string} type - "rsvp" | "contact"
  * @param {unknown} payload
  */
@@ -72,6 +89,30 @@ export function enqueueOffline(type, payload) {
   });
   _persist();
   _updateBadge();
+  _registerSyncTag();
+}
+
+/**
+ * Register the Background Sync tag with the active Service Worker.
+ * No-op when the Background Sync API is unavailable.
+ * @returns {void}
+ */
+function _registerSyncTag() {
+  try {
+    const sw = typeof navigator !== "undefined" ? navigator.serviceWorker : undefined;
+    if (!sw || !sw.controller) return;
+    sw.ready
+      .then((reg) => {
+        if (reg && "sync" in reg) {
+          return reg.sync.register("rsvp-sync");
+        }
+      })
+      .catch(() => {
+        // Background Sync not supported or permission denied — ignore
+      });
+  } catch {
+    // Navigator/serviceWorker not available in this environment
+  }
 }
 
 /**
@@ -158,3 +199,4 @@ function _updateBadge() {
     badge.textContent = `⏳ ${t("offline_badge_queued", { n: String(qCount) })}`;
   }
 }
+

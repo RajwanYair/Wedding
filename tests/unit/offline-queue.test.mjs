@@ -125,3 +125,29 @@ describe("offline-queue — initOfflineQueue", () => {
     expect(getOfflineQueueCount()).toBe(1);
   });
 });
+
+describe("offline-queue — Background Sync tag registration", () => {
+  it("calls reg.sync.register('rsvp-sync') when enqueuing with SW controller", async () => {
+    const register = vi.fn(() => Promise.resolve());
+    const ready = Promise.resolve({ sync: { register } });
+    Object.defineProperty(navigator, "serviceWorker", {
+      configurable: true, writable: true,
+      value: { controller: {}, ready, addEventListener: vi.fn() },
+    });
+    enqueueOffline("rsvp", { name: "Alice" });
+    await ready;
+    await new Promise((r) => setTimeout(r, 10));
+    expect(register).toHaveBeenCalledWith("rsvp-sync");
+    // restore
+    Object.defineProperty(navigator, "serviceWorker", {
+      configurable: true, writable: true, value: undefined,
+    });
+  });
+
+  it("does not throw when serviceWorker is absent", () => {
+    Object.defineProperty(navigator, "serviceWorker", {
+      configurable: true, writable: true, value: undefined,
+    });
+    expect(() => enqueueOffline("rsvp", {})).not.toThrow();
+  });
+});
