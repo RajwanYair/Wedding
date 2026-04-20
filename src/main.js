@@ -426,6 +426,19 @@ let _activeSection = null;
   // 11j. Sprint 17 — App-level RSVP deadline banner (persistent across all sections)
   _updateAppRsvpDeadlineBanner();
   storeSubscribe("weddingInfo", _updateAppRsvpDeadlineBanner);
+
+  // 11k. Phase 4.2 — File Handling API: open CSV/XLSX files launched from OS
+  if ("launchQueue" in window) {
+    window.launchQueue.setConsumer((launchParams) => {
+      if (!launchParams.files?.length) return;
+      // Route the first file to the CSV import section
+      launchParams.files[0].getFile().then((file) => {
+        _switchSection("guests");
+        // Dispatch a custom event so the guests section can pick up the file
+        window.dispatchEvent(new CustomEvent("launchFile", { detail: { file } }));
+      }).catch(() => {});
+    });
+  }
 })();
 
 // ── Sprint 17: App-level RSVP deadline banner ────────────────────────────
