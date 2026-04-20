@@ -42,22 +42,23 @@ Best-in-class wedding management platforms and what we can learn from each.
 
 ---
 
-## Current State (v9.8.0)
+## Current State (v10.0.0)
 
 | Dimension | Status | Assessment |
 | --- | --- | --- |
-| **Frontend** | Vanilla JS ES2025 + Vite 8 + CSS `@layer` + nesting | Production-grade; Proxy reactivity is best-in-class for zero-deps |
+| **Frontend** | Vanilla JS ES2025 + Vite 8 + CSS `@layer` + nesting | Production-grade; Proxy reactivity is best-in-class for minimal-deps |
 | **Backend** | Google Sheets (active) + Supabase (wired, not primary) | Split brain; needs convergence to single authoritative backend |
 | **Auth** | Google + Facebook + Apple OAuth + email allowlist + anonymous | Interface clean; token storage unencrypted in localStorage |
 | **State** | Proxy-based store + localStorage + debounced persistence | Excellent batching; no offline write queue persistence |
-| **i18n** | 4 locales, ICU plurals, Intl APIs, lazy loading | World-class for zero-deps; missing compile-time key validation |
+| **i18n** | 4 locales, ICU plurals, Intl APIs, lazy loading | World-class for minimal-deps; missing compile-time key validation |
 | **Router** | Hash-based + View Transitions + swipe + keyboard shortcuts | `pushState` + `popstate` — browser back/forward works |
-| **Testing** | 3720+ Vitest unit tests + Playwright E2E + a11y | Strong coverage; needs integration tests for backend paths |
+| **Testing** | 5284 Vitest unit tests + Playwright E2E + a11y (266 test files) | Strong coverage; integration tests for backend paths present |
 | **PWA** | Service Worker + manifest + offline fallback + install prompt | Good foundation; sync queue not persistent across crashes |
-| **CI/CD** | 7 GitHub Actions workflows, Node 22+24 matrix, CodeQL | Solid; needs dependency review and Lighthouse gates |
+| **CI/CD** | 7 GitHub Actions workflows, Node 22+24 matrix, CodeQL | Solid; bundle size gate fixed; dependency review in place |
 | **Docs** | 12 ADRs, ops runbooks, integration guides, Mermaid diagrams | Excellent culture; version spread across 9+ files is fragile |
-| **Bundle** | ~45 KB gzipped (estimate), manual chunk splitting | Lean; dead exports removed in v8.3.0 |
+| **Bundle** | ~45 KB gzipped (estimate), manual chunk splitting | Lean; dead exports removed; per-chunk CI gate enforced |
 | **Security** | CSP headers, SRI, no eval/innerHTML, credential scanning | Good posture; tokens in plaintext localStorage is a gap |
+| **Runtime deps** | 3 (`@supabase/supabase-js`, `dompurify`, `valibot`) | Minimal and justified; correctly documented |
 
 ### Honest Decision Audit
 

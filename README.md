@@ -2,7 +2,7 @@
 
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v9.8.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v10.0.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
 [![Tests](https://img.shields.io/badge/tests-5284_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
@@ -12,7 +12,7 @@
 [![Hebrew](https://img.shields.io/badge/שפה-עברית_RTL-60a5fa?style=flat-square)](src/i18n/he.json)
 
 **Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
-**Vite 8, vanilla JS/CSS, Hebrew RTL first, zero runtime dependencies.**
+**Vite 8, vanilla JS/CSS, Hebrew RTL first, minimal runtime dependencies (3).**
 
 Node 22+ is the supported local and CI runtime.
 

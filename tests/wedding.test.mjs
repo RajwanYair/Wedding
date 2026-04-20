@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Repo Sanity Suite v9.8.0
+// Wedding Manager — Repo Sanity Suite v10.0.0
 // Keeps high-level repo assertions aligned with the current src/ architecture.
 // =============================================================================
 

@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [10.0.0] — 2025-07-17
+
+### Changed (Production Hardening)
+
+- **Repo cleanup** — Removed tracked junk files (`config-output.json`, `test_output.txt`, `test_results.txt`); updated `.gitignore` to prevent future commits of these artifacts
+- **SVG diagrams moved to `docs/`** — `architecture.svg`, `auth-flow.svg`, `features-grid.svg`, `rsvp-flow.svg` relocated from root to `docs/`; README references updated
+- **Doc accuracy: runtime deps** — All "Zero Runtime Deps" references corrected to "Minimal Runtime Deps (3)" across `copilot-instructions.md`, `AGENTS.md`, `CONTRIBUTING.md`, agent files, and README to reflect the actual `@supabase/supabase-js`, `dompurify`, and `valibot` dependencies
+- **VS Code formatter** — Removed orphaned `esbenp.prettier-vscode` default formatter (Prettier not in devDependencies); replaced with built-in VS Code formatters per language
+- **CI bundle size gate fixed** — Rewrote the broken shell pipeline (`wc -c | sort -rn | head -1` computed total bytes, not per-file max) to correctly check each JS chunk individually with a clear error message per offending file
+- **Test file renamed** — `tests/unit/sprint5.test.mjs` → `tests/unit/i18n-rtl-state-async.test.mjs` (describes actual coverage: i18n RTL helpers + async state wrappers)
+
+### Stats
+
+- **5284 tests** (266 test files) · 0 lint errors · 0 warnings
+
 ## [9.8.0] — 2025-07-14
 
 ### Added
