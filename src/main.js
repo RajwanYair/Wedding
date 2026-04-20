@@ -59,6 +59,7 @@ import {
   showConfirmDialog,
   initSW,
   initInstallPrompt,
+  announce,
 } from "./core/ui.js";
 import { fetchGasVersion } from "./core/status-bar.js";
 import { injectTemplate } from "./core/template-loader.js";
@@ -1398,6 +1399,9 @@ async function _switchSection(name) {
   if (name === "budget") {
     SECTIONS.expenses?.mount?.(container);
   }
+
+  // Sprint 18: announce section title for screen readers (WCAG 2.4.2)
+  announce(t(`nav_${name}`) || name);
 
   storeSet("activeSection", name);
 }
