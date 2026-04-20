@@ -108,6 +108,7 @@ const browserGlobals = shared?.browserGlobals ?? {
   IDBRequest: "readonly",
   TextEncoder: "readonly",
   TextDecoder: "readonly",
+  ServiceWorkerRegistration: "readonly",
 };
 const nodeGlobals = shared?.nodeGlobals ?? {
   process: "readonly",
@@ -160,6 +161,8 @@ export default [
         FB: "readonly",
         AppleID: "readonly",
         google: "readonly",
+        // Service Worker API globals (not in all shared configs)
+        ServiceWorkerRegistration: "readonly",
       },
     },
     rules,
