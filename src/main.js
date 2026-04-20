@@ -397,6 +397,24 @@ let _activeSection = null;
   import("./services/supabase-realtime.js").then(({ activateRealtimeSync }) => {
     activateRealtimeSync(["guests", "tables", "config"]).catch(() => {});
   });
+
+  // 11i. Phase 4.2 — App Badging API: badge icon with pending RSVP count
+  import("./utils/app-badge.js").then(({ updateBadge }) => {
+    const { storeSubscribe: _badgeSub } = /** @type {any} */ (
+      import("./core/store.js")
+    );
+    // Wire immediately and on every guests change
+    const _refreshBadge = () => {
+      const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+      const pendingCount = guests.filter((g) => g.status === "pending").length;
+      updateBadge(pendingCount);
+    };
+    _refreshBadge();
+    // Subscribe using already-imported storeSubscribe from the module scope
+    import("./core/store.js").then(({ storeSubscribe }) => {
+      storeSubscribe("guests", _refreshBadge);
+    });
+  });
 })();
 
 // ── S9.2 Event Switcher ──────────────────────────────────────────────────
