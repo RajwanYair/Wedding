@@ -9,6 +9,7 @@ import { storeGet } from "../core/store.js";
 import { showToast, openModal, closeModal, showConfirmDialog } from "../core/ui.js";
 import { t } from "../core/i18n.js";
 import { getVal } from "../utils/form-helpers.js";
+import { issueGuestToken } from "../services/guest-token.js";
 import {
   saveGuest,
   deleteGuest,
@@ -67,6 +68,11 @@ export function registerGuestHandlers() {
     if (result.ok) {
       closeModal("guestModal");
       showToast(t("guest_saved"), "success");
+      // Issue RSVP deep-link token for new guests (Sprint 36)
+      const savedId = result.id ?? id;
+      if (savedId && !id) {
+        issueGuestToken(savedId);
+      }
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
 

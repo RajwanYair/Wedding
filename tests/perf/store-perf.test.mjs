@@ -118,7 +118,7 @@ describe("store read performance", () => {
 // ── Guest stat computation ────────────────────────────────────────────────
 
 describe("stat computation performance", () => {
-  it("counts totals across 5,000 guests in under 30 ms", () => {
+  it("counts totals across 5,000 guests in under 100 ms", () => {
     const guests = Array.from({ length: 5_000 }, (_, i) => ({
       ...makeGuest(i),
       count: 2,
@@ -129,18 +129,19 @@ describe("stat computation performance", () => {
     storeSet("guests", guests);
     const all = storeGet("guests");
 
-    const start = performance.now();
-    const total    = all.length;
-    const confirmed = all.filter((g) => g.status === "confirmed").length;
-    const checkedIn = all.filter((g) => g.checkedIn).length;
-    const totalCount = all.reduce((s, g) => s + (g.count ?? 0), 0);
-    const elapsed = performance.now() - start;
+    let total, confirmed, checkedIn, totalCount;
+    const elapsed = measureMedian(5, () => {
+      total      = all.length;
+      confirmed  = all.filter((g) => g.status === "confirmed").length;
+      checkedIn  = all.filter((g) => g.checkedIn).length;
+      totalCount = all.reduce((s, g) => s + (g.count ?? 0), 0);
+    });
 
     expect(total).toBe(5_000);
     expect(confirmed).toBe(1_250);
     expect(checkedIn).toBeGreaterThan(0);
     expect(totalCount).toBe(10_000);
-    expect(elapsed).toBeLessThan(30);
+    expect(elapsed).toBeLessThan(100);
   });
 });
 

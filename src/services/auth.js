@@ -137,3 +137,12 @@ export function maybeRotateSession() {
   save(SESSION_KEY, _user);
   return true;
 }
+
+/**
+ * Check whether the current admin session has expired (> SESSION_ROTATION_MS old).
+ * @returns {boolean}  true if admin is logged in but session has expired
+ */
+export function isSessionExpired() {
+  if (!_user?.isAdmin) return false;
+  return Date.now() - _user.loginAt >= SESSION_ROTATION_MS;
+}

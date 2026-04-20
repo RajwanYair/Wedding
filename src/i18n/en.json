@@ -260,7 +260,7 @@
     "seats": "seats",
     "of": "of",
     "tip_btn_lang": "Toggle between Hebrew and English",
-    "tip_btn_theme": "Cycle through 5 color themes",
+    "tip_btn_theme": "Cycle through 6 color themes",
     "tip_btn_dark_light": "Toggle light / dark mode",
     "tip_nav_dashboard": "Overview – stats, countdown & quick actions",
     "tip_nav_guests": "Guest list – add, edit, search & filter",
@@ -1105,5 +1105,10 @@
     "nfc_not_supported": "NFC not supported on this device",
     "nfc_scanning": "NFC scanning active — hold device near tag",
     "nfc_scan_error": "NFC scan failed",
-    "checkin_nfc_success": "Guest checked in via NFC"
+    "checkin_nfc_success": "Guest checked in via NFC",
+    "network_offline": "You are offline — changes will sync when connection is restored",
+    "network_back_online": "Back online",
+    "session_expired": "Your session has expired. Please sign in again.",
+    "offline_indicator": "Offline",
+    "checkin_qr_label": "Guest check-in QR code"
 }

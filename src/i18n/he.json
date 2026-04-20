@@ -260,7 +260,7 @@
     "seats": "מקומות",
     "of": "מתוך",
     "tip_btn_lang": "החלף בין עברית לאנגלית",
-    "tip_btn_theme": "החלף ערכת צבעים (5 אפשרויות)",
+    "tip_btn_theme": "החלף ערכת צבעים (6 אפשרויות)",
     "tip_btn_dark_light": "החלף בין מצב בהיר לכהה",
     "tip_nav_dashboard": "סקירה כוללת – סטטיסטיקות, ספירה לאחור ופעולות מהירות",
     "tip_nav_guests": "רשימת אורחים – הוסף, ערוך, חפש וסנן",
@@ -1105,5 +1105,10 @@
     "nfc_not_supported": "NFC אינו נתמך במכשיר זה",
     "nfc_scanning": "סריקת NFC פעילה — הצמד את המכשיר לתג",
     "nfc_scan_error": "שגיאה בסריקת NFC",
-    "checkin_nfc_success": "האורח צוין כהגיע דרך NFC"
+    "checkin_nfc_success": "האורח צוין כהגיע דרך NFC",
+    "network_offline": "אתה ללא חיבור — השינויים יסונכרנו בעת החזרת החיבור",
+    "network_back_online": "החיבור הושב",
+    "session_expired": "הפעילות שלך פקעה. אנא התחבר מחדש.",
+    "offline_indicator": "ללא חיבור",
+    "checkin_qr_label": "קוד QR לצ'ק-אין אורח"
 }

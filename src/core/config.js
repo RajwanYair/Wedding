@@ -7,7 +7,7 @@
  */
 
 // ── Version ───────────────────────────────────────────────────────────────
-export const APP_VERSION = "9.0.0";
+export const APP_VERSION = "9.1.0";
 
 // ── LocalStorage ─────────────────────────────────────────────────────────
 export const STORAGE_PREFIX = "wedding_v1_";
@@ -46,9 +46,6 @@ export const TOAST_DURATION_MS = 3000;
 export const DEBOUNCE_MS = 1500;
 export const MAX_RETRIES = 4;
 export const BACKOFF_BASE_MS = 2000;
-
-// ── RSVP deadlines ────────────────────────────────────────────────────────
-export const RSVP_DEADLINE = "";
 
 // ── Domain enums ──────────────────────────────────────────────────────────
 // Centralised in src/core/constants.js — import from there.

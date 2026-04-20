@@ -66,6 +66,7 @@ import {
   loginOAuth,
   clearSession,
   maybeRotateSession,
+  isSessionExpired,
   onAuthChange,
   currentUser,
 } from "./services/auth.js";
@@ -323,8 +324,20 @@ let _activeSection = null;
     }
   }
 
-  // 9. Session rotation (every 15 min)
-  setInterval(maybeRotateSession, 15 * 60 * 1000);
+  // 9. Session rotation (every 15 min) + expiry enforcement
+  setInterval(
+    () => {
+      if (isSessionExpired()) {
+        clearSession();
+        showToast(t("session_expired"), "warning");
+        // Redirect to landing section
+        window.location.hash = "#landing";
+      } else {
+        maybeRotateSession();
+      }
+    },
+    15 * 60 * 1000,
+  );
 
   // 10. Swipe gesture navigation (S2.7)
   initSwipe();
@@ -366,7 +379,21 @@ let _activeSection = null;
   // 11f. Fetch GAS version for status bar (fire-and-forget)
   fetchGasVersion(currentUser());
 
-  // 11g. S17 — Activate Supabase Realtime when backend is configured
+  // 11g. Network status — offline/online indicator
+  import("./utils/network-status.js").then(
+    ({ initNetworkStatus, onStatusChange }) => {
+      initNetworkStatus();
+      onStatusChange((online) => {
+        if (online) {
+          showToast(t("network_back_online"), "success");
+        } else {
+          showToast(t("network_offline"), "warning", 0);
+        }
+      });
+    },
+  );
+
+  // 11h. S17 — Activate Supabase Realtime when backend is configured
   import("./services/supabase-realtime.js").then(({ activateRealtimeSync }) => {
     activateRealtimeSync(["guests", "tables", "config"]).catch(() => {});
   });

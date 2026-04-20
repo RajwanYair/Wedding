@@ -8,6 +8,11 @@
 import { storeGet, storeSubscribeScoped, cleanupScope } from "../core/store.js";
 import { t, currentLang } from "../core/i18n.js";
 import { MEAL_TYPES, GUEST_GROUPS } from "../core/constants.js";
+import {
+  getTopCategories,
+  getMonthlyTotals,
+  getBudgetUtilization,
+} from "../services/expense-analytics.js";
 
 const _SCOPE = "analytics";
 
@@ -1194,20 +1199,21 @@ export function renderExpenseDonut() {
     return;
   }
 
-  /** @type {Map<string, number>} */
-  const catMap = new Map();
-  expenses.forEach((e) => {
-    const cat = e.category || t("expense_cat_other");
-    catMap.set(cat, (catMap.get(cat) ?? 0) + (e.amount || 0));
-  });
-
   const colors = [
-    "var(--primary)", "var(--accent)", "var(--success)", "var(--warning)",
-    "var(--danger)", "var(--info, #0288d1)", "#9c27b0", "#ff5722",
+    "var(--primary)",
+    "var(--accent)",
+    "var(--success)",
+    "var(--warning)",
+    "var(--danger)",
+    "var(--info, #0288d1)",
+    "#9c27b0",
+    "#ff5722",
   ];
-  const slices = Array.from(catMap.entries()).map(([label, value], i) => ({
-    label,
-    value,
+  // Use expense-analytics service for top categories (S127)
+  const topCats = getTopCategories(8);
+  const slices = topCats.map(({ category, total }, i) => ({
+    label: category,
+    value: total,
     color: colors[i % colors.length],
   }));
   _renderDonut("analyticsExpenseDonut", slices);
@@ -1232,12 +1238,12 @@ export function renderExpenseDonut() {
  */
 export function checkBudgetOvershoot() {
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
-  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
   const settings = /** @type {any} */ (storeGet("weddingInfo") ?? {});
   const target = Number(settings.budgetTarget) || 0;
-  const committed =
-    vendors.reduce((s, v) => s + (v.price || 0), 0) +
-    expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  const vendorPaid = vendors.reduce((s, v) => s + (v.price || 0), 0);
+  // Use expense-analytics service for accurate expense total (S127)
+  const util = getBudgetUtilization(target);
+  const committed = util.spent + vendorPaid;
   return { overBudget: target > 0 && committed > target, committed, target };
 }
 
@@ -1344,9 +1350,11 @@ export function renderArrivalForecast() {
 export function renderExpenseTrend() {
   const container = document.getElementById("expenseTrendSvg");
   if (!container) return;
-  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
 
-  // Build monthly buckets — last 6 months
+  // Use expense-analytics service for monthly totals (S127)
+  const allMonths = getMonthlyTotals();
+
+  // Keep last 6 months (or available data, whichever is smaller)
   const now = new Date();
   /** @type {{ label: string, total: number }[]} */
   const months = [];
@@ -1354,13 +1362,13 @@ export function renderExpenseTrend() {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     const label = d.toLocaleDateString("he-IL", { month: "short" });
-    const total = expenses
-      .filter((e) => (e.date || "").startsWith(key))
-      .reduce((s, e) => s + (Number(e.amount) || 0), 0);
-    months.push({ label, total });
+    const found = allMonths.find((m) => m.month === key);
+    months.push({ label, total: found?.total ?? 0 });
   }
 
-  const W = 280, H = 120, PAD = { top: 10, right: 10, bottom: 30, left: 44 };
+  const W = 280,
+    H = 120,
+    PAD = { top: 10, right: 10, bottom: 30, left: 44 };
   const chartW = W - PAD.left - PAD.right;
   const chartH = H - PAD.top - PAD.bottom;
   const maxVal = Math.max(...months.map((m) => m.total), 1);
@@ -1391,7 +1399,8 @@ export function renderExpenseTrend() {
     labelEl.setAttribute("text-anchor", "end");
     labelEl.setAttribute("font-size", "9");
     labelEl.setAttribute("fill", "var(--text-muted)");
-    labelEl.textContent = amt > 999 ? `${Math.round(amt / 1000)}K` : String(amt);
+    labelEl.textContent =
+      amt > 999 ? `${Math.round(amt / 1000)}K` : String(amt);
     container.appendChild(labelEl);
   });
 

@@ -91,6 +91,44 @@ body.theme-royal {
   --gold: #60a5fa;
 }
 
+/* ── Theme: High Contrast (WCAG AAA — Phase 3.1 Accessibility) ── */
+body.theme-high-contrast {
+  --bg-primary: #000;
+  --bg-secondary: #0d0d0d;
+  --bg-card: rgba(255, 255, 255, 0.08);
+  --bg-card-hover: rgba(255, 255, 255, 0.15);
+  --bg-gradient: linear-gradient(135deg, #000 0%, #111 50%, #000 100%);
+  --header-bg: #000;
+  --accent: #ff0;
+  --accent-light: #ffff80;
+  --accent-dark: #e6e600;
+  --gold: #ff0;
+  --gold-light: #ffff80;
+  --text-primary: #fff;
+  --text-secondary: #eee;
+  --text-muted: #ccc;
+  --card-border: 2px solid #fff;
+  --card-shadow: 0 0 0 2px #fff;
+  --success: #00ff80;
+  --danger: #f44;
+  --warning: #fa0;
+  --info: #0cf;
+}
+
+/* Auto-apply high-contrast when OS requests it */ /* stylelint-disable-next-line media-feature-name-value-no-unknown */
+@media (prefers-contrast: more) {
+  :root {
+    --bg-primary: #000;
+    --bg-secondary: #0d0d0d;
+    --text-primary: #fff;
+    --text-secondary: #eee;
+    --text-muted: #ccc;
+    --accent: #ff0;
+    --gold: #ff0;
+    --card-border: 2px solid #fff;
+  }
+}
+
 /* ── Light Mode (base — default purple accent) ── */
 body.light-mode {
   --header-bg: rgba(253, 247, 240, 0.96);

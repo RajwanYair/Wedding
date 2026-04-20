@@ -102,6 +102,16 @@ patch("tests/wedding.test.mjs", [
   [/typesSource\.includes\(\s*"src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v[\d.]+\)",?\s*\)/s, `typesSource.includes(\n        "src/types.d.ts — Shared type definitions for the Wedding Manager (v${ver})",\n      )`],
 ]);
 
+// AGENTS.md — app version reference
+patch("AGENTS.md", [
+  [/(Wedding Manager v)[\d.]+/, `$1${ver}`],
+]);
+
+// ROADMAP.md — Current State heading
+patch("ROADMAP.md", [
+  [/(## Current State \(v)[\d.]+(\))/, `$1${ver}$2`],
+]);
+
 // CHANGELOG.md — header (informational only)
 patch("CHANGELOG.md", [
   [/^(# Changelog)$/m, `$1`], // no-op anchor — manual entry expected

@@ -225,11 +225,11 @@ export function showConfirmDialog(message, onConfirm) {
 
 // ── Theme ─────────────────────────────────────────────────────────────────
 
-const THEMES = ["default", "rosegold", "gold", "emerald", "royal"];
+const THEMES = ["default", "rosegold", "gold", "emerald", "royal", "high-contrast"];
 let _themeIdx = 0;
 
 /**
- * Cycle through the 5 design themes (applies a body class).
+ * Cycle through the 6 design themes (applies a body class).
  */
 export function cycleTheme() {
   _themeIdx = (_themeIdx + 1) % THEMES.length;

@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.1.0] — 2026-05-05
+
+### Added
+
+- **Network status indicator** — online/offline toast notifications wired at boot (Sprint 3); `initNetworkStatus()` now called from `src/main.js`
+- **High-contrast theme** — 6th theme `body.theme-high-contrast` added with WCAG AAA palette; `@media (prefers-contrast: more)` auto-applies; cycleTheme updated to include it
+- **Session timeout enforcement** — `isSessionExpired()` export in `src/services/auth.js`; 15-min interval signs out expired admin sessions with `session_expired` toast
+- **RSVP guest token deep links** — `issueGuestToken()` called on new guest save in `src/handlers/guest-handlers.js`; `?token=` query param handled in `src/core/nav.js` routes to RSVP section with pre-fill context
+- **Client-side QR code generator** — new `src/utils/qr-code.js` with `renderQrToCanvas()` and `buildCheckinUrl()`; `getGuestQrUrl()` in checkin.js now uses it; `showGuestQr()` renders to DOM canvas
+- **Expense analytics wiring** — `src/sections/analytics.js` imports `getTopCategories`, `getMonthlyTotals`, `getBudgetUtilization` from `src/services/expense-analytics.js` (Sprint 127); `renderExpenseDonut`, `renderExpenseTrend`, and `checkBudgetOvershoot` now use the service
+- **320px breakpoint** — `@media (max-width: 320px)` added to `css/responsive.css` for very small phones
+- **Container queries** — `.main-content` and `.card` now use `container-type: inline-size`; `@container` queries adapt stats grid and form-row dynamically
+- **Version sync hook** — `"version"` npm lifecycle script added to `package.json`; `sync-version.mjs` extended to patch `AGENTS.md` and `ROADMAP.md`
+
+### Removed
+
+- Dead export `RSVP_DEADLINE` from `src/core/config.js`
+
+### Changed
+
+- `src/sections/analytics.js` — expense charts use `expense-analytics.js` service instead of inline calculations
+- `src/core/ui.js` — theme cycle updated from 5 → 6 themes (adds `high-contrast`)
+
+### Fixed
+
+- `src/utils/retry-policy.js` — `sleep()` is no longer exported (internal helper only)
+- `src/core/nav.js` — `?token=` deep links now route guest to RSVP section
+
 ## [9.0.0] — 2026-04-20
 
 ### Changed

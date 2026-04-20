@@ -12,7 +12,7 @@ import { announce } from "../core/ui.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { isNFCSupported, startNFCScan } from "../services/nfc.js";
 import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
-
+import { buildCheckinUrl, renderQrToCanvas } from "../utils/qr-code.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
@@ -477,12 +477,27 @@ export function stopNFCCheckin() {
 }
 
 /**
- * Generate a QR code URL for a guest (using QR API).
+ * Generate a QR code URL for a guest check-in deep link.
+ * Uses the client-side QR utility (Sprint 9).
  * @param {string} guestId
- * @returns {string} QR code image URL
+ * @returns {string} Check-in URL (pass to renderQrToCanvas for QR display)
  */
 export function getGuestQrUrl(guestId) {
-  const baseUrl = window.location.origin + window.location.pathname;
-  const checkinUrl = `${baseUrl}?guestId=${encodeURIComponent(guestId)}&action=checkin`;
-  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkinUrl)}`;
+  return buildCheckinUrl(guestId);
+}
+
+/**
+ * Render a QR code for a guest into the #guestQrContainer element.
+ * Called from check-in guest detail view.
+ * @param {string} guestId
+ */
+export function showGuestQr(guestId) {
+  const container = document.getElementById("guestQrContainer");
+  if (!container) return;
+  container.textContent = "";
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("aria-label", t("checkin_qr_label"));
+  canvas.setAttribute("role", "img");
+  container.appendChild(canvas);
+  renderQrToCanvas(getGuestQrUrl(guestId), canvas, 8);
 }

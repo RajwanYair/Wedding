@@ -92,6 +92,21 @@ export function initRouter() {
   window.addEventListener("popstate", _handleHash, { passive: true });
   // Use replaceState only for initial load so we don't pollute history.
   history.replaceState(null, "", location.href);
+
+  // Sprint 36: Handle ?token= deep links — navigate to rsvp section with token context
+  const params = new URLSearchParams(location.search);
+  const deepToken = params.get("token");
+  if (deepToken) {
+    import("../services/guest-token.js").then(({ getGuestByToken }) => {
+      const guest = getGuestByToken(deepToken);
+      if (guest) {
+        // Store token context for rsvp section to pre-fill form
+        sessionStorage.setItem("rsvp_token_guest", JSON.stringify({ id: guest.id, name: `${guest.firstName ?? ""} ${guest.lastName ?? ""}`.trim() }));
+        location.hash = "#rsvp";
+      }
+    });
+  }
+
   _handleHash();
 }
 

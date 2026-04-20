@@ -146,6 +146,43 @@
   .countdown-number { font-size: 1.2em; }
 }
 
+/* — Very small phones (≤ 320px) — */
+@media (max-width: 320px) {
+  .header .couple-names { font-size: 0.95em; }
+  .header h1 { font-size: 0.65em; }
+  .header-info-chip { display: none; }
+  .top-bar { padding: 0.25rem 0.4rem; gap: 0.2rem; }
+  .nav-tab { padding: 0.25rem 0.45rem; font-size: 0.65em; }
+  .btn { padding: 0.4rem 0.7rem; font-size: 0.75em; }
+  .stat-number { font-size: 1.5em; }
+  .stat-label { font-size: 0.7em; }
+  .card { padding: 0.7rem; }
+  .modal { width: 100%; border-radius: 8px; padding: 0.8rem; }
+}
+
+/* ── Container Queries (Phase 3.1) ── */
+/* Enable container query context on key layout regions */
+.main-content { container-type: inline-size; container-name: main; }
+.card { container-type: inline-size; container-name: card; }
+
+/* Stats grid adapts to its container width */
+@container main (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+@container main (min-width: 481px) and (max-width: 700px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@container main (min-width: 701px) {
+  .stats-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+}
+
+/* Card-level adaptations for narrow containers */
+@container card (max-width: 240px) {
+  .card-header { font-size: 0.95em; }
+  .btn { font-size: 0.78em; padding: 0.35rem 0.6rem; }
+}
+
 
 /* ── Print ── */
 @media print {
