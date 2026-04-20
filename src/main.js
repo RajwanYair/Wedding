@@ -9,7 +9,7 @@
 // ── Foundation layer ──────────────────────────────────────────────────────
 import { PUBLIC_SECTIONS, STORAGE_KEYS } from "./core/constants.js";
 import { buildStoreDefs, defaultWeddingInfo } from "./core/defaults.js";
-import { initStore, reinitStore, storeGet, storeSet } from "./core/store.js";
+import { initStore, reinitStore, storeGet, storeSet, storeSubscribe } from "./core/store.js";
 import { initEvents, on } from "./core/events.js";
 import {
   loadLocale,
@@ -20,6 +20,7 @@ import {
   loadFallbackLocale,
 } from "./core/i18n.js";
 import { resolveAppLocale, detectLocale } from "./utils/locale-detector.js";
+import { getCountdown, isOverdue } from "./utils/rsvp-deadline.js";
 import { updateNavForAuth } from "./core/nav-auth.js";
 import {
   initStorage,
@@ -412,22 +413,49 @@ let _activeSection = null;
 
   // 11i. Phase 4.2 — App Badging API: badge icon with pending RSVP count
   import("./utils/app-badge.js").then(({ updateBadge }) => {
-    const { storeSubscribe: _badgeSub } = /** @type {any} */ (
-      import("./core/store.js")
-    );
-    // Wire immediately and on every guests change
     const _refreshBadge = () => {
       const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
       const pendingCount = guests.filter((g) => g.status === "pending").length;
       updateBadge(pendingCount);
     };
     _refreshBadge();
-    // Subscribe using already-imported storeSubscribe from the module scope
-    import("./core/store.js").then(({ storeSubscribe }) => {
-      storeSubscribe("guests", _refreshBadge);
-    });
+    storeSubscribe("guests", _refreshBadge);
   });
+
+  // 11j. Sprint 17 — App-level RSVP deadline banner (persistent across all sections)
+  _updateAppRsvpDeadlineBanner();
+  storeSubscribe("weddingInfo", _updateAppRsvpDeadlineBanner);
 })();
+
+// ── Sprint 17: App-level RSVP deadline banner ────────────────────────────
+
+/**
+ * Show or hide the persistent app-level RSVP deadline banner.
+ * Uses #appRsvpDeadlineBanner in index.html (outside any section template).
+ */
+function _updateAppRsvpDeadlineBanner() {
+  const banner = document.getElementById("appRsvpDeadlineBanner");
+  if (!banner) return;
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const deadline = info.rsvpDeadline;
+  if (!deadline) {
+    banner.hidden = true;
+    return;
+  }
+  const { days } = getCountdown(deadline);
+  const overdue = isOverdue(deadline);
+  if (overdue) {
+    banner.textContent = t("rsvp_deadline_passed");
+    banner.className = "rsvp-deadline-banner rsvp-deadline-banner--late";
+    banner.hidden = false;
+  } else if (days <= 7) {
+    banner.textContent = t("rsvp_deadline_soon").replace("{days}", String(days));
+    banner.className = "rsvp-deadline-banner rsvp-deadline-banner--soon";
+    banner.hidden = false;
+  } else {
+    banner.hidden = true;
+  }
+}
 
 // ── S9.2 Event Switcher ──────────────────────────────────────────────────
 
