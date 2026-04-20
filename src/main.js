@@ -17,6 +17,7 @@ import {
   t,
   normalizeUiLanguage,
   nextUiLanguage,
+  loadFallbackLocale,
 } from "./core/i18n.js";
 import { resolveAppLocale, detectLocale } from "./utils/locale-detector.js";
 import { updateNavForAuth } from "./core/nav-auth.js";
@@ -252,6 +253,8 @@ let _activeSection = null;
     ? normalizeUiLanguage(String(_storedLang))
     : resolveAppLocale(detectLocale(), ["he", "en", "ar", "ru"], "he");
   await loadLocale(lang);
+  // Load English fallback dict for non-English locales (Sprint 13)
+  if (lang !== "en") loadFallbackLocale().catch(() => {});
 
   // 2. Apply i18n bindings
   applyI18n();

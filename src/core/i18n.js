@@ -8,6 +8,8 @@
 
 /** @type {Record<string, string>} */
 let _dict = {};
+/** @type {Record<string, string>} */
+let _fallbackDict = {};
 /** @type {'he'|'en'|'ar'|'ru'} */
 let _lang = "he";
 
@@ -80,6 +82,18 @@ export function preloadLocale(lang) {
 }
 
 /**
+ * Load the English locale into `_fallbackDict` so that `t()` returns an
+ * English string for any key not present in the current locale's dictionary.
+ * Safe to call multiple times — only fetches once. (Phase 4.3 — i18n fallback)
+ * @returns {Promise<void>}
+ */
+export async function loadFallbackLocale() {
+  if (Object.keys(_fallbackDict).length > 0 || _lang === "en") return;
+  const { default: dict } = await import("../i18n/en.json");
+  _fallbackDict = dict;
+}
+
+/**
  * Translate a key, with optional ICU MessageFormat interpolation.
  *
  * Supports:
@@ -99,7 +113,7 @@ export function t(key, paramsOrFallback, fallback) {
   const fb = isParams ? fallback : /** @type {string|undefined} */ (paramsOrFallback);
   // Check plugin i18n overrides first, then main dict
   const pluginDict = /** @type {any} */ (globalThis).__pluginI18n?.[_lang];
-  const template = _dict[key] ?? pluginDict?.[key] ?? fb ?? key;
+  const template = _dict[key] ?? _fallbackDict[key] ?? pluginDict?.[key] ?? fb ?? key;
   return isParams ? formatMessage(template, paramsOrFallback) : template;
 }
 
