@@ -161,6 +161,8 @@ import {
   toggleGiftMode,
   startQrScan,
   stopQrScan,
+  startNFCCheckin,
+  stopNFCCheckin,
 } from "./sections/checkin.js";
 import {
   renderBudgetChart,
@@ -835,6 +837,14 @@ function _registerHandlers() {
   on("toggleGiftMode", () => toggleGiftMode());
   on("startQrScan", () => startQrScan());
   on("stopQrScan", () => stopQrScan());
+  // Sprint 16 — NFC check-in actions
+  on("startNFCCheckin", () => startNFCCheckin());
+  on("stopNFCCheckin", () => stopNFCCheckin());
+  on("writeNFCForGuest", (el) =>
+    import("./services/nfc.js").then(({ writeNFCTag }) =>
+      writeNFCTag(el.dataset.actionArg ?? "").catch(() => {}),
+    ),
+  );
 
   // ── Vendors ──
   on("saveVendor", (_el, _e) => {
