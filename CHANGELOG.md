@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.4.0] — 2025-07-10
+
+### Added
+
+- **QR code test suite** — 12 tests for `src/utils/qr-code.js` covering `buildCheckinUrl`, `renderQrToCanvas`, and `getQrDataUrl` including fallback path and canvas context edge cases (Sprint 31)
+- **Table utilization heatmap** — `src/utils/seating-analytics.js` exports `computeSeatingHeatmap(guests, tables)` (per-table occupancy %, heat levels, meal breakdown, balance score) and `getImbalancedTables(tables, n)` (Sprint 32)
+- **Vendor payment timeline analytics** — `src/utils/vendor-analytics.js` exports `computeVendorPaymentStats(vendors)`, `computeVendorPaymentTimeline(vendors)` (monthly cash-flow buckets), and `sortVendorsByUrgency(vendors)` (Sprint 33)
+- **Spotify playlist oEmbed utility** — `src/utils/spotify-embed.js` exports `extractSpotifyResource(url)`, `buildSpotifyEmbedUrl(url)`, `buildSpotifyIframeAttrs(url, opts?)`, and `isSpotifyUrl(url)` for safe iframe embeds; strips `?si=` and `utm_*` params (Sprint 34)
+- **vCard 3.0 contact exporter** — `src/utils/vcard.js` exports `buildVCard(guest)`, `buildVCardDataUrl(guest)`, `buildBulkVCard(guests)`, and `buildBulkVCardFilename(count)` for RFC 6350-compatible download links (Sprint 35)
+- **Wedding countdown utility** — `src/utils/wedding-countdown.js` exports `computeCountdown(weddingDate, now?)` and `formatCountdownHuman(countdown, locale?)` using Asia/Jerusalem timezone (Sprint 36)
+- **Smart message personalizer** — `src/utils/message-personalizer.js` exports `personalizeMessage(template, guest, weddingInfo?)`, `validateTemplate(template)`, `getAvailableTokens()`, and `personalizeBulk(template, guests)` with 9 supported tokens (Sprint 37)
+- **WhatsApp Business Cloud API stub** — `src/services/whatsapp-business.js` exports `isBusinessAPIConfigured(config)`, `buildApiEndpoint(config)`, `buildTemplatePayload(to, templateRef)`, `buildTextPayload(to, text)`, and `sendTemplateMessage(...)` dry-run helper (Sprint 38)
+- **Guest relationship graph** — `src/utils/guest-relationships.js` exports `buildRelationshipGraph(guests)`, `findSeparatedGroupMembers(guests, graph)`, `getClusterStats(guests)`, and `suggestTableConsolidation(guests, tables)` for seating conflict detection (Sprint 39)
+
 ## [9.3.0] — 2026-05-19
 
 ### Added

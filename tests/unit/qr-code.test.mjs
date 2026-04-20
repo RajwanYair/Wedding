@@ -86,7 +86,7 @@ describe("renderQrToCanvas()", () => {
 
   it("does not throw for long text (fallback path)", () => {
     const canvas = makeCanvas();
-    const longText = "https://example.com/" + "x".repeat(200);
+    const longText = `https://example.com/${"x".repeat(200)}`;
     expect(() => renderQrToCanvas(longText, canvas, 8)).not.toThrow();
   });
 
