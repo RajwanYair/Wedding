@@ -42,7 +42,7 @@ Best-in-class wedding management platforms and what we can learn from each.
 
 ---
 
-## Current State (v9.6.0)
+## Current State (v9.7.0)
 
 | Dimension | Status | Assessment |
 | --- | --- | --- |

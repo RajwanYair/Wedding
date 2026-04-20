@@ -174,7 +174,7 @@ describe("isValidVapidKey()", () => {
   it("rejects non-string", () => expect(isValidVapidKey(12345)).toBe(false));
   it("rejects short key", () => expect(isValidVapidKey("abc")).toBe(false));
   it("rejects key with invalid chars", () => {
-    const bad = "A".repeat(84) + "==";
+    const bad = `${"A".repeat(84)}==`;
     expect(isValidVapidKey(bad)).toBe(false);
   });
 });

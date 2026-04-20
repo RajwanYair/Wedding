@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.7.0] — 2025-07-13
+
+### Added
+
+- **AI message drafter** — `src/utils/ai-draft.js` exports `AI_TONES`, `AI_LANGUAGES`, `DRAFT_CONTEXTS`, `buildSystemPrompt`, `buildInvitationPrompt`, `buildRsvpReminderPrompt`, `buildRsvpConfirmationPrompt`, `buildDayOfPrompt`, `buildThankYouPrompt`, `buildVendorOutreachPrompt`, `parseAiResponse`, `sanitizeAiOutput`, `estimateTokenCount`, `estimatePromptTokens`, `buildBulkInvitationPrompts`; LLM-agnostic prompt builder, no network calls (Sprint 61, 51 tests)
+- **WhatsApp Cloud API helper** — `src/utils/whatsapp-cloud-api.js` exports `WA_API_VERSION`, `WABA_BASE_URL`, `DELIVERY_STATUSES`, `MESSAGE_TYPES`, `INTERACTIVE_TYPES`, `isValidPhoneForWaba`, `formatPhoneForWaba`, `buildTextMessage`, `buildTemplateMessage`, `buildInteractiveMessage`, `buildMediaMessage`, `parseWebhookPayload`, `parseDeliveryStatus`, `buildStatusWebhook`, `buildMessagesEndpoint`, `isWebhookVerification`; pure data, no network (Sprint 62, 50 tests)
+- **File System Access API utilities** — `src/utils/file-handler.js` exports `isFileSystemApiSupported`, `ACCEPTED_MIME_TYPES`, `MAX_FILE_SIZE_BYTES`, `validateFileType`, `validateFileSize`, `formatBytes`, `parseDroppedFiles`, `readFileAsText`, `readFileAsJson`, `splitCsvFile`, `buildFileMetadata`, `getMimeTypeForExtension`; drag-drop and file validation helpers (Sprint 63, 50 tests)
+- **Web Push subscription manager** — `src/utils/push-manager.js` exports `PUSH_PERMISSION`, `PUSH_SERVICES`, `isPushSupported`, `getPermissionState`, `serializeSubscription`, `deserializeSubscription`, `compareSubscriptions`, `isSubscriptionExpired`, `isValidVapidKey`, `buildApplicationServerKey`, `buildPushEndpointInfo`, `buildVapidAuthHeader`; VAPID + subscription lifecycle helpers (Sprint 64, 40 tests)
+- **In-app onboarding tour builder** — `src/utils/tour-guide.js` exports `TOUR_STEPS`, `TOUR_ROLES`, `createTourStep`, `buildTour`, `filterStepsForRole`, `getTourProgress`, `markStepComplete`, `isTourComplete`, `resetTour`, `buildTourSummary`; pure data, no DOM (Sprint 65, 32 tests)
+- **Error classification & retry helpers** — `src/utils/error-recovery.js` exports `ERROR_CLASSES`, `RETRY_STRATEGIES`, `classifyError`, `isNetworkError`, `isAuthError`, `isQuotaError`, `isNotFoundError`, `isRateLimitError`, `isTimeoutError`, `isRetryable`, `getRetryDelay`, `buildErrorReport`, `withTimeout`, `withFallback`; pure data, no DOM (Sprint 66, 55 tests)
+- **Batch print job scheduler** — `src/utils/print-queue.js` exports `PRINT_TYPES`, `PRINT_STATUS`, `createPrintJob`, `buildPrintQueue`, `sortPrintQueue`, `chunkPrintQueue`, `estimatePrintTime`, `summarizePrintQueue`, `filterPrintJobsByType`, `getPrintJobsByGuest`; deduplicates by guestId+type (Sprint 67, 36 tests)
+- **CHANGELOG.md parser** — `src/utils/changelog-parser.js` exports `parseVersionEntry`, `parseChangelog`, `getLatestEntry`, `getEntriesSince`, `compareVersions`, `isNewerVersion`, `formatEntryForDisplay`, `getNewFeaturesSince`; structured changelog for the What's New UI (Sprint 68, 34 tests)
+- **Client-side full-text search index** — `src/utils/search-index.js` exports `createIndex`, `indexDocument`, `indexDocuments`, `removeDocument`, `searchIndex`, `rankResults`, `buildGuestIndex`, `buildVendorIndex`, `highlightMatches`, `normalizeSearchQuery`; prefix-aware ranked search, no DOM (Sprint 69, 36 tests)
+
 ## [9.6.0] — 2025-07-12
 
 ### Added
