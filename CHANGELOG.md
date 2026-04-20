@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.8.0] — 2025-07-14
+
+### Added
+
+- **Guest lifecycle state machine** — `src/utils/guest-lifecycle.js` exports `LIFECYCLE_STAGES`, `TERMINAL_STAGES`, `ALLOWED_TRANSITIONS`, `canTransition`, `transitionGuest`, `forceStage`, `stageOrdinal`, `isLaterStage`, `isTerminal`, `isCheckedIn`, `isConfirmed`, `groupByStage`, `buildLifecycleSummary`, `guestsBeforeStage`; pure data, no DOM (Sprint 71, 46 tests)
+- **Budget allocation and variance analysis** — `src/utils/budget-planner.js` exports `BUDGET_CATEGORIES`, `buildDefaultBudgetPlan`, `createBudgetLine`, `summarizeBudget`, `getOverBudgetLines`, `computeVariances`, `reallocateSurplus`, `formatBudgetAmount`, `budgetLineStatus`, `sortByVariance`; traffic-light status, non-mutating (Sprint 72, 39 tests)
+- **Event template cloning** — `src/utils/event-template.js` exports `TEMPLATE_SECTIONS`, `createTemplate`, `instantiateTemplate`, `describeTemplate`, `getTemplateSections`, `mergeTemplates`, `omitSection`; strips PII, regenerates IDs, non-mutating (Sprint 73, 32 tests)
+- **Payment deep-links** — `src/utils/payment-link.js` exports `PAYMENT_PLATFORMS`, `isValidAmount`, `normalizePaymentPhone`, `buildBitLink`, `buildPayBoxLink`, `buildPayPalLink`, `buildRevolutLink`, `buildBankTransferData`, `buildPaymentLink`, `platformLabel`; Israeli (Bit, PayBox) + international platforms (Sprint 74, 37 tests)
+- **Photo gallery metadata** — `src/utils/photo-gallery.js` exports `createPhotoEntry`, `buildAlbum`, `groupByTag`, `filterByTag`, `sortAlbumByDate`, `buildGalleryManifest`, `estimateStorageSize`, `getAlbumStats`; pure data album organisation (Sprint 75, 29 tests)
+- **Campaign send tracker** — `src/utils/campaign-tracker.js` exports `CAMPAIGN_STATUSES`, `RECIPIENT_STATUSES`, `createCampaign`, `addCampaignRecipient`, `updateRecipientStatus`, `getCampaignStats`, `getDeliveryRate`, `getReadRate`, `filterByStatus`, `buildCampaignReport`; WhatsApp/SMS blast tracking (Sprint 76, 28 tests)
+- **WhatsApp delivery status helpers** — `src/utils/whatsapp-status.js` exports `WA_STATUS`, `isDelivered`, `isRead`, `isFailed`, `parseStatusWebhook`, `buildStatusTimeline`, `getLatestStatus`, `summarizeStatuses`; webhook parsing + rate calculations (Sprint 77, 31 tests)
+- **Seating chart exporter** — `src/utils/seating-exporter.js` exports `exportSeatingToCsv`, `exportSeatingToJson`, `buildSeatingMatrix`, `buildTableManifest`, `buildEscortCardData`, `buildPlaceCardData`, `groupExportByTable`; CSV/JSON/card formats (Sprint 78, 25 tests)
+- **Wedding website builder** — `src/utils/wedding-website.js` exports `WEBSITE_SECTIONS`, `createWebsiteSection`, `buildWebsiteConfig`, `buildRsvpFormConfig`, `buildVenueSection`, `buildGallerySection`, `buildRegistrySection`, `validateWebsiteConfig`; pure data section config (Sprint 79, 29 tests)
+
+### Stats
+
+- **+296 tests** (5284 total, 266 test files)
+- All 9 new utility modules: zero runtime deps, pure data, ESLint clean, non-mutating
+
 ## [9.7.0] — 2025-07-13
 
 ### Added

@@ -2,10 +2,10 @@
 
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v9.7.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v9.8.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
-[![Tests](https://img.shields.io/badge/tests-3720_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
+[![Tests](https://img.shields.io/badge/tests-5284_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
 [![Node](https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)](docs/README.md)
 [![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
