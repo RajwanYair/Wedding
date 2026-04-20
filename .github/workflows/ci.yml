@@ -89,42 +89,8 @@ jobs:
 
       - name: Check for dangerous JS patterns
         run: |
-          FAILED=0
-          for f in $(find src/ -name '*.js' -o -name '*.ts') index.html; do
-            if grep -n "eval(" "$f"; then
-              echo "::error file=$f::eval() usage detected"
-              FAILED=1
-            fi
-            if grep -n "document\.write(" "$f"; then
-              echo "::error file=$f::document.write() detected"
-              FAILED=1
-            fi
-          done
-          # Scan HTML templates and modals for innerHTML / eval
-          for f in $(find src/templates/ src/modals/ -name '*.html' 2>/dev/null); do
-            if grep -n "innerHTML" "$f"; then
-              echo "::error file=$f::innerHTML usage detected in template"
-              FAILED=1
-            fi
-            if grep -n "eval(" "$f"; then
-              echo "::error file=$f::eval() usage detected in template"
-              FAILED=1
-            fi
-            if grep -n "javascript:" "$f"; then
-              echo "::error file=$f::javascript: URI detected in template"
-              FAILED=1
-            fi
-            if grep -n "on[a-z]*=" "$f"; then
-              echo "::warning file=$f::Inline event handler detected (prefer data-action)"
-            fi
-          done
-          # Check index.html has no inline scripts (CSP moved to _headers)
-          if grep -Pn '<script>[^<]' index.html; then
-            echo "::error file=index.html::Inline script detected — use external files only (CSP disallows inline)"
-            FAILED=1
-          fi
-          [ "$FAILED" -eq 0 ] && echo "Security scan passed."
-          exit $FAILED
+          node scripts/ensure-shared-tooling.mjs
+          node scripts/security-scan.mjs
 
   lighthouse:
     name: Lighthouse Audit

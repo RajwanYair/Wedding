@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup shared tooling (CI shim)
+        run: node scripts/ensure-shared-tooling.mjs
+
       - name: Run CI checks
         run: npm run ci
 

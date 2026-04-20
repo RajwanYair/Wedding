@@ -107,18 +107,18 @@ writeFileSync(
 // ── ESLint base ───────────────────────────────────────────────────────────
 // The ESLint config uses dynamic import with inline fallback in eslint.config.mjs,
 // so we only need the dir to exist for the htmlhint/stylelint configs.
-// Creating base.mjs here as well for consistency.
+// Exporting null values forces eslint.config.mjs to use its comprehensive inline fallbacks.
 const eslintDir = resolve(toolingBase, "eslint");
 mkdirSync(eslintDir, { recursive: true });
 writeFileSync(
   resolve(eslintDir, "base.mjs"),
-  `// CI shim — see MyScripts/tooling/eslint/base.mjs for canonical version
-export const baseLinterOptions = { reportUnusedDisableDirectives: "error" };
-export const baseLanguageOptions = { ecmaVersion: 2025, sourceType: "module" };
-export const browserGlobals = {};
-export const nodeGlobals = { process: "readonly", __dirname: "readonly", __filename: "readonly", Buffer: "readonly" };
-export const testDomGlobals = {};
-export const baseRules = {};
+  `// CI shim — exports null so eslint.config.mjs uses its inline fallbacks
+export const baseLinterOptions = null;
+export const baseLanguageOptions = null;
+export const browserGlobals = null;
+export const nodeGlobals = null;
+export const testDomGlobals = null;
+export const baseRules = null;
 `,
 );
 
