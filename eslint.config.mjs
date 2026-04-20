@@ -163,6 +163,9 @@ export default [
         google: "readonly",
         // Service Worker API globals (not in all shared configs)
         ServiceWorkerRegistration: "readonly",
+        // Additional browser globals
+        Image: "readonly",
+        File: "readonly",
       },
     },
     rules,
