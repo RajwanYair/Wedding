@@ -1,5 +1,5 @@
 // =============================================================================
-// Wedding Manager — Repo Sanity Suite v9.2.0
+// Wedding Manager — Repo Sanity Suite v9.3.0
 // Keeps high-level repo assertions aligned with the current src/ architecture.
 // =============================================================================
 
@@ -48,40 +48,40 @@ const runtimeSources = [
 const allHtml = [indexHtml, readHtmlDir("src/templates"), readHtmlDir("src/modals")].join("\n");
 
 describe("Version alignment", function () {
-  it("package.json is v9.2.0", function () {
-    assert.equal(packageJson.version, "9.2.0");
+  it("package.json is v9.3.0", function () {
+    assert.equal(packageJson.version, "9.3.0");
   });
 
-  it("src/core/config.js exports APP_VERSION v9.2.0", function () {
-    assert.ok(read("src/core/config.js").includes('APP_VERSION = "9.2.0"'));
+  it("src/core/config.js exports APP_VERSION v9.3.0", function () {
+    assert.ok(read("src/core/config.js").includes('APP_VERSION = "9.3.0"'));
   });
 
-  it("public/sw.js uses wedding-v9.2.0 cache", function () {
-    assert.ok(serviceWorker.includes("wedding-v9.2.0"));
+  it("public/sw.js uses wedding-v9.3.0 cache", function () {
+    assert.ok(serviceWorker.includes("wedding-v9.3.0"));
   });
 
-  it("README version badge references v9.2.0", function () {
-    assert.ok(readme.includes("version-v9.2.0"));
+  it("README version badge references v9.3.0", function () {
+    assert.ok(readme.includes("version-v9.3.0"));
   });
 
-  it("Copilot instructions title references v9.2.0", function () {
+  it("Copilot instructions title references v9.3.0", function () {
     assert.ok(
       copilotInstructions.includes(
-        "# GitHub Copilot Instructions — Wedding Manager v9.2.0",
+        "# GitHub Copilot Instructions — Wedding Manager v9.3.0",
       ),
     );
   });
 
-  it("ARCHITECTURE.md header references v9.2.0", function () {
+  it("ARCHITECTURE.md header references v9.3.0", function () {
     assert.ok(
-      architecture.includes("# Wedding Manager — Architecture (v9.2.0)"),
+      architecture.includes("# Wedding Manager — Architecture (v9.3.0)"),
     );
   });
 
-  it("src/types.d.ts header references v9.2.0", function () {
+  it("src/types.d.ts header references v9.3.0", function () {
     assert.ok(
       typesSource.includes(
-        "src/types.d.ts — Shared type definitions for the Wedding Manager (v9.2.0)",
+        "src/types.d.ts — Shared type definitions for the Wedding Manager (v9.3.0)",
       ),
     );
   });

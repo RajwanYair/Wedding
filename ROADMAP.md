@@ -42,7 +42,7 @@ Best-in-class wedding management platforms and what we can learn from each.
 
 ---
 
-## Current State (v9.2.0)
+## Current State (v9.3.0)
 
 | Dimension | Status | Assessment |
 | --- | --- | --- |
@@ -193,7 +193,7 @@ Steps: Audit configs > promote shared rules > thin project configs > remove inli
 
 | Area | Current | Target |
 | --- | --- | --- |
-| Unit tests | 4041+ (Vitest) | Maintain + add coverage for new backend paths |
+| Unit tests | 3819+ (Vitest) | Maintain + add coverage for new backend paths |
 | Integration tests | Minimal | Add Supabase integration tests with test containers |
 | E2E tests | Playwright smoke + visual regression | Add RSVP flow, check-in flow, multi-event flow |
 | Coverage | Reported but no gate | Gate at 80% line coverage in CI |

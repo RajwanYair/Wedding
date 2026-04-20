@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.3.0] — 2026-05-19
+
+### Added
+
+- **Background Sync tag registration** — `_registerSyncTag()` in `src/services/offline-queue.js` registers the `"rsvp-sync"` SW Background Sync tag whenever an item is queued offline; SW message listener handles `RSVP_SYNC_READY` (Sprint 21)
+- **File Handling API** — `public/manifest.json` declares `file_handlers` for `.csv`, `.xls`, `.xlsx`; `src/main.js` wires `window.launchQueue.setConsumer()` to navigate to the guests section and dispatch a `launchFile` CustomEvent (Sprint 22)
+- **Locale-aware currency default** — `formatCurrency()` in `src/core/i18n.js` now auto-selects the currency symbol via `getLocaleCurrency(locale)` from `src/utils/locale-detector.js` when no explicit currency is passed (Sprint 23)
+- **`formatShortDate()`** — exported from `src/core/i18n.js`; uses `Intl.DateTimeFormat` with `dateStyle: "short"` and `Asia/Jerusalem` timezone for locale-aware short date rendering (Sprint 24)
+- **Google Calendar deep link + ICS download** — `src/utils/calendar-link.js` exports `buildGoogleCalendarLink(event)`, `buildIcsContent(event)`, and `buildIcsDataUrl(event)` for RFC 5545-compliant calendar invites (Sprint 25)
+- **Venue navigation deep links** — `src/utils/venue-navigation.js` exports `buildWazeLink(venue)`, `buildGoogleMapsLink(venue, opts?)`, and `buildNavLinks(venue, opts?)` for one-tap Waze/Google Maps navigation to the venue (Sprint 26)
+- **6-stage RSVP conversion funnel** — `computeRsvpFunnel(guests)` in `src/utils/rsvp-analytics.js` tracks invited → link_sent → link_clicked → form_started → confirmed → checked_in and returns counts + conversion rates (Sprint 27)
+- **Dietary breakdown for catering** — `computeDietaryBreakdown(guests)` in `src/utils/rsvp-analytics.js` returns meal-type counts weighted by head count, accessibility tallies, per-table breakdowns, and confirmed vs total head counts (Sprint 28)
+- **Budget burn-down chart utility** — `src/utils/budget-burndown.js` exports `computeBudgetBurndown(expenses, totalBudget)` (chronological data points with cumulative spend, remaining, and percentage), `sliceBurndownUpTo(points, date)`, and `projectFinalSpend(points, totalDays)` (Sprint 29)
+
 ## [9.2.0] — 2026-05-12
 
 ### Added

@@ -18,16 +18,16 @@
  *   startDate: string,       // ISO date \"YYYY-MM-DD\" or full ISO-8601 datetime
  *   endDate?: string,        // defaults to same day as startDate
  *   startTime?: string,      // \"HH:MM\" 24-hour; if omitted, treated as all-day
- *   endTime?: string,        // \"HH:MM\" 24-hour; defaults to startTime + 2h    
+ *   endTime?: string,        // \"HH:MM\" 24-hour; defaults to startTime + 2h
  *   location?: string,
  *   description?: string,
  * }} CalendarEvent
  */
 
-// ── Helpers ────────────────────────────────────────────────────────────────  
+// ── Helpers ────────────────────────────────────────────────────────────────
 
 /**
- * Normalise a date/time pair into a Google Calendar \dates\ param token.       
+ * Normalise a date/time pair into a Google Calendar \dates\ param token.
  * All-day: YYYYMMDD/YYYYMMDD
  * Timed:   YYYYMMDDTHHmmss/YYYYMMDDTHHmmss
  *
@@ -37,25 +37,27 @@
  * @param {string} [endTime]   HH:MM (defaults to startTime + 2h)
  * @returns {string}
  */
-function _buildGoogleDateRange(startDate, endDate, startTime, endTime) {        
-  const sd = startDate.replace(/-/g, '');
-  const ed = (endDate ?? startDate).replace(/-/g, '');
+function _buildGoogleDateRange(startDate, endDate, startTime, endTime) {
+  const sd = startDate.replace(/-/g, "");
+  const ed = (endDate ?? startDate).replace(/-/g, "");
 
   if (!startTime) {
     // All-day: Google expects end = next day for single-day events
-    const nextDay = new Date(`${startDate  }T00:00:00`);
+    const nextDay = new Date(`${startDate}T00:00:00`);
     nextDay.setDate(nextDay.getDate() + 1);
-    const nd = nextDay.toISOString().slice(0, 10).replace(/-/g, '');
-    return `${sd  }/${  nd}`;
+    const nd = nextDay.toISOString().slice(0, 10).replace(/-/g, "");
+    return `${sd}/${nd}`;
   }
 
-  const [sh, sm] = startTime.split(':').map(Number);
-  const et = endTime ?? (`${String((sh + 2) % 24).padStart(2, '0')  }:${  String(sm).padStart(2, '0')}`);
-  const st = `${sh.toString().padStart(2, '0') + String(sm).padStart(2, '0')  }00`;
-  const [eh, em] = et.split(':').map(Number);
-  const etStr = `${eh.toString().padStart(2, '0') + String(em).padStart(2, '0')  }00`;
+  const [sh, sm] = startTime.split(":").map(Number);
+  const et =
+    endTime ??
+    `${String((sh + 2) % 24).padStart(2, "0")}:${String(sm).padStart(2, "0")}`;
+  const st = `${sh.toString().padStart(2, "0") + String(sm).padStart(2, "0")}00`;
+  const [eh, em] = et.split(":").map(Number);
+  const etStr = `${eh.toString().padStart(2, "0") + String(em).padStart(2, "0")}00`;
 
-  return `${sd  }T${  st  }/${  ed  }T${  etStr}`;
+  return `${sd}T${st}/${ed}T${etStr}`;
 }
 
 /**
@@ -68,7 +70,7 @@ function _icsDateTime(date, time) {
   const d = date.replace(/-/g, '');
   if (!time) return d;
   const [h, m] = time.split(':').map(Number);
-  return `${d  }T${  String(h).padStart(2, '0')  }${String(m).padStart(2, '0')  }00`;   
+  return `${d}T${String(h).padStart(2, "0")}${String(m).padStart(2, "0")}00`;
 }
 
 /**
@@ -98,7 +100,7 @@ function _icsUid(title, startDate) {
   return `${hash  }-wedding@wedding-manager`;
 }
 
-// ── Public API ─────────────────────────────────────────────────────────────  
+// ── Public API ─────────────────────────────────────────────────────────────
 
 /**
  * Build a Google Calendar \"Add event\" URL.
@@ -164,7 +166,7 @@ export function buildIcsContent(event) {
     `${dtEndProp  }:${  dtEnd}`,
     `SUMMARY:${  _escapeIcs(event.title)}`,
   ];
-  if (event.location)    lines.push(`LOCATION:${  _escapeIcs(event.location)}`);  
+  if (event.location) lines.push(`LOCATION:${_escapeIcs(event.location)}`);
   if (event.description) lines.push(`DESCRIPTION:${  _escapeIcs(event.description)}`);
   lines.push('END:VEVENT', 'END:VCALENDAR');
 
@@ -172,14 +174,14 @@ export function buildIcsContent(event) {
 }
 
 /**
- * Build a \data:\ URI for the ICS file that can be used as an anchor href.     
- * Clicking the link triggers a download of a \.ics\ file in most browsers.     
+ * Build a \data:\ URI for the ICS file that can be used as an anchor href.
+ * Clicking the link triggers a download of a \.ics\ file in most browsers.
  *
  * @param {CalendarEvent} event
  * @returns {string}  data: URI
  */
 export function buildIcsDataUrl(event) {
   const content = buildIcsContent(event);
-  // encodeURIComponent is safe for data: URIs; no external server involved     
-  return `data:text/calendar;charset=utf-8,${  encodeURIComponent(content)}`;     
+  // encodeURIComponent is safe for data: URIs; no external server involved
+  return `data:text/calendar;charset=utf-8,${encodeURIComponent(content)}`;
 }
