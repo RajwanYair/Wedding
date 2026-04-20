@@ -90,8 +90,8 @@ export default defineConfig({
   },
   test: {
     include: ["tests/**/*.test.mjs"],
-    pool: "forks",
-    poolOptions: { forks: { execArgv: ["--no-warnings"] } },
+    pool: "vmThreads",
+    poolOptions: { vmThreads: { execArgv: ["--no-warnings"] } },
     cacheDir: join(TEMP_BASE, "vitest-cache"),
     coverage: {
       provider: "v8",

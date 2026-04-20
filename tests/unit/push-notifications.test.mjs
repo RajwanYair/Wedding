@@ -76,32 +76,29 @@ describe("serializeSubscription", () => {
 
 describe("getCachedSubscription", () => {
   it("returns null when nothing stored", () => {
-    const orig = global.localStorage;
-    global.localStorage = /** @type {any} */ ({
+    vi.stubGlobal("localStorage", /** @type {any} */ ({
       getItem: vi.fn().mockReturnValue(null),
-    });
+    }));
     expect(getCachedSubscription()).toBeNull();
-    global.localStorage = orig;
+    vi.unstubAllGlobals();
   });
 
   it("returns parsed subscription data when stored", () => {
     const sub = makeSub();
-    const orig = global.localStorage;
-    global.localStorage = /** @type {any} */ ({
+    vi.stubGlobal("localStorage", /** @type {any} */ ({
       getItem: vi.fn().mockReturnValue(JSON.stringify(sub)),
-    });
+    }));
     const result = getCachedSubscription();
     expect(result?.endpoint).toBe(sub.endpoint);
-    global.localStorage = orig;
+    vi.unstubAllGlobals();
   });
 
   it("returns null on parse error", () => {
-    const orig = global.localStorage;
-    global.localStorage = /** @type {any} */ ({
+    vi.stubGlobal("localStorage", /** @type {any} */ ({
       getItem: vi.fn().mockReturnValue("NOT JSON"),
-    });
+    }));
     expect(getCachedSubscription()).toBeNull();
-    global.localStorage = orig;
+    vi.unstubAllGlobals();
   });
 });
 

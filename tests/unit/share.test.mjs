@@ -40,7 +40,8 @@ describe("share()", () => {
     expect(await share({ title: "Wedding", url: "https://example.com" })).toBe(true);
   });
   it("returns false on AbortError (user cancelled)", async () => {
-    const err = new DOMException("Cancelled", "AbortError");
+    const err = new Error("Cancelled");
+    err.name = "AbortError";
     installShare(vi.fn().mockRejectedValue(err));
     expect(await share({ title: "Wedding" })).toBe(false);
   });

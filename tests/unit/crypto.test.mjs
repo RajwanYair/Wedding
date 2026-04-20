@@ -8,29 +8,14 @@ import { encrypt, decrypt } from "../../src/utils/crypto.js";
 describe("crypto — AES-GCM encrypt/decrypt", () => {
   const passphrase = "test-passphrase-2025";
 
-  it("round-trips a simple string", async () => {
-    const plain = "Hello, World!";
-    const cipher = await encrypt(plain, passphrase);
-    const result = await decrypt(cipher, passphrase);
-    expect(result).toBe(plain);
-  });
-
-  it("round-trips Hebrew text", async () => {
-    const plain = "שלום עולם";
-    const cipher = await encrypt(plain, passphrase);
-    const result = await decrypt(cipher, passphrase);
-    expect(result).toBe(plain);
-  });
-
-  it("round-trips a phone number", async () => {
-    const plain = "+972541234567";
-    const cipher = await encrypt(plain, passphrase);
-    const result = await decrypt(cipher, passphrase);
-    expect(result).toBe(plain);
-  });
-
-  it("round-trips an email address", async () => {
-    const plain = "user@example.com";
+  it.each([
+    ["simple string", "Hello, World!"],
+    ["Hebrew text", "שלום עולם"],
+    ["phone number", "+972541234567"],
+    ["email address", "user@example.com"],
+    ["empty string", ""],
+    ["long text (1000+ chars)", "A".repeat(2000)],
+  ])("round-trips %s", async (_label, plain) => {
     const cipher = await encrypt(plain, passphrase);
     const result = await decrypt(cipher, passphrase);
     expect(result).toBe(plain);
@@ -53,18 +38,5 @@ describe("crypto — AES-GCM encrypt/decrypt", () => {
   it("fails to decrypt with wrong passphrase", async () => {
     const cipher = await encrypt("secret", passphrase);
     await expect(decrypt(cipher, "wrong-pass")).rejects.toThrow();
-  });
-
-  it("handles empty string", async () => {
-    const cipher = await encrypt("", passphrase);
-    const result = await decrypt(cipher, passphrase);
-    expect(result).toBe("");
-  });
-
-  it("handles long text (1000+ chars)", async () => {
-    const plain = "A".repeat(2000);
-    const cipher = await encrypt(plain, passphrase);
-    const result = await decrypt(cipher, passphrase);
-    expect(result).toBe(plain);
   });
 });
