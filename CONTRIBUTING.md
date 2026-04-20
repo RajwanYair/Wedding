@@ -32,7 +32,7 @@ npm run dev           # Vite dev server at http://localhost:5173/Wedding/
 1. **No `innerHTML` with untrusted data** — use `textContent` only
 2. **Every string visible to users**: `data-i18n="key"` (HTML) + `t('key')` (JS) — both `he` and `en` required
 3. **All colors via CSS custom properties** — never hardcode hex/rgb
-4. **Zero runtime deps** — no npm packages loaded at runtime
+4. **Minimal runtime deps** — only 3 npm packages loaded at runtime (`@supabase/supabase-js`, `dompurify`, `valibot`)
 5. **Named exports only** — no `window.*` assignments in `src/`
 6. **`sanitize(input, schema)`** for all user input validation at boundaries
 7. **Constants first** — new enums, section names, and storage keys go in `src/core/constants.js`

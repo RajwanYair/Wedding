@@ -22,11 +22,11 @@ Node 22+ is the supported local and CI runtime.
 
 ## Features
 
-![Features](features-grid.svg)
+![Features](docs/features-grid.svg)
 
 ## RSVP Journey
 
-![RSVP Flow](rsvp-flow.svg)
+![RSVP Flow](docs/rsvp-flow.svg)
 
 ## Quick Start
 

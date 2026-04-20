@@ -22,7 +22,7 @@ You are a vendor management specialist for a wedding app.
 - All data stored client-side in localStorage (prefix `wedding_v1_`)
 - Hebrew RTL primary, English toggle; all strings use `data-i18n` / `t('key')`
 - CSS custom properties for all colors — never hardcode
-- Zero runtime deps
+- Minimal runtime deps (3: `@supabase/supabase-js`, `dompurify`, `valibot`)
 - Canonical type shapes and enums live in `src/types.d.ts` and `src/core/constants.js`
 
 ## Key Files

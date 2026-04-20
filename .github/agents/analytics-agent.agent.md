@@ -19,7 +19,7 @@ You are an analytics and reporting specialist for a wedding app.
 
 ## Context
 
-- Zero runtime deps — all charts are CSS/HTML based (no chart libraries)
+- Minimal runtime deps — all charts are CSS/HTML based (no chart libraries); runtime: `@supabase/supabase-js`, `dompurify`, `valibot`
 - Data stored client-side in localStorage (prefix `wedding_v1_`)
 - Hebrew RTL primary, English toggle; all strings use `data-i18n` / `t('key')`
 - CSS custom properties for all colors — never hardcode

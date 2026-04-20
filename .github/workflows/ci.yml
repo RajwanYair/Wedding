@@ -139,16 +139,20 @@ jobs:
 
       - name: Bundle size budget gate
         run: |
-          # Fail CI if main bundle exceeds 50 KB gzip (target: <30 KB, hard limit: 50 KB)
+          # Fail CI if any single JS chunk exceeds 50 KB gzip (target: <30 KB, hard limit: 50 KB)
           npm run build 2>/dev/null || true
-          MAIN_SIZE=$(find dist/assets -name '*.js' -type f -exec gzip -c {} \; | wc -c | sort -rn | head -1)
-          MAIN_KB=$((MAIN_SIZE / 1024))
-          echo "Largest JS chunk: ${MAIN_KB} KB gzip"
-          if [ "$MAIN_KB" -gt 50 ]; then
-            echo "::error::Bundle size ${MAIN_KB} KB exceeds 50 KB budget"
-            exit 1
-          fi
-          echo "Bundle size within budget."
+          FAILED=0
+          while IFS= read -r file; do
+            SIZE=$(gzip -c "$file" | wc -c)
+            KB=$((SIZE / 1024))
+            echo "  $(basename "$file"): ${KB} KB gzip"
+            if [ "$KB" -gt 50 ]; then
+              echo "::error::Chunk $(basename "$file") is ${KB} KB — exceeds 50 KB gzip budget"
+              FAILED=1
+            fi
+          done < <(find dist/assets -name '*.js' -type f)
+          if [ "$FAILED" -eq 1 ]; then exit 1; fi
+          echo "All chunks within 50 KB gzip budget."
 
       - name: Upload size report artifact
         uses: actions/upload-artifact@v4

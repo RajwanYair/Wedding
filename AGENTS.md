@@ -5,7 +5,7 @@
 ## Project Identity
 
 - **App**: Wedding Manager v9.8.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
-- **Stack**: Vanilla JS ES2025 + Vite 8 + CSS `@layer` — zero runtime deps
+- **Stack**: Vanilla JS ES2025 + Vite 8 + CSS `@layer` — minimal runtime deps (`@supabase/supabase-js`, `dompurify`, `valibot`)
 - **Entry**: `src/main.js` (ESM, Vite build)
 - **Deploy**: GitHub Pages — <https://rajwanyair.github.io/Wedding>
 

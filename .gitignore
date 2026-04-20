@@ -30,4 +30,9 @@ test-results/
 # Temp lint/build outputs
 lint_*.txt
 release_notes.md
+
+# Debug / CI artifacts (never commit)
+test_output.txt
+test_results.txt
+config-output.json
 playwright-report/
