@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [9.0.0] — 2026-04-20
+
+### Changed
+
+- **BREAKING**: Major version bump v8.3.0 → v9.0.0
+- Vitest pool switched from `forks` to `vmThreads` — test suite 65% faster (52s → 18s)
+- Consolidated crypto tests into parameterized `it.each` patterns
+- Fixed global stub isolation in push-notification and share tests for vmThreads compatibility
+
+### Removed
+
+- Removed deprecated `eslint.useFlatConfig` VS Code setting
+- Cleaned temp lint output artifacts from repo root
+- Removed empty `src/plugins/` and `docs/runbooks/` directories
+
+### Improved
+
+- Updated `.gitignore` to exclude temp lint/release artifacts and Playwright reports
+- VS Code task labels aligned with current test count (3720+)
+- README test badge updated to reflect actual test count
+- All version references synchronized across 14+ files
+
 ## [8.3.0] — 2026-04-19
 
 ### Added

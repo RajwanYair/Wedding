@@ -42,7 +42,7 @@ Best-in-class wedding management platforms and what we can learn from each.
 
 ---
 
-## Current State (v8.3.0)
+## Current State (v9.0.0)
 
 | Dimension | Status | Assessment |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ Best-in-class wedding management platforms and what we can learn from each.
 | **State** | Proxy-based store + localStorage + debounced persistence | Excellent batching; no offline write queue persistence |
 | **i18n** | 4 locales, ICU plurals, Intl APIs, lazy loading | World-class for zero-deps; missing compile-time key validation |
 | **Router** | Hash-based + View Transitions + swipe + keyboard shortcuts | `pushState` + `popstate` — browser back/forward works |
-| **Testing** | 4074+ Vitest unit tests + Playwright E2E + a11y | Strong coverage; needs integration tests for backend paths |
+| **Testing** | 3720+ Vitest unit tests + Playwright E2E + a11y | Strong coverage; needs integration tests for backend paths |
 | **PWA** | Service Worker + manifest + offline fallback + install prompt | Good foundation; sync queue not persistent across crashes |
 | **CI/CD** | 7 GitHub Actions workflows, Node 22+24 matrix, CodeQL | Solid; needs dependency review and Lighthouse gates |
 | **Docs** | 12 ADRs, ops runbooks, integration guides, Mermaid diagrams | Excellent culture; version spread across 9+ files is fragile |
@@ -358,9 +358,8 @@ Decision: Evaluate Preact Signals for reactive primitives without full framework
 | Version | Focus | Status |
 | --- | --- | --- |
 | **v8.2.x** | Security hardening, dead code cleanup, storage centralization | **Done** |
-| **v8.3.x** | Foundation hardening: router fix, dead exports, DX tooling, Copilot instructions | **Active** |
-| **v8.4.x** | DX improvements, tooling consolidation, Copilot overhaul, test gates | Planned |
-| **v9.0.x** | UX overhaul, AI features, WhatsApp Business API, realtime collaboration | Planned |
+| **v8.3.x** | Foundation hardening: router fix, dead exports, DX tooling, Copilot instructions | **Done** |
+| **v9.0.x** | Production readiness: test consolidation, config modernization, repo cleanup, release prep | **Active** |
 | **v10.x** | Multi-tenant, native-quality PWA, API integrations, infra hardening | Future |
 
 ---
