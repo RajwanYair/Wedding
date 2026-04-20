@@ -18,6 +18,7 @@ import {
   normalizeUiLanguage,
   nextUiLanguage,
 } from "./core/i18n.js";
+import { resolveAppLocale, detectLocale } from "./utils/locale-detector.js";
 import { updateNavForAuth } from "./core/nav-auth.js";
 import {
   initStorage,
@@ -245,8 +246,11 @@ let _activeSection = null;
     }
   }
 
-  // 1. Language
-  const lang = normalizeUiLanguage(load("lang", "he"));
+  // 1. Language — use stored preference; auto-detect browser locale for new users (Phase 4.3)
+  const _storedLang = load("lang");
+  const lang = _storedLang
+    ? normalizeUiLanguage(String(_storedLang))
+    : resolveAppLocale(detectLocale(), ["he", "en", "ar", "ru"], "he");
   await loadLocale(lang);
 
   // 2. Apply i18n bindings
