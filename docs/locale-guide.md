@@ -150,3 +150,37 @@ Example for French (no "few"/"many", only "one" and "other"):
 | `en` | English | ❌ | Fallback |
 | `ar` | Arabic | ✅ | Community |
 | `ru` | Russian | ❌ | Community |
+
+## Per-locale screenshots
+
+> Reviewers compare visual parity across locales. Drop one screenshot of each
+> primary section per locale into `docs/screenshots/<locale>/<section>.png`
+> (kept out of the repo until needed; create the folder when you start).
+
+| Section | Hebrew (he) | English (en) | Arabic (ar) | Russian (ru) |
+| --- | --- | --- | --- | --- |
+| Landing | _todo_ | _todo_ | _todo_ | _todo_ |
+| Dashboard | _todo_ | _todo_ | _todo_ | _todo_ |
+| Guests | _todo_ | _todo_ | _todo_ | _todo_ |
+| RSVP | _todo_ | _todo_ | _todo_ | _todo_ |
+| Tables | _todo_ | _todo_ | _todo_ | _todo_ |
+| Vendors | _todo_ | _todo_ | _todo_ | _todo_ |
+| Settings | _todo_ | _todo_ | _todo_ | _todo_ |
+
+### How to capture
+
+`pwsh
+npx playwright test tests/e2e/visual.spec.mjs --project=chromium-light
+`
+
+Visual baselines from Playwright land in `tests/e2e/visual.spec.mjs-snapshots/`;
+copy the relevant per-locale renders into `docs/screenshots/` for the guide.
+
+## RTL parity checklist
+
+- [ ] `dir="rtl"` is applied automatically by `i18n.applyDirection()` for `he` and `ar`
+- [ ] Icons that imply direction (chevrons, arrows) flip via CSS logical props
+- [ ] Numbers stay LTR inside RTL paragraphs (`unicode-bidi: plaintext` on
+      phone/date spans)
+- [ ] Tahoma + `"Segoe UI"` font stack covers all 4 scripts
+- [ ] `tests/e2e/visual.spec.mjs` snapshots updated per locale after layout changes
