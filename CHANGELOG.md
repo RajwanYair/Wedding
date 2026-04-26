@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.5.0] — 2026-04-28
+
+> Roadmap sprint batch — observability, supply-chain, RSVP delight, default-info bootstrap fix.
+
+### Added
+
+- **Opt-in error pipeline** wired in `src/main.js`: `initMonitoring()` (lazy
+  `@sentry/browser`) + `window` `error` / `unhandledrejection` listeners forward
+  scrubbed exceptions to `services/error-pipeline.js`. No-op without
+  `VITE_SENTRY_DSN`. (ROADMAP §6 Phase A2.)
+- **Supply-chain workflows** under `.github/workflows/`:
+  `scorecard.yml` (OpenSSF Scorecard, weekly + push to main),
+  `sbom.yml` (CycloneDX SBOM JSON+XML on tag/weekly),
+  `trivy.yml` (Trivy fs + config scan, weekly + PR, SARIF upload).
+- **`docs/operations/disaster-recovery.md`** — Supabase PITR, GH Pages
+  recovery, SW poison, secrets rotation, drill log template.
+- **`.github/agents/release-engineer.agent.md`** — automation guide for
+  version bumps, sync-version, CHANGELOG, tagging, GH releases.
+- **README badges** — bundle ≤ 60 KB gzip, Lighthouse CI gated, CodeQL.
+- **RSVP "Add to Calendar"** — Google Calendar deep link + `.ics` download
+  appended to the confirmation panel when status = `confirmed`. Powered by
+  the existing `src/utils/calendar-link.js`. New i18n keys
+  `rsvp_add_to_calendar`, `rsvp_add_to_google`, `rsvp_download_ics` across
+  `he` / `en` / `ar` / `ru`.
+- **Locale guide** — per-locale screenshot table + RTL parity checklist in
+  `docs/locale-guide.md`.
+
+### Fixed
+
+- **Default wedding info bootstrap**: `src/main.js` now fetches
+  `public/wedding.json` on first load and merges it into `weddingInfo`.
+  Empty-string overrides from saved info no longer clobber the seeded
+  groom/bride/date/venue. Resolves the "Groom & Bride" placeholder showing
+  on the dashboard top bar.
+- **Section nav**: clicking a primary tab now updates the URL hash via
+  `history.pushState` so the browser back button respects section history.
+
+### Internal
+
+- All 12 version-bearing files synced via `npm run sync:version`.
+- E2E suite: `tests/e2e/_helpers.mjs` (admin session seed + section-loaded
+  wait) and Firefox-safe context-page reload pattern in `offline.spec.mjs`.
+- `body.light-mode` top-bar contrast fix in `css/components.css`.
+
 ## [11.4.0] — 2026-04-27
 
 ### Removed (Zero Workarounds, Zero Dead Code)
