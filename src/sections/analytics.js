@@ -13,6 +13,13 @@ import {
   getMonthlyTotals,
   getBudgetUtilization,
 } from "../services/expense-analytics.js";
+import {
+  renderDonut as _renderDonut,
+  renderBar as _renderBar,
+  setStatText as _setStatText,
+  escSvg as _escSvg,
+  escHtml as _escHtml,
+} from "../utils/charts.js";
 
 const _SCOPE = "analytics";
 
@@ -214,89 +221,6 @@ export function renderBudgetChart() {
   }));
 
   _renderBar("analyticsBudgetBar", bars);
-}
-
-/**
- * Render a simple SVG donut chart.
- * @param {string} containerId
- * @param {{ label: string, value: number, color: string }[]} slices
- */
-function _renderDonut(containerId, slices) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  const total = slices.reduce((s, sl) => s + sl.value, 0);
-  if (total === 0) {
-    container.textContent = "";
-    return;
-  }
-
-  const cx = 60;
-  const cy = 60;
-  const r = 45;
-  const strokeW = 18;
-  const circ = 2 * Math.PI * r;
-
-  let svg = `<svg viewBox="0 0 120 120" role="img" aria-label="${t("chart")}"><title>${t("chart")}</title>`;
-  let offset = -Math.PI / 2;
-
-  slices.forEach((sl) => {
-    if (sl.value === 0) return;
-    const angle = (sl.value / total) * 2 * Math.PI;
-    const dashLen = (sl.value / total) * circ;
-    const dashOff = circ - dashLen;
-    const rotate = (offset * 180) / Math.PI;
-    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sl.color}"
-      stroke-width="${strokeW}" stroke-dasharray="${dashLen} ${dashOff}"
-      transform="rotate(${rotate} ${cx} ${cy})" />`;
-    offset += angle;
-  });
-
-  // Centre text
-  svg += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="14" fill="var(--text)">${total}</text>`;
-  svg += `</svg>`;
-
-  container.innerHTML = svg; // safe: all values are numbers/CSS vars/i18n strings
-}
-
-/**
- * Render a simple horizontal SVG bar chart.
- * @param {string} containerId
- * @param {{ label: string, value: number, color: string }[]} bars
- */
-function _renderBar(containerId, bars) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  const maxVal = Math.max(...bars.map((b) => b.value), 1);
-  const rowH = 22;
-  const w = 220;
-  const labelW = 80;
-  const barMaxW = 120;
-  const h = bars.length * rowH + 4;
-
-  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${t("chart")}"><title>${t("chart")}</title>`;
-
-  bars.forEach((b, i) => {
-    const y = i * rowH;
-    const barW = (b.value / maxVal) * barMaxW;
-    svg += `<text x="0" y="${y + 14}" font-size="10" fill="var(--text)">${b.label}</text>`;
-    svg += `<rect x="${labelW}" y="${y + 4}" width="${barW}" height="${rowH - 6}" fill="${b.color}" rx="3"/>`;
-    svg += `<text x="${labelW + barW + 4}" y="${y + 14}" font-size="10" fill="var(--text)">${b.value}</text>`;
-  });
-
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: all values are numbers/CSS vars/i18n strings
-}
-
-/**
- * Set text content of a stat element by id.
- * @param {string} id
- * @param {number} value
- */
-function _setStatText(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = String(value);
 }
 
 /**
@@ -888,27 +812,6 @@ export function exportAnalyticsCSV() {
   a.download = "wedding-analytics.csv";
   a.click();
   URL.revokeObjectURL(url);
-}
-
-// ── SVG escape helper ────────────────────────────────────────────────────
-
-/** @param {string} s */
-/** Escape SVG special characters.
- * @param {string} s
- */
-function _escSvg(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-/** Escape HTML special characters for safe insertion into generated HTML.
- * @param {string} s
- */
-function _escHtml(s) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 // ── S13.4 Seating Chart SVG Map ───────────────────────────────────────────
