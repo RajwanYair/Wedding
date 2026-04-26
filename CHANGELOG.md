@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.10.0] — 2026-04-29
+
+> Roadmap sprint batch — three Phase A ADRs (router, encryption, backend), two new advisory CI gates, Diátaxis explanation index + how-to + reference.
+
+### Added
+
+- **ADR-025** — pushState router migration plan (Phase A6). R0 → R3 phased rollout through v12.0.0; typed route table with declared query params; GH Pages 404 → index redirect.
+- **ADR-026** — Encrypt auth tokens & PII at rest (Phase A3). AES-GCM 256 with non-extractable IndexedDB-resident CryptoKey; v1 envelope format `{ v, iv, ct }`; zero-downtime migration shim.
+- **ADR-027** — Supabase as single runtime backend (Phase A1). Phased flip B0 → B4 spanning v11.10 → v13.0; Sheets becomes import/export only.
+- **`scripts/check-plaintext-secrets.mjs`** + `audit:plaintext-secrets` npm script — advisory grep for plaintext writes to Critical/High sensitivity storage keys. Allowlists `secure-storage.js` and `core/storage.js`. Currently reports 0 violations.
+- **`scripts/check-coverage-gate.mjs`** + `audit:coverage` npm script — advisory check of `coverage/coverage-summary.json` against ROADMAP §6 Phase B targets (lines 80 % / branches 75 % / functions 80 % / statements 80 %).
+- **CI**: `audit:plaintext-secrets` and `audit:bundle` wired as advisory steps on the Node 22 matrix.
+- **`docs/explanation/README.md`** — Diátaxis explanation quadrant index linking every ADR by theme + reading order.
+- **`docs/how-to/encrypt-tokens.md`** — recipe for migrating a single storage key to AES-GCM via `secure-storage.js` (ADR-026 phases E1–E4).
+- **`docs/reference/backend-types.md`** — exhaustive `BACKEND_TYPE` value catalogue with status, dispatch chain, and removal timeline (ADR-027).
+
+### Changed
+
+- `audit:bundle` and `audit:plaintext-secrets` are now part of the standard CI run on the Node 22 matrix (advisory).
+
 ## [11.9.0] — 2026-04-29
 
 > Roadmap sprint batch — ADR-022 Phase 1 modal action aliases, ADRs 023 + 024, advisory bundle-size budget, Diátaxis tutorial/how-to/reference skeletons.
