@@ -214,13 +214,15 @@ test.describe("Tables Section — Basic Flow", () => {
   });
 
   test("table list or empty state is rendered", async ({ page }) => {
-    const tableList = page.locator("#tableList, #tableListContainer, #tableListBody, .table-list");
-    const hasAny = (await tableList.count()) > 0;
-    // Tables section should have either a list or an empty state
-    if (!hasAny) {
-      const emptyState = page.locator(".tables-empty, [id*='tableEmpty']");
-      await expect(emptyState.first()).toBeAttached({ timeout: 3_000 });
-    }
+    // Tables section always renders both the seating-floor container and an
+    // empty-state placeholder; either signals a successful mount.
+    const tableList = page.locator(
+      "#tableList, #tableListContainer, #tableListBody, .table-list, #seatingFloor",
+    );
+    const emptyState = page.locator("#tablesEmpty, .empty-state");
+    const hasList = (await tableList.count()) > 0;
+    const hasEmpty = (await emptyState.count()) > 0;
+    expect(hasList || hasEmpty).toBe(true);
   });
 
   test("add table button is present", async ({ page }) => {

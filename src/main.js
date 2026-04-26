@@ -601,7 +601,20 @@ function _escHtml(s) {
  */
 function _registerHandlers() {
   // ── Navigation ──
-  on("showSection", (el) => _switchSection(el.dataset.actionArg || "dashboard"));
+  on("showSection", (el) => {
+    const name = el.dataset.actionArg || "dashboard";
+    // Keep URL hash in sync so deep-links, browser back/forward, and external
+    // tools observe the active section. pushState does NOT fire hashchange,
+    // so this is safe to do alongside the explicit _switchSection call.
+    if (typeof location !== "undefined" && location.hash !== `#${name}`) {
+      try {
+        history.pushState(null, "", `#${name}`);
+      } catch {
+        /* SecurityError in sandboxed contexts — fall back silently */
+      }
+    }
+    _switchSection(name);
+  });
 
   // ── S9.2 Event switcher ──
   on("switchEvent", (el) => {
