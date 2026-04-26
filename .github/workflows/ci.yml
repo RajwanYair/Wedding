@@ -72,6 +72,12 @@ jobs:
         run: npm run audit:trusted-types
         # ADR-018 Phase 1: report-only sink census. Hard gate in v12.0.0.
 
+      - name: Plaintext-secrets advisory (ADR-026 Phase E0)
+        if: matrix.node-version == '22'
+        run: npm run audit:plaintext-secrets
+        # ADR-026 Phase E0: report-only scan for plaintext credential writes.
+        # Hard gate in v12.0.0 once secure-storage migration is complete.
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
@@ -79,6 +85,11 @@ jobs:
 
       - name: Vite build
         run: npm run build
+
+      - name: Bundle-size advisory (ADR-024)
+        if: matrix.node-version == '22'
+        run: npm run audit:bundle
+        # ADR-024: per-route gzip budgets. Advisory; enforced in v12.0.0.
 
       - name: Coverage report
         if: matrix.node-version == '22'
