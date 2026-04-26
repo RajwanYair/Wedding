@@ -47,6 +47,30 @@ export async function seedAdminSession(page) {
 }
 
 /**
+ * Seed store data into localStorage before navigation.
+ * Keys should be plain store keys (e.g. "guests", "tables"); the
+ * `wedding_v1_` prefix is applied automatically.
+ * Must be called BEFORE `page.goto(...)`.
+ *
+ * @param {import("@playwright/test").Page} page
+ * @param {Record<string, unknown>} data
+ */
+export async function seedStoreData(page, data) {
+  await page.addInitScript(
+    ({ prefix, entries }) => {
+      try {
+        for (const [key, value] of Object.entries(entries)) {
+          localStorage.setItem(`${prefix}${key}`, JSON.stringify(value));
+        }
+      } catch {
+        /* localStorage unavailable in some test contexts */
+      }
+    },
+    { prefix: STORAGE_PREFIX, entries: data },
+  );
+}
+
+/**
  * Wait until a lazy-loaded section template has injected content.
  * @param {import("@playwright/test").Page} page
  * @param {string} sectionId DOM id of the section container, e.g. "sec-guests"
