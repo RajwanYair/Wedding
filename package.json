@@ -60,6 +60,7 @@
     "@playwright/test": "^1.59.1",
     "@vitest/coverage-v8": "^4.1.4",
     "eslint": "^10.2.0",
+    "happy-dom": "^20.0.6",
     "htmlhint": "^1.9.2",
     "markdownlint-cli2": "^0.22.0",
     "prettier": "3.8.3",
