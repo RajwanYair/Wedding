@@ -30,7 +30,7 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
 
   use: {
-    baseURL: "http://localhost:3000/Wedding/",
+    baseURL: "http://localhost:3000",
     /* Capture trace on the first retry so failures are diagnosable */
     trace: "on-first-retry",
   },
@@ -59,9 +59,10 @@ export default defineConfig({
   ],
 
   webServer: {
-    /* Serve the Vite build output */
-    command: "npx vite preview --port 3000",
-    url: "http://localhost:3000/Wedding/",
+    /* Serve the Vite build output. Override base to / so absolute path
+       goto("/") in tests resolves to the app entry without redirect. */
+    command: "npx vite preview --base / --port 3000",
+    url: "http://localhost:3000",
     /* Reuse an existing server in local dev; always start fresh in CI */
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
