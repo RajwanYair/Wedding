@@ -13,6 +13,9 @@
 [![Bundle](https://img.shields.io/badge/bundle-%E2%89%A460KB_gzip-1abc9c?style=flat-square)](.github/workflows/ci.yml)
 [![Lighthouse](https://img.shields.io/badge/Lighthouse-CI_gated-6c5ce7?style=flat-square&logo=lighthouse&logoColor=white)](.github/workflows/lighthouse.yml)
 [![CodeQL](https://github.com/RajwanYair/Wedding/actions/workflows/codeql.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/codeql.yml)
+[![Scorecard](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml)
+[![SBOM](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml)
+[![Trivy](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml)
 
 **Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
 **Vite 8, vanilla JS/CSS, Hebrew RTL first, minimal runtime dependencies (3).**

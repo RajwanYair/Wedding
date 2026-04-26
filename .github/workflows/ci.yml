@@ -57,6 +57,11 @@ jobs:
       - name: Section contract validation
         run: npm run audit:sections
 
+      - name: Dead-export advisory (Phase B5)
+        if: matrix.node-version == '22'
+        run: npm run audit:dead || echo "::warning::Dead-export check found unused exports (advisory; will become a hard gate in v13.0.0)"
+        # ROADMAP §6 Phase B5: dead exports < 5%. Currently advisory.
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
