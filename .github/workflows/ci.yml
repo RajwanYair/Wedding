@@ -96,7 +96,14 @@ jobs:
         run: npm run test:coverage
         env:
           NODE_NO_WARNINGS: "1"
-        # S6.11: Coverage gate is enforced — failures block CI
+        # S6.11: Per-directory thresholds in vite.config.js gate this step.
+
+      - name: Coverage gate (global totals)
+        if: matrix.node-version == '22'
+        run: npm run audit:coverage
+        # Reads coverage/coverage-summary.json (json-summary reporter) and checks
+        # global line/branch/function/statement floors. Advisory; use --enforce once
+        # overall coverage is stable.
 
   security-scan:
     name: Security Scan
@@ -137,25 +144,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Vite build (required for size report)
+        run: npm run build
+
       - name: Generate size report
         run: node scripts/size-report.mjs | tee size-report.txt
 
       - name: Bundle size budget gate
-        run: |
-          # Fail CI if any single JS chunk exceeds 50 KB gzip (target: <30 KB, hard limit: 50 KB)
-          npm run build 2>/dev/null || true
-          FAILED=0
-          while IFS= read -r file; do
-            SIZE=$(gzip -c "$file" | wc -c)
-            KB=$((SIZE / 1024))
-            echo "  $(basename "$file"): ${KB} KB gzip"
-            if [ "$KB" -gt 50 ]; then
-              echo "::error::Chunk $(basename "$file") is ${KB} KB — exceeds 50 KB gzip budget"
-              FAILED=1
-            fi
-          done < <(find dist/assets -name '*.js' -type f)
-          if [ "$FAILED" -eq 1 ]; then exit 1; fi
-          echo "All chunks within 50 KB gzip budget."
+        run: npm run audit:bundle -- --enforce
+        # Uses check-bundle-size.mjs with per-tier gzip budgets (ADR-024).
+        # Hard gate: fails CI if any chunk exceeds its budget.
 
       - name: Upload size report artifact
         uses: actions/upload-artifact@v4

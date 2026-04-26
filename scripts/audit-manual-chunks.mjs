@@ -15,7 +15,7 @@ import { join } from "node:path";
 
 const REPO_ROOT = process.cwd();
 const VITE_FILE = join(REPO_ROOT, "vite.config.js");
-const BASELINE = 999; // advisory; flip when ADR-041 MC3 lands
+const BASELINE = 8; // current rule count; must not grow; target: 0 (ADR-041 MC3)
 
 const enforce = process.argv.includes("--enforce");
 

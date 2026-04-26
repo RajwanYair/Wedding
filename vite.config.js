@@ -98,7 +98,7 @@ export default defineConfig({
     cacheDir: join(TEMP_BASE, "vitest-cache"),
     coverage: {
       provider: "v8",
-      reporter: ["text", "lcov", "html"],
+      reporter: ["text", "lcov", "html", "json-summary"],
       include: ["src/**"],
       exclude: [
         "tests/**",

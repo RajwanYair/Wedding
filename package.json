@@ -36,6 +36,7 @@
     "version": "node scripts/sync-version.mjs",
     "icons": "node scripts/generate-icons.mjs",
     "sri": "node scripts/sri-check.mjs",
+    "inject:config": "node scripts/inject-config.mjs",
     "audit:dead": "node scripts/dead-export-check.mjs",
     "audit:security": "node scripts/security-scan.mjs",
     "audit:sections": "node scripts/validate-sections.mjs",

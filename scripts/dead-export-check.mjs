@@ -9,6 +9,7 @@
  *   node scripts/dead-export-check.mjs             # print report
  *   node scripts/dead-export-check.mjs --json      # JSON output
  *   node scripts/dead-export-check.mjs --summary   # only totals
+ *   node scripts/dead-export-check.mjs --enforce   # exit 1 if dead exports found
  */
 
 import { readFileSync, readdirSync } from "fs";
@@ -20,6 +21,7 @@ const ROOT = join(fileURLToPath(import.meta.url), "../..");
 const ARGS = new Set(process.argv.slice(2));
 const JSON_OUT = ARGS.has("--json");
 const SUMMARY_ONLY = ARGS.has("--summary");
+const ENFORCE = ARGS.has("--enforce");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -107,3 +109,8 @@ for (const [dir, entries] of Object.entries(byDir).sort()) {
 console.log(`\nNote: exports used only via barrel re-export (export * from) or`);
 console.log(`accessed exclusively by string key (e.g. obj["sym"]) may still`);
 console.log(`appear dead. Review before removing.\n`);
+
+if (ENFORCE && dead.length > 0) {
+  console.error(`\n✖ --enforce: ${dead.length} dead export(s) found. Clean up before merging.`);
+  process.exit(1);
+}
