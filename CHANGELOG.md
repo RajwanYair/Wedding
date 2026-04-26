@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.6.0] — 2026-04-29
+
+> Roadmap sprint batch — Web Vitals, ADRs for monitoring/router/cutover, CI advisory gates.
+
+### Added
+
+- **Web Vitals beacons** — `initWebVitals()` in `src/services/monitoring.js`
+  observes `largest-contentful-paint`, `event` (INP, durationThreshold 16 ms)
+  and `layout-shift` via `PerformanceObserver`. Flushes a single
+  `web-vitals` breadcrumb (and optional `_transport.captureMessage`) on
+  `visibilitychange` / `pagehide`. Wired from `src/main.js` bootstrap step 0b
+  inside try/catch. No-op when `PerformanceObserver` is unavailable.
+  (ROADMAP §6 Phase A2.)
+- **ADRs** — `docs/adr/013-opt-in-monitoring-and-supply-chain.md`,
+  `docs/adr/014-pushstate-router.md`,
+  `docs/adr/015-sheets-to-supabase-cutover.md`.
+- **CI advisory gate** — `audit:dead` step added to `lint-and-test` (Node 22
+  matrix only) emitting `::warning::` on unused-export hits. Will become a
+  hard gate in v13.0.0 (ROADMAP §6 Phase B5).
+- **README supply-chain badges** — OpenSSF Scorecard, CycloneDX SBOM, Trivy.
+- **What's New v11.5.0** — six `whats_new_item_*` keys refreshed across
+  `he` / `en` / `ar` / `ru` covering Sentry, calendar deep links,
+  supply-chain hardening, PITR runbook, `wedding.json` MIME fix, ADR set.
+
+### Changed
+
+- `eslint.config.mjs` — added `PerformanceObserver` and
+  `PerformanceEventTiming` to browser globals so Web Vitals code lints under
+  the shared base config.
+- `src/main.js` — imports and invokes `initWebVitals()` alongside
+  `initMonitoring()`.
+
 ## [11.5.0] — 2026-04-28
 
 > Roadmap sprint batch — observability, supply-chain, RSVP delight, default-info bootstrap fix.
