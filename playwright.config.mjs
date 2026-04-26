@@ -30,7 +30,7 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
 
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3000/Wedding/",
     /* Capture trace on the first retry so failures are diagnosable */
     trace: "on-first-retry",
   },
@@ -61,9 +61,9 @@ export default defineConfig({
   webServer: {
     /* Serve the Vite build output */
     command: "npx vite preview --port 3000",
-    url: "http://localhost:3000",
+    url: "http://localhost:3000/Wedding/",
     /* Reuse an existing server in local dev; always start fresh in CI */
     reuseExistingServer: !process.env.CI,
-    timeout: 20_000,
+    timeout: 60_000,
   },
 });
