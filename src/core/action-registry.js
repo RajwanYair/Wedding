@@ -290,3 +290,49 @@ export function findDuplicateActions(registry = ACTIONS) {
   }
   return [...seen.entries()].filter(([, count]) => count > 1).map(([v]) => v);
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// Namespaced aliases (ADR-022 Phase 1 — modals)
+//
+// Maps the new `modal:<verb>` names to the existing legacy flat names. Both
+// continue to work via `events.alias()`. Old names will be removed in
+// v12.0.0; templates should adopt the new names incrementally.
+// ──────────────────────────────────────────────────────────────────────────
+
+/** @type {Readonly<Record<string, string>>} */
+export const MODAL_ACTION_ALIASES = Object.freeze({
+  "modal:close": ACTIONS.CLOSE_MODAL,
+  "modal:close-gallery-lightbox": ACTIONS.CLOSE_GALLERY_LIGHTBOX,
+  "modal:open-add-guest": ACTIONS.OPEN_ADD_GUEST_MODAL,
+  "modal:open-add-table": ACTIONS.OPEN_ADD_TABLE_MODAL,
+  "modal:open-add-vendor": ACTIONS.OPEN_ADD_VENDOR_MODAL,
+  "modal:open-add-expense": ACTIONS.OPEN_ADD_EXPENSE_MODAL,
+  "modal:open-add-timeline": ACTIONS.OPEN_ADD_TIMELINE_MODAL,
+});
+
+/**
+ * Aggregate all namespaced action aliases shipped so far. Future ADR-022
+ * batches (auth, guests, tables, …) extend this object.
+ * @type {Readonly<Record<string, string>>}
+ */
+export const NAMESPACED_ACTION_ALIASES = Object.freeze({
+  ...MODAL_ACTION_ALIASES,
+});
+
+/**
+ * Wire all namespaced aliases into the supplied event hub. Idempotent.
+ * @param {(newName: string, originalName: string) => void} aliasFn
+ *        Typically `alias` from `core/events.js`.
+ * @returns {number} count of aliases registered
+ */
+export function registerNamespacedActionAliases(aliasFn) {
+  if (typeof aliasFn !== "function") {
+    throw new TypeError("registerNamespacedActionAliases: aliasFn required");
+  }
+  let count = 0;
+  for (const [newName, originalName] of Object.entries(NAMESPACED_ACTION_ALIASES)) {
+    aliasFn(newName, originalName);
+    count += 1;
+  }
+  return count;
+}

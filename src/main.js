@@ -10,7 +10,8 @@
 import { PUBLIC_SECTIONS, STORAGE_KEYS } from "./core/constants.js";
 import { buildStoreDefs, defaultWeddingInfo } from "./core/defaults.js";
 import { initStore, reinitStore, storeGet, storeSet, storeSubscribe } from "./core/store.js";
-import { initEvents, on } from "./core/events.js";
+import { initEvents, on, alias } from "./core/events.js";
+import { registerNamespacedActionAliases } from "./core/action-registry.js";
 import {
   loadLocale,
   applyI18n,
@@ -370,6 +371,13 @@ let _activeSection = null;
 
   // 7. Register ALL data-action handlers
   _registerHandlers();
+
+  // 7a. Register namespaced action aliases (ADR-022 — modal: namespace)
+  try {
+    registerNamespacedActionAliases(alias);
+  } catch (e) {
+    console.warn("[main] registerNamespacedActionAliases failed:", e);
+  }
 
   // 8. Start hash router — fires "showSection" for initial hash
   initRouter();

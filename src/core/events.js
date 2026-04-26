@@ -9,7 +9,30 @@
 /** @type {Map<string, (el: HTMLElement, e: Event) => void>} */
 const _handlers = new Map();
 
+/**
+ * Action alias map (ADR-022 — namespace migration).
+ * Maps a new namespaced action (e.g. `modal:close`) to an existing legacy
+ * flat action (`closeModal`). Dispatch resolves through this map when a
+ * direct handler is not found.
+ * @type {Map<string, string>}
+ */
+const _aliases = new Map();
+
 let _initialized = false;
+
+/**
+ * Resolve a handler, transparently following an alias if no direct handler
+ * is registered. ADR-022 — supports namespaced action migration.
+ * @param {string} action
+ * @returns {((el: HTMLElement, e: Event) => void) | undefined}
+ */
+function _resolve(action) {
+  const direct = _handlers.get(action);
+  if (direct) return direct;
+  const aliasTarget = _aliases.get(action);
+  if (aliasTarget) return _handlers.get(aliasTarget);
+  return undefined;
+}
 
 /** @param {Event} e */
 function _dispatch(e) {
@@ -18,7 +41,7 @@ function _dispatch(e) {
   if (!el) return;
   const action = /** @type {HTMLElement} */ (el).dataset.action;
   if (!action) return;
-  const fn = _handlers.get(action);
+  const fn = _resolve(action);
   if (fn) {
     try {
       fn(/** @type {HTMLElement} */ (el), e);
@@ -44,7 +67,7 @@ export function initEvents() {
     const target = /** @type {HTMLElement} */ (e.target);
     const action = target.dataset.onInput;
     if (!action) return;
-    const fn = _handlers.get(action);
+    const fn = _resolve(action);
     if (fn) {
       try {
         fn(target, e);
@@ -60,7 +83,7 @@ export function initEvents() {
     // First try data-on-change attribute
     const onChangeAction = target.dataset.onChange;
     if (onChangeAction) {
-      const fn = _handlers.get(onChangeAction);
+      const fn = _resolve(onChangeAction);
       if (fn) {
         try {
           fn(target, e);
@@ -81,7 +104,7 @@ export function initEvents() {
     const action = target.dataset.onEnter;
     if (!action) return;
     e.preventDefault();
-    const fn = _handlers.get(action);
+    const fn = _resolve(action);
     if (fn) {
       try {
         fn(target, e);
@@ -107,4 +130,30 @@ export function on(action, fn) {
  */
 export function off(action) {
   _handlers.delete(action);
+}
+
+/**
+ * Register a new namespaced action that dispatches to an existing legacy
+ * action's handler. ADR-022 — namespace migration.
+ *
+ * Both names continue to work; the new name does not require its own handler.
+ * Multiple aliases per target are allowed. Calling `alias()` again with the
+ * same `newName` overwrites the previous mapping.
+ *
+ * @param {string} newName     e.g. "modal:close"
+ * @param {string} originalName e.g. "closeModal"
+ */
+export function alias(newName, originalName) {
+  if (!newName || !originalName) {
+    throw new TypeError("events.alias: both newName and originalName are required");
+  }
+  _aliases.set(newName, originalName);
+}
+
+/**
+ * Test seam — clear the alias map. Not exported in production index.
+ * @returns {void}
+ */
+export function _resetAliasesForTests() {
+  _aliases.clear();
 }
