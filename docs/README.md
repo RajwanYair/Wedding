@@ -1,8 +1,24 @@
 # Documentation Index — Wedding Manager
 
-> v10.1.0 · [Live App](https://rajwanyair.github.io/Wedding) · [GitHub](https://github.com/RajwanYair/Wedding)
+> v11.9.0 · [Live App](https://rajwanyair.github.io/Wedding) · [GitHub](https://github.com/RajwanYair/Wedding)
 
 This directory contains all architecture, integration, and operational documentation for the Wedding Manager project.
+
+The user-facing docs are organized by the [Diátaxis](https://diataxis.fr/) framework:
+
+| Quadrant | Folder | Purpose |
+| --- | --- | --- |
+| **Tutorials** | [tutorials/](tutorials/) | Learning-oriented, fixed happy-path lessons |
+| **How-to guides** | [how-to/](how-to/) | Task-oriented recipes for common goals |
+| **Reference** | [reference/](reference/) | Information-oriented, exhaustive facts |
+| **Explanation** | [adr/](adr/) | Understanding-oriented architectural rationale |
+
+## Diátaxis quick links
+
+- Tutorial: [Your first event](tutorials/first-event.md)
+- How-to: [Add a locale](how-to/add-a-locale.md)
+- Reference: [Storage keys](reference/storage-keys.md)
+- Explanation: see the ADR table below.
 
 ---
 
@@ -22,6 +38,9 @@ This directory contains all architecture, integration, and operational documenta
 | [010](adr/010-ab-testing-strategy.md) | A/B Testing Strategy | ✅ Accepted |
 | [011](adr/011-focus-trap-accessibility.md) | Focus Trap Accessibility | ✅ Accepted |
 | [012](adr/012-event-bus.md) | Event Bus | ✅ Accepted |
+| [022](adr/022-action-namespace-migration.md) | Action Namespace Migration | 🟡 Proposed |
+| [023](adr/023-org-team-scoping.md) | Org & Team Scoping | 🟡 Proposed |
+| [024](adr/024-bundle-size-budget.md) | Bundle Size Budget | 🟡 Proposed |
 
 ---
 
