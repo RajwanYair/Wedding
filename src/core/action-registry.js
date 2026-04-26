@@ -212,3 +212,83 @@ export function buildActionReport() {
   const registered = Object.fromEntries(ACTION_NAMES);
   return { actions: listActions(), count: ACTION_VALUES.size, registered };
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// Namespacing helpers (Phase A — incremental migration aid)
+//
+// Existing actions are flat camelCase strings ("saveGuest"). New code may
+// opt into namespaced form "guests:save" without breaking the registry.
+// `parseAction()` accepts both styles.
+// ──────────────────────────────────────────────────────────────────────────
+
+/** @typedef {{ namespace: string | null, name: string, raw: string }} ParsedAction */
+
+const NAMESPACE_SEP = ":";
+
+/**
+ * Combine a namespace and local action name into a single token.
+ *
+ * @param {string} namespace e.g. "guests"
+ * @param {string} name      e.g. "save"
+ * @returns {string}         e.g. "guests:save"
+ */
+export function namespaced(namespace, name) {
+  if (!namespace || !name) throw new TypeError("action-registry: namespace and name required");
+  if (namespace.includes(NAMESPACE_SEP) || name.includes(NAMESPACE_SEP)) {
+    throw new TypeError(`action-registry: namespace/name must not contain "${NAMESPACE_SEP}"`);
+  }
+  return `${namespace}${NAMESPACE_SEP}${name}`;
+}
+
+/**
+ * Parse an action string into namespace + local name. Returns `namespace: null`
+ * for legacy flat names.
+ *
+ * @param {string} value
+ * @returns {ParsedAction}
+ */
+export function parseAction(value) {
+  const raw = String(value);
+  const idx = raw.indexOf(NAMESPACE_SEP);
+  if (idx < 0) return { namespace: null, name: raw, raw };
+  return {
+    namespace: raw.slice(0, idx),
+    name: raw.slice(idx + 1),
+    raw,
+  };
+}
+
+/**
+ * Filter the registry by namespace. Returns an array of full action values.
+ * Matches both `"<ns>:..."` and (case-insensitively) the camelCase prefix
+ * of legacy flat names — e.g. namespace "guest" matches "saveGuest".
+ *
+ * @param {string} namespace
+ * @returns {string[]}
+ */
+export function getActionsByNamespace(namespace) {
+  if (!namespace) return [];
+  const ns = namespace.toLowerCase();
+  return listActions().filter((a) => {
+    const parsed = parseAction(a);
+    if (parsed.namespace) return parsed.namespace.toLowerCase() === ns;
+    return a.toLowerCase().includes(ns);
+  });
+}
+
+/**
+ * Dev-time duplicate detector. Returns any action string that appears more
+ * than once across the supplied registry object. Exposed for the validator
+ * scripts and unit tests.
+ *
+ * @param {Record<string, string>} registry
+ * @returns {string[]} duplicate values (empty array when registry is clean)
+ */
+export function findDuplicateActions(registry = ACTIONS) {
+  /** @type {Map<string, number>} */
+  const seen = new Map();
+  for (const value of Object.values(registry)) {
+    seen.set(value, (seen.get(value) ?? 0) + 1);
+  }
+  return [...seen.entries()].filter(([, count]) => count > 1).map(([v]) => v);
+}
