@@ -50,6 +50,8 @@
     "audit:section-templates": "node scripts/check-section-template-parity.mjs",
     "audit:base-section": "node scripts/audit-base-section.mjs",
     "audit:jsdoc": "node scripts/audit-jsdoc.mjs",
+    "audit:css-scope": "node scripts/audit-css-scope.mjs",
+    "audit:section-i18n": "node scripts/audit-section-i18n.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
