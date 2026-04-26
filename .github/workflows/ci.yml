@@ -159,10 +159,12 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build production bundle
-        # Build with base=/ so vite preview serves at the root path; tests
-        # use absolute goto("/...") which only resolves to the app entry
-        # when assets are not under the GH-Pages /Wedding/ subpath.
-        run: npx vite build --base=/
+        # VITE_BASE=/ overrides the GH-Pages /Wedding/ base so the preview
+        # server (started by Playwright) responds at the host root, matching
+        # absolute goto("/...") calls in tests.
+        env:
+          VITE_BASE: "/"
+        run: npm run build
 
       - name: Run E2E smoke tests
         run: npm run test:e2e

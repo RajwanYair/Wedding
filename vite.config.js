@@ -22,7 +22,9 @@ function copyChangelog() {
 }
 
 export default defineConfig({
-  base: "/Wedding/",
+  // Override via VITE_BASE for environments that serve at root (E2E preview,
+  // Lighthouse static-dist server). Production GH Pages deploys under /Wedding/.
+  base: process.env.VITE_BASE ?? "/Wedding/",
   plugins: [copyChangelog()],
   cacheDir: join(TEMP_BASE, "vite-cache"),
   build: {

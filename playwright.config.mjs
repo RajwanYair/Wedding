@@ -59,9 +59,11 @@ export default defineConfig({
   ],
 
   webServer: {
-    /* Serve the Vite build output. Override base to / so absolute path
-       goto("/") in tests resolves to the app entry without redirect. */
-    command: "npx vite preview --base / --port 3000",
+    /* Serve the Vite build output. VITE_BASE=/ overrides the GH-Pages
+       /Wedding/ base so absolute goto("/") in tests resolves to the app
+       entry without redirect. */
+    command: "npx vite preview --port 3000",
+    env: { VITE_BASE: "/" },
     url: "http://localhost:3000",
     /* Reuse an existing server in local dev; always start fresh in CI */
     reuseExistingServer: !process.env.CI,
