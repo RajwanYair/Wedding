@@ -56,13 +56,27 @@ test.describe("Offline behaviour (Phase 9.2)", () => {
   });
 
   test("localStorage mutations survive page reload", async ({ page }) => {
-    // Write a value to localStorage then reload and verify it persists
+    // Write a value to localStorage then reload and verify it persists.
     await page.evaluate((key) => {
       localStorage.setItem(key, "ping");
     }, TEST_STORAGE_KEYS.OFFLINE_PROBE);
-    await page.reload();
+
+    // Wait for any active service worker to settle before reloading. Firefox
+    // can throw NS_BINDING_ABORTED on reload if a SW is mid-install/activate.
+    await page
+      .evaluate(async () => {
+        if ("serviceWorker" in navigator) {
+          await navigator.serviceWorker.ready.catch(() => {});
+        }
+      })
+      .catch(() => {});
+
+    await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
-    const val = await page.evaluate((key) => localStorage.getItem(key), TEST_STORAGE_KEYS.OFFLINE_PROBE);
+    const val = await page.evaluate(
+      (key) => localStorage.getItem(key),
+      TEST_STORAGE_KEYS.OFFLINE_PROBE,
+    );
     expect(val).toBe("ping");
     // Cleanup
     await page.evaluate((key) => localStorage.removeItem(key), TEST_STORAGE_KEYS.OFFLINE_PROBE);

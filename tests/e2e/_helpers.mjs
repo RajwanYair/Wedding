@@ -55,11 +55,13 @@ export async function seedAdminSession(page) {
 export async function waitForSection(page, sectionId, timeout = 15_000) {
   const container = page.locator(`#${sectionId}`);
   await expect(container).toBeAttached({ timeout });
-  // Section template is injected lazily; wait until it has at least one child.
+  // Section template is injected lazily; the loader sets data-loaded="1" on
+  // the container once the HTML has been fetched and inserted. Wait for that
+  // marker so callers see fully-mounted DOM (not a transient empty shell).
   await page.waitForFunction(
     (id) => {
       const el = document.getElementById(id);
-      return !!el && el.children.length > 0;
+      return !!el && el.dataset.loaded === "1" && el.children.length > 0;
     },
     sectionId,
     { timeout },
