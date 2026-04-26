@@ -4,7 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [11.13.0] — 2026-04-27
+## [11.14.0] — 2026-04-26
+
+> Roadmap sprint batch — Phase B prep: ADRs 034 (BaseSection adoption) + 035 (TypeScript migration), two new advisories (`audit:base-section`, `audit:jsdoc`), four new Diátaxis docs.
+
+### Added
+
+- **ADR-034** — Adopt `BaseSection` across all 18 sections (BS0 → BS4 phasing). Audit baseline: 0/19 adopted.
+- **ADR-035** — TypeScript strict migration for `core/`, `services/`, `handlers/` (TS0 → TS4 phasing). Sections stay `.js` + JSDoc.
+- **`scripts/audit-base-section.mjs`** + `audit:base-section` npm script — advisory inventory of sections that have not yet adopted `BaseSection`. Baseline: 19 pending.
+- **`scripts/audit-jsdoc.mjs`** + `audit:jsdoc` npm script — advisory coverage metric for JSDoc on top-level exports in `src/core/` + `src/services/`. Current: 498/500 documented (100%).
+- **`docs/how-to/migrate-section-to-base.md`** — step-by-step recipe for converting a function-style section to the `BaseSection` class pattern.
+- **`docs/reference/repositories-api.md`** — reference for `BaseRepository<T>` + 4 domain repositories + planned strict architecture gate (ROADMAP B9).
+- **`docs/explanation/typescript-migration-strategy.md`** — Diátaxis explanation: why TypeScript only at the boundaries (`core`/`services`/`handlers`), not in sections.
+- **`docs/explanation/section-lifecycle.md`** — Diátaxis explanation of mount/unmount contract, common lifecycle bugs, performance budget.
+
+### Changed
+
+- `package.json`: added `audit:base-section` and `audit:jsdoc` scripts.
+
+
 
 > Roadmap sprint batch — `src/main.js` migrated to `navigate()` (ADR-025 R2), two new advisory ADRs (`console.error` migration, storage schema migrations), two new advisories (`audit:console-error`, `audit:section-templates`), three new Diátaxis docs.
 
