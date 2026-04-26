@@ -13,18 +13,18 @@ import { formatCurrency as _formatCurrency } from "../utils/currency.js";
 let _dict = {};
 /** @type {Record<string, string>} */
 let _fallbackDict = {};
-/** @type {'he'|'en'|'ar'|'ru'} */
+/** @type {'he'|'en'} */
 let _lang = "he";
 
 /** RTL languages */
-const RTL_LANGS = new Set(["he", "ar"]);
+const RTL_LANGS = new Set(["he"]);
 const BILINGUAL_LANGS = new Set(["he", "en"]);
 
 /**
  * Load a language pack via Vite dynamic import().
- * Hebrew is bundled eagerly; other locales are split into lazy chunks.
+ * Hebrew is bundled eagerly; English is split into a lazy chunk.
  *
- * @param {'he'|'en'|'ar'|'ru'} lang
+ * @param {'he'|'en'} lang
  * @param {Record<string, string>} [_inlineDict]  Injected dict for unit tests only
  * @returns {Promise<void>}
  */
@@ -39,12 +39,6 @@ export async function loadLocale(lang, _inlineDict) {
   if (lang === "en") {
     const { default: dict } = await import("../i18n/en.json");
     _dict = dict;
-  } else if (lang === "ar") {
-    const { default: dict } = await import("../i18n/ar.json");
-    _dict = dict;
-  } else if (lang === "ru") {
-    const { default: dict } = await import("../i18n/ru.json");
-    _dict = dict;
   } else {
     // Hebrew — bundled eagerly into the main entry chunk
     const { default: dict } = await import("../i18n/he.json");
@@ -55,8 +49,8 @@ export async function loadLocale(lang, _inlineDict) {
 
 /**
  * Set `dir` and `lang` attributes on the document root.
- * RTL for he/ar, LTR for en/ru.
- * @param {'he'|'en'|'ar'|'ru'} lang
+ * RTL for he, LTR for en.
+ * @param {'he'|'en'} lang
  */
 function _applyDirection(lang) {
   if (typeof document === "undefined") return;
@@ -68,13 +62,11 @@ function _applyDirection(lang) {
 /**
  * Preload a secondary locale into the module cache during idle time.
  * Does NOT switch the active language — just primes the dynamic import.
- * @param {'he'|'en'|'ar'|'ru'} lang
+ * @param {'he'|'en'} lang
  */
 export function preloadLocale(lang) {
   const loader = () => {
     if (lang === "en") import("../i18n/en.json");
-    else if (lang === "ar") import("../i18n/ar.json");
-    else if (lang === "ru") import("../i18n/ru.json");
     // he is bundled eagerly — no preload needed
   };
   if (typeof requestIdleCallback === "function") {
@@ -128,7 +120,7 @@ export function t(key, paramsOrFallback, fallback) {
  * Handles `{key}` simple interpolation and
  * `{key, plural, =N {…} one {…} few {…} many {…} other {…}}` plural blocks.
  * Uses native `Intl.PluralRules` for locale-correct plural categories
- * (important for Arabic few/many and Russian one/few/many).
+ * (important for Hebrew one/many).
  *
  * @param {string} template
  * @param {Record<string, string|number>} params
@@ -349,7 +341,7 @@ export function formatList(items, type = "conjunction") {
 
 /**
  * Format a date using the locale-appropriate short format.
- * Hebrew / Arabic / Russian → DD/MM/YYYY  (Intl adapts automatically)
+ * Hebrew → DD/MM/YYYY  (Intl adapts automatically)
  * English → MM/DD/YYYY
  *
  * Examples:

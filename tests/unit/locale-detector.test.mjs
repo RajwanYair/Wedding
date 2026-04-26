@@ -65,12 +65,13 @@ describe("detectLocale", () => {
 describe("resolveAppLocale", () => {
   it("resolves supported locale", () => {
     expect(resolveAppLocale("he")).toBe("he");
-    expect(resolveAppLocale("ar")).toBe("ar");
+    expect(resolveAppLocale("en")).toBe("en");
   });
 
   it("falls back to 'en' for unsupported locale", () => {
     expect(resolveAppLocale("ja")).toBe("en");
     expect(resolveAppLocale("fr")).toBe("en");
+    expect(resolveAppLocale("ar")).toBe("en");
   });
 
   it("strips region tag", () => {

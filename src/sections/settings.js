@@ -81,7 +81,7 @@ export function saveWeddingInfo(data) {
 
 /**
  * Switch the app language.
- * @param {"he"|"en"|"ar"|"ru"} lang
+ * @param {"he"|"en"} lang
  */
 export async function switchLanguage(lang) {
   const nextLang = normalizeUiLanguage(lang);

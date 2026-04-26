@@ -45,7 +45,7 @@ export function detectLocale(nav) {
  * @param {string}  [fallback]     Default: "en"
  * @returns {string}
  */
-export function resolveAppLocale(locale, supported = ["he", "en", "ar", "ru"], fallback = "en") {
+export function resolveAppLocale(locale, supported = ["he", "en"], fallback = "en") {
   const lang = primaryLang(locale);
   return supported.includes(lang) ? lang : fallback;
 }

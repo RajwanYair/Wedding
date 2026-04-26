@@ -65,14 +65,14 @@ describe("config-scopes", () => {
   });
 
   it("resetRuntimeConfig removes override, falls back to default", () => {
-    setRuntimeConfig("defaultLang", "ar");
-    expect(getConfig("defaultLang")).toBe("ar");
+    setRuntimeConfig("defaultLang", "en");
+    expect(getConfig("defaultLang")).toBe("en");
     resetRuntimeConfig("defaultLang");
     expect(getConfig("defaultLang")).toBe("he");
   });
 
   it("clearRuntimeConfig removes all overrides", () => {
-    setRuntimeConfig("defaultLang", "ru");
+    setRuntimeConfig("defaultLang", "he");
     setRuntimeConfig("defaultTheme", "gold");
     clearRuntimeConfig();
     expect(getConfig("defaultLang")).toBe("he");

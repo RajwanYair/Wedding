@@ -185,10 +185,10 @@ let _activeSection = null;
 
   // 1. Language — use stored preference; auto-detect browser locale for new users (Phase 4.3)
   const _storedLang = load("lang");
-  const lang = /** @type {'he'|'en'|'ar'|'ru'} */ (
+  const lang = /** @type {'he'|'en'} */ (
     _storedLang
       ? normalizeUiLanguage(String(_storedLang))
-      : resolveAppLocale(detectLocale(), ["he", "en", "ar", "ru"], "he")
+      : resolveAppLocale(detectLocale(), ["he", "en"], "he")
   );
   await loadLocale(lang);
   // Load English fallback dict for non-English locales (Sprint 13)

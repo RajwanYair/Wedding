@@ -2,7 +2,7 @@
 /**
  * scripts/validate-i18n.mjs — i18n key parity validator (Phase 9.3)
  *
- * Checks that all 4 locale files (he/en/ar/ru) define identical key sets.
+ * Checks that both locale files (he/en) define identical key sets.
  * Exits with non-zero status when any mismatch is found so CI can block.
  *
  * Usage:
@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const I18N_DIR = join(__dir, "..", "src", "i18n");
-const LOCALES = ["he", "en", "ar", "ru"];
+const LOCALES = ["he", "en"];
 const VERBOSE = process.argv.includes("--report");
 
 // ── Load all locale files ─────────────────────────────────────────────────

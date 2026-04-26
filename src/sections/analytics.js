@@ -704,7 +704,7 @@ export function exportAnalyticsPDF() {
   const lang = currentLang();
 
   const html = `<!DOCTYPE html>
-<html lang="${lang}" dir="${lang === "he" || lang === "ar" ? "rtl" : "ltr"}">
+<html lang="${lang}" dir="${lang === "he" ? "rtl" : "ltr"}">
 <head><meta charset="utf-8"><title>${_escHtml(title)}</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}

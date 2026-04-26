@@ -19,8 +19,6 @@ vi.mock("../../src/core/config.js", () => ({
 
 vi.mock("../../src/i18n/he.json", () => ({ default: { rtl_test: "בדיקה" } }));
 vi.mock("../../src/i18n/en.json", () => ({ default: { rtl_test: "test" } }));
-vi.mock("../../src/i18n/ar.json", () => ({ default: { rtl_test: "اختبار" } }));
-vi.mock("../../src/i18n/ru.json", () => ({ default: { rtl_test: "тест" } }));
 
 // storage.js module-level mock — fn refs defined before factory so closure
 // captures the same references used in tests
@@ -62,16 +60,6 @@ describe("S22b — currentLang / isRTL / textDir", () => {
     expect(textDir()).toBe("rtl");
   });
 
-  it("isRTL() is true for Arabic", async () => {
-    await loadLocale("ar");
-    expect(isRTL()).toBe(true);
-  });
-
-  it("textDir() returns 'rtl' for Arabic", async () => {
-    await loadLocale("ar");
-    expect(textDir()).toBe("rtl");
-  });
-
   it("isRTL() is false for English", async () => {
     await loadLocale("en");
     expect(isRTL()).toBe(false);
@@ -82,21 +70,11 @@ describe("S22b — currentLang / isRTL / textDir", () => {
     expect(textDir()).toBe("ltr");
   });
 
-  it("isRTL() is false for Russian", async () => {
-    await loadLocale("ru");
-    expect(isRTL()).toBe(false);
-  });
-
-  it("textDir() returns 'ltr' for Russian", async () => {
-    await loadLocale("ru");
-    expect(textDir()).toBe("ltr");
-  });
-
   it("currentLang() reflects language after switch", async () => {
     await loadLocale("en");
     expect(currentLang()).toBe("en");
-    await loadLocale("ar");
-    expect(currentLang()).toBe("ar");
+    await loadLocale("he");
+    expect(currentLang()).toBe("he");
   });
 });
 

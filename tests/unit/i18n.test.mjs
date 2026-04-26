@@ -246,14 +246,14 @@ describe("ICU plural via t()", () => {
 
 describe("bilingual language helpers", () => {
   it("normalizes unsupported values to Hebrew", () => {
-    expect(normalizeUiLanguage("ru")).toBe("he");
+    expect(normalizeUiLanguage("fr")).toBe("he");
     expect(normalizeUiLanguage(undefined)).toBe("he");
   });
 
   it("returns the next UI language in the Hebrew/English pair", () => {
     expect(nextUiLanguage("he")).toBe("en");
     expect(nextUiLanguage("en")).toBe("he");
-    expect(nextUiLanguage("ar")).toBe("en");
+    expect(nextUiLanguage("fr")).toBe("en");
   });
 
   it("returns the correct language toggle label", () => {

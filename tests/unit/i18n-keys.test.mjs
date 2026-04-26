@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const i18nDir = resolve(__dirname, "..", "..", "src", "i18n");
 
-const LOCALES = ["he", "en", "ar", "ru"];
+const LOCALES = ["he", "en"];
 
 /** @type {Record<string, Record<string, unknown>>} */
 const data = {};
@@ -53,9 +53,8 @@ for (const locale of LOCALES) {
 const refLocale = "he";
 const refKeys = keySets[refLocale];
 
-// en must be in perfect sync; ar/ru may lag (tracked as soft warnings)
+// en must be in perfect sync with he
 const strictLocales = ["en"];
-const softLocales = ["ar", "ru"];
 
 describe("i18n key-set validation", () => {
   it("all locale files parse as valid JSON", () => {
@@ -81,29 +80,6 @@ describe("i18n key-set validation", () => {
         extra,
         `${locale} has ${extra.length} extra keys: ${extra.slice(0, 10).join(", ")}`,
       ).toHaveLength(0);
-    });
-  }
-
-  // ── Soft: ar/ru may have gaps — log but don't fail ───────────────────
-  for (const locale of softLocales) {
-    it(`${locale} coverage vs ${refLocale} (soft audit)`, () => {
-      const missing = [...refKeys].filter((k) => !keySets[locale].has(k));
-      const extra = [...keySets[locale]].filter((k) => !refKeys.has(k));
-      const coverage = (
-        ((refKeys.size - missing.length) / refKeys.size) *
-        100
-      ).toFixed(1);
-      // Log stats but don't fail
-      if (missing.length > 0 || extra.length > 0) {
-        console.log(
-          `[i18n-audit] ${locale}: ${coverage}% coverage, ${missing.length} missing, ${extra.length} extra`,
-        );
-      }
-      // Only fail if coverage drops below 50% (seriously broken)
-      expect(
-        Number(coverage),
-        `${locale} coverage is critically low (${coverage}%)`,
-      ).toBeGreaterThan(50);
     });
   }
 
