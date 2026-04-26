@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.11.0] — 2026-04-26
+
+> Roadmap sprint batch — pushState router lands behind a parallel `navigate()` API (ADR-025 R1), two new advisory ADRs (error monitoring, WCAG 2.2 AA), `audit:router` advisory, three new Diátaxis docs.
+
+### Added
+
+- **`src/core/router.js`** — pushState router (ADR-025 R1). Public API: `navigate(name, params?, opts?)`, `currentRoute()`, `onRouteChange(handler)`, `initRouterListener()`. Coexists with the legacy hash router in `nav.js`. 14 unit tests.
+- **ADR-028** — Error monitoring activation (Phase A2). Vendor-neutral envelope-based transport; M0 → M4 phasing through v12.1; no SDK adopted (preserves ADR-001).
+- **ADR-029** — WCAG 2.2 AA compliance roadmap (Phase A4). A0 → A4 phasing; `axe-core` Playwright sweep planned for v11.12; new SCs 2.4.11, 2.5.7, 2.5.8, 3.2.6, 3.3.7, 3.3.8 mapped to affected components.
+- **`scripts/audit-router-usage.mjs`** + `audit:router` npm script — advisory scan for direct `location.hash` / `history.pushState` / `history.replaceState` writes outside `src/core/router.js` and `src/core/nav.js`. Baseline: 3 call sites (`src/main.js` × 2, `src/services/supabase-auth.js` × 1).
+- **`docs/how-to/migrate-whatsapp-tokens.md`** — recipe for migrating Green API + WhatsApp phone-number-id storage keys to encrypted secure-storage (ADR-026 E1).
+- **`docs/how-to/deep-link-rsvp.md`** — recipe for generating `?token=` deep-link RSVP URLs and how the router consumes them.
+- **`docs/reference/audit-scripts.md`** — exhaustive catalogue of every `audit:*` npm script with files, default mode, enforce flags, and promotion path.
+- **`docs/reference/wcag-checklist.md`** — WCAG 2.2 AA manual audit checklist (companion to ADR-029, run before every minor release).
+- **`docs/tutorials/run-locally.md`** — first-time-contributor tutorial: clone, install (parent-dir `node_modules`), dev, test, lint, build, optional Playwright.
+
+### Changed
+
+- `package.json`: added `audit:router` script.
+
 ## [11.10.0] — 2026-04-29
 
 > Roadmap sprint batch — three Phase A ADRs (router, encryption, backend), two new advisory CI gates, Diátaxis explanation index + how-to + reference.
