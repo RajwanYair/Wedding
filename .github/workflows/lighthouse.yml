@@ -1,0 +1,59 @@
+# Lighthouse CI — performance + a11y + best-practices regression gate (ROADMAP §5 Phase B)
+#
+# Runs on PRs and main. Builds the production bundle, serves it, and runs
+# Lighthouse against the public sections. Hard gates can be enabled later by
+# bumping minScore values.
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Install Lighthouse CI
+        run: npm i -g @lhci/cli@0.14.x
+
+      - name: Run Lighthouse against built bundle
+        run: |
+          lhci autorun \
+            --collect.staticDistDir=./dist \
+            --collect.numberOfRuns=2 \
+            --collect.url="http://localhost/Wedding/index.html" \
+            --upload.target=temporary-public-storage \
+            --assert.preset=lighthouse:recommended \
+            --assert.assertions.categories.performance="warn:0.85" \
+            --assert.assertions.categories.accessibility="warn:0.90" \
+            --assert.assertions.categories.best-practices="warn:0.90" \
+            --assert.assertions.categories.seo="warn:0.85"
+        continue-on-error: true # advisory until v12 hard-gate
+
+      - name: Upload Lighthouse artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          retention-days: 14
