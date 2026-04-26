@@ -42,6 +42,7 @@
     "audit:trusted-types": "node scripts/audit-trusted-types.mjs",
     "audit:adrs": "node scripts/check-adr-coverage.mjs",
     "audit:bundle": "node scripts/check-bundle-size.mjs",
+    "audit:plaintext-secrets": "node scripts/check-plaintext-secrets.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
