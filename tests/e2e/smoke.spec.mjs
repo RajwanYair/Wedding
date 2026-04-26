@@ -172,7 +172,7 @@ test.describe("Guest Management — CRUD Flow", () => {
     await page.waitForFunction(() => document.title.length > 0, { timeout: 8_000 });
     // Lazy-loaded section template — wait until it injects content.
     await waitForSection(page, "sec-guests");
-  };);
+  });
 
   test("guests section is reachable via hash", async ({ page }) => {
     const section = page.locator("#sec-guests, section[data-section='guests']").first();
@@ -206,7 +206,7 @@ test.describe("Tables Section — Basic Flow", () => {
     await page.goto("/#tables");
     await page.waitForFunction(() => document.title.length > 0, { timeout: 8_000 });
     await waitForSection(page, "sec-tables");
-  };);
+  });
 
   test("tables section is reachable via hash", async ({ page }) => {
     const section = page.locator("#sec-tables, section[data-section='tables']").first();
