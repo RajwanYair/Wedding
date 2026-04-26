@@ -1,2 +1,0 @@
-var e=new Set,t=typeof navigator<`u`?navigator.onLine:!0;function n(t){return e.add(t),()=>e.delete(t)}function r(n){n!==t&&(t=n,e.forEach(e=>e(t)))}function i(){if(typeof window>`u`)return()=>{};let e=()=>r(!0),t=()=>r(!1);return window.addEventListener(`online`,e),window.addEventListener(`offline`,t),()=>{window.removeEventListener(`online`,e),window.removeEventListener(`offline`,t)}}export{i as initNetworkStatus,n as onStatusChange};
-//# sourceMappingURL=network-status-BUPQ17Sv.js.map
