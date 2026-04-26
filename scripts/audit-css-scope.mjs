@@ -27,7 +27,7 @@ for (const name of files) {
   const src = readFileSync(p, "utf8");
 
   let depth = 0;
-  let scopeDepths = [];
+  const scopeDepths = [];
   let lineNo = 0;
   for (const line of src.split(/\r?\n/)) {
     lineNo++;

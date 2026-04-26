@@ -4,11 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.15.0] — 2026-04-26
+
+> Roadmap sprint batch — Phase B advisories: ADRs 036 (CSS @scope per section), 037 (supply-chain hardening), 038 (Trusted Types policy), two new advisories (`audit:css-scope`, `audit:section-i18n`), four new Diátaxis docs.
+
+### Added (11.15.0)
+
+- **ADR-036** — `@scope ([data-section="<name>"]) { … }` per-section CSS isolation (SC0 → SC3 phasing). Audit baseline: 4 unscoped selectors in `css/print.css`.
+- **ADR-037** — Supply-chain hardening: SBOM (CycloneDX), Trivy fs scan (HIGH/CRITICAL fail), OpenSSF Scorecard (SC0 → SC4 phasing).
+- **ADR-038** — Trusted Types policy `wedding-sanitizer` wrapping DOMPurify (TT0 → TT3 phasing). Safari graceful fallback.
+- **`scripts/audit-css-scope.mjs`** + `audit:css-scope` npm script — advisory scan for `[data-section="…"]` selectors outside `@scope`. Baseline: 4.
+- **`scripts/audit-section-i18n.mjs`** + `audit:section-i18n` npm script — advisory coverage metric for `data-i18n` on visible-text nodes. Current: 452/473 (96%).
+- **`docs/how-to/run-supabase-locally.md`** — recipe for running the full Supabase stack locally (CLI, migrations, seed, edge functions).
+- **`docs/reference/csp-directives.md`** — exhaustive directive-by-directive reference for the production CSP.
+- **`docs/explanation/csp-and-trusted-types.md`** — Diátaxis explanation: why CSP + Trusted Types together; why DOMPurify *and* TT.
+- **`docs/explanation/bundle-budget.md`** — Diátaxis explanation: 45 KB gzip / 60 KB hard gate; why no framework runtime.
+
+### Changed (11.15.0)
+
+- `package.json`: added `audit:css-scope` and `audit:section-i18n` scripts.
+
 ## [11.14.0] — 2026-04-26
 
 > Roadmap sprint batch — Phase B prep: ADRs 034 (BaseSection adoption) + 035 (TypeScript migration), two new advisories (`audit:base-section`, `audit:jsdoc`), four new Diátaxis docs.
 
-### Added
+### Added (11.14.0)
 
 - **ADR-034** — Adopt `BaseSection` across all 18 sections (BS0 → BS4 phasing). Audit baseline: 0/19 adopted.
 - **ADR-035** — TypeScript strict migration for `core/`, `services/`, `handlers/` (TS0 → TS4 phasing). Sections stay `.js` + JSDoc.
@@ -19,11 +39,9 @@ All notable changes to this project will be documented in this file.
 - **`docs/explanation/typescript-migration-strategy.md`** — Diátaxis explanation: why TypeScript only at the boundaries (`core`/`services`/`handlers`), not in sections.
 - **`docs/explanation/section-lifecycle.md`** — Diátaxis explanation of mount/unmount contract, common lifecycle bugs, performance budget.
 
-### Changed
+### Changed (11.14.0)
 
 - `package.json`: added `audit:base-section` and `audit:jsdoc` scripts.
-
-
 
 > Roadmap sprint batch — `src/main.js` migrated to `navigate()` (ADR-025 R2), two new advisory ADRs (`console.error` migration, storage schema migrations), two new advisories (`audit:console-error`, `audit:section-templates`), three new Diátaxis docs.
 

@@ -42,7 +42,7 @@ if (window.trustedTypes?.createPolicy) {
 Add to `public/_headers` (Cloudflare) and the `<meta http-equiv>` we
 ship in `index.html`:
 
-```
+```text
 Content-Security-Policy: …existing… ;
   require-trusted-types-for 'script';
   trusted-types wedding-sanitizer dompurify;
