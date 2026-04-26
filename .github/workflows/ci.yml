@@ -158,6 +158,11 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Build production bundle
+        # Required: playwright.config.mjs webServer runs `vite preview` which
+        # needs dist/ to exist.
+        run: npm run build
+
       - name: Run E2E smoke tests
         run: npm run test:e2e
 
