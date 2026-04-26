@@ -1319,7 +1319,15 @@ async function _switchSection(name) {
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     const active = /** @type {HTMLElement} */ (btn).dataset.tab === name;
     btn.classList.toggle("active", active);
-    btn.setAttribute("aria-selected", String(active));
+    // aria-selected is only valid on role=tab; bottom-nav buttons have no role
+    // so signal active state via aria-current=page there.
+    if (btn.getAttribute("role") === "tab") {
+      btn.setAttribute("aria-selected", String(active));
+    } else if (active) {
+      btn.setAttribute("aria-current", "page");
+    } else {
+      btn.removeAttribute("aria-current");
+    }
   });
 
   // Show/hide section panes

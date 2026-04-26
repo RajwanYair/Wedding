@@ -275,7 +275,15 @@ export function applyI18n(root = document) {
   });
   root.querySelectorAll("[data-lang-toggle-label]").forEach((el) => {
     if (!BILINGUAL_LANGS.has(normalizeUiLanguage(_lang))) return;
-    el.textContent = languageToggleLabel(_lang);
+    const label = languageToggleLabel(_lang);
+    el.textContent = label;
+    // Keep the accessible name in sync with the visible text to satisfy
+    // axe-core's label-content-name-mismatch (the tooltip is preserved via
+    // the `title` attribute set above by data-i18n-tooltip).
+    /** @type {HTMLElement} */ (el).setAttribute(
+      "aria-label",
+      `${label} — ${t("tip_btn_lang")}`,
+    );
   });
 }
 

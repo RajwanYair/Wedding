@@ -112,7 +112,15 @@ export async function switchSection(name) {
   document.querySelectorAll("[data-tab]").forEach((btn) => {
     const active = /** @type {HTMLElement} */ (btn).dataset.tab === name;
     btn.classList.toggle("active", active);
-    btn.setAttribute("aria-selected", String(active));
+    // aria-selected is only valid on role=tab/option/treeitem; bottom-nav uses
+    // plain <button> without a role, so use aria-current=page there instead.
+    if (btn.getAttribute("role") === "tab") {
+      btn.setAttribute("aria-selected", String(active));
+    } else if (active) {
+      btn.setAttribute("aria-current", "page");
+    } else {
+      btn.removeAttribute("aria-current");
+    }
   });
 
   // Show/hide section panes
