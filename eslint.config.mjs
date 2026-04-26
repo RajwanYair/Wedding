@@ -79,6 +79,8 @@ const browserGlobals = shared?.browserGlobals ?? {
   URL: "readonly",
   Intl: "readonly",
   performance: "readonly",
+  PerformanceObserver: "readonly",
+  PerformanceEventTiming: "readonly",
   HTMLElement: "readonly",
   HTMLInputElement: "readonly",
   HTMLTextAreaElement: "readonly",
@@ -175,6 +177,9 @@ export default [
         // Additional browser globals
         Image: "readonly",
         File: "readonly",
+        // Web Vitals / performance observers (monitoring.js)
+        PerformanceObserver: "readonly",
+        PerformanceEventTiming: "readonly",
       },
     },
     rules,

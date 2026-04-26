@@ -186,6 +186,106 @@ export function getBreadcrumbs() {
 }
 
 /**
+ * Capture core Web Vitals (LCP, INP, CLS) via PerformanceObserver and forward
+ * them as breadcrumbs + remote `captureMessage` (when transport available).
+ *
+ * Zero-dependency reimplementation — does not pull `web-vitals` into the
+ * bundle. Numbers match the Chrome User Experience Report definitions:
+ *   - LCP: largest-contentful-paint entry, finalised on hidden/load.
+ *   - INP: max interaction event duration (best-of approximation).
+ *   - CLS: sum of layout-shift entries without recent input.
+ *
+ * Safe no-op in browsers without `PerformanceObserver`.
+ * Returns a `cleanup` function to disconnect observers (used in tests).
+ *
+ * @returns {() => void}
+ */
+export function initWebVitals() {
+  if (typeof window === "undefined" || typeof PerformanceObserver === "undefined") {
+    return () => {};
+  }
+
+  /** @type {PerformanceObserver[]} */
+  const observers = [];
+  const safeObserve = (
+    /** @type {PerformanceObserverInit} */ init,
+    /** @type {(list: PerformanceObserverEntryList) => void} */ cb,
+  ) => {
+    try {
+      const obs = new PerformanceObserver(cb);
+      obs.observe(init);
+      observers.push(obs);
+    } catch {
+      /* entry type not supported in this browser */
+    }
+  };
+
+  /** @type {Record<string, number>} */
+  const metrics = { lcp: 0, inp: 0, cls: 0 };
+
+  // LCP — keep updating; final value at hidden/pagehide.
+  safeObserve({ type: "largest-contentful-paint", buffered: true }, (list) => {
+    const entries = list.getEntries();
+    const last = /** @type {any} */ (entries[entries.length - 1]);
+    if (last) metrics.lcp = Math.round(last.renderTime || last.loadTime || last.startTime || 0);
+  });
+
+  // INP — best approximation: track the slowest event-timing duration.
+  safeObserve({ type: "event", buffered: true, durationThreshold: 16 }, (list) => {
+    for (const entry of list.getEntries()) {
+      const d = /** @type {PerformanceEventTiming} */ (entry).duration;
+      if (d > metrics.inp) metrics.inp = Math.round(d);
+    }
+  });
+
+  // CLS — sum non-input layout shifts.
+  safeObserve({ type: "layout-shift", buffered: true }, (list) => {
+    for (const entry of list.getEntries()) {
+      const e = /** @type {{ value: number, hadRecentInput?: boolean }} */ (
+        /** @type {unknown} */ (entry)
+      );
+      if (!e.hadRecentInput) metrics.cls += e.value;
+    }
+  });
+
+  const flush = () => {
+    addBreadcrumb({
+      category: "web-vitals",
+      message: "page-vitals",
+      level: "info",
+      data: { lcp: metrics.lcp, inp: metrics.inp, cls: Number(metrics.cls.toFixed(4)) },
+    });
+    if (_transport && typeof _transport.captureMessage === "function") {
+      try {
+        _transport.captureMessage("web-vitals", {
+          level: "info",
+          extra: { lcp: metrics.lcp, inp: metrics.inp, cls: metrics.cls },
+        });
+      } catch {
+        /* swallow */
+      }
+    }
+  };
+
+  const onHide = () => {
+    if (document.visibilityState === "hidden") flush();
+  };
+  document.addEventListener("visibilitychange", onHide);
+  window.addEventListener("pagehide", flush, { once: true });
+
+  return () => {
+    for (const o of observers) {
+      try {
+        o.disconnect();
+      } catch {
+        /* already disconnected */
+      }
+    }
+    document.removeEventListener("visibilitychange", onHide);
+  };
+}
+
+/**
  * Reset all module state. Tests only.
  */
 export function _resetForTests() {

@@ -76,7 +76,7 @@ import {
   currentUser,
 } from "./services/auth.js";
 import { startPresence, onPresenceChange } from "./services/presence.js";
-import { initMonitoring, captureException } from "./services/monitoring.js";
+import { initMonitoring, initWebVitals, captureException } from "./services/monitoring.js";
 import {
   syncSheetsNow,
   sheetsCheckConnection,
@@ -254,6 +254,13 @@ let _activeSection = null;
   initMonitoring().catch(() => {
     /* monitoring must never break the app */
   });
+  // Web Vitals beacons (LCP / INP / CLS) — forwarded as breadcrumbs and to
+  // remote transport when configured. Pure no-op without PerformanceObserver.
+  try {
+    initWebVitals();
+  } catch {
+    /* never break the app for telemetry */
+  }
   if (typeof window !== "undefined") {
     window.addEventListener("error", (event) => {
       captureException(event.error ?? new Error(String(event.message)), {
