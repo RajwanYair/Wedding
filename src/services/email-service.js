@@ -67,7 +67,7 @@ export async function sendEmail(msg) {
 
   // Validate and sanitize optional replyTo
   const replyTo = msg.replyTo
-    ? sanitize(msg.replyTo, { type: "email", required: false }).value ?? undefined
+    ? (sanitize(msg.replyTo, { type: "email", required: false }).value ?? undefined)
     : undefined;
 
   return callEdgeFunction("send-email", {

@@ -13,12 +13,7 @@ import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 import { guestMatchesQuery } from "../utils/guest-search.js";
-import {
-  GUEST_STATUSES,
-  GUEST_SIDES,
-  GUEST_GROUPS,
-  MEAL_TYPES,
-} from "../core/constants.js";
+import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -100,9 +95,7 @@ export function saveGuest(data, existingId = null) {
 
   // Duplicate phone detection
   if (value.phone) {
-    const duplicate = guests.find(
-      (g) => g.phone === value.phone && g.id !== existingId,
-    );
+    const duplicate = guests.find((g) => g.phone === value.phone && g.id !== existingId);
     if (duplicate) {
       return {
         ok: false,
@@ -132,9 +125,7 @@ export function saveGuest(data, existingId = null) {
  * @param {string} id
  */
 export function deleteGuest(id) {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
-    (g) => g.id !== id,
-  );
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter((g) => g.id !== id);
   storeSet("guests", guests);
   _pendingSync.delete(id);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
@@ -283,9 +274,7 @@ export function exportGuestsCsv() {
       `${g.group || ""},${g.meal || ""}`,
   );
   const csv = [header, ...rows].join("\n");
-  return URL.createObjectURL(
-    new Blob([csv], { type: "text/csv;charset=utf-8;" }),
-  );
+  return URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
 }
 
 /** @returns {boolean} */
@@ -327,10 +316,8 @@ export function printGuests() {
  * Download a blank CSV template for bulk import.
  */
 export function downloadCSVTemplate() {
-  const header =
-    "FirstName,LastName,Phone,Email,Count,Children,Status,Side,Group,Meal,Notes";
-  const example =
-    "ישראל,ישראלי,0501234567,example@email.com,2,0,pending,groom,family,regular,";
+  const header = "FirstName,LastName,Phone,Email,Count,Children,Status,Side,Group,Meal,Notes";
+  const example = "ישראל,ישראלי,0501234567,example@email.com,2,0,pending,groom,family,regular,";
   const csv = [header, example].join("\n");
   const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -386,9 +373,7 @@ export function importGuestsCSV(fileInput) {
           const phone = cleanPhone(get("phone") || get("טלפון") || "");
           if (!phone) return; // phone is required
 
-          const existingIdx = existing.findIndex(
-            (g) => cleanPhone(g.phone || "") === phone,
-          );
+          const existingIdx = existing.findIndex((g) => cleanPhone(g.phone || "") === phone);
           const entry = {
             id: existingIdx >= 0 ? existing[existingIdx].id : uid(),
             firstName: get("firstname") || get("שם פרטי") || "",
@@ -403,20 +388,15 @@ export function importGuestsCSV(fileInput) {
                 : "pending"
             ),
             side: /** @type {any} */ (
-              GUEST_SIDES.includes(/** @type {any} */ (get("side")))
-                ? get("side")
-                : "mutual"
+              GUEST_SIDES.includes(/** @type {any} */ (get("side"))) ? get("side") : "mutual"
             ),
             group: /** @type {any} */ (
-              GUEST_GROUPS.includes(/** @type {any} */ (get("group")))
-                ? get("group")
-                : "other"
+              GUEST_GROUPS.includes(/** @type {any} */ (get("group"))) ? get("group") : "other"
             ),
             meal: get("meal") || "regular",
             notes: get("notes") || get("הערות") || "",
             updatedAt: Date.now(),
-            createdAt:
-              existingIdx >= 0 ? existing[existingIdx].createdAt : Date.now(),
+            createdAt: existingIdx >= 0 ? existing[existingIdx].createdAt : Date.now(),
           };
           if (existingIdx >= 0) {
             existing[existingIdx] = entry;
@@ -453,10 +433,9 @@ export function openGuestForEdit(id) {
   if (!g) return;
 
   const setVal = (elId, val) => {
-    const input =
-      /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
-        document.getElementById(elId)
-      );
+    const input = /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
+      document.getElementById(elId)
+    );
     if (!input) return;
     if (input.type === "checkbox") {
       /** @type {HTMLInputElement} */ (input).checked = Boolean(val);
@@ -732,11 +711,7 @@ function _updateBatchToolbar() {
   const toolbar = document.getElementById("batchToolbar");
   const countEl = document.getElementById("batchCount");
   if (toolbar) toolbar.classList.toggle("u-hidden", ids.length === 0);
-  if (countEl)
-    countEl.textContent = t("batch_selected_count").replace(
-      "{n}",
-      String(ids.length),
-    );
+  if (countEl) countEl.textContent = t("batch_selected_count").replace("{n}", String(ids.length));
 }
 
 /** Toggle all checkboxes */
@@ -773,9 +748,7 @@ export function batchSetStatus(status) {
 export function batchDeleteGuests() {
   const ids = new Set(_getSelectedIds());
   if (ids.size === 0) return;
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
-    (g) => !ids.has(g.id),
-  );
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter((g) => !ids.has(g.id));
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
 }

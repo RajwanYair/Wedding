@@ -47,9 +47,7 @@ function patch(relPath, rules) {
 console.log(`Syncing version → v${ver}${dryRun ? " (dry-run)" : ""}\n`);
 
 // src/core/config.js — APP_VERSION
-patch("src/core/config.js", [
-  [/APP_VERSION\s*=\s*["'][^"']+["']/, `APP_VERSION = "${ver}"`],
-]);
+patch("src/core/config.js", [[/APP_VERSION\s*=\s*["'][^"']+["']/, `APP_VERSION = "${ver}"`]]);
 
 // public/sw.js — CACHE_NAME
 patch("public/sw.js", [
@@ -58,20 +56,19 @@ patch("public/sw.js", [
 ]);
 
 // README.md — version badge
-patch("README.md", [
-  [/version-v[\d.]+-d4a574/, `version-v${ver}-d4a574`],
-]);
+patch("README.md", [[/version-v[\d.]+-d4a574/, `version-v${ver}-d4a574`]]);
 
 // .github/copilot-instructions.md — title + Quick Facts version
 patch(".github/copilot-instructions.md", [
-  [/# GitHub Copilot Instructions — Wedding Manager v[\d.]+/, `# GitHub Copilot Instructions — Wedding Manager v${ver}`],
+  [
+    /# GitHub Copilot Instructions — Wedding Manager v[\d.]+/,
+    `# GitHub Copilot Instructions — Wedding Manager v${ver}`,
+  ],
   [/\| Version \| \*\*v[\d.]+\*\*/, `| Version | **v${ver}**`],
 ]);
 
 // .github/copilot/config.json — welcome message version
-patch(".github/copilot/config.json", [
-  [/Wedding Manager v[\d.]+/, `Wedding Manager v${ver}`],
-]);
+patch(".github/copilot/config.json", [[/Wedding Manager v[\d.]+/, `Wedding Manager v${ver}`]]);
 
 // .github/instructions/workspace.instructions.md — title version
 patch(".github/instructions/workspace.instructions.md", [
@@ -93,24 +90,32 @@ patch("tests/wedding.test.mjs", [
   [/(Copilot instructions title references v)[\d.]+/, `$1${ver}`],
   [/(ARCHITECTURE\.md header references v)[\d.]+/, `$1${ver}`],
   [/(src\/types\.d\.ts header references v)[\d.]+/, `$1${ver}`],
-  [/assert\.equal\(packageJson\.version, "[\d.]+"\);/, `assert.equal(packageJson.version, "${ver}");`],
+  [
+    /assert\.equal\(packageJson\.version, "[\d.]+"\);/,
+    `assert.equal(packageJson.version, "${ver}");`,
+  ],
   [/APP_VERSION = "[\d.]+"/, `APP_VERSION = "${ver}"`],
   [/serviceWorker\.includes\("wedding-v[\d.]+"\)/, `serviceWorker.includes("wedding-v${ver}")`],
   [/readme\.includes\("version-v[\d.]+"\)/, `readme.includes("version-v${ver}")`],
-  [/copilotInstructions\.includes\(\s*"# GitHub Copilot Instructions — Wedding Manager v[\d.]+",?\s*\)/s, `copilotInstructions.includes(\n        "# GitHub Copilot Instructions — Wedding Manager v${ver}",\n      )`],
-  [/architecture\.includes\("# Wedding Manager — Architecture \(v[\d.]+\)"\)/, `architecture.includes("# Wedding Manager — Architecture (v${ver})")`],
-  [/typesSource\.includes\(\s*"src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v[\d.]+\)",?\s*\)/s, `typesSource.includes(\n        "src/types.d.ts — Shared type definitions for the Wedding Manager (v${ver})",\n      )`],
+  [
+    /copilotInstructions\.includes\(\s*"# GitHub Copilot Instructions — Wedding Manager v[\d.]+",?\s*\)/s,
+    `copilotInstructions.includes(\n        "# GitHub Copilot Instructions — Wedding Manager v${ver}",\n      )`,
+  ],
+  [
+    /architecture\.includes\("# Wedding Manager — Architecture \(v[\d.]+\)"\)/,
+    `architecture.includes("# Wedding Manager — Architecture (v${ver})")`,
+  ],
+  [
+    /typesSource\.includes\(\s*"src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v[\d.]+\)",?\s*\)/s,
+    `typesSource.includes(\n        "src/types.d.ts — Shared type definitions for the Wedding Manager (v${ver})",\n      )`,
+  ],
 ]);
 
 // AGENTS.md — app version reference
-patch("AGENTS.md", [
-  [/(Wedding Manager v)[\d.]+/, `$1${ver}`],
-]);
+patch("AGENTS.md", [[/(Wedding Manager v)[\d.]+/, `$1${ver}`]]);
 
 // ROADMAP.md — Current State heading
-patch("ROADMAP.md", [
-  [/(## Current State \(v)[\d.]+(\))/, `$1${ver}$2`],
-]);
+patch("ROADMAP.md", [[/(## Current State \(v)[\d.]+(\))/, `$1${ver}$2`]]);
 
 // CHANGELOG.md — header (informational only)
 patch("CHANGELOG.md", [
@@ -118,13 +123,14 @@ patch("CHANGELOG.md", [
 ]);
 
 // ARCHITECTURE.md — h1 version
-patch("ARCHITECTURE.md", [
-  [/(# Wedding Manager — Architecture \(v)[\d.]+(\))/, `$1${ver}$2`],
-]);
+patch("ARCHITECTURE.md", [[/(# Wedding Manager — Architecture \(v)[\d.]+(\))/, `$1${ver}$2`]]);
 
 // src/types.d.ts — header version
 patch("src/types.d.ts", [
-  [/(src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v)[\d.]+(\))/, `$1${ver}$2`],
+  [
+    /(src\/types\.d\.ts — Shared type definitions for the Wedding Manager \(v)[\d.]+(\))/,
+    `$1${ver}$2`,
+  ],
 ]);
 
 console.log("\nDone.");

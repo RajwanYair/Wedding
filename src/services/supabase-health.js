@@ -27,10 +27,7 @@ export async function checkSupabaseHealth(supabase) {
 
   const start = Date.now();
   try {
-    const { error } = await client
-      .from("guests")
-      .select("id")
-      .limit(1);
+    const { error } = await client.from("guests").select("id").limit(1);
     const latencyMs = Date.now() - start;
     if (error) {
       return { ok: false, latencyMs, error: error.message };
@@ -79,7 +76,7 @@ export async function getHealthReport(supabase) {
           overallOk = false;
         }
       }
-    })
+    }),
   );
 
   const latencyMs = Date.now() - start;

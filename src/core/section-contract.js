@@ -55,7 +55,10 @@ export function validateSectionModule(name, mod) {
   if (typeof m.unmount !== "function") {
     errors.push(`${name}: missing or non-function export "unmount"`);
   }
-  if ("capabilities" in m && (typeof m.capabilities !== "object" || m.capabilities === null || Array.isArray(m.capabilities))) {
+  if (
+    "capabilities" in m &&
+    (typeof m.capabilities !== "object" || m.capabilities === null || Array.isArray(m.capabilities))
+  ) {
     errors.push(`${name}: "capabilities" must be a plain object`);
   }
   if ("capabilities" in m && typeof m.capabilities === "object" && m.capabilities !== null) {
@@ -63,7 +66,9 @@ export function validateSectionModule(name, mod) {
     const validKeys = new Set(Object.values(SECTION_CAPABILITIES));
     for (const key of Object.keys(caps)) {
       if (!validKeys.has(key)) {
-        errors.push(`${name}: unknown capability key "${key}" (valid: ${[...validKeys].join(", ")})`);
+        errors.push(
+          `${name}: unknown capability key "${key}" (valid: ${[...validKeys].join(", ")})`,
+        );
       }
       if (typeof caps[key] !== "boolean") {
         errors.push(`${name}: capability "${key}" must be boolean`);

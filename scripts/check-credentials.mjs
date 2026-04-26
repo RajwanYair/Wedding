@@ -70,8 +70,12 @@ for (const name of MUST_BE_EMPTY) {
   if (match && match[1].length > 0) {
     const preview = match[1].slice(0, 12) + (match[1].length > 12 ? "…" : "");
     const level = WARN_ONLY ? "WARN" : "ERROR";
-    console.error(`check-credentials: [${level}] ${name} has a non-empty hardcoded value: "${preview}"`);
-    console.error(`  → Move "${name}" to GitHub Secret GH_${name} and re-run scripts/inject-config.mjs`);
+    console.error(
+      `check-credentials: [${level}] ${name} has a non-empty hardcoded value: "${preview}"`,
+    );
+    console.error(
+      `  → Move "${name}" to GitHub Secret GH_${name} and re-run scripts/inject-config.mjs`,
+    );
     if (!WARN_ONLY) failed++;
   }
 }

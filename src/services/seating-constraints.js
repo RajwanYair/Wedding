@@ -107,7 +107,7 @@ export function suggestSwaps(tables, violations) {
   /** @type {Swap[]} */
   return violations.map((v) => {
     const fromTableId = guestTable.get(v.guestId) ?? null;
-    let toTableId     = guestTable.get(v.targetGuestId) ?? null;
+    let toTableId = guestTable.get(v.targetGuestId) ?? null;
 
     if (v.type === "far") {
       // Move to a different table

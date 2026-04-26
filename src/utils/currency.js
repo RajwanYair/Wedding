@@ -8,14 +8,14 @@
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 /** Supported currency codes. */
-export const SUPPORTED_CURRENCIES = /** @type {const} */ (['ILS', 'USD', 'EUR', 'GBP']);
+export const SUPPORTED_CURRENCIES = /** @type {const} */ (["ILS", "USD", "EUR", "GBP"]);
 
 /** Default locale per currency. */
 const CURRENCY_LOCALE = {
-  ILS: 'he-IL',
-  USD: 'en-US',
-  EUR: 'de-DE',
-  GBP: 'en-GB',
+  ILS: "he-IL",
+  USD: "en-US",
+  EUR: "de-DE",
+  GBP: "en-GB",
 };
 
 // ─── Formatting ───────────────────────────────────────────────────────────────
@@ -28,12 +28,12 @@ const CURRENCY_LOCALE = {
  * @param {string} [locale] - BCP-47 locale tag; defaults to currency's native locale.
  * @returns {string} Formatted currency string, e.g. "₪1,234.56".
  */
-export function formatCurrency(amount, currency = 'ILS', locale) {
-  if (typeof amount !== 'number' || !isFinite(amount)) return '';
-  const resolvedLocale = locale ?? CURRENCY_LOCALE[currency] ?? 'en-US';
+export function formatCurrency(amount, currency = "ILS", locale) {
+  if (typeof amount !== "number" || !isFinite(amount)) return "";
+  const resolvedLocale = locale ?? CURRENCY_LOCALE[currency] ?? "en-US";
   try {
     return new Intl.NumberFormat(resolvedLocale, {
-      style: 'currency',
+      style: "currency",
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -51,13 +51,13 @@ export function formatCurrency(amount, currency = 'ILS', locale) {
  * @param {string} [locale]
  * @returns {string}
  */
-export function formatCurrencyCompact(amount, currency = 'ILS', locale) {
-  if (typeof amount !== 'number' || !isFinite(amount)) return '';
-  const resolvedLocale = locale ?? CURRENCY_LOCALE[currency] ?? 'en-US';
+export function formatCurrencyCompact(amount, currency = "ILS", locale) {
+  if (typeof amount !== "number" || !isFinite(amount)) return "";
+  const resolvedLocale = locale ?? CURRENCY_LOCALE[currency] ?? "en-US";
   const fractions = Number.isInteger(amount) ? 0 : 2;
   try {
     return new Intl.NumberFormat(resolvedLocale, {
-      style: 'currency',
+      style: "currency",
       currency,
       minimumFractionDigits: fractions,
       maximumFractionDigits: fractions,
@@ -75,8 +75,8 @@ export function formatCurrencyCompact(amount, currency = 'ILS', locale) {
  * @param {string} [locale='he-IL']
  * @returns {string}
  */
-export function formatNumber(amount, decimals = 2, locale = 'he-IL') {
-  if (typeof amount !== 'number' || !isFinite(amount)) return '';
+export function formatNumber(amount, decimals = 2, locale = "he-IL") {
+  if (typeof amount !== "number" || !isFinite(amount)) return "";
   try {
     return new Intl.NumberFormat(locale, {
       minimumFractionDigits: decimals,
@@ -105,18 +105,18 @@ export function formatNumber(amount, decimals = 2, locale = 'he-IL') {
  * @returns {number} Parsed float or NaN.
  */
 export function parseCurrencyInput(input) {
-  if (typeof input !== 'string') return NaN;
+  if (typeof input !== "string") return NaN;
 
   // Strip whitespace and common currency symbols
-  let cleaned = input.replace(/[\s₪$€£]/g, '');
+  let cleaned = input.replace(/[\s₪$€£]/g, "");
   if (!cleaned) return NaN;
 
   // Handle negative sign
-  const negative = cleaned.startsWith('-');
+  const negative = cleaned.startsWith("-");
   if (negative) cleaned = cleaned.slice(1);
 
-  const dotIdx = cleaned.lastIndexOf('.');
-  const commaIdx = cleaned.lastIndexOf(',');
+  const dotIdx = cleaned.lastIndexOf(".");
+  const commaIdx = cleaned.lastIndexOf(",");
 
   let normalised;
 
@@ -124,27 +124,27 @@ export function parseCurrencyInput(input) {
     // Both separators present — the last one is the decimal separator
     if (dotIdx > commaIdx) {
       // e.g. "1,234.56" — dot is decimal
-      normalised = cleaned.replace(/,/g, '');
+      normalised = cleaned.replace(/,/g, "");
     } else {
       // e.g. "1.234,56" — comma is decimal
-      normalised = cleaned.replace(/\./g, '').replace(',', '.');
+      normalised = cleaned.replace(/\./g, "").replace(",", ".");
     }
   } else if (commaIdx !== -1) {
     // Only comma — treat as decimal if after last 3 digits, else thousand sep
     const afterComma = cleaned.slice(commaIdx + 1);
-    if (afterComma.length === 3 && !afterComma.includes('.')) {
+    if (afterComma.length === 3 && !afterComma.includes(".")) {
       // Likely thousand separator: "1,234"
-      normalised = cleaned.replace(/,/g, '');
+      normalised = cleaned.replace(/,/g, "");
     } else {
       // Decimal comma: "1234,56"
-      normalised = cleaned.replace(',', '.');
+      normalised = cleaned.replace(",", ".");
     }
   } else {
     normalised = cleaned;
   }
 
   const result = parseFloat(normalised);
-  return isNaN(result) ? NaN : (negative ? -result : result);
+  return isNaN(result) ? NaN : negative ? -result : result;
 }
 
 // ─── Arithmetic helpers ───────────────────────────────────────────────────────

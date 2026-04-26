@@ -21,11 +21,7 @@
  */
 export function isOrientationLockSupported() {
   const s = typeof globalThis !== "undefined" ? globalThis.screen : null;
-  return (
-    s != null &&
-    s.orientation != null &&
-    typeof s.orientation.lock === "function"
-  );
+  return s != null && s.orientation != null && typeof s.orientation.lock === "function";
 }
 
 // ── Orientation control ───────────────────────────────────────────────────

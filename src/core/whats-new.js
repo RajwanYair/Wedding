@@ -31,7 +31,8 @@ export function maybeShowWhatsNew(user) {
 
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
-  overlay.style.cssText = "display:flex;z-index:10000;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)";
+  overlay.style.cssText =
+    "display:flex;z-index:10000;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)";
   const card = document.createElement("div");
   card.className = "card";
   card.style.cssText = "max-width:420px;width:90%;padding:1.5rem;max-height:80vh;overflow-y:auto";

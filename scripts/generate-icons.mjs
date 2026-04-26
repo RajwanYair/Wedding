@@ -29,8 +29,7 @@ const CRC_TABLE = (() => {
 
 function crc32(buf) {
   let c = 0xffffffff;
-  for (let i = 0; i < buf.length; i++)
-    c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
   return (c ^ 0xffffffff) >>> 0;
 }
 
@@ -151,11 +150,7 @@ function buildPNG(sz) {
   const outPath = resolve(ROOT, `icon-${sz}.png`);
   const buf = buildPNG(sz);
   writeFileSync(outPath, buf);
-  process.stdout.write(
-    `✔  Generated icon-${sz}.png  (${(buf.length / 1024).toFixed(1)} KB)\n`,
-  );
+  process.stdout.write(`✔  Generated icon-${sz}.png  (${(buf.length / 1024).toFixed(1)} KB)\n`);
 });
 
-process.stdout.write(
-  "Done. Update manifest.json to reference icon-192.png and icon-512.png.\n",
-);
+process.stdout.write("Done. Update manifest.json to reference icon-192.png and icon-512.png.\n");

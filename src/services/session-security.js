@@ -38,8 +38,14 @@ export function createSessionGuard(opts) {
   let destroyed = false;
 
   function clearTimers() {
-    if (timeoutHandle !== null) { clearTimeout(timeoutHandle); timeoutHandle = null; }
-    if (warningHandle !== null) { clearTimeout(warningHandle); warningHandle = null; }
+    if (timeoutHandle !== null) {
+      clearTimeout(timeoutHandle);
+      timeoutHandle = null;
+    }
+    if (warningHandle !== null) {
+      clearTimeout(warningHandle);
+      warningHandle = null;
+    }
   }
 
   function scheduleTimers() {

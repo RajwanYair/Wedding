@@ -20,10 +20,10 @@ export function getCountdown(deadline, now = new Date()) {
   const abs = Math.abs(diffMs);
 
   return {
-    days:    Math.floor(abs / 86_400_000),
-    hours:   Math.floor((abs % 86_400_000) / 3_600_000),
-    minutes: Math.floor((abs % 3_600_000)  / 60_000),
-    seconds: Math.floor((abs % 60_000)     / 1_000),
+    days: Math.floor(abs / 86_400_000),
+    hours: Math.floor((abs % 86_400_000) / 3_600_000),
+    minutes: Math.floor((abs % 3_600_000) / 60_000),
+    seconds: Math.floor((abs % 60_000) / 1_000),
     isPast,
   };
 }
@@ -63,11 +63,7 @@ export function msUntilDeadline(deadline, now = new Date()) {
  * @param {Date} [now]
  * @returns {ReminderPoint[]}  Only future reminders are returned
  */
-export function getReminderSchedule(
-  deadline,
-  daysBeforeList = [14, 7, 3, 1],
-  now = new Date(),
-) {
+export function getReminderSchedule(deadline, daysBeforeList = [14, 7, 3, 1], now = new Date()) {
   const target = deadline instanceof Date ? deadline : new Date(deadline);
   /** @type {ReminderPoint[]} */
   const points = [];
@@ -105,11 +101,11 @@ export function getOverdueGuests(guests, deadline, now = new Date()) {
 export function getDeadlineSummary(guests, deadline, now = new Date()) {
   const target = deadline instanceof Date ? deadline : new Date(deadline);
   return {
-    deadline:       target.toISOString(),
-    isOverdue:      isOverdue(deadline, now),
-    msRemaining:    msUntilDeadline(deadline, now),
-    overdueCount:   getOverdueGuests(guests, deadline, now).length,
-    pendingCount:   guests.filter((g) => g.status === "pending").length,
+    deadline: target.toISOString(),
+    isOverdue: isOverdue(deadline, now),
+    msRemaining: msUntilDeadline(deadline, now),
+    overdueCount: getOverdueGuests(guests, deadline, now).length,
+    pendingCount: guests.filter((g) => g.status === "pending").length,
     respondedCount: guests.filter((g) => ["confirmed", "declined"].includes(g.status)).length,
   };
 }

@@ -75,10 +75,7 @@ writeFileSync(
         ],
         "font-family-no-duplicate-names": true,
         "no-duplicate-at-import-rules": true,
-        "selector-pseudo-class-no-unknown": [
-          true,
-          { ignorePseudoClasses: ["global"] },
-        ],
+        "selector-pseudo-class-no-unknown": [true, { ignorePseudoClasses: ["global"] }],
         "selector-pseudo-element-no-unknown": true,
         "unit-no-unknown": true,
         "no-descending-specificity": null,

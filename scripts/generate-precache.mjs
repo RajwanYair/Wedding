@@ -12,13 +12,7 @@
  */
 
 import { createHash } from "node:crypto";
-import {
-  readFileSync,
-  readdirSync,
-  writeFileSync,
-  statSync,
-  existsSync,
-} from "node:fs";
+import { readFileSync, readdirSync, writeFileSync, statSync, existsSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,16 +22,12 @@ const BASE = "/Wedding/";
 const MAX_CACHE_BYTES = 1_000_000; // skip files > 1 MB (e.g. source maps)
 
 if (!existsSync(DIST)) {
-  console.error(
-    "[generate-precache] dist/ not found — run `npm run build` first.",
-  );
+  console.error("[generate-precache] dist/ not found — run `npm run build` first.");
   process.exit(1);
 }
 
 function sha384(filePath) {
-  return `sha384-${createHash("sha384")
-    .update(readFileSync(filePath))
-    .digest("base64")}`;
+  return `sha384-${createHash("sha384").update(readFileSync(filePath)).digest("base64")}`;
 }
 
 function walk(dir, results = []) {
@@ -64,9 +54,7 @@ const manifest = files.map(function (fp) {
 // Write manifest JSON
 const outPath = resolve(DIST, "precache-manifest.json");
 writeFileSync(outPath, JSON.stringify(manifest, null, 2));
-console.log(
-  `[generate-precache] Wrote ${manifest.length} entries → dist/precache-manifest.json`,
-);
+console.log(`[generate-precache] Wrote ${manifest.length} entries → dist/precache-manifest.json`);
 
 // ── Patch dist/sw.js APP_SHELL ────────────────────────────────────────────────
 const swPath = resolve(DIST, "sw.js");
@@ -89,9 +77,7 @@ if (existsSync(swPath)) {
   // Replace the existing APP_SHELL block
   sw = sw.replace(/const APP_SHELL = \[[\s\S]*?\];/, shellArrayText);
   writeFileSync(swPath, sw);
-  console.log(
-    `[generate-precache] Patched dist/sw.js APP_SHELL (${shellUrls.length} entries)`,
-  );
+  console.log(`[generate-precache] Patched dist/sw.js APP_SHELL (${shellUrls.length} entries)`);
 }
 
 // Print summary

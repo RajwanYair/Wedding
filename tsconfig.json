@@ -16,24 +16,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "types": [
-      "vite/client"
-    ],
-    "lib": [
-      "ES2025",
-      "DOM",
-      "DOM.Iterable"
-    ]
+    "types": ["vite/client"],
+    "lib": ["ES2025", "DOM", "DOM.Iterable"]
   },
-  "include": [
-    "src/**/*.js",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/types/**/*.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests"
-  ]
+  "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.d.ts", "src/types/**/*.d.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
 }

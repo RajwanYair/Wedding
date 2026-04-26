@@ -30,9 +30,7 @@ const VALID_CAPS = new Set(["offline", "public", "printable", "shortcuts", "anal
 let allOk = true;
 const results = [];
 
-const files = (await readdir(SECTIONS_DIR)).filter(
-  (f) => f.endsWith(".js") && !SKIP.has(f),
-);
+const files = (await readdir(SECTIONS_DIR)).filter((f) => f.endsWith(".js") && !SKIP.has(f));
 
 for (const file of files) {
   const name = file.replace(".js", "");

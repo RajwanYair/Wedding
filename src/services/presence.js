@@ -71,7 +71,7 @@ async function _sendHeartbeat() {
 
   const entry = {
     email: user.email || "unknown",
-    name: (/** @type {any} */ (user)).displayName || user.email || "Admin",
+    name: /** @type {any} */ (user).displayName || user.email || "Admin",
     lastSeen: new Date().toISOString(),
   };
 
@@ -84,9 +84,7 @@ async function _sendHeartbeat() {
 
   // Update in-memory list (filter stale entries)
   const now = Date.now();
-  _presenceList = presence.filter(
-    (p) => now - new Date(p.lastSeen).getTime() < _STALE_MS,
-  );
+  _presenceList = presence.filter((p) => now - new Date(p.lastSeen).getTime() < _STALE_MS);
 
   // Notify listeners
   _listeners.forEach((fn) => {

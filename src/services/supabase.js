@@ -63,8 +63,7 @@ async function _rest(path, opts = {}) {
     Authorization: `Bearer ${key}`,
     "Content-Type": "application/json",
     Prefer: /** @type {string} */ (
-      /** @type {Record<string, string>} */ (opts.headers)?.["Prefer"] ??
-        "return=minimal"
+      /** @type {Record<string, string>} */ (opts.headers)?.["Prefer"] ?? "return=minimal"
     ),
     ...opts.headers,
   };
@@ -181,7 +180,10 @@ export async function fetchAuditLog(limit = 200) {
   if (!isConfigured()) return [];
   try {
     const path = `/rest/v1/audit_log?select=action,entity,entity_id,user_email,ts,diff&order=ts.desc&limit=${limit}`;
-    const result = await _rest(path, { method: "GET", headers: { Prefer: "return=representation" } });
+    const result = await _rest(path, {
+      method: "GET",
+      headers: { Prefer: "return=representation" },
+    });
     if (!Array.isArray(result)) return [];
     return result.map((row) => ({
       action: row.action ?? "",

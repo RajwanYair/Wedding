@@ -28,9 +28,7 @@ function _renderFromHash() {
 
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const guest = guests.find((g) => g.id === guestId);
   if (!guest || !_container) return;
 

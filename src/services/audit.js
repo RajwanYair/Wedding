@@ -15,11 +15,7 @@
  */
 
 import { APP_VERSION } from "../core/config.js";
-import {
-  getBackendTypeConfig,
-  getSupabaseAnonKey,
-  getSupabaseUrl,
-} from "../core/app-config.js";
+import { getBackendTypeConfig, getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
 import {
   readBrowserStorageJson,

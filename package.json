@@ -1,71 +1,74 @@
 {
-    "name": "wedding-manager",
-    "version": "11.1.0",
-    "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
-    "type": "module",
-    "private": true,
-    "packageManager": "npm@11.11.0",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "postbuild": "node scripts/generate-precache.mjs",
-        "preview": "vite preview",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "test:e2e": "playwright test",
-        "lint:html": "htmlhint --config ../tooling/htmlhint/.htmlhintrc index.html",
-        "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
-        "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
-        "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md AGENTS.md \"docs/**/*.md\" \".github/**/*.md\"",
-        "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
-        "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
-        "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",
-        "check:credentials": "node scripts/check-credentials.mjs",
-        "check:credentials:warn": "node scripts/check-credentials.mjs --warn",
-        "sync:version": "node scripts/sync-version.mjs",
-        "version": "node scripts/sync-version.mjs",
-        "icons": "node scripts/generate-icons.mjs",
-        "sri": "node scripts/sri-check.mjs",
-        "audit:dead": "node scripts/dead-export-check.mjs",
-        "audit:security": "node scripts/security-scan.mjs",
-        "audit:sections": "node scripts/validate-sections.mjs",
-        "audit:arch": "node scripts/arch-check.mjs",
-        "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
-        "precache": "node scripts/generate-precache.mjs",
-        "size": "node scripts/size-report.mjs",
-        "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run audit:security && npm run audit:sections && npm test && npm run build"
-    },
-    "engines": {
-        "node": ">=22.0.0",
-        "npm": ">=11.0.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/RajwanYair/Wedding.git"
-    },
-    "homepage": "https://rajwanyair.github.io/Wedding",
-    "bugs": {
-        "url": "https://github.com/RajwanYair/Wedding/issues"
-    },
-    "comment:deps": "Runtime deps in parent MyScripts/ workspace. Run npm install from ../MyScripts. CI uses its own npm ci.",
-    "devDependencies": {
-        "@axe-core/playwright": "^4.10.2",
-        "@eslint/js": "^9.39.4",
-        "@playwright/test": "^1.59.1",
-        "@vitest/coverage-v8": "^4.1.4",
-        "eslint": "^10.2.0",
-        "htmlhint": "^1.9.2",
-        "markdownlint-cli2": "^0.22.0",
-        "serve": "^14.2.6",
-        "stylelint": "^17.7.0",
-        "stylelint-config-standard": "^40.0.0",
-        "vite": "^8.0.8",
-        "vitest": "^4.1.4"
-    },
-    "dependencies": {
-        "@supabase/supabase-js": "^2.49.4",
-        "dompurify": "^3.2.6",
-        "valibot": "^1.0.0"
-    }
+  "name": "wedding-manager",
+  "version": "11.2.0",
+  "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
+  "type": "module",
+  "private": true,
+  "packageManager": "npm@11.11.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "node scripts/generate-precache.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "lint:html": "htmlhint --config ../tooling/htmlhint/.htmlhintrc index.html",
+    "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
+    "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
+    "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md AGENTS.md \"docs/**/*.md\" \".github/**/*.md\"",
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
+    "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
+    "format": "prettier --write \"src/**/*.{js,json}\" \"css/**/*.css\" \"scripts/**/*.mjs\" \"*.json\" \"*.js\"",
+    "format:check": "prettier --check \"src/**/*.{js,json}\" \"css/**/*.css\" \"scripts/**/*.mjs\" \"*.json\" \"*.js\"",
+    "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",
+    "check:credentials": "node scripts/check-credentials.mjs",
+    "check:credentials:warn": "node scripts/check-credentials.mjs --warn",
+    "sync:version": "node scripts/sync-version.mjs",
+    "version": "node scripts/sync-version.mjs",
+    "icons": "node scripts/generate-icons.mjs",
+    "sri": "node scripts/sri-check.mjs",
+    "audit:dead": "node scripts/dead-export-check.mjs",
+    "audit:security": "node scripts/security-scan.mjs",
+    "audit:sections": "node scripts/validate-sections.mjs",
+    "audit:arch": "node scripts/arch-check.mjs",
+    "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
+    "precache": "node scripts/generate-precache.mjs",
+    "size": "node scripts/size-report.mjs",
+    "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run audit:security && npm run audit:sections && npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=11.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RajwanYair/Wedding.git"
+  },
+  "homepage": "https://rajwanyair.github.io/Wedding",
+  "bugs": {
+    "url": "https://github.com/RajwanYair/Wedding/issues"
+  },
+  "comment:deps": "Runtime deps in parent MyScripts/ workspace. Run npm install from ../MyScripts. CI uses its own npm ci.",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.59.1",
+    "@vitest/coverage-v8": "^4.1.4",
+    "eslint": "^10.2.0",
+    "htmlhint": "^1.9.2",
+    "markdownlint-cli2": "^0.22.0",
+    "prettier": "3.8.3",
+    "serve": "^14.2.6",
+    "stylelint": "^17.7.0",
+    "stylelint-config-standard": "^40.0.0",
+    "vite": "^8.0.8",
+    "vitest": "^4.1.4"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "dompurify": "^3.2.6",
+    "valibot": "^1.0.0"
+  }
 }

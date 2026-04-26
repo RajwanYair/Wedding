@@ -1,0 +1,15 @@
+# Prettier ignore file
+# Anything here is NOT reformatted by `npm run format` / `format:check`
+
+# Build output
+dist/
+node_modules/
+
+# Pre-built / hand-crafted SVG assets — formatting would break them
+docs/*.svg
+
+# Generated files
+public/sw.js
+
+# Shared tooling (not owned by this repo)
+../tooling/

@@ -64,7 +64,9 @@ export function initSyncTracker(keys) {
  * @returns {import('../types').SyncState}
  */
 export function getSyncState(key) {
-  return _states.get(key) ?? { key, status: "idle", lastSyncAt: null, pendingWrites: 0, error: null };
+  return (
+    _states.get(key) ?? { key, status: "idle", lastSyncAt: null, pendingWrites: 0, error: null }
+  );
 }
 
 /**
@@ -199,9 +201,13 @@ function _incrementPending(key) {
  */
 function _notify(key, state) {
   _listeners.get(key)?.forEach((fn) => {
-    try { fn(state); } catch {}
+    try {
+      fn(state);
+    } catch {}
   });
   _listeners.get("*")?.forEach((fn) => {
-    try { fn(state); } catch {}
+    try {
+      fn(state);
+    } catch {}
   });
 }

@@ -112,14 +112,25 @@ const _COL_ORDER = {
   expenses: ["id", "category", "description", "amount", "date", "createdAt"],
   budget: ["id", "name", "amount", "note", "createdAt", "updatedAt"],
   timeline: ["id", "time", "title", "note", "icon"],
-  contacts: ["id", "firstName", "lastName", "phone", "email", "side", "dietaryNotes", "submittedAt"],
+  contacts: [
+    "id",
+    "firstName",
+    "lastName",
+    "phone",
+    "email",
+    "side",
+    "dietaryNotes",
+    "submittedAt",
+  ],
   gallery: ["id", "caption", "credit", "addedAt"],
 };
 
 // F1.5.4 — Column order validation (dev-only guard)
 for (const [key, cols] of Object.entries(_COL_ORDER)) {
-  if (!Array.isArray(cols) || cols.length === 0) console.warn(`_COL_ORDER[${key}] must be a non-empty array`);
-  if (cols[0] !== "id") console.warn(`_COL_ORDER[${key}] first column must be "id", got "${cols[0]}"`);
+  if (!Array.isArray(cols) || cols.length === 0)
+    console.warn(`_COL_ORDER[${key}] must be a non-empty array`);
+  if (cols[0] !== "id")
+    console.warn(`_COL_ORDER[${key}] first column must be "id", got "${cols[0]}"`);
   if (new Set(cols).size !== cols.length) console.warn(`_COL_ORDER[${key}] has duplicate columns`);
 }
 
@@ -181,25 +192,19 @@ export async function syncStoreKeyToSheetsImpl(storeKey) {
     // present in the sheet — even if the user hasn't set it yet — and the
     // order is deterministic. Store-only keys (e.g. set by future features)
     // are appended after the canonical keys.
-    const obj = /** @type {Record<string, unknown>} */ (
-      storeGet(storeKey) ?? {}
-    );
+    const obj = /** @type {Record<string, unknown>} */ (storeGet(storeKey) ?? {});
     const canonical = /** @type {Record<string, unknown>} */ (
       Object.fromEntries(_WEDDING_INFO_KEYS.map((k) => [k, ""]))
     );
     const merged = { ...canonical, ...obj };
     // Put canonical keys first in defined order, then any extra keys
     const canonicalRows = _WEDDING_INFO_KEYS.map((k) => [k, merged[k] ?? ""]);
-    const extraKeys = Object.keys(merged).filter(
-      (k) => !_WEDDING_INFO_KEYS.includes(k),
-    );
+    const extraKeys = Object.keys(merged).filter((k) => !_WEDDING_INFO_KEYS.includes(k));
     const extraRows = extraKeys.map((k) => [k, merged[k] ?? ""]);
     rows = [["key", "value"], ...canonicalRows, ...extraRows];
   } else if (storeKey === "timelineDone") {
     // timelineDone is a plain { itemId: boolean } map → key-value rows
-    const obj = /** @type {Record<string, boolean>} */ (
-      storeGet(storeKey) ?? {}
-    );
+    const obj = /** @type {Record<string, boolean>} */ (storeGet(storeKey) ?? {});
     const dataRows = Object.entries(obj).map(([k, v]) => [k, String(v)]);
     rows = [["itemId", "done"], ...dataRows];
   } else {
@@ -267,9 +272,7 @@ export async function createMissingSheetTabsImpl() {
  * @returns {Promise<Array<Record<string, unknown>>>}
  */
 export async function sheetsReadImpl(spreadsheetId, sheetName) {
-  const url = new URL(
-    `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq`,
-  );
+  const url = new URL(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq`);
   url.searchParams.set("sheet", sheetName);
   url.searchParams.set("tqx", "out:json");
   const resp = await fetch(url.toString(), { cache: "no-store" });
@@ -448,12 +451,16 @@ export function validateSchema(serverColOrder) {
       continue;
     }
     if (localCols.length !== serverCols.length) {
-      errors.push(`Column count mismatch for "${key}": local=${localCols.length}, server=${serverCols.length}`);
+      errors.push(
+        `Column count mismatch for "${key}": local=${localCols.length}, server=${serverCols.length}`,
+      );
       continue;
     }
     for (let i = 0; i < localCols.length; i++) {
       if (localCols[i] !== serverCols[i]) {
-        errors.push(`Column mismatch in "${key}" at index ${i}: local="${localCols[i]}", server="${serverCols[i]}"`);
+        errors.push(
+          `Column mismatch in "${key}" at index ${i}: local="${localCols[i]}", server="${serverCols[i]}"`,
+        );
       }
     }
   }

@@ -46,11 +46,7 @@ const _CACHE_KEY = STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE;
 
 /** @returns {boolean} */
 export function isPushSupported() {
-  return (
-    typeof window !== "undefined" &&
-    "serviceWorker" in navigator &&
-    "PushManager" in window
-  );
+  return typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window;
 }
 
 // ── Permission ─────────────────────────────────────────────────────────────
@@ -140,7 +136,7 @@ export function serializeSubscription(sub) {
     endpoint: sub.endpoint,
     keys: {
       p256dh: json.keys?.p256dh ?? "",
-      auth:   json.keys?.auth   ?? "",
+      auth: json.keys?.auth ?? "",
     },
     expirationTime: sub.expirationTime ?? null,
   };
@@ -164,7 +160,7 @@ export async function dispatchPush(subscriptions, payload) {
   });
 
   return {
-    sent:   result?.sent   ?? 0,
+    sent: result?.sent ?? 0,
     failed: result?.failed ?? 0,
   };
 }
@@ -179,7 +175,7 @@ export async function dispatchPush(subscriptions, payload) {
  */
 export async function sendPushToAdmins(payload, storeGet) {
   const subs = /** @type {PushSubscriptionData[]} */ (
-    storeGet ? storeGet("push_subscriptions") ?? [] : []
+    storeGet ? (storeGet("push_subscriptions") ?? []) : []
   );
   return dispatchPush(subs, payload);
 }

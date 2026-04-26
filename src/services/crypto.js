@@ -6,7 +6,7 @@
  *   base64( iv[12 bytes] ++ ciphertext )
  */
 
-const ALGO   = "AES-GCM";
+const ALGO = "AES-GCM";
 const IV_LEN = 12; // bytes
 
 /**
@@ -17,7 +17,7 @@ export async function generateKey() {
   return crypto.subtle.generateKey(
     { name: ALGO, length: 256 },
     false, // non-extractable
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
 }
 
@@ -27,13 +27,10 @@ export async function generateKey() {
  * @returns {Promise<CryptoKey>}
  */
 export async function importRawKey(rawKey) {
-  return crypto.subtle.importKey(
-    "raw",
-    rawKey,
-    { name: ALGO, length: 256 },
-    false,
-    ["encrypt", "decrypt"]
-  );
+  return crypto.subtle.importKey("raw", rawKey, { name: ALGO, length: 256 }, false, [
+    "encrypt",
+    "decrypt",
+  ]);
 }
 
 /**
@@ -60,8 +57,8 @@ export async function encryptField(key, plaintext) {
  */
 export async function decryptField(key, ciphertext) {
   const combined = Uint8Array.from(atob(ciphertext), (c) => c.charCodeAt(0));
-  const iv         = combined.slice(0, IV_LEN);
-  const encrypted  = combined.slice(IV_LEN);
+  const iv = combined.slice(0, IV_LEN);
+  const encrypted = combined.slice(IV_LEN);
   const plainbuf = await crypto.subtle.decrypt({ name: ALGO, iv }, key, encrypted);
   return new TextDecoder().decode(plainbuf);
 }

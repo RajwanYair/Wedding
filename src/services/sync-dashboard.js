@@ -8,10 +8,7 @@
  *   import { getSyncStatus, isSyncHealthy } from "../services/sync-dashboard.js";
  */
 
-import {
-  getAllSyncStates,
-  getSyncState,
-} from "./sync-tracker.js";
+import { getAllSyncStates, getSyncState } from "./sync-tracker.js";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 /**
@@ -35,15 +32,22 @@ import {
 export function getSyncStatus() {
   const states = getAllSyncStates();
   /** @type {SyncStatusSummary} */
-  const summary = { pending: 0, syncing: 0, failed: 0, offline: 0, total: states.length, lastSync: null };
+  const summary = {
+    pending: 0,
+    syncing: 0,
+    failed: 0,
+    offline: 0,
+    total: states.length,
+    lastSync: null,
+  };
 
   let latestSyncMs = 0;
 
   for (const s of states) {
-    if (s.status === "pending")  summary.pending++;
-    if (s.status === "syncing")  summary.syncing++;
-    if (s.status === "error")    summary.failed++;
-    if (s.status === "offline")  summary.offline++;
+    if (s.status === "pending") summary.pending++;
+    if (s.status === "syncing") summary.syncing++;
+    if (s.status === "error") summary.failed++;
+    if (s.status === "offline") summary.offline++;
 
     if (s.lastSyncAt) {
       const ms = new Date(s.lastSyncAt).getTime();
@@ -63,10 +67,7 @@ export function getSyncStatus() {
  * @returns {number}
  */
 export function getQueueDepth() {
-  return getAllSyncStates().reduce(
-    (sum, s) => sum + (s.pendingWrites ?? 0),
-    0,
-  );
+  return getAllSyncStates().reduce((sum, s) => sum + (s.pendingWrites ?? 0), 0);
 }
 
 /**
@@ -80,7 +81,10 @@ export function getLastSyncTime() {
   for (const s of getAllSyncStates()) {
     if (s.lastSyncAt) {
       const ms = new Date(s.lastSyncAt).getTime();
-      if (ms > latestMs) { latestMs = ms; latest = s.lastSyncAt; }
+      if (ms > latestMs) {
+        latestMs = ms;
+        latest = s.lastSyncAt;
+      }
     }
   }
   return latest;

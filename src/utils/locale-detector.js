@@ -56,9 +56,9 @@ export function resolveAppLocale(locale, supported = ["he", "en", "ar", "ru"], f
  * @returns {{ raw: string, primary: string, isRtl: boolean, appLocale: string }}
  */
 export function getLocaleInfo(nav) {
-  const raw       = detectLocale(nav);
-  const primary   = primaryLang(raw);
-  const rtl       = isRtl(raw);
+  const raw = detectLocale(nav);
+  const primary = primaryLang(raw);
+  const rtl = isRtl(raw);
   const appLocale = resolveAppLocale(raw);
   return { raw, primary, isRtl: rtl, appLocale };
 }

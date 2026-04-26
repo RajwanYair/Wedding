@@ -71,22 +71,20 @@ export function createOptimisticManager(getFn, setFn) {
       snapshotId,
       storeKey,
       recordId: String(recordId),
-      before: before.map((r) => ({ ...r })),  // shallow-clone each record
+      before: before.map((r) => ({ ...r })), // shallow-clone each record
       original: { ...original },
       createdAt: Date.now(),
     };
     _snapshots.set(snapshotId, snapshot);
 
     // Apply the patch immediately
-    const patched = before.map((r) =>
-      String(r.id) === String(recordId) ? { ...r, ...patch } : r
-    );
+    const patched = before.map((r) => (String(r.id) === String(recordId) ? { ...r, ...patch } : r));
     setFn(storeKey, patched);
 
     return {
       snapshotId,
       rollback: () => rollbackOptimistic(snapshotId),
-      commit:   () => commitOptimistic(snapshotId),
+      commit: () => commitOptimistic(snapshotId),
     };
   }
 

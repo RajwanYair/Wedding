@@ -25,7 +25,7 @@
 ### Code Quality
 
 - [ ] `npm run lint` passes (0 errors, 0 warnings)
-- [ ] `npm test` passes (2318+ tests, 141 suites)
+- [ ] `npm test` passes (2385+ tests, 147 suites)
 - [ ] No `innerHTML` with unsanitized data — `textContent` only
 - [ ] No hardcoded colors — CSS custom properties only
 - [ ] No inline `getElementById` — `el` object only

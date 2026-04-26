@@ -16,7 +16,9 @@ const _KEY = "invitationAnalytics";
  */
 
 /** @returns {AnalyticsEvent[]} */
-function _all() { return storeGet(_KEY) ?? []; }
+function _all() {
+  return storeGet(_KEY) ?? [];
+}
 function _save(list) {
   storeSet(_KEY, list);
   enqueueWrite(_KEY, () => Promise.resolve());
@@ -57,7 +59,11 @@ export function getEventsByType(type) {
  * @returns {number}
  */
 export function uniqueOpens() {
-  return new Set(_all().filter((e) => e.type === "open").map((e) => e.guestId)).size;
+  return new Set(
+    _all()
+      .filter((e) => e.type === "open")
+      .map((e) => e.guestId),
+  ).size;
 }
 
 /**
@@ -65,7 +71,11 @@ export function uniqueOpens() {
  * @returns {number}
  */
 export function uniqueClicks() {
-  return new Set(_all().filter((e) => e.type === "click").map((e) => e.guestId)).size;
+  return new Set(
+    _all()
+      .filter((e) => e.type === "click")
+      .map((e) => e.guestId),
+  ).size;
 }
 
 /**
@@ -73,7 +83,11 @@ export function uniqueClicks() {
  * @returns {number}
  */
 export function uniqueRsvps() {
-  return new Set(_all().filter((e) => e.type === "rsvp").map((e) => e.guestId)).size;
+  return new Set(
+    _all()
+      .filter((e) => e.type === "rsvp")
+      .map((e) => e.guestId),
+  ).size;
 }
 
 /**
@@ -84,9 +98,9 @@ export function uniqueRsvps() {
 export function getFunnelStats(totalInvited) {
   if (!totalInvited || totalInvited <= 0) return { openRate: 0, clickRate: 0, conversionRate: 0 };
   return {
-    openRate:       uniqueOpens()  / totalInvited,
-    clickRate:      uniqueClicks() / totalInvited,
-    conversionRate: uniqueRsvps()  / totalInvited,
+    openRate: uniqueOpens() / totalInvited,
+    clickRate: uniqueClicks() / totalInvited,
+    conversionRate: uniqueRsvps() / totalInvited,
   };
 }
 

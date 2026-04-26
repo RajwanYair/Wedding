@@ -58,9 +58,7 @@ export function saveTimelineItem(data, existingId = null) {
 export function deleteTimelineItem(id) {
   storeSet(
     "timeline",
-    /** @type {any[]} */ (storeGet("timeline") ?? []).filter(
-      (i) => i.id !== id,
-    ),
+    /** @type {any[]} */ (storeGet("timeline") ?? []).filter((i) => i.id !== id),
   );
   enqueueWrite("timeline", () => syncStoreKeyToSheets("timeline"));
 }
@@ -104,9 +102,7 @@ export function renderTimeline() {
     actions.className = "timeline-actions";
 
     // S24.1 Done checkbox toggle
-    const doneMap = /** @type {Record<string,boolean>} */ (
-      storeGet("timelineDone") ?? {}
-    );
+    const doneMap = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
     const isDone = !!doneMap[item.id];
     li.classList.toggle("timeline-item--done", isDone);
     const doneBtn = document.createElement("button");
@@ -150,9 +146,7 @@ export function openTimelineForEdit(id) {
   const item = items.find((i) => i.id === id);
   if (!item) return;
   const setVal = (/** @type {string} */ elId, /** @type {unknown} */ val) => {
-    const input = /** @type {HTMLInputElement|null} */ (
-      document.getElementById(elId)
-    );
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById(elId));
     if (input) input.value = String(val ?? "");
   };
   setVal("timelineModalId", item.id);
@@ -259,17 +253,24 @@ function _fireTimelineAlert(item, diffMs) {
  */
 export function printTimeline() {
   const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
-  if (items.length === 0) { alert(t("timeline_empty")); return; }
+  if (items.length === 0) {
+    alert(t("timeline_empty"));
+    return;
+  }
 
   const sorted = [...items].sort((a, b) => (a.time || "").localeCompare(b.time || ""));
-  const rows = sorted.map((item) =>
-    `<tr><td class="tl-time">${_esc(item.time || "")}</td><td class="tl-title">${_esc(item.title || "")}</td><td class="tl-notes">${_esc(item.notes || "")}</td></tr>`,
-  ).join("");
+  const rows = sorted
+    .map(
+      (item) =>
+        `<tr><td class="tl-time">${_esc(item.time || "")}</td><td class="tl-title">${_esc(item.title || "")}</td><td class="tl-notes">${_esc(item.notes || "")}</td></tr>`,
+    )
+    .join("");
 
   const weddingInfo = /** @type {any} */ (storeGet("weddingInfo") ?? {});
-  const heading = weddingInfo.brideName && weddingInfo.groomName
-    ? `${_esc(weddingInfo.brideName)} &amp; ${_esc(weddingInfo.groomName)}`
-    : t("timeline_title");
+  const heading =
+    weddingInfo.brideName && weddingInfo.groomName
+      ? `${_esc(weddingInfo.brideName)} &amp; ${_esc(weddingInfo.groomName)}`
+      : t("timeline_title");
 
   const win = window.open("", "_blank");
   if (!win) return;
@@ -323,7 +324,13 @@ export function exportTimelineCSV() {
   const done = /** @type {Record<string,boolean>} */ (storeGet("timelineDone") ?? {});
   const header = "Time,Title,Note,Icon,Done";
   const rows = items.map((i) =>
-    [i.time, `"${(i.title || "").replace(/"/g, '""')}"`, `"${(i.note || "").replace(/"/g, '""')}"`, i.icon || "", done[i.id] ? "yes" : "no"].join(","),
+    [
+      i.time,
+      `"${(i.title || "").replace(/"/g, '""')}"`,
+      `"${(i.note || "").replace(/"/g, '""')}"`,
+      i.icon || "",
+      done[i.id] ? "yes" : "no",
+    ].join(","),
   );
   const csv = [header, ...rows].join("\n");
   const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
@@ -359,13 +366,15 @@ export function getTimelineCompletionStats() {
  */
 export function getTimelineDuration() {
   const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
-  const withTime = items.filter((i) => i.time).sort((a, b) => String(a.time).localeCompare(String(b.time)));
+  const withTime = items
+    .filter((i) => i.time)
+    .sort((a, b) => String(a.time).localeCompare(String(b.time)));
   if (withTime.length < 2) return null;
   const first = withTime[0].time;
   const last = withTime[withTime.length - 1].time;
   const [h1, m1] = first.split(":").map(Number);
   const [h2, m2] = last.split(":").map(Number);
-  return { startTime: first, endTime: last, durationMinutes: (h2 * 60 + m2) - (h1 * 60 + m1) };
+  return { startTime: first, endTime: last, durationMinutes: h2 * 60 + m2 - (h1 * 60 + m1) };
 }
 
 /**

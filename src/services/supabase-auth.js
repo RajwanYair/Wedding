@@ -16,11 +16,7 @@
  *   4. Session stored in localStorage via STORAGE_KEYS.SUPABASE_SESSION
  */
 
-import {
-  getApprovedAdminEmails,
-  getSupabaseAnonKey,
-  getSupabaseUrl,
-} from "../core/app-config.js";
+import { getApprovedAdminEmails, getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
 import {
   readBrowserStorageJson,
@@ -109,7 +105,7 @@ async function _authRest(path, opts) {
  * @param {'google'|'facebook'|'apple'} provider
  * @param {string} [redirectUrl]  defaults to current origin
  */
-export function signInWithProvider(provider, redirectUrl = `${window.location.origin  }/Wedding/`) {
+export function signInWithProvider(provider, redirectUrl = `${window.location.origin}/Wedding/`) {
   const url = _url();
   const key = _key();
   if (!url || !key) {
@@ -195,7 +191,9 @@ export function handleOAuthRedirect() {
     if (!accessToken) return null;
 
     // Decode user from JWT payload
-    const payload = JSON.parse(atob(accessToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+    const payload = JSON.parse(
+      atob(accessToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+    );
     const sess = /** @type {SupabaseSession} */ ({
       access_token: accessToken,
       refresh_token: refreshToken,
@@ -211,7 +209,11 @@ export function handleOAuthRedirect() {
     _saveSession(sess);
 
     // Clean hash from URL without reload
-    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname + window.location.search,
+    );
     return sess;
   } catch {
     return null;
@@ -228,7 +230,5 @@ export function handleOAuthRedirect() {
  */
 export function isAdmin(sess) {
   if (!sess?.user?.email) return false;
-  return getApprovedAdminEmails().includes(
-    sess.user.email.trim().toLowerCase(),
-  );
+  return getApprovedAdminEmails().includes(sess.user.email.trim().toLowerCase());
 }

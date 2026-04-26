@@ -2,10 +2,10 @@
 
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v11.1.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v11.2.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
-[![Tests](https://img.shields.io/badge/tests-2318_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
+[![Tests](https://img.shields.io/badge/tests-2385_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
 [![Node](https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)](docs/README.md)
 [![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
@@ -34,8 +34,13 @@ Node 22+ is the supported local and CI runtime.
 git clone https://github.com/RajwanYair/Wedding.git
 cd Wedding
 
-# Install shared dependencies from the parent workspace
-cd ../MyScripts && npm install && cd Wedding
+# Install dependencies (shared tooling lives at ../MyScripts/node_modules/)
+# If you cloned into the recommended parent workspace:
+npm install --prefix ../MyScripts  # one-time shared tooling
+npm install                         # project devDependencies
+
+# — OR — install standalone (CI / first-time setup):
+npm ci
 
 # Start local development
 npm run dev
@@ -44,9 +49,10 @@ npm run dev
 ## Development
 
 ```bash
-npm run lint
-npm test
-npm run build
+npm run lint          # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
+npm run format:check  # Prettier formatting check (add to pre-commit hook)
+npm test              # 2385+ Vitest unit tests
+npm run build         # Vite production bundle → dist/
 ```
 
 ## Overview

@@ -388,10 +388,9 @@ function _renderMealPerTable() {
 
     let rowTotal = 0;
     meals.forEach((m, i) => {
-      const count = seated.filter((g) => (g.meal || "regular") === m).reduce(
-        (s, g) => s + (g.count || 1),
-        0,
-      );
+      const count = seated
+        .filter((g) => (g.meal || "regular") === m)
+        .reduce((s, g) => s + (g.count || 1), 0);
       grandTotals[i] += count;
       rowTotal += count;
       const td = document.createElement("td");
@@ -442,8 +441,8 @@ export function exportMealPerTableCSV() {
 
   const rows = tables.map((table) => {
     const seated = confirmed.filter((g) => g.tableId === table.id);
-    const counts = meals.map(
-      (m) => seated.filter((g) => (g.meal || "regular") === m).reduce((s, g) => s + (g.count || 1), 0),
+    const counts = meals.map((m) =>
+      seated.filter((g) => (g.meal || "regular") === m).reduce((s, g) => s + (g.count || 1), 0),
     );
     const total = counts.reduce((s, c) => s + c, 0);
     return [`"${table.name}"`, ...counts, total].join(",");
@@ -490,9 +489,7 @@ function _renderHeatmap() {
   const w = labelW + barMaxW + 40;
   const h = tables.length * rowH + 10;
   const maxPerTable = Math.max(
-    ...tables.map(
-      (tbl) => guests.filter((g) => g.tableId === tbl.id).length,
-    ),
+    ...tables.map((tbl) => guests.filter((g) => g.tableId === tbl.id).length),
     1,
   );
 
@@ -503,9 +500,7 @@ function _renderHeatmap() {
     const assigned = guests.filter((g) => g.tableId === tbl.id);
     const groom = assigned.filter((g) => g.side === "groom").length;
     const bride = assigned.filter((g) => g.side === "bride").length;
-    const mutual = assigned.filter(
-      (g) => g.side !== "groom" && g.side !== "bride",
-    ).length;
+    const mutual = assigned.filter((g) => g.side !== "groom" && g.side !== "bride").length;
     const total = groom + bride + mutual;
     const scale = total > 0 ? barMaxW / maxPerTable : 0;
 
@@ -719,7 +714,9 @@ function _renderActivityFeed() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const recent = guests
     .filter((g) => g.updatedAt || g.createdAt)
-    .sort((a, b) => (b.updatedAt || b.createdAt || "").localeCompare(a.updatedAt || a.createdAt || ""))
+    .sort((a, b) =>
+      (b.updatedAt || b.createdAt || "").localeCompare(a.updatedAt || a.createdAt || ""),
+    )
     .slice(0, 10);
 
   if (recent.length === 0) {
@@ -907,7 +904,11 @@ function _escSvg(s) {
  * @param {string} s
  */
 function _escHtml(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 // ── S13.4 Seating Chart SVG Map ───────────────────────────────────────────
@@ -944,7 +945,12 @@ export function renderSeatingMap() {
     const cy = pad + row * cellH + 40;
     const seated = guests.filter((g) => g.tableId === tbl.id);
     const cap = tbl.capacity || 10;
-    const fill = seated.length >= cap ? "var(--danger)" : seated.length > 0 ? "var(--success)" : "var(--bg-card)";
+    const fill =
+      seated.length >= cap
+        ? "var(--danger)"
+        : seated.length > 0
+          ? "var(--success)"
+          : "var(--bg-card)";
 
     // Table shape
     if (tbl.shape === "rect") {
@@ -1014,7 +1020,10 @@ export function exportEventSummary() {
     ...vendors.map((v) => `${v.name}: ₪${v.paid || 0}/₪${v.price || 0}`),
     "",
     `=== ${t("nav_guests")} (${t("status_confirmed")}) ===`,
-    ...confirmed.map((g) => `${g.firstName} ${g.lastName || ""} — ${g.count || 1} guests — ${t(`meal_${g.meal || "regular"}`)}`),
+    ...confirmed.map(
+      (g) =>
+        `${g.firstName} ${g.lastName || ""} — ${g.count || 1} guests — ${t(`meal_${g.meal || "regular"}`)}`,
+    ),
   ];
 
   const csv = bom + lines.join("\n");
@@ -1062,7 +1071,11 @@ export function renderPaymentSchedule() {
     if (isOverdue) tr.className = "vendor-row--overdue";
     if (isPaid) tr.className = "vendor-row--paid";
 
-    const statusText = isPaid ? t("vendor_status_paid") : (isOverdue ? t("vendor_overdue") : t("vendor_status_upcoming"));
+    const statusText = isPaid
+      ? t("vendor_status_paid")
+      : isOverdue
+        ? t("vendor_overdue")
+        : t("vendor_status_upcoming");
 
     tr.innerHTML = `<td>${_escSvg(v.name || v.category)}</td><td>${v.dueDate}</td><td>₪${(v.paid || 0).toLocaleString()} / ₪${(v.price || 0).toLocaleString()}</td><td>${statusText}</td>`; // nosec: name via _escSvg, statusText via t(), numbers
     tbody.appendChild(tr);
@@ -1129,7 +1142,9 @@ export function renderRsvpTimeline() {
  * Generate and print per-table dietary requirement cards for the caterer.
  */
 export function printDietaryCards() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter((g) => g.status === "confirmed");
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (g) => g.status === "confirmed",
+  );
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
 
   const lines = [];
@@ -1153,23 +1168,37 @@ export function printDietaryCards() {
       const m = g.meal || "regular";
       mealCounts[m] = (mealCounts[m] || 0) + (g.count || 1);
     });
-    lines.push(`<div class="card"><h3>${_escSvg(tb.name)} (${seated.reduce((s, g) => s + (g.count || 1), 0)} ${t("stat_guests")})</h3>`);
-    lines.push(`<table><thead><tr><th>${t("col_name")}</th><th>${t("col_meal")}</th><th>${t("label_meal_notes")}</th><th>${t("col_count")}</th></tr></thead><tbody>`);
+    lines.push(
+      `<div class="card"><h3>${_escSvg(tb.name)} (${seated.reduce((s, g) => s + (g.count || 1), 0)} ${t("stat_guests")})</h3>`,
+    );
+    lines.push(
+      `<table><thead><tr><th>${t("col_name")}</th><th>${t("col_meal")}</th><th>${t("label_meal_notes")}</th><th>${t("col_count")}</th></tr></thead><tbody>`,
+    );
     seated.forEach((g) => {
       const special = g.meal && g.meal !== "regular" ? "meal-special" : "";
-      lines.push(`<tr><td>${_escSvg(g.firstName)} ${_escSvg(g.lastName || "")}</td><td class="${special}">${t(`meal_${g.meal || "regular"}`)}</td><td>${_escSvg(g.mealNotes || "")}</td><td>${g.count || 1}</td></tr>`);
+      lines.push(
+        `<tr><td>${_escSvg(g.firstName)} ${_escSvg(g.lastName || "")}</td><td class="${special}">${t(`meal_${g.meal || "regular"}`)}</td><td>${_escSvg(g.mealNotes || "")}</td><td>${g.count || 1}</td></tr>`,
+      );
     });
     lines.push(`</tbody></table>`);
-    lines.push(`<p><strong>${t("dietary_summary")}:</strong> ${Object.entries(mealCounts).map(([m, c]) => `${t(`meal_${m}`)}: ${c}`).join(", ")}</p>`);
+    lines.push(
+      `<p><strong>${t("dietary_summary")}:</strong> ${Object.entries(mealCounts)
+        .map(([m, c]) => `${t(`meal_${m}`)}: ${c}`)
+        .join(", ")}</p>`,
+    );
     lines.push(`</div>`);
   });
 
   // Unassigned guests with special diets
   const unassigned = guests.filter((g) => !g.tableId && g.meal && g.meal !== "regular");
   if (unassigned.length > 0) {
-    lines.push(`<div class="card"><h3>${t("filter_unassigned")} — ${t("dietary_special")}</h3><ul>`);
+    lines.push(
+      `<div class="card"><h3>${t("filter_unassigned")} — ${t("dietary_special")}</h3><ul>`,
+    );
     unassigned.forEach((g) => {
-      lines.push(`<li>${_escSvg(g.firstName)} ${_escSvg(g.lastName || "")} — ${t(`meal_${g.meal}`)} ${g.mealNotes ? `(${_escSvg(g.mealNotes)})` : ""}</li>`);
+      lines.push(
+        `<li>${_escSvg(g.firstName)} ${_escSvg(g.lastName || "")} — ${t(`meal_${g.meal}`)} ${g.mealNotes ? `(${_escSvg(g.mealNotes)})` : ""}</li>`,
+      );
     });
     lines.push(`</ul></div>`);
   }
@@ -1249,7 +1278,7 @@ export function checkBudgetOvershoot() {
 
 // ── S18.2 Guest Arrival Forecast ────────────────────────────────────────
 
-const _MAYBE_PCT = 0.6;  // assume 60% of "maybe" guests will come
+const _MAYBE_PCT = 0.6; // assume 60% of "maybe" guests will come
 const _PENDING_PCT = 0.4; // assume 40% of pending guests will come
 
 // ── F4.1.2 No-Show Rate Prediction ──────────────────────────────────────
@@ -1284,13 +1313,19 @@ export function predictNoShowRate() {
 
   // Base no-show rate: 5% for on-time, 15% for late, 25% for very-late
   const onTimeCount = confirmed.length - lateCount - veryLateCount;
-  const weighted = (onTimeCount * 0.05) + (lateCount * 0.15) + (veryLateCount * 0.25);
+  const weighted = onTimeCount * 0.05 + lateCount * 0.15 + veryLateCount * 0.25;
   const noShowRate = confirmed.length > 0 ? weighted / confirmed.length : 0.05;
   const expectedNoShows = Math.round(totalHeads * noShowRate);
 
   const details = `${onTimeCount} ${t("noshow_on_time") || "בזמן"}, ${lateCount + veryLateCount} ${t("noshow_late") || "מאוחר"}`;
 
-  return { noShowRate, expectedNoShows, confirmed: totalHeads, lateConfirmed: lateCount + veryLateCount, details };
+  return {
+    noShowRate,
+    expectedNoShows,
+    confirmed: totalHeads,
+    lateConfirmed: lateCount + veryLateCount,
+    details,
+  };
 }
 
 /**
@@ -1299,7 +1334,10 @@ export function predictNoShowRate() {
  */
 export function computeArrivalForecast() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  let confirmed = 0, maybe = 0, pending = 0, declined = 0;
+  let confirmed = 0,
+    maybe = 0,
+    pending = 0,
+    declined = 0;
   guests.forEach((g) => {
     const heads = (g.count || 1) + (g.children || 0);
     if (g.status === "confirmed") confirmed += heads;
@@ -1325,8 +1363,8 @@ export function renderArrivalForecast() {
   // Format: structured elements (dashboard & analytics both use these ids)
   const confirmedEl = document.getElementById("forecastConfirmed");
   const projectedEl = document.getElementById("forecastProjected");
-  const capacityEl  = document.getElementById("forecastCapacity");
-  const detailEl    = document.getElementById("forecastDetail");
+  const capacityEl = document.getElementById("forecastCapacity");
+  const detailEl = document.getElementById("forecastDetail");
 
   if (confirmedEl) confirmedEl.textContent = String(confirmed);
   if (projectedEl) {
@@ -1399,8 +1437,7 @@ export function renderExpenseTrend() {
     labelEl.setAttribute("text-anchor", "end");
     labelEl.setAttribute("font-size", "9");
     labelEl.setAttribute("fill", "var(--text-muted)");
-    labelEl.textContent =
-      amt > 999 ? `${Math.round(amt / 1000)}K` : String(amt);
+    labelEl.textContent = amt > 999 ? `${Math.round(amt / 1000)}K` : String(amt);
     container.appendChild(labelEl);
   });
 
@@ -1511,7 +1548,10 @@ export function renderNoShowPrediction() {
   const items = [
     { num: `${Math.round(noShowRate * 100)}%`, label: t("noshow_rate") || "שיעור אי-הגעה צפוי" },
     { num: String(expectedNoShows), label: t("noshow_expected") || "צפויים לא להגיע" },
-    { num: String(confirmed - expectedNoShows), label: t("noshow_actual_expected") || "צפויים להגיע" },
+    {
+      num: String(confirmed - expectedNoShows),
+      label: t("noshow_actual_expected") || "צפויים להגיע",
+    },
     { num: String(lateConfirmed), label: t("noshow_late_rsvp") || "אישרו מאוחר" },
   ];
 
@@ -1748,7 +1788,11 @@ export function getMealDistribution() {
     counts[m] = (counts[m] || 0) + 1;
   }
   return Object.entries(counts)
-    .map(([meal, count]) => ({ meal, count: /** @type {number} */ (count), pct: Math.round((/** @type {number} */ (count) / total) * 100) }))
+    .map(([meal, count]) => ({
+      meal,
+      count: /** @type {number} */ (count),
+      pct: Math.round(/** @type {number} */ (count / total) * 100),
+    }))
     .sort((a, b) => b.count - a.count);
 }
 
@@ -1765,7 +1809,9 @@ export function getSideBalance() {
   const mutual = guests.filter((g) => g.side === "mutual" || !g.side).length;
   const total = guests.length || 1;
   return {
-    groom, bride, mutual,
+    groom,
+    bride,
+    mutual,
     groomPct: Math.round((groom / total) * 100),
     bridePct: Math.round((bride / total) * 100),
   };
@@ -1824,9 +1870,10 @@ export function getCostPerHead() {
   const target = parseFloat(info.budgetTarget || "0") || 0;
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
   const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
-  const totalBudget = target ||
+  const totalBudget =
+    target ||
     vendors.reduce((s, v) => s + (parseFloat(v.price) || 0), 0) +
-    expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+      expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const confirmedSeats = guests
     .filter((g) => g.status === "confirmed")
@@ -1904,7 +1951,11 @@ export function getRsvpDeadlineCountdown() {
  */
 export function getVendorPaymentProgress() {
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
-  let totalCost = 0, totalPaid = 0, fullyPaid = 0, partiallyPaid = 0, unpaid = 0;
+  let totalCost = 0,
+    totalPaid = 0,
+    fullyPaid = 0,
+    partiallyPaid = 0,
+    unpaid = 0;
   for (const v of vendors) {
     const price = parseFloat(v.price) || 0;
     const paid = parseFloat(v.paid) || 0;
@@ -1939,7 +1990,8 @@ export function getErrorStats() {
   const raw = /** @type {unknown[]} */ (storeGet("appErrors") ?? []);
   /** @type {Record<string, number>} */
   const bySeverity = {};
-  const recent = /** @type {Array<{message: string, level: string, ts: string, url: string}>} */ ([]);
+  const recent =
+    /** @type {Array<{message: string, level: string, ts: string, url: string}>} */ ([]);
 
   for (const entry of raw) {
     const e = /** @type {Record<string, unknown>} */ (entry);
@@ -1983,11 +2035,7 @@ export function renderErrorAnalytics() {
 
     // Per severity
     for (const [level, count] of Object.entries(bySeverity).sort((a, b) => b[1] - a[1])) {
-      const box = _createStatBox(
-        String(count),
-        level,
-        severityColors[level] ?? "var(--muted)",
-      );
+      const box = _createStatBox(String(count), level, severityColors[level] ?? "var(--muted)");
       summaryEl.appendChild(box);
     }
   }

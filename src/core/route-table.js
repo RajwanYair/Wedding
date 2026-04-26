@@ -38,7 +38,7 @@ export function parseLocation(input) {
   const loc = input ?? (typeof location === "undefined" ? null : location);
   if (!loc) return { section: "dashboard", params: {} };
 
-  const hash   = String(/** @type {{ hash?: string }} */ (loc).hash ?? "").replace(/^#/, "");
+  const hash = String(/** @type {{ hash?: string }} */ (loc).hash ?? "").replace(/^#/, "");
   const search = String(/** @type {{ search?: string }} */ (loc).search ?? "");
 
   // Hash may carry its own query suffix: "section?a=1"

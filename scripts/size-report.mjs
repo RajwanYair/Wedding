@@ -65,25 +65,14 @@ async function main() {
   const W = { path: 40, num: 9 };
 
   console.log("\n📦 Bundle Size Report — Wedding Manager\n");
-  console.log(
-    "File".padEnd(W.path),
-    "Raw".padStart(W.num),
-    "Gzip".padStart(W.num),
-    "  Status",
-  );
+  console.log("File".padEnd(W.path), "Raw".padStart(W.num), "Gzip".padStart(W.num), "  Status");
   console.log("-".repeat(W.path + W.num * 2 + 10));
 
   for (const r of rows) {
     const rawStr = `${(r.raw / 1024).toFixed(1)} KB`;
     const gzStr = `${(r.gz / 1024).toFixed(1)} KB`;
     const status = r.over ? "⚠ OVER LIMIT" : "✓";
-    console.log(
-      r.path.padEnd(W.path),
-      rawStr.padStart(W.num),
-      gzStr.padStart(W.num),
-      " ",
-      status,
-    );
+    console.log(r.path.padEnd(W.path), rawStr.padStart(W.num), gzStr.padStart(W.num), " ", status);
   }
 
   console.log("-".repeat(W.path + W.num * 2 + 10));
@@ -97,8 +86,7 @@ async function main() {
 
   if (overLimit.length > 0) {
     console.log(`\n⚠  ${overLimit.length} file(s) exceed size limits:`);
-    for (const r of overLimit)
-      console.log(`   ${r.path} (${(r.raw / 1024).toFixed(1)} KB)`);
+    for (const r of overLimit) console.log(`   ${r.path} (${(r.raw / 1024).toFixed(1)} KB)`);
     if (CHECK_MODE) {
       console.log("");
       process.exit(1);

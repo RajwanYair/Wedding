@@ -1,6 +1,6 @@
-# Wedding Manager — Roadmap v11.0.0
+# Wedding Manager — Roadmap v11.1.0
 
-> Architecture: `ARCHITECTURE.md` · History: `CHANGELOG.md` · Contributors: `CONTRIBUTING.md` · Previous roadmap: `ROADMAP.old.md`
+> Architecture: `ARCHITECTURE.md` · History: `CHANGELOG.md` · Contributors: `CONTRIBUTING.md`
 
 This document is a **deep architectural re-evaluation** of every decision this project has taken so far — including the ones that appeared clean. Every layer is audited: frontend, backend, language, docs, code patterns, architecture, configuration, tools, external APIs, database, and infrastructure. Every assumption is challenged. The goal is to aim for a best-in-class wedding management application.
 

@@ -42,7 +42,7 @@ export class SupabaseExpenseRepository extends SupabaseBaseRepository {
     if (error) throw error;
     /** @type {Record<string, number>} */
     const summary = {};
-    for (const row of (data ?? [])) {
+    for (const row of data ?? []) {
       const cat = String(row.category ?? "other");
       summary[cat] = (summary[cat] ?? 0) + Number(row.amount ?? 0);
     }

@@ -107,9 +107,11 @@ export async function writeNFCTag(guestId) {
   const encoder = new TextEncoder();
 
   await writer.write({
-    records: [{
-      recordType: "text",
-      data: encoder.encode(payload),
-    }],
+    records: [
+      {
+        recordType: "text",
+        data: encoder.encode(payload),
+      },
+    ],
   });
 }

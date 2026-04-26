@@ -42,9 +42,7 @@ export const defaultTimeline = [
  * @returns {Record<string, { value: unknown, storageKey?: string }>}
  */
 export function buildStoreDefs() {
-  const savedInfo = /** @type {Record<string, string>} */ (
-    load("weddingInfo", {})
-  );
+  const savedInfo = /** @type {Record<string, string>} */ (load("weddingInfo", {}));
   const weddingInfo = { ...defaultWeddingInfo, ...savedInfo };
 
   const savedTimeline = load("timeline", null);

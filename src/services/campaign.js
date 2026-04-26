@@ -93,7 +93,11 @@ export function createCampaign({ name, type, templateName = "", guestIds }) {
 
   /** @type {Campaign} */
   const campaign = {
-    id, name, type, templateName, guestIds,
+    id,
+    name,
+    type,
+    templateName,
+    guestIds,
     status: "draft",
     sentCount: 0,
     failedCount: 0,

@@ -36,18 +36,11 @@ export function sanitize(input, schema) {
   const errors = /** @type {string[]} */ ([]);
 
   for (const [field, def] of Object.entries(schema)) {
-    const raw = Object.prototype.hasOwnProperty.call(input, field)
-      ? input[field]
-      : undefined;
+    const raw = Object.prototype.hasOwnProperty.call(input, field) ? input[field] : undefined;
 
     if (raw === undefined || raw === null || raw === "") {
       if (def.required) errors.push(`${field} is required`);
-      value[field] =
-        def.type === "number"
-          ? (def.min ?? 0)
-          : def.type === "boolean"
-            ? false
-            : "";
+      value[field] = def.type === "number" ? (def.min ?? 0) : def.type === "boolean" ? false : "";
       continue;
     }
 

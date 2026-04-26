@@ -32,7 +32,10 @@ function _toDate(d) {
  * @returns {string}
  */
 function _formatUtcCompact(d) {
-  return d.toISOString().replace(/[-:.]/g, "").replace(/\d{3}Z$/, "Z");
+  return d
+    .toISOString()
+    .replace(/[-:.]/g, "")
+    .replace(/\d{3}Z$/, "Z");
 }
 
 /**
@@ -57,14 +60,14 @@ function _icsEscape(s) {
 export function buildGoogleCalendarLink(ev) {
   if (!ev?.title) throw new TypeError("calendar-link: title required");
   const start = _toDate(ev.start);
-  const end   = _toDate(ev.end ?? new Date(start.getTime() + 3 * HOUR_MS));
+  const end = _toDate(ev.end ?? new Date(start.getTime() + 3 * HOUR_MS));
   const params = new URLSearchParams({
-    action:   "TEMPLATE",
-    text:     ev.title,
-    dates:    `${_formatUtcCompact(start)}/${_formatUtcCompact(end)}`,
+    action: "TEMPLATE",
+    text: ev.title,
+    dates: `${_formatUtcCompact(start)}/${_formatUtcCompact(end)}`,
   });
   if (ev.description) params.set("details", ev.description);
-  if (ev.location)    params.set("location", ev.location);
+  if (ev.location) params.set("location", ev.location);
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
@@ -77,7 +80,7 @@ export function buildGoogleCalendarLink(ev) {
 export function buildIcsContent(ev) {
   if (!ev?.title) throw new TypeError("calendar-link: title required");
   const start = _toDate(ev.start);
-  const end   = _toDate(ev.end ?? new Date(start.getTime() + 3 * HOUR_MS));
+  const end = _toDate(ev.end ?? new Date(start.getTime() + 3 * HOUR_MS));
   const uid = `wedding-${start.getTime()}-${Math.random().toString(36).slice(2, 10)}@wedding-manager`;
   const lines = [
     "BEGIN:VCALENDAR",
@@ -93,8 +96,8 @@ export function buildIcsContent(ev) {
     `SUMMARY:${_icsEscape(ev.title)}`,
   ];
   if (ev.description) lines.push(`DESCRIPTION:${_icsEscape(ev.description)}`);
-  if (ev.location)    lines.push(`LOCATION:${_icsEscape(ev.location)}`);
-  if (ev.url)         lines.push(`URL:${ev.url}`);
+  if (ev.location) lines.push(`LOCATION:${_icsEscape(ev.location)}`);
+  if (ev.url) lines.push(`URL:${ev.url}`);
   lines.push("END:VEVENT", "END:VCALENDAR");
   return lines.join("\r\n");
 }

@@ -28,8 +28,8 @@
  * }} AuditPipeline
  */
 
-const BATCH_SIZE   = 20;
-const FLUSH_MS     = 5_000;
+const BATCH_SIZE = 20;
+const FLUSH_MS = 5_000;
 
 /**
  * Actions that require at least "high" severity.
@@ -67,7 +67,7 @@ function resolveSeverity(action, hint) {
  */
 export function createAuditPipeline(supabase, opts = {}) {
   const batchSize = opts.batchSize ?? BATCH_SIZE;
-  const flushMs   = opts.flushMs   ?? FLUSH_MS;
+  const flushMs = opts.flushMs ?? FLUSH_MS;
 
   /** @type {AuditEvent[]} */
   const queue = [];
@@ -122,7 +122,10 @@ export function createAuditPipeline(supabase, opts = {}) {
 
     /** Flush all pending events immediately. */
     async flush() {
-      if (timer) { clearTimeout(timer); timer = null; }
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
       await flushQueue();
     },
 
@@ -134,7 +137,10 @@ export function createAuditPipeline(supabase, opts = {}) {
     /** Stop accepting new events and clear the timer. */
     destroy() {
       destroyed = true;
-      if (timer) { clearTimeout(timer); timer = null; }
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
     },
   };
 }

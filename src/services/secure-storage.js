@@ -76,11 +76,17 @@ function _getKey() {
       try {
         raw = fromB64(stored);
         if (raw.byteLength !== KEY_LEN) raw = null;
-      } catch { raw = null; }
+      } catch {
+        raw = null;
+      }
     }
     if (!raw) {
       raw = crypto.getRandomValues(new Uint8Array(KEY_LEN));
-      try { ls?.setItem(KEY_NAME, toB64(raw)); } catch { /* quota / blocked */ }
+      try {
+        ls?.setItem(KEY_NAME, toB64(raw));
+      } catch {
+        /* quota / blocked */
+      }
     }
     return crypto.subtle.importKey("raw", raw, ALGO, false, ["encrypt", "decrypt"]);
   })();
@@ -93,7 +99,11 @@ function _getKey() {
  */
 export function rotateDeviceKey() {
   _keyPromise = null;
-  try { _ls()?.removeItem(KEY_NAME); } catch { /* ignore */ }
+  try {
+    _ls()?.removeItem(KEY_NAME);
+  } catch {
+    /* ignore */
+  }
 }
 
 // ── Public API ────────────────────────────────────────────────────────────
@@ -136,11 +146,19 @@ export async function getSecure(key) {
 
   /** @type {{ v: number, iv: string, ct: string } | null} */
   let env = null;
-  try { env = JSON.parse(raw); } catch { /* not JSON */ }
+  try {
+    env = JSON.parse(raw);
+  } catch {
+    /* not JSON */
+  }
 
   if (!env || env.v !== ENVELOPE_VERSION || !env.iv || !env.ct) {
     // Legacy / unsealed: drop it so we never surface plaintext.
-    try { ls.removeItem(STORAGE_PREFIX + key); } catch { /* ignore */ }
+    try {
+      ls.removeItem(STORAGE_PREFIX + key);
+    } catch {
+      /* ignore */
+    }
     return null;
   }
 
@@ -152,7 +170,11 @@ export async function getSecure(key) {
     return /** @type {T} */ (JSON.parse(new TextDecoder().decode(plain)));
   } catch {
     // Wrong key (e.g. rotated) — drop the unreadable entry.
-    try { ls.removeItem(STORAGE_PREFIX + key); } catch { /* ignore */ }
+    try {
+      ls.removeItem(STORAGE_PREFIX + key);
+    } catch {
+      /* ignore */
+    }
     return null;
   }
 }
@@ -162,7 +184,11 @@ export async function getSecure(key) {
  * @param {string} key
  */
 export function removeSecure(key) {
-  try { _ls()?.removeItem(STORAGE_PREFIX + key); } catch { /* ignore */ }
+  try {
+    _ls()?.removeItem(STORAGE_PREFIX + key);
+  } catch {
+    /* ignore */
+  }
 }
 
 /**

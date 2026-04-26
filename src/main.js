@@ -182,16 +182,8 @@ import {
   updateWaPreview,
   sendWhatsAppReminder,
 } from "./sections/whatsapp.js";
-import {
-  handleGalleryUpload,
-  deleteGalleryPhoto,
-  openLightbox,
-} from "./sections/gallery.js";
-import {
-  saveTimelineItem,
-  deleteTimelineItem,
-  openTimelineForEdit,
-} from "./sections/timeline.js";
+import { handleGalleryUpload, deleteGalleryPhoto, openLightbox } from "./sections/gallery.js";
+import { saveTimelineItem, deleteTimelineItem, openTimelineForEdit } from "./sections/timeline.js";
 import {
   switchLanguage,
   clearAllData,
@@ -242,10 +234,7 @@ let _activeSection = null;
   await initStorage();
 
   // 0a. One-time migration from localStorage → IndexedDB (S16)
-  if (
-    getAdapterType() === "indexeddb" &&
-    readBrowserStorage(STORAGE_KEYS.IDB_MIGRATED) !== "1"
-  ) {
+  if (getAdapterType() === "indexeddb" && readBrowserStorage(STORAGE_KEYS.IDB_MIGRATED) !== "1") {
     const migrated = await migrateFromLocalStorage();
     if (migrated > 0) {
       writeBrowserStorage(STORAGE_KEYS.IDB_MIGRATED, "1");
@@ -272,9 +261,7 @@ let _activeSection = null;
 
   // 3a. Seed default weddingInfo for the "default" event if empty
   if (getActiveEventId() === "default") {
-    const info = /** @type {Record<string,string>} */ (
-      storeGet("weddingInfo") ?? {}
-    );
+    const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
     if (!info.groom) {
       storeSet("weddingInfo", {
         ...defaultWeddingInfo,
@@ -394,18 +381,16 @@ let _activeSection = null;
   fetchGasVersion(currentUser());
 
   // 11g. Network status — offline/online indicator
-  import("./utils/network-status.js").then(
-    ({ initNetworkStatus, onStatusChange }) => {
-      initNetworkStatus();
-      onStatusChange((online) => {
-        if (online) {
-          showToast(t("network_back_online"), "success");
-        } else {
-          showToast(t("network_offline"), "warning", 0);
-        }
-      });
-    },
-  );
+  import("./utils/network-status.js").then(({ initNetworkStatus, onStatusChange }) => {
+    initNetworkStatus();
+    onStatusChange((online) => {
+      if (online) {
+        showToast(t("network_back_online"), "success");
+      } else {
+        showToast(t("network_offline"), "warning", 0);
+      }
+    });
+  });
 
   // 11h. S17 — Activate Supabase Realtime when backend is configured
   import("./services/supabase-realtime.js").then(({ activateRealtimeSync }) => {
@@ -432,11 +417,14 @@ let _activeSection = null;
     window.launchQueue.setConsumer((launchParams) => {
       if (!launchParams.files?.length) return;
       // Route the first file to the CSV import section
-      launchParams.files[0].getFile().then((file) => {
-        _switchSection("guests");
-        // Dispatch a custom event so the guests section can pick up the file
-        window.dispatchEvent(new CustomEvent("launchFile", { detail: { file } }));
-      }).catch(() => {});
+      launchParams.files[0]
+        .getFile()
+        .then((file) => {
+          _switchSection("guests");
+          // Dispatch a custom event so the guests section can pick up the file
+          window.dispatchEvent(new CustomEvent("launchFile", { detail: { file } }));
+        })
+        .catch(() => {});
     });
   }
 })();
@@ -485,8 +473,7 @@ function _renderEventSwitcher() {
   events.forEach((evt) => {
     const opt = document.createElement("option");
     opt.value = evt.id;
-    opt.textContent =
-      evt.label || (evt.id === "default" ? t("event_default") : evt.id);
+    opt.textContent = evt.label || (evt.id === "default" ? t("event_default") : evt.id);
     if (evt.id === activeId) opt.selected = true;
     select.appendChild(opt);
   });
@@ -602,9 +589,7 @@ function _escHtml(s) {
  */
 function _registerHandlers() {
   // ── Navigation ──
-  on("showSection", (el) =>
-    _switchSection(el.dataset.actionArg || "dashboard"),
-  );
+  on("showSection", (el) => _switchSection(el.dataset.actionArg || "dashboard"));
 
   // ── S9.2 Event switcher ──
   on("switchEvent", (el) => {
@@ -616,9 +601,7 @@ function _registerHandlers() {
 
   // ── Auth ──
   on("submitEmailLogin", () => {
-    const input = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("adminLoginEmail")
-    );
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("adminLoginEmail"));
     const email = input?.value?.trim() ?? "";
     const result = loginOAuth(email, email, "", "email");
     if (!result) showToast(t("auth_email_not_approved"), "error");
@@ -691,45 +674,35 @@ function _registerHandlers() {
     if (lb) lb.remove();
   });
   on("openAddGuestModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("guestModalId")
-    );
+    const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"));
     if (idEl) idEl.value = "";
     const title = document.getElementById("guestModalTitle");
     if (title) title.setAttribute("data-i18n", "modal_add_guest");
     openModal("guestModal");
   });
   on("openAddTableModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("tableModalId")
-    );
+    const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("tableModalId"));
     if (idEl) idEl.value = "";
     const title = document.getElementById("tableModalTitle");
     if (title) title.setAttribute("data-i18n", "modal_add_table");
     openModal("tableModal");
   });
   on("openAddVendorModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("vendorModalId")
-    );
+    const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("vendorModalId"));
     if (idEl) idEl.value = "";
     const title = document.getElementById("vendorModalTitle");
     if (title) title.setAttribute("data-i18n", "modal_add_vendor");
     openModal("vendorModal");
   });
   on("openAddExpenseModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("expenseModalId")
-    );
+    const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("expenseModalId"));
     if (idEl) idEl.value = "";
     const title = document.getElementById("expenseModalTitle");
     if (title) title.setAttribute("data-i18n", "expense_add");
     openModal("expenseModal");
   });
   on("openAddTimelineModal", () => {
-    const idEl = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("timelineModalId")
-    );
+    const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("timelineModalId"));
     if (idEl) idEl.value = "";
     const title = document.getElementById("timelineModalTitle");
     if (title) title.setAttribute("data-i18n", "timeline_add");
@@ -783,18 +756,13 @@ function _registerHandlers() {
       "csvImportDone",
       (e) => {
         const { added, updated } = /** @type {CustomEvent} */ (e).detail ?? {};
-        showToast(
-          t("guests_imported", { added: added ?? 0, updated: updated ?? 0 }),
-          "success",
-        );
+        showToast(t("guests_imported", { added: added ?? 0, updated: updated ?? 0 }), "success");
       },
       { once: true },
     );
   });
   on("deleteGuest", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteGuest(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteGuest(el.dataset.actionArg ?? "")),
   );
   on("searchGuests", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
@@ -855,9 +823,7 @@ function _registerHandlers() {
   on("exportTransportCSV", () => exportTransportCSV());
   on("printTransportManifest", () => printTransportManifest());
   on("deleteTable", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteTable(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteTable(el.dataset.actionArg ?? "")),
   );
   on("openEditTableModal", (el) => {
     openTableForEdit(el.dataset.actionArg ?? "");
@@ -911,14 +877,10 @@ function _registerHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteVendor", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteVendor(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteVendor(el.dataset.actionArg ?? "")),
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
-  on("filterVendorsByCategory", (el) =>
-    filterVendorsByCategory(el.dataset.category ?? "all"),
-  );
+  on("filterVendorsByCategory", (el) => filterVendorsByCategory(el.dataset.category ?? "all"));
   on("openEditVendorModal", (el) => {
     openVendorForEdit(el.dataset.actionArg ?? "");
     openModal("vendorModal");
@@ -944,14 +906,10 @@ function _registerHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteExpense", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteExpense(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteExpense(el.dataset.actionArg ?? "")),
   );
   on("exportExpensesCSV", () => exportExpensesCSV());
-  on("filterExpensesByCategory", (el) =>
-    filterExpensesByCategory(el.dataset.category ?? "all"),
-  );
+  on("filterExpensesByCategory", (el) => filterExpensesByCategory(el.dataset.category ?? "all"));
   on("openEditExpenseModal", (el) => {
     openExpenseForEdit(el.dataset.actionArg ?? "");
     openModal("expenseModal");
@@ -968,17 +926,13 @@ function _registerHandlers() {
       showToast(t("error_invalid_amount"), "error");
       return;
     }
-    const current = /** @type {Record<string,unknown>} */ (
-      storeGet("weddingInfo") ?? {}
-    );
+    const current = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
     storeSet("weddingInfo", { ...current, budgetTarget: val });
     renderBudgetProgress();
     showToast(t("settings_saved"), "success");
   });
   on("deleteBudgetEntry", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteBudgetEntry(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteBudgetEntry(el.dataset.actionArg ?? "")),
   );
   on("renderBudgetProgress", () => renderBudgetProgress());
   on("renderBudgetChart", () => renderBudgetChart());
@@ -1006,42 +960,34 @@ function _registerHandlers() {
           document.getElementById("rsvpLastName")
         )?.value?.trim() ?? "",
       side:
-        /** @type {HTMLSelectElement|null} */ (
-          document.getElementById("rsvpSide")
-        )?.value ?? "mutual",
+        /** @type {HTMLSelectElement|null} */ (document.getElementById("rsvpSide"))?.value ??
+        "mutual",
       status:
-        /** @type {HTMLSelectElement|null} */ (
-          document.getElementById("rsvpAttending")
-        )?.value ?? "confirmed",
+        /** @type {HTMLSelectElement|null} */ (document.getElementById("rsvpAttending"))?.value ??
+        "confirmed",
       count:
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("rsvpGuests")
-        )?.value ?? "1",
+        /** @type {HTMLInputElement|null} */ (document.getElementById("rsvpGuests"))?.value ?? "1",
       children:
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("rsvpChildren")
-        )?.value ?? "0",
+        /** @type {HTMLInputElement|null} */ (document.getElementById("rsvpChildren"))?.value ??
+        "0",
       meal:
-        /** @type {HTMLSelectElement|null} */ (
-          document.getElementById("rsvpMeal")
-        )?.value ?? "regular",
+        /** @type {HTMLSelectElement|null} */ (document.getElementById("rsvpMeal"))?.value ??
+        "regular",
       accessibility: /** @type {HTMLInputElement|null} */ (
         document.getElementById("rsvpAccessibility")
       )?.checked
         ? "true"
         : "",
       transport:
-        /** @type {HTMLSelectElement|null} */ (
-          document.getElementById("rsvpTransport")
-        )?.value ?? "",
+        /** @type {HTMLSelectElement|null} */ (document.getElementById("rsvpTransport"))?.value ??
+        "",
       notes:
         /** @type {HTMLTextAreaElement|null} */ (
           document.getElementById("rsvpNotes")
         )?.value?.trim() ?? "",
     };
     const result = submitRsvp(data);
-    if (!result.ok)
-      showToast(result.errors?.join(", ") ?? t("error_save"), "error");
+    if (!result.ok) showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("lookupRsvpByPhone", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
@@ -1052,9 +998,7 @@ function _registerHandlers() {
     const statusEl = document.getElementById("rsvpLookupStatus");
     if (statusEl) {
       statusEl.classList.remove("u-hidden");
-      statusEl.textContent = result.found
-        ? t("rsvp_lookup_found")
-        : t("rsvp_lookup_new");
+      statusEl.textContent = result.found ? t("rsvp_lookup_found") : t("rsvp_lookup_new");
     }
     // Also reveal the form for new guests once a valid-looking phone is entered
     if (!result.found && input.value.replace(/\D/g, "").length >= 9) {
@@ -1069,17 +1013,13 @@ function _registerHandlers() {
     handleGalleryUpload(input);
   });
   on("deleteGalleryPhoto", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteGalleryPhoto(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteGalleryPhoto(el.dataset.actionArg ?? "")),
   );
   on("openLightbox", (el) => openLightbox(el.dataset.actionArg ?? ""));
 
   // ── WhatsApp / Green API ──
   on("sendWhatsAppAll", (el) => sendWhatsAppAll(el.dataset.actionArg ?? "all"));
-  on("sendWhatsAppAllViaApi", (el) =>
-    sendWhatsAppAllViaApi(el.dataset.actionArg ?? "all"),
-  );
+  on("sendWhatsAppAllViaApi", (el) => sendWhatsAppAllViaApi(el.dataset.actionArg ?? "all"));
   on("updateWaPreview", (_triggerEl, e) => {
     const input = /** @type {HTMLTextAreaElement|null} */ (
       e.target?.tagName === "TEXTAREA" ? e.target : null
@@ -1099,9 +1039,7 @@ function _registerHandlers() {
   // ── Timeline ──
   on("saveTimelineItem", (_el, _e) => {
     const getVal = (id) =>
-      /** @type {HTMLInputElement|null} */ (
-        document.getElementById(id)
-      )?.value?.trim() ?? "";
+      /** @type {HTMLInputElement|null} */ (document.getElementById(id))?.value?.trim() ?? "";
     const data = {
       time: getVal("timelineTime"),
       icon: getVal("timelineIcon"),
@@ -1116,9 +1054,7 @@ function _registerHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteTimelineItem", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteTimelineItem(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteTimelineItem(el.dataset.actionArg ?? "")),
   );
   on("openEditTimelineModal", (el) => {
     openTimelineForEdit(el.dataset.actionArg ?? "");
@@ -1133,10 +1069,7 @@ function _registerHandlers() {
   });
   on("sheetsCheckConnection", async () => {
     const ok = await sheetsCheckConnection();
-    showToast(
-      ok ? t("sheets_connected") : t("sheets_not_connected"),
-      ok ? "success" : "error",
-    );
+    showToast(ok ? t("sheets_connected") : t("sheets_not_connected"), ok ? "success" : "error");
   });
   on("createMissingSheetTabs", async () => {
     await createMissingSheetTabs();
@@ -1203,9 +1136,7 @@ function _registerHandlers() {
   on("cleanConfigDuplicates", async () => {
     showToast(t("sheets_testing"), "info");
     try {
-      const result = /** @type {any} */ (
-        await sheetsPost({ action: "cleanConfig" })
-      );
+      const result = /** @type {any} */ (await sheetsPost({ action: "cleanConfig" }));
       const removed = result?.removed ?? 0;
       showToast(
         removed > 0
@@ -1233,13 +1164,9 @@ function _registerHandlers() {
     showToast(t("settings_saved"), "success");
   });
   on("supabaseCheckConnection", async () => {
-    const { supabaseCheckConnection: sbCheck } =
-      await import("./services/supabase.js");
+    const { supabaseCheckConnection: sbCheck } = await import("./services/supabase.js");
     const ok = await sbCheck();
-    showToast(
-      ok ? t("supabase_connected") : t("supabase_not_connected"),
-      ok ? "success" : "error",
-    );
+    showToast(ok ? t("supabase_connected") : t("supabase_not_connected"), ok ? "success" : "error");
   });
 
   // ── Settings / Misc ──
@@ -1320,34 +1247,26 @@ function _registerHandlers() {
           document.getElementById("ccLastName")
         )?.value?.trim() ?? "",
       phone:
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("ccPhone")
-        )?.value?.trim() ?? "",
+        /** @type {HTMLInputElement|null} */ (document.getElementById("ccPhone"))?.value?.trim() ??
+        "",
       email:
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("ccEmail")
-        )?.value?.trim() ?? "",
+        /** @type {HTMLInputElement|null} */ (document.getElementById("ccEmail"))?.value?.trim() ??
+        "",
       side:
-        /** @type {HTMLSelectElement|null} */ (
-          document.getElementById("ccSide")
-        )?.value ?? "mutual",
+        /** @type {HTMLSelectElement|null} */ (document.getElementById("ccSide"))?.value ??
+        "mutual",
       dietaryNotes: "",
     };
     const result = contactSection.submitContactForm(data);
-    if (!result.ok)
-      showToast(result.errors?.join(", ") ?? t("error_save"), "error");
+    if (!result.ok) showToast(result.errors?.join(", ") ?? t("error_save"), "error");
     else showToast(t("contact_sent"), "success");
   });
 
   // ── Landing table finder ──
   on("findTable", (_findTableEl) => {
     const input =
-      /** @type {HTMLInputElement|null} */ (
-        document.getElementById("tablefinderInput")
-      ) ??
-      /** @type {HTMLInputElement|null} */ (
-        document.getElementById("findTableInput")
-      );
+      /** @type {HTMLInputElement|null} */ (document.getElementById("tablefinderInput")) ??
+      /** @type {HTMLInputElement|null} */ (document.getElementById("findTableInput"));
     landingSection.showTableFinder(input?.value?.trim() ?? "");
   });
 }

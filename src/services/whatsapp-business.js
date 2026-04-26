@@ -50,8 +50,10 @@ const GRAPH_BASE = "https://graph.facebook.com";
  */
 export function isBusinessAPIConfigured(config) {
   return (
-    typeof config?.phoneNumberId === "string" && config.phoneNumberId.length > 0 &&
-    typeof config?.accessToken   === "string" && config.accessToken.length   > 0
+    typeof config?.phoneNumberId === "string" &&
+    config.phoneNumberId.length > 0 &&
+    typeof config?.accessToken === "string" &&
+    config.accessToken.length > 0
   );
 }
 
@@ -85,9 +87,7 @@ export function buildTemplatePayload(to, templateRef) {
       language: {
         code: templateRef.language ?? "he",
       },
-      ...(templateRef.components?.length
-        ? { components: templateRef.components }
-        : {}),
+      ...(templateRef.components?.length ? { components: templateRef.components } : {}),
     },
   };
 }
@@ -128,11 +128,11 @@ export function buildTextPayload(to, text, opts = {}) {
  */
 export function sendTemplateMessage(to, templateRef, config, opts = {}) {
   const dryRun = opts.dryRun !== false; // default: dry-run for safety
-  const payload  = buildTemplatePayload(to, templateRef);
+  const payload = buildTemplatePayload(to, templateRef);
   const endpoint = isBusinessAPIConfigured(config) ? buildApiEndpoint(config) : "(not configured)";
 
   return {
-    success:  true,
+    success: true,
     payload,
     endpoint,
     dryRun,

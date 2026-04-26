@@ -35,8 +35,7 @@ export function renderEventSwitcher() {
   events.forEach((evt) => {
     const opt = document.createElement("option");
     opt.value = evt.id;
-    opt.textContent =
-      evt.label || (evt.id === "default" ? t("event_default") : evt.id);
+    opt.textContent = evt.label || (evt.id === "default" ? t("event_default") : evt.id);
     if (evt.id === activeId) opt.selected = true;
     select.appendChild(opt);
   });

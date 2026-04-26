@@ -51,18 +51,12 @@ export function registerVendorHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteVendor", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteVendor(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteVendor(el.dataset.actionArg ?? "")),
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
   on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());
-  on("setVendorPaymentFilter", (el) =>
-    setVendorPaymentFilter(el.dataset.actionArg ?? "all"),
-  );
-  on("filterVendorsByCategory", (el) =>
-    filterVendorsByCategory(el.dataset.category ?? "all"),
-  );
+  on("setVendorPaymentFilter", (el) => setVendorPaymentFilter(el.dataset.actionArg ?? "all"));
+  on("filterVendorsByCategory", (el) => filterVendorsByCategory(el.dataset.category ?? "all"));
   on("openEditVendorModal", (el) => {
     openVendorForEdit(el.dataset.actionArg ?? "");
     openModal("vendorModal");
@@ -84,17 +78,11 @@ export function registerVendorHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteExpense", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteExpense(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteExpense(el.dataset.actionArg ?? "")),
   );
   on("exportExpensesCSV", () => exportExpensesCSV());
-  on("filterExpensesByCategory", (el) =>
-    filterExpensesByCategory(el.dataset.category ?? "all"),
-  );
-  on("setExpenseCategoryFilter", (el) =>
-    setExpenseCategoryFilter(el.dataset.actionArg ?? "all"),
-  );
+  on("filterExpensesByCategory", (el) => filterExpensesByCategory(el.dataset.category ?? "all"));
+  on("setExpenseCategoryFilter", (el) => setExpenseCategoryFilter(el.dataset.actionArg ?? "all"));
   on("openEditExpenseModal", (el) => {
     openExpenseForEdit(el.dataset.actionArg ?? "");
     openModal("expenseModal");

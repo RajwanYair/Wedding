@@ -46,8 +46,7 @@ export function saveExpense(data, existingId = null) {
 
   if (existingId) {
     const idx = expenses.findIndex((e) => e.id === existingId);
-    if (idx === -1)
-      return { ok: false, errors: [t("error_expense_not_found")] };
+    if (idx === -1) return { ok: false, errors: [t("error_expense_not_found")] };
     expenses[idx] = { ...expenses[idx], ...value, updatedAt: now };
   } else {
     expenses.push({
@@ -67,9 +66,7 @@ export function saveExpense(data, existingId = null) {
  * @param {string} id
  */
 export function deleteExpense(id) {
-  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []).filter(
-    (e) => e.id !== id,
-  );
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []).filter((e) => e.id !== id);
   storeSet("expenses", expenses);
   enqueueWrite("expenses", () => syncStoreKeyToSheets("expenses"));
 }
@@ -100,15 +97,11 @@ export function renderExpenses() {
     catBtn.textContent = e.category || "";
     catBtn.title = t("expense_filter_by_cat");
     catBtn.dataset.action = "setExpenseCategoryFilter";
-    catBtn.dataset.actionArg = _expenseCatFilter === e.category ? "all" : (e.category || "all");
+    catBtn.dataset.actionArg = _expenseCatFilter === e.category ? "all" : e.category || "all";
     catTd.appendChild(catBtn);
     tr.appendChild(catTd);
 
-    const cells = [
-      e.description || "",
-      e.date || "",
-      `₪${e.amount || 0}`,
-    ];
+    const cells = [e.description || "", e.date || "", `₪${e.amount || 0}`];
     cells.forEach((txt) => {
       const td = document.createElement("td");
       td.textContent = txt;
@@ -145,8 +138,7 @@ export function renderExpenses() {
   if (emptyEl) emptyEl.classList.toggle("u-hidden", expenses.length > 0);
   // Show admin actions header when there are expenses
   const actionsHeader = document.getElementById("expenseActionsHeader");
-  if (actionsHeader)
-    actionsHeader.classList.toggle("u-hidden", expenses.length === 0);
+  if (actionsHeader) actionsHeader.classList.toggle("u-hidden", expenses.length === 0);
 }
 
 /**
@@ -265,5 +257,11 @@ export function getLargestExpenses(limit = 5) {
   return [...expenses]
     .sort((a, b) => (b.amount || 0) - (a.amount || 0))
     .slice(0, limit)
-    .map((e) => ({ id: e.id, category: e.category || "", description: e.description || "", amount: e.amount || 0, date: e.date || "" }));
+    .map((e) => ({
+      id: e.id,
+      category: e.category || "",
+      description: e.description || "",
+      amount: e.amount || 0,
+      date: e.date || "",
+    }));
 }

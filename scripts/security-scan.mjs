@@ -58,7 +58,12 @@ function walk(dir, exts = []) {
  * @param {string} text
  */
 function fail(file, lineNum, rule, text) {
-  violations.push({ file: relative(ROOT, file), line: lineNum, rule, text: text.trim().slice(0, 120) });
+  violations.push({
+    file: relative(ROOT, file),
+    line: lineNum,
+    rule,
+    text: text.trim().slice(0, 120),
+  });
 }
 
 // ── JS rules ──────────────────────────────────────────────────────────────
@@ -79,16 +84,14 @@ const JS_RULES = [
     // Exclude legitimate print-popup pattern: win.document.write(...)
     // These open a new window and write to it — common safe pattern for print/export.
     pattern: /(?<!win\.)(?<!w\.)document\.write\s*\(/,
-    message:
-      "document.write() usage detected (use win.document.write for print popups)",
+    message: "document.write() usage detected (use win.document.write for print popups)",
   },
   {
     rule: "no-unsafe-inner-html",
     // Flag .innerHTML = with a non-empty RHS.
     // Escape hatches: empty-string clear ("" or ''), pure SVG string vars named *svg* or *Svg*
     pattern: /\.innerHTML\s*=\s*(?!["']\s*["'])/,
-    message:
-      "Potentially unsafe .innerHTML assignment (use .textContent or sanitize)",
+    message: "Potentially unsafe .innerHTML assignment (use .textContent or sanitize)",
     skip: (line) =>
       // Allow empty-string clear
       /\.innerHTML\s*=\s*["']\s*["']/.test(line) ||
@@ -104,9 +107,7 @@ const JS_RULES = [
         !/\$\{[^}]*(?!_esc)[a-z][A-Za-z.]*\}/.test(line)) ||
       // Allow lines where the only template expressions use _esc* or t( or toLocaleString or numeric literals
       (/\$\{[^}]+\}/.test(line) &&
-        !/\$\{(?!(?:[^}]*_esc|[^}]*\bt\(|[^}]*toLocaleString|[^}]*\d+))[^}]+\}/.test(
-          line,
-        )),
+        !/\$\{(?!(?:[^}]*_esc|[^}]*\bt\(|[^}]*toLocaleString|[^}]*\d+))[^}]+\}/.test(line)),
   },
   {
     rule: "no-http-url",

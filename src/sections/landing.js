@@ -22,9 +22,7 @@ export function unmount() {
 }
 
 export function renderLanding() {
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
 
   // Couple names
   const coupleEl = document.getElementById("landingCoupleName");
@@ -126,7 +124,12 @@ function _getRegistryLinks(info) {
         if (item && typeof item === "object") {
           return {
             url: typeof item.url === "string" ? item.url : "",
-            name: typeof item.name === "string" ? item.name : (typeof item.url === "string" ? item.url : ""),
+            name:
+              typeof item.name === "string"
+                ? item.name
+                : typeof item.url === "string"
+                  ? item.url
+                  : "",
           };
         }
         return null;

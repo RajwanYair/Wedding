@@ -83,8 +83,8 @@ export function getBudgetUtilization(budget) {
   const spent = getTotalExpenses();
   return {
     spent,
-    remaining:       budget - spent,
+    remaining: budget - spent,
     utilizationRate: budget > 0 ? spent / budget : 0,
-    isOver:          spent > budget,
+    isOver: spent > budget,
   };
 }

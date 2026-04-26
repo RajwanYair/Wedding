@@ -28,12 +28,12 @@ export class SupabaseRsvpLogRepository {
     const { data, error } = await this._supabase
       .from("rsvp_log")
       .insert({
-        guest_id:   guestId,
+        guest_id: guestId,
         from_status: fromStatus ?? null,
-        to_status:  toStatus,
+        to_status: toStatus,
         source,
-        event_id:   eventId,
-        logged_at:  new Date().toISOString(),
+        event_id: eventId,
+        logged_at: new Date().toISOString(),
       })
       .select()
       .single();

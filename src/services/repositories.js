@@ -39,12 +39,15 @@ function _paginate(items, { cursor, limit, orderBy, orderDir = "asc" }) {
     });
   }
 
-  const startIdx = cursor ? sorted.findIndex((i) => /** @type {Record<string,unknown>}*/ (i)["id"] === cursor) + 1 : 0;
+  const startIdx = cursor
+    ? sorted.findIndex((i) => /** @type {Record<string,unknown>}*/ (i)["id"] === cursor) + 1
+    : 0;
   const page = sorted.slice(startIdx, startIdx + limit);
   const last = page[page.length - 1];
-  const nextCursor = page.length === limit && last
-    ? String(/** @type {Record<string,unknown>} */ (last)["id"])
-    : null;
+  const nextCursor =
+    page.length === limit && last
+      ? String(/** @type {Record<string,unknown>} */ (last)["id"])
+      : null;
 
   return { items: page, nextCursor, total: sorted.length };
 }
@@ -130,7 +133,10 @@ export const guestRepo = {
   /** @param {string} id */
   async delete(id) {
     const guests = await this.getAll();
-    storeSet("guests", guests.filter((g) => g.id !== id));
+    storeSet(
+      "guests",
+      guests.filter((g) => g.id !== id),
+    );
     enqueueWrite("guests", async () => {});
   },
 
@@ -141,7 +147,7 @@ export const guestRepo = {
     const now = _now();
     storeSet(
       "guests",
-      guests.map((g) => idSet.has(g.id) ? { ...g, status, updatedAt: now } : g),
+      guests.map((g) => (idSet.has(g.id) ? { ...g, status, updatedAt: now } : g)),
     );
     enqueueWrite("guests", async () => {});
   },
@@ -153,7 +159,7 @@ export const guestRepo = {
     const now = _now();
     storeSet(
       "guests",
-      guests.map((g) => idSet.has(g.id) ? { ...g, tableId, updatedAt: now } : g),
+      guests.map((g) => (idSet.has(g.id) ? { ...g, tableId, updatedAt: now } : g)),
     );
     enqueueWrite("guests", async () => {});
   },
@@ -164,7 +170,7 @@ export const guestRepo = {
    */
   async getActive() {
     const guests = await this.getAll();
-    return guests.filter((g) => !/** @type {any} */ (g).deleted_at);
+    return guests.filter((g) => !(/** @type {any} */ (g).deleted_at));
   },
 
   /**
@@ -262,7 +268,10 @@ export const tableRepo = {
   /** @param {string} id */
   async delete(id) {
     const tables = await this.getAll();
-    storeSet("tables", tables.filter((t) => t.id !== id));
+    storeSet(
+      "tables",
+      tables.filter((t) => t.id !== id),
+    );
     enqueueWrite("tables", async () => {});
   },
 };
@@ -330,7 +339,10 @@ export const vendorRepo = {
   /** @param {string} id */
   async delete(id) {
     const vendors = await this.getAll();
-    storeSet("vendors", vendors.filter((v) => v.id !== id));
+    storeSet(
+      "vendors",
+      vendors.filter((v) => v.id !== id),
+    );
     enqueueWrite("vendors", async () => {});
   },
 
@@ -340,7 +352,7 @@ export const vendorRepo = {
    */
   async getActive() {
     const vendors = await this.getAll();
-    return vendors.filter((v) => !/** @type {any} */ (v).deleted_at);
+    return vendors.filter((v) => !(/** @type {any} */ (v).deleted_at));
   },
 
   /**
@@ -443,7 +455,10 @@ export const expenseRepo = {
   /** @param {string} id */
   async delete(id) {
     const expenses = await this.getAll();
-    storeSet("expenses", expenses.filter((e) => e.id !== id));
+    storeSet(
+      "expenses",
+      expenses.filter((e) => e.id !== id),
+    );
     enqueueWrite("expenses", async () => {});
   },
 };
@@ -489,7 +504,11 @@ export const timelineRepo = {
     const items = await this.getAll();
     const idx = items.findIndex((t) => t.id === id);
     if (idx === -1) throw new Error(`Timeline item not found: ${id}`);
-    const updated = /** @type {import('../types').TimelineItem} */ ({ ...items[idx], ...patch, id });
+    const updated = /** @type {import('../types').TimelineItem} */ ({
+      ...items[idx],
+      ...patch,
+      id,
+    });
     const next = [...items];
     next[idx] = updated;
     storeSet("timeline", next);
@@ -500,7 +519,10 @@ export const timelineRepo = {
   /** @param {string} id */
   async delete(id) {
     const items = await this.getAll();
-    storeSet("timeline", items.filter((t) => t.id !== id));
+    storeSet(
+      "timeline",
+      items.filter((t) => t.id !== id),
+    );
     enqueueWrite("timeline", async () => {});
   },
 

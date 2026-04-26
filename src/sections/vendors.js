@@ -69,12 +69,7 @@ export function saveVendor(data, existingId = null) {
 export function deleteVendor(id) {
   const all = /** @type {any[]} */ (storeGet("vendors") ?? []);
   const victim = all.find((v) => v.id === id);
-  if (victim)
-    pushUndo(
-      `Delete vendor ${victim.name}`,
-      "vendors",
-      JSON.parse(JSON.stringify(all)),
-    );
+  if (victim) pushUndo(`Delete vendor ${victim.name}`, "vendors", JSON.parse(JSON.stringify(all)));
   const vendors = all.filter((v) => v.id !== id);
   storeSet("vendors", vendors);
   enqueueWrite("vendors", () => syncStoreKeyToSheets("vendors"));
@@ -95,13 +90,10 @@ export function renderVendors() {
 
     // S14.3 — Overdue detection
     const now = new Date();
-    const isOverdue =
-      v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0);
+    const isOverdue = v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0);
     if (isOverdue) tr.classList.add("vendor-row--overdue");
 
-    const dueDateStr = v.dueDate
-      ? new Date(v.dueDate).toLocaleDateString("he-IL")
-      : "—";
+    const dueDateStr = v.dueDate ? new Date(v.dueDate).toLocaleDateString("he-IL") : "—";
     const cells = [
       v.category || "",
       v.name || "",
@@ -178,8 +170,7 @@ export function renderVendors() {
     const total = vendors.reduce((s, v) => s + (v.price || 0), 0);
     const paid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
     bannerEl.textContent =
-      t("vendor_total", { total, paid, remaining: total - paid }) ||
-      `₪${paid} / ₪${total}`;
+      t("vendor_total", { total, paid, remaining: total - paid }) || `₪${paid} / ₪${total}`;
   }
   const emptyEl = document.getElementById("vendorsEmpty");
   if (emptyEl) emptyEl.hidden = vendors.length > 0;
@@ -225,8 +216,7 @@ export function filterVendorsByCategory(category) {
   rows.forEach((row) => {
     const htmlRow = /** @type {HTMLElement} */ (row);
     const cat = htmlRow.dataset.category || "";
-    htmlRow.style.display =
-      category === "all" || !category || cat === category ? "" : "none";
+    htmlRow.style.display = category === "all" || !category || cat === category ? "" : "none";
   });
 }
 
@@ -286,8 +276,7 @@ export function renderOverdueChip() {
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
   const now = new Date();
   const count = vendors.filter(
-    (v) =>
-      v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
+    (v) => v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
   ).length;
   if (count > 0) {
     chip.textContent = `⚠️ ${count} ${t("vendor_overdue_count")}`;
@@ -383,11 +372,20 @@ export function getVendorPaymentSummary() {
   const now = new Date();
   const totalCost = vendors.reduce((s, v) => s + (v.price || 0), 0);
   const totalPaid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
-  const paidCount = vendors.filter((v) => (v.paid || 0) >= (v.price || 0) && (v.price || 0) > 0).length;
+  const paidCount = vendors.filter(
+    (v) => (v.paid || 0) >= (v.price || 0) && (v.price || 0) > 0,
+  ).length;
   const overdueCount = vendors.filter(
     (v) => v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
   ).length;
-  return { total: vendors.length, totalCost, totalPaid, outstanding: totalCost - totalPaid, paidCount, overdueCount };
+  return {
+    total: vendors.length,
+    totalCost,
+    totalPaid,
+    outstanding: totalCost - totalPaid,
+    paidCount,
+    overdueCount,
+  };
 }
 
 /**

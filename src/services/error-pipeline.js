@@ -47,7 +47,7 @@ export function captureError(err, context = {}) {
   const isError = err instanceof Error;
   const record = /** @type {AppError} */ ({
     id: `err_${nowMs()}_${Math.random().toString(36).slice(2, 7)}`,
-    type: isError ? (err.name || "Error") : typeof err,
+    type: isError ? err.name || "Error" : typeof err,
     message: isError ? err.message : String(err),
     stack: isError ? err.stack : undefined,
     context: { ...context },
@@ -76,7 +76,7 @@ export function captureError(err, context = {}) {
  */
 export function getErrors(filter = {}) {
   let errors = getAll().sort((a, b) => b.ts - a.ts);
-  if (filter.type)  errors = errors.filter((e) => e.type === filter.type);
+  if (filter.type) errors = errors.filter((e) => e.type === filter.type);
   if (filter.since) errors = errors.filter((e) => e.ts >= filter.since);
   return errors;
 }
@@ -114,6 +114,6 @@ export function getErrorSummary() {
  * @returns {number}
  */
 export function getRecentErrorCount(since) {
-  const cutoff = since ?? (nowMs() - 60_000);
+  const cutoff = since ?? nowMs() - 60_000;
   return getAll().filter((e) => e.ts >= cutoff).length;
 }

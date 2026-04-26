@@ -52,12 +52,12 @@ function _id() {
  */
 export function startSession(opts = {}) {
   const session = /** @type {CheckinSession} */ ({
-    id:        _id(),
-    eventId:   opts.eventId ?? "_default",
+    id: _id(),
+    eventId: opts.eventId ?? "_default",
     startedAt: Date.now(),
-    endedAt:   null,
-    checkIns:  {},
-    active:    true,
+    endedAt: null,
+    checkIns: {},
+    active: true,
   });
   _save([..._getSessions(), session]);
   return session.id;
@@ -128,12 +128,12 @@ export function isCheckedIn(sessionId, guestId) {
 export function getSessionStats(sessionId) {
   const session = getSession(sessionId);
   if (!session) return null;
-  const entries  = Object.values(session.checkIns);
+  const entries = Object.values(session.checkIns);
   const partySize = entries.reduce((s, e) => s + e.partySize, 0);
   return {
     guestCount: entries.length,
     partySize,
-    isActive:   session.active,
-    startedAt:  session.startedAt,
+    isActive: session.active,
+    startedAt: session.startedAt,
   };
 }

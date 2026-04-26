@@ -30,9 +30,7 @@ function readStoredString(storageKey) {
  */
 function normalizeEmailList(value) {
   if (!Array.isArray(value)) return [];
-  return value
-    .map((entry) => String(entry).trim().toLowerCase())
-    .filter(Boolean);
+  return value.map((entry) => String(entry).trim().toLowerCase()).filter(Boolean);
 }
 
 /** @returns {string} */
@@ -57,13 +55,8 @@ export function getSupabaseAnonKey() {
 
 /** @returns {'sheets'|'supabase'|'both'|'none'} */
 export function getBackendTypeConfig() {
-  const configured =
-    readStoredString("backendType") || BACKEND_TYPE || "sheets";
-  if (
-    configured === "supabase" ||
-    configured === "both" ||
-    configured === "none"
-  ) {
+  const configured = readStoredString("backendType") || BACKEND_TYPE || "sheets";
+  if (configured === "supabase" || configured === "both" || configured === "none") {
     return configured;
   }
   return "sheets";

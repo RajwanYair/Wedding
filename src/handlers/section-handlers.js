@@ -22,11 +22,7 @@ import {
   printDietaryCards,
 } from "../sections/analytics.js";
 import { submitRsvp, lookupRsvpByPhone } from "../sections/rsvp.js";
-import {
-  handleGalleryUpload,
-  deleteGalleryPhoto,
-  openLightbox,
-} from "../sections/gallery.js";
+import { handleGalleryUpload, deleteGalleryPhoto, openLightbox } from "../sections/gallery.js";
 import {
   sendWhatsAppAll,
   sendWhatsAppAllViaApi,
@@ -67,17 +63,13 @@ export function registerSectionHandlers() {
       showToast(t("error_invalid_amount"), "error");
       return;
     }
-    const current = /** @type {Record<string,unknown>} */ (
-      storeGet("weddingInfo") ?? {}
-    );
+    const current = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
     storeSet("weddingInfo", { ...current, budgetTarget: val });
     renderBudgetProgress();
     showToast(t("settings_saved"), "success");
   });
   on("deleteBudgetEntry", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteBudgetEntry(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteBudgetEntry(el.dataset.actionArg ?? "")),
   );
   on("renderBudgetProgress", () => renderBudgetProgress());
   on("renderBudgetChart", () => renderBudgetChart());
@@ -108,23 +100,18 @@ export function registerSectionHandlers() {
       notes: getVal("rsvpNotes"),
     };
     const result = submitRsvp(data);
-    if (!result.ok)
-      showToast(result.errors?.join(", ") ?? t("error_save"), "error");
+    if (!result.ok) showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("lookupRsvpByPhone", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT"
-        ? e.target
-        : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT" ? e.target : null
     );
     if (!input) return;
     const result = lookupRsvpByPhone(input.value);
     const statusEl = document.getElementById("rsvpLookupStatus");
     if (statusEl) {
       statusEl.classList.remove("u-hidden");
-      statusEl.textContent = result.found
-        ? t("rsvp_lookup_found")
-        : t("rsvp_lookup_new");
+      statusEl.textContent = result.found ? t("rsvp_lookup_found") : t("rsvp_lookup_new");
     }
     if (!result.found && input.value.replace(/\D/g, "").length >= 9) {
       const details = document.getElementById("rsvpDetails");
@@ -138,22 +125,16 @@ export function registerSectionHandlers() {
     handleGalleryUpload(input);
   });
   on("deleteGalleryPhoto", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteGalleryPhoto(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteGalleryPhoto(el.dataset.actionArg ?? "")),
   );
   on("openLightbox", (el) => openLightbox(el.dataset.actionArg ?? ""));
 
   // ── WhatsApp / Green API ──
   on("sendWhatsAppAll", (el) => sendWhatsAppAll(el.dataset.actionArg ?? "all"));
-  on("sendWhatsAppAllViaApi", (el) =>
-    sendWhatsAppAllViaApi(el.dataset.actionArg ?? "all"),
-  );
+  on("sendWhatsAppAllViaApi", (el) => sendWhatsAppAllViaApi(el.dataset.actionArg ?? "all"));
   on("updateWaPreview", (_triggerEl, e) => {
     const input = /** @type {HTMLTextAreaElement|null} */ (
-      /** @type {HTMLElement|null} */ (e.target)?.tagName === "TEXTAREA"
-        ? e.target
-        : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "TEXTAREA" ? e.target : null
     );
     updateWaPreview(input?.value ?? "");
   });
@@ -178,16 +159,13 @@ export function registerSectionHandlers() {
     if (!textarea) return;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    textarea.value =
-      textarea.value.slice(0, start) + varText + textarea.value.slice(end);
+    textarea.value = textarea.value.slice(0, start) + varText + textarea.value.slice(end);
     textarea.focus();
     textarea.setSelectionRange(start + varText.length, start + varText.length);
     updateWaPreview(textarea.value);
   });
   on("scheduleWaReminders", () => {
-    const input = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("waScheduleDate")
-    );
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("waScheduleDate"));
     const dateVal = input?.value;
     if (!dateVal) {
       showToast(t("wa_schedule_no_date") || "Select a date first", "warning");
@@ -226,9 +204,7 @@ export function registerSectionHandlers() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteTimelineItem", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteTimelineItem(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteTimelineItem(el.dataset.actionArg ?? "")),
   );
   on("openEditTimelineModal", (el) => {
     openTimelineForEdit(el.dataset.actionArg ?? "");
@@ -236,15 +212,11 @@ export function registerSectionHandlers() {
   });
   on("printTimeline", () => printTimeline());
   on("exportTimelineCSV", () => exportTimelineCSV());
-  on("toggleTimelineDone", (el) =>
-    toggleTimelineDone(el.dataset.actionArg ?? ""),
-  );
+  on("toggleTimelineDone", (el) => toggleTimelineDone(el.dataset.actionArg ?? ""));
 
   // ── Communication Hub (Phase 10.2) ──
   on("commAddSample", () => {
-    const guests = /** @type {Array<Record<string, unknown>>} */ (
-      storeGet("guests") ?? []
-    );
+    const guests = /** @type {Array<Record<string, unknown>>} */ (storeGet("guests") ?? []);
     const guest = guests[Math.floor(Math.random() * guests.length)];
     const guestName = guest
       ? `${guest.firstName ?? ""} ${guest.lastName ?? ""}`.trim()
@@ -272,7 +244,6 @@ function _updateScheduleStatus() {
   if (!el) return;
   const queue = getScheduledQueue();
   const pending = queue.filter((q) => !q.sentAt);
-  el.textContent = pending.length > 0
-    ? `⏰ ${pending.length} ${t("wa_scheduled_pending") || "scheduled"}`
-    : "";
+  el.textContent =
+    pending.length > 0 ? `⏰ ${pending.length} ${t("wa_scheduled_pending") || "scheduled"}` : "";
 }

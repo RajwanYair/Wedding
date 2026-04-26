@@ -50,10 +50,14 @@ export class BaseSection {
   }
 
   /** @returns {string} */
-  get name() { return this.#name; }
+  get name() {
+    return this.#name;
+  }
 
   /** @returns {boolean} */
-  get isMounted() { return this.#mounted; }
+  get isMounted() {
+    return this.#mounted;
+  }
 
   // ── Subclass hooks (override these) ────────────────────────────────────
 
@@ -63,7 +67,9 @@ export class BaseSection {
    * @returns {void | Promise<void>}
    */
 
-  async onMount(_params) { /* override */ }
+  async onMount(_params) {
+    /* override */
+  }
 
   /**
    * Called once on unmount. Override for any custom teardown beyond cleanup
@@ -71,7 +77,9 @@ export class BaseSection {
    * `subscribe()` are released automatically.
    * @returns {void}
    */
-  onUnmount() { /* override */ }
+  onUnmount() {
+    /* override */
+  }
 
   // ── Helpers available to subclasses ────────────────────────────────────
 
@@ -116,14 +124,26 @@ export class BaseSection {
     if (!this.#mounted) return;
     this.#mounted = false;
     for (const fn of this.#unsubscribers) {
-      try { fn(); } catch { /* ignore */ }
+      try {
+        fn();
+      } catch {
+        /* ignore */
+      }
     }
     this.#unsubscribers.length = 0;
     for (const fn of this.#cleanup) {
-      try { fn(); } catch { /* ignore */ }
+      try {
+        fn();
+      } catch {
+        /* ignore */
+      }
     }
     this.#cleanup.length = 0;
-    try { this.onUnmount(); } catch { /* ignore */ }
+    try {
+      this.onUnmount();
+    } catch {
+      /* ignore */
+    }
   }
 }
 

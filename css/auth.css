@@ -1,138 +1,197 @@
 @layer auth {
-
-/* ── Auth Overlay ── */
-.auth-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(10, 5, 20, 0.93);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.4s ease;
-}
-.auth-overlay.auth-hidden { display: none; }
-.auth-card {
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.5rem;
-  padding: 2.5rem 2rem;
-  width: min(90vw, 400px);
-  text-align: center;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-}
-.auth-logo-icon { font-size: 2.8rem; line-height: 1; margin-bottom: 0.4rem; }
-.auth-card-title {
-  font-size: 1.45rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 0.3rem;
-}
-.auth-card-sub { color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 1.8rem; }
-.auth-providers { display: flex; flex-direction: column; align-items: center; gap: 0.65rem; }
-.google-btn-host { width: 100%; max-width: 280px; min-height: 44px; }
-.google-btn-host > div { width: 100% !important; }
-.auth-social-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  width: 100%;
-  max-width: 280px;
-  padding: 0.65rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.auth-social-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
-.auth-social-btn.btn-fb { color: rgb(123, 158, 222); border-color: rgba(66, 103, 178, 0.35); }
-.auth-social-btn.btn-fb:hover { background: rgba(66, 103, 178, 0.14); }
-.auth-social-btn.btn-facebook { color: rgb(123, 158, 222); border-color: rgba(66, 103, 178, 0.35); }
-.auth-social-btn.btn-facebook:hover { background: rgba(66, 103, 178, 0.14); }
-.auth-social-btn.btn-apple { color: var(--text-primary); border-color: rgba(255, 255, 255, 0.2); }
-.auth-social-btn.btn-apple:hover { background: rgba(255, 255, 255, 0.08); }
-.auth-social-btn.btn-guest {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-.auth-divider-line {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  max-width: 280px;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-}
-.auth-divider-line::before,
-.auth-divider-line::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
-.auth-email-input {
-  width: 100%;
-  max-width: 280px;
-  padding: 0.65rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-primary);
-  font-size: 0.92rem;
-  text-align: center;
-  direction: ltr;
-  transition: border-color 0.2s, background 0.2s;
-}
-.auth-email-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.1);
-}
-/* ── User Info in Top Bar ── */
-.user-chip { gap: 0.4rem !important; }
-.user-avatar-sm {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  object-fit: cover;
-}
-.user-display-name {
-  font-size: 0.78em;
-  color: var(--text-secondary);
-  max-width: 110px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.user-role-chip {
-  font-size: 0.68em;
-  padding: 0.1rem 0.4rem;
-  border-radius: 0.8rem;
-  border: 1px solid currentColor;
-  white-space: nowrap;
-}
-.user-role-chip.role-admin { color: var(--gold); }
-.user-role-chip.role-guest { color: var(--text-muted); }
-.user-signout-btn {
-  background: transparent;
-  border: 1px solid rgba(240, 230, 214, 0.3);
-  color: var(--text-primary);
-  font-size: 0.78em;
-  width: auto;
-  height: auto;
-  padding: 0.18rem 0.45rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-}
-.user-signout-btn:hover { color: var(--bg-primary); background: var(--accent-light); border-color: var(--accent-light); }
-/* Guest mode: only RSVP visible */
-body.guest-mode .nav-tabs { display: none !important; }
-
-
+  /* ── Auth Overlay ── */
+  .auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(10, 5, 20, 0.93);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.4s ease;
+  }
+  .auth-overlay.auth-hidden {
+    display: none;
+  }
+  .auth-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    width: min(90vw, 400px);
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  }
+  .auth-logo-icon {
+    font-size: 2.8rem;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .auth-card-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.3rem;
+  }
+  .auth-card-sub {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0 0 1.8rem;
+  }
+  .auth-providers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .google-btn-host {
+    width: 100%;
+    max-width: 280px;
+    min-height: 44px;
+  }
+  .google-btn-host > div {
+    width: 100% !important;
+  }
+  .auth-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    width: 100%;
+    max-width: 280px;
+    padding: 0.65rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
+  }
+  .auth-social-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .auth-social-btn.btn-fb {
+    color: rgb(123, 158, 222);
+    border-color: rgba(66, 103, 178, 0.35);
+  }
+  .auth-social-btn.btn-fb:hover {
+    background: rgba(66, 103, 178, 0.14);
+  }
+  .auth-social-btn.btn-facebook {
+    color: rgb(123, 158, 222);
+    border-color: rgba(66, 103, 178, 0.35);
+  }
+  .auth-social-btn.btn-facebook:hover {
+    background: rgba(66, 103, 178, 0.14);
+  }
+  .auth-social-btn.btn-apple {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .auth-social-btn.btn-apple:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .auth-social-btn.btn-guest {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  .auth-divider-line {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 280px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+  .auth-divider-line::before,
+  .auth-divider-line::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .auth-email-input {
+    width: 100%;
+    max-width: 280px;
+    padding: 0.65rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    text-align: center;
+    direction: ltr;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+  }
+  .auth-email-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  /* ── User Info in Top Bar ── */
+  .user-chip {
+    gap: 0.4rem !important;
+  }
+  .user-avatar-sm {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    object-fit: cover;
+  }
+  .user-display-name {
+    font-size: 0.78em;
+    color: var(--text-secondary);
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .user-role-chip {
+    font-size: 0.68em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.8rem;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+  .user-role-chip.role-admin {
+    color: var(--gold);
+  }
+  .user-role-chip.role-guest {
+    color: var(--text-muted);
+  }
+  .user-signout-btn {
+    background: transparent;
+    border: 1px solid rgba(240, 230, 214, 0.3);
+    color: var(--text-primary);
+    font-size: 0.78em;
+    width: auto;
+    height: auto;
+    padding: 0.18rem 0.45rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .user-signout-btn:hover {
+    color: var(--bg-primary);
+    background: var(--accent-light);
+    border-color: var(--accent-light);
+  }
+  /* Guest mode: only RSVP visible */
+  body.guest-mode .nav-tabs {
+    display: none !important;
+  }
 } /* end @layer auth */

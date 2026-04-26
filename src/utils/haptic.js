@@ -23,15 +23,15 @@ export function isVibrationSupported() {
 /** Standard pulse patterns (ms). */
 export const HAPTIC = Object.freeze({
   /** Single short confirmation pulse — check-in success, RSVP submitted */
-  SUCCESS:   [50],
+  SUCCESS: [50],
   /** Double pulse — action toggle */
-  DOUBLE:    [50, 80, 50],
+  DOUBLE: [50, 80, 50],
   /** Error pattern — three short bursts */
-  ERROR:     [80, 60, 80, 60, 80],
+  ERROR: [80, 60, 80, 60, 80],
   /** Warning — single medium pulse */
-  WARNING:   [120],
+  WARNING: [120],
   /** Continuous scan-active pulse */
-  SCAN:      [30, 120, 30],
+  SCAN: [30, 120, 30],
 });
 
 // ── Public API ────────────────────────────────────────────────────────────

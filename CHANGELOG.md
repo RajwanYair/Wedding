@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.2.0] — 2026-04-26
+
+### Added (Sprint 12 — Quality, Tooling & Docs consolidation)
+
+- **Prettier** (`prettier` devDep, `.prettierrc.json`, `.prettierignore`) — deterministic code formatting for JS, CSS, and JSON. All source files formatted in this release. (Task 9)
+- **`npm run format:check`** — new CI-gated script; fails if any tracked file deviates from Prettier config. (Task 9)
+- **`npm run format`** — write-mode companion for local usage. (Task 9)
+- **Prettier CI gate** — `format:check` step added to `.github/workflows/ci.yml` lint job before i18n parity check. (Task 10)
+- **Prettier VS Code integration** — `esbenp.prettier-vscode` added to `.vscode/extensions.json`; JS/CSS/JSON formatters in `.vscode/settings.json` updated to Prettier. (Task 12)
+- **Format tasks** — "Format: Check" and "Format: Write" added to `.vscode/tasks.json`. (Task 12)
+- **ARCHITECTURE.md — Scope section** — explicit "pure web, Node ≥ 22 only, zero Python, single `dist/` output" statement. (Tasks 1, 2, 3)
+- **ARCHITECTURE.md — Section Lifecycle diagram** — Mermaid flowchart showing `BaseSection` mount → subscribe → unmount → auto-cleanup path alongside the legacy path. (Tasks 3, 17)
+- **ARCHITECTURE.md — Store Reactivity diagram** — Mermaid flowchart: `storeSet` → Proxy → localStorage + microtask → subscriber callbacks → UI render + `enqueueWrite`. (Tasks 3, 17)
+- **ARCHITECTURE.md — Route Table diagram** — Mermaid flowchart: `parseLocation` → `isKnownSection` → public/admin gate → template-loader → `mount`. (Tasks 3, 17)
+- **ARCHITECTURE.md — v11.1.0 module additions** — `monitoring.js`, `secure-storage.js`, `section-base.js`, `route-table.js`, `calendar-link.js` added to dependency graph. (Task 3)
+
+### Fixed
+
+- **Vitest 4 `poolOptions` deprecation** — `vite.config.js` migrated from deprecated `test.poolOptions.vmThreads` to top-level `test.vmThreads`. Removes "DEPRECATED" log line from every test run. (Tasks 7, 8)
+
+### Removed (Task 5, 18, 20 — Footprint reduction)
+
+- `cleanup_utils.ps1` — one-time deletion script from v11.0.0 purge; no longer needed.
+- `ROADMAP.old.md` — superseded by current `ROADMAP.md`; history preserved in `CHANGELOG.md`.
+
+### Changed (Task 15 — README refresh)
+
+- **README tests badge** — updated from stale `2318` to current `2385`.
+- **README Quick Start** — added portable standalone install path (`npm ci`) alongside the shared-workspace path; `npm run format:check` added to development commands.
+
+### Changed (Task 12, 13 — Tooling sync)
+
+- `.vscode/tasks.json` — test count label updated (`2318+` → `2385+`); Format: Check + Format: Write tasks added.
+- `.github/PULL_REQUEST_TEMPLATE.md` — test count updated (`2318+` / `141 suites` → `2385+` / `147 suites`).
+- `ROADMAP.md` — removed stale reference to `ROADMAP.old.md`; version header bumped.
+
+### Stats
+
+- **2385 tests** (147 files) · **0 lint errors** · **0 warnings** · **0 Prettier violations** after initial format pass.
+- Before: 1 stale script, 1 stale archive MD, stale test counts in 3 places, no formatting standard.
+- After: clean formatter baseline; all tooling counts in sync.
+
 ## [11.1.0] — 2025-07-18
 
 ### Added (Phase A — Foundation Sprint)

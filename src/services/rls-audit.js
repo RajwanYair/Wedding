@@ -36,9 +36,7 @@ export async function verifyRlsEnabled(supabase) {
   /** @type {RlsTableRow[]} */
   const rows = data ?? [];
   /** @type {Record<string, boolean>} */
-  const tableStatus = Object.fromEntries(
-    rows.map((r) => [r.tablename, r.rowsecurity])
-  );
+  const tableStatus = Object.fromEntries(rows.map((r) => [r.tablename, r.rowsecurity]));
 
   const missing = REQUIRED_RLS_TABLES.filter((t) => !tableStatus[t]);
   return { ok: missing.length === 0, missing, tableStatus };
@@ -69,16 +67,12 @@ export async function verifySelectPolicies(supabase) {
   const results = await Promise.all(
     REQUIRED_RLS_TABLES.map(async (table) => {
       const policies = await listPolicies(supabase, table);
-      const hasSelect = policies.some(
-        (p) => p.cmd === "SELECT" || p.cmd === "ALL"
-      );
+      const hasSelect = policies.some((p) => p.cmd === "SELECT" || p.cmd === "ALL");
       return { table, hasSelect };
-    })
+    }),
   );
 
-  const unprotected = results
-    .filter((r) => !r.hasSelect)
-    .map((r) => r.table);
+  const unprotected = results.filter((r) => !r.hasSelect).map((r) => r.table);
 
   return { ok: unprotected.length === 0, unprotected };
 }

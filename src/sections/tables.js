@@ -73,9 +73,7 @@ export function deleteTable(id) {
   );
   storeSet("guests", guests);
 
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []).filter(
-    (tb) => tb.id !== id,
-  );
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []).filter((tb) => tb.id !== id);
   storeSet("tables", tables);
   enqueueWrite("tables", () => syncStoreKeyToSheets("tables"));
 }
@@ -98,14 +96,10 @@ export function autoAssignTables() {
       usage.set(g.tableId, n + (g.count || 1));
     });
 
-  const unassigned = guests.filter(
-    (g) => !g.tableId && g.status !== "declined",
-  );
+  const unassigned = guests.filter((g) => !g.tableId && g.status !== "declined");
   // Sort by group priority
   unassigned.sort(
-    (a, b) =>
-      priority.indexOf(a.group || "other") -
-      priority.indexOf(b.group || "other"),
+    (a, b) => priority.indexOf(a.group || "other") - priority.indexOf(b.group || "other"),
   );
 
   const updated = [...guests];
@@ -199,9 +193,7 @@ export function renderTables() {
 function _renderUnassigned(guests) {
   const unassignedEl = document.getElementById("unassignedGuests");
   if (!unassignedEl) return;
-  const unassigned = guests.filter(
-    (g) => !g.tableId && g.status !== "declined",
-  );
+  const unassigned = guests.filter((g) => !g.tableId && g.status !== "declined");
   unassignedEl.textContent = "";
   if (unassigned.length === 0) {
     const p = document.createElement("p");
@@ -254,9 +246,7 @@ function _renderTransportManifest(guests) {
   if (!container) return;
   container.textContent = "";
 
-  const withTransport = guests.filter(
-    (g) => g.transport && g.status !== "declined",
-  );
+  const withTransport = guests.filter((g) => g.transport && g.status !== "declined");
   if (withTransport.length === 0) {
     const p = document.createElement("p");
     p.className = "u-text-muted";
@@ -278,10 +268,7 @@ function _renderTransportManifest(guests) {
     section.className = "transport-route";
 
     const header = document.createElement("h4");
-    const totalPax = passengers.reduce(
-      (s, g) => s + (g.count || 1) + (g.children || 0),
-      0,
-    );
+    const totalPax = passengers.reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
     header.textContent = `🚌 ${route} — ${totalPax} ${t("transport_passengers")}`;
     section.appendChild(header);
 
@@ -323,9 +310,7 @@ function _renderTransportManifest(guests) {
  */
 export function exportTransportCSV() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const withTransport = guests.filter(
-    (g) => g.transport && g.status !== "declined",
-  );
+  const withTransport = guests.filter((g) => g.transport && g.status !== "declined");
   const header = "Route,Name,Phone,Count";
   const rows = withTransport.map((g) =>
     [
@@ -386,9 +371,7 @@ export function printTableSigns() {
  * Shows a result in the find-table output element.
  */
 export function findTable() {
-  const input = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("findTableInput")
-  );
+  const input = /** @type {HTMLInputElement|null} */ (document.getElementById("findTableInput"));
   const output = document.getElementById("findTableResult");
   if (!input || !output) return;
 
@@ -449,10 +432,7 @@ export function getTableStats() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
 
   const totalCapacity = tables.reduce((s, t) => s + (t.capacity || 0), 0);
-  const totalSeated = guests.reduce(
-    (s, g) => s + (g.tableId ? g.count || 1 : 0),
-    0,
-  );
+  const totalSeated = guests.reduce((s, g) => s + (g.tableId ? g.count || 1 : 0), 0);
 
   return {
     totalTables: tables.length,
@@ -531,7 +511,13 @@ export function getOverCapacityTables() {
     const seated = guests.filter((guest) => guest.tableId === table.id).length;
     const capacity = table.capacity || 10;
     if (seated > capacity) {
-      overbooked.push({ tableId: table.id, name: table.name || table.id, capacity, seated, over: seated - capacity });
+      overbooked.push({
+        tableId: table.id,
+        name: table.name || table.id,
+        capacity,
+        seated,
+        over: seated - capacity,
+      });
     }
   }
   return overbooked;

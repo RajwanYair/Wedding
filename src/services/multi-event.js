@@ -60,14 +60,14 @@ function _id() {
 export function createEvent(opts) {
   if (!opts.name?.trim()) throw new Error("multi-event: name is required");
   const event = /** @type {WeddingEvent} */ ({
-    id:          _id(),
-    name:        opts.name.trim(),
-    label:       opts.name.trim(),
-    date:        opts.date       ?? null,
-    venue:       opts.venue      ?? null,
+    id: _id(),
+    name: opts.name.trim(),
+    label: opts.name.trim(),
+    date: opts.date ?? null,
+    venue: opts.venue ?? null,
     description: opts.description ?? null,
-    createdAt:   Date.now(),
-    updatedAt:   Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   });
   _save([..._getEvents(), event]);
   return event.id;

@@ -63,16 +63,12 @@ export function registerTableHandlers() {
   on("printSeatingChart", () => printSeatingChart());
   on("printPlaceCards", () => printPlaceCards());
   on("printTableSigns", () => printTableSigns());
-  on("printTablePlaceCards", (el) =>
-    printPlaceCards(el.dataset.actionArg ?? ""),
-  );
+  on("printTablePlaceCards", (el) => printPlaceCards(el.dataset.actionArg ?? ""));
   on("exportTransportCSV", () => exportTransportCSV());
   on("exportTableCSV", (el) => exportTableCSV(el.dataset.actionArg ?? ""));
   on("printTransportManifest", () => printTransportManifest());
   on("deleteTable", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteTable(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteTable(el.dataset.actionArg ?? "")),
   );
   on("openEditTableModal", (el) => {
     openTableForEdit(el.dataset.actionArg ?? "");
@@ -83,7 +79,7 @@ export function registerTableHandlers() {
   on("checkInGuest", (el) => checkInGuest(el.dataset.actionArg ?? ""));
   on("checkinSearch", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      (/** @type {HTMLElement|null} */ (e.target))?.tagName === "INPUT" ? e.target : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT" ? e.target : null
     );
     setCheckinSearch(input?.value ?? "");
   });

@@ -81,9 +81,7 @@ export function mdToHtml(md) {
  * @returns {string}
  */
 function _inlineFormat(text) {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, "<<b>>$1<</b>>")
-    .replace(/`(.+?)`/g, "<<code>>$1<</code>>");
+  return text.replace(/\*\*(.+?)\*\*/g, "<<b>>$1<</b>>").replace(/`(.+?)`/g, "<<code>>$1<</code>>");
 }
 
 /**

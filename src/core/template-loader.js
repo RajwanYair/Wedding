@@ -38,9 +38,10 @@ export const TEMPLATE_TIMEOUT_MS = 10_000;
  */
 const _rawGlob = /** @type {Record<string, () => Promise<{ default: string }>>} */ (
   import.meta.glob("../templates/*.html", {
-  query: "?raw",
-  eager: false,
-}));
+    query: "?raw",
+    eager: false,
+  })
+);
 
 /** @type {Map<string, () => Promise<{ default: string }>>} */
 const _loaders = new Map();
@@ -143,10 +144,7 @@ export async function injectTemplate(container, sectionName) {
     _callbacks.get(sectionName)?.();
   } catch (err) {
     // All retries exhausted — section will render empty
-    console.warn(
-      `[template-loader] Failed to load template after retries: ${sectionName}`,
-      err,
-    );
+    console.warn(`[template-loader] Failed to load template after retries: ${sectionName}`, err);
   } finally {
     container.classList.remove("tpl-loading");
     container.removeAttribute("aria-busy");

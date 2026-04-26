@@ -66,9 +66,7 @@ export function saveBudgetEntry(data, existingId = null) {
  * @param {string} id
  */
 export function deleteBudgetEntry(id) {
-  const entries = /** @type {any[]} */ (storeGet("budget") ?? []).filter(
-    (e) => e.id !== id,
-  );
+  const entries = /** @type {any[]} */ (storeGet("budget") ?? []).filter((e) => e.id !== id);
   storeSet("budget", entries);
   enqueueWrite("budget", () => syncStoreKeyToSheets("budget"));
 }
@@ -125,11 +123,8 @@ export function renderBudget() {
   const info = /** @type {any} */ (storeGet("weddingInfo") ?? {});
   const target = Number(info.budgetTarget) || 0;
   const giftCount = allRows.filter((r) => r.amount > 0).length;
-  const pending = guests.filter(
-    (g) => g.status === "confirmed" && !g.gift,
-  ).length;
-  const pct =
-    target > 0 ? Math.min(100, Math.round((total / target) * 100)) : 0;
+  const pending = guests.filter((g) => g.status === "confirmed" && !g.gift).length;
+  const pct = target > 0 ? Math.min(100, Math.round((total / target) * 100)) : 0;
 
   _statText("budgetStatGifts", String(giftCount));
   _statText("budgetStatTotal", `₪${total}`);
@@ -138,9 +133,7 @@ export function renderBudget() {
   _statText("budgetStatPct", target > 0 ? `${pct}%` : "—");
 
   // Show progress wrap when budget target is set
-  const wrap = /** @type {HTMLElement|null} */ (
-    document.getElementById("budgetProgressWrap")
-  );
+  const wrap = /** @type {HTMLElement|null} */ (document.getElementById("budgetProgressWrap"));
   if (wrap) {
     if (target > 0) {
       wrap.classList.remove("u-hidden");
@@ -183,12 +176,8 @@ export function getBudgetSummary() {
  * Reads `weddingInfo.budgetTarget` from the store for the target amount.
  */
 export function renderBudgetProgress() {
-  const bar = /** @type {HTMLElement|null} */ (
-    document.getElementById("budgetProgressBar")
-  );
-  const label = /** @type {HTMLElement|null} */ (
-    document.getElementById("budgetProgressLabel")
-  );
+  const bar = /** @type {HTMLElement|null} */ (document.getElementById("budgetProgressBar"));
+  const label = /** @type {HTMLElement|null} */ (document.getElementById("budgetProgressLabel"));
   if (!bar) return;
 
   const info = /** @type {any} */ (storeGet("weddingInfo") ?? {});
@@ -200,8 +189,7 @@ export function renderBudgetProgress() {
     expenses.reduce((s, e) => s + (e.amount || 0), 0) +
     vendors.reduce((s, v) => s + (v.paid || 0), 0);
 
-  const pct =
-    target > 0 ? Math.min(100, Math.round((spent / target) * 100)) : 0;
+  const pct = target > 0 ? Math.min(100, Math.round((spent / target) * 100)) : 0;
   bar.style.width = `${pct}%`;
   bar.setAttribute("aria-valuenow", String(pct));
 
@@ -263,12 +251,7 @@ export function renderExpenseCategoryBreakdown() {
     .forEach(([cat, { count, total }]) => {
       const pct = grandTotal > 0 ? Math.round((total / grandTotal) * 100) : 0;
       const tr = document.createElement("tr");
-      const cells = [
-        cat,
-        String(count),
-        `₪${total.toLocaleString()}`,
-        `${pct}%`,
-      ];
+      const cells = [cat, String(count), `₪${total.toLocaleString()}`, `${pct}%`];
       cells.forEach((txt) => {
         const td = document.createElement("td");
         td.textContent = txt;
@@ -280,12 +263,14 @@ export function renderExpenseCategoryBreakdown() {
   // Total row
   const totalTr = document.createElement("tr");
   totalTr.className = "budget-vs-actual-total";
-  [`${t("budget_total") || "סה״כ"}`, "", `₪${grandTotal.toLocaleString()}`, "100%"].forEach((txt, i) => {
-    const td = document.createElement("td");
-    td.textContent = txt;
-    if (i === 0) td.style.fontWeight = "700";
-    totalTr.appendChild(td);
-  });
+  [`${t("budget_total") || "סה״כ"}`, "", `₪${grandTotal.toLocaleString()}`, "100%"].forEach(
+    (txt, i) => {
+      const td = document.createElement("td");
+      td.textContent = txt;
+      if (i === 0) td.style.fontWeight = "700";
+      totalTr.appendChild(td);
+    },
+  );
   tbody.appendChild(totalTr);
 }
 
@@ -392,7 +377,7 @@ export function getBudgetForecast() {
   const monthlyRate = Math.round(totalSpent / spanMonths);
   return {
     monthlyRate,
-    monthsLeft: monthlyRate > 0 ? Math.round(remaining / monthlyRate * 10) / 10 : null,
+    monthsLeft: monthlyRate > 0 ? Math.round((remaining / monthlyRate) * 10) / 10 : null,
     remaining,
   };
 }
@@ -407,10 +392,16 @@ export function getTopExpenses(limit = 10) {
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
   const items = [
     ...expenses.map((e) => ({
-      id: e.id, description: e.description || "", amount: Number(e.amount) || 0, category: e.category || "other",
+      id: e.id,
+      description: e.description || "",
+      amount: Number(e.amount) || 0,
+      category: e.category || "other",
     })),
     ...vendors.map((v) => ({
-      id: v.id, description: v.name || "", amount: Number(v.price) || 0, category: v.category || "other",
+      id: v.id,
+      description: v.name || "",
+      amount: Number(v.price) || 0,
+      category: v.category || "other",
     })),
   ];
   return items.sort((a, b) => b.amount - a.amount).slice(0, limit);

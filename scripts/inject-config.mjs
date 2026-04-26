@@ -105,7 +105,9 @@ function patchAdminEmails(filePath) {
   if (re.test(src)) {
     src = src.replace(re, `export const ADMIN_EMAILS = ${arrayLiteral}`);
     writeFileSync(filePath, src, "utf8");
-    console.log(`  ✓ [src/core/config.js] Injected ADMIN_EMAILS (${emails.length} entries) from $GH_ADMIN_EMAILS`);
+    console.log(
+      `  ✓ [src/core/config.js] Injected ADMIN_EMAILS (${emails.length} entries) from $GH_ADMIN_EMAILS`,
+    );
     return 1;
   }
   console.warn("  ⚠ [src/core/config.js] ADMIN_EMAILS pattern not found — skipped");
@@ -115,9 +117,7 @@ function patchAdminEmails(filePath) {
 const total = patchFile(ESM_CONFIG, "src/core/config.js") + patchAdminEmails(ESM_CONFIG);
 
 if (total > 0) {
-  console.log(
-    `\nConfig injection complete: ${total} value(s) updated.`,
-  );
+  console.log(`\nConfig injection complete: ${total} value(s) updated.`);
 } else {
   console.log("No secrets set — config files left unchanged (local dev mode).");
 }

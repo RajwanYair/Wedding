@@ -28,8 +28,11 @@ export function isNativeShareSupported() {
  * @returns {Promise<ShareResult>}
  */
 export async function share(data, overrides = {}) {
-  const nativeShare  = overrides.nativeShare  ?? (typeof navigator !== "undefined" && navigator.share?.bind(navigator));
-  const clipWrite    = overrides.clipboardWrite ?? (typeof navigator !== "undefined" && navigator.clipboard?.writeText?.bind(navigator.clipboard));
+  const nativeShare =
+    overrides.nativeShare ?? (typeof navigator !== "undefined" && navigator.share?.bind(navigator));
+  const clipWrite =
+    overrides.clipboardWrite ??
+    (typeof navigator !== "undefined" && navigator.clipboard?.writeText?.bind(navigator.clipboard));
 
   // Try native share
   if (nativeShare) {

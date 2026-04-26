@@ -40,7 +40,7 @@ export async function showConflictModal(conflicts) {
  * @param {string[]} choices
  */
 export function applyConflictResolutions(choices) {
-  const guests = /** @type {any[]} */ ([...(/** @type {any[]} */ (storeGet("guests") ?? []))]);
+  const guests = /** @type {any[]} */ ([.../** @type {any[]} */ (storeGet("guests") ?? [])]);
   for (let i = 0; i < _pendingConflicts.length; i++) {
     if (choices[i] === "remote") {
       const c = _pendingConflicts[i];
@@ -93,8 +93,8 @@ export function detectConflicts(local, remote, opts = {}) {
     if (exclude.has(key)) continue;
     const lv = /** @type {Record<string, unknown>} */ (local)[key];
     const rv = /** @type {Record<string, unknown>} */ (remote)[key];
-    if (lv === rv) continue;                 // identical → no conflict
-    if (lv == null && rv == null) continue;  // both empty → no conflict
+    if (lv === rv) continue; // identical → no conflict
+    if (lv == null && rv == null) continue; // both empty → no conflict
     conflicts.push({
       id: local.id,
       field: key,

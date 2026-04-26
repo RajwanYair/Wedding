@@ -45,10 +45,7 @@ export const EXTRA_SECTIONS = /** @type {const} */ ([
  * All valid section names (navigable + extra).
  * @type {readonly string[]}
  */
-export const ALL_SECTIONS = /** @type {const} */ ([
-  ...SECTION_LIST,
-  ...EXTRA_SECTIONS,
-]);
+export const ALL_SECTIONS = /** @type {const} */ ([...SECTION_LIST, ...EXTRA_SECTIONS]);
 
 /**
  * Sections accessible without admin authentication.
@@ -67,12 +64,7 @@ export const PUBLIC_SECTIONS = new Set([
  * Valid guest status values.
  * @type {readonly string[]}
  */
-export const GUEST_STATUSES = /** @type {const} */ ([
-  "pending",
-  "confirmed",
-  "declined",
-  "maybe",
-]);
+export const GUEST_STATUSES = /** @type {const} */ (["pending", "confirmed", "declined", "maybe"]);
 
 /**
  * Guest statuses that represent an explicit response (i.e. not still pending).

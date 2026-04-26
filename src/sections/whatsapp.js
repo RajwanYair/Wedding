@@ -29,15 +29,11 @@ export function unmount() {
 
 export function renderWhatsApp() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
-  const template = el.waTemplate
-    ? /** @type {HTMLTextAreaElement} */ (el.waTemplate).value
-    : "";
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const template = el.waTemplate ? /** @type {HTMLTextAreaElement} */ (el.waTemplate).value : "";
 
   // Populate template textarea with default if empty
-  if (el.waTemplate && !/** @type {HTMLTextAreaElement} */ (el.waTemplate).value) {
+  if (el.waTemplate && !(/** @type {HTMLTextAreaElement} */ (el.waTemplate).value)) {
     /** @type {HTMLTextAreaElement} */ (el.waTemplate).value = _defaultTemplate(info);
   }
 
@@ -96,9 +92,7 @@ export function getWhatsAppLink(guestId) {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const g = guests.find((gg) => gg.id === guestId);
   if (!g || !g.phone) return null;
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const msg = _interpolate(_defaultTemplate(info), g, info);
   return `https://wa.me/${cleanPhone(g.phone)}?text=${encodeURIComponent(msg)}`;
 }
@@ -119,9 +113,7 @@ export function buildWhatsAppMessage(guestId, template) {
   const g = guests.find((gg) => gg.id === guestId);
   if (!g || !g.phone) return null;
 
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const tpl = template ?? _defaultTemplate(info);
   const message = _interpolate(tpl, g, info);
   const link = `https://wa.me/${cleanPhone(g.phone)}?text=${encodeURIComponent(message)}`;
@@ -176,7 +168,11 @@ export function updateWaPreview(templateText, guest) {
   if (!bubble) return;
   const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const tpl = templateText ?? _defaultTemplate(info);
-  const demoGuest = guest ?? { firstName: t("groom_placeholder") || "חתן", lastName: "", phone: "050" };
+  const demoGuest = guest ?? {
+    firstName: t("groom_placeholder") || "חתן",
+    lastName: "",
+    phone: "050",
+  };
   const message = _interpolate(tpl, demoGuest, info);
   bubble.textContent = message;
   if (timeEl) {
@@ -200,13 +196,10 @@ export function updateWaPreview(templateText, guest) {
  */
 export function sendWhatsAppAll(filter = "all") {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const template =
-    /** @type {HTMLTextAreaElement|null} */ (
-      document.getElementById("waTemplate")
-    )?.value || _defaultTemplate(info);
+    /** @type {HTMLTextAreaElement|null} */ (document.getElementById("waTemplate"))?.value ||
+    _defaultTemplate(info);
 
   guests
     .filter((g) => {
@@ -217,10 +210,7 @@ export function sendWhatsAppAll(filter = "all") {
     .forEach((g) => {
       const phone = cleanPhone(g.phone);
       const msg = _interpolate(template, g, info);
-      window.open(
-        `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
-        "_blank",
-      );
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
       markGuestSent(g.id);
     });
 }
@@ -238,20 +228,15 @@ export async function sendWhatsAppAllViaApi(filter = "all") {
   )?.value?.trim();
 
   if (!instanceId || !token) {
-    alert(
-      t("error_green_api_config") || "Configure Green API credentials first",
-    );
+    alert(t("error_green_api_config") || "Configure Green API credentials first");
     return;
   }
 
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const template =
-    /** @type {HTMLTextAreaElement|null} */ (
-      document.getElementById("waTemplate")
-    )?.value || _defaultTemplate(info);
+    /** @type {HTMLTextAreaElement|null} */ (document.getElementById("waTemplate"))?.value ||
+    _defaultTemplate(info);
 
   const targets = guests.filter((g) => {
     if (!g.phone) return false;
@@ -262,14 +247,11 @@ export async function sendWhatsAppAllViaApi(filter = "all") {
     const phone = `${cleanPhone(g.phone)}@c.us`;
     const message = _interpolate(template, g, info);
     try {
-      await fetch(
-        `https://api.green-api.com/waInstance${instanceId}/sendMessage/${token}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chatId: phone, message }),
-        },
-      );
+      await fetch(`https://api.green-api.com/waInstance${instanceId}/sendMessage/${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chatId: phone, message }),
+      });
       markGuestSent(g.id);
       // Brief pause between messages to avoid rate limits
       await new Promise((res) => setTimeout(res, 350));
@@ -318,13 +300,11 @@ export async function checkGreenApiConnection() {
 export function saveGreenApiConfig(form) {
   const instanceId =
     /** @type {HTMLInputElement|null} */ (
-      form?.querySelector("[name='instanceId']") ??
-        document.getElementById("greenApiInstanceId")
+      form?.querySelector("[name='instanceId']") ?? document.getElementById("greenApiInstanceId")
     )?.value?.trim() ?? "";
   const token =
     /** @type {HTMLInputElement|null} */ (
-      form?.querySelector("[name='token']") ??
-        document.getElementById("greenApiToken")
+      form?.querySelector("[name='token']") ?? document.getElementById("greenApiToken")
     )?.value?.trim() ?? "";
 
   try {
@@ -347,7 +327,9 @@ export function sendWhatsAppReminder() {
   const template =
     /** @type {HTMLTextAreaElement|null} */ (
       document.getElementById("waReminderTemplate")
-    )?.value?.trim() || t("wa_reminder_default") || "Hi {name}, reminder: RSVP at {rsvpLink}";
+    )?.value?.trim() ||
+    t("wa_reminder_default") ||
+    "Hi {name}, reminder: RSVP at {rsvpLink}";
 
   const targets = guests.filter(
     (g) => g.phone && g.sent && (g.status === "pending" || g.status === "maybe"),
@@ -420,8 +402,13 @@ export function generateICS() {
   const eventDate = new Date(info.date);
   if (Number.isNaN(eventDate.getTime())) return null;
   const endDate = new Date(eventDate.getTime() + 3 * 60 * 60 * 1000);
-  const format = (date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  const summary = `${info.groom || ""} & ${info.bride || ""} — ${t("ics_wedding_title") || "Wedding"}`.trim();
+  const format = (date) =>
+    date
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .replace(/\.\d{3}/, "");
+  const summary =
+    `${info.groom || ""} & ${info.bride || ""} — ${t("ics_wedding_title") || "Wedding"}`.trim();
   const location = [info.venue, info.venueAddress].filter(Boolean).join(", ");
   return [
     "BEGIN:VCALENDAR",
@@ -438,7 +425,9 @@ export function generateICS() {
     `DTSTAMP:${format(new Date())}`,
     "END:VEVENT",
     "END:VCALENDAR",
-  ].filter(Boolean).join("\r\n");
+  ]
+    .filter(Boolean)
+    .join("\r\n");
 }
 
 /**
@@ -447,7 +436,10 @@ export function generateICS() {
  */
 export function getThankYouCount() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  return guests.filter((guest) => guest.phone && guest.checkedIn && guest.status === "confirmed" && !guest.thankYouSent).length;
+  return guests.filter(
+    (guest) =>
+      guest.phone && guest.checkedIn && guest.status === "confirmed" && !guest.thankYouSent,
+  ).length;
 }
 
 /**

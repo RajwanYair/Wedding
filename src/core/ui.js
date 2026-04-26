@@ -7,11 +7,7 @@
 
 import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
-import {
-  readBrowserStorage,
-  removeBrowserStorage,
-  writeBrowserStorage,
-} from "./storage.js";
+import { readBrowserStorage, removeBrowserStorage, writeBrowserStorage } from "./storage.js";
 
 // ── Toast ─────────────────────────────────────────────────────────────────
 
@@ -179,9 +175,13 @@ function _installFocusTrap(modal) {
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
     } else if (document.activeElement === last) {
-      e.preventDefault(); first.focus();
+      e.preventDefault();
+      first.focus();
     }
   };
   _trapListeners.set(modal, handler);
@@ -225,14 +225,7 @@ export function showConfirmDialog(message, onConfirm) {
 
 // ── Theme ─────────────────────────────────────────────────────────────────
 
-const THEMES = [
-  "default",
-  "rosegold",
-  "gold",
-  "emerald",
-  "royal",
-  "high-contrast",
-];
+const THEMES = ["default", "rosegold", "gold", "emerald", "royal", "high-contrast"];
 let _themeIdx = 0;
 
 /**
@@ -241,9 +234,7 @@ let _themeIdx = 0;
 export function cycleTheme() {
   _themeIdx = (_themeIdx + 1) % THEMES.length;
   const theme = THEMES[_themeIdx];
-  document.body.className = document.body.className
-    .replace(/\btheme-\S+/g, "")
-    .trim();
+  document.body.className = document.body.className.replace(/\btheme-\S+/g, "").trim();
   if (theme !== "default") document.body.classList.add(`theme-${theme}`);
   writeBrowserStorage(STORAGE_KEYS.THEME, theme);
 }
@@ -475,10 +466,7 @@ export function initInstallPrompt() {
       dismiss.addEventListener("click", () => {
         banner.remove();
         _deferredPrompt = null;
-        writeBrowserStorage(
-          _INSTALL_DISMISSED_KEY,
-          String(Date.now() + _INSTALL_SNOOZE_MS),
-        );
+        writeBrowserStorage(_INSTALL_DISMISSED_KEY, String(Date.now() + _INSTALL_SNOOZE_MS));
       });
 
       banner.appendChild(icon);
@@ -498,10 +486,7 @@ export function initInstallPrompt() {
  * @param {'polite'|'assertive'} [politeness]  Default: 'polite'
  */
 export function announce(message, politeness = "polite") {
-
-  let region = /** @type {HTMLElement|null} */ (
-    document.getElementById("ariaLiveRegion")
-  );
+  let region = /** @type {HTMLElement|null} */ (document.getElementById("ariaLiveRegion"));
   if (!region) {
     region = document.createElement("div");
     region.id = "ariaLiveRegion";

@@ -50,10 +50,7 @@ export function detectConflicts(local, remote, options = {}) {
     const remoteRecord = remoteMap.get(id);
     if (!remoteRecord) continue;
 
-    const allFields = new Set([
-      ...Object.keys(localRecord),
-      ...Object.keys(remoteRecord),
-    ]);
+    const allFields = new Set([...Object.keys(localRecord), ...Object.keys(remoteRecord)]);
 
     for (const field of allFields) {
       if (skipFields.has(field)) continue;

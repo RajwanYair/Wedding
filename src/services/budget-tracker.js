@@ -73,8 +73,8 @@ export function recordSpend(category, amount, note) {
   if (!env) return false;
   if (amount <= 0) throw new Error("budget-tracker: amount must be > 0");
   env.entries.push({ amount, note, ts: Date.now() });
-  env.spent     += amount;
-  env.updatedAt  = Date.now();
+  env.spent += amount;
+  env.updatedAt = Date.now();
   _save(all);
   return true;
 }
@@ -90,12 +90,12 @@ export function getEnvelopeSummary(category) {
   const env = _getAll()[category];
   if (!env) return null;
   const remaining = env.limit - env.spent;
-  const runRate   = env.entries.length > 0 ? env.spent / env.entries.length : 0;
+  const runRate = env.entries.length > 0 ? env.spent / env.entries.length : 0;
   return {
-    limit:     env.limit,
-    spent:     env.spent,
+    limit: env.limit,
+    spent: env.spent,
     remaining,
-    isOver:    remaining < 0,
+    isOver: remaining < 0,
     runRate,
   };
 }
@@ -122,8 +122,8 @@ export function getAllSummaries() {
 export function getTotalBudget() {
   const all = _getAll();
   const envs = Object.values(all);
-  const totalLimit   = envs.reduce((s, e) => s + e.limit, 0);
-  const totalSpent   = envs.reduce((s, e) => s + e.spent, 0);
+  const totalLimit = envs.reduce((s, e) => s + e.limit, 0);
+  const totalSpent = envs.reduce((s, e) => s + e.spent, 0);
   return { totalLimit, totalSpent, totalRemaining: totalLimit - totalSpent };
 }
 

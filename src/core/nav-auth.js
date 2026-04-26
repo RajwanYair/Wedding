@@ -25,18 +25,14 @@ export function updateNavForAuth(user) {
   // Update user-bar chip
   const btnSignIn = document.getElementById("btnSignIn");
   const btnSignOut = document.getElementById("btnSignOut");
-  const userAvatar = /** @type {HTMLImageElement | null} */ (
-    document.getElementById("userAvatar")
-  );
+  const userAvatar = /** @type {HTMLImageElement | null} */ (document.getElementById("userAvatar"));
   const userDisplayName = document.getElementById("userDisplayName");
   const userRoleBadge = document.getElementById("userRoleBadge");
 
   if (btnSignIn) btnSignIn.classList.toggle("u-hidden", isAdmin);
   if (btnSignOut) btnSignOut.classList.toggle("u-hidden", !isAdmin);
-  if (userDisplayName)
-    userDisplayName.textContent = isAdmin ? (user?.name ?? "") : "";
-  if (userRoleBadge)
-    userRoleBadge.textContent = isAdmin ? t("role_admin") : "";
+  if (userDisplayName) userDisplayName.textContent = isAdmin ? (user?.name ?? "") : "";
+  if (userRoleBadge) userRoleBadge.textContent = isAdmin ? t("role_admin") : "";
   if (userAvatar) {
     const hasPic = isAdmin && !!user?.picture;
     userAvatar.classList.toggle("u-hidden", !hasPic);

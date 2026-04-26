@@ -24,8 +24,14 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 function parseArgs(args) {
   const opts = { dir: join(__dir, "..", "src", "i18n"), primary: "he", json: false };
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === "--dir"     && args[i + 1]) { opts.dir     = args[++i]; continue; }
-    if (args[i] === "--primary" && args[i + 1]) { opts.primary = args[++i]; continue; }
+    if (args[i] === "--dir" && args[i + 1]) {
+      opts.dir = args[++i];
+      continue;
+    }
+    if (args[i] === "--primary" && args[i + 1]) {
+      opts.primary = args[++i];
+      continue;
+    }
     if (args[i] === "--json") opts.json = true;
   }
   return opts;
@@ -78,7 +84,7 @@ export function findMissingKeys(translations) {
  */
 export function checkParity(dir) {
   const translations = loadTranslations(dir);
-  const missing      = findMissingKeys(translations);
+  const missing = findMissingKeys(translations);
   const totalMissing = Object.values(missing).reduce((n, arr) => n + arr.length, 0);
   return {
     ok: totalMissing === 0,
@@ -91,7 +97,7 @@ export function checkParity(dir) {
 // ── CLI entry ─────────────────────────────────────────────────────────────
 
 if (process.argv[1] && import.meta.url.endsWith(basename(process.argv[1]))) {
-  const opts   = parseArgs(process.argv.slice(2));
+  const opts = parseArgs(process.argv.slice(2));
   const report = checkParity(opts.dir);
 
   if (opts.json) {

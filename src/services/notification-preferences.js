@@ -32,19 +32,19 @@ import { storeGet, storeSet } from "../core/store.js";
 
 /** @type {Record<NotificationChannel, boolean>} */
 const DEFAULT_CHANNELS = {
-  push:      true,
-  email:     true,
-  whatsapp:  true,
-  sms:       false,
+  push: true,
+  email: true,
+  whatsapp: true,
+  sms: false,
 };
 
 /** @type {Record<NotificationEvent, boolean>} */
 const DEFAULT_EVENTS = {
   rsvp_confirmed: true,
-  rsvp_reminder:  true,
+  rsvp_reminder: true,
   table_assigned: true,
-  campaign:       true,
-  system:         true,
+  campaign: true,
+  system: true,
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -74,8 +74,8 @@ export function getPreferences(userId = "_default") {
   // Return defaults without persisting (lazy init)
   return {
     userId,
-    channels:  { ...DEFAULT_CHANNELS },
-    events:    { ...DEFAULT_EVENTS },
+    channels: { ...DEFAULT_CHANNELS },
+    events: { ...DEFAULT_EVENTS },
     updatedAt: 0,
   };
 }
@@ -90,8 +90,8 @@ export function updatePreferences(userId, patch) {
   const current = getPreferences(userId);
   const updated = /** @type {NotificationPrefs} */ ({
     ...current,
-    channels:  { ...current.channels, ...(patch.channels ?? {}) },
-    events:    { ...current.events,   ...(patch.events ?? {}) },
+    channels: { ...current.channels, ...(patch.channels ?? {}) },
+    events: { ...current.events, ...(patch.events ?? {}) },
     updatedAt: Date.now(),
   });
   const all = _getAll();
@@ -130,9 +130,7 @@ export function optOutAll(userId) {
     Object.fromEntries(Object.keys(DEFAULT_CHANNELS).map((k) => [k, false]))
   );
   const allEvents = /** @type {Record<NotificationEvent, boolean>} */ (
-    Object.fromEntries(
-      Object.keys(DEFAULT_EVENTS).map((k) => [k, k === "system"])
-    )
+    Object.fromEntries(Object.keys(DEFAULT_EVENTS).map((k) => [k, k === "system"]))
   );
   return updatePreferences(userId, { channels: allChannels, events: allEvents });
 }

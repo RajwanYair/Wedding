@@ -23,9 +23,10 @@ import { currentUser } from "../services/auth.js";
  * Vite glob: all section modules discovered at build time.
  * @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>}
  */
-const _sectionLoaders = /** @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>} */ (
-  import.meta.glob("../sections/*.js")
-);
+const _sectionLoaders =
+  /** @type {Record<string, () => Promise<{mount?: Function, unmount?: Function}>>} */ (
+    import.meta.glob("../sections/*.js")
+  );
 
 /** Filename-to-section-ID aliases for mismatches. */
 /** @type {Record<string, string>} */

@@ -110,10 +110,7 @@ export function unmount() {
 export function renderDashboard() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
 
-  const total = guests.reduce(
-    (s, g) => s + (g.count || 1) + (g.children || 0),
-    0,
-  );
+  const total = guests.reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
   const confirmed = guests
     .filter((g) => g.status === "confirmed")
     .reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
@@ -131,9 +128,7 @@ export function renderDashboard() {
   const accessibility = guests.filter((g) => g.accessibility).length;
   const groomSide = guests.filter((g) => g.side === "groom").length;
   const brideSide = guests.filter((g) => g.side === "bride").length;
-  const transport = guests.filter(
-    (g) => g.transport && g.transport !== "",
-  ).length;
+  const transport = guests.filter((g) => g.transport && g.transport !== "").length;
 
   _setText("statTotal", total);
   _setText("statConfirmed", confirmed);
@@ -162,9 +157,7 @@ export function renderDashboard() {
  * Update the top bar couple names.
  */
 export function updateTopBar() {
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const groom = info.groom || t("groom_placeholder");
   const bride = info.bride || t("bride_placeholder");
   if (el.topBarCouple) {
@@ -180,9 +173,7 @@ export function updateTopBar() {
  */
 export function updateCountdown() {
   if (!el.countdown) return;
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const dateStr = info.date;
   const timeStr = info.time || "18:00";
   if (!dateStr) {
@@ -204,8 +195,7 @@ export function updateCountdown() {
     const hours = Math.floor((diff % 86_400_000) / 3_600_000);
     const mins = Math.floor((diff % 3_600_000) / 60_000);
     const secs = Math.floor((diff % 60_000) / 1_000);
-    el.countdown.textContent =
-      `${days} ${t("countdown_days")} ${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    el.countdown.textContent = `${days} ${t("countdown_days")} ${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   }
   if (el.weddingDateDisplay) {
     el.weddingDateDisplay.textContent = formatDateHebrew(dateStr);
@@ -221,8 +211,7 @@ function _renderLiveCountdown(diff) {
   const hours = Math.floor(diff / 3_600_000);
   const mins = Math.floor((diff % 3_600_000) / 60_000);
   const secs = Math.floor((diff % 60_000) / 1_000);
-  el.countdown.textContent =
-    `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  el.countdown.textContent = `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
 /** Clear the live countdown if no longer needed. */
@@ -294,9 +283,7 @@ export function initStatCounterObserver() {
 export function updateRsvpDeadlineBanner() {
   const banner = document.getElementById("rsvpDeadlineBanner");
   if (!banner) return;
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const deadline = info.rsvpDeadline;
   if (!deadline) {
     banner.hidden = true;
@@ -308,9 +295,10 @@ export function updateRsvpDeadlineBanner() {
     banner.className = "rsvp-deadline-banner rsvp-deadline-banner--late";
     banner.hidden = false;
   } else if (days <= 7) {
-    banner.textContent = (
-      t("rsvp_deadline_soon") || "נותרו {days} ימים ל-RSVP"
-    ).replace("{days}", String(days));
+    banner.textContent = (t("rsvp_deadline_soon") || "נותרו {days} ימים ל-RSVP").replace(
+      "{days}",
+      String(days),
+    );
     banner.className = "rsvp-deadline-banner rsvp-deadline-banner--soon";
     banner.hidden = false;
   } else {
@@ -339,7 +327,10 @@ export function renderExpenseSummary() {
   _setText("dashBudgetTarget", budgetTarget > 0 ? `₪${budgetTarget.toLocaleString()}` : "—");
   _setText("dashTotalCommitted", `₪${totalCommitted.toLocaleString()}`);
   _setText("dashTotalSpent", `₪${totalSpent.toLocaleString()}`);
-  _setText("dashBudgetRemaining", budgetTarget > 0 ? `₪${(budgetTarget - totalCommitted).toLocaleString()}` : "—");
+  _setText(
+    "dashBudgetRemaining",
+    budgetTarget > 0 ? `₪${(budgetTarget - totalCommitted).toLocaleString()}` : "—",
+  );
 
   // Progress bar
   const pctEl = document.getElementById("dashBudgetFill");
@@ -399,7 +390,8 @@ export function renderBudgetForecast() {
 
   // Estimate per-plate from catering vendor or default fallback
   const cateringVendor = vendors.find(
-    (v) => (v.category || "").toLowerCase() === "catering" || (v.category || "").includes("קייטרינג"),
+    (v) =>
+      (v.category || "").toLowerCase() === "catering" || (v.category || "").includes("קייטרינג"),
   );
   let perPlate = 0;
   if (cateringVendor && headcount > 0) {
@@ -421,7 +413,10 @@ export function renderBudgetForecast() {
 
   const items = [
     { label: t("forecast_headcount") || "מוזמנים מאושרים", val: String(headcount) },
-    { label: t("forecast_per_plate") || "עלות למנה (משוער)", val: perPlate > 0 ? `₪${perPlate.toLocaleString()}` : "—" },
+    {
+      label: t("forecast_per_plate") || "עלות למנה (משוער)",
+      val: perPlate > 0 ? `₪${perPlate.toLocaleString()}` : "—",
+    },
     { label: t("forecast_total") || "תחזית כוללת", val: `₪${forecastTotal.toLocaleString()}` },
   ];
 
@@ -537,7 +532,10 @@ let _activityMounted = false;
  * @param {string} key
  */
 function _logActivity(key) {
-  if (!_activityMounted) { _activityMounted = true; return; } // skip initial load
+  if (!_activityMounted) {
+    _activityMounted = true;
+    return;
+  } // skip initial load
   const feed = /** @type {Array<{ts: string, key: string}>} */ (load("activityFeed", []) || []);
   feed.unshift({ ts: new Date().toISOString(), key });
   if (feed.length > 50) feed.length = 50; // cap at 50 entries
@@ -557,7 +555,12 @@ export function renderActivityFeed() {
     container.textContent = t("activity_none");
     return;
   }
-  const icons = /** @type {Record<string, string>} */ ({ guests: "👤", vendors: "🏢", tables: "🪑", expenses: "💸" });
+  const icons = /** @type {Record<string, string>} */ ({
+    guests: "👤",
+    vendors: "🏢",
+    tables: "🪑",
+    expenses: "💸",
+  });
   feed.slice(0, 10).forEach((entry) => {
     const row = document.createElement("div");
     row.className = "activity-feed-item";
@@ -614,9 +617,10 @@ export function renderVendorCategories() {
     const row = document.createElement("div");
     row.className = "vendor-cat-row";
     const outstanding = entry.cost - entry.paid;
-    const overdueTag = entry.overdue > 0
-      ? ` <span class="badge badge--danger">${entry.overdue} ${t("overdue")}</span>`
-      : "";
+    const overdueTag =
+      entry.overdue > 0
+        ? ` <span class="badge badge--danger">${entry.overdue} ${t("overdue")}</span>`
+        : "";
     row.innerHTML = `<span class="vendor-cat-name">${_escDash(cat)}</span>
       <span class="vendor-cat-stat">₪${entry.paid.toLocaleString()} / ₪${entry.cost.toLocaleString()} ${outstanding > 0 ? `(<span class="u-text-danger">-₪${outstanding.toLocaleString()}</span>)` : "✅"}${overdueTag}</span>`;
     el.appendChild(row);
@@ -750,7 +754,9 @@ export function renderGuestTargetRing() {
   const confirmed = guests.filter((g) => g.status === "confirmed").length;
   const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
 
-  const R = 48, CX = 60, CY = 60;
+  const R = 48,
+    CX = 60,
+    CY = 60;
   const circ = 2 * Math.PI * R;
   const dash = (pct / 100) * circ;
 
@@ -826,7 +832,10 @@ export function renderSuggestedActions() {
   if (unsentPending.length > 0) {
     actions.push({
       icon: "📱",
-      text: (t("tip_send_invitations") || "שלח הזמנה ל-{n} אורחים").replace("{n}", String(unsentPending.length)),
+      text: (t("tip_send_invitations") || "שלח הזמנה ל-{n} אורחים").replace(
+        "{n}",
+        String(unsentPending.length),
+      ),
       action: "showSection",
       arg: "whatsapp",
     });
@@ -836,7 +845,10 @@ export function renderSuggestedActions() {
   if (sentPending.length > 0) {
     actions.push({
       icon: "🔔",
-      text: (t("tip_follow_up_pending") || "עקוב אחר {n} ממתינים").replace("{n}", String(sentPending.length)),
+      text: (t("tip_follow_up_pending") || "עקוב אחר {n} ממתינים").replace(
+        "{n}",
+        String(sentPending.length),
+      ),
       action: "showSection",
       arg: "whatsapp",
     });
@@ -848,19 +860,23 @@ export function renderSuggestedActions() {
   if (overdue.length > 0) {
     actions.push({
       icon: "💸",
-      text: (t("tip_overdue_vendors") || "{n} ספקים עם תשלום באיחור").replace("{n}", String(overdue.length)),
+      text: (t("tip_overdue_vendors") || "{n} ספקים עם תשלום באיחור").replace(
+        "{n}",
+        String(overdue.length),
+      ),
       action: "showSection",
       arg: "vendors",
     });
   }
 
-  const confirmedUnseated = guests.filter(
-    (g) => g.status === "confirmed" && !g.tableId,
-  );
+  const confirmedUnseated = guests.filter((g) => g.status === "confirmed" && !g.tableId);
   if (confirmedUnseated.length > 0) {
     actions.push({
       icon: "🪑",
-      text: (t("tip_unseated_confirmed") || "{n} אורחים מאושרים ללא שולחן").replace("{n}", String(confirmedUnseated.length)),
+      text: (t("tip_unseated_confirmed") || "{n} אורחים מאושרים ללא שולחן").replace(
+        "{n}",
+        String(confirmedUnseated.length),
+      ),
       action: "showSection",
       arg: "tables",
     });

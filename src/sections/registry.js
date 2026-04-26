@@ -21,16 +21,12 @@ export function unmount() {
 }
 
 export function renderRegistry() {
-  const info = /** @type {Record<string, string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
   const container = document.getElementById("registryLinks");
   if (!container) return;
   container.textContent = "";
 
-  const registryLinks = /** @type {string[]} */ (
-    JSON.parse(info.registryLinks || "[]")
-  );
+  const registryLinks = /** @type {string[]} */ (JSON.parse(info.registryLinks || "[]"));
   if (registryLinks.length === 0) {
     const msg = document.createElement("p");
     msg.textContent = t("registry_empty");
@@ -56,9 +52,7 @@ export function renderRegistry() {
  */
 export function addLink(link) {
   if (!link.url.startsWith("https://")) return;
-  const info = /** @type {Record<string, string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
   const existing = JSON.parse(info.registryLinks || "[]");
   if (!existing.includes(link.url)) {
     existing.push(link.url);

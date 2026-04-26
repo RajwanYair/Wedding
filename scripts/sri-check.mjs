@@ -50,20 +50,11 @@ const COL_PATH = 38;
 const COL_SZ = 8;
 
 console.log("\nSRI Integrity Hashes — Wedding Manager\n");
-console.log(
-  "File".padEnd(COL_PATH),
-  "Size".padStart(COL_SZ),
-  '  integrity="…"',
-);
+console.log("File".padEnd(COL_PATH), "Size".padStart(COL_SZ), '  integrity="…"');
 console.log("-".repeat(COL_PATH + COL_SZ + 80));
 
 for (const { path, sri, sizeKB } of rows) {
-  console.log(
-    path.padEnd(COL_PATH),
-    (`${sizeKB  } KB`).padStart(COL_SZ),
-    " ",
-    sri,
-  );
+  console.log(path.padEnd(COL_PATH), `${sizeKB} KB`.padStart(COL_SZ), " ", sri);
 }
 
 console.log("\nUsage in HTML:");
@@ -72,15 +63,9 @@ console.log('          integrity="sha384-<hash above>"');
 console.log('          crossorigin="anonymous"></script>\n');
 
 console.log("External scripts (not version-pinned — SRI not applicable):");
-console.log(
-  '  https://accounts.google.com/gsi/client   → crossorigin="anonymous" only',
-);
-console.log(
-  "  https://connect.facebook.net/…/sdk.js    → loaded dynamically by auth.js",
-);
-console.log(
-  "  https://appleid.cdn-apple.com/…/auth.js  → loaded dynamically by auth.js\n",
-);
+console.log('  https://accounts.google.com/gsi/client   → crossorigin="anonymous" only');
+console.log("  https://connect.facebook.net/…/sdk.js    → loaded dynamically by auth.js");
+console.log("  https://appleid.cdn-apple.com/…/auth.js  → loaded dynamically by auth.js\n");
 
 /* ── S4.3: Also scan dist/ build output if it exists ── */
 import { existsSync } from "node:fs";
@@ -97,7 +82,7 @@ if (existsSync(DIST)) {
       const fp = resolve(DIST, file);
       const sri = computeSri(fp);
       const sizeKB = (statSync(fp).size / 1024).toFixed(1);
-      console.log(file.padEnd(50), (`${sizeKB  } KB`).padStart(10), " ", sri);
+      console.log(file.padEnd(50), `${sizeKB} KB`.padStart(10), " ", sri);
     }
   }
 }

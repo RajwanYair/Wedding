@@ -9,12 +9,7 @@
  * mount() / unmount() lifecycle follows the standard section pattern.
  */
 
-import {
-  storeGet,
-  storeSet,
-  storeSubscribeScoped,
-  cleanupScope,
-} from "../core/store.js";
+import { storeGet, storeSet, storeSubscribeScoped, cleanupScope } from "../core/store.js";
 import { t } from "../core/i18n.js";
 
 const _SCOPE = "communication";
@@ -26,9 +21,7 @@ const _SCOPE = "communication";
  * @returns {{ total: number, sent: number, pending: number, failed: number }}
  */
 export function getThankyouQueueStats() {
-  const entries = /** @type {Array<Record<string, unknown>>} */ (
-    storeGet("commLog") ?? []
-  );
+  const entries = /** @type {Array<Record<string, unknown>>} */ (storeGet("commLog") ?? []);
   let sent = 0,
     failed = 0;
   for (const e of entries) {
@@ -90,9 +83,7 @@ export function renderCommunicationStats() {
 export function renderCommLog() {
   const listEl = document.getElementById("commLogList");
   if (!listEl) return;
-  const entries = /** @type {Array<Record<string, unknown>>} */ (
-    storeGet("commLog") ?? []
-  );
+  const entries = /** @type {Array<Record<string, unknown>>} */ (storeGet("commLog") ?? []);
   listEl.textContent = "";
 
   if (entries.length === 0) {

@@ -30,10 +30,7 @@ export function isShareSupported() {
  * @returns {boolean}
  */
 export function canShareFiles(files) {
-  if (
-    typeof navigator === "undefined" ||
-    typeof navigator.canShare !== "function"
-  ) {
+  if (typeof navigator === "undefined" || typeof navigator.canShare !== "function") {
     return false;
   }
   return navigator.canShare({ files });

@@ -50,7 +50,10 @@ function _autoLookupFromUrl() {
       const statusEl = document.getElementById("rsvpLookupStatus");
       if (statusEl) {
         statusEl.classList.remove("u-hidden");
-        statusEl.textContent = t("rsvp_welcome_name").replace("{name}", `${guest.firstName} ${guest.lastName || ""}`.trim());
+        statusEl.textContent = t("rsvp_welcome_name").replace(
+          "{name}",
+          `${guest.firstName} ${guest.lastName || ""}`.trim(),
+        );
       }
       return;
     }
@@ -161,24 +164,24 @@ export function submitRsvp(data) {
 
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-  enqueueWrite("rsvp_log", () => appendToRsvpLog({
-    phone,
-    firstName: String(value.firstName ?? ""),
-    lastName: String(value.lastName ?? ""),
-    status: String(value.status),
-    count: Number(value.count ?? 1),
-    timestamp: now,
-  }));
+  enqueueWrite("rsvp_log", () =>
+    appendToRsvpLog({
+      phone,
+      firstName: String(value.firstName ?? ""),
+      lastName: String(value.lastName ?? ""),
+      status: String(value.status),
+      count: Number(value.count ?? 1),
+      timestamp: now,
+    }),
+  );
 
   // Register Background Sync so offline submissions flush automatically once online (S18b)
-  if (
-    !navigator.onLine &&
-    "serviceWorker" in navigator &&
-    "SyncManager" in window
-  ) {
+  if (!navigator.onLine && "serviceWorker" in navigator && "SyncManager" in window) {
     navigator.serviceWorker.ready
       .then((reg) => reg.sync.register("rsvp-sync"))
-      .catch(() => {/* Background Sync not available */});
+      .catch(() => {
+        /* Background Sync not available */
+      });
   }
 
   vibrate(HAPTIC.SUCCESS); // S23 haptic feedback on RSVP submit
@@ -209,9 +212,7 @@ function _prefillForm(guest) {
     if (input && guest[key] !== undefined) input.value = String(guest[key]);
   });
   // Accessibility checkbox
-  const acc = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("rsvpAccessibility")
-  );
+  const acc = /** @type {HTMLInputElement|null} */ (document.getElementById("rsvpAccessibility"));
   if (acc) acc.checked = Boolean(guest.accessibility);
   // Reveal the rest of the form
   const formBody = document.getElementById("rsvpDetails");
@@ -264,7 +265,8 @@ function _showDeadlineMessage() {
     icon.style.fontSize = "3rem";
     msg.appendChild(icon);
     const p = document.createElement("p");
-    p.textContent = t("rsvp_deadline_passed") || "RSVP deadline has passed. Please contact the couple directly.";
+    p.textContent =
+      t("rsvp_deadline_passed") || "RSVP deadline has passed. Please contact the couple directly.";
     p.style.fontSize = "1.2rem";
     p.style.marginTop = "1rem";
     msg.appendChild(p);
@@ -305,7 +307,10 @@ export function getRsvpResponseTime() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const times = guests
     .filter((guest) => guest.createdAt && guest.rsvpDate)
-    .map((guest) => (new Date(guest.rsvpDate).getTime() - new Date(guest.createdAt).getTime()) / 86400000)
+    .map(
+      (guest) =>
+        (new Date(guest.rsvpDate).getTime() - new Date(guest.createdAt).getTime()) / 86400000,
+    )
     .filter((days) => days >= 0);
   if (times.length === 0) {
     return { avgDays: 0, fastest: 0, slowest: 0, count: 0 };

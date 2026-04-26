@@ -46,7 +46,8 @@ export function validateGuest(guest) {
   /** @type {Record<string, string>} */
   const errors = {};
 
-  if (!guest || typeof guest !== "object") return { valid: false, errors: { _root: "not an object" } };
+  if (!guest || typeof guest !== "object")
+    return { valid: false, errors: { _root: "not an object" } };
 
   const g = /** @type {Record<string, unknown>} */ (guest);
 
@@ -96,7 +97,8 @@ export function validateGuest(guest) {
 export function validateTable(table) {
   /** @type {Record<string, string>} */
   const errors = {};
-  if (!table || typeof table !== "object") return { valid: false, errors: { _root: "not an object" } };
+  if (!table || typeof table !== "object")
+    return { valid: false, errors: { _root: "not an object" } };
 
   const t = /** @type {Record<string, unknown>} */ (table);
 
@@ -122,7 +124,8 @@ export function validateTable(table) {
 export function validateVendor(vendor) {
   /** @type {Record<string, string>} */
   const errors = {};
-  if (!vendor || typeof vendor !== "object") return { valid: false, errors: { _root: "not an object" } };
+  if (!vendor || typeof vendor !== "object")
+    return { valid: false, errors: { _root: "not an object" } };
 
   const v = /** @type {Record<string, unknown>} */ (vendor);
 
@@ -152,7 +155,8 @@ export function validateVendor(vendor) {
 export function validateExpense(expense) {
   /** @type {Record<string, string>} */
   const errors = {};
-  if (!expense || typeof expense !== "object") return { valid: false, errors: { _root: "not an object" } };
+  if (!expense || typeof expense !== "object")
+    return { valid: false, errors: { _root: "not an object" } };
 
   const e = /** @type {Record<string, unknown>} */ (expense);
 

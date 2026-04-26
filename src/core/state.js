@@ -19,9 +19,7 @@ let _activeEventId = "default";
  * @returns {string}
  */
 function _prefix() {
-  return _activeEventId === "default"
-    ? _BASE_PREFIX
-    : `${_BASE_PREFIX}evt_${_activeEventId}_`;
+  return _activeEventId === "default" ? _BASE_PREFIX : `${_BASE_PREFIX}evt_${_activeEventId}_`;
 }
 
 // ── Event management (S9.1) ───────────────────────────────────────────────
@@ -209,10 +207,7 @@ export function clearAll() {
  */
 export function clearEventData(eventId) {
   try {
-    const pfx =
-      eventId === "default"
-        ? _BASE_PREFIX
-        : `${_BASE_PREFIX}evt_${eventId}_`;
+    const pfx = eventId === "default" ? _BASE_PREFIX : `${_BASE_PREFIX}evt_${eventId}_`;
     // Only remove data keys — never remove global registry keys
     const globalKeys = new Set([
       `${_BASE_PREFIX}events`,
@@ -260,7 +255,9 @@ export async function saveAsync(key, value) {
   try {
     await _asyncStorage.storageSet(_prefix() + key, JSON.stringify(value));
     // Also mirror to sync localStorage so sync callers still work
-    try { localStorage.setItem(_prefix() + key, JSON.stringify(value)); } catch {}
+    try {
+      localStorage.setItem(_prefix() + key, JSON.stringify(value));
+    } catch {}
   } catch {
     save(key, value);
   }
@@ -274,7 +271,9 @@ export async function saveAsync(key, value) {
 export async function removeAsync(key) {
   try {
     await _asyncStorage.storageRemove(_prefix() + key);
-    try { localStorage.removeItem(_prefix() + key); } catch {}
+    try {
+      localStorage.removeItem(_prefix() + key);
+    } catch {}
   } catch {
     remove(key);
   }

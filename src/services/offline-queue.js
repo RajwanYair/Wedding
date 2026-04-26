@@ -136,7 +136,9 @@ export function flushOfflineQueue() {
       const requeue = failed.filter((item) => (item.retries ?? 0) < MAX_RETRIES);
       const exhausted = failed.filter((item) => (item.retries ?? 0) >= MAX_RETRIES);
       _exhaustedCount += exhausted.length;
-      requeue.forEach((item) => { item.retries = (item.retries ?? 0) + 1; });
+      requeue.forEach((item) => {
+        item.retries = (item.retries ?? 0) + 1;
+      });
 
       if (requeue.length > 0) {
         _queue = [...requeue, ..._queue];
@@ -151,10 +153,19 @@ export function flushOfflineQueue() {
     }
 
     const item = pending.shift();
-    if (!item) { next(); return; }
+    if (!item) {
+      next();
+      return;
+    }
     _postFn(item.payload)
-      .then(() => { _sent++; next(); })
-      .catch(() => { failed.push(item); next(); });
+      .then(() => {
+        _sent++;
+        next();
+      })
+      .catch(() => {
+        failed.push(item);
+        next();
+      });
   }
 
   next();
@@ -174,9 +185,7 @@ export function getOfflineQueueCount() {
  */
 export function getQueueStats() {
   const oldest =
-    _queue.length > 0
-      ? _queue.reduce((a, b) => (a.addedAt < b.addedAt ? a : b)).addedAt
-      : null;
+    _queue.length > 0 ? _queue.reduce((a, b) => (a.addedAt < b.addedAt ? a : b)).addedAt : null;
   return { total: _queue.length, exhausted: _exhaustedCount, oldestAddedAt: oldest };
 }
 
@@ -199,4 +208,3 @@ function _updateBadge() {
     badge.textContent = `⏳ ${t("offline_badge_queued", { n: String(qCount) })}`;
   }
 }
-

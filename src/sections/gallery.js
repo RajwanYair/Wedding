@@ -65,9 +65,7 @@ export function addGalleryPhoto(photo) {
  * @param {string} id
  */
 export function deleteGalleryPhoto(id) {
-  const gallery = /** @type {any[]} */ (storeGet("gallery") ?? []).filter(
-    (p) => p.id !== id,
-  );
+  const gallery = /** @type {any[]} */ (storeGet("gallery") ?? []).filter((p) => p.id !== id);
   storeSet("gallery", gallery);
   enqueueWrite("gallery", () => syncStoreKeyToSheets("gallery"));
 }
@@ -161,10 +159,7 @@ export function renderGallery() {
     img.alt = p.caption || t("photo");
     img.className = "gallery-item-img";
     // Use a safe URL — only set src if url is a data: or https: URL
-    if (
-      p.url &&
-      (p.url.startsWith("https://") || p.url.startsWith("data:image/"))
-    ) {
+    if (p.url && (p.url.startsWith("https://") || p.url.startsWith("data:image/"))) {
       img.src = p.url;
     }
     img.addEventListener("click", () => openLightbox(p.id));

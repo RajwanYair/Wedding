@@ -78,9 +78,7 @@ export class SupabaseGuestRepository extends SupabaseBaseRepository {
    * @returns {Promise<Record<string, unknown>[]>}
    */
   async findUncheckedIn() {
-    const { data, error } = await this._query()
-      .eq("status", "confirmed")
-      .eq("checked_in", false);
+    const { data, error } = await this._query().eq("status", "confirmed").eq("checked_in", false);
     if (error) throw error;
     return data ?? [];
   }

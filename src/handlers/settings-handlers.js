@@ -63,10 +63,7 @@ export function registerSettingsHandlers(ctx) {
   });
   on("sheetsCheckConnection", async () => {
     const ok = await sheetsCheckConnection();
-    showToast(
-      ok ? t("sheets_connected") : t("sheets_not_connected"),
-      ok ? "success" : "error",
-    );
+    showToast(ok ? t("sheets_connected") : t("sheets_not_connected"), ok ? "success" : "error");
   });
   on("createMissingSheetTabs", async () => {
     await createMissingSheetTabs();
@@ -133,9 +130,7 @@ export function registerSettingsHandlers(ctx) {
     if (!list) return;
     const radios = list.querySelectorAll('input[type="radio"]:checked');
     const choices = /** @type {string[]} */ ([]);
-    radios.forEach((r) =>
-      choices.push(/** @type {HTMLInputElement} */ (r).value),
-    );
+    radios.forEach((r) => choices.push(/** @type {HTMLInputElement} */ (r).value));
     ctx.applyConflictResolutions(choices);
     closeModal("conflictModal");
     showToast(t("conflict_resolved"), "success");
@@ -144,14 +139,9 @@ export function registerSettingsHandlers(ctx) {
   on("pushAllToSheets", async () => {
     showToast(t("sheets_push_all_loading"), "info");
     try {
-      const counts = /** @type {Record<string, number>} */ (
-        await pushAllToSheets()
-      );
+      const counts = /** @type {Record<string, number>} */ (await pushAllToSheets());
       const total = Object.values(counts).reduce((s, n) => s + n, 0);
-      showToast(
-        t("sheets_push_all_done").replace("{n}", String(total)),
-        "success",
-      );
+      showToast(t("sheets_push_all_done").replace("{n}", String(total)), "success");
     } catch {
       showToast(t("toast_sheets_error"), "error");
     }
@@ -159,9 +149,7 @@ export function registerSettingsHandlers(ctx) {
   on("cleanConfigDuplicates", async () => {
     showToast(t("sheets_testing"), "info");
     try {
-      const result = /** @type {any} */ (
-        await sheetsPost({ action: "cleanConfig" })
-      );
+      const result = /** @type {any} */ (await sheetsPost({ action: "cleanConfig" }));
       const removed = result?.removed ?? 0;
       showToast(
         removed > 0
@@ -189,13 +177,9 @@ export function registerSettingsHandlers(ctx) {
     showToast(t("settings_saved"), "success");
   });
   on("supabaseCheckConnection", async () => {
-    const { supabaseCheckConnection: sbCheck } =
-      await import("../services/supabase.js");
+    const { supabaseCheckConnection: sbCheck } = await import("../services/supabase.js");
     const ok = await sbCheck();
-    showToast(
-      ok ? t("supabase_connected") : t("supabase_not_connected"),
-      ok ? "success" : "error",
-    );
+    showToast(ok ? t("supabase_connected") : t("supabase_not_connected"), ok ? "success" : "error");
   });
 
   // ── Settings / Misc ──
@@ -258,9 +242,7 @@ export function registerSettingsHandlers(ctx) {
   on("startAutoBackup", () => {
     const interval =
       Number(
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("autoBackupInterval")
-        )?.value,
+        /** @type {HTMLInputElement|null} */ (document.getElementById("autoBackupInterval"))?.value,
       ) || 30;
     startAutoBackup(interval);
     showToast(t("autobackup_started"), "success");
@@ -292,9 +274,7 @@ export function registerSettingsHandlers(ctx) {
   on("updateWeddingDetails", () => invitationSection.updateWeddingDetails?.());
   on("handleInvitationUpload", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT"
-        ? e.target
-        : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT" ? e.target : null
     );
     if (input) invitationSection.handleInvitationUpload?.(input);
   });
@@ -311,34 +291,26 @@ export function registerSettingsHandlers(ctx) {
           document.getElementById("ccLastName")
         )?.value?.trim() ?? "",
       phone:
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("ccPhone")
-        )?.value?.trim() ?? "",
+        /** @type {HTMLInputElement|null} */ (document.getElementById("ccPhone"))?.value?.trim() ??
+        "",
       email:
-        /** @type {HTMLInputElement|null} */ (
-          document.getElementById("ccEmail")
-        )?.value?.trim() ?? "",
+        /** @type {HTMLInputElement|null} */ (document.getElementById("ccEmail"))?.value?.trim() ??
+        "",
       side:
-        /** @type {HTMLSelectElement|null} */ (
-          document.getElementById("ccSide")
-        )?.value ?? "mutual",
+        /** @type {HTMLSelectElement|null} */ (document.getElementById("ccSide"))?.value ??
+        "mutual",
       dietaryNotes: "",
     };
     const result = contactSection.submitContactForm(data);
-    if (!result.ok)
-      showToast(result.errors?.join(", ") ?? t("error_save"), "error");
+    if (!result.ok) showToast(result.errors?.join(", ") ?? t("error_save"), "error");
     else showToast(t("contact_sent"), "success");
   });
 
   // ── Landing table finder ──
   on("findTable", () => {
     const input =
-      /** @type {HTMLInputElement|null} */ (
-        document.getElementById("tablefinderInput")
-      ) ??
-      /** @type {HTMLInputElement|null} */ (
-        document.getElementById("findTableInput")
-      );
+      /** @type {HTMLInputElement|null} */ (document.getElementById("tablefinderInput")) ??
+      /** @type {HTMLInputElement|null} */ (document.getElementById("findTableInput"));
     landingSection.showTableFinder(input?.value?.trim() ?? "");
   });
 }

@@ -64,9 +64,7 @@ export function listTemplates() {
  */
 export function escapeValue(raw) {
   if (raw === null || raw === undefined) return "";
-  return String(raw)
-    .replace(/\\/g, "\\\\")
-    .replace(/`/g, "\\`");
+  return String(raw).replace(/\\/g, "\\\\").replace(/`/g, "\\`");
 }
 
 /**
@@ -81,9 +79,8 @@ export function escapeValue(raw) {
  * @returns {string}
  */
 function _processConditionals(source, vars) {
-  return source.replace(
-    /\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g,
-    (_match, varName, content) => (vars[varName] ? content : ""),
+  return source.replace(/\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (_match, varName, content) =>
+    vars[varName] ? content : "",
   );
 }
 

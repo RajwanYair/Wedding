@@ -76,10 +76,14 @@ for (const locale of LOCALES.slice(1)) {
   errors++;
   console.error(`✗ ${locale}.json — parity mismatch vs ${reference}.json:`);
   if (missing.length > 0) {
-    console.error(`  MISSING (${missing.length}): ${missing.slice(0, 20).join(", ")}${missing.length > 20 ? ` … +${missing.length - 20} more` : ""}`);
+    console.error(
+      `  MISSING (${missing.length}): ${missing.slice(0, 20).join(", ")}${missing.length > 20 ? ` … +${missing.length - 20} more` : ""}`,
+    );
   }
   if (extra.length > 0) {
-    console.error(`  EXTRA   (${extra.length}): ${extra.slice(0, 20).join(", ")}${extra.length > 20 ? ` … +${extra.length - 20} more` : ""}`);
+    console.error(
+      `  EXTRA   (${extra.length}): ${extra.slice(0, 20).join(", ")}${extra.length > 20 ? ` … +${extra.length - 20} more` : ""}`,
+    );
   }
 }
 
@@ -93,7 +97,9 @@ for (const locale of LOCALES) {
     if (!v || String(v).trim() === "") empty.push(k);
   }
   if (empty.length > 0) {
-    console.warn(`⚠ ${locale}.json — ${empty.length} empty value(s): ${empty.slice(0, 10).join(", ")}`);
+    console.warn(
+      `⚠ ${locale}.json — ${empty.length} empty value(s): ${empty.slice(0, 10).join(", ")}`,
+    );
   }
 }
 

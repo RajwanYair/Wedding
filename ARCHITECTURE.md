@@ -1,6 +1,10 @@
-# Wedding Manager — Architecture (v11.1.0)
+# Wedding Manager — Architecture (v11.2.0)
 
 > Runtime entry: `src/main.js` · Pure ESM · Vite 8 · Google Sheets remains the active backend path
+
+## Scope
+
+This is a **pure web application**: one production build (`dist/`), one dev-server command (`npm run dev`), zero native binaries, zero Python build steps.  All CI and tooling runs on Node ≥ 22 (GitHub Actions ubuntu-latest + local VS Code).
 
 ## Module Dependency Graph
 
@@ -80,6 +84,27 @@ graph TD
     MAIN --> CONTACT
     MAIN --> REGISTRY
     MAIN --> GUESTLANDING
+
+    subgraph NewCore ["src/core/ — v11.1.0 additions"]
+        SECTBASE["section-base.js\nBaseSection lifecycle"]
+        ROUTETBL["route-table.js\ntyped router helpers"]
+        ACTREG["action-registry.js\nACTIONS + namespacing"]
+    end
+
+    subgraph NewServices ["src/services/ — v11.1.0 additions"]
+        MONITOR["monitoring.js\nSentry-compatible + PII scrubber"]
+        SECSTOR["secure-storage.js\nAES-256-GCM token store"]
+    end
+
+    subgraph NewUtils ["src/utils/ — v11.1.0 additions"]
+        CALLINK["calendar-link.js\nGoogle Cal + ICS helpers"]
+    end
+
+    MAIN --> SECTBASE
+    MAIN --> ROUTETBL
+    MAIN --> ACTREG
+    MAIN --> MONITOR
+    MAIN --> SECSTOR
 
     GUESTS --> STORE
     GUESTS --> SANITIZE
@@ -317,6 +342,60 @@ flowchart LR
     A["@layer auth\nLogin screen, OAuth buttons"] --> R
     R["@layer responsive\n768px + 480px breakpoints"] --> P
     P["@layer print\nPrint-only overrides"]
+```
+
+---
+
+## Section Lifecycle (v11.1.0 — BaseSection)
+
+```mermaid
+flowchart TD
+    NAV["nav.js resolves\nnew section name"] --> TMPL["template-loader.js\ninjects HTML lazily"]
+    TMPL --> MOUNT["section.mount(params)"]
+    MOUNT --> BASE{extends BaseSection?}
+    BASE -- Yes --> ONMOUNT["onMount(params)\nhook called"]
+    ONMOUNT --> SUBS["subscribe(key, fn)\ncallbacks registered"]
+    BASE -- No --> LEGACY["legacy mount fn\n(direct store subscriptions)"]
+    SUBS --> ACTIVE["Section active\n(reactive to store changes)"]
+    LEGACY --> ACTIVE
+    ACTIVE --> AWAY["User navigates away"]
+    AWAY --> UNMOUNT["section.unmount()"]
+    UNMOUNT --> BASE2{extends BaseSection?}
+    BASE2 -- Yes --> ONUNMOUNT["onUnmount() hook"]
+    ONUNMOUNT --> CLEANUP["auto-unsubscribe all\n+ cleanup fns"]
+    BASE2 -- No --> LEGACYUN["legacy unmount fn"]
+    CLEANUP --> IDLE["Section idle\n(no memory leaks)"]
+    LEGACYUN --> IDLE
+```
+
+## Store Reactivity
+
+```mermaid
+flowchart LR
+    SET["storeSet(key, value)"] --> PROXY["store.js\nProxy set trap"]
+    PROXY --> LS["localStorage persist\n(wedding_v1_ prefix)"]
+    PROXY --> MICRO["microtask queue\n(setTimeout 0)"]
+    MICRO --> SUBS["storeSubscribe(key)\ncallbacks batch-fired"]
+    SUBS --> RENDER["Section re-renders\n(textContent only)"]
+    SUBS --> ENQUEUE["enqueueWrite(key, fn)\n1.5 s debounce"]
+    ENQUEUE --> SHEETS["Google Sheets\nApps Script sync"]
+```
+
+## Route Table (v11.1.0)
+
+```mermaid
+flowchart TD
+    HASH["window.location\n#section?key=val"] --> PARSE["parseLocation()\nroute-table.js"]
+    PARSE --> KNOWN{isKnownSection?}
+    KNOWN -- No --> DEFAULT["fallback: landing"]
+    KNOWN -- Yes --> PUBLIC{isPublicSection?}
+    PUBLIC -- Yes --> GUESTOK["allow guest access"]
+    PUBLIC -- No --> AUTHD{isAdmin?}
+    AUTHD -- No --> OVERLAY["show auth overlay"]
+    AUTHD -- Yes --> ADMINOK["allow admin access"]
+    GUESTOK --> TPLL["template-loader injects HTML"]
+    ADMINOK --> TPLL
+    TPLL --> MNT["section.mount(params)\ngetRouteParam() for deep links"]
 ```
 
 ---

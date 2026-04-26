@@ -43,14 +43,10 @@ export function updateWeddingDetails() {
   ];
   const delta = /** @type {Record<string,string>} */ ({});
   fieldMap.forEach(({ id, key }) => {
-    const input = /** @type {HTMLInputElement|null} */ (
-      document.getElementById(id)
-    );
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById(id));
     if (input) delta[key] = input.value;
   });
-  const current = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const current = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const prevGroomEn = current.groomEn ?? "";
   const prevBrideEn = current.brideEn ?? "";
   storeSet("weddingInfo", { ...current, ...delta });
@@ -59,14 +55,15 @@ export function updateWeddingDetails() {
   const newGroomEn = delta.groomEn ?? prevGroomEn;
   const newBrideEn = delta.brideEn ?? prevBrideEn;
   const namesChanged =
-    (prevGroomEn && newGroomEn !== prevGroomEn) ||
-    (prevBrideEn && newBrideEn !== prevBrideEn);
+    (prevGroomEn && newGroomEn !== prevGroomEn) || (prevBrideEn && newBrideEn !== prevBrideEn);
   if (namesChanged && window.confirm(t("backend_reinit_prompt"))) {
-    createMissingTabs().then(() => {
-      window.alert(t("backend_reinit_done"));
-    }).catch(() => {
-      window.alert(t("backend_reinit_skip"));
-    });
+    createMissingTabs()
+      .then(() => {
+        window.alert(t("backend_reinit_done"));
+      })
+      .catch(() => {
+        window.alert(t("backend_reinit_skip"));
+      });
   }
 }
 
@@ -81,9 +78,7 @@ export function handleInvitationUpload(input) {
   reader.onload = function (ev) {
     const dataUrl = /** @type {string} */ (ev.target?.result);
     if (!dataUrl.startsWith("data:image/")) return;
-    const current = /** @type {Record<string,string>} */ (
-      storeGet("weddingInfo") ?? {}
-    );
+    const current = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
     storeSet("weddingInfo", { ...current, invitationUrl: dataUrl });
     // Render immediately
     const container = document.getElementById("invitationImage");
@@ -100,9 +95,7 @@ export function handleInvitationUpload(input) {
 }
 
 export function renderInvitation() {
-  const info = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
 
   // Populate the editable form fields with persisted values
   /** @type {Array<{id: string, key: string}>} */
@@ -121,9 +114,7 @@ export function renderInvitation() {
     { id: "venueWaze", key: "venueWaze" },
   ];
   fieldMap.forEach(({ id, key }) => {
-    const input = /** @type {HTMLInputElement|null} */ (
-      document.getElementById(id)
-    );
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById(id));
     if (input && info[key] !== undefined && !input.value) {
       input.value = info[key];
     }
@@ -151,10 +142,7 @@ export function renderInvitation() {
   // Invitation image
   if (el.invitationImage && info.invitationUrl) {
     const img = /** @type {HTMLImageElement} */ (el.invitationImage);
-    if (
-      info.invitationUrl.startsWith("https://") ||
-      info.invitationUrl.startsWith("data:image/")
-    ) {
+    if (info.invitationUrl.startsWith("https://") || info.invitationUrl.startsWith("data:image/")) {
       img.src = info.invitationUrl;
     }
   }

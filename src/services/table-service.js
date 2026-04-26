@@ -70,10 +70,7 @@ export async function moveTable(sourceTableId, targetTableId) {
  * @returns {Promise<{ capacity: number, seated: number, available: number }>}
  */
 export async function getTableOccupancy(tableId) {
-  const [table, guests] = await Promise.all([
-    tableRepo.getById(tableId),
-    guestRepo.getActive(),
-  ]);
+  const [table, guests] = await Promise.all([tableRepo.getById(tableId), guestRepo.getActive()]);
   if (!table) throw new Error(`Table not found: ${tableId}`);
   const seated = guests.filter((g) => g.tableId === tableId).length;
   return { capacity: table.capacity, seated, available: Math.max(0, table.capacity - seated) };
@@ -162,9 +159,7 @@ export async function autoAssign(guestIds) {
   const unplaceable = /** @type {string[]} */ ([]);
 
   for (const guest of targets) {
-    const table = tables.find(
-      (t) => (occupancy.get(t.id) ?? 0) < (capacity.get(t.id) ?? 0),
-    );
+    const table = tables.find((t) => (occupancy.get(t.id) ?? 0) < (capacity.get(t.id) ?? 0));
     if (!table) {
       unplaceable.push(guest.id);
       continue;

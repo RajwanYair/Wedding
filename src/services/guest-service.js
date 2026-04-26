@@ -123,7 +123,7 @@ export async function bulkCheckIn(ids) {
   const { enqueueWrite } = await import("./sheets.js");
   storeSet(
     "guests",
-    guests.map((g) => idSet.has(g.id) ? { ...g, checkedIn: true, updatedAt: now } : g),
+    guests.map((g) => (idSet.has(g.id) ? { ...g, checkedIn: true, updatedAt: now } : g)),
   );
   enqueueWrite("guests", async () => {});
 }
@@ -150,12 +150,9 @@ export async function importGuests(rows) {
         skipped++;
         continue;
       }
-      const side = GUEST_SIDES.includes(/** @type {any} */ (row.side))
-        ? row.side : "mutual";
-      const group = GUEST_GROUPS.includes(/** @type {any} */ (row.group))
-        ? row.group : "other";
-      const meal = MEAL_TYPES.includes(/** @type {any} */ (row.meal))
-        ? row.meal : "regular";
+      const side = GUEST_SIDES.includes(/** @type {any} */ (row.side)) ? row.side : "mutual";
+      const group = GUEST_GROUPS.includes(/** @type {any} */ (row.group)) ? row.group : "other";
+      const meal = MEAL_TYPES.includes(/** @type {any} */ (row.meal)) ? row.meal : "regular";
 
       await guestRepo.create({
         firstName,
@@ -179,7 +176,9 @@ export async function importGuests(rows) {
       });
       created++;
     } catch (err) {
-      errors.push(`Row ${created + skipped + errors.length + 1}: ${err instanceof Error ? err.message : String(err)}`);
+      errors.push(
+        `Row ${created + skipped + errors.length + 1}: ${err instanceof Error ? err.message : String(err)}`,
+      );
       skipped++;
     }
   }
@@ -258,10 +257,11 @@ export async function searchGuests(query) {
   if (!query.trim()) return guestRepo.getActive();
   const q = query.toLowerCase();
   const guests = await guestRepo.getActive();
-  return guests.filter((g) =>
-    g.firstName.toLowerCase().includes(q) ||
-    g.lastName.toLowerCase().includes(q) ||
-    g.phone.includes(q) ||
-    g.email.toLowerCase().includes(q),
+  return guests.filter(
+    (g) =>
+      g.firstName.toLowerCase().includes(q) ||
+      g.lastName.toLowerCase().includes(q) ||
+      g.phone.includes(q) ||
+      g.email.toLowerCase().includes(q),
   );
 }

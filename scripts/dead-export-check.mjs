@@ -29,8 +29,7 @@ function getAllJs(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) results.push(...getAllJs(full));
-    else if (entry.name.endsWith(".js") || entry.name.endsWith(".mjs"))
-      results.push(full);
+    else if (entry.name.endsWith(".js") || entry.name.endsWith(".mjs")) results.push(full);
   }
   return results;
 }
@@ -51,8 +50,7 @@ const corpus = allFiles.map((f) => readFileSync(f, "utf8")).join("\n");
 
 // ── Export discovery ────────────────────────────────────────────────────────
 
-const EXPORT_RE =
-  /^export (?:(?:async )?function|const|class|let) ([a-zA-Z_$][a-zA-Z0-9_$]*)/gm;
+const EXPORT_RE = /^export (?:(?:async )?function|const|class|let) ([a-zA-Z_$][a-zA-Z0-9_$]*)/gm;
 
 /** @type {Array<{sym: string, file: string}>} */
 const allExports = [];
@@ -75,10 +73,7 @@ for (const { sym, file } of allExports) {
   const importRe = new RegExp(`import[^;]*\\b${sym}\\b`, "g");
   const importCount = (corpus.match(importRe) ?? []).length;
   // 2. Namespace property access: ns.sym( or ns?.sym(
-  const nsAccessRe = new RegExp(
-    `\\.${sym}[\\s\\S]{0,2}\\(|\\[['"\`]${sym}['"\`]\\]`,
-    "g",
-  );
+  const nsAccessRe = new RegExp(`\\.${sym}[\\s\\S]{0,2}\\(|\\[['"\`]${sym}['"\`]\\]`, "g");
   const nsAccessCount = (corpus.match(nsAccessRe) ?? []).length;
   if (importCount === 0 && nsAccessCount === 0) dead.push({ sym, file });
 }
@@ -109,8 +104,6 @@ for (const [dir, entries] of Object.entries(byDir).sort()) {
   for (const e of entries) console.log(`  ${e}`);
 }
 
-console.log(
-  `\nNote: exports used only via barrel re-export (export * from) or`,
-);
+console.log(`\nNote: exports used only via barrel re-export (export * from) or`);
 console.log(`accessed exclusively by string key (e.g. obj["sym"]) may still`);
 console.log(`appear dead. Review before removing.\n`);

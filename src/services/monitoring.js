@@ -55,13 +55,15 @@ const _breadcrumbs = [];
  */
 export function scrubPii(input) {
   if (typeof input !== "string") return input;
-  return input
-    // emails
-    .replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "[email]")
-    // bearer tokens / JWTs
-    .replace(/\b(?:eyJ|sk-|pk_|Bearer\s+)[A-Za-z0-9._-]{8,}\b/g, "[token]")
-    // Israeli phones (+972 / 0XX) — keep last 2 digits for triage
-    .replace(/(?:\+?972|0)[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?(\d{2,4})/g, "[phone-***$1]");
+  return (
+    input
+      // emails
+      .replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, "[email]")
+      // bearer tokens / JWTs
+      .replace(/\b(?:eyJ|sk-|pk_|Bearer\s+)[A-Za-z0-9._-]{8,}\b/g, "[token]")
+      // Israeli phones (+972 / 0XX) — keep last 2 digits for triage
+      .replace(/(?:\+?972|0)[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?(\d{2,4})/g, "[phone-***$1]")
+  );
 }
 
 /**
@@ -100,9 +102,10 @@ export async function initMonitoring(opts = {}) {
   if (_initialized) return _transport != null;
   _initialized = true;
 
-  const dsn = opts.dsn
-    ?? (typeof globalThis !== "undefined" && globalThis.process?.env?.VITE_SENTRY_DSN)
-    ?? (typeof import.meta !== "undefined" && /** @type {any} */ (import.meta).env?.VITE_SENTRY_DSN);
+  const dsn =
+    opts.dsn ??
+    (typeof globalThis !== "undefined" && globalThis.process?.env?.VITE_SENTRY_DSN) ??
+    (typeof import.meta !== "undefined" && /** @type {any} */ (import.meta).env?.VITE_SENTRY_DSN);
 
   if (!dsn) return false;
 
@@ -115,9 +118,11 @@ export async function initMonitoring(opts = {}) {
       tracesSampleRate: opts.sampleRate ?? 0.05,
       environment: opts.environment ?? "production",
       release: `wedding-manager@${APP_VERSION}`,
-      beforeSend(/** @type {{ message?: string, exception?: unknown, extra?: Record<string, unknown> }} */ event) {
+      beforeSend(
+        /** @type {{ message?: string, exception?: unknown, extra?: Record<string, unknown> }} */ event,
+      ) {
         if (event.message) event.message = scrubPii(event.message);
-        if (event.extra)   event.extra   = scrubContext(event.extra);
+        if (event.extra) event.extra = scrubContext(event.extra);
         return event;
       },
     });
@@ -164,7 +169,11 @@ export function addBreadcrumb(crumb) {
   _breadcrumbs.push(enriched);
   if (_breadcrumbs.length > MAX_BREADCRUMBS) _breadcrumbs.shift();
   if (_transport && typeof _transport.addBreadcrumb === "function") {
-    try { _transport.addBreadcrumb(enriched); } catch { /* ignore */ }
+    try {
+      _transport.addBreadcrumb(enriched);
+    } catch {
+      /* ignore */
+    }
   }
 }
 

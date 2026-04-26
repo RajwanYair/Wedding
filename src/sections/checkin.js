@@ -93,9 +93,8 @@ export function renderCheckin() {
   if (_searchQuery) {
     guests = guests.filter(
       (g) =>
-        `${g.firstName} ${g.lastName || ""}`
-          .toLowerCase()
-          .includes(_searchQuery) || (g.phone || "").includes(_searchQuery),
+        `${g.firstName} ${g.lastName || ""}`.toLowerCase().includes(_searchQuery) ||
+        (g.phone || "").includes(_searchQuery),
     );
   }
 
@@ -119,16 +118,12 @@ export function renderCheckin() {
 
     const tableTd = document.createElement("td");
     const guestTable = tables.find((tb) => tb.id === g.tableId);
-    tableTd.textContent = guestTable
-      ? guestTable.name
-      : g.tableId
-        ? g.tableId
-        : "—";
+    tableTd.textContent = guestTable ? guestTable.name : g.tableId ? g.tableId : "—";
     tr.appendChild(tableTd);
 
     // S11.5 Gift column
     const giftTd = document.createElement("td");
-    giftTd.className = `gift-col${  _giftMode ? "" : " u-hidden"}`;
+    giftTd.className = `gift-col${_giftMode ? "" : " u-hidden"}`;
     if (g.checkedIn) {
       giftTd.textContent = g.gift ? `₪${g.gift}` : "—";
     } else {
@@ -242,9 +237,7 @@ export function getCheckinStats() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const confirmed = guests.filter((g) => g.status === "confirmed");
   const total = confirmed.reduce((s, g) => s + (g.count || 1), 0);
-  const checkedIn = confirmed
-    .filter((g) => g.checkedIn)
-    .reduce((s, g) => s + (g.count || 1), 0);
+  const checkedIn = confirmed.filter((g) => g.checkedIn).reduce((s, g) => s + (g.count || 1), 0);
   return {
     total,
     checkedIn,
@@ -258,7 +251,9 @@ export function getCheckinStats() {
  * @returns {Array<{ side: string, total: number, checkedIn: number, rate: number }>}
  */
 export function getCheckinRateBySide() {
-  const confirmed = /** @type {any[]} */ (storeGet("guests") ?? []).filter((guest) => guest.status === "confirmed");
+  const confirmed = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (guest) => guest.status === "confirmed",
+  );
   /** @type {Map<string, { total: number, checkedIn: number }>} */
   const bySide = new Map();
   for (const guest of confirmed) {
@@ -406,9 +401,7 @@ export async function startQrScan() {
         if (barcodes.length > 0) {
           const raw = barcodes[0].rawValue || "";
           // QR contains guestId
-          const guestId = raw.includes("guestId=")
-            ? new URL(raw).searchParams.get("guestId")
-            : raw;
+          const guestId = raw.includes("guestId=") ? new URL(raw).searchParams.get("guestId") : raw;
           if (guestId) {
             checkInGuest(guestId);
             announce(t("checkin_qr_success") || "Guest checked in via QR");

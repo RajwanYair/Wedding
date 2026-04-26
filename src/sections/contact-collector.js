@@ -36,8 +36,7 @@ export function submitContactForm(data) {
   if (errors.length) return { ok: false, errors };
 
   const phone = cleanPhone(String(value.phone));
-  if (!isValidPhone(phone))
-    return { ok: false, errors: [t("error_invalid_phone")] };
+  if (!isValidPhone(phone)) return { ok: false, errors: [t("error_invalid_phone")] };
 
   const contacts = [.../** @type {any[]} */ (storeGet("contacts") ?? [])];
   contacts.push({

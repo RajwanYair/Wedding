@@ -39,17 +39,14 @@ export async function eraseGuest(supabase, guestId, opts = {}) {
   const nullPatch = Object.fromEntries(PII_COLUMNS.map((c) => [c, null]));
   nullPatch.erased_at = new Date().toISOString();
 
-  const { error: updateError } = await supabase
-    .from("guests")
-    .update(nullPatch)
-    .eq("id", guestId);
+  const { error: updateError } = await supabase.from("guests").update(nullPatch).eq("id", guestId);
   if (updateError) throw updateError;
 
   const { error: logError } = await supabase.from("erasure_log").insert({
-    entity_type:   "guest",
-    entity_id:     guestId,
-    requested_by:  opts.requestedBy ?? null,
-    erased_at:     nullPatch.erased_at,
+    entity_type: "guest",
+    entity_id: guestId,
+    requested_by: opts.requestedBy ?? null,
+    erased_at: nullPatch.erased_at,
   });
   if (logError) throw logError;
 }

@@ -78,9 +78,7 @@ export function getDeliveryHistory(guestId) {
  * @returns {DeliveryRecord[]}
  */
 export function getUndelivered(filter = {}) {
-  let records = getAllRecords().filter(
-    (r) => r.status === "failed" || r.status === "bounced",
-  );
+  let records = getAllRecords().filter((r) => r.status === "failed" || r.status === "bounced");
   if (filter.channel) {
     records = records.filter((r) => r.channel === filter.channel);
   }
@@ -109,7 +107,7 @@ export function getLatestDelivery(guestId, channel) {
 export function getDeliveryStats(filter = {}) {
   let records = getAllRecords();
   if (filter.campaignId) records = records.filter((r) => r.campaignId === filter.campaignId);
-  if (filter.channel)    records = records.filter((r) => r.channel === filter.channel);
+  if (filter.channel) records = records.filter((r) => r.channel === filter.channel);
 
   const stats = { total: records.length, sent: 0, delivered: 0, read: 0, failed: 0, bounced: 0 };
   for (const r of records) {

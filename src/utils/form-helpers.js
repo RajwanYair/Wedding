@@ -41,9 +41,7 @@ export function getFormValues(fieldMap) {
  * @param {(id: string) => void} openModalFn
  */
 export function openAddModal(modalId, idInputId, titleElId, titleI18n, openModalFn) {
-  const idEl = /** @type {HTMLInputElement|null} */ (
-    document.getElementById(idInputId)
-  );
+  const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById(idInputId));
   if (idEl) idEl.value = "";
   const title = document.getElementById(titleElId);
   if (title) title.setAttribute("data-i18n", titleI18n);

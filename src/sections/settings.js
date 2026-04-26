@@ -6,18 +6,20 @@
  */
 
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
-import {
-  getBackendTypeConfig,
-  getSheetsWebAppUrl,
-  getSpreadsheetId,
-} from "../core/app-config.js";
+import { getBackendTypeConfig, getSheetsWebAppUrl, getSpreadsheetId } from "../core/app-config.js";
 import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n, normalizeUiLanguage } from "../core/i18n.js";
 import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { readBrowserStorageJson } from "../core/storage.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite, syncStoreKeyToSheets, queueSize, queueKeys, onSyncStatus } from "../services/sheets.js";
+import {
+  enqueueWrite,
+  syncStoreKeyToSheets,
+  queueSize,
+  queueKeys,
+  onSyncStatus,
+} from "../services/sheets.js";
 import {
   isPushSupported,
   requestPushPermission,
@@ -71,9 +73,7 @@ export function saveWeddingInfo(data) {
   });
   if (errors.length) return { ok: false, errors };
 
-  const current = /** @type {Record<string,string>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const current = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   storeSet("weddingInfo", { ...current, ...value });
   enqueueWrite("weddingInfo", () => syncStoreKeyToSheets("weddingInfo"));
   return { ok: true };
@@ -276,9 +276,7 @@ export function copyContactLink() {
 export function generateRsvpQrCode() {
   const rsvpUrl = `${location.origin}${location.pathname}#rsvp`;
   const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&qzone=2&format=png&data=${encodeURIComponent(rsvpUrl)}`;
-  const img = /** @type {HTMLImageElement|null} */ (
-    document.getElementById("rsvpQrImage")
-  );
+  const img = /** @type {HTMLImageElement|null} */ (document.getElementById("rsvpQrImage"));
   if (img) {
     img.src = apiUrl;
     img.alt = "RSVP QR Code";
@@ -324,9 +322,7 @@ export function saveWebAppUrl(form) {
  * Save Supabase configuration (URL + anon key) from Settings inputs.
  */
 export function saveSupabaseConfig() {
-  const urlInput = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("supabaseUrl")
-  );
+  const urlInput = /** @type {HTMLInputElement|null} */ (document.getElementById("supabaseUrl"));
   const keyInput = /** @type {HTMLInputElement|null} */ (
     document.getElementById("supabaseAnonKey")
   );
@@ -363,13 +359,10 @@ export function saveBackendType() {
  */
 export function saveTransportSettings() {
   const _getVal = (/** @type {string} */ id) =>
-    /** @type {HTMLInputElement|null} */ (
-      document.getElementById(id)
-    )?.value?.trim() ?? "";
+    /** @type {HTMLInputElement|null} */ (document.getElementById(id))?.value?.trim() ?? "";
   const enabled =
-    /** @type {HTMLInputElement|null} */ (
-      document.getElementById("transportEnabled")
-    )?.checked ?? false;
+    /** @type {HTMLInputElement|null} */ (document.getElementById("transportEnabled"))?.checked ??
+    false;
   const data = {
     transportEnabled: enabled ? "true" : "",
     transportTefachotTime: _getVal("transportTefachotTime"),
@@ -377,9 +370,7 @@ export function saveTransportSettings() {
     transportJerusalemTime: _getVal("transportJerusalemTime"),
     transportJerusalemAddress: _getVal("transportJerusalemAddress"),
   };
-  const current = /** @type {Record<string,unknown>} */ (
-    storeGet("weddingInfo") ?? {}
-  );
+  const current = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
   storeSet("weddingInfo", { ...current, ...data });
 }
 
@@ -387,9 +378,7 @@ export function saveTransportSettings() {
  * Add an email to the approved admin allowlist.
  */
 export function addApprovedEmail() {
-  const input = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("newApproveEmail")
-  );
+  const input = /** @type {HTMLInputElement|null} */ (document.getElementById("newApproveEmail"));
   if (!input) return;
   const email = input.value.trim().toLowerCase();
   if (!email || !email.includes("@")) return;
@@ -421,9 +410,10 @@ export function renderAuditLog() {
 
   const MAX = 200;
   const raw = /** @type {unknown[]} */ (storeGet("auditLog") ?? []);
-  const entries = /** @type {Array<{action?:string, entity?:string, entityId?:string|null, userEmail?:string, ts?:string, diff?:unknown}>} */ (
-    raw.slice(-MAX).reverse()
-  );
+  const entries =
+    /** @type {Array<{action?:string, entity?:string, entityId?:string|null, userEmail?:string, ts?:string, diff?:unknown}>} */ (
+      raw.slice(-MAX).reverse()
+    );
 
   tbody.textContent = "";
 
@@ -671,21 +661,43 @@ function _renderQueueBadge() {
  */
 export async function exportAllCSV() {
   const sections = [
-    { key: "guests", header: "ID,First,Last,Phone,Status,Count,Children,Side,Group,Meal", fields: (/** @type {any} */ g) => `${g.id},${g.firstName},${g.lastName || ""},${g.phone || ""},${g.status},${g.count || 1},${g.children || 0},${g.side || ""},${g.group || ""},${g.meal || ""}` },
-    { key: "vendors", header: "ID,Category,Name,Contact,Phone,Price,Paid,Notes,DueDate", fields: (/** @type {any} */ v) => `${v.id},"${(v.category || "").replace(/"/g, '""')}","${(v.name || "").replace(/"/g, '""')}",${v.contact || ""},${v.phone || ""},${v.price || 0},${v.paid || 0},"${(v.notes || "").replace(/"/g, '""')}",${v.dueDate || ""}` },
-    { key: "expenses", header: "ID,Category,Amount,Description,Date", fields: (/** @type {any} */ ex) => `${ex.id},"${(ex.category || "").replace(/"/g, '""')}",${ex.amount || 0},"${(ex.description || "").replace(/"/g, '""')}",${ex.date || ""}` },
-    { key: "timeline", header: "Time,Title,Note", fields: (/** @type {any} */ t) => `${t.time || ""},"${(t.title || "").replace(/"/g, '""')}","${(t.note || "").replace(/"/g, '""')}"` },
-    { key: "contacts", header: "Name,Phone,Email,SubmittedAt", fields: (/** @type {any} */ c) => `"${`${c.firstName || ""} ${c.lastName || ""}`.trim().replace(/"/g, '""')}",${c.phone || ""},${c.email || ""},${c.submittedAt || ""}` },
+    {
+      key: "guests",
+      header: "ID,First,Last,Phone,Status,Count,Children,Side,Group,Meal",
+      fields: (/** @type {any} */ g) =>
+        `${g.id},${g.firstName},${g.lastName || ""},${g.phone || ""},${g.status},${g.count || 1},${g.children || 0},${g.side || ""},${g.group || ""},${g.meal || ""}`,
+    },
+    {
+      key: "vendors",
+      header: "ID,Category,Name,Contact,Phone,Price,Paid,Notes,DueDate",
+      fields: (/** @type {any} */ v) =>
+        `${v.id},"${(v.category || "").replace(/"/g, '""')}","${(v.name || "").replace(/"/g, '""')}",${v.contact || ""},${v.phone || ""},${v.price || 0},${v.paid || 0},"${(v.notes || "").replace(/"/g, '""')}",${v.dueDate || ""}`,
+    },
+    {
+      key: "expenses",
+      header: "ID,Category,Amount,Description,Date",
+      fields: (/** @type {any} */ ex) =>
+        `${ex.id},"${(ex.category || "").replace(/"/g, '""')}",${ex.amount || 0},"${(ex.description || "").replace(/"/g, '""')}",${ex.date || ""}`,
+    },
+    {
+      key: "timeline",
+      header: "Time,Title,Note",
+      fields: (/** @type {any} */ t) =>
+        `${t.time || ""},"${(t.title || "").replace(/"/g, '""')}","${(t.note || "").replace(/"/g, '""')}"`,
+    },
+    {
+      key: "contacts",
+      header: "Name,Phone,Email,SubmittedAt",
+      fields: (/** @type {any} */ c) =>
+        `"${`${c.firstName || ""} ${c.lastName || ""}`.trim().replace(/"/g, '""')}",${c.phone || ""},${c.email || ""},${c.submittedAt || ""}`,
+    },
   ];
   for (const { key, header, fields } of sections) {
     const items = /** @type {any[]} */ (storeGet(key) ?? []);
     if (items.length === 0) continue;
     const rows = items.map(fields);
     const csv = [header, ...rows].join("\n");
-    _downloadBlob(
-      new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" }),
-      `${key}.csv`,
-    );
+    _downloadBlob(new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" }), `${key}.csv`);
   }
 }
 
@@ -710,15 +722,18 @@ export function checkDataIntegrity() {
     // Missing name
     if (!g.firstName) issues.push(`Guest ${g.id}: missing firstName`);
     // Invalid status
-    if (g.status && !validStatuses.has(g.status)) issues.push(`Guest ${g.id}: invalid status "${g.status}"`);
+    if (g.status && !validStatuses.has(g.status))
+      issues.push(`Guest ${g.id}: invalid status "${g.status}"`);
     // Orphaned tableId
-    if (g.tableId && !tableIds.has(g.tableId)) issues.push(`Guest ${g.id}: tableId "${g.tableId}" not found`);
+    if (g.tableId && !tableIds.has(g.tableId))
+      issues.push(`Guest ${g.id}: tableId "${g.tableId}" not found`);
   }
 
   // Check table capacity vs assignments
   for (const tbl of tables) {
     const seated = guests.filter((g) => g.tableId === tbl.id).length;
-    if (seated > (tbl.capacity || 10)) issues.push(`Table "${tbl.name}": ${seated} seated exceeds capacity ${tbl.capacity}`);
+    if (seated > (tbl.capacity || 10))
+      issues.push(`Table "${tbl.name}": ${seated} seated exceeds capacity ${tbl.capacity}`);
   }
 
   return { ok: issues.length === 0, issues };
@@ -730,18 +745,15 @@ export function checkDataIntegrity() {
  */
 export function exportDebugReport() {
   /** @type {any[]} */
-  const errors = STORAGE_KEYS.ERRORS
-    ? readBrowserStorageJson(STORAGE_KEYS.ERRORS, [])
-    : [];
+  const errors = STORAGE_KEYS.ERRORS ? readBrowserStorageJson(STORAGE_KEYS.ERRORS, []) : [];
 
   const report = {
     timestamp: new Date().toISOString(),
     errors,
-    stores: ["guests", "tables", "vendors", "expenses", "timeline", "weddingInfo"]
-      .map((k) => {
-        const val = storeGet(k);
-        return { key: k, count: Array.isArray(val) ? val.length : (val ? 1 : 0) };
-      }),
+    stores: ["guests", "tables", "vendors", "expenses", "timeline", "weddingInfo"].map((k) => {
+      const val = storeGet(k);
+      return { key: k, count: Array.isArray(val) ? val.length : val ? 1 : 0 };
+    }),
     userAgent: navigator.userAgent,
   };
   const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });

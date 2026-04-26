@@ -91,7 +91,8 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.mjs"],
     pool: "vmThreads",
-    poolOptions: { vmThreads: { execArgv: ["--no-warnings"] } },
+    // Vitest 4: poolOptions moved to top-level per-pool options
+    vmThreads: { execArgv: ["--no-warnings"] },
     cacheDir: join(TEMP_BASE, "vitest-cache"),
     coverage: {
       provider: "v8",

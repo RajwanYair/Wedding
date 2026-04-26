@@ -9,11 +9,7 @@
 import { on } from "../core/events.js";
 import { t } from "../core/i18n.js";
 import { showToast, openModal, closeModal } from "../core/ui.js";
-import {
-  loginAnonymous,
-  loginOAuth,
-  clearSession,
-} from "../services/auth.js";
+import { loginAnonymous, loginOAuth, clearSession } from "../services/auth.js";
 import { switchSection } from "../core/section-resolver.js";
 
 /**
@@ -42,23 +38,19 @@ export function registerAuthHandlers() {
     fb.login(
       (/** @type {any} */ response) => {
         if (response.authResponse) {
-          fb.api(
-            "/me",
-            { fields: "name,email,picture" },
-            (/** @type {any} */ profile) => {
-              const result = loginOAuth(
-                profile.email || "",
-                profile.name,
-                profile.picture?.data?.url || "",
-                "facebook",
-              );
-              if (result) {
-                closeModal("authOverlay");
-                switchSection("dashboard");
-                showToast(t("auth_welcome", { name: result.name }), "success");
-              }
-            },
-          );
+          fb.api("/me", { fields: "name,email,picture" }, (/** @type {any} */ profile) => {
+            const result = loginOAuth(
+              profile.email || "",
+              profile.name,
+              profile.picture?.data?.url || "",
+              "facebook",
+            );
+            if (result) {
+              closeModal("authOverlay");
+              switchSection("dashboard");
+              showToast(t("auth_welcome", { name: result.name }), "success");
+            }
+          });
         }
       },
       { scope: "public_profile,email" },

@@ -37,7 +37,9 @@ import {
   toggleGuestVip,
   toggleVipFilter,
   printGuestBadges,
-  printGuestsByTable,  exportGuestsByGroup,} from "../sections/guests.js";
+  printGuestsByTable,
+  exportGuestsByGroup,
+} from "../sections/guests.js";
 
 /**
  * Register all guest-related event handlers.
@@ -89,26 +91,19 @@ export function registerGuestHandlers() {
       "csvImportDone",
       (e) => {
         const { added, updated } = /** @type {CustomEvent} */ (e).detail ?? {};
-        showToast(
-          t("guests_imported", { added: added ?? 0, updated: updated ?? 0 }),
-          "success",
-        );
+        showToast(t("guests_imported", { added: added ?? 0, updated: updated ?? 0 }), "success");
       },
       { once: true },
     );
   });
 
   on("deleteGuest", (el) =>
-    showConfirmDialog(t("confirm_delete"), () =>
-      deleteGuest(el.dataset.actionArg ?? ""),
-    ),
+    showConfirmDialog(t("confirm_delete"), () => deleteGuest(el.dataset.actionArg ?? "")),
   );
 
   on("searchGuests", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT"
-        ? e.target
-        : null
+      /** @type {HTMLElement|null} */ (e.target)?.tagName === "INPUT" ? e.target : null
     );
     setSearchQuery(input?.value ?? "");
   });
@@ -151,9 +146,7 @@ export function registerGuestHandlers() {
     }
   });
 
-  on("toggleGuestVip", (actionEl) =>
-    toggleGuestVip(actionEl.dataset.actionArg ?? ""),
-  );
+  on("toggleGuestVip", (actionEl) => toggleGuestVip(actionEl.dataset.actionArg ?? ""));
   on("toggleVipFilter", () => toggleVipFilter());
 
   on("toggleGuestNotes", (actionEl) => {
@@ -194,9 +187,8 @@ export function registerGuestHandlers() {
   });
 
   on("addGuestNote", () => {
-    const guestId = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("guestModalId")
-    )?.value;
+    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))
+      ?.value;
     const noteInput = /** @type {HTMLInputElement|null} */ (
       document.getElementById("guestNoteInput")
     );
@@ -214,9 +206,8 @@ export function registerGuestHandlers() {
   });
 
   on("addGuestTag", () => {
-    const guestId = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("guestModalId")
-    )?.value;
+    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))
+      ?.value;
     const tagInput = /** @type {HTMLInputElement|null} */ (
       document.getElementById("guestTagInput")
     );
@@ -227,15 +218,12 @@ export function registerGuestHandlers() {
   });
 
   on("removeGuestTag", (el) => {
-    const guestId = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("guestModalId")
-    )?.value;
+    const guestId = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"))
+      ?.value;
     if (!guestId) return;
     removeGuestTag(guestId, el.dataset.tag ?? "");
   });
 
   // Sprint 7: Export by group
-  on("exportGuestsByGroup", (el) =>
-    exportGuestsByGroup(el.dataset.actionArg ?? "all"),
-  );
+  on("exportGuestsByGroup", (el) => exportGuestsByGroup(el.dataset.actionArg ?? "all"));
 }

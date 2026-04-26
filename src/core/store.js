@@ -483,6 +483,8 @@ export function getSubscriptionCount(scope) {
     return _scopedUnsubs.get(scope)?.size ?? 0;
   }
   let total = 0;
-  _scopedUnsubs.forEach((set) => { total += set.size; });
+  _scopedUnsubs.forEach((set) => {
+    total += set.size;
+  });
   return total;
 }

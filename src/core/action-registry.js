@@ -175,9 +175,7 @@ export const ACTIONS = /** @type {const} */ ({
  * Useful for debug output and validation scripts.
  * @type {Map<string, string>}
  */
-export const ACTION_NAMES = new Map(
-  Object.entries(ACTIONS).map(([k, v]) => [v, k]),
-);
+export const ACTION_NAMES = new Map(Object.entries(ACTIONS).map(([k, v]) => [v, k]));
 
 /** Set of all registered action string values. */
 export const ACTION_VALUES = new Set(Object.values(ACTIONS));

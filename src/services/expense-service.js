@@ -87,7 +87,8 @@ export async function getBudgetRemaining() {
  */
 export async function getOverBudget(categoryLimits) {
   const sums = await expenseRepo.sumByCategory();
-  const overBudget = /** @type {Array<{ category: string, used: number, limit: number, over: number }>} */ ([]);
+  const overBudget =
+    /** @type {Array<{ category: string, used: number, limit: number, over: number }>} */ ([]);
 
   for (const [category, limit] of Object.entries(categoryLimits)) {
     const used = sums[category] ?? 0;

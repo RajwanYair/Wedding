@@ -27,7 +27,10 @@ export function guestFullName(g) {
  */
 export function parseGiftAmount(raw) {
   if (!raw) return 0;
-  const cleaned = String(raw).replace(/[₪,\s]/g, "").replace(/^NIS/i, "").replace(/NIS$/i, "");
+  const cleaned = String(raw)
+    .replace(/[₪,\s]/g, "")
+    .replace(/^NIS/i, "")
+    .replace(/NIS$/i, "");
   const n = parseFloat(cleaned);
   return isFinite(n) && n >= 0 ? n : 0;
 }

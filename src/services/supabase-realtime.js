@@ -144,8 +144,14 @@ function _connect() {
 
 function _disconnect() {
   _stopHeartbeat();
-  if (_reconnectTimer) { clearTimeout(_reconnectTimer); _reconnectTimer = null; }
-  if (_ws) { _ws.close(); _ws = null; }
+  if (_reconnectTimer) {
+    clearTimeout(_reconnectTimer);
+    _reconnectTimer = null;
+  }
+  if (_ws) {
+    _ws.close();
+    _ws = null;
+  }
   _connected = false;
 }
 
@@ -160,7 +166,10 @@ function _startHeartbeat() {
 }
 
 function _stopHeartbeat() {
-  if (_heartbeatTimer) { clearInterval(_heartbeatTimer); _heartbeatTimer = null; }
+  if (_heartbeatTimer) {
+    clearInterval(_heartbeatTimer);
+    _heartbeatTimer = null;
+  }
 }
 
 // ── Reconnection with exponential backoff ─────────────────────────────────
@@ -197,9 +206,7 @@ function _subscribeTable(table) {
       config: {
         broadcast: { ack: false, self: false },
         presence: { key: "" },
-        postgres_changes: [
-          { event: "*", schema: "public", table },
-        ],
+        postgres_changes: [{ event: "*", schema: "public", table }],
       },
     },
     ref: table,
@@ -212,7 +219,10 @@ function _subscribeTable(table) {
  */
 function _handleMessage(msg) {
   if (msg.event !== "postgres_changes") return;
-  const changes = /** @type {{ data?: { record?: unknown, old_record?: unknown, type?: string, table?: string } }} */ (msg.payload);
+  const changes =
+    /** @type {{ data?: { record?: unknown, old_record?: unknown, type?: string, table?: string } }} */ (
+      msg.payload
+    );
   const data = changes.data;
   if (!data) return;
 
@@ -245,7 +255,7 @@ function _handleMessage(msg) {
 export function subscribeGuestChanges() {
   return subscribeRealtime("guests", (payload) => {
     const guests = /** @type {import('../utils/misc.js').Guest[]} */ ([
-      ...(/** @type {any[]} */ (storeGet("guests") ?? [])),
+      .../** @type {any[]} */ (storeGet("guests") ?? []),
     ]);
 
     if (payload.type === "INSERT" || payload.type === "UPDATE") {
@@ -279,29 +289,29 @@ export function subscribeGuestChanges() {
  */
 function _mapGuest(row) {
   return {
-    id:            String(row.id ?? ""),
-    firstName:     String(row.first_name ?? ""),
-    lastName:      String(row.last_name ?? ""),
-    phone:         String(row.phone ?? ""),
-    email:         String(row.email ?? ""),
-    count:         Number(row.count ?? 1),
-    children:      Number(row.children ?? 0),
-    status:        String(row.status ?? "pending"),
-    side:          String(row.side ?? "mutual"),
-    group:         String(row.group ?? "other"),
-    meal:          String(row.meal ?? "regular"),
-    mealNotes:     String(row.meal_notes ?? ""),
+    id: String(row.id ?? ""),
+    firstName: String(row.first_name ?? ""),
+    lastName: String(row.last_name ?? ""),
+    phone: String(row.phone ?? ""),
+    email: String(row.email ?? ""),
+    count: Number(row.count ?? 1),
+    children: Number(row.children ?? 0),
+    status: String(row.status ?? "pending"),
+    side: String(row.side ?? "mutual"),
+    group: String(row.group ?? "other"),
+    meal: String(row.meal ?? "regular"),
+    mealNotes: String(row.meal_notes ?? ""),
     accessibility: String(row.accessibility ?? ""),
-    transport:     String(row.transport ?? ""),
-    tableId:       row.table_id != null ? String(row.table_id) : null,
-    gift:          String(row.gift ?? ""),
-    notes:         String(row.notes ?? ""),
-    sent:          Boolean(row.sent),
-    checkedIn:     Boolean(row.checked_in),
-    rsvpDate:      row.rsvp_date ? String(row.rsvp_date) : null,
-    vip:           Boolean(row.vip),
-    createdAt:     String(row.created_at ?? ""),
-    updatedAt:     String(row.updated_at ?? ""),
+    transport: String(row.transport ?? ""),
+    tableId: row.table_id != null ? String(row.table_id) : null,
+    gift: String(row.gift ?? ""),
+    notes: String(row.notes ?? ""),
+    sent: Boolean(row.sent),
+    checkedIn: Boolean(row.checked_in),
+    rsvpDate: row.rsvp_date ? String(row.rsvp_date) : null,
+    vip: Boolean(row.vip),
+    createdAt: String(row.created_at ?? ""),
+    updatedAt: String(row.updated_at ?? ""),
   };
 }
 
@@ -340,10 +350,7 @@ function _dispatch(table, payload) {
  * @param {import("@supabase/supabase-js").SupabaseClient} client
  * @param {string[]} [tables] — which tables to subscribe to (default: guests + config)
  */
-export function activateSDKRealtime(
-  client,
-  tables = ["guests", "tables", "config"]
-) {
+export function activateSDKRealtime(client, tables = ["guests", "tables", "config"]) {
   // Tear down any existing SDK channels before creating new ones
   deactivateSDKRealtime(client);
 
@@ -352,18 +359,14 @@ export function activateSDKRealtime(
 
     const channel = client
       .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table },
-        (payload) => {
-          _dispatch(table, {
-            type: /** @type {'INSERT'|'UPDATE'|'DELETE'} */ (payload.eventType),
-            table,
-            record: /** @type {Record<string, unknown>} */ (payload.new ?? {}),
-            old_record: /** @type {Record<string, unknown> | null} */ (payload.old ?? null),
-          });
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table }, (payload) => {
+        _dispatch(table, {
+          type: /** @type {'INSERT'|'UPDATE'|'DELETE'} */ (payload.eventType),
+          table,
+          record: /** @type {Record<string, unknown>} */ (payload.new ?? {}),
+          old_record: /** @type {Record<string, unknown> | null} */ (payload.old ?? null),
+        });
+      })
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
           _connected = true;
@@ -409,4 +412,3 @@ export async function activateRealtimeSync(tables) {
   activateSDKRealtime(client, tables);
   return true;
 }
-

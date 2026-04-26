@@ -179,7 +179,10 @@ export function _resetForTesting() {
   _queue.clear();
   _inFlight.clear();
   _failed.clear();
-  if (_flushTimer !== null) { clearTimeout(_flushTimer); _flushTimer = null; }
+  if (_flushTimer !== null) {
+    clearTimeout(_flushTimer);
+    _flushTimer = null;
+  }
   _processing = false;
   _listeners.clear();
 }

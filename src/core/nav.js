@@ -53,10 +53,7 @@ export function navigateTo(name) {
     const tab = document.querySelector(
       `[data-action="showSection"][data-action-arg="${CSS.escape(name)}"]`,
     );
-    if (tab)
-      tab.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true }),
-      );
+    if (tab) tab.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
   });
 }
 
@@ -82,10 +79,7 @@ export function initRouter() {
     const tab = document.querySelector(
       `[data-action="showSection"][data-action-arg="${CSS.escape(name)}"]`,
     );
-    if (tab)
-      tab.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true }),
-      );
+    if (tab) tab.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
   }
   window.addEventListener("hashchange", _handleHash, { passive: true });
   // popstate fires when the user navigates back/forward via History API.
@@ -187,10 +181,7 @@ export function initPullToRefresh(onRefresh, container = document.body) {
       if (dy > 20 && window.scrollY === 0) {
         _pulling = true;
         const pct = Math.min(dy / THRESHOLD, 1);
-        document.body.style.setProperty(
-          "--ptr-pull",
-          String(Math.round(pct * THRESHOLD)),
-        );
+        document.body.style.setProperty("--ptr-pull", String(Math.round(pct * THRESHOLD)));
         document.body.classList.toggle("ptr--pulling", pct >= 1);
       }
     },
@@ -200,9 +191,7 @@ export function initPullToRefresh(onRefresh, container = document.body) {
   container.addEventListener(
     "touchend",
     async () => {
-      const pull = parseFloat(
-        document.body.style.getPropertyValue("--ptr-pull") || "0",
-      );
+      const pull = parseFloat(document.body.style.getPropertyValue("--ptr-pull") || "0");
       document.body.style.removeProperty("--ptr-pull");
       document.body.classList.remove("ptr--pulling");
       if (!_pulling || pull < THRESHOLD) {
@@ -301,9 +290,7 @@ function _toggleShortcutsOverlay() {
   overlay.setAttribute("role", "dialog");
   overlay.setAttribute("aria-label", "Keyboard shortcuts");
 
-  const shortcuts = _sections.slice(0, 9).map(
-    (s, i) => `<kbd>Alt+${i + 1}</kbd> ${s}`,
-  );
+  const shortcuts = _sections.slice(0, 9).map((s, i) => `<kbd>Alt+${i + 1}</kbd> ${s}`);
   shortcuts.push("<kbd>?</kbd> Show this help");
   shortcuts.push("<kbd>Esc</kbd> Close overlay / modal");
 
@@ -323,7 +310,9 @@ function _toggleShortcutsOverlay() {
   const closeBtn = document.createElement("button");
   closeBtn.className = "btn btn-secondary u-mt-sm";
   closeBtn.textContent = "Close";
-  closeBtn.addEventListener("click", () => { overlay.hidden = true; });
+  closeBtn.addEventListener("click", () => {
+    overlay.hidden = true;
+  });
   inner.appendChild(closeBtn);
   overlay.appendChild(inner);
   overlay.addEventListener("click", (e) => {

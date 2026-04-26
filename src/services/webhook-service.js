@@ -182,13 +182,16 @@ export async function dispatchWebhookEvent(event, payload, opts = {}) {
       }
 
       const res = await fetcher(hook.url, { method: "POST", headers, body });
-      delivery.status    = res.ok ? "delivered" : "failed";
+      delivery.status = res.ok ? "delivered" : "failed";
       delivery.statusCode = res.status;
       if (res.ok) delivered++;
-      else { failed++; delivery.error = `HTTP ${res.status}`; }
+      else {
+        failed++;
+        delivery.error = `HTTP ${res.status}`;
+      }
     } catch (err) {
       delivery.status = "failed";
-      delivery.error  = err instanceof Error ? err.message : String(err);
+      delivery.error = err instanceof Error ? err.message : String(err);
       failed++;
     }
 
@@ -222,7 +225,7 @@ export function getWebhookDeliveries(webhookId) {
 export async function verifyWebhookSignature(secret, body, signature) {
   if (!signature.startsWith("sha256=")) return false;
   const expected = signature.slice(7);
-  const actual   = await _hmacHex(secret, body);
+  const actual = await _hmacHex(secret, body);
   // Constant-time comparison not available in pure JS across all envs:
   // compare as lowercase hex strings (good enough for server-side verification)
   return actual === expected;
@@ -236,14 +239,14 @@ export async function verifyWebhookSignature(secret, body, signature) {
  * @returns {Promise<string>}  hex-encoded HMAC-SHA256
  */
 async function _hmacHex(secret, message) {
-  const enc   = new TextEncoder();
-  const key   = await crypto.subtle.importKey(
-    "raw", enc.encode(secret),
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
     { name: "HMAC", hash: "SHA-256" },
-    false, ["sign"],
+    false,
+    ["sign"],
   );
-  const sig   = await crypto.subtle.sign("HMAC", key, enc.encode(message));
-  return [...new Uint8Array(sig)]
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
