@@ -38,6 +38,7 @@
     "audit:security": "node scripts/security-scan.mjs",
     "audit:sections": "node scripts/validate-sections.mjs",
     "audit:arch": "node scripts/arch-check.mjs",
+    "audit:actions": "node scripts/check-action-namespace.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",

@@ -23,9 +23,11 @@ Adopt Trusted Types in **three phases** over v11.7.0 → v12.1.0:
 - Inject the following CSP header (via `public/_headers` for GH Pages preview, and via
   the GitHub Pages `Pages-Headers` file once supported, or a Cloudflare worker if/when
   we front the domain):
+
   ```text
   Content-Security-Policy-Report-Only: require-trusted-types-for 'script'; trusted-types default 'none'; report-uri /trusted-types-report
   ```
+
 - Add an `npm run audit:trusted-types` script that greps for known sinks (`innerHTML`,
   `outerHTML`, `document.write`, `setAttribute('on...'`, `<script>` injection,
   `eval`-shaped APIs) and emits a report. Initially advisory in CI.
@@ -36,6 +38,7 @@ Adopt Trusted Types in **three phases** over v11.7.0 → v12.1.0:
 
 - Introduce a single named policy `wedding-html` in `src/utils/sanitize.js` that wraps
   DOMPurify:
+
   ```js
   // src/utils/sanitize.js (sketch)
   const policy =
@@ -47,6 +50,7 @@ Adopt Trusted Types in **three phases** over v11.7.0 → v12.1.0:
   export const trustedHtml = (input) =>
     policy ? policy.createHTML(input) : DOMPurify.sanitize(input, baseConfig);
   ```
+
 - All callers that *must* set HTML (today already routed through `sanitize()`) move to
   `trustedHtml()` so the policy covers them.
 
