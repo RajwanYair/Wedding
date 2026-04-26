@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.7.0] — 2026-04-29
+
+> Roadmap sprint batch — ADRs 016-020, action-namespace advisory, Diátaxis user docs.
+
+### Added
+
+- **ADR-016** — Web Vitals monitoring policy. No third-party `web-vitals` dep;
+  single flush per page visit; opt-in transport; LH-CI budgets `LCP ≤ 2.5 s`,
+  `INP ≤ 200 ms`, `CLS ≤ 0.1`.
+- **ADR-017** — Coverage gate threshold (80 % lines / 75 % branches / 80 %
+  functions enforced; 85/75/85 internal aspirational; per-file gate explicitly
+  rejected).
+- **ADR-018** — Trusted Types adoption plan in three phases (report-only →
+  named policy → enforce) targeting v11.7.x → v12.1.0.
+- **ADR-019** — Repositories layer enforcement; sections forbidden from
+  importing `services/*` (except `monitoring`/`auth`); `arch-check.mjs --strict`
+  becomes a hard gate in v12.0.0.
+- **ADR-020** — Service-directory dedup plan: `share` / `audit` / `sheets` /
+  `presence` pairs collapse to canonical modules; deprecated re-exports warn in
+  dev and disappear in v12.0.0.
+- **`scripts/check-action-namespace.mjs`** — advisory CI script reporting how
+  many `data-action` values follow the `domain:verb` namespacing convention.
+  Wired into `ci.yml` as the new `audit:actions` step. Hard gate planned for
+  v13.0.0 alongside dead-export purge (ROADMAP §5.3 #4).
+- **`docs/users/`** — new Diátaxis-style user docs: `couple-guide.md`,
+  `planner-guide.md`, `vendor-guide.md`. Each cross-links to the others, the
+  locale guide, and the relevant ROADMAP phase.
+
+### Changed
+
+- `package.json` — new `audit:actions` script binding to the advisory checker.
+- `.github/workflows/ci.yml` — adds `Action-namespace advisory` step on the
+  Node 22 matrix only, mirroring the existing dead-export advisory.
+
 ## [11.6.0] — 2026-04-29
 
 > Roadmap sprint batch — Web Vitals, ADRs for monitoring/router/cutover, CI advisory gates.
