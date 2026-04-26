@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.13.0] — 2026-04-27
+
+> Roadmap sprint batch — `src/main.js` migrated to `navigate()` (ADR-025 R2), two new advisory ADRs (`console.error` migration, storage schema migrations), two new advisories (`audit:console-error`, `audit:section-templates`), three new Diátaxis docs.
+
+### Added
+
+- **ADR-032** — Migrate `console.error` call sites to `reportError()` (C0 → C4 phasing). Permanent allowlist: `error-monitor.js`, `health.js`.
+- **ADR-033** — Versioned `localStorage` schema migrations. `wedding_schema_version` root key + numbered `src/core/migrations/` modules with idempotent `up(read, write)`. Contract only this release.
+- **`scripts/audit-console-error.mjs`** + `audit:console-error` npm script — advisory scan for `console.error(` outside the ADR-032 allowlist. Current count: 9.
+- **`scripts/check-section-template-parity.mjs`** + `audit:section-templates` npm script — advisory parity check that every `SECTION_LIST` / `EXTRA_SECTIONS` entry has both a section module and a template file.
+- **`docs/how-to/add-locale.md`** — recipe for adding a new locale (BCP-47 code, parity guard, picker label, RTL toggle).
+- **`docs/reference/error-monitor-envelope.md`** — exhaustive reference for envelope v1 schema, field rules, PII guarantees, and sink registration.
+- **`docs/explanation/zero-runtime-deps.md`** — Diátaxis explanation of ADR-001 (bundle, supply chain, mobile reality, when we'd reconsider).
+
+### Changed
+
+- **`src/main.js`** — session-expiry redirect and `on("showSection")` handler now call `navigate(name)` from `src/core/nav.js` instead of writing `window.location.hash` / `history.pushState` directly (ADR-025 R2). Reduces `audit:router` violations from 3 to 1 (the remaining site is `supabase-auth.js` clearing OAuth params from a path-only URL — out of scope for hash-based `navigate()`).
+- `package.json`: added `audit:console-error` and `audit:section-templates` scripts.
+
 ## [11.12.0] — 2026-04-26
 
 > Roadmap sprint batch — error monitor lands behind a no-op transport (ADR-028 M1), `nav.js` re-exports the new pushState router, two new advisory ADRs (i18n split, PWA install), `audit:aria-roles` advisory, three new Diátaxis docs.
