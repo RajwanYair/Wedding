@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.16.0] — 2026-04-26
+
+> Roadmap sprint batch — Phase B advisories: ADRs 039 (Preact Signals as store internals), 040 (Service Worker strategies + Background Sync), 041 (auto code-splitting), two new advisories (`audit:manual-chunks`, `audit:store-mutation-depth`), four new Diátaxis docs.
+
+### Added (11.16.0)
+
+- **ADR-039** — Preact Signals replace the hand-rolled Proxy in `core/store.js` (SG0 → SG3 phasing). Public API stable; ~1.6 KB gzip cost; supersedes ADR-003 at SG3.
+- **ADR-040** — Service Worker rewrite around explicit per-route strategies + Background Sync outbox (SW0 → SW3 phasing). Hand-rolled (no Workbox runtime).
+- **ADR-041** — Remove `manualChunks` from `vite.config.js`; rely on Rollup's default chunking (MC0 → MC3 phasing).
+- **`scripts/audit-manual-chunks.mjs`** + `audit:manual-chunks` npm script — advisory rule count for `manualChunks` in `vite.config.js`. Baseline: 8 rules detected.
+- **`scripts/audit-store-mutation-depth.mjs`** + `audit:store-mutation-depth` npm script — advisory scan for nested-mutation patterns that won't fire reactivity. Current count: 0.
+- **`docs/how-to/migrate-store-to-signals.md`** — SG0 → SG3 step-by-step migration recipe.
+- **`docs/reference/sw-cache-strategies.md`** — exhaustive route → strategy table, outbox schema, backoff schedule, browser support matrix.
+- **`docs/explanation/why-signals.md`** — Diátaxis explanation: alternatives considered, performance expectation, what Signals don't solve.
+- **`docs/explanation/sw-rewrite-strategy.md`** — Diátaxis explanation: mental model, hand-rolled vs Workbox, idempotency + dead-letter, Safari fallback.
+
+### Changed (11.16.0)
+
+- `package.json`: added `audit:manual-chunks` and `audit:store-mutation-depth` scripts.
+
 ## [11.15.0] — 2026-04-26
 
 > Roadmap sprint batch — Phase B advisories: ADRs 036 (CSS @scope per section), 037 (supply-chain hardening), 038 (Trusted Types policy), two new advisories (`audit:css-scope`, `audit:section-i18n`), four new Diátaxis docs.

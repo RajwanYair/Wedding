@@ -55,9 +55,7 @@ if (samples.length) {
   for (const s of samples) console.log(`  • ${s}`);
 }
 
-console.log(
-  `\nBaseline gate: ${BASELINE} (advisory). Phase MC3 (ADR-041) flips to --enforce.`,
-);
+console.log(`\nBaseline gate: ${BASELINE} (advisory). Phase MC3 (ADR-041) flips to --enforce.`);
 
 if (enforce && total > 0) {
   console.error(`\n❌ --enforce: ${total} rule(s) present (target: 0).`);

@@ -35,7 +35,8 @@ function walk(dir) {
 }
 
 const CHAINED = /storeGet\(\s*["'][^"']+["']\s*\)\s*(?:\[[^\]]+\]|\.[a-zA-Z_]+)+\s*=/;
-const MUTATING = /storeGet\(\s*["'][^"']+["']\s*\)\s*\.\s*(push|pop|shift|unshift|splice|sort|reverse)\(/;
+const MUTATING =
+  /storeGet\(\s*["'][^"']+["']\s*\)\s*\.\s*(push|pop|shift|unshift|splice|sort|reverse)\(/;
 
 const findings = [];
 
