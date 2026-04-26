@@ -46,7 +46,7 @@ test.describe("Accessibility — axe-core WCAG AA", () => {
               .join("\n")}`,
         )
         .join("\n\n");
-       
+
       console.error(`A11y violations:\n${report}`);
     }
 

@@ -1,5 +1,6 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
+import { seedAdminSession, waitForSection } from "./_helpers.mjs";
 
 /**
  * Wedding Manager — E2E Smoke Tests
@@ -164,13 +165,14 @@ test.describe("Navigation Flow (S6.8)", () => {
 // ── Guest CRUD flow (S6.8) ────────────────────────────────────────────────
 test.describe("Guest Management — CRUD Flow", () => {
   test.beforeEach(async ({ page }) => {
+    // Guests is admin-gated; seed an admin session BEFORE navigation so the
+    // section auth guard in src/core/section-resolver.js lets the section mount.
+    await seedAdminSession(page);
     await page.goto("/#guests");
     await page.waitForFunction(() => document.title.length > 0, { timeout: 8_000 });
-    // Lazy-loaded section template — wait until it actually injects content.
-    await page.waitForSelector("#sec-guests :is(table, .empty-state, [data-action])", {
-      timeout: 10_000,
-    });
-  });
+    // Lazy-loaded section template — wait until it injects content.
+    await waitForSection(page, "sec-guests");
+  };);
 
   test("guests section is reachable via hash", async ({ page }) => {
     const section = page.locator("#sec-guests, section[data-section='guests']").first();
@@ -199,12 +201,12 @@ test.describe("Guest Management — CRUD Flow", () => {
 // ── Tables section flow (S6.8) ────────────────────────────────────────────
 test.describe("Tables Section — Basic Flow", () => {
   test.beforeEach(async ({ page }) => {
+    // Tables is admin-gated; seed an admin session BEFORE navigation.
+    await seedAdminSession(page);
     await page.goto("/#tables");
     await page.waitForFunction(() => document.title.length > 0, { timeout: 8_000 });
-    await page.waitForSelector("#sec-tables :is(.empty-state, [data-action])", {
-      timeout: 10_000,
-    });
-  });
+    await waitForSection(page, "sec-tables");
+  };);
 
   test("tables section is reachable via hash", async ({ page }) => {
     const section = page.locator("#sec-tables, section[data-section='tables']").first();
