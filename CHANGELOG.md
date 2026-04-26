@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.12.0] — 2026-04-26
+
+> Roadmap sprint batch — error monitor lands behind a no-op transport (ADR-028 M1), `nav.js` re-exports the new pushState router, two new advisory ADRs (i18n split, PWA install), `audit:aria-roles` advisory, three new Diátaxis docs.
+
+### Added
+
+- **`src/services/error-monitor.js`** — vendor-neutral error transport (ADR-028 M1). Public API: `reportError(err, ctx?)`, `setUser({ id })`, `configureTransport(fn)`. Envelope v1 with `ts/msg/stack/ctx/ua/url/user`. Strips `?token=` / secret-shaped keys; truncates stacks at 4 KB. 10 unit tests.
+- **`src/core/nav.js`** — re-exports `navigate`, `currentRoute`, `onRouteChange`, `initRouterListener` from `router.js`; `initRouter()` now also wires `initRouterListener()` so subscribers fire on browser back/forward (ADR-025 R1 bridge).
+- **ADR-030** — Lazy-load locale bundles + namespace splitting (Phase A5). N0 → N4 phasing through v12.0; per-section namespaces; goal: 5th locale costs ≤ 4 KB gzip on the active section.
+- **ADR-031** — PWA install prompt UX (Phase A7). I0 → I4 phasing through v12.0; engagement-gated bottom-sheet + Safari iOS instructions card; 30-day dismissal flag.
+- **`scripts/audit-aria-roles.mjs`** + `audit:aria-roles` npm script — advisory scan for `role="dialog"` missing `aria-modal`/`aria-labelledby`, live regions missing `aria-live`, empty icon buttons missing `aria-label`. Baseline: 18 potential issues across `src/templates` + `src/modals` + `index.html`.
+- **`docs/how-to/add-audit-script.md`** — step-by-step recipe for adding a new `audit:*` script (file template, `package.json` entry, CI wiring, doc updates, promotion path).
+- **`docs/reference/router-api.md`** — full API reference for `src/core/router.js` (`navigate`, `currentRoute`, `onRouteChange`, `initRouterListener`, `_resetRouterForTests`).
+- **`docs/explanation/error-monitoring.md`** — Diátaxis explanation: why we ship a 1 KB envelope-and-transport instead of linking Sentry/Bugsnag/Datadog (ADR-001 + bundle + privacy).
+
+### Changed
+
+- `package.json`: added `audit:aria-roles` script.
+
 ## [11.11.0] — 2026-04-26
 
 > Roadmap sprint batch — pushState router lands behind a parallel `navigate()` API (ADR-025 R1), two new advisory ADRs (error monitoring, WCAG 2.2 AA), `audit:router` advisory, three new Diátaxis docs.
