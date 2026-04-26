@@ -36,7 +36,6 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
           sync-labels: false
-        continue-on-error: true
 
   # ---------------------------------------------------------------------------
   # Auto-add to project board (requires GH_PROJECT_TOKEN + PROJECT_NUMBER var)
@@ -54,7 +53,6 @@ jobs:
         with:
           project-url: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/projects/${{ vars.PROJECT_NUMBER }}
           github-token: ${{ secrets.GH_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
-        continue-on-error: true
 
   # ---------------------------------------------------------------------------
   # Stale issue / PR management
@@ -85,4 +83,3 @@ jobs:
           exempt-issue-labels: "pinned,security,blocked"
           exempt-pr-labels: "pinned,security,blocked"
           operations-per-run: 50
-        continue-on-error: true

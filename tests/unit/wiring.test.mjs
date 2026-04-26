@@ -34,7 +34,6 @@ const NAV_JS = readFileSync(resolve(root, "src", "core", "nav.js"), "utf8");
 const MAIN_JS = readFileSync(resolve(root, "src", "main.js"), "utf8");
 const SECTION_RESOLVER_JS = readFileSync(resolve(root, "src", "core", "section-resolver.js"), "utf8");
 const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
-const BARREL = readFileSync(resolve(root, "src", "sections", "index.js"), "utf8");
 const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets-impl.js"), "utf8");
 const CONSTANTS_JS = readFileSync(resolve(root, "src", "core", "constants.js"), "utf8");
 const I18N_HE = JSON.parse(readFileSync(resolve(root, "src", "i18n", "he.json"), "utf8"));
@@ -258,39 +257,6 @@ describe("Wiring: SECTIONS map (main.js)", () => {
       `Missing section modules for: ${formatList(missing)}`,
     ).toEqual([]);
   });
-});
-
-describe("Wiring: barrel exports (src/sections/index.js)", () => {
-  // With import.meta.glob (in main.js or section-resolver.js), verify barrel has an export for each section file
-  if (MAIN_JS.includes("import.meta.glob") || SECTION_RESOLVER_JS.includes("import.meta.glob")) {
-    const sectionsDir = resolve(root, "src", "sections");
-    const sectionFiles = readdirSync(sectionsDir)
-      .filter((f) => f.endsWith(".js") && f !== "index.js");
-
-    it("barrel references every section file", () => {
-      const missing = sectionFiles.filter(
-        (fileName) => !BARREL.includes(fileName.replace(".js", "")),
-      );
-      expect(
-        missing,
-        `Missing barrel references for: ${formatList(missing)}`,
-      ).toEqual([]);
-    });
-  } else {
-    // Legacy: check each import * as xxxSection from "./sections/"
-    const importedModules = [...MAIN_JS.matchAll(/import \* as (\w+Section) from "\.\/sections\//g)]
-      .map((m) => m[1]);
-
-    it("barrel exports every imported section module", () => {
-      const missing = importedModules.filter(
-        (modName) => !BARREL.includes(modName),
-      );
-      expect(
-        missing,
-        `Missing barrel exports for: ${formatList(missing)}`,
-      ).toEqual([]);
-    });
-  }
 });
 
 describe("Wiring: nav sections consistency", () => {

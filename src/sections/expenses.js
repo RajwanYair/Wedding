@@ -182,15 +182,6 @@ export function setExpenseCategoryFilter(category) {
 }
 
 /**
- * Filter expenses by category for display.
- * @param {string} category — pass "all" to clear filter
- * @deprecated Use setExpenseCategoryFilter instead
- */
-export function filterExpensesByCategory(category) {
-  setExpenseCategoryFilter(category);
-}
-
-/**
  * Pre-fill the expense modal with an existing expense and open it.
  * @param {string} id
  */

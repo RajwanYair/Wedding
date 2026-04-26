@@ -1105,5 +1105,10 @@
   "suggest_same_group": "نفس المجموعة",
   "suggest_same_meal": "تفضيل طعام مماثل",
   "suggest_best_fit": "مقعد متاح",
-  "ics_wedding_title": "حفل الزفاف"
+  "ics_wedding_title": "حفل الزفاف",
+  "network_offline": "أنت غير متصل — ستتم مزامنة التغييرات عند استعادة الاتصال",
+  "network_back_online": "عاد الاتصال",
+  "session_expired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
+  "offline_indicator": "غير متصل",
+  "checkin_qr_label": "رمز QR لتسجيل وصول الضيف"
 }

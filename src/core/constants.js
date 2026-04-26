@@ -164,7 +164,6 @@ export const MODALS = /** @type {const} */ ({
  * Non-domain localStorage keys used outside the reactive store.
  * All keys are prefixed with `wedding_v1_` at runtime.
  * Use these constants instead of hardcoding magic strings.
- * @type {Readonly<Record<string, string>>}
  */
 export const STORAGE_KEYS = /** @type {const} */ ({
   // App metadata (non-prefixed short keys used with state.js)

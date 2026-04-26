@@ -1105,5 +1105,10 @@
   "suggest_same_group": "Та же группа",
   "suggest_same_meal": "Похожие предпочтения в еде",
   "suggest_best_fit": "Свободное место",
-  "ics_wedding_title": "Свадьба"
+  "ics_wedding_title": "Свадьба",
+  "network_offline": "Вы офлайн — изменения синхронизируются при восстановлении соединения",
+  "network_back_online": "Соединение восстановлено",
+  "session_expired": "Сеанс истёк. Пожалуйста, войдите снова.",
+  "offline_indicator": "Офлайн",
+  "checkin_qr_label": "QR-код для регистрации гостя"
 }

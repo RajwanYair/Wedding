@@ -211,15 +211,15 @@ export function confirmDialog(messageKey) {
 }
 
 /**
- * Show a confirmation dialog and invoke a callback if confirmed.
+ * Show a confirmation dialog and optionally invoke a callback if confirmed.
  * Passes the resolved i18n message to the native confirm dialog.
  * @param {string} message  — already-translated string (or i18n key fallback)
- * @param {() => void} onConfirm  — callback invoked when user confirms
+ * @param {() => void} [onConfirm]  — optional callback invoked when user confirms
  * @returns {boolean}  true if confirmed
  */
 export function showConfirmDialog(message, onConfirm) {
   const confirmed = confirm(message);
-  if (confirmed) onConfirm();
+  if (confirmed && typeof onConfirm === "function") onConfirm();
   return confirmed;
 }
 

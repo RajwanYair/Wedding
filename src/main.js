@@ -144,6 +144,7 @@ import {
   saveVendor,
   deleteVendor,
   exportVendorsCSV,
+  exportVendorPaymentsCSV,
   filterVendorsByCategory,
   openVendorForEdit,
 } from "./sections/vendors.js";
@@ -151,7 +152,6 @@ import {
   saveExpense,
   deleteExpense,
   exportExpensesCSV,
-  filterExpensesByCategory,
   openExpenseForEdit,
 } from "./sections/expenses.js";
 import { deleteBudgetEntry, renderBudgetProgress } from "./sections/budget.js";
@@ -183,7 +183,12 @@ import {
   sendWhatsAppReminder,
 } from "./sections/whatsapp.js";
 import { handleGalleryUpload, deleteGalleryPhoto, openLightbox } from "./sections/gallery.js";
-import { saveTimelineItem, deleteTimelineItem, openTimelineForEdit } from "./sections/timeline.js";
+import {
+  saveTimelineItem,
+  deleteTimelineItem,
+  openTimelineForEdit,
+  printTimeline,
+} from "./sections/timeline.js";
 import {
   switchLanguage,
   clearAllData,
@@ -203,6 +208,7 @@ import {
 // registry.js addRegistryLink — added inline below (section handles its own form)
 
 /** Map of section name → module (provides mount/unmount lifecycle). */
+/** @type {Record<string, { mount?: (el: HTMLElement) => void | Promise<void>, unmount?: () => void }>} */
 const SECTIONS = {
   dashboard: dashboardSection,
   guests: guestsSection,
@@ -243,9 +249,11 @@ let _activeSection = null;
 
   // 1. Language — use stored preference; auto-detect browser locale for new users (Phase 4.3)
   const _storedLang = load("lang");
-  const lang = _storedLang
-    ? normalizeUiLanguage(String(_storedLang))
-    : resolveAppLocale(detectLocale(), ["he", "en", "ar", "ru"], "he");
+  const lang = /** @type {'he'|'en'|'ar'|'ru'} */ (
+    _storedLang
+      ? normalizeUiLanguage(String(_storedLang))
+      : resolveAppLocale(detectLocale(), ["he", "en", "ar", "ru"], "he")
+  );
   await loadLocale(lang);
   // Load English fallback dict for non-English locales (Sprint 13)
   if (lang !== "en") loadFallbackLocale().catch(() => {});
@@ -383,7 +391,7 @@ let _activeSection = null;
   // 11g. Network status — offline/online indicator
   import("./utils/network-status.js").then(({ initNetworkStatus, onStatusChange }) => {
     initNetworkStatus();
-    onStatusChange((online) => {
+    onStatusChange((/** @type {boolean} */ online) => {
       if (online) {
         showToast(t("network_back_online"), "success");
       } else {
@@ -413,13 +421,14 @@ let _activeSection = null;
   storeSubscribe("weddingInfo", _updateAppRsvpDeadlineBanner);
 
   // 11k. Phase 4.2 — File Handling API: open CSV/XLSX files launched from OS
-  if ("launchQueue" in window) {
-    window.launchQueue.setConsumer((launchParams) => {
+  const _launchQueue = /** @type {any} */ (window).launchQueue;
+  if (_launchQueue && typeof _launchQueue.setConsumer === "function") {
+    _launchQueue.setConsumer((/** @type {any} */ launchParams) => {
       if (!launchParams.files?.length) return;
       // Route the first file to the CSV import section
       launchParams.files[0]
         .getFile()
-        .then((file) => {
+        .then((/** @type {File} */ file) => {
           _switchSection("guests");
           // Dispatch a custom event so the guests section can pick up the file
           window.dispatchEvent(new CustomEvent("launchFile", { detail: { file } }));
@@ -486,8 +495,8 @@ function _renderEventSwitcher() {
 async function _doSwitchEvent(eventId) {
   if (eventId === getActiveEventId()) return;
   // unmount active section
-  if (_activeSection && SECTIONS[_activeSection]?.unmount) {
-    SECTIONS[_activeSection].unmount();
+  if (_activeSection) {
+    SECTIONS[_activeSection]?.unmount?.();
   }
   // switch
   setActiveEvent(eventId);
@@ -562,10 +571,13 @@ async function _showConflictModal(conflicts) {
  * @param {string[]} choices
  */
 function _applyConflictResolutions(choices) {
-  const guests = /** @type {any[]} */ ([...(storeGet("guests") ?? [])]);
+  const guests = /** @type {any[]} */ (
+    Array.from(/** @type {Iterable<any>} */ (storeGet("guests") ?? []))
+  );
   for (let i = 0; i < _pendingConflicts.length; i++) {
     if (choices[i] === "remote") {
       const c = _pendingConflicts[i];
+      if (!c) continue;
       const guest = guests.find((g) => String(g.id) === c.id);
       if (guest) guest[c.field] = c.remoteVal;
     }
@@ -615,9 +627,9 @@ function _registerHandlers() {
     const fb = /** @type {any} */ (window).FB;
     if (!fb) return;
     fb.login(
-      (response) => {
+      (/** @type {any} */ response) => {
         if (response.authResponse) {
-          fb.api("/me", { fields: "name,email,picture" }, (profile) => {
+          fb.api("/me", { fields: "name,email,picture" }, (/** @type {any} */ profile) => {
             const result = loginOAuth(
               profile.email || "",
               profile.name,
@@ -640,7 +652,7 @@ function _registerHandlers() {
     if (!AppleID) return;
     AppleID.auth
       .signIn()
-      .then((response) => {
+      .then((/** @type {any} */ response) => {
         const email = response?.user?.email ?? "";
         const name =
           `${response?.user?.name?.firstName ?? ""} ${response?.user?.name?.lastName ?? ""}`.trim();
@@ -712,7 +724,7 @@ function _registerHandlers() {
   // ── Guests ──
   on("saveGuest", (_el, _e) => {
     /** @param {string} id @returns {string} */
-    const getVal = (id) => {
+    const getVal = (/** @type {string} */ id) => {
       const inp = document.getElementById(id);
       if (!inp) return "";
       if (/** @type {HTMLInputElement} */ (inp).type === "checkbox")
@@ -766,7 +778,7 @@ function _registerHandlers() {
   );
   on("searchGuests", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      e.target instanceof HTMLInputElement ? e.target : null
     );
     setSearchQuery(input?.value ?? "");
   });
@@ -800,7 +812,7 @@ function _registerHandlers() {
 
   // ── Tables ──
   on("saveTable", (_el, _e) => {
-    const getVal = (id) =>
+    const getVal = (/** @type {string} */ id) =>
       /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
         document.getElementById(id)
       )?.value?.trim() ?? "";
@@ -834,7 +846,7 @@ function _registerHandlers() {
   on("checkInGuest", (el) => checkInGuest(el.dataset.actionArg ?? ""));
   on("checkinSearch", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      e.target instanceof HTMLInputElement ? e.target : null
     );
     setCheckinSearch(input?.value ?? "");
   });
@@ -856,7 +868,7 @@ function _registerHandlers() {
 
   // ── Vendors ──
   on("saveVendor", (_el, _e) => {
-    const getVal = (id) =>
+    const getVal = (/** @type {string} */ id) =>
       /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
         document.getElementById(id)
       )?.value?.trim() ?? "";
@@ -880,6 +892,7 @@ function _registerHandlers() {
     showConfirmDialog(t("confirm_delete"), () => deleteVendor(el.dataset.actionArg ?? "")),
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
+  on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());
   on("filterVendorsByCategory", (el) => filterVendorsByCategory(el.dataset.category ?? "all"));
   on("openEditVendorModal", (el) => {
     openVendorForEdit(el.dataset.actionArg ?? "");
@@ -888,7 +901,7 @@ function _registerHandlers() {
 
   // ── Expenses ──
   on("saveExpense", (_el, _e) => {
-    const getVal = (id) =>
+    const getVal = (/** @type {string} */ id) =>
       /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
         document.getElementById(id)
       )?.value?.trim() ?? "";
@@ -909,7 +922,6 @@ function _registerHandlers() {
     showConfirmDialog(t("confirm_delete"), () => deleteExpense(el.dataset.actionArg ?? "")),
   );
   on("exportExpensesCSV", () => exportExpensesCSV());
-  on("filterExpensesByCategory", (el) => filterExpensesByCategory(el.dataset.category ?? "all"));
   on("openEditExpenseModal", (el) => {
     openExpenseForEdit(el.dataset.actionArg ?? "");
     openModal("expenseModal");
@@ -991,7 +1003,7 @@ function _registerHandlers() {
   });
   on("lookupRsvpByPhone", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      e.target instanceof HTMLInputElement ? e.target : null
     );
     if (!input) return;
     const result = lookupRsvpByPhone(input.value);
@@ -1022,7 +1034,7 @@ function _registerHandlers() {
   on("sendWhatsAppAllViaApi", (el) => sendWhatsAppAllViaApi(el.dataset.actionArg ?? "all"));
   on("updateWaPreview", (_triggerEl, e) => {
     const input = /** @type {HTMLTextAreaElement|null} */ (
-      e.target?.tagName === "TEXTAREA" ? e.target : null
+      e.target instanceof HTMLTextAreaElement ? e.target : null
     );
     updateWaPreview(input?.value ?? "");
   });
@@ -1038,7 +1050,7 @@ function _registerHandlers() {
 
   // ── Timeline ──
   on("saveTimelineItem", (_el, _e) => {
-    const getVal = (id) =>
+    const getVal = (/** @type {string} */ id) =>
       /** @type {HTMLInputElement|null} */ (document.getElementById(id))?.value?.trim() ?? "";
     const data = {
       time: getVal("timelineTime"),
@@ -1060,6 +1072,7 @@ function _registerHandlers() {
     openTimelineForEdit(el.dataset.actionArg ?? "");
     openModal("timelineModal");
   });
+  on("printTimeline", () => printTimeline());
 
   // ── Sheets / Sync ──
   on("syncSheetsNow", async () => {
@@ -1102,7 +1115,7 @@ function _registerHandlers() {
 
   // S10.2 Conflict resolution
   on("conflictAcceptAllLocal", () => {
-    closeModal();
+    closeModal("conflictModal");
     showToast(t("conflict_kept_local"), "info");
   });
   on("conflictAcceptAllRemote", () => {
@@ -1110,7 +1123,7 @@ function _registerHandlers() {
     if (_pendingConflicts.length > 0) {
       _applyConflictResolutions(_pendingConflicts.map(() => "remote"));
     }
-    closeModal();
+    closeModal("conflictModal");
   });
   on("conflictApplySelected", () => {
     const list = document.getElementById("conflictList");
@@ -1119,7 +1132,7 @@ function _registerHandlers() {
     const choices = /** @type {string[]} */ ([]);
     radios.forEach((r) => choices.push(/** @type {HTMLInputElement} */ (r).value));
     _applyConflictResolutions(choices);
-    closeModal();
+    closeModal("conflictModal");
     showToast(t("conflict_resolved"), "success");
   });
 
@@ -1170,11 +1183,8 @@ function _registerHandlers() {
   });
 
   // ── Settings / Misc ──
-  on("saveTransportSettings", (_el, e) => {
-    const form = /** @type {HTMLFormElement|null} */ (
-      /** @type {HTMLElement} */ (e.target).closest("form")
-    );
-    saveTransportSettings(form);
+  on("saveTransportSettings", () => {
+    saveTransportSettings();
     showToast(t("settings_saved"), "success");
   });
   on("addRegistryLink", () => {
@@ -1230,7 +1240,7 @@ function _registerHandlers() {
   on("updateWeddingDetails", () => invitationSection.updateWeddingDetails?.());
   on("handleInvitationUpload", (_triggerEl, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
-      e.target?.tagName === "INPUT" ? e.target : null
+      e.target instanceof HTMLInputElement ? e.target : null
     );
     if (input) invitationSection.handleInvitationUpload?.(input);
   });

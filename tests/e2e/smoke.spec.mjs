@@ -183,13 +183,11 @@ test.describe("Guest Management — CRUD Flow", () => {
   });
 
   test("add guest button or form is accessible", async ({ page }) => {
-    // Button to open add-guest modal (or inline form) should exist
+    // Production build must expose a way to add a guest — assert it.
     const addBtn = page.locator(
       '[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]'
     ).first();
-    const exists = await addBtn.isAttached().catch(() => false);
-    // Not all builds may have a guest UI — skip gracefully if not present
-    test.skip(!exists, "No add-guest button found in current build");
+    await expect(addBtn).toBeAttached({ timeout: 5_000 });
     await expect(addBtn).toBeVisible({ timeout: 5_000 });
   });
 });
@@ -220,8 +218,7 @@ test.describe("Tables Section — Basic Flow", () => {
     const addBtn = page.locator(
       '[data-action="openAddTableModal"], #addTableBtn, button[data-action*="Table"]'
     ).first();
-    const exists = await addBtn.isAttached().catch(() => false);
-    test.skip(!exists, "No add-table button found in current build");
+    await expect(addBtn).toBeAttached({ timeout: 5_000 });
     await expect(addBtn).toBeVisible({ timeout: 5_000 });
   });
 });

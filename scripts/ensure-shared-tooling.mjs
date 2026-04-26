@@ -2,59 +2,69 @@
 /**
  * ensure-shared-tooling.mjs
  *
- * Ensures the shared tooling configs exist at ../tooling/.
- * In local development they live in the parent MyScripts/tooling/ directory.
- * In CI (standalone checkout) they don't exist — this script recreates them
- * from embedded defaults so lint/test pipelines work without the parent workspace.
+ * Idempotent setup script that guarantees the local environment matches the
+ * "shared tooling at MyScripts/" convention used by every script in this repo.
  *
- * Run: node scripts/ensure-shared-tooling.mjs
+ *   1. Ensures `../tooling/` exists (or recreates it from inlined defaults
+ *      for standalone/CI checkouts).
+ *   2. Ensures `node_modules/` exists in the project root. When the parent
+ *      directory holds a populated `node_modules/` (the shared MyScripts/
+ *      install), a Windows junction (or POSIX symlink) is created so Node's
+ *      ESM resolver finds packages without walking up to ancestor dirs —
+ *      Node 25's strict `legacyMainResolve` chokes on ancestor lookups for
+ *      packages that omit an `exports` field (e.g. `@eslint/js`).
+ *
+ * Run automatically as a `prepare` script after `npm install`. Safe to invoke
+ * directly: `node scripts/ensure-shared-tooling.mjs`.
  */
 
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, symlinkSync, lstatSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const toolingBase = resolve(__dirname, "../../tooling");
+const projectRoot = resolve(__dirname, "..");
+const parentRoot = resolve(__dirname, "../..");
+const toolingBase = resolve(parentRoot, "tooling");
 
+// ── Step 1: Shared node_modules junction ─────────────────────────────────
+const localModules = resolve(projectRoot, "node_modules");
+const sharedModules = resolve(parentRoot, "node_modules");
+
+function isJunctionOrLink(p) {
+  try {
+    return lstatSync(p).isSymbolicLink();
+  } catch {
+    return false;
+  }
+}
+
+if (!existsSync(localModules) && existsSync(sharedModules)) {
+  try {
+    if (process.platform === "win32") {
+      execFileSync("cmd", ["/c", "mklink", "/J", localModules, sharedModules], {
+        stdio: "inherit",
+      });
+    } else {
+      symlinkSync(sharedModules, localModules, "dir");
+    }
+    console.log(`Linked ${localModules} -> ${sharedModules}`);
+  } catch (err) {
+    console.warn(`Could not create node_modules link: ${err.message}`);
+  }
+} else if (existsSync(localModules) && !isJunctionOrLink(localModules)) {
+  console.log("node_modules is a real directory (standalone install) - leaving as-is.");
+}
+
+// ── Step 2: Shared tooling configs ───────────────────────────────────────
 if (existsSync(toolingBase)) {
-  console.log("Shared tooling already present — skipping.");
+  console.log("Shared tooling already present - skipping config shim.");
   process.exit(0);
 }
 
-console.log("Creating shared tooling shim (CI mode)…");
+console.log("Creating shared tooling shim (CI mode)...");
 
-// ── HTMLHint ──────────────────────────────────────────────────────────────
-const htmlhintDir = resolve(toolingBase, "htmlhint");
-mkdirSync(htmlhintDir, { recursive: true });
-writeFileSync(
-  resolve(htmlhintDir, ".htmlhintrc"),
-  JSON.stringify(
-    {
-      "tagname-lowercase": true,
-      "attr-lowercase": true,
-      "attr-value-double-quotes": true,
-      "doctype-first": true,
-      "tag-pair": true,
-      "spec-char-escape": false,
-      "id-unique": true,
-      "src-not-empty": true,
-      "title-require": true,
-      "alt-require": true,
-      "doctype-html5": true,
-      "style-disabled": false,
-      "inline-style-disabled": false,
-      "inline-script-disabled": false,
-      "id-class-ad-disabled": true,
-      "attr-unsafe-chars": true,
-      "head-script-disabled": false,
-    },
-    null,
-    2,
-  ),
-);
-
-// ── Stylelint ─────────────────────────────────────────────────────────────
 const stylelintDir = resolve(toolingBase, "stylelint");
 mkdirSync(stylelintDir, { recursive: true });
 writeFileSync(
@@ -101,15 +111,11 @@ writeFileSync(
   ),
 );
 
-// ── ESLint base ───────────────────────────────────────────────────────────
-// The ESLint config uses dynamic import with inline fallback in eslint.config.mjs,
-// so we only need the dir to exist for the htmlhint/stylelint configs.
-// Exporting null values forces eslint.config.mjs to use its comprehensive inline fallbacks.
 const eslintDir = resolve(toolingBase, "eslint");
 mkdirSync(eslintDir, { recursive: true });
 writeFileSync(
   resolve(eslintDir, "base.mjs"),
-  `// CI shim — exports null so eslint.config.mjs uses its inline fallbacks
+  `// CI shim - exports null so eslint.config.mjs uses its inline fallbacks
 export const baseLinterOptions = null;
 export const baseLanguageOptions = null;
 export const browserGlobals = null;

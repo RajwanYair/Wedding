@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.4.0] — 2026-04-27
+
+### Removed (Zero Workarounds, Zero Dead Code)
+
+- **All `continue-on-error: true` workarounds** removed from `.github/workflows/project-automation.yml` (3 sites) — every CI step is now a hard gate.
+- **All `test.skip()` conditional skips** removed from `tests/e2e/smoke.spec.mjs` (2 sites) — replaced with `expect(...).toBeAttached({ timeout: 5000 })` hard assertions.
+- **Deprecated `filterExpensesByCategory` alias** and its handler removed.
+- **Entire `src/handlers/*.js` directory** (~2 500 LoC, 7 modules) plus parallel `tests/unit/*-handlers.test.mjs` deleted — handlers were never wired into `main.js` (verified dead code).
+- **Dead `src/sections/communication.js`** + `src/templates/communication.html` + `tests/unit/communication.test.mjs` deleted (section never registered in `SECTIONS` map). Index.html container removed.
+- **Dead `src/sections/index.js` barrel** deleted (only referenced by tests). Wiring test updated.
+- **Dead UI buttons** removed (no backing implementation): `smartAutoAssign` button (tables), entire `waCloudCard` settings card with `saveWaCloudSettings`, `exportEventSummary` + `printDietaryCards` analytics card, `sheetsMirrorToggle`, `refreshAuditLog`, S15.3 Auto-Backup card (4 buttons), `addGuestTag` + `addGuestNote` modal sections.
+- **Stale repo files** purged: `lint_output.txt`, `test_output.txt`, `test_results.txt`, duplicated `Wedding/node_modules` (replaced by junction).
+
+### Added
+
+- **`npm run typecheck`** with regression-blocking baseline (`scripts/typecheck.mjs` + `typecheck-baseline.txt`). Baseline: 161 known errors (down from 187 after dead-code purge). Any new `tsc --strict` error fails CI; baseline updated only via explicit `--update`.
+- **`npm run setup` / `prepare` script** (`scripts/ensure-shared-tooling.mjs`) — auto-creates a junction (`mklink /J` on Windows, symlink elsewhere) from `Wedding/node_modules` to the shared `MyScripts/node_modules` when local copy is missing. Eliminates the Node 25 ESM `legacyMainResolve` failure for `@eslint/js@10.x`.
+- **`src/utils/network-status.js`** — `initNetworkStatus()`, `onStatusChange()`, `isOnline()`. Toggles `body.is-offline`.
+- **`src/utils/app-badge.js`** — `updateBadge(count)`, `clearBadge()` over `navigator.setAppBadge`.
+- **i18n parity** — 5 new keys (`network_offline`, `network_back_online`, `session_expired`, `offline_indicator`, `checkin_qr_label`) added across all 4 locales (`he`, `en`, `ar`, `ru`).
+- **Browser globals in ESLint** — `HTMLInputElement`, `HTMLTextAreaElement`, `HTMLFormElement`, `HTMLSelectElement`, `HTMLButtonElement`, `HTMLAnchorElement`, `HTMLImageElement`, `HTMLCanvasElement` added to local + shared configs.
+- **`printTimeline` and `exportVendorPaymentsCSV` actions** wired into `main.js` (functions previously existed but weren't dispatched).
+
+### Changed
+
+- **CI chain** is now `lint → typecheck → check:i18n → check:credentials → audit:security → audit:sections → test → build` — every gate hard-fails on regression.
+- **`STORAGE_KEYS` literal types** preserved (removed `@type {Readonly<Record<string,string>>}` JSDoc that erased `as const` narrowing).
+- **`showConfirmDialog(message, onConfirm?)`** — `onConfirm` made optional.
+- **~30 `tsc --strict` fixes in `src/main.js`** — `instanceof HTMLInputElement` guards, `Record<string,...>` typing for `SECTIONS`, language-code casts, parameter annotations on `getVal`, FB/Apple SDK callbacks typed, conflict-resolver array handling.
+- **ROADMAP.md** rewritten to reflect production-ready status.
+
+### Stats
+
+- 0 lint errors · 0 lint warnings · 0 Node deprecation warnings
+- All test suites pass · 0 skipped · 0 e2e conditional skips
+- 0 npm audit vulnerabilities · 0 security-scan violations · 161 typecheck baseline (down 26 from 187)
+- 143 modules built · 121 precache entries · 3 runtime deps unchanged
+
+## [11.3.0] — 2026-04-26
+
+### Fixed (Production Hardening)
+
+- **GH Actions exact version pins** — all workflows now use `actions/checkout@v6.0.2`,
+  `actions/setup-node@v6.4.0`, and `softprops/action-gh-release@v3.0.0`. Resolves VS Code
+  "Unable to resolve action" warnings and guards against supply-chain drift. (ci.yml, codeql.yml,
+  lighthouse.yml, preview.yml, release.yml)
+- **Lighthouse CI hard gate** — `continue-on-error: true` advisory removed from `lighthouse.yml`;
+  Lighthouse now runs `lhci autorun --config=.lighthouserc.json` with ERROR-level assertions. Any
+  score regression fails the pipeline.
+- **CI deduplication** — duplicate `lighthouse:` job removed from `ci.yml`; `lighthouse.yml` is
+  the single Lighthouse workflow for both PRs and `main` push.
+- **htmlhint config consolidated** — `lint:html` script simplified to `htmlhint index.html` (uses
+  root `.htmlhintrc` directly). `scripts/ensure-shared-tooling.mjs` HTMLHint shim creation removed.
+  VS Code HTMLHint extension and CLI now use the same config file.
+- **Prettier in shared tooling** — `prettier@^3.2.5` added to
+  `C:\Users\ryair\OneDrive - Intel Corporation\Documents\MyScripts\package.json` (shared
+  `node_modules/prettier` already present).
+- **CI/CD instructions updated** — `cicd.instructions.md` documents the exact version pin
+  requirement and rationale.
+
 ## [11.2.0] — 2026-04-26
 
 ### Added (Sprint 12 — Quality, Tooling & Docs consolidation)

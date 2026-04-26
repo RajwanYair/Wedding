@@ -122,13 +122,6 @@
             <span data-i18n="live_sync_label">סנכרון חי (כל 30 שניות)</span>
           </label>
         </div>
-        <!-- Phase 7.5 Sheets Mirror via Edge Function toggle -->
-        <div class="live-sync-row">
-          <label class="toggle-label">
-            <input type="checkbox" id="sheetsMirrorToggle" data-action="toggleSheetsMirror">
-            <span data-i18n="sheets_mirror_label">שיקוף ל-Sheets דרך Edge Function</span>
-          </label>
-        </div>
       </div>
       <!-- GS version / connectivity indicator -->
       <div id="sheetsGsVersion"></div>
@@ -569,9 +562,6 @@
         </table>
       </div>
       <div class="settings-btn-row">
-        <button class="btn btn-secondary btn-small" data-action="refreshAuditLog">
-          🔄 <span data-i18n="audit_refresh_btn">טען מ-Supabase</span>
-        </button>
         <button class="btn btn-danger btn-small" data-action="clearAuditLog">
           🗑️ <span data-i18n="audit_clear_btn">נקה יומן</span>
         </button>
@@ -601,35 +591,6 @@
       </button>
     </div>
 
-    <!-- S15.3 Auto-Backup -->
-    <div class="settings-card">
-      <h3>💾 <span data-i18n="autobackup_title">גיבוי אוטומטי</span></h3>
-      <p data-i18n="autobackup_desc">גיבוי אוטומטי שומר תמונת מצב כל 30 דקות.</p>
-      <div class="form-row">
-        <div class="form-group">
-          <label data-i18n="autobackup_interval">מרווח (דקות)</label>
-          <input type="number" id="autoBackupInterval" min="5" max="240" value="30" inputmode="numeric" />
-        </div>
-        <div class="form-group">
-          <span class="badge" id="lastBackupTime" data-i18n="autobackup_never">טרם בוצע</span>
-        </div>
-      </div>
-      <div class="section-toolbar-start">
-        <button class="btn btn-primary btn-small" data-action="startAutoBackup">
-          ▶ <span data-i18n="autobackup_start">הפעל גיבוי</span>
-        </button>
-        <button class="btn btn-secondary btn-small" data-action="stopAutoBackup">
-          ⏹ <span data-i18n="autobackup_stop">עצור גיבוי</span>
-        </button>
-        <button class="btn btn-secondary btn-small" data-action="downloadAutoBackup">
-          📥 <span data-i18n="autobackup_download">הורד גיבוי</span>
-        </button>
-        <button class="btn btn-secondary btn-small" data-action="restoreAutoBackup">
-          📤 <span data-i18n="autobackup_restore">שחזר מגיבוי</span>
-        </button>
-      </div>
-    </div>
-
     <!-- S18.1 Sync Queue Monitor -->
     <div class="settings-card">
       <h3>🔄 <span data-i18n="sync_monitor_title">מוניטור סנכרון</span></h3>
@@ -644,31 +605,6 @@
         <p class="text-note u-mt-xs" id="syncProgressText"></p>
         <div id="syncQueueList" class="sync-queue-list u-text-muted"></div>
       </div>
-    </div>
-
-    <!-- Phase 10.1 — WhatsApp Cloud API -->
-    <div class="settings-card" id="waCloudCard">
-      <h3>🟢 <span data-i18n="wa_cloud_title">WhatsApp Cloud API</span></h3>
-      <p data-i18n="wa_cloud_desc">
-        שלח הודעות דרך WhatsApp Cloud API — צור Edge Function בסופאבייס עם
-        WA_ACCESS_TOKEN ו-WA_PHONE_NUMBER_ID כ-Secrets.
-      </p>
-      <div class="sheets-url-row">
-        <label for="waPhoneNumberId" class="sheets-label" data-i18n="wa_phone_number_id_label">Phone Number ID</label>
-        <input
-          type="text"
-          id="waPhoneNumberId"
-          class="form-input"
-          data-i18n-placeholder="ph_wa_phone_number_id"
-          autocomplete="off"
-        >
-        <button class="btn btn-secondary" data-action="saveWaCloudSettings">
-          <span data-i18n="wa_cloud_save_btn">שמור</span>
-        </button>
-      </div>
-      <p class="text-hint" data-i18n="wa_cloud_hint">
-        ה-Token נשמר רק בסביבת Supabase Edge Function (לא בדפדפן).
-      </p>
     </div>
 
     <!-- Danger Zone -->

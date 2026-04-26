@@ -7,7 +7,7 @@ description: "Use when: editing CI/CD workflows, GitHub Actions, or any YAML con
 
 ## Workflow Standards
 
-- Use `actions/checkout@v6` and `actions/setup-node@v6` (current stable)
+- Use `actions/checkout@v6.0.2` and `actions/setup-node@v6.4.0` (exact pins — resolves VS Code action-version linting errors and guards against supply-chain drift)
 - `permissions: contents: read` (least privilege)
 - Install deps via `npm ci`; use `cache: 'npm'` in `setup-node` (CI creates its own `node_modules/`; locally deps resolve from parent `../MyScripts/node_modules/`)
 - Keep `package.json` `packageManager` current so local tooling, cache behavior, and Copilot environment hints stay aligned
