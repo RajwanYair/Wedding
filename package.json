@@ -30,7 +30,8 @@
         "audit:dead": "node scripts/dead-export-check.mjs",
         "audit:security": "node scripts/security-scan.mjs",
         "audit:sections": "node scripts/validate-sections.mjs",
-        "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections",
+        "audit:arch": "node scripts/arch-check.mjs",
+        "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
         "precache": "node scripts/generate-precache.mjs",
         "size": "node scripts/size-report.mjs",
         "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run audit:security && npm run audit:sections && npm test && npm run build"
