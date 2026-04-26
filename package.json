@@ -46,6 +46,8 @@
     "audit:coverage": "node scripts/check-coverage-gate.mjs",
     "audit:router": "node scripts/audit-router-usage.mjs",
     "audit:aria-roles": "node scripts/audit-aria-roles.mjs",
+    "audit:console-error": "node scripts/audit-console-error.mjs",
+    "audit:section-templates": "node scripts/check-section-template-parity.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",

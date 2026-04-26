@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+/**
+ * audit-console-error.mjs — Advisory scan for `console.error(` call sites
+ * outside the permanent allowlist (ADR-032).
+ *
+ * Exit codes:
+ *   0  → advisory mode (always); summary printed.
+ *   1  → only when `--enforce` is passed AND violations > BASELINE.
+ */
+
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative, sep } from "node:path";
+
+const ROOT = process.cwd();
+const SRC = join(ROOT, "src");
+
+// Permanent allowlist — see ADR-032.
+const ALLOWLIST = new Set([
+  "src/services/error-monitor.js",
+  "src/services/health.js",
+]);
+
+// Baseline — bumped down each migration phase.
+const BASELINE = 999;
+
+const ENFORCE = process.argv.includes("--enforce");
+
+function walk(dir, out = []) {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    const s = statSync(p);
+    if (s.isDirectory()) walk(p, out);
+    else if (name.endsWith(".js")) out.push(p);
+  }
+  return out;
+}
+
+const violations = [];
+for (const file of walk(SRC)) {
+  const rel = relative(ROOT, file).split(sep).join("/");
+  if (ALLOWLIST.has(rel)) continue;
+  const lines = readFileSync(file, "utf8").split(/\r?\n/);
+  lines.forEach((line, i) => {
+    if (/\bconsole\.error\s*\(/.test(line)) {
+      violations.push({ file: rel, line: i + 1, text: line.trim() });
+    }
+  });
+}
+
+if (violations.length === 0) {
+  console.log("[audit-console-error] 0 call sites outside allowlist. ✅");
+  process.exit(0);
+}
+
+console.log(
+  `[audit-console-error] Found ${violations.length} call site(s) to migrate (ADR-032):\n`,
+);
+for (const v of violations.slice(0, 50)) {
+  console.log(`  ${v.file}:${v.line}`);
+  console.log(`    > ${v.text}`);
+  console.log(`    fix: import { reportError } from "../services/error-monitor.js"; reportError(err, { source, op });`);
+}
+if (violations.length > 50) {
+  console.log(`  …and ${violations.length - 50} more.`);
+}
+
+if (ENFORCE && violations.length > BASELINE) {
+  console.log(
+    `\n[audit-console-error] ENFORCE: ${violations.length} > baseline ${BASELINE}. Failing.`,
+  );
+  process.exit(1);
+}
+console.log(
+  "\n[audit-console-error] Advisory mode (no failure). Re-run with --enforce to gate.",
+);
+process.exit(0);
