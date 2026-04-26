@@ -280,10 +280,7 @@ export function applyI18n(root = document) {
     // Keep the accessible name in sync with the visible text to satisfy
     // axe-core's label-content-name-mismatch (the tooltip is preserved via
     // the `title` attribute set above by data-i18n-tooltip).
-    /** @type {HTMLElement} */ (el).setAttribute(
-      "aria-label",
-      `${label} — ${t("tip_btn_lang")}`,
-    );
+    /** @type {HTMLElement} */ (el).setAttribute("aria-label", `${label} — ${t("tip_btn_lang")}`);
   });
 }
 
