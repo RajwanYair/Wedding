@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.1.0] — 2025-07-18
+
+### Added (Phase A — Foundation Sprint)
+
+- **`src/services/monitoring.js`** — Opt-in error monitoring with Sentry-compatible transport. Lazy-loads `@sentry/browser` only when `VITE_SENTRY_DSN` is present, otherwise pipes through the local `error-pipeline.captureError()`. Built-in PII scrubber redacts emails, JWT/bearer tokens, and Israeli phone numbers (preserving last 2–4 digits). 50-breadcrumb buffer + 1000 ms per-error-type sample window. (P0)
+- **`src/services/secure-storage.js`** — AES-256-GCM-encrypted replacement for plaintext `localStorage` token writes. Per-device 32-byte key in `wedding_v1_device_key` (base64); envelope `{v:1, iv, ct}`; legacy/unsealed entries lazily removed. Exposes `setSecure`/`getSecure`/`removeSecure`/`rotateDeviceKey`. (P0)
+- **`src/core/section-base.js`** — `BaseSection` class providing uniform mount/unmount lifecycle, auto-unsubscribe `subscribe(key, fn)` helper, and `addCleanup(fn)`. `fromSection(instance)` adapter returns a section-contract-compatible `{ mount, unmount, capabilities }` object so existing sections can migrate incrementally. (P3)
+- **`src/core/route-table.js`** — Typed router prep without breaking the hash router. `parseLocation()`, `buildHref()`, `isKnownSection()`, `isPublicSection()`, `getRouteParam()`. Supports both `#section?key=val` and pushState-style `?key=val#section`. (P1)
+- **`src/utils/calendar-link.js`** — Pure helpers `buildGoogleCalendarLink()`, `buildIcsContent()`, `buildIcsDataUrl()` for RFC 5545-compliant calendar invites. Defaults to a 3-hour window when no `end` is supplied; ICS escaping per §3.3.11. (P1)
+- **Action-registry namespacing** — `namespaced(ns, name)`, `parseAction(value)`, `getActionsByNamespace(ns)`, `findDuplicateActions(registry)` in `src/core/action-registry.js`. Legacy flat names continue to work; new code may opt into `"guests:save"` form. (P2)
+- **`scripts/arch-check.mjs`** — Advisory script that surfaces section→service direct imports (15 current violations across budget, checkin, contact-collector, expenses, gallery, guests, invitation, rsvp, settings, tables, timeline, vendors, whatsapp). `npm run audit:arch`; `--strict` flag fails CI. (P1)
+- **Lighthouse CI workflow** — `.github/workflows/lighthouse.yml` runs `@lhci/cli` on PRs and `main`. Advisory until v12 (`continue-on-error: true`); uploads `lighthouse-reports` artifact. (P2)
+
+### Tests
+
+- **2385 tests** (147 files) — +67 tests across 7 new suites: `monitoring` (10), `secure-storage` (8), `section-base` (11), `route-table` (16), `calendar-link` (8), `action-registry-namespacing` (11), and `arch-check` smoke (3).
+
+### Notes
+
+- Coverage thresholds in `vite.config.js` already enforced at 85/85/75/85 (lines/functions/branches/statements). No change needed for this release.
+- Service-direct-import architecture violations are tracked but **not yet fixed** — repository pattern migration is scheduled for v11.2.x.
+
 ## [11.0.0] — 2025-07-18
 
 ### Changed (Production Cleanup — Dead Code Purge)

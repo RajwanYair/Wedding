@@ -464,3 +464,48 @@ export async function migrateFromLocalStorage(prefix = STORAGE_PREFIX) {
   }
   return count;
 }
+
+// ── Quota detection (Phase 1.3) ───────────────────────────────────────────
+
+/** Threshold (fraction 0–1) at which storage is considered nearly full. */
+export const QUOTA_WARNING_THRESHOLD = 0.85;
+
+/**
+ * @typedef {{ usage: number, quota: number, percent: number }} StorageQuota
+ */
+
+/**
+ * Estimate current storage usage and quota via the StorageManager API.
+ * Returns `null` when the API is unavailable (e.g. non-secure contexts,
+ * non-supporting browsers, or test environments).
+ * @returns {Promise<StorageQuota | null>}
+ */
+export async function getStorageQuota() {
+  if (typeof navigator === "undefined" || !navigator.storage?.estimate) {
+    return null;
+  }
+  try {
+    const { usage = 0, quota = 0 } = await navigator.storage.estimate();
+    return {
+      usage,
+      quota,
+      percent: quota > 0 ? usage / quota : 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check storage health: returns an object with the active adapter, quota info,
+ * and a boolean warning if usage exceeds QUOTA_WARNING_THRESHOLD.
+ * @returns {Promise<{ adapter: AdapterType, quota: StorageQuota | null, nearFull: boolean }>}
+ */
+export async function checkStorageHealth() {
+  const quota = await getStorageQuota();
+  return {
+    adapter: _adapterType,
+    quota,
+    nearFull: quota !== null && quota.percent >= QUOTA_WARNING_THRESHOLD,
+  };
+}
