@@ -1248,12 +1248,14 @@
   }
 
   /* ── Skip Link (Accessibility) ── */
+  /* Hard-coded high-contrast colors (≥15:1) so the link passes axe-core
+     evaluation even when offscreen / before theme tokens resolve. */
   .skip-link {
     position: absolute;
     top: -100%;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--accent);
+    background: #1a1a2e;
     color: #fff;
     padding: 0.5rem 1.2rem;
     border-radius: 0 0 8px 8px;
@@ -1711,14 +1713,16 @@
   }
 
   /* ── Skip-to-main accessibility link (S7.9) ── */
+  /* Hard-coded high-contrast colors (≥15:1) so axe-core sees a clearly
+     compliant fg/bg pair regardless of theme or offscreen position. */
   .skip-to-main {
     position: fixed;
     inset-block-start: -3rem;
     inset-inline-start: 0.5rem;
     z-index: 9999;
     padding: 0.5rem 1rem;
-    background: var(--accent);
-    color: var(--text-primary, #fff);
+    background: #1a1a2e;
+    color: #fff;
     border-radius: 0 0 0.4rem 0.4rem;
     font-weight: 600;
     font-size: 0.9rem;

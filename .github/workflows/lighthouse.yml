@@ -30,8 +30,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build production bundle
-        run: npm run build
+      - name: Build production bundle for Lighthouse
+        # Override base path: GH Pages deploys under /Wedding/, but lhci
+        # serves staticDistDir at /. Without this override every asset 404s
+        # and Lighthouse measures a broken page.
+        run: npx vite build --base=/
 
       - name: Install Lighthouse CI
         run: npm i -g @lhci/cli@0.14.x

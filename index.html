@@ -46,7 +46,10 @@
   <link rel="stylesheet" href="./css/print.css" media="print" fetchpriority="low">
   <!-- Google Identity Services — Sign In with Google -->
   <!-- Setup: https://console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0 Client ID (Web application) -->
-  <script src="https://accounts.google.com/gsi/client" async defer crossorigin="anonymous" fetchpriority="low"></script>
+  <!-- NOTE: No `crossorigin` attr: Google's GSI endpoint does not serve CORS
+       headers; with `crossorigin="anonymous"` the browser sends a CORS request
+       and blocks execution, breaking sign-in and producing console errors. -->
+  <script src="https://accounts.google.com/gsi/client" async defer fetchpriority="low"></script>
   <!-- Structured Data: Event (JSON-LD) -->
   <script type="application/ld+json">
   {

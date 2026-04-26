@@ -6,9 +6,15 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("../../src/core/i18n.js", () => ({
   formatDate: vi.fn((date, _opts) => date.toISOString().slice(0, 10)),
+  currentLang: vi.fn(() => "he"),
 }));
 
-import { formatDateHebrew, daysUntil, nowISOJerusalem } from "../../src/utils/date.js";
+import {
+  formatDateHebrew,
+  daysUntil,
+  nowISOJerusalem,
+  formatRelative,
+} from "../../src/utils/date.js";
 import { formatDate } from "../../src/core/i18n.js";
 
 /** @type {import("vitest").MockInstance} */
@@ -82,5 +88,30 @@ describe("nowISOJerusalem", () => {
     await new Promise((r) => setTimeout(r, 10));
     // They could conceivably be equal in the same millisecond but the strings are based on seconds
     expect(typeof a).toBe("string");
+  });
+});
+
+describe("formatRelative", () => {
+  it("returns empty string for invalid input", () => {
+    expect(formatRelative("not-a-date")).toBe("");
+  });
+  it("returns string for seconds-scale diff", () => {
+    const soon = new Date(Date.now() + 30 * 1000).toISOString();
+    expect(typeof formatRelative(soon)).toBe("string");
+  });
+  it("returns string for minutes-scale diff", () => {
+    expect(formatRelative(new Date(Date.now() + 10 * 60_000).toISOString())).not.toBe("");
+  });
+  it("returns string for hours-scale diff", () => {
+    expect(formatRelative(new Date(Date.now() + 5 * 3_600_000).toISOString())).not.toBe("");
+  });
+  it("returns string for days-scale diff", () => {
+    expect(formatRelative(new Date(Date.now() + 3 * 86_400_000).toISOString())).not.toBe("");
+  });
+  it("returns string for weeks-scale diff", () => {
+    expect(formatRelative(new Date(Date.now() + 21 * 86_400_000).toISOString())).not.toBe("");
+  });
+  it("returns string for months-scale diff", () => {
+    expect(formatRelative(new Date(Date.now() + 120 * 86_400_000).toISOString())).not.toBe("");
   });
 });
