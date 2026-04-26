@@ -12,6 +12,16 @@
 // ── State ─────────────────────────────────────────────────────────────────
 import { SECTION_LIST } from "./constants.js";
 
+// ADR-025 R1: re-export the new pushState router API so callers can migrate
+// incrementally. `navigate()` writes pushState entries; `navigateTo()` (below)
+// remains the legacy hash-based path. Both coexist until ADR-025 R3.
+export {
+  navigate,
+  currentRoute,
+  onRouteChange,
+  initRouterListener,
+} from "./router.js";
+
 /**
  * Navigable sections — imported from constants.js (single source of truth).
  * @type {readonly string[]}
@@ -84,6 +94,9 @@ export function initRouter() {
   window.addEventListener("hashchange", _handleHash, { passive: true });
   // popstate fires when the user navigates back/forward via History API.
   window.addEventListener("popstate", _handleHash, { passive: true });
+  // ADR-025 R1: also wire the pushState router's popstate emitter so
+  // `onRouteChange` subscribers fire on browser back/forward.
+  import("./router.js").then(({ initRouterListener }) => initRouterListener());
   // Use replaceState only for initial load so we don't pollute history.
   history.replaceState(null, "", location.href);
 
