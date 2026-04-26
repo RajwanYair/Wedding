@@ -48,6 +48,8 @@
     "audit:aria-roles": "node scripts/audit-aria-roles.mjs",
     "audit:console-error": "node scripts/audit-console-error.mjs",
     "audit:section-templates": "node scripts/check-section-template-parity.mjs",
+    "audit:base-section": "node scripts/audit-base-section.mjs",
+    "audit:jsdoc": "node scripts/audit-jsdoc.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
