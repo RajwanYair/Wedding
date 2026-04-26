@@ -13,6 +13,7 @@ import { nowISOJerusalem } from "../utils/date.js";
 import { enqueueWrite, appendToRsvpLog, syncStoreKeyToSheets } from "../services/sheets.js";
 import { GUEST_SIDES, RSVP_RESPONSE_STATUSES, MEAL_TYPES } from "../core/constants.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
+import { buildGoogleCalendarLink, buildIcsDataUrl } from "../utils/calendar-link.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -225,6 +226,7 @@ function _showConfirmation(status) {
   if (!confirmEl) return;
   if (status === "confirmed") {
     confirmEl.textContent = t("rsvp_confirmed");
+    _renderCalendarLinks(confirmEl);
   } else if (status === "declined") {
     confirmEl.textContent = t("rsvp_declined");
   } else {
@@ -233,6 +235,58 @@ function _showConfirmation(status) {
   confirmEl.classList.remove("u-hidden");
   const details = document.getElementById("rsvpDetails");
   if (details) details.classList.add("u-hidden");
+}
+
+/**
+ * Append "Add to Calendar" actions (Google Calendar link + .ics download)
+ * to the confirmation panel. Skips silently if weddingInfo lacks a date.
+ * No `innerHTML` — DOM built via `createElement` + `textContent`.
+ *
+ * @param {HTMLElement} parent
+ */
+function _renderCalendarLinks(parent) {
+  const info = /** @type {Record<string, string|undefined>} */ (storeGet("weddingInfo") ?? {});
+  const date = info.date;
+  if (!date) return;
+  const time = info.time || "19:00";
+  const start = new Date(`${date}T${time}:00`);
+  if (Number.isNaN(start.getTime())) return;
+  const title = `${info.groom || ""} & ${info.bride || ""}`.trim() || t("rsvp_add_to_calendar");
+  /** @type {import("../utils/calendar-link.js")} */
+  const ev = {
+    title,
+    location: info.venue || "",
+    start,
+  };
+
+  const wrap = document.createElement("div");
+  wrap.className = "rsvp-calendar-actions";
+  wrap.style.marginTop = "0.75rem";
+  wrap.style.display = "flex";
+  wrap.style.gap = "0.5rem";
+  wrap.style.flexWrap = "wrap";
+
+  const heading = document.createElement("strong");
+  heading.textContent = t("rsvp_add_to_calendar");
+  heading.style.flex = "1 0 100%";
+  wrap.appendChild(heading);
+
+  const gcal = document.createElement("a");
+  gcal.href = buildGoogleCalendarLink(ev);
+  gcal.target = "_blank";
+  gcal.rel = "noopener noreferrer";
+  gcal.className = "btn btn-sm";
+  gcal.textContent = t("rsvp_add_to_google");
+  wrap.appendChild(gcal);
+
+  const ics = document.createElement("a");
+  ics.href = buildIcsDataUrl(ev);
+  ics.download = "wedding.ics";
+  ics.className = "btn btn-sm";
+  ics.textContent = t("rsvp_download_ics");
+  wrap.appendChild(ics);
+
+  parent.appendChild(wrap);
 }
 
 // ── S12.5 RSVP Deadline Enforcement ───────────────────────────────────────
