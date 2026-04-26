@@ -27,7 +27,7 @@ test.describe("Wedding Manager — Smoke Tests", () => {
   });
 
   test("at least one app section is rendered", async ({ page }) => {
-    const section = page.locator("section.section").first();
+    const section = page.locator("div.section, [role='region']").first();
     await expect(section).toBeAttached();
   });
 
@@ -166,6 +166,10 @@ test.describe("Guest Management — CRUD Flow", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/#guests");
     await page.waitForFunction(() => document.title.length > 0, { timeout: 8_000 });
+    // Lazy-loaded section template — wait until it actually injects content.
+    await page.waitForSelector("#sec-guests :is(table, .empty-state, [data-action])", {
+      timeout: 10_000,
+    });
   });
 
   test("guests section is reachable via hash", async ({ page }) => {
@@ -177,8 +181,8 @@ test.describe("Guest Management — CRUD Flow", () => {
     // Either a guestTableBody or an 'empty guests' indicator must be present
     const table = page.locator("#guestTableBody");
     const isEmpty = page.locator("#guestsEmpty, .guests-empty");
-    const hasTable = await table.isAttached().catch(() => false);
-    const hasEmpty = await isEmpty.isAttached().catch(() => false);
+    const hasTable = (await table.count()) > 0;
+    const hasEmpty = (await isEmpty.count()) > 0;
     expect(hasTable || hasEmpty).toBe(true);
   });
 
@@ -197,6 +201,9 @@ test.describe("Tables Section — Basic Flow", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/#tables");
     await page.waitForFunction(() => document.title.length > 0, { timeout: 8_000 });
+    await page.waitForSelector("#sec-tables :is(.empty-state, [data-action])", {
+      timeout: 10_000,
+    });
   });
 
   test("tables section is reachable via hash", async ({ page }) => {
@@ -206,7 +213,7 @@ test.describe("Tables Section — Basic Flow", () => {
 
   test("table list or empty state is rendered", async ({ page }) => {
     const tableList = page.locator("#tableList, #tableListContainer, #tableListBody, .table-list");
-    const hasAny = await tableList.first().isAttached().catch(() => false);
+    const hasAny = (await tableList.count()) > 0;
     // Tables section should have either a list or an empty state
     if (!hasAny) {
       const emptyState = page.locator(".tables-empty, [id*='tableEmpty']");

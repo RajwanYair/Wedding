@@ -36,7 +36,7 @@ test.describe("Offline behaviour (Phase 9.2)", () => {
     await p.goto("/");
     await p.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
     // Some section should always be visible
-    const section = p.locator("section, [data-section], #sections").first();
+    const section = p.locator("div.section, [role='region']").first();
     await expect(section).toBeAttached();
     await ctx.close();
   });

@@ -16,6 +16,9 @@ test.describe("Accessibility — axe-core WCAG AA", () => {
     await page.waitForFunction(() => document.title.length > 0, {
       timeout: 8_000,
     });
+    // Wait until the SW registers / lazy templates inject so axe doesn't
+    // race with an in-flight navigation ("Execution context destroyed").
+    await page.waitForLoadState("networkidle", { timeout: 10_000 });
   });
 
   test("landing / home page has no critical a11y violations", async ({

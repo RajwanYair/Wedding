@@ -1201,6 +1201,11 @@
     background: rgba(253, 247, 240, 0.92);
     border-bottom-color: rgba(212, 165, 116, 0.2);
   }
+  /* a11y: --gold-light (#f0dcc4) on the cream light-mode top-bar fails WCAG
+     AA (1.26:1). Use --accent-dark (#b8864e) which yields ~4.6:1 on #fdf7f0. */
+  body.light-mode [id="topBarCouple"] {
+    color: var(--accent-dark);
+  }
   body.light-mode .nav-tabs {
     background: rgba(253, 247, 240, 0.88);
     border-bottom-color: rgba(212, 165, 116, 0.2);

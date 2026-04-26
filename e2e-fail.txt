@@ -1,0 +1,1520 @@
+
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4249873Z     Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4250557Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4261208Z     Error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4261599Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4281539Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4282104Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4282990Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4283336Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4283735Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4283992Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4284594Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4285541Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4294089Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4294497Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4295189Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4295396Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4295609Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4295909Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4296622Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4297600Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4310696Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4311107Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4311631Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4311869Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4325071Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4325424Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4326230Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4327023Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4335459Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4336046Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4336701Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4336916Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4337143Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4337303Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4337930Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4338429Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4351236Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4351691Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4351859Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4352254Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4352409Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4352552Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4353100Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4357684Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4358079Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4358215Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4358486Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4358699Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4358958Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4359470Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4368096Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4368303Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4374406Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4374612Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4386289Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4386614Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4387783Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4388045Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4388414Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4388571Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4389115Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4390108Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4392525Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4393045Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4393714Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4394293Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4400069Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4400964Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4402956Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4403314Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4403698Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4403976Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4404683Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4406266Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4409869Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4410727Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4411241Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4411820Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4426170Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4426645Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4438134Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4438586Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4457633Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4458441Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4463417Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-desktop-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4464819Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-dc6d3-20-home-page-initial-render-chromium/home-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4466136Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4470339Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4471436Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4471656Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4472022Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4476324Z     Expected: tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4477587Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-dashboard-view-chromium/dashboard-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4478803Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4482515Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4483242Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4483513Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4483934Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4487525Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-desktop-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4488520Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-guests-view-chromium/guests-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4489593Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4492708Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4493346Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4493481Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4493738Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4496880Z     Expected: tests/e2e/visual.spec.mjs-snapshots/tables-desktop-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4497863Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-tables-view-chromium/tables-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4498933Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4502125Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4502753Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4502904Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4503181Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4506432Z     Expected: tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4507541Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-vendors-view-chromium/vendors-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4508530Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4511758Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4512583Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4512727Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4513024Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4516289Z     Expected: tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4517392Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-analytics-view-chromium/analytics-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4518432Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4521994Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4522612Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4522846Z       52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4523218Z       53 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4526274Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-mobile-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4527604Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-831ec-844-home-page-mobile-render-chromium/home-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4529035Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4533653Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4534259Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4534397Z       63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4534678Z       64 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4538348Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-mobile-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4539375Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-mobile-390├ù844-guests-view-mobile-chromium/guests-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4540791Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4543759Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4544356Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4544491Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4544754Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4547836Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4548812Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-rosegold-chromium/theme-rosegold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4549702Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4552741Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4553320Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4553620Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4553891Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4556932Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-gold-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4557837Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-gold-chromium/theme-gold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4558690Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4561759Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4562343Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4562482Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4562741Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4565680Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-emerald-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4566634Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-emerald-chromium/theme-emerald-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4567505Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4570580Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4571164Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4571299Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4571563Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4574540Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-royal-chromium-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4575450Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-royal-chromium/theme-royal-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4576310Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4579111Z     Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4579367Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4579732Z     expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4580065Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4580501Z     Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4580821Z     Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4584896Z     Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4589650Z       Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4591228Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4596413Z     Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4596767Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4608522Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4608843Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4609369Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4609569Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4609783Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4609941Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4610566Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4611086Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4616314Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4616634Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4617164Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4617384Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4617615Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4617767Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4618150Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4618721Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4628573Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4628897Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4629429Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4629624Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4629836Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4629991Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4630740Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4631211Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4637458Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4637780Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4638188Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4638385Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4638599Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4638749Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4639124Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4639554Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4650717Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4651541Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4651907Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4652370Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4652540Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4652707Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4653217Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4657551Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4657949Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4658090Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4658474Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4658721Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4658959Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4659688Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4674967Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4675348Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4684706Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4685068Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4701027Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4701360Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4702598Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4702802Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4703019Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4703177Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4703564Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4704398Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4707238Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4707584Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4707910Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4708215Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4711788Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4712117Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4713243Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4713448Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4713668Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4713823Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4714217Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4715070Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4717013Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4717348Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4717691Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4717994Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4725592Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4725858Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4732062Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4732310Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4743862Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4744455Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4747905Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-desktop-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4748896Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-dc6d3-20-home-page-initial-render-firefox/home-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4749814Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4753252Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4753850Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4753984Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4754243Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4757266Z     Expected: tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4758289Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-dashboard-view-firefox/dashboard-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4759214Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4762427Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4763023Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4763162Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4763424Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4766387Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-desktop-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4767355Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-guests-view-firefox/guests-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4768254Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4771284Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4771870Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4772001Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4772258Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4775508Z     Expected: tests/e2e/visual.spec.mjs-snapshots/tables-desktop-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4776485Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-tables-view-firefox/tables-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4777373Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4780370Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4781037Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4781180Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4781433Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4784406Z     Expected: tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4785395Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-vendors-view-firefox/vendors-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4786297Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4789243Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4789842Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4789970Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4790460Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4793501Z     Expected: tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4794519Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-analytics-view-firefox/analytics-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4795442Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4798455Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4799031Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4799263Z       52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4799612Z       53 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4811991Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-mobile-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4813005Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-831ec-844-home-page-mobile-render-firefox/home-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4813956Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4816895Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4817467Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4817604Z       63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4817859Z       64 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4821504Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-mobile-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4822527Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-mobile-390├ù844-guests-view-mobile-firefox/guests-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4823439Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4826212Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4826803Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4826931Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4827188Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4830400Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4831392Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-rosegold-firefox/theme-rosegold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4832276Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4835094Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4835652Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4835787Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4836036Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4839078Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-gold-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4839970Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-gold-firefox/theme-gold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4841092Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4843779Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4844358Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4844489Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4844760Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4847690Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-emerald-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4848615Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-emerald-firefox/theme-emerald-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4849475Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4852626Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4853212Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4853344Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4853601Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4856514Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-royal-firefox-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4857575Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-royal-firefox/theme-royal-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4858431Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4861392Z     Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4861644Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4862026Z     expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4862362Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4862521Z     Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4862800Z     Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4868161Z     Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf9f2", "contrastRatio": 1.17, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "10.2pt (13.6px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "target": ["#btnLang"]}, {"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4877121Z       Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "impact": "serious", "none": [], "target": ["#btnLang"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.16, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "9.4pt (12.48px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4885284Z       Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"user-signout-btn\" id=\"btnSignIn\" data-action=\"showAuthOverlay\" data-i18n=\"auth_sign_in\" data-tooltip-pos=\"down\">≡ƒöæ ╫¢╫á╫Ö╫í╫ö</button>", "impact": "serious", "none": [], "target": ["#btnSignIn"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4890047Z       Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4891606Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4896445Z     Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4896798Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4908513Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4908841Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4909366Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4909578Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4909787Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4909940Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4910623Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4911160Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4916370Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4916685Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4917203Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4917401Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4917614Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4917760Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4918134Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4918655Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4928336Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4928670Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4929078Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4929276Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4929489Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4929635Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4930009Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4930625Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4936124Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4936444Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4936846Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4937041Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4937246Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4937406Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4937777Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4938203Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4947983Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4948382Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4948522Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4948780Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4948912Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4949063Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4949467Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4953619Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4954141Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4954280Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4954535Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4954672Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4954804Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4955217Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4963190Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4963407Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4968759Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4968961Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4978595Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4978911Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4979964Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4980040Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4980432Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4980445Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4980746Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4981383Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4982078Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4982183Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4982365Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4982442Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4984224Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4984231Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4984783Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4984864Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4984964Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4984980Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4985263Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4985879Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4986557Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4986659Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4986839Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4986909Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4990983Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4990991Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4994147Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4994155Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4999724Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.4999732Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5001906Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-desktop-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5002590Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-dc6d3-20-home-page-initial-render-webkit/home-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5002927Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5004597Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5004618Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5004756Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5004823Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5006340Z     Expected: tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5007035Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-dashboard-view-webkit/dashboard-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5007367Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5009118Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5009126Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5009258Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5009452Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5011088Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-desktop-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5011745Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-guests-view-webkit/guests-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5012071Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5013666Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5013686Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5013814Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5013886Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5015350Z     Expected: tests/e2e/visual.spec.mjs-snapshots/tables-desktop-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5015983Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-tables-view-webkit/tables-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5016445Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5018041Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5018049Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5018180Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5018246Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5019825Z     Expected: tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5020607Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-vendors-view-webkit/vendors-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5020946Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5022571Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5022595Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5022722Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5022789Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5024256Z     Expected: tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5024926Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-analytics-view-webkit/analytics-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5025257Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5027018Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5027026Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5027254Z       52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5027326Z       53 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5028862Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-mobile-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5029525Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-831ec-844-home-page-mobile-render-webkit/home-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5029847Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5031615Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5031636Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5031767Z       63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5031834Z       64 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5033276Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-mobile-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5033934Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-mobile-390├ù844-guests-view-mobile-webkit/guests-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5034404Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5036121Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5036134Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5036262Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5036329Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5037784Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5038394Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-rosegold-webkit/theme-rosegold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5038719Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5040367Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5040391Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5040519Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5040591Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5042006Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-gold-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5042581Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-gold-webkit/theme-gold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5042912Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5044419Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5044562Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5044690Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5044760Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5046296Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-emerald-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5046899Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-emerald-webkit/theme-emerald-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5047234Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5048750Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5048757Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5048886Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5048952Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5050506Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-royal-webkit-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5051091Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-royal-webkit/theme-royal-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5051419Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5052959Z     Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5053089Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5053452Z     expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5053460Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5053605Z     Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5053741Z     Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5059030Z     Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf9f2", "contrastRatio": 1.17, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "10.2pt (13.6px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "target": ["#btnLang"]}, {"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5063666Z       Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "impact": "serious", "none": [], "target": ["#btnLang"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.16, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "9.4pt (12.48px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5067700Z       Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"user-signout-btn\" id=\"btnSignIn\" data-action=\"showAuthOverlay\" data-i18n=\"auth_sign_in\" data-tooltip-pos=\"down\">≡ƒöæ ╫¢╫á╫Ö╫í╫ö</button>", "impact": "serious", "none": [], "target": ["#btnSignIn"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5069573Z       Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5069695Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5072188Z     Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5072196Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5072554Z     expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5072562Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5072704Z     Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5072845Z     Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5076798Z     Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5078690Z       Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5078705Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5083920Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5083940Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5084221Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5084297Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5084404Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5084412Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5084694Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5084987Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5087629Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5087637Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5087916Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5087997Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5088100Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5088188Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5088469Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5088765Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5093731Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5093739Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5093954Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5094034Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5094135Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5094142Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5094431Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5094655Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5097434Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5097570Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5097792Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5097867Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5097970Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5097977Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5098256Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5098475Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5103801Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5103809Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5104094Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5104209Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5104216Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5104358Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5104580Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5106693Z     Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5106706Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5106837Z     Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5106945Z     Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5106952Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5107092Z       152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5107427Z       153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5111700Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5111708Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5114429Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5114551Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5119752Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5119775Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5120464Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5120545Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5120647Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5120655Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5120943Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5121702Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5122394Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5122503Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5122685Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5122759Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5124456Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5124579Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5125131Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5125211Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5125313Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5125320Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5125607Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5126218Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5126911Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5127013Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5127201Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5127273Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5131545Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5131557Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5134688Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5134704Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5140766Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5140777Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5142705Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-desktop-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5143438Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-dc6d3-20-home-page-initial-render-mobile-portrait/home-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5143772Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5145580Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5145600Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5145740Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5145807Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5147349Z     Expected: tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5148080Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-dashboard-view-mobile-portrait/dashboard-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5148421Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5150445Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5150457Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5150592Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5150662Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5152323Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-desktop-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5153021Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-guests-view-mobile-portrait/guests-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5153351Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5155102Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5155122Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5155257Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5155323Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5156836Z     Expected: tests/e2e/visual.spec.mjs-snapshots/tables-desktop-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5157524Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-tables-view-mobile-portrait/tables-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5158019Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5159849Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5159857Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5159990Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5160060Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5161725Z     Expected: tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5162431Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-vendors-view-mobile-portrait/vendors-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5162764Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5164553Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5164561Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5164688Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5164762Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5166281Z     Expected: tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5167020Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-analytics-view-mobile-portrait/analytics-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5167344Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5169263Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5169273Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5169624Z       52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5169692Z       53 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5171319Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-mobile-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5172032Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-831ec-844-home-page-mobile-render-mobile-portrait/home-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5172368Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5174154Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5174162Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5174296Z       63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5174365Z       64 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5175852Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-mobile-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5176710Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-mobile-390├ù844-guests-view-mobile-mobile-portrait/guests-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5177042Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5178877Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5178886Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5179027Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5179098Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5180743Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5181420Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-rosegold-mobile-portrait/theme-rosegold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5181759Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5183410Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5183418Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5183550Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5183623Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5185273Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-gold-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5185899Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-gold-mobile-portrait/theme-gold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5186229Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5187872Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5188000Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5188138Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5188206Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5189702Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-emerald-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5190487Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-emerald-mobile-portrait/theme-emerald-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5190840Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5192486Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5192500Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5192628Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5192696Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5194203Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-royal-mobile-portrait-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5194979Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-royal-mobile-portrait/theme-royal-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5195305Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5196997Z     Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5197005Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5200477Z     Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5200485Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5200853Z     expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5200870Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5201007Z     Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5201143Z     Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5205060Z     Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5207007Z       Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5207028Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212209Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212228Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212505Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212586Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212687Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212694Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5212974Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5213279Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5215993Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5216002Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5216281Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5216355Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5216470Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5216477Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5216756Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5217046Z       - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5221975Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5221983Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5222203Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5222287Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5222396Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5222403Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5222681Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5222902Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5225834Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5225851Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5226066Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5226148Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5226247Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5226254Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5226529Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5226761Z       - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5231975Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5231983Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5234706Z     TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5234713Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5239956Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5239964Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5240789Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5240865Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5240974Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5240982Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5241272Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5241887Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5242690Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5242791Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5242979Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5243054Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5244781Z     Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5244789Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5245339Z     Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5245414Z     Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5245529Z     Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5245536Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5245807Z       - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5246420Z       - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5247536Z     > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5247641Z           |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5247910Z       191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5247987Z       192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5252379Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5252387Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5260096Z     TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5260104Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5266734Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5266742Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5268557Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-desktop-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5269302Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-dc6d3-20-home-page-initial-render-tablet-landscape/home-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5269634Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5271687Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5271831Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5271973Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5272051Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5273620Z     Expected: tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5274372Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-dashboard-view-tablet-landscape/dashboard-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5274711Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5276614Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5276622Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5276757Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5276824Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5278355Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-desktop-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5279055Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-guests-view-tablet-landscape/guests-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5279386Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5281288Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5281308Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5281441Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5281509Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5283181Z     Expected: tests/e2e/visual.spec.mjs-snapshots/tables-desktop-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5283872Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-tables-view-tablet-landscape/tables-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5284320Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5286091Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5286099Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5286227Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5286299Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5287819Z     Expected: tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5288537Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-vendors-view-tablet-landscape/vendors-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5288859Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5290797Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5290937Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5291080Z       37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5291149Z       38 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5292724Z     Expected: tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5293506Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-desktop-1280├ù720-analytics-view-tablet-landscape/analytics-desktop-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5293848Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5295782Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5295791Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5296030Z       52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5296110Z       53 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5297612Z     Expected: tests/e2e/visual.spec.mjs-snapshots/home-mobile-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5298340Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-831ec-844-home-page-mobile-render-tablet-landscape/home-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5298674Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5300624Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5300635Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5300766Z       63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5300839Z       64 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5302486Z     Expected: tests/e2e/visual.spec.mjs-snapshots/guests-mobile-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5303383Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-mobile-390├ù844-guests-view-mobile-tablet-landscape/guests-mobile-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5303715Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5305474Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5305492Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5305638Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5305705Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5307225Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5307904Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-rosegold-tablet-landscape/theme-rosegold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5308242Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5309992Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5310001Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5310271Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5310348Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5311971Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-gold-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5312612Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-gold-tablet-landscape/theme-gold-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5312943Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5314608Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5314616Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5314743Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5314825Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5316329Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-emerald-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5316996Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-emerald-tablet-landscape/theme-emerald-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5317319Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5319114Z     Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5319121Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5319249Z       86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5319321Z       87 |
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5321025Z     Expected: tests/e2e/visual.spec.mjs-snapshots/theme-royal-tablet-landscape-linux.png
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5321810Z     Received: ../../../../../tmp/wedding-dev/playwright-results/visual-Visual-regression-ΓÇö-themes-theme-royal-tablet-landscape/theme-royal-actual.png
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5322135Z     ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5323604Z     Error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5323611Z 
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5325492Z   94 failed
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5326094Z     [chromium] ΓÇ║ tests/e2e/accessibility.spec.mjs:21:3 ΓÇ║ Accessibility ΓÇö axe-core WCAG AA ΓÇ║ landing / home page has no critical a11y violations 
+> E2E Smoke Tests	Run E2E smoke tests	    Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      53 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      64 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-chromium-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	    Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	    Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      53 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      64 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-firefox-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	    Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	    Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf9f2", "contrastRatio": 1.17, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "10.2pt (13.6px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "target": ["#btnLang"]}, {"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "impact": "serious", "none": [], "target": ["#btnLang"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.16, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "9.4pt (12.48px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"user-signout-btn\" id=\"btnSignIn\" data-action=\"showAuthOverlay\" data-i18n=\"auth_sign_in\" data-tooltip-pos=\"down\">≡ƒöæ ╫¢╫á╫Ö╫í╫ö</button>", "impact": "serious", "none": [], "target": ["#btnSignIn"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT",
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5718443Z ##[error]  39) [webkit] ΓÇ║ tests/e2e/accessibility.spec.mjs:21:3 ΓÇ║ Accessibility ΓÇö axe-core WCAG AA ΓÇ║ landing / home page has no critical a11y violations 
+> E2E Smoke Tests	Run E2E smoke tests	    Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      53 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      64 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-webkit-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	    Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	    Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf9f2", "contrastRatio": 1.17, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "10.2pt (13.6px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "target": ["#btnLang"]}, {"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.17 (foreground color: #f0e6d6, background color: #fdf9f2, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"btn-lang\" id=\"btnLang\" data-lang-toggle-label=\"\" data-action=\"toggleLanguage\" data-i18n-tooltip=\"tip_btn_lang\" data-i18n-aria=\"tip_btn_lang\" data-tooltip-pos=\"down\" aria-label=\"EN ΓÇö ╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\" title=\"╫ö╫ù╫£╫ú ╫æ╫Ö╫ƒ ╫ó╫æ╫¿╫Ö╫¬ ╫£╫É╫á╫Æ╫£╫Ö╫¬\">EN</button>", "impact": "serious", "none": [], "target": ["#btnLang"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.16, "expectedContrastRatio": "4.5:1", "fgColor": "#f0e6d6", "fontSize": "9.4pt (12.48px)", "fontWeight": "normal", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.16 (foreground color: #f0e6d6, background color: #fdf8f1, font size: 9.4pt (12.48px), font weight: normal). Expected contrast ratio of 4.5:1", "html": "<button class=\"user-signout-btn\" id=\"btnSignIn\" data-action=\"showAuthOverlay\" data-i18n=\"auth_sign_in\" data-tooltip-pos=\"down\">≡ƒöæ ╫¢╫á╫Ö╫í╫ö</button>", "impact": "serious", "none": [], "target": ["#btnSignIn"]}, {"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3
+  E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.5887114Z ##[error]  58) [mobile-portrait] ΓÇ║ tests/e2e/accessibility.spec.mjs:21:3 ΓÇ║ Accessibility ΓÇö axe-core WCAG AA ΓÇ║ landing / home page has no critical a11y violations 
+> E2E Smoke Tests	Run E2E smoke tests	    Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	    Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	    Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(received).toBe(expected) // Object.is equality
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: "#rsvp"
+> E2E Smoke Tests	Run E2E smoke tests	    Received: ""
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      152 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      153 |       const hash = await page.evaluate(() => window.location.hash);
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      53 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      64 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-mobile-portrait-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: frame.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: 1 critical/serious accessibility violation(s) found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    expect(received).toHaveLength(expected)
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected length: 0
+> E2E Smoke Tests	Run E2E smoke tests	    Received length: 1
+> E2E Smoke Tests	Run E2E smoke tests	    Received array:  [{"description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds", "help": "Elements must meet minimum color contrast ratio thresholds", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright", "id": "color-contrast", "impact": "serious", "nodes": [{"all": [], "any": [{"data": {"bgColor": "#fdf8f1", "contrastRatio": 1.26, "expectedContrastRatio": "4.5:1", "fgColor": "#f0dcc4", "fontSize": "9.8pt (13.12px)", "fontWeight": "bold", "messageKey": null}, "id": "color-contrast", "impact": "serious", "message": "Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "relatedNodes": [{"html": "<div class=\"top-bar\">", "target": [".top-bar"]}]}], "failureSummary": "Fix any of the following:
+> E2E Smoke Tests	Run E2E smoke tests	      Element has insufficient color contrast of 1.26 (foreground color: #f0dcc4, background color: #fdf8f1, font size: 9.8pt (13.12px), font weight: bold). Expected contrast ratio of 4.5:1", "html": "<span id=\"topBarCouple\">╫ù╫¬╫ƒ &amp; ╫¢╫£╫ö</span>", "impact": "serious", "none": [], "target": ["#topBarCouple"]}], "tags": ["cat.color", "wcag2aa", "wcag143", "TTv5", "TT13.c", "EN-301-549", "EN-9.1.4.3", "ACT", "RGAAv4", "RGAA-3.2.1"]}]
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section, [data-section], #sections').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('section.section').first()
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: table.isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    Error: expect(locator).toBeAttached() failed
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Expected: attached
+> E2E Smoke Tests	Run E2E smoke tests	    Timeout: 5000ms
+> E2E Smoke Tests	Run E2E smoke tests	    Error: element(s) not found
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      - Expect "toBeAttached" with timeout 5000ms
+  E2E Smoke Tests	Run E2E smoke tests	      - waiting for locator('[data-action="openAddGuestModal"], [data-action="showAddGuest"], #addGuestBtn, button[data-action*="Guest"]').first()
+> E2E Smoke Tests	Run E2E smoke tests	    > 190 |     await expect(addBtn).toBeAttached({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	          |                          ^
+> E2E Smoke Tests	Run E2E smoke tests	      191 |     await expect(addBtn).toBeVisible({ timeout: 5_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      192 |   });
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    TypeError: tableList.first(...).isAttached is not a function
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/dashboard-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/tables-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/vendors-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/analytics-desktop-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      37 |       await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      38 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/home-mobile-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      52 |     await page.waitForSelector('[role="tablist"]', { timeout: 10_000 });
+  E2E Smoke Tests	Run E2E smoke tests	      53 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/guests-mobile-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      63 |     await page.waitForTimeout(300);
+  E2E Smoke Tests	Run E2E smoke tests	      64 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-rosegold-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-gold-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-emerald-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: A snapshot doesn't exist at /home/runner/work/Wedding/Wedding/tests/e2e/visual.spec.mjs-snapshots/theme-royal-tablet-landscape-linux.png, writing actual.
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	      86 |       await page.waitForTimeout(150);
+  E2E Smoke Tests	Run E2E smoke tests	      87 |
+> E2E Smoke Tests	Run E2E smoke tests	    Error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+  E2E Smoke Tests	Run E2E smoke tests	
+> E2E Smoke Tests	Run E2E smoke tests	2026-04-26T11:44:39.6213653Z ##[notice]  94 failed
+  E2E Smoke Tests	Run E2E smoke tests	    [chromium] ΓÇ║ tests/e2e/accessibility.spec.mjs:21:3 ΓÇ║ Accessibility ΓÇö axe-core WCAG AA ΓÇ║ landing / home page has no critical a11y violations 
+
