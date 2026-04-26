@@ -40,6 +40,7 @@
     "audit:arch": "node scripts/arch-check.mjs",
     "audit:actions": "node scripts/check-action-namespace.mjs",
     "audit:trusted-types": "node scripts/audit-trusted-types.mjs",
+    "audit:adrs": "node scripts/check-adr-coverage.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
