@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.8.0] — 2026-04-29
+
+> Roadmap sprint batch — Trusted Types audit, ADR index, ADR coverage advisory, ADRs 021/022, Diátaxis indices.
+
+### Added
+
+- **`scripts/audit-trusted-types.mjs`** + `audit:trusted-types` npm script —
+  advisory grep for DOM sinks (`innerHTML`, `outerHTML`, `insertAdjacentHTML`,
+  `document.write`, `eval`, `new Function`, inline event setters). Wired as a
+  CI advisory step on the Node 22 matrix. Becomes a hard gate in v12.0.0
+  alongside the named `wedding-html` Trusted Types policy. (ADR-018 Phase 1.)
+- **`scripts/check-adr-coverage.mjs`** + `audit:adrs` script — emits an ADR
+  inventory (count, by status, numbering gaps). Hard gate planned for v12.0.0
+  asserting every ROADMAP §3 "Replace" verdict has a backing ADR. (ROADMAP §3.4.)
+- **`docs/adr/README.md`** — full ADR catalogue (22 entries) with status legend
+  and "when to write an ADR" guidance.
+- **ADR-021** — Diátaxis documentation reorganisation plan staged across
+  v11.8.0 → v12.0.0 (tutorials / how-to / reference / explanation while
+  keeping audience folders for `users/` and `operations/`).
+- **ADR-022** — Action namespace migration sequence: dual-name support,
+  one domain per minor (modals → auth → guests → tables → vendors → ui →
+  events), hard gate per domain, alias removal at v12.0.0.
+- **`docs/users/README.md`** + **`docs/operations/README.md`** — Diátaxis
+  audience indices linking the existing per-audience guides and runbooks.
+- **README badges** — ADR catalogue (22) + audits (dead/actions/types)
+  alongside the existing supply-chain row.
+
+### Changed
+
+- `package.json` — new `audit:adrs` and `audit:trusted-types` scripts.
+- `.github/workflows/ci.yml` — adds `Trusted Types sink advisory` step on the
+  Node 22 matrix.
+
 ## [11.7.0] — 2026-04-29
 
 > Roadmap sprint batch — ADRs 016-020, action-namespace advisory, Diátaxis user docs.

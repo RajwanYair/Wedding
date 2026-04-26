@@ -2,7 +2,7 @@
 
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v11.7.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v11.8.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
 [![Tests](https://img.shields.io/badge/tests-2385_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
@@ -16,6 +16,8 @@
 [![Scorecard](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml)
 [![SBOM](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml)
 [![Trivy](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml)
+[![ADRs](https://img.shields.io/badge/ADRs-22-7f5af0?style=flat-square)](docs/adr/README.md)
+[![Audits](https://img.shields.io/badge/audits-dead%20%C2%B7%20actions%20%C2%B7%20types-1abc9c?style=flat-square)](.github/workflows/ci.yml)
 
 **Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
 **Vite 8, vanilla JS/CSS, Hebrew RTL first, minimal runtime dependencies (3).**
