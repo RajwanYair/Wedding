@@ -1,0 +1,197 @@
+@layer print {
+  /* ── Print Styles (v1.16.0) ──────────────────────────────────────────────────
+   Optimised print layouts for: guest list, place cards, table signs.
+   Load order: after components.css and before auth.css.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+  /* ── Base print reset ── */
+  @media print {
+    /* Hide chrome elements */
+    .nav-sidebar,
+    .bottom-nav,
+    .top-bar,
+    .auth-overlay,
+    .modal-overlay,
+    .toast-container,
+    .update-banner,
+    [id="updateBanner"],
+    .admin-bar,
+    .guest-filters,
+    .table-actions,
+    .btn,
+    [id="expenseAdminBar"],
+    [id="timelineAdminBar"],
+    .nav-tab {
+      display: none !important;
+    }
+
+    /* Remove glassmorphism backdrop */
+    body {
+      background: white !important;
+      color: black !important;
+    }
+
+    .card,
+    .section {
+      background: white !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    .main-content {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+
+  /* ── Guest list print ── */
+  @media print {
+    .print-guest-list .section {
+      display: block !important;
+    }
+
+    .guest-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+
+    .guest-table th,
+    .guest-table td {
+      padding: 4px 6px;
+      border: 1px solid #ccc;
+      color: black;
+    }
+
+    .guest-table thead {
+      background: #f0f0f0 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+
+  /* ── Place cards layout ── */
+  .place-cards-grid {
+    display: none;
+  }
+
+  @media print {
+    .place-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      width: 100%;
+    }
+
+    .place-card {
+      width: 3.5in;
+      height: 2in;
+      border: 1px dashed #ccc;
+      padding: 0.25in;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      break-inside: avoid;
+    }
+
+    .place-card-name {
+      font-size: 14pt;
+      font-weight: 700;
+      color: black;
+      margin-bottom: 0.1in;
+    }
+
+    .place-card-table {
+      font-size: 10pt;
+      color: #444;
+    }
+
+    .place-card-count {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 4pt;
+    }
+  }
+
+  /* ── Table signs layout ── */
+  .table-signs-grid {
+    display: none;
+  }
+
+  @media print {
+    .table-signs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+    }
+
+    .table-sign {
+      width: 5in;
+      height: 3in;
+      border: 2px solid #000;
+      padding: 0.3in;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      break-inside: avoid;
+    }
+
+    .table-sign-number {
+      font-size: 48pt;
+      font-weight: 700;
+      color: black;
+      line-height: 1;
+    }
+
+    .table-sign-name {
+      font-size: 18pt;
+      color: #222;
+      margin-top: 12pt;
+    }
+
+    .table-sign-capacity {
+      font-size: 10pt;
+      color: #555;
+      margin-top: 8pt;
+    }
+  }
+
+  /* ── Pre-print helper classes (screen only) ── */
+  @media screen {
+    .place-cards-grid,
+    .table-signs-grid {
+      display: none;
+    }
+  }
+
+  /* ── Analytics Print (S8.4) ── */
+  @media print {
+    .section[data-section="analytics"] .card {
+      break-inside: avoid;
+      box-shadow: none;
+      backdrop-filter: none;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+    .section[data-section="analytics"] svg {
+      max-width: 100%;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+    .section[data-section="analytics"] .analytics-activity-list li {
+      border-color: #ccc;
+      color: #000;
+    }
+    .section[data-section="analytics"] .btn {
+      display: none;
+    }
+  }
+} /* end @layer print */

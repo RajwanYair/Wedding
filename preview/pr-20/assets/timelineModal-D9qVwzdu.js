@@ -1,0 +1,79 @@
+var e=`<div
+  class="modal-overlay"
+  id="timelineModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="timelineModalTitle"
+>
+  <div class="modal modal--narrow">
+    <div class="modal-header">
+      <h2 id="timelineModalTitle" data-i18n="timeline_add">הוסף אירוע</h2>
+      <button
+        class="modal-close"
+        data-action="closeModal"
+        data-action-arg="timelineModal"
+        aria-label="סגור"
+        data-i18n-aria="btn_close"
+      >
+        &times;
+      </button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="timelineTime" data-i18n="label_timeline_time">שעה</label>
+        <input type="time" id="timelineTime" required />
+      </div>
+      <div class="form-group">
+        <label for="timelineIcon" data-i18n="label_timeline_icon">אמוג׳י</label>
+        <input
+          type="text"
+          id="timelineIcon"
+          placeholder="📌"
+          maxlength="2"
+          class="emoji-input"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="timelineTitle" data-i18n="label_timeline_title">כותרת</label>
+      <input
+        type="text"
+        id="timelineTitle"
+        data-i18n-placeholder="ph_timeline_title"
+        placeholder="קבלת פנים..."
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="timelineDesc" data-i18n="label_timeline_desc"
+        >תיאור (אופציונלי)</label
+      >
+      <input
+        type="text"
+        id="timelineDesc"
+        data-i18n-placeholder="ph_timeline_desc"
+        placeholder="פרטים נוספים..."
+      />
+    </div>
+    <input type="hidden" id="timelineModalId" value="" />
+    <div class="modal-footer">
+      <button
+        class="btn btn-secondary"
+        data-action="closeModal"
+        data-action-arg="timelineModal"
+        data-i18n="btn_cancel"
+      >
+        ביטול
+      </button>
+      <button
+        class="btn btn-primary"
+        data-action="saveTimelineItem"
+        data-i18n="btn_save"
+      >
+        שמור
+      </button>
+    </div>
+  </div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=timelineModal-D9qVwzdu.js.map

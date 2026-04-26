@@ -1,0 +1,99 @@
+{
+    "name": "ניהול חתונה — Wedding Manager",
+    "short_name": "Wedding",
+    "description": "Wedding management app — RSVP, table seating, WhatsApp invitations. Hebrew RTL with English support.",
+    "display": "standalone",
+    "display_override": ["window-controls-overlay", "standalone"],
+    "start_url": "./index.html",
+    "scope": "./",
+    "background_color": "#0f0520",
+    "theme_color": "#1a0a2e",
+    "orientation": "any",
+    "lang": "he",
+    "dir": "rtl",
+    "categories": ["lifestyle", "utilities"],
+    "icons": [
+        {
+            "src": "./icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "./icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "./icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "אישור הגעה",
+            "short_name": "RSVP",
+            "url": "./index.html#rsvp",
+            "description": "דף אישור הגעה לאורחים"
+        },
+        {
+            "name": "רשימת אורחים",
+            "short_name": "אורחים",
+            "url": "./index.html#guests",
+            "description": "ניהול רשימת אורחים"
+        },
+        {
+            "name": "דשבורד",
+            "short_name": "דשבורד",
+            "url": "./index.html#dashboard",
+            "description": "סטטיסטיקות ותמונה כוללת"
+        },
+        {
+            "name": "צ'ק-אין",
+            "short_name": "צ'ק-אין",
+            "url": "./index.html#checkin",
+            "description": "קליטת אורחים בכניסה"
+        }
+    ],
+    "share_target": {
+        "action": "./index.html",
+        "method": "GET",
+        "params": {
+            "title": "share_title",
+            "text": "share_text",
+            "url": "share_url"
+        }
+    },
+    "screenshots": [
+        {
+            "src": "./screenshot-dashboard.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Wedding Manager Dashboard"
+        },
+        {
+            "src": "./screenshot-rsvp.png",
+            "sizes": "390x844",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "RSVP Form"
+        }
+    ],
+    "handle_links": "preferred",
+    "file_handlers": [
+        {
+            "action": "./index.html",
+            "accept": {
+                "text/csv": [".csv"],
+                "application/vnd.ms-excel": [".xls"],
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"]
+            },
+            "icons": [{ "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" }],
+            "launch_type": "single-client"
+        }
+    ]
+}

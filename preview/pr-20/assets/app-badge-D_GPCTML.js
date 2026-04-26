@@ -1,0 +1,2 @@
+function e(){return typeof navigator<`u`&&typeof navigator.setAppBadge==`function`}async function t(t){if(!e())return!1;try{let e=Number(t);return!Number.isFinite(e)||e<=0?await navigator.clearAppBadge():await navigator.setAppBadge(Math.floor(e)),!0}catch{return!1}}export{t as updateBadge};
+//# sourceMappingURL=app-badge-D_GPCTML.js.map
