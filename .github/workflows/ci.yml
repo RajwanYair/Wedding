@@ -67,6 +67,11 @@ jobs:
         run: npm run audit:actions
         # ROADMAP §5.3 #4: domain:verb namespacing. Advisory until v13.0.0.
 
+      - name: Trusted Types sink advisory (ADR-018 Phase 1)
+        if: matrix.node-version == '22'
+        run: npm run audit:trusted-types
+        # ADR-018 Phase 1: report-only sink census. Hard gate in v12.0.0.
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
