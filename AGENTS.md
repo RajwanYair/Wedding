@@ -49,6 +49,7 @@ supabase/     — Migrations and edge functions
 | Wedding Designer | `.github/agents/wedding-designer.agent.md` | UI/UX, themes, CSS, RTL layout, accessibility           |
 | Analytics Agent  | `.github/agents/analytics-agent.agent.md`  | Dashboard stats, charts, reporting, export              |
 | Vendor Agent     | `.github/agents/vendor-agent.agent.md`     | Vendors, expenses, budget tracking, payments            |
+| Release Engineer | `.github/agents/release-engineer.agent.md` | Version bumps, CHANGELOG, sync-version, tagging, GH release notes |
 
 ## Common Tasks
 
