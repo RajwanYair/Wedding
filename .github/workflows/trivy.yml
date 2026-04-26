@@ -1,0 +1,60 @@
+# Trivy filesystem & config scan.
+# Catches CVEs in transitive deps and misconfig in workflow / Dockerfile-style
+# files. Runs weekly + on PR; uploads SARIF for code-scanning integration.
+#
+# Docs: https://github.com/aquasecurity/trivy-action
+name: Trivy Scan
+
+on:
+  schedule:
+    - cron: "37 6 * * 1" # Mondays 06:37 UTC
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Trivy filesystem + config
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Run Trivy (filesystem)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-fs.sarif
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+          # exit 0 — surfaced via SARIF upload, not by failing CI
+          exit-code: "0"
+
+      - name: Run Trivy (config / IaC)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: config
+          scan-ref: .
+          format: sarif
+          output: trivy-config.sarif
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+
+      - name: Upload filesystem SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-fs
+
+      - name: Upload config SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-config.sarif
+          category: trivy-config

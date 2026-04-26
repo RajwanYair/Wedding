@@ -1,0 +1,53 @@
+# CycloneDX SBOM (Software Bill of Materials) generation.
+# Runs on each release tag and weekly on main. Uploads CycloneDX JSON +
+# XML artefacts that downstream consumers (and supply-chain audits) can use.
+#
+# Tool: @cyclonedx/cyclonedx-npm — the official Node generator.
+name: SBOM (CycloneDX)
+
+on:
+  schedule:
+    - cron: "31 6 * * 1" # Mondays 06:31 UTC
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sbom:
+    name: Generate CycloneDX SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install (production deps only)
+        run: npm ci --omit=dev
+
+      - name: Generate SBOM (JSON + XML)
+        run: |
+          npx --yes @cyclonedx/cyclonedx-npm \
+            --output-format JSON \
+            --output-file sbom.cdx.json \
+            --omit dev
+          npx --yes @cyclonedx/cyclonedx-npm \
+            --output-format XML \
+            --output-file sbom.cdx.xml \
+            --omit dev
+
+      - name: Upload artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyclonedx-sbom
+          path: |
+            sbom.cdx.json
+            sbom.cdx.xml
+          retention-days: 90
