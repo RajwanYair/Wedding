@@ -76,6 +76,7 @@ import {
   currentUser,
 } from "./services/auth.js";
 import { startPresence, onPresenceChange } from "./services/presence.js";
+import { initMonitoring, captureException } from "./services/monitoring.js";
 import {
   syncSheetsNow,
   sheetsCheckConnection,
@@ -247,6 +248,29 @@ let _activeSection = null;
     }
   }
 
+  // 0b. Production monitoring — opt-in via VITE_SENTRY_DSN. No-op without DSN.
+  // Wires window error/unhandledrejection listeners so silent failures surface.
+  // (ROADMAP Phase A2: zero plaintext credentials, observable error stream.)
+  initMonitoring().catch(() => {
+    /* monitoring must never break the app */
+  });
+  if (typeof window !== "undefined") {
+    window.addEventListener("error", (event) => {
+      captureException(event.error ?? new Error(String(event.message)), {
+        section: "window",
+        action: "error",
+        filename: event.filename,
+        lineno: event.lineno,
+      });
+    });
+    window.addEventListener("unhandledrejection", (event) => {
+      captureException(event.reason ?? new Error("unhandledrejection"), {
+        section: "window",
+        action: "unhandledrejection",
+      });
+    });
+  }
+
   // 1. Language — use stored preference; auto-detect browser locale for new users (Phase 4.3)
   const _storedLang = load("lang");
   const lang = /** @type {'he'|'en'|'ar'|'ru'} */ (
@@ -267,18 +291,39 @@ let _activeSection = null;
   // 3. Reactive store — seed with persisted data from localStorage
   initStore(buildStoreDefs());
 
-  // 3a. Seed default weddingInfo for the "default" event if empty
+  // 3a. Seed default weddingInfo for the "default" event if empty.
+  // Source-of-truth defaults live in `public/wedding.json` (deploy-time config).
+  // Falls back silently if the fetch fails (offline / file missing).
   if (getActiveEventId() === "default") {
     const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
     if (!info.groom) {
+      /** @type {Record<string, string>} */
+      let publicDefaults = {};
+      try {
+        const res = await fetch(`${import.meta.env.BASE_URL}wedding.json`, {
+          cache: "no-cache",
+        });
+        if (res.ok) {
+          const json = /** @type {Record<string, unknown>} */ (await res.json());
+          // Coerce to string map and drop the comment / non-string fields.
+          publicDefaults = Object.fromEntries(
+            Object.entries(json)
+              .filter(([k, v]) => !k.startsWith("_") && typeof v === "string")
+              .map(([k, v]) => [k, /** @type {string} */ (v)]),
+          );
+        }
+      } catch {
+        /* network or parse error — keep built-in defaults */
+      }
+      // Drop empty-string fields from saved info so they don't override the
+      // public defaults during the merge.
+      const overrides = Object.fromEntries(
+        Object.entries(info).filter(([, v]) => typeof v === "string" && v !== ""),
+      );
       storeSet("weddingInfo", {
         ...defaultWeddingInfo,
-        groom: "אליאור",
-        bride: "טובה",
-        date: "2026-05-07",
-        venue: "נוף הירדן",
-        venueAddress: "מצפה יריחו",
-        ...info,
+        ...publicDefaults,
+        ...overrides,
       });
     }
   }
