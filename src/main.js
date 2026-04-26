@@ -48,6 +48,7 @@ import {
   initKeyboardShortcuts,
   initShortcutsHelp,
   initCommandPaletteTrigger,
+  navigate,
 } from "./core/nav.js";
 import {
   showToast,
@@ -397,8 +398,8 @@ let _activeSection = null;
       if (isSessionExpired()) {
         clearSession();
         showToast(t("session_expired"), "warning");
-        // Redirect to landing section
-        window.location.hash = "#landing";
+        // Redirect to landing section (ADR-025 R2)
+        navigate("landing");
       } else {
         maybeRotateSession();
       }
@@ -663,14 +664,14 @@ function _registerHandlers() {
   // ── Navigation ──
   on("showSection", (el) => {
     const name = el.dataset.actionArg || "dashboard";
-    // Keep URL hash in sync so deep-links, browser back/forward, and external
-    // tools observe the active section. pushState does NOT fire hashchange,
-    // so this is safe to do alongside the explicit _switchSection call.
+    // ADR-025 R2: route through navigate() so onRouteChange subscribers
+    // and the SECTION_LIST guard handle URL writes. Falls back silently
+    // for sandboxed contexts (try/catch).
     if (typeof location !== "undefined" && location.hash !== `#${name}`) {
       try {
-        history.pushState(null, "", `#${name}`);
+        navigate(name);
       } catch {
-        /* SecurityError in sandboxed contexts — fall back silently */
+        /* unknown section / sandboxed context — ignore */
       }
     }
     _switchSection(name);
