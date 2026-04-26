@@ -1,2 +1,0 @@
-function e(){return typeof navigator<`u`&&typeof navigator.setAppBadge==`function`}function t(t){if(!e())return;let n=Math.max(0,Math.round(t));n===0?navigator.clearAppBadge?.().catch(()=>{}):navigator.setAppBadge(n).catch(()=>{})}export{t as updateBadge};
-//# sourceMappingURL=app-badge-DhtEKmTx.js.map
