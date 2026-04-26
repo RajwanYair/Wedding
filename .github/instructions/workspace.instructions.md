@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v11.14.0
+# Workspace — Wedding Manager v11.15.0
 
 ## Available Resources
 

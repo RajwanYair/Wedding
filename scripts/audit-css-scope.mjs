@@ -19,7 +19,6 @@ const BASELINE = 999;
 
 const files = readdirSync(CSS_DIR).filter((n) => n.endsWith(".css"));
 
-let total = 0;
 const violations = [];
 for (const name of files) {
   const p = join(CSS_DIR, name);
@@ -38,7 +37,6 @@ for (const name of files) {
     const inScope = scopeDepths.length > 0 && depth >= scopeDepths[scopeDepths.length - 1];
 
     if (/\[data-section\s*=/.test(stripped) && /\{/.test(stripped) && !inScope) {
-      total++;
       violations.push({ file: rel, line: lineNo, text: stripped.trim() });
     }
     depth += opens - closes;
