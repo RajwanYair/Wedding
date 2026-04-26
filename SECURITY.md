@@ -2,11 +2,11 @@
 
 ## Supported Versions
 
-| Version | Supported     |
-| ------- | ------------- |
-| 10.x    | ✅ Active     |
-| 9.x     | ⚠️ Maintenance |
-| < 9.0   | ❌ No support |
+| Version | Supported |
+| ------- | --------- |
+| 10.x | ✅ Active |
+| 9.x | ⚠️ Maintenance |
+| < 9.0 | ❌ No support |
 
 ## Reporting a Vulnerability
 
@@ -39,11 +39,11 @@ This project applies the following security practices:
 
 ## Scope
 
-| In scope                      | Out of scope                                  |
-| ----------------------------- | --------------------------------------------- |
-| `src/` ES modules             | Third-party OAuth SDKs            |
+| In scope | Out of scope |
+| -------- | ------------ |
+| `src/` ES modules | Third-party OAuth SDKs |
 | `public/sw.js` service worker | GitHub Actions secrets management |
-| `scripts/` build scripts      |                                   |
+| `scripts/` build scripts | (none) |
 
 ## Known Limitations
 

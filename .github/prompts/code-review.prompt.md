@@ -5,7 +5,9 @@ description: "Full code review: security, UI, i18n, data integrity, and performa
 
 # Code Review — Wedding Manager
 
-Review the active change set against the modular runtime, not only `index.html`. Inspect the touched `src/`, `css/`, `src/templates/`, `src/modals/`, and workflow/docs files as needed. Report findings first, ordered by severity, with file references for every failure.
+Review the active change set against the modular runtime, not only `index.html`. Inspect the touched
+`src/`, `css/`, `src/templates/`, `src/modals/`, and workflow/docs files as needed. Report findings
+first, ordered by severity, with file references for every failure.
 
 Audit the implementation for:
 

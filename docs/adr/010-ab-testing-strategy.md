@@ -10,7 +10,10 @@ The Wedding Manager needs a lightweight mechanism to roll out features progressi
 
 ## Decision
 
-Implement client-side deterministic A/B assignment using a djb2 hash of `experiment:subject`. No external SDK or server call is required. Assignment is sticky per session (same input = same output). Feature flags (`feature-flags.js`) gate released features; the A/B utility (`ab-test.js`) governs experiment exposure.
+Implement client-side deterministic A/B assignment using a djb2 hash of `experiment:subject`.
+No external SDK or server call is required. Assignment is sticky per session (same input = same output).
+Feature flags (`feature-flags.js`) gate released features; the A/B utility (`ab-test.js`) governs
+experiment exposure.
 
 ## Consequences
 

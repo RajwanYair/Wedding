@@ -5,8 +5,8 @@
     border: var(--card-border);
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
-    backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     transition: all var(--transition-normal);
@@ -45,8 +45,8 @@
     padding: 1.2rem;
     text-align: center;
     transition: all var(--transition-fast);
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     position: relative;
     overflow: hidden;
 
@@ -415,8 +415,8 @@
     z-index: 200;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
   }
   .modal-overlay.active {
     display: flex;
@@ -553,8 +553,8 @@
     border-radius: 14px;
     padding: 0.65rem 1.1rem;
     min-width: 66px;
-    backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     transition:
       transform var(--transition-fast),
       box-shadow var(--transition-fast);
@@ -617,8 +617,8 @@
     animation:
       toastIn 0.3s ease,
       toastOut 0.3s ease 2.7s;
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
   @keyframes toastIn {
     from {
@@ -954,6 +954,7 @@
     z-index: 9950;
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }
   [data-tooltip]::before {
@@ -1012,8 +1013,8 @@
     padding: 0.45rem 1rem;
     background: rgba(251, 191, 36, 0.1);
     border-bottom: 1px solid rgba(251, 191, 36, 0.3);
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     font-size: 0.83em;
     color: var(--gold);
     animation: updateBannerIn 0.35s ease;
@@ -1065,8 +1066,8 @@
     padding: 0.65rem 1rem;
     background: rgba(139, 92, 246, 0.12);
     border-top: 1px solid rgba(139, 92, 246, 0.35);
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     font-size: 0.85em;
     color: var(--text-primary);
     animation: installBannerIn 0.4s ease;
@@ -1283,8 +1284,8 @@
     left: 0;
     right: 0;
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     border-top: var(--card-border);
     z-index: 200;
     padding: 0 0.25rem;
@@ -1632,6 +1633,7 @@
     font-size: 0.72em;
     padding: 0.3rem 0.5rem;
     text-align: center;
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
   }
   .gallery-delete-btn {
@@ -2598,8 +2600,8 @@
   .stat-card,
   .modal-content,
   .search-box {
-    backdrop-filter: blur(20px) saturate(1.4);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    backdrop-filter: blur(20px) saturate(1.4);
   }
 
   /* ── Sprint 2: View Transition names – each section fades cleanly ── */
@@ -2695,8 +2697,8 @@
     font-weight: 500;
     max-width: 340px;
     min-width: 200px;
-    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     pointer-events: auto;
     position: relative;

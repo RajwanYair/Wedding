@@ -6,11 +6,15 @@
 
 ## Context
 
-Modules in different domains (sections, services, plugins) occasionally need to communicate events without explicit coupling. The current pattern of `data-action` DOM delegation is excellent for user interactions but is awkward for programmatic in-memory signalling (e.g., "a new guest was added", "sync completed").
+Modules in different domains (sections, services, plugins) occasionally need to communicate events
+without explicit coupling. The current pattern of `data-action` DOM delegation is excellent for user
+interactions but is awkward for programmatic in-memory signalling
+(e.g., "a new guest was added", "sync completed").
 
 ## Decision
 
-Introduce a singleton in-process event bus (`src/utils/event-bus.js`) exposing `on`, `once`, `off`, `emit`, `clearAll`, and `activeEvents`. The bus is a simple `Map<string, Set<handler>>` — no external library.
+Introduce a singleton in-process event bus (`src/utils/event-bus.js`) exposing `on`, `once`, `off`,
+`emit`, `clearAll`, and `activeEvents`. The bus is a simple `Map<string, Set<handler>>` — no external library.
 
 Rules for use:
 

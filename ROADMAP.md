@@ -1,10 +1,18 @@
 # Wedding Manager — Roadmap v11.3.0
 
-> Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) · Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/)
+> Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
+> Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/)
 
-This document is a **deep architectural re-evaluation** of every decision the project has taken so far — including the ones that previously shipped under the label "clean". Every layer is audited from first principles: frontend, backend, language, docs, code methods, architecture, configuration, tools and versions, external sources and APIs, database, and infrastructure. Every assumption is reopened. The goal is to build, ship, and defend a **best-in-class wedding management application** — Hebrew-first, RTL-native, offline-capable, privacy-respecting, open source.
+This document is a **deep architectural re-evaluation** of every decision the project has taken so far
+— including the ones that previously shipped under the label "clean". Every layer is audited from first
+principles: frontend, backend, language, docs, code methods, architecture, configuration, tools and versions,
+external sources and APIs, database, and infrastructure. Every assumption is reopened. The goal is to build,
+ship, and defend a **best-in-class wedding management application** — Hebrew-first, RTL-native,
+offline-capable, privacy-respecting, open source.
 
-This roadmap is the **single source of truth** for direction. The previous `ROADMAP.old.md` has been retired (see [CHANGELOG.md](CHANGELOG.md) entry for v11.2.0); anything still relevant from it is consolidated below.
+This roadmap is the **single source of truth** for direction. The previous `ROADMAP.old.md` has been
+retired (see [CHANGELOG.md](CHANGELOG.md) entry for v11.2.0); anything still relevant from it is
+consolidated below.
 
 ## Contents
 
@@ -25,9 +33,14 @@ This roadmap is the **single source of truth** for direction. The previous `ROAD
 
 ## 0. Executive Summary & North Star
 
-**State (v11.3.0)** — 2 385 tests passing, 0 lint errors / warnings, 21 sections, 4 locales (HE/EN/AR/RU), Vanilla ES2025 + Vite 8, ~45 KB gzip bundle, 22 Supabase migrations, 7 GitHub Actions workflows, MIT-licensed. Strong engineering hygiene; weak feature wiring (15+ utilities exist with no UI), Sheets is *still* the active runtime backend, auth tokens live in plaintext `localStorage`, and the router silently breaks the browser back button.
+**State (v11.3.0)** — 2 385 tests passing, 0 lint errors / warnings, 21 sections, 4 locales (HE/EN/AR/RU),
+Vanilla ES2025 + Vite 8, ~45 KB gzip bundle, 22 Supabase migrations, 7 GitHub Actions workflows, MIT-licensed.
+Strong engineering hygiene; weak feature wiring (15+ utilities exist with no UI), Sheets is *still* the active
+runtime backend, auth tokens live in plaintext `localStorage`, and the router silently breaks the browser back button.
 
-**North Star** — *The fastest, most accessible, RTL-native, offline-first, open-source wedding manager on the web. Self-hostable in one click, privately operable on a flaky 3G in Hebrew, integrated end-to-end with WhatsApp, with planner-grade analytics and AI assistance, at a bundle size 5–10× smaller than every commercial competitor.*
+**North Star** — *The fastest, most accessible, RTL-native, offline-first, open-source wedding manager on the web.
+Self-hostable in one click, privately operable on a flaky 3G in Hebrew, integrated end-to-end with WhatsApp,
+with planner-grade analytics and AI assistance, at a bundle size 5–10× smaller than every commercial competitor.*
 
 **Top 5 priorities (next two minor releases):**
 
@@ -35,15 +48,20 @@ This roadmap is the **single source of truth** for direction. The previous `ROAD
 2. **Encrypt every credential and PII at rest.** Web Crypto AES-GCM in IndexedDB; remove plaintext JWT/email from `localStorage`.
 3. **Replace the hash router with `pushState` + typed routes + query params.** Restore the back button; enable deep links.
 4. **Wire production-grade observability.** Sentry-compatible error pipeline, Lighthouse CI hard gate, Web Vitals beacons.
-5. **Activate every dormant utility.** ~15 utilities (QR, push, AI draft, AI seating, PDF, vCard, calendar, command palette, payments, etc.) exist with no UI — this is the highest leverage in the entire backlog.
+5. **Activate every dormant utility.** ~15 utilities (QR, push, AI draft, AI seating, PDF, vCard,
+   calendar, command palette, payments, etc.) exist with no UI — this is the highest leverage in
+   the entire backlog.
 
-**Single quality bar (every PR):** lint 0 errors / 0 warnings · test 0 fail · axe 0 violations · Lighthouse ≥ 95 · `npm run audit:security` 0 findings · bundle ≤ 60 KB gzip per route.
+**Single quality bar (every PR):** lint 0 errors / 0 warnings · test 0 fail · axe 0 violations ·
+Lighthouse ≥ 95 · `npm run audit:security` 0 findings · bundle ≤ 60 KB gzip per route.
 
 ---
 
 ## 1. First-Principles Rethink — *If we rebuilt from zero*
 
-> Pretend the repo doesn't exist. We have one Hebrew-first wedding to plan, four locales to support, a flaky-3G venue, and an ~$0/month budget. What would we choose? And how does each fresh choice compare to what we already have?
+> Pretend the repo doesn't exist. We have one Hebrew-first wedding to plan,
+> four locales to support, a flaky-3G venue, and an ~$0/month budget.
+> What would we choose? And how does each fresh choice compare to what we already have?
 
 | Layer | Fresh-from-zero choice (2026) | Today's reality | Verdict | Action |
 | --- | --- | --- | --- | --- |
@@ -70,7 +88,11 @@ This roadmap is the **single source of truth** for direction. The previous `ROAD
 | **Monitoring** | Sentry (free tier) + Web Vitals + UptimeRobot + Lighthouse-CI weekly cron. | `monitoring.js` ships Sentry-compatible adapter; not yet enabled in production. | **Activate.** | v12. |
 | **Docs** | Diátaxis split (tutorial / how-to / reference / explanation). ADR per "Replace" decision. | 12 ADRs, 4 agents, runbooks, locale guide. | **Keep + tighten.** | Diátaxis re-org of `docs/`; ADR-per-Replace gate in CI. |
 
-**Net assessment:** the project's *direction* is overwhelmingly correct — vanilla ES2025, RTL-first, OSS, minimal deps, Supabase, PWA. The *execution gaps* are concentrated in a handful of replaceable subsystems (router, store internals, storage layer, auth integration, runtime backend selector). Fixing those five unlocks every other capability in §2's harvest list.
+**Net assessment:** the project's *direction* is overwhelmingly correct —
+vanilla ES2025, RTL-first, OSS, minimal deps, Supabase, PWA. The *execution gaps*
+are concentrated in a handful of replaceable subsystems (router, store internals,
+storage layer, auth integration, runtime backend selector). Fixing those five
+unlocks every other capability in §2's harvest list.
 
 ---
 
@@ -310,7 +332,9 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 
 ## 4. Technical Debt & Risk Register
 
-> Prioritised list of concrete blockers and risks as of v11.3.0. **P0** = production blocker · **P1** = significant risk · **P2** = maintenance drag · **P3** = future capability gap. Likelihood × Impact = Severity.
+> Prioritised list of concrete blockers and risks as of v11.3.0.
+> **P0** = production blocker · **P1** = significant risk · **P2** = maintenance drag · **P3** = future capability gap.
+> Likelihood × Impact = Severity.
 
 | Sev | Pri | Area | Debt / Risk | Likelihood | Impact | Effort | Mitigation owner phase |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -338,8 +362,11 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 
 ### 4.1 Risks of *not* acting
 
-- **Sheets rate-limit failure under realistic guest count.** A 300-guest wedding generating concurrent RSVPs will exceed Apps Script quotas; the queue retries silently and users see "saved" while nothing persists. Sentry would catch this; today it's invisible.
-- **PII leak via XSS.** A single `innerHTML` slip + plaintext session = full account takeover. Trusted Types + AES-GCM encryption removes this class of risk.
+- **Sheets rate-limit failure under realistic guest count.** A 300-guest wedding generating concurrent
+  RSVPs will exceed Apps Script quotas; the queue retries silently and users see "saved" while nothing
+  persists. Sentry would catch this; today it's invisible.
+- **PII leak via XSS.** A single `innerHTML` slip + plaintext session = full account takeover.
+  Trusted Types + AES-GCM encryption removes this class of risk.
 - **Bundle size regression.** Without a CI gate, a single `import lodash from "lodash"` could quadruple our bundle overnight. The 60 KB gate prevents it.
 - **Doc rot.** Without a relevance sweep per release, ADRs accumulate and conflict; new contributors lose orientation. Diátaxis re-org + archive policy fixes this.
 
@@ -372,10 +399,13 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 
 ### 5.3 Refactor (code health)
 
-1. **Repositories layer enforcement** — every backend call routes through `src/repositories/`; ESLint-ban service imports from sections via `no-restricted-imports`. (`arch-check.mjs` advisory; flip to strict.)
+1. **Repositories layer enforcement** — every backend call routes through `src/repositories/`;
+   ESLint-ban service imports from sections via `no-restricted-imports`.
+   (`arch-check.mjs` advisory; flip to strict.)
 2. **TypeScript migration** — `src/core/` + `src/services/` + `src/handlers/` to `.ts` strict. Sections stay `.js` + JSDoc to preserve velocity.
 3. **Service-directory dedup** — `src/services/` has overlapping helpers (`share.js` vs `share-service.js`, `audit.js` vs `audit-pipeline.js`, `sheets.js` vs `sheets-impl.js`). Consolidate.
-4. **Action namespacing** — adopt `guests:save`, `tables:add` everywhere; CI duplicate-detection.
+4. **Action namespacing** — adopt `guests:save`, `tables:add` everywhere;
+   CI duplicate-detection.
 5. **Store internals to Signals** — replace recursive Proxy with Preact Signals; keep public API stable.
 6. **`BaseSection` adoption** — migrate all 18 sections; add `audit:sections` strict mode.
 

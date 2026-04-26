@@ -4,7 +4,9 @@
 
 ## Overview
 
-Supabase provides optional persistence, real-time sync, and auth for Wedding Manager. The app is fully functional without it (all data stored in `localStorage`). When Supabase is configured, data syncs bidirectionally with the cloud database.
+Supabase provides optional persistence, real-time sync, and auth for Wedding Manager.
+The app is fully functional without it (all data stored in `localStorage`).
+When Supabase is configured, data syncs bidirectionally with the cloud database.
 
 ---
 

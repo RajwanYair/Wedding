@@ -46,7 +46,7 @@ swaps.
 
 ## Consequences
 
-**Positive**
+### Positive
 
 - Nested mutations via the new `useSignalState(domain)` helper fire
   reactivity correctly. (Direct `storeGet().push(...)` still requires
@@ -56,7 +56,7 @@ swaps.
 - Aligns with ROADMAP §1 *Reactivity* row ("Replace") and ADR-003
   follow-up.
 
-**Negative**
+### Negative
 
 - One extra runtime dep — counts against ADR-001's tight budget.
   Justified by removing equivalent in-tree code.
@@ -64,7 +64,7 @@ swaps.
   bundlers occasionally include the React adapter by mistake. Build
   audit added in SG0.
 
-**Neutral**
+### Neutral
 
 - No section-level changes; the migration is invisible to feature
   developers.

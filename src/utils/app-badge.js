@@ -10,6 +10,7 @@ function hasBadgeApi() {
   return typeof navigator !== "undefined" && typeof navigator.setAppBadge === "function";
 }
 
+/** @param {number} count */
 export async function updateBadge(count) {
   if (!hasBadgeApi()) return false;
   try {

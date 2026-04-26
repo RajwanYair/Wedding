@@ -44,7 +44,7 @@ the override is reintroduced without an ADR amendment.
 
 ## Consequences
 
-**Positive**
+### Positive
 
 - Cache hit rate on incremental deploys goes up; users redownload
   only what actually changed.
@@ -52,7 +52,7 @@ the override is reintroduced without an ADR amendment.
 - Consistent with ADR-001 (no implicit policies hand-coded into the
   build).
 
-**Negative**
+### Negative
 
 - Loss of a forcing function: the manual config currently doubles as
   documentation. Replaced by the audit script + this ADR.

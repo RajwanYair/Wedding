@@ -6,7 +6,9 @@
 
 ## Context
 
-WCAG 2.1 SC 2.1.2 (No Keyboard Trap, Level A) requires that keyboard users can navigate into and out of modal dialogs. Without a focus trap, Tab will move focus outside an open modal to the underlying page content, making the modal effectively inaccessible.
+WCAG 2.1 SC 2.1.2 (No Keyboard Trap, Level A) requires that keyboard users can navigate into and
+out of modal dialogs. Without a focus trap, Tab will move focus outside an open modal to the underlying
+page content, making the modal effectively inaccessible.
 
 ## Decision
 

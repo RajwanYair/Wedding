@@ -4,7 +4,9 @@
 
 ## Overview
 
-Wedding Manager deploys to **GitHub Pages** (static assets) with **Supabase** as the optional backend (auth, real-time sync, persistent storage). The static bundle is fully functional without Supabase; backend features degrade gracefully when not configured.
+Wedding Manager deploys to **GitHub Pages** (static assets) with **Supabase** as the optional backend
+(auth, real-time sync, persistent storage). The static bundle is fully functional without Supabase;
+backend features degrade gracefully when not configured.
 
 ---
 

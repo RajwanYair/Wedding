@@ -1,5 +1,3 @@
-<div align="center">
-
 # 💍 Wedding Manager
 
 [![Version](https://img.shields.io/badge/version-v11.16.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
@@ -23,8 +21,6 @@
 **Vite 8, vanilla JS/CSS, Hebrew RTL first, minimal runtime dependencies (3).**
 
 Node 22+ is the supported local and CI runtime.
-
-</div>
 
 ---
 

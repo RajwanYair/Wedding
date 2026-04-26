@@ -446,7 +446,9 @@ The following files were explicitly removed as aspirational with no active consu
 
 ### v11.0.0 Dead Utils Purge
 
-112 `src/utils/*.js` files were removed (along with 112 matching test files). Only 15 production-used utils remain: `currency`, `date`, `form-helpers`, `guest-search`, `haptic`, `locale-detector`, `md-to-html`, `message-templates`, `misc`, `orientation`, `phone`, `qr-code`, `rsvp-deadline`, `sanitize`, `undo`.
+112 `src/utils/*.js` files were removed (along with 112 matching test files). Only 15 production-used utils
+remain: `currency`, `date`, `form-helpers`, `guest-search`, `haptic`, `locale-detector`, `md-to-html`,
+`message-templates`, `misc`, `orientation`, `phone`, `qr-code`, `rsvp-deadline`, `sanitize`, `undo`.
 
 Categories removed: analytics/stats, lifecycle/state machines, validation chains, formatting pipelines, encryption/hashing, accessibility/animation/gesture, queue/cache/rate-limit/circuit-breaker, and unused barrels.
 

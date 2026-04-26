@@ -60,14 +60,14 @@ consume Workbox-style *patterns*, not the library.
 
 ## Consequences
 
-**Positive**
+### Positive
 
 - RSVPs submitted offline (e.g., from a venue Wi-Fi blackspot)
   arrive on reconnect.
 - p95 navigation TTFB drops on flaky networks (asset cache-first).
 - Single file, ~400 lines max — auditable; no Workbox runtime cost.
 
-**Negative**
+### Negative
 
 - Hand-rolled queue is ~150 LOC and needs regression tests on every
   release. Mitigated by E2E spec gating.

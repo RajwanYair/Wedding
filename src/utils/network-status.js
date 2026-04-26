@@ -11,6 +11,7 @@ const listeners = new Set();
 let initialised = false;
 let lastStatus = typeof navigator !== "undefined" ? navigator.onLine : true;
 
+/** @param {boolean} online */
 function notify(online) {
   if (online === lastStatus) return;
   lastStatus = online;
@@ -32,6 +33,7 @@ export function initNetworkStatus() {
   document.body?.classList.toggle("is-offline", !navigator.onLine);
 }
 
+/** @param {(online: boolean) => void} fn */
 export function onStatusChange(fn) {
   if (typeof fn !== "function") return () => {};
   listeners.add(fn);
