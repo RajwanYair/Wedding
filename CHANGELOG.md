@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [11.9.0] — 2026-04-29
+
+> Roadmap sprint batch — ADR-022 Phase 1 modal action aliases, ADRs 023 + 024, advisory bundle-size budget, Diátaxis tutorial/how-to/reference skeletons.
+
+### Added
+
+- **ADR-022 Phase 1** — namespaced modal action aliases. New `events.alias(newName, originalName)` API + `_resolve(action)` dispatcher fallback in `src/core/events.js`. New `MODAL_ACTION_ALIASES` + `registerNamespacedActionAliases()` exports in `src/core/action-registry.js`. Wired in `src/main.js` after handler registration. Templates may now use `data-action="modal:close"` (and 6 other `modal:*` names) alongside the legacy flat names — both dispatch to the same handler. Enforced removal of legacy names is scheduled for v12.0.0.
+- **`tests/unit/action-aliases.test.mjs`** — 8 unit tests covering the alias API, registry shape, dispatch routing, and error guards.
+- **ADR-023** — Org & Team Scoping (Phase D). Three-tier `org → events → data` model with phased rollout D0 → D4 spanning v12.x → v15.0. Schema sketch, RLS template, per-org `localStorage` namespace prefix.
+- **ADR-024** — Per-route bundle size budget. 60 KB initial / 25 KB per route / 10 KB per modal / 220 KB total (gzip). Advisory in v11.9.0; enforcing in v12.0.0.
+- **`scripts/check-bundle-size.mjs`** + `audit:bundle` npm script — walks `dist/`, gzips each chunk, reports per-chunk vs budget. Honours `bundle.budget.json` overrides. Advisory mode (default exit 0); `--enforce` flag flips to fail-on-violation for v12.0.0.
+- **`bundle.budget.json`** — v11.9.0 baseline overrides for the supabase-client chunk and locale chunks.
+- **`docs/tutorials/first-event.md`** — Diátaxis tutorial walking a new admin from sign-in through first RSVP in ≤ 15 minutes.
+- **`docs/how-to/add-a-locale.md`** — Diátaxis how-to for shipping a new UI language end-to-end.
+- **`docs/reference/storage-keys.md`** — exhaustive `wedding_v1_*` key catalogue grouped by domain / auth / preferences / diagnostics / integrations.
+- **`docs/README.md`** — Diátaxis quadrant header + ADRs 022 / 023 / 024 added to the index.
+
+### Changed
+
+- `docs/README.md` version badge bumped to v11.9.0.
+
 ## [11.8.0] — 2026-04-29
 
 > Roadmap sprint batch — Trusted Types audit, ADR index, ADR coverage advisory, ADRs 021/022, Diátaxis indices.
