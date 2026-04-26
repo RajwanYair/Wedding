@@ -156,7 +156,9 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        # Install all engines exercised by playwright.config.mjs:
+        # chromium · firefox · webkit (Desktop Safari + iPad Mini land.) · iPhone 14 (chromium)
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Build production bundle
         # VITE_BASE=/ overrides the GH-Pages /Wedding/ base so the preview

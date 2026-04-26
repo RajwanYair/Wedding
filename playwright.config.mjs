@@ -31,6 +31,9 @@ export default defineConfig({
 
   use: {
     baseURL: "http://localhost:3000",
+    /* App auto-detects UI language from navigator.language; force Hebrew so
+       the production default (dir=rtl) is exercised under test. */
+    locale: "he-IL",
     /* Capture trace on the first retry so failures are diagnosable */
     trace: "on-first-retry",
   },
