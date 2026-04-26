@@ -1,0 +1,10 @@
+{
+  "comment": "v11.9.0 baseline (ADR-024 advisory). Review at every minor release.",
+  "overrides": {
+    "supabase-client-BaMXppT7.js": 32,
+    "i18n-he.json.js": 0,
+    "i18n-en.json.js": 0,
+    "i18n-ar.json.js": 0,
+    "i18n-ru.json.js": 0
+  }
+}
