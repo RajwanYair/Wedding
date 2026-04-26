@@ -55,30 +55,27 @@ test.describe("Offline behaviour (Phase 9.2)", () => {
     await expect(body).toBeAttached();
   });
 
-  test("localStorage mutations survive page reload", async ({ page }) => {
-    // Write a value to localStorage then reload and verify it persists.
+  test("localStorage mutations survive page reload", async ({ page, context }) => {
+    // Write a value to localStorage on the first page.
     await page.evaluate((key) => {
       localStorage.setItem(key, "ping");
     }, TEST_STORAGE_KEYS.OFFLINE_PROBE);
 
-    // Wait for any active service worker to settle before reloading. Firefox
-    // can throw NS_BINDING_ABORTED on reload if a SW is mid-install/activate.
-    await page
-      .evaluate(async () => {
-        if ("serviceWorker" in navigator) {
-          await navigator.serviceWorker.ready.catch(() => {});
-        }
-      })
-      .catch(() => {});
-
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
-    const val = await page.evaluate(
+    // Open a fresh page in the SAME browser context — localStorage is
+    // origin-scoped within the context, so the value must still be visible.
+    // We avoid `page.reload()` because Firefox + an active service worker
+    // can throw NS_BINDING_ABORTED on reload, which is unrelated to the
+    // behaviour under test (storage persistence across page lifecycles).
+    const page2 = await context.newPage();
+    await page2.goto("/");
+    await page2.waitForFunction(() => document.title.length > 0, { timeout: 10_000 });
+    const val = await page2.evaluate(
       (key) => localStorage.getItem(key),
       TEST_STORAGE_KEYS.OFFLINE_PROBE,
     );
     expect(val).toBe("ping");
     // Cleanup
-    await page.evaluate((key) => localStorage.removeItem(key), TEST_STORAGE_KEYS.OFFLINE_PROBE);
+    await page2.evaluate((key) => localStorage.removeItem(key), TEST_STORAGE_KEYS.OFFLINE_PROBE);
+    await page2.close();
   });
 });
