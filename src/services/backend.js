@@ -47,6 +47,43 @@ export function getBackendType() {
   return "sheets";
 }
 
+// ── S96: Backend flip prep ────────────────────────────────────────────────
+//
+// v13.0 will flip the default backend from "sheets" to "supabase". These
+// helpers let admins opt-in to dual-write today and let the UI surface a
+// readiness check. The actual flip is gated by `BACKEND_TYPE` config.
+
+/** Default backend candidate for the next major version. */
+export const BACKEND_FLIP_CANDIDATE = "supabase";
+
+/**
+ * Whether dual-write mode is currently active. Either the build-time config
+ * is "both" or the user opted in via Settings (localStorage `backendType`).
+ * @returns {boolean}
+ */
+export function isDualWriteActive() {
+  return getBackendType() === "both";
+}
+
+/**
+ * Coarse readiness check for the v13 backend flip. We are "ready" when the
+ * Supabase connection has been verified at least once (cached in state) AND
+ * dual-write has been active long enough to mirror existing data.
+ *
+ * This is advisory — the source of truth is the manual flip in
+ * `app-config.js`. Intended for the Settings UI to show a hint.
+ *
+ * @returns {{ ready: boolean, reasons: string[] }}
+ */
+export function isBackendFlipReady() {
+  const reasons = [];
+  if (!getSupabaseUrl()) reasons.push("supabase_url_missing");
+  if (!isDualWriteActive()) reasons.push("dual_write_inactive");
+  const lastOk = /** @type {number} */ (load("supabaseLastOkAt", 0) ?? 0);
+  if (!lastOk) reasons.push("supabase_never_verified");
+  return { ready: reasons.length === 0, reasons };
+}
+
 // ── Dynamic loader (called once per backend) ─────────────────────────────
 
 async function _loadSheetsModule() {
