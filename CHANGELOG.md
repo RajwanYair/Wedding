@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.7] — 2026-04-28
+
+> **Sprints 88–97: Backend convergence prep II.**
+>
+> IDB hot-key cleanup, Background Sync API, Trusted Types, pushState router prep, View Transitions, Facebook OAuth via Supabase, OAuth provider abstraction, Edge function stubs, dual-write readiness, dead-export reduction.
+
+### Added (12.5.7)
+
+- **S88** — `auditLocalStorageRemnants()` + `cleanupLocalStorageRemnants()` in `src/core/storage.js`; best-effort cleanup runs after IDB migration. (2512 → 2515)
+- **S89** — `src/services/background-sync.js`: `registerBackgroundSync()`, `ensureBackgroundFlush()`; sheets flush registers a Background Sync tag when retries are exhausted. (2515 → 2520)
+- **S90** — `src/core/trusted-types.js`: `installTrustedTypesPolicy()` creates `wedding-html` + `default` TT policies sanitised through DOMPurify; bootstrapped first in `main.js`. (2520 → 2525)
+- **S91** — `src/core/history-router.js`: pushState router scaffolding (`buildHistoryUrl`, `pushRoute`, `replaceRoute`, `onRouteChange`, `initHistoryRouter`); coexists with hash router until v13.0. (2525 → 2531)
+- **S92** — View Transitions API integration in `nav.js` (`withViewTransition`, `isViewTransitionSupported`); 240 ms cubic-bezier fade in `css/base.css`; honours `prefers-reduced-motion`. (2531 → 2534)
+- **S94** — `src/services/oauth-providers.js`: provider abstraction (`detectInstalledSdks`, `preferredTransport`, `signInWith`); SDK-or-Supabase fallback for Google/Apple, Supabase-only for Facebook. (2534 → 2540)
+- **S95** — Edge function stubs: `supabase/functions/gdpr-erasure/index.ts` (admin-gated POST,
+  deletes guests/rsvp_log/audit_log) and `supabase/functions/rsvp-webhook/index.ts`
+  (HMAC-SHA256 signed external RSVP webhook). (2540 → 2543)
+- **S96** — `BACKEND_FLIP_CANDIDATE`, `isDualWriteActive()`, `isBackendFlipReady()` exports in `src/services/backend.js` for v13.0 Supabase flip readiness. (2543 → 2548)
+
+### Changed (12.5.7)
+
+- **S93** — Removed Facebook JS SDK; `loginFacebook` handler now uses
+  `signInWithProvider('facebook')` from Supabase Auth. CSP `script-src` no longer
+  lists `connect.facebook.net`. `eslint.config.mjs` drops the `FB` global.
+  `FB_APP_ID` kept as deprecated stub.
+- **S97** — Removed 3 confirmed-dead exports from `src/core/i18n.js`: `preloadLocale`, `formatList`, `pluralCategory` (-38 lines).
+
+### Changed (12.5.7) — internal
+
+- 2548 tests across 162 files (was 2512 / 155). Lint 0/0. 0 Node warnings. Dead-export count: 82 → 79.
+
 ## [12.5.6] — 2026-04-27
 
 > **Sprints 78–87: Monitoring telemetry opt-out, coverage gate, JSDoc strict, mermaid-validate CI, supabase-lint CI, admin_users migration, service consolidation, secure-storage API.**
