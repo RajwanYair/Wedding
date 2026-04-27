@@ -16,7 +16,7 @@ const ROOT = process.cwd();
 const TARGET_DIRS = ["src/core", "src/services"];
 
 const ENFORCE = process.argv.includes("--enforce");
-const BASELINE = 999;
+const BASELINE = 0;
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {

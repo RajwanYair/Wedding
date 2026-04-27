@@ -110,6 +110,10 @@ export function onRouteChange(handler) {
  * Internal — wire popstate once. Idempotent.
  */
 let _initialized = false;
+/**
+ * Initialise the popstate listener that emits route-change events.
+ * Idempotent — safe to call multiple times.
+ */
 export function initRouterListener() {
   if (_initialized) return;
   _initialized = true;
