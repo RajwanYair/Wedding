@@ -34,50 +34,10 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        /* S4.5 + S1.8 + F1.6.4: Manual chunk splitting — per-section + templates + public bundle */
-        manualChunks(id) {
-          if (id.includes("i18n/en.json")) return "locale-en";
-
-          // S1.8: Public bundle — RSVP, landing, guest-landing load without admin
-          if (
-            id.includes("src/sections/rsvp") ||
-            id.includes("src/sections/landing") ||
-            id.includes("src/sections/guest-landing") ||
-            id.includes("src/sections/contact-collector") ||
-            id.includes("src/sections/registry")
-          )
-            return "chunk-public";
-
-          // F1.6.4: Per-section chunks for admin sections
-          if (id.includes("src/sections/dashboard")) return "sec-dashboard";
-          if (id.includes("src/sections/guests")) return "sec-guests";
-          if (id.includes("src/sections/tables")) return "sec-tables";
-          if (id.includes("src/sections/vendors")) return "sec-vendors";
-          if (id.includes("src/sections/whatsapp")) return "sec-whatsapp";
-          if (id.includes("src/sections/checkin")) return "sec-checkin";
-          if (id.includes("src/sections/settings")) return "sec-settings";
-          if (id.includes("src/sections/invitation")) return "sec-invitation";
-          if (id.includes("src/sections/changelog")) return "sec-changelog";
-
-          // S1.8: Lazy section templates — each in its own chunk
-          if (id.includes("src/templates/")) {
-            const match = id.match(/src\/templates\/([^/]+)\.html/);
-            return match ? `template-${match[1]}` : "templates";
-          }
-
-          if (id.includes("src/sections/analytics")) return "sec-analytics";
-          if (id.includes("src/sections/budget")) return "sec-budget";
-          if (id.includes("src/sections/expenses")) return "sec-expenses";
-          if (id.includes("src/sections/gallery")) return "sec-gallery";
-          if (id.includes("src/sections/timeline")) return "sec-timeline";
-          if (
-            id.includes("sheets") ||
-            id.includes("auth") ||
-            id.includes("push") ||
-            id.includes("email")
-          )
-            return "chunk-services";
-        },
+        /* B8 (ROADMAP §6 Phase B): Auto code splitting — Vite splits on dynamic
+         * import() boundaries introduced by section/modal/template lazy loaders
+         * and locale dictionaries. No manual config — survives file renames and
+         * stays correct as the section/template surface evolves. */
         /* Keep asset filenames stable for SRI hashing */
         entryFileNames: "assets/[name]-[hash].js",
         chunkFileNames: "assets/[name]-[hash].js",
