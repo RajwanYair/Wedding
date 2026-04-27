@@ -113,6 +113,8 @@ async function _ensureModalLoaded(modal, modalId) {
 /**
  * Open a modal by ID, trapping focus inside it.
  * Lazy-loads modal HTML template on first open.
+ * Native `<dialog>` elements use `showModal()`; legacy `.modal-overlay` divs
+ * fall back to the focus-trap implementation. (S103 — dialog adoption.)
  * @param {string} modalId
  */
 export async function openModal(modalId) {
@@ -120,6 +122,20 @@ export async function openModal(modalId) {
   if (!modal) return;
   await _ensureModalLoaded(modal, modalId);
   _modalOpener = /** @type {HTMLElement | null} */ (document.activeElement);
+  // Native <dialog> path — browser handles focus trap + Escape automatically.
+  if (
+    modal.tagName === "DIALOG" &&
+    typeof (/** @type {any} */ (modal).showModal) === "function"
+  ) {
+    try {
+      /** @type {HTMLDialogElement} */ (
+        /** @type {unknown} */ (modal)
+      ).showModal();
+      return;
+    } catch {
+      // fall through to legacy path
+    }
+  }
   modal.hidden = false;
   modal.classList.remove("auth-hidden");
   modal.setAttribute("aria-modal", "true");
@@ -138,6 +154,20 @@ export async function openModal(modalId) {
 export function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   if (!modal) return;
+  if (
+    modal.tagName === "DIALOG" &&
+    typeof (/** @type {any} */ (modal).close) === "function" &&
+    /** @type {HTMLDialogElement} */ (/** @type {unknown} */ (modal)).open
+  ) {
+    try {
+      /** @type {HTMLDialogElement} */ (/** @type {unknown} */ (modal)).close();
+      _modalOpener?.focus();
+      _modalOpener = null;
+      return;
+    } catch {
+      // fall through to legacy path
+    }
+  }
   modal.hidden = true;
   modal.classList.add("auth-hidden");
   modal.setAttribute("aria-hidden", "true");
