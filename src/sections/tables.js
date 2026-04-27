@@ -13,6 +13,12 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { TABLE_SHAPES } from "../core/constants.js";
 import { validateSeating } from "../services/seating-constraints.js";
+import {
+  buildSeatRows,
+  seatRowsToCsv,
+  seatRowsToJson,
+  downloadTextFile,
+} from "../services/seating-exporter.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -414,6 +420,35 @@ export function printTransportManifest() {
   document.body.classList.add("print-transport");
   window.print();
   document.body.classList.remove("print-transport");
+}
+
+// ── C1 Sprint 39: Seating chart export ───────────────────────────────────
+
+/**
+ * Export the full seating chart as a UTF-8 CSV file.
+ * Columns: Table, Seat, Guest, Headcount.
+ */
+export function exportSeatMapCsv() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const rows = buildSeatRows(tables, guests);
+  const csv = seatRowsToCsv(rows, {
+    tableHeader: t("seating_export_col_table"),
+    seatHeader: t("seating_export_col_seat"),
+    guestHeader: t("seating_export_col_guest"),
+    countHeader: t("seating_export_col_count"),
+  });
+  downloadTextFile(csv, "seating-chart.csv", "text/csv;charset=utf-8");
+}
+
+/**
+ * Export the full seating chart as a JSON file.
+ */
+export function exportSeatMapJson() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const rows = buildSeatRows(tables, guests);
+  downloadTextFile(seatRowsToJson(rows), "seating-chart.json", "application/json");
 }
 
 /**

@@ -15,6 +15,8 @@ import {
   openTableForEdit,
   exportTransportCSV,
   printTransportManifest,
+  exportSeatMapCsv,
+  exportSeatMapJson,
 } from "../sections/tables.js";
 
 export function register() {
@@ -42,6 +44,8 @@ export function register() {
   on("printTableSigns", () => printTableSigns());
   on("exportTransportCSV", () => exportTransportCSV());
   on("printTransportManifest", () => printTransportManifest());
+  on("exportSeatMapCsv", () => exportSeatMapCsv());
+  on("exportSeatMapJson", () => exportSeatMapJson());
   on("deleteTable", (el) =>
     showConfirmDialog(t("confirm_delete"), () => deleteTable(el.dataset.actionArg ?? "")),
   );

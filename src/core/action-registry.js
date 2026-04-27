@@ -66,6 +66,8 @@ export const ACTIONS = /** @type {const} */ ({
   EXPORT_GUESTS_CSV: "exportGuestsCSV",
   EXPORT_GIFTS_CSV: "exportGiftsCSV",
   EXPORT_TRANSPORT_CSV: "exportTransportCSV",
+  EXPORT_SEAT_MAP_CSV: "exportSeatMapCsv",
+  EXPORT_SEAT_MAP_JSON: "exportSeatMapJson",
   EXPORT_MEAL_PER_TABLE_CSV: "exportMealPerTableCSV",
   EXPORT_CSV_TEMPLATE: "downloadCSVTemplate",
   EXPORT_JSON: "exportJSON",
