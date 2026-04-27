@@ -27,6 +27,10 @@ import {
   unsubscribePush,
   getCachedSubscription,
 } from "../services/push-notifications.js";
+import {
+  getPreferences,
+  updatePreferences,
+} from "../services/notification-preferences.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -47,6 +51,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   refreshAuditLog();
   // Wire push notification UI (S18d)
   _renderPushCard();
+  // Wire notification channel/event preferences (Sprint 56)
+  _renderNotifPrefsCard();
 }
 
 export function unmount() {
@@ -895,4 +901,94 @@ function _renderPushCard() {
   container.appendChild(vapidLabel);
   container.appendChild(statusMsg);
   container.appendChild(toggleBtn);
+}
+
+// ── Sprint 56 — Notification Preferences UI ───────────────────────────────
+
+const CHANNELS = /** @type {const} */ (["push", "email", "whatsapp", "sms"]);
+const EVENTS = /** @type {const} */ ([
+  "rsvp_confirmed",
+  "rsvp_reminder",
+  "table_assigned",
+  "campaign",
+  "system",
+]);
+
+/** @type {Record<string, string>} */
+const CHANNEL_ICONS = { push: "🔔", email: "📧", whatsapp: "💬", sms: "📲" };
+
+/**
+ * Render channel + event toggles in #notifPrefsCard.
+ * Preferences are stored under "_default" userId.
+ */
+function _renderNotifPrefsCard() {
+  const container = document.getElementById("notifPrefsCard");
+  if (!container) return;
+  container.textContent = "";
+
+  const userId = "_default";
+  const prefs = getPreferences(userId);
+
+  // ── Channels section ──────────────────────────────────
+  const chanHeading = document.createElement("p");
+  chanHeading.className = "settings-label";
+  chanHeading.setAttribute("data-i18n", "notif_channels_label");
+  chanHeading.textContent = t("notif_channels_label");
+  container.appendChild(chanHeading);
+
+  const chanGrid = document.createElement("div");
+  chanGrid.className = "notif-prefs-grid";
+  for (const ch of CHANNELS) {
+    const row = document.createElement("label");
+    row.className = "notif-pref-row";
+
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.checked = prefs.channels[ch] ?? false;
+    chk.addEventListener("change", () => {
+      updatePreferences(userId, { channels: { [ch]: chk.checked } });
+    });
+
+    const lbl = document.createElement("span");
+    lbl.textContent = `${CHANNEL_ICONS[ch] ?? ""} `;
+    const lblKey = document.createElement("span");
+    lblKey.setAttribute("data-i18n", `notif_channel_${ch}`);
+    lblKey.textContent = t(`notif_channel_${ch}`);
+    lbl.appendChild(lblKey);
+
+    row.appendChild(chk);
+    row.appendChild(lbl);
+    chanGrid.appendChild(row);
+  }
+  container.appendChild(chanGrid);
+
+  // ── Events section ────────────────────────────────────
+  const evtHeading = document.createElement("p");
+  evtHeading.className = "settings-label u-mt-sm";
+  evtHeading.setAttribute("data-i18n", "notif_events_label");
+  evtHeading.textContent = t("notif_events_label");
+  container.appendChild(evtHeading);
+
+  const evtGrid = document.createElement("div");
+  evtGrid.className = "notif-prefs-grid";
+  for (const ev of EVENTS) {
+    const row = document.createElement("label");
+    row.className = "notif-pref-row";
+
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.checked = prefs.events[ev] ?? false;
+    chk.addEventListener("change", () => {
+      updatePreferences(userId, { events: { [ev]: chk.checked } });
+    });
+
+    const lbl = document.createElement("span");
+    lbl.setAttribute("data-i18n", `notif_event_${ev}`);
+    lbl.textContent = t(`notif_event_${ev}`);
+
+    row.appendChild(chk);
+    row.appendChild(lbl);
+    evtGrid.appendChild(row);
+  }
+  container.appendChild(evtGrid);
 }

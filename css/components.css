@@ -537,6 +537,27 @@
     margin-top: 0.2rem;
   }
 
+  /* ── Notification Preferences Grid ── */
+  .notif-prefs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .notif-pref-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.88rem;
+
+    & input[type="checkbox"] {
+      accent-color: var(--color-primary, #a78bfa);
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
   /* ── WhatsApp Variable Chips ── */
   .wa-variable-chips {
     display: flex;
