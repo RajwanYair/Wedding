@@ -128,6 +128,13 @@ jobs:
         # S81: validates ```mermaid blocks across markdown docs (lightweight,
         # no mermaid-cli/puppeteer dep). Catches type/bracket regressions.
 
+      - name: Supabase migrations lint (S82)
+        if: matrix.node-version == '22'
+        run: npm run audit:supabase-lint -- --enforce
+        # S82: static checks on supabase/migrations/*.sql (idempotent guards,
+        # trailing whitespace, terminator). Baseline 3 (legacy 003/004/008).
+        # Heavy `supabase db lint` lives in a separate Docker-required workflow.
+
       - name: Section/template parity baseline (Sprint 12)
         if: matrix.node-version == '22'
         run: npm run audit:section-templates -- --baseline=2
