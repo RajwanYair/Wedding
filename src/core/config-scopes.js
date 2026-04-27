@@ -80,7 +80,7 @@ export function getConfig(key) {
   // 2 — build-time / deploy-time inject (window.__WEDDING_CONFIG__)
   const buildCfg =
     typeof globalThis !== "undefined" &&
-    /** @type {Record<string, Record<string, unknown>>} */ (globalThis).__WEDDING_CONFIG__;
+    /** @type {Record<string, Record<string, unknown>>} */ (/** @type {any} */ (globalThis)).__WEDDING_CONFIG__;
   if (buildCfg && Object.hasOwn(buildCfg, key)) return buildCfg[key];
 
   // 3 — defaults
@@ -122,7 +122,7 @@ export function clearRuntimeConfig() {
 export function getConfigSnapshot() {
   const buildCfg =
     typeof globalThis !== "undefined" &&
-    /** @type {Record<string, Record<string, unknown>>} */ (globalThis).__WEDDING_CONFIG__;
+    /** @type {Record<string, Record<string, unknown>>} */ (/** @type {any} */ (globalThis)).__WEDDING_CONFIG__;
   return {
     ...DEFAULTS,
     ...(buildCfg ?? {}),

@@ -31,7 +31,7 @@ let _defaultPolicy = null;
  * @returns {boolean}
  */
 export function isTrustedTypesSupported() {
-  return typeof globalThis.trustedTypes !== "undefined";
+  return typeof (/** @type {any} */ (globalThis).trustedTypes) !== "undefined";
 }
 
 /**
@@ -44,7 +44,7 @@ export function isTrustedTypesSupported() {
 export function installTrustedTypesPolicy() {
   if (!isTrustedTypesSupported()) return null;
   /** @type {any} */
-  const tt = globalThis.trustedTypes;
+  const tt = /** @type {any} */ (globalThis).trustedTypes;
   if (!_strictPolicy && typeof tt.createPolicy === "function") {
     try {
       _strictPolicy = tt.createPolicy(WEDDING_HTML_POLICY, {
