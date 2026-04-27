@@ -85,4 +85,13 @@ console.log(JSON.stringify(report, null, 2));
 console.log(
   `audit:trusted-types — ${findings.length} potential sink usages across ${report.files.length} files (advisory; ADR-018 Phase 1).`,
 );
+
+const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
+const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+if (BASELINE !== null && Number.isFinite(BASELINE) && findings.length > BASELINE) {
+  console.error(
+    `\n✖ --baseline=${BASELINE}: ${findings.length} sink(s) found (regression of ${findings.length - BASELINE}). Route new HTML writes through src/utils/sanitize.js.`,
+  );
+  process.exit(1);
+}
 process.exit(0);

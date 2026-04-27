@@ -76,10 +76,11 @@ jobs:
         # Baseline locked at v12.0.0; regressions fail CI. Hard --strict gate
         # in v13.0.0 once all 15 violations are migrated.
 
-      - name: Trusted Types sink advisory (ADR-018 Phase 1)
+      - name: Trusted Types sink baseline (ADR-018 Phase 2)
         if: matrix.node-version == '22'
-        run: npm run audit:trusted-types
-        # ADR-018 Phase 1: report-only sink census. Hard gate in v12.0.0.
+        run: npm run audit:trusted-types -- --baseline=24
+        # ADR-018 Phase 2 (v12.0.0): baseline-locked at current count.
+        # Hard gate after sanitize.js hosts the named policy in v13.0.0.
 
       - name: Plaintext-secrets gate (ADR-026 Phase E1)
         if: matrix.node-version == '22'
