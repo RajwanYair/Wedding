@@ -14,6 +14,11 @@ import {
   getBudgetUtilization,
 } from "../services/expense-analytics.js";
 import {
+  uniqueOpens,
+  uniqueClicks,
+  uniqueRsvps,
+} from "../services/invitation-analytics.js";
+import {
   renderDonut as _renderDonut,
   renderBar as _renderBar,
   setStatText as _setStatText,
@@ -59,6 +64,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   storeSubscribeScoped("tables", renderSeatingScore, _SCOPE);
   // Phase 10.3 error analytics
   storeSubscribeScoped("appErrors", renderErrorAnalytics, _SCOPE);
+  // C1: invitation engagement funnel (Sprint 36)
+  storeSubscribeScoped("invitationAnalytics", renderInvitationEngagementFunnel, _SCOPE);
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -76,6 +83,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
   renderBudgetBurndown(); // F4.3.3
   renderSeatingScore(); // F4.3.4
   renderErrorAnalytics(); // Phase 10.3
+  renderInvitationEngagementFunnel(); // C1 Sprint 36
 }
 
 export function unmount() {
@@ -497,6 +505,57 @@ function _renderFunnel() {
 
   svg += `</svg>`;
   container.innerHTML = svg; // safe: numbers/CSS vars/i18n strings
+}
+
+// ── C1 Sprint 36: Invitation Engagement Funnel ───────────────────────────
+
+/**
+ * Render a 4-stage invitation engagement funnel using tracked open/click/rsvp
+ * events from invitation-analytics.js (ROADMAP Phase C C1).
+ * Stages: Invited → Opened → Clicked → RSVP'd
+ */
+export function renderInvitationEngagementFunnel() {
+  const container = document.getElementById("analyticsInviteFunnel");
+  if (!container) return;
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const total = guests.length;
+  const opens = uniqueOpens();
+  const clicks = uniqueClicks();
+  const rsvps = uniqueRsvps();
+
+  if (total === 0) {
+    container.textContent = t("analytics_no_guests");
+    return;
+  }
+
+  const stages = [
+    { label: t("invite_funnel_invited"), value: total, color: "var(--primary)" },
+    { label: t("invite_funnel_opened"), value: opens, color: "var(--info)" },
+    { label: t("invite_funnel_clicked"), value: clicks, color: "var(--warning, #f0ad4e)" },
+    { label: t("invite_funnel_rsvpd"), value: rsvps, color: "var(--success)" },
+  ];
+
+  const maxVal = Math.max(total, 1);
+  const barH = 32;
+  const gap = 8;
+  const w = 320;
+  const h = stages.length * (barH + gap);
+  const title = t("analytics_invite_funnel_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escSvg(title)}"><title>${_escSvg(title)}</title>`;
+
+  stages.forEach((s, i) => {
+    const y = i * (barH + gap);
+    const barW = Math.max((s.value / maxVal) * (w - 90), 2);
+    const pct = total > 0 ? Math.round((s.value / total) * 100) : 0;
+    svg += `<text x="0" y="${y + 20}" font-size="11" fill="var(--text)">${_escSvg(s.label)}</text>`;
+    svg += `<rect x="85" y="${y + 2}" width="${barW}" height="${barH - 4}" fill="${s.color}" rx="4" opacity="0.85"/>`;
+    svg += `<text x="${85 + barW + 6}" y="${y + 20}" font-size="11" fill="var(--text)">${s.value} (${pct}%)</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/CSS vars/escaped i18n strings
 }
 
 // ── S8.3 Vendor Payment Timeline ─────────────────────────────────────────
