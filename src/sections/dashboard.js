@@ -111,7 +111,7 @@ export function unmount() {
 /**
  * Render all dashboard stat elements from the current store state.
  */
-export function renderDashboard() {
+function renderDashboard() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
 
   const total = guests.reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
@@ -262,7 +262,7 @@ function _animateStat(el) {
  * Set up IntersectionObserver for stat counter animation (S2.6).
  * Observes all `[data-stat]` elements in the stats grid.
  */
-export function initStatCounterObserver() {
+function initStatCounterObserver() {
   if (_statObserver || !("IntersectionObserver" in window)) return;
   _statObserver = new IntersectionObserver(
     (entries) => {
@@ -284,7 +284,7 @@ export function initStatCounterObserver() {
  * Show/hide the RSVP deadline banner based on rsvpDeadline in weddingInfo.
  * Shows a warning if the deadline is within 7 days or has passed.
  */
-export function updateRsvpDeadlineBanner() {
+function updateRsvpDeadlineBanner() {
   const banner = document.getElementById("rsvpDeadlineBanner");
   if (!banner) return;
   const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
@@ -315,7 +315,7 @@ export function updateRsvpDeadlineBanner() {
 /**
  * Render expense/vendor summary widget on the dashboard.
  */
-export function renderExpenseSummary() {
+function renderExpenseSummary() {
   const container = document.getElementById("dashExpenseSummary");
   if (!container) return;
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
@@ -380,7 +380,7 @@ export function renderExpenseSummary() {
  * confirmed guest headcount × per-plate estimate vs budget target.
  * Displays in #dashBudgetForecast.
  */
-export function renderBudgetForecast() {
+function renderBudgetForecast() {
   const container = document.getElementById("dashBudgetForecast");
   if (!container) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -454,7 +454,7 @@ export function renderBudgetForecast() {
  * Show upcoming/overdue vendor payments in #dashVendorDueList.
  * Buckets: overdue, ≤3 days, ≤7 days.
  */
-export function renderVendorDueReminders() {
+function renderVendorDueReminders() {
   const card = document.getElementById("dashVendorDueCard");
   const container = document.getElementById("dashVendorDueList");
   const badge = document.getElementById("dashVendorDueBadge");
@@ -550,7 +550,7 @@ function _logActivity(key) {
 /**
  * Render the activity feed into the dashboard widget.
  */
-export function renderActivityFeed() {
+function renderActivityFeed() {
   const container = document.getElementById("dashActivityFeed");
   if (!container) return;
   const feed = /** @type {Array<{ts: string, key: string}>} */ (load("activityFeed", []) || []);
@@ -594,7 +594,7 @@ function _timeAgo(date) {
 /**
  * Render a summary of vendors grouped by category into #dashVendorCategories.
  */
-export function renderVendorCategories() {
+function renderVendorCategories() {
   const el = document.getElementById("dashVendorCategories");
   if (!el) return;
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
@@ -641,7 +641,7 @@ function _escDash(s) {
 /**
  * Render guests who received an invitation but haven't RSVP'd (sent=true + pending).
  */
-export function renderFollowUpList() {
+function renderFollowUpList() {
   const el = document.getElementById("dashFollowUpList");
   if (!el) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -702,7 +702,7 @@ export function renderFollowUpList() {
 /**
  * Render mini invitation statistics into #dashInviteStats.
  */
-export function renderInvitationStats() {
+function renderInvitationStats() {
   const el = document.getElementById("dashInviteStats");
   if (!el) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -732,7 +732,7 @@ export function renderInvitationStats() {
 /**
  * Render a check-in progress bar in #dashCheckinCard.
  */
-export function renderCheckinProgress() {
+function renderCheckinProgress() {
   const card = document.getElementById("dashCheckinCard");
   if (!card) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -750,7 +750,7 @@ export function renderCheckinProgress() {
 /**
  * Render an SVG donut ring in #dashGuestTargetCard showing confirmed vs total invited.
  */
-export function renderGuestTargetRing() {
+function renderGuestTargetRing() {
   const svg = document.getElementById("guestTargetRing");
   if (!svg) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -822,7 +822,7 @@ export function renderGuestTargetRing() {
 /**
  * Render up to 3 actionable suggestions in #dashSuggestedActions.
  */
-export function renderSuggestedActions() {
+function renderSuggestedActions() {
   const container = document.getElementById("dashSuggestedActions");
   if (!container) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -914,7 +914,7 @@ export function renderSuggestedActions() {
 /**
  * Show how many confirmed guests have a gift recorded in #dashGiftProgress.
  */
-export function renderGiftProgress() {
+function renderGiftProgress() {
   const el = document.getElementById("dashGiftProgress");
   if (!el) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -932,7 +932,7 @@ export function renderGiftProgress() {
  * Show the next upcoming timeline event in #dashNextEventContent.
  * Hides #dashNextEventCard if no upcoming events found.
  */
-export function renderNextTimelineEvent() {
+function renderNextTimelineEvent() {
   const card = document.getElementById("dashNextEventCard");
   if (!card) return;
   const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
@@ -1072,7 +1072,7 @@ export function getDashboardSnapshot() {
  * Fetch CHANGELOG.md and render the latest version's highlights in
  * #dashWhatsNewContent.  Non-blocking — silently hides the card on error.
  */
-export async function renderWhatsNewPanel() {
+async function renderWhatsNewPanel() {
   const card = document.getElementById("dashWhatsNewCard");
   if (!card) return;
   try {

@@ -42,7 +42,7 @@ export class SupabaseVendorRepository extends SupabaseBaseRepository {
   async totalCost() {
     const { data, error } = await this._query().select("price");
     if (error) throw error;
-    return (data ?? []).reduce((s, v) => s + Number(v.price ?? 0), 0);
+    return (data ?? []).reduce(/** @param {number} s @param {Record<string,unknown>} v */ (s, v) => s + Number(v.price ?? 0), 0);
   }
 
   /**
@@ -52,7 +52,7 @@ export class SupabaseVendorRepository extends SupabaseBaseRepository {
   async totalPaid() {
     const { data, error } = await this._query().select("paid");
     if (error) throw error;
-    return (data ?? []).reduce((s, v) => s + Number(v.paid ?? 0), 0);
+    return (data ?? []).reduce(/** @param {number} s @param {Record<string,unknown>} v */ (s, v) => s + Number(v.paid ?? 0), 0);
   }
 
   /**

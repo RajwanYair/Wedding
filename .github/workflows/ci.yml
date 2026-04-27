@@ -1,5 +1,5 @@
 # =============================================================================
-# CI — Wedding Manager v12.5.2
+# CI — Wedding Manager v12.5.3
 # Lint, i18n parity, unit tests, Vite build, security scan, Lighthouse, size, E2E
 # =============================================================================
 
@@ -61,7 +61,7 @@ jobs:
 
       - name: Dead-export baseline gate (Phase B5)
         if: matrix.node-version == '22'
-        run: npm run audit:dead -- --baseline=117
+        run: npm run audit:dead -- --baseline=85
         # ROADMAP §6 Phase B5: dead exports < 5%. Baseline locked at v12.0.0
         # current count; regressions fail CI. Hard --enforce gate in v13.0.0
         # once dormant services are wired or removed.
@@ -140,7 +140,7 @@ jobs:
 
       - name: TypeScript error count baseline (Sprint 19)
         if: matrix.node-version == '22'
-        run: npm run audit:tsc -- --enforce --baseline=160
+        run: npm run audit:tsc -- --enforce --baseline=134
         # ROADMAP §3.3 / Phase B2: trend tsc --noEmit error count downward.
         # Sprint 41 (v12.3.0): lowered 209→184 (-25 fixed in undo/sync-manager/md-to-html/guest-token/checkin-session/auth-claims/contact-dedup/currency/sheets-impl)
         # Tighten as core/services/handlers migrate to .ts strict.

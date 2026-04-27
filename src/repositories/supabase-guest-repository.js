@@ -50,11 +50,10 @@ export class SupabaseGuestRepository extends SupabaseBaseRepository {
       .or(`phone.eq.${phone},phone.eq.+${normalized}`)
       .maybeSingle();
     if (error) throw error;
-    return data ?? null;
+    return /** @type {Record<string, unknown> | null} */ (data) ?? null;
   }
 
   /**
-   * @param {import("../types.d.ts").GuestSide} side
    * @returns {Promise<Record<string, unknown>[]>}
    */
   async findBySide(side) {

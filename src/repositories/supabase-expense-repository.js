@@ -30,7 +30,7 @@ export class SupabaseExpenseRepository extends SupabaseBaseRepository {
   async totalAmount() {
     const { data, error } = await this._query().select("amount");
     if (error) throw error;
-    return (data ?? []).reduce((s, e) => s + Number(e.amount ?? 0), 0);
+    return (data ?? []).reduce((/** @type {number} */ s, /** @type {Record<string,unknown>} */ e) => s + Number(e.amount ?? 0), 0);
   }
 
   /**

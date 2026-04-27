@@ -55,7 +55,7 @@ function _rsEcc(data, poly) {
     result.push(0);
     if (top !== 0) {
       for (let i = 0; i < result.length; i++) {
-        result[i] ^= _gfMul(top, /** @type {number} */ (poly[i + 1]));
+        result[i] = (result[i] ?? 0) ^ _gfMul(top, /** @type {number} */ (poly[i + 1] ?? 0));
       }
     }
   }

@@ -24,7 +24,7 @@ import { storeGet, storeSet } from "../core/store.js";
  *   id:         string,
  *   url:        string,
  *   events:     string[],
- *   secret?:    string,
+ *   secret?:    string | null,
  *   active:     boolean,
  *   createdAt:  number,
  *   updatedAt:  number,

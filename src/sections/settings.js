@@ -112,7 +112,7 @@ export function setTheme(theme) {
 /**
  * Populate settings form fields from current store state.
  */
-export function populateSettings() {
+function populateSettings() {
   // Wedding info fields live in the invitation section; just update data summary here.
   updateDataSummary();
 
@@ -161,7 +161,7 @@ export function populateSettings() {
 /**
  * Update the data summary card (guest count, admin emails displayed).
  */
-export function updateDataSummary() {
+function updateDataSummary() {
   if (!el.dataSummary) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
@@ -410,7 +410,7 @@ export function clearAuditLog() {
  * Fetches from Supabase `audit_log` table when backend is "supabase".
  * Falls back to localStorage store when offline or not configured.
  */
-export function renderAuditLog() {
+function renderAuditLog() {
   const tbody = document.getElementById("auditLogBody");
   if (!tbody) return;
 
@@ -478,7 +478,7 @@ export function clearErrorLog() {
  * Fetch remote audit log entries from Supabase and merge into the local store.
  * No-op when backend is not Supabase or project is not configured.
  */
-export async function refreshAuditLog() {
+async function refreshAuditLog() {
   const { getBackendType } = await import("../services/backend.js");
   if (getBackendType() !== "supabase") return;
   const { fetchAuditLog } = await import("../services/supabase.js");
@@ -547,7 +547,7 @@ export function startAutoBackup(intervalMin = 30) {
 /**
  * Stop automatic backups.
  */
-export function stopAutoBackup() {
+function stopAutoBackup() {
   if (_autoBackupInterval !== null) {
     clearInterval(_autoBackupInterval);
     _autoBackupInterval = null;

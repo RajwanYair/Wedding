@@ -99,7 +99,7 @@ export function unmount() {
 /**
  * Render all analytics charts into their DOM containers.
  */
-export function renderAnalytics() {
+function renderAnalytics() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
 
   // RSVP status donut
@@ -518,7 +518,7 @@ function _renderFunnel() {
  * events from invitation-analytics.js (ROADMAP Phase C C1).
  * Stages: Invited → Opened → Clicked → RSVP'd
  */
-export function renderInvitationEngagementFunnel() {
+function renderInvitationEngagementFunnel() {
   const container = document.getElementById("analyticsInviteFunnel");
   if (!container) return;
 
@@ -568,7 +568,7 @@ export function renderInvitationEngagementFunnel() {
  * Render 6-stage RSVP conversion funnel bar chart.
  * Stages: Invited → Reachable → Responded → Confirmed → Attending → Seated
  */
-export function renderRsvpFunnel() {
+function renderRsvpFunnel() {
   const container = document.getElementById("analyticsRsvpFunnel");
   if (!container) return;
 
@@ -936,7 +936,7 @@ export function exportAnalyticsCSV() {
 /**
  * Render an SVG visual floor plan of all tables with guest names.
  */
-export function renderSeatingMap() {
+function renderSeatingMap() {
   const container = document.getElementById("analyticsSeatingMap");
   if (!container) return;
 
@@ -1061,7 +1061,7 @@ export function exportEventSummary() {
 /**
  * Render a chronological payment schedule for vendors with due dates.
  */
-export function renderPaymentSchedule() {
+function renderPaymentSchedule() {
   const container = document.getElementById("analyticsPaymentSchedule");
   if (!container) return;
 
@@ -1109,7 +1109,7 @@ export function renderPaymentSchedule() {
 /**
  * Render an SVG timeline of RSVP responses over time.
  */
-export function renderRsvpTimeline() {
+function renderRsvpTimeline() {
   const container = document.getElementById("analyticsRsvpTimeline");
   if (!container) return;
 
@@ -1237,7 +1237,7 @@ export function printDietaryCards() {
 /**
  * Render a donut chart of expenses broken down by category.
  */
-export function renderExpenseDonut() {
+function renderExpenseDonut() {
   const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
   const container = document.getElementById("analyticsExpenseDonut");
   if (!container) return;
@@ -1405,7 +1405,7 @@ export function renderArrivalForecast() {
 /**
  * Render a month-by-month expense trend as an SVG polyline in #expenseTrendSvg.
  */
-export function renderExpenseTrend() {
+function renderExpenseTrend() {
   const container = document.getElementById("expenseTrendSvg");
   if (!container) return;
 
@@ -1500,7 +1500,7 @@ export function renderExpenseTrend() {
 /**
  * Render a horizontal bar breakdown of guest tags in #analyticsTagBreakdown.
  */
-export function renderTagBreakdown() {
+function renderTagBreakdown() {
   const container = document.getElementById("analyticsTagBreakdown");
   if (!container) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
@@ -1554,7 +1554,7 @@ export function renderTagBreakdown() {
 /**
  * Render no-show prediction card into #noShowPrediction.
  */
-export function renderNoShowPrediction() {
+function renderNoShowPrediction() {
   const container = document.getElementById("noShowPrediction");
   if (!container) return;
   const { noShowRate, expectedNoShows, confirmed, lateConfirmed } = predictNoShowRate();
@@ -2031,7 +2031,7 @@ export function getErrorStats() {
 /**
  * Render the error analytics dashboard into #analyticsErrorSummary and #analyticsErrorList.
  */
-export function renderErrorAnalytics() {
+function renderErrorAnalytics() {
   const { total, bySeverity, recent } = getErrorStats();
 
   // Summary grid

@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.3] — 2026-04-27
+
+> **Sprint 66: TypeScript accuracy + dead-export reduction + repository JSDoc types.**
+
+### Fixed (12.5.3)
+
+- **`src/repositories/supabase-vendor-repository.js`** — Repaired syntax
+  corruption (broken reduce callback JSDoc) that caused 12 TypeScript parse
+  errors; `totalCost()` and `totalPaid()` methods now parse correctly.
+- **`src/repositories/table-repository.js`** — Removed duplicate file-level
+  `@extends` JSDoc tag (TS8022); annotation now sits directly on the class.
+- **`src/repositories/supabase-table-repository.js`** — Restored missing
+  closing braces after prior multi-replace; typed `findByName` return value
+  with `/** @type {Record<string, unknown> | null} */` cast.
+- **`src/repositories/supabase-guest-repository.js`** — Typed `findByPhone`
+  return with `/** @type */` cast to satisfy `noUncheckedIndexedAccess`.
+- **`src/services/webhook-service.js`** — Local `Webhook` typedef updated
+  to `secret?: string | null` matching `src/types.d.ts` (TS2322).
+- **`src/utils/qr-code.js`** — Changed `result[i] ^=` to
+  `result[i] = (result[i] ?? 0) ^ ...` to handle `number | undefined` under
+  `noUncheckedIndexedAccess: true` (TS2532).
+
+### Changed (12.5.3)
+
+- **TypeScript errors** — Reduced from **157 → 134** via repository JSDoc
+  type improvements; CI `audit:tsc --baseline` lowered `160 → 134`.
+- **Dead exports** — Reduced from **117 → 85** by removing `export` from
+  internal-only render functions in `sections/analytics.js` (11 removed),
+  `sections/dashboard.js` (16 removed), and `sections/settings.js` (5 removed);
+  CI `audit:dead --baseline` lowered `117 → 85`.
+- **`README.md`** — Test badge updated to 2509 (was stale 2306).
+- **Version bump** — `12.5.2 → 12.5.3` propagated via `npm run sync:version`.
+
 ## [12.5.2] — 2026-04-27
 
 > **Cleanup pass: dead-export audit accuracy + 85 false positives eliminated.**

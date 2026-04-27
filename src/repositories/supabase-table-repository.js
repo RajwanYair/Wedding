@@ -30,7 +30,7 @@ export class SupabaseTableRepository extends SupabaseBaseRepository {
   async totalCapacity() {
     const { data, error } = await this._query().select("capacity");
     if (error) throw error;
-    return (data ?? []).reduce((sum, row) => sum + (Number(row.capacity) || 0), 0);
+    return (data ?? []).reduce(/** @param {number} sum @param {Record<string,unknown>} row */ (sum, row) => sum + (Number(row.capacity) || 0), 0);
   }
 
   /**
@@ -41,6 +41,6 @@ export class SupabaseTableRepository extends SupabaseBaseRepository {
   async findByName(name) {
     const { data, error } = await this._query().ilike("name", name).maybeSingle();
     if (error) throw error;
-    return data ?? null;
+    return /** @type {Record<string, unknown> | null} */ (data) ?? null;
   }
 }

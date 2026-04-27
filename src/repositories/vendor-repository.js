@@ -1,10 +1,17 @@
 /**
  * src/repositories/vendor-repository.js — Store-backed VendorRepository (Sprint 54)
+ * @extends {BaseRepository<import("../types.d.ts").Vendor>}
  */
 
 import { BaseRepository } from "./base-repository.js";
 
+/** @extends {BaseRepository<import("../types.d.ts").Vendor>} */
 export class VendorRepository extends BaseRepository {
+  /**
+   * @param {(key: string) => import("../types.d.ts").Vendor[]} storeGet
+   * @param {(key: string, items: import("../types.d.ts").Vendor[]) => void} storeSet
+   * @param {(key: string, item: import("../types.d.ts").Vendor) => void} storeUpsert
+   */
   constructor(storeGet, storeSet, storeUpsert) {
     super("vendors", storeGet, storeSet, storeUpsert);
   }

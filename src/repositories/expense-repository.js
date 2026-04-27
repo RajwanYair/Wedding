@@ -4,12 +4,21 @@
 
 import { BaseRepository } from "./base-repository.js";
 
+/** @extends {BaseRepository<import("../types.d.ts").Expense>} */
 export class ExpenseRepository extends BaseRepository {
+  /**
+   * @param {(key: string) => import("../types.d.ts").Expense[]} storeGet
+   * @param {(key: string, items: import("../types.d.ts").Expense[]) => void} storeSet
+   * @param {(key: string, item: import("../types.d.ts").Expense) => void} storeUpsert
+   */
   constructor(storeGet, storeSet, storeUpsert) {
     super("expenses", storeGet, storeSet, storeUpsert);
   }
 
-  /** @returns {import("../types.d.ts").Expense[]} */
+  /**
+   * @param {string} category
+   * @returns {import("../types.d.ts").Expense[]}
+   */
   findByCategory(category) {
     return this.findAll().filter((e) => e.category === category);
   }
