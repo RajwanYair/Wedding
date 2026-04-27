@@ -178,7 +178,7 @@ function _resolvePlural(expr, params) {
   const ruleRE = /(=\d+|\w+)\s*\{([^}]*)\}/g;
   let m;
   while ((m = ruleRE.exec(ruleStr)) !== null) {
-    rules[m[1]] = m[2];
+    rules[/** @type {string} */ (m[1])] = /** @type {string} */ (m[2]);
   }
 
   // 1. Exact match first: =0, =1, =5 …

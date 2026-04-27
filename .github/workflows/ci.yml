@@ -129,7 +129,7 @@ jobs:
 
       - name: TypeScript error count baseline (Sprint 19)
         if: matrix.node-version == '22'
-        run: npm run audit:tsc -- --enforce --baseline=244
+        run: npm run audit:tsc -- --enforce --baseline=209
         # ROADMAP §3.3 / Phase B2: trend tsc --noEmit error count downward.
         # Tighten as core/services/handlers migrate to .ts strict.
 

@@ -42,7 +42,7 @@ export function parseLocation(input) {
   const search = String(/** @type {{ search?: string }} */ (loc).search ?? "");
 
   // Hash may carry its own query suffix: "section?a=1"
-  const [hashSection, hashQuery = ""] = hash.split("?", 2);
+  const [hashSection = "", hashQuery = ""] = hash.split("?", 2);
   const section = isKnownSection(hashSection) ? hashSection : "dashboard";
 
   /** @type {Record<string, string>} */
@@ -51,7 +51,7 @@ export function parseLocation(input) {
     if (!src) continue;
     for (const pair of src.split("&")) {
       if (!pair) continue;
-      const [rawK, rawV = ""] = pair.split("=", 2);
+      const [rawK = "", rawV = ""] = pair.split("=", 2);
       try {
         params[decodeURIComponent(rawK)] = decodeURIComponent(rawV);
       } catch {
@@ -106,5 +106,5 @@ export function isPublicSection(name) {
  */
 export function getRouteParam(key, input) {
   const { params } = parseLocation(input);
-  return Object.hasOwn(params, key) ? params[key] : null;
+  return Object.hasOwn(params, key) ? (params[key] ?? null) : null;
 }

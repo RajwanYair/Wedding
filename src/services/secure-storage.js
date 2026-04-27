@@ -35,7 +35,7 @@ let _keyPromise = null;
 /** @param {Uint8Array} bytes */
 function toB64(bytes) {
   let s = "";
-  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(/** @type {number} */ (bytes[i]));
   return btoa(s);
 }
 

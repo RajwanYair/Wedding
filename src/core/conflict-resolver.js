@@ -44,6 +44,7 @@ export function applyConflictResolutions(choices) {
   for (let i = 0; i < _pendingConflicts.length; i++) {
     if (choices[i] === "remote") {
       const c = _pendingConflicts[i];
+      if (!c) continue;
       const guest = guests.find((g) => String(g.id) === c.id);
       if (guest) guest[c.field] = c.remoteVal;
     }

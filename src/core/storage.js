@@ -107,16 +107,15 @@ async function _idbTx(mode, fn) {
   });
 }
 
-/** @type {typeof _memAdapter} */
 const _idbAdapter = {
-  async getItem(k) {
+  async getItem(/** @type {string} */ k) {
     const val = await _idbTx("readonly", (s) => s.get(k));
     return /** @type {string | null} */ (val ?? null);
   },
-  async setItem(k, v) {
+  async setItem(/** @type {string} */ k, /** @type {string} */ v) {
     await _idbTx("readwrite", (s) => s.put(v, k));
   },
-  async removeItem(k) {
+  async removeItem(/** @type {string} */ k) {
     await _idbTx("readwrite", (s) => s.delete(k));
   },
   async clear() {

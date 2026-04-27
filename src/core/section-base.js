@@ -64,7 +64,7 @@ export class BaseSection {
   /**
    * Called once on mount. Override to fetch data, render, attach listeners.
    * @param {Record<string, unknown>} [_params]
-   * @returns {void | Promise<void>}
+   * @returns {Promise<void>}
    */
 
   async onMount(_params) {

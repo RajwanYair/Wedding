@@ -426,7 +426,7 @@ export function storeRemove(key, id) {
  * @returns {() => void}     Cancel function (no-op once already fired)
  */
 export function storeSubscribeOnce(key, fn) {
-  const unsub = storeSubscribe(key, (value) => {
+  const unsub = storeSubscribe(key, (/** @type {unknown} */ value) => {
     unsub();
     fn(value);
   });

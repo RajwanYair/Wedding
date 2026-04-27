@@ -48,7 +48,7 @@ const _loaders = new Map();
 for (const [path, loader] of Object.entries(_rawGlob)) {
   // path looks like "../templates/guests.html"
   const match = path.match(/\/([^/]+)\.html$/);
-  if (match) _loaders.set(match[1], /** @type {any} */ (loader));
+  if (match) _loaders.set(/** @type {string} */ (match[1]), /** @type {any} */ (loader));
 }
 
 /** @type {Map<string, () => void>} section name → post-inject callback */

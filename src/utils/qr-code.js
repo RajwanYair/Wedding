@@ -30,12 +30,16 @@ const _GF_LOG = new Uint8Array(256);
     _GF_LOG[x] = i;
     x = (x << 1) ^ (x >= 128 ? 0x11d : 0);
   }
-  for (let i = 255; i < 512; i++) _GF_EXP[i] = _GF_EXP[i - 255];
+  for (let i = 255; i < 512; i++) _GF_EXP[i] = /** @type {number} */ (_GF_EXP[i - 255]);
 })();
 
+/**
+ * @param {number} a
+ * @param {number} b
+ */
 function _gfMul(a, b) {
   if (a === 0 || b === 0) return 0;
-  return _GF_EXP[(_GF_LOG[a] + _GF_LOG[b]) % 255];
+  return _GF_EXP[((_GF_LOG[a] ?? 0) + (_GF_LOG[b] ?? 0)) % 255];
 }
 
 /**
@@ -47,11 +51,11 @@ function _gfMul(a, b) {
 function _rsEcc(data, poly) {
   const result = new Array(poly.length - 1).fill(0);
   for (const b of data) {
-    const top = b ^ result.shift();
+    const top = b ^ /** @type {number} */ (result.shift());
     result.push(0);
     if (top !== 0) {
       for (let i = 0; i < result.length; i++) {
-        result[i] ^= _gfMul(top, poly[i + 1]);
+        result[i] ^= _gfMul(top, /** @type {number} */ (poly[i + 1]));
       }
     }
   }
@@ -79,15 +83,19 @@ function _encodeV1(text) {
   const modules = new Uint8Array(SIZE * SIZE); // 0=light, 1=dark
   const reserved = new Uint8Array(SIZE * SIZE); // 1=reserved (can't set)
 
-  const _set = (r, c, dark) => {
+  const _set = (/** @type {number} */ r, /** @type {number} */ c, /** @type {boolean} */ dark) => {
     if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) modules[r * SIZE + c] = dark ? 1 : 0;
   };
-  const _reserve = (r, c) => {
+  const _reserve = (/** @type {number} */ r, /** @type {number} */ c) => {
     if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) reserved[r * SIZE + c] = 1;
   };
-  const _isReserved = (r, c) => reserved[r * SIZE + c] === 1;
+  const _isReserved = (/** @type {number} */ r, /** @type {number} */ c) => reserved[r * SIZE + c] === 1;
 
   // Finder patterns (top-left, top-right, bottom-left)
+  /**
+   * @param {number} tr
+   * @param {number} tc
+   */
   function _drawFinder(tr, tc) {
     for (let r = -1; r <= 7; r++) {
       for (let c = -1; c <= 7; c++) {
@@ -125,14 +133,14 @@ function _encodeV1(text) {
   // ── Data encoding (byte mode, ECC level L) ──────────────────────────
   // Capacity V1-L: 19 bytes → 152 bits → 19 data codewords + 7 ECC
   const dataBytes = [0x40 | (bytes.length >> 4)];
-  dataBytes.push(((bytes.length & 0xf) << 4) | (bytes[0] >> 4));
+  dataBytes.push(((bytes.length & 0xf) << 4) | (/** @type {number} */ (bytes[0]) >> 4));
   for (let i = 0; i < bytes.length - 1; i++) {
-    dataBytes.push(((bytes[i] & 0xf) << 4) | (bytes[i + 1] >> 4));
+    dataBytes.push(((/** @type {number} */ (bytes[i]) & 0xf) << 4) | (/** @type {number} */ (bytes[i + 1]) >> 4));
   }
-  dataBytes.push((bytes[bytes.length - 1] & 0xf) << 4);
+  dataBytes.push((/** @type {number} */ (bytes[bytes.length - 1]) & 0xf) << 4);
   // Pad to 19 codewords
   const PAD = [0xec, 0x11];
-  while (dataBytes.length < 19) dataBytes.push(PAD[dataBytes.length % 2 === 0 ? 0 : 1]);
+  while (dataBytes.length < 19) dataBytes.push(/** @type {number} */ (PAD[dataBytes.length % 2 === 0 ? 0 : 1]));
 
   // ECC (V1-L uses 7 ECC codewords, generator poly degree 7)
   const _POLY_7 = [1, 127, 122, 154, 164, 11, 68, 117];
@@ -151,7 +159,7 @@ function _encodeV1(text) {
         if (!_isReserved(r, c)) {
           const byteIdx = bitIdx >> 3;
           const bitOff = 7 - (bitIdx & 7);
-          const dark = byteIdx < allBytes.length && ((allBytes[byteIdx] >> bitOff) & 1) === 1;
+          const dark = byteIdx < allBytes.length && ((/** @type {number} */ (allBytes[byteIdx]) >> bitOff) & 1) === 1;
           _set(r, c, dark);
           bitIdx++;
         }
@@ -164,7 +172,7 @@ function _encodeV1(text) {
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       if (!_isReserved(r, c) && (r + c) % 2 === 0) {
-        modules[r * SIZE + c] ^= 1;
+        modules[r * SIZE + c] = (modules[r * SIZE + c] ?? 0) ^ 1;
       }
     }
   }
