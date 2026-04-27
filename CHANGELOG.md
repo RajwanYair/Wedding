@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.6] — 2026-04-27
+
+> **Sprints 78–87: Monitoring telemetry opt-out, coverage gate, JSDoc strict, mermaid-validate CI, supabase-lint CI, admin_users migration, service consolidation, secure-storage API.**
+
+### Added (12.5.6)
+
+- **S78** — Sentry/Glitchtip telemetry adapter: opt-in DSN, PII scrubber, Settings toggle `disable_telemetry`.
+- **S79** — Coverage gate ratchet: `check-coverage-gate.mjs` with targets 47/41/54/47 (lines/branches/functions/statements).
+- **S80** — `eslint-plugin-jsdoc` strict enforcement on `src/core/`, `src/services/`, `src/handlers/`; 14 JSDoc fixes across handler + service files.
+- **S81** — `scripts/validate-mermaid.mjs` CI step; RSVP submission sequenceDiagram added to `ARCHITECTURE.md`.
+- **S82** — `scripts/audit-supabase-lint.mjs` static migration checker (idempotent guards, terminator, trailing whitespace); CI gate with baseline=1.
+- **S83** — `supabase/migrations/023_admin_users.sql` — server-side admin allowlist with RLS; `src/services/admin.js` exporting `isApprovedAdminAsync()`.
+- **S84 (pivot)** — Dead-export reduction 86 → 84: removed unused `isOnline()` from `network-status.js`; demoted `buildVCard` to internal helper.
+- **S85** — Service consolidation: `audit-pipeline.js` merged into `audit.js`; `createAuditPipeline` now exported from `audit.js`; file deleted.
+- **S86** — Service consolidation: `share-service.js` merged into `share.js`; `shareWithFallback()`, `buildShareUrl()`, `isNativeShareSupported` alias added; file deleted.
+- **S87** — `getSecureStorageStatus()` diagnostic API in `secure-storage.js`; i18n keys `secure_storage_{title,active,inactive}` (HE + EN); 3 new unit tests (2509 → 2512).
+
+### Changed (12.5.6)
+
+- **`package.json`** — Version `12.5.5` → `12.5.6`.
+- **Dead exports**: 86 → 82 (net across S84–S86).
+- **Service file count**: reduced by 2 (deleted `audit-pipeline.js`, `share-service.js`).
+
 ## [12.5.5] — 2026-04-27
 
 > **Sprint 77: ROADMAP deep rethink — every decision reopened to first principles.**

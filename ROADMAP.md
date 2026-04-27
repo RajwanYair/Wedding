@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v12.5.5
+# Wedding Manager — Roadmap v12.5.6
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -17,7 +17,7 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2026-04-27, v12.5.4):** 2 509 tests passing · 0 lint errors · ~45 KB gzip bundle ·
+**State (2026-04-27, v12.5.6):** 2 512 tests passing · 0 lint errors · ~45 KB gzip bundle ·
 WCAG 2.2 AA · Lighthouse ≥ 95 · 7 GitHub Actions workflows · CodeQL on · OpenSSF Scorecard +
 SBOM + Trivy live · Node 22 LTS in CI + `.nvmrc` · GitHub Pages deploy. Strong foundation.
 
@@ -68,13 +68,13 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v12.5.4 · 2026-04-27
+### Actual state — v12.5.6 · 2026-04-27
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **2 509 passing · 155 files · 0 Node warnings** | ✅ |
+| Tests | **2 512 passing · 155 files · 0 Node warnings** | ✅ |
 | TypeScript errors | **134** (was 157; trending down via JSDoc fixes) | ⚠ |
-| Dead exports | **85** (was 117) | ⚠ |
+| Dead exports | **82** (was 117; 84 pre-S85, -2 via S86) | ⚠ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
 | Sections | **19** modules · **18** templates · **8** modals | ✅ |
 | Services | **62** files (~3× healthy max) | ⚠ consolidation needed |
@@ -1002,7 +1002,8 @@ Storage + Realtime for development without an account.
 | v12.5.2 | Released 2026-04-27 | Tooling accuracy | Dead-export audit regex (202 false → 117 actual); baseline 201→117 |
 | v12.5.3 | Released 2026-04-27 | TSC accuracy + dead-export reduction | TSC 157→134; dead exports 117→85; repository JSDoc fixes |
 | v12.5.4 | Released 2026-04-27 | Node LTS + supply chain + theme picker | Sprints 67–76: `.nvmrc` 22 LTS; SBOM + Trivy + Scorecard; rotation runbook; arch enforcement; live theme picker |
-| **v12.5.5** | **This release** | **Roadmap deep rethink** | **Sprint 77: ROADMAP rewrite — verdict matrix, lessons learned, sprint backlog 77–130, cost profile, hybrid edge runtime decision, JSDoc-strict (revised TS path)** |
+| **v12.5.5** | Released 2026-04-27 | Roadmap deep rethink | Sprint 77: ROADMAP rewrite — verdict matrix, lessons learned, sprint backlog 77–130, cost profile, hybrid edge runtime decision, JSDoc-strict (revised TS path) |
+| **v12.5.6** | **This release** | **Backend convergence prep** | **Sprints 78–87: Sentry telemetry opt-out, coverage gate ratchet, eslint-plugin-jsdoc strict, mermaid-validate CI, supabase-lint CI, admin_users migration, dead-export 86→82, service consolidation (audit-pipeline + share-service merged), secure-storage status API** |
 | v12.6.x | Candidate patches | Monitoring + coverage gate | Sprints 78–86: Sentry, coverage gate, JSDoc-plugin, mermaid-validate, db lint, admin table, service consolidation |
 | **v13.0.0** | Next major | Backend convergence + P0 security | Sprints 87–96: encryption, IDB queue, pushState router, drop FB/GIS/AppleID, Supabase Auth, **flip BACKEND_TYPE = supabase** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
@@ -1013,5 +1014,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2026-04-27 · v12.5.5 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-04-27 · v12.5.6 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*
