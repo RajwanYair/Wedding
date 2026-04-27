@@ -4,9 +4,9 @@
 
 | Version | Supported |
 | ------- | --------- |
-| 10.x | ✅ Active |
-| 9.x | ⚠️ Maintenance |
-| < 9.0 | ❌ No support |
+| 12.x | ✅ Active |
+| 11.x | ⚠️ Maintenance |
+| < 11.0 | ❌ No support |
 
 ## Reporting a Vulnerability
 
