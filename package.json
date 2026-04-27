@@ -15,7 +15,7 @@
     "preview:build": "npm run build && vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage --coverage.reporter json-summary",
     "test:e2e": "playwright test --grep-invert \"Visual regression\"",
     "test:e2e:visual": "playwright test tests/e2e/visual.spec.mjs",
     "test:e2e:visual:update": "playwright test tests/e2e/visual.spec.mjs --update-snapshots",
