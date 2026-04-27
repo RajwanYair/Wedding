@@ -7,8 +7,9 @@
  */
 
 import { getApprovedAdminEmails } from "../core/app-config.js";
-import { save, load } from "../core/state.js";
+import { load, remove } from "../core/state.js";
 import { storeGet } from "../core/store.js";
+import { setSecure, getSecure, removeSecure } from "./secure-storage.js";
 
 const SESSION_KEY = "auth_user";
 const SESSION_ROTATION_MS = 2 * 60 * 60 * 1000; // 2 hours
@@ -30,31 +31,52 @@ export function onAuthChange(fn) {
 }
 
 /**
- * Load persisted session from localStorage.
- * @returns {AuthUser | null}
+ * Load persisted session. Tries encrypted storage first (AES-GCM); falls
+ * back to legacy plaintext for E2E-seeded sessions and first-boot migration.
+ * On a successful plaintext read the value is immediately re-encrypted and
+ * the plaintext entry is deleted (one-shot upgrade path).
+ * @returns {Promise<AuthUser | null>}
  */
-export function loadSession() {
-  _user = /** @type {any} */ (load(SESSION_KEY, null)) ?? null;
-  if (_user && !_user.isAdmin) _user = null; // guest sessions not persisted
-  return _user;
+export async function loadSession() {
+  // 1. Try encrypted store (normal path after first encrypted save).
+  const secure = /** @type {AuthUser | null} */ (await getSecure(SESSION_KEY).catch(() => null));
+  if (secure?.isAdmin) {
+    _user = secure;
+    return _user;
+  }
+  // 2. Plaintext fallback (E2E seeds / first-boot migration).
+  const legacy = /** @type {AuthUser | null} */ (load(SESSION_KEY, null) ?? null);
+  if (legacy?.isAdmin) {
+    _user = legacy;
+    // Upgrade: write encrypted, erase plaintext (fire-and-forget, errors silenced).
+    setSecure(SESSION_KEY, legacy).catch(() => {});
+    remove(SESSION_KEY);
+    return _user;
+  }
+  return null;
 }
 
 /**
- * Save user session to localStorage.
+ * Save user session using AES-GCM encrypted storage (ROADMAP A3, OWASP A02).
+ * The plaintext key is removed so no raw email/token remains in localStorage.
  * @param {AuthUser} user
  */
 export function saveSession(user) {
   _user = user;
-  save(SESSION_KEY, user);
+  // Write encrypted (async, errors silenced — in-memory _user is source of truth).
+  setSecure(SESSION_KEY, user).catch(() => {});
+  // Erase any legacy plaintext entry.
+  remove(SESSION_KEY);
   _onAuthChange?.(user);
 }
 
 /**
- * Clear the current session (logout).
+ * Clear the current session (logout). Removes both encrypted and legacy entries.
  */
 export function clearSession() {
   _user = null;
-  save(SESSION_KEY, null);
+  removeSecure(SESSION_KEY);
+  remove(SESSION_KEY);
   _onAuthChange?.(null);
 }
 
@@ -132,9 +154,10 @@ export function loginAnonymous() {
 export function maybeRotateSession() {
   if (!_user?.isAdmin) return false;
   if (Date.now() - _user.loginAt < SESSION_ROTATION_MS) return false;
-  // Rotate: bump loginAt and re-save
+  // Rotate: bump loginAt and re-save (encrypted).
   _user = { ..._user, loginAt: Date.now() };
-  save(SESSION_KEY, _user);
+  setSecure(SESSION_KEY, _user).catch(() => {});
+  remove(SESSION_KEY);
   return true;
 }
 

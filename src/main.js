@@ -252,7 +252,7 @@ let _activeSection = null;
 
   // 5. Auth — restore session or sign in anonymously
   onAuthChange(updateNavForAuth); // register BEFORE any login call
-  const user = loadSession();
+  const user = await loadSession();
   if (!user) loginAnonymous(); // fires onAuthChange immediately
 
   // 5a. S10.3 — Presence indicator for admins

@@ -8,7 +8,7 @@ import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
-import { loadSession } from "../services/auth.js";
+import { currentUser } from "../services/auth.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
 
 /** @type {(() => void)[]} */
@@ -19,7 +19,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
   // Show admin bar for authenticated users only
   const adminBar = document.getElementById("galleryAdminBar");
   if (adminBar) {
-    const user = loadSession();
+    const user = currentUser();
     adminBar.classList.toggle("u-hidden", !user || !user.isAdmin);
   }
   renderGallery();
@@ -136,7 +136,7 @@ export function renderGallery() {
   if (!grid) return;
 
   const photos = /** @type {any[]} */ (storeGet("gallery") ?? []);
-  const user = loadSession();
+  const user = currentUser();
   const isAdmin = user && user.isAdmin;
   const emptyEl = document.getElementById("galleryEmpty");
 

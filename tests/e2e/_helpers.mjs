@@ -3,7 +3,7 @@
  * tests/e2e/_helpers.mjs — shared E2E utilities.
  *
  * `seedAdminSession(page)` writes a synthetic admin user into localStorage
- * BEFORE any page navigation so that `loadSession()` finds it during boot
+ * `loadSession()` (now async) finds it during boot
  * and the section auth guard allows admin-only sections (guests, tables,
  * vendors, etc.) to mount during smoke tests.
  *
