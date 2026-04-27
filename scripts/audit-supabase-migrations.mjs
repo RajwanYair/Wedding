@@ -29,7 +29,7 @@ const ENFORCE = process.argv.includes("--enforce");
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
-function relPath(p) {
+function _relPath(p) {
   return relative(ROOT, p).split(sep).join("/");
 }
 
@@ -69,7 +69,7 @@ const allContent = files.map((f) => {
   return { file: f, raw, sql: stripComments(raw) };
 });
 
-const combinedSql = allContent.map((m) => m.sql).join("\n");
+const _combinedSql = allContent.map((m) => m.sql).join("\n");
 
 // ── Check 1: Numbering gaps ───────────────────────────────────────────────
 
