@@ -3,7 +3,8 @@
 [![Version](https://img.shields.io/badge/version-v12.0.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
-[![Tests](https://img.shields.io/badge/tests-2385_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
+[![Tests](https://img.shields.io/badge/tests-2306_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
+[![Coverage](https://img.shields.io/badge/coverage-50%25_lines_%C2%B7_42%25_branches-1abc9c?style=flat-square)](.github/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)](docs/README.md)
 [![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
@@ -14,7 +15,7 @@
 [![Scorecard](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml)
 [![SBOM](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml)
 [![Trivy](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml)
-[![ADRs](https://img.shields.io/badge/ADRs-22-7f5af0?style=flat-square)](docs/adr/README.md)
+[![ADRs](https://img.shields.io/badge/ADRs-42-7f5af0?style=flat-square)](docs/adr/README.md)
 [![Audits](https://img.shields.io/badge/audits-dead%20%C2%B7%20actions%20%C2%B7%20types-1abc9c?style=flat-square)](.github/workflows/ci.yml)
 
 **Wedding management app for RSVP, guest lists, table seating, WhatsApp outreach, and event-day operations.**
