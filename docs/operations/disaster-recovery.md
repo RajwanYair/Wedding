@@ -1,6 +1,6 @@
 # Disaster Recovery Runbook
 
-> Last reviewed: 2025-XX-XX · Owner: release-engineer · Drill cadence: quarterly
+> Last reviewed: 2026-04-27 · Owner: release-engineer · Drill cadence: quarterly
 
 This runbook covers full data-plane and control-plane recovery for Wedding
 Manager when Supabase, GitHub Pages, or DNS fail catastrophically.
