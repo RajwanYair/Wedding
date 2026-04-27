@@ -11,7 +11,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { guestMatchesQuery } from "../utils/guest-search.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
 

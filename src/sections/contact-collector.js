@@ -9,7 +9,7 @@ import { t } from "../core/i18n.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { uid } from "../utils/misc.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;

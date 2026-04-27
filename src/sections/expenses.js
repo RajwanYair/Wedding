@@ -9,7 +9,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];

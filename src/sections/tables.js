@@ -10,7 +10,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { TABLE_SHAPES } from "../core/constants.js";
 
 /** @type {(() => void)[]} */

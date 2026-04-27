@@ -19,7 +19,7 @@ import {
   queueSize,
   queueKeys,
   onSyncStatus,
-} from "../services/sheets.js";
+} from "../core/sync.js";
 import {
   isPushSupported,
   requestPushPermission,

@@ -11,7 +11,7 @@ import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { readBrowserStorageJson, writeBrowserStorage } from "../core/storage.js";
 import { cleanPhone } from "../utils/phone.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];

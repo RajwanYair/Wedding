@@ -8,7 +8,7 @@ import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
-import { enqueueWrite, syncStoreKeyToSheets } from "../services/sheets.js";
+import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { pushUndo } from "../utils/undo.js";
 import { cleanPhone } from "../utils/phone.js";
 
