@@ -161,6 +161,29 @@ flowchart TD
     G --> H["Google Sheets\nApps Script Web App"]
 ```
 
+### RSVP Submission Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Guest
+    participant Form as RSVP Form (UI)
+    participant Lookup as lookupRsvpByPhone()
+    participant Store as store.js
+    participant Queue as enqueueWrite("rsvp_log")
+    participant Sheet as Google Sheets / Supabase
+    Guest->>Form: enter phone + status
+    Form->>Lookup: phone-first lookup
+    Lookup-->>Form: existing guest record (or null)
+    Guest->>Form: confirm + submit
+    Form->>Store: setStore("guests", patched)
+    Store-->>Form: subscribers re-render
+    Form->>Queue: appendToRsvpLog(entry)
+    Queue->>Sheet: debounced write (1.5s)
+    Sheet-->>Queue: 200 OK
+    Queue-->>Form: ack (announce live region)
+```
+
 ## Build
 
 - **Vite 8** — entry `src/main.js`

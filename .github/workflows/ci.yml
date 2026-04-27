@@ -122,6 +122,12 @@ jobs:
         run: npm run audit:css-scope -- --enforce
         # ADR-036: unscoped [data-section="…"] selectors locked at 4.
 
+      - name: Mermaid diagram syntax (S81)
+        if: matrix.node-version == '22'
+        run: npm run audit:mermaid
+        # S81: validates ```mermaid blocks across markdown docs (lightweight,
+        # no mermaid-cli/puppeteer dep). Catches type/bracket regressions.
+
       - name: Section/template parity baseline (Sprint 12)
         if: matrix.node-version == '22'
         run: npm run audit:section-templates -- --baseline=2
