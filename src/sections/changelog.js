@@ -2,20 +2,23 @@
  * src/sections/changelog.js — Changelog section ESM module
  *
  * Fetches CHANGELOG.md and renders it as formatted HTML.
+ * S100 — first section to adopt {@link BaseSection}; behaviour unchanged.
  */
 
 import { mdToHtml } from "../utils/md-to-html.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
 /** @type {string|null} cached rendered HTML */
 let _cached = null;
 
-export function mount(/** @type {HTMLElement} */ _container) {
-  renderChangelog();
+class ChangelogSection extends BaseSection {
+  async onMount() {
+    await renderChangelog();
+  }
 }
 
-export function unmount() {
-  // no subscriptions to clean up
-}
+const _instance = new ChangelogSection("changelog");
+export const { mount, unmount, capabilities } = fromSection(_instance);
 
 export async function renderChangelog() {
   const el = document.getElementById("changelogContent");
