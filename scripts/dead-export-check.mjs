@@ -10,6 +10,7 @@
  *   node scripts/dead-export-check.mjs --json      # JSON output
  *   node scripts/dead-export-check.mjs --summary   # only totals
  *   node scripts/dead-export-check.mjs --enforce   # exit 1 if dead exports found
+ *   node scripts/dead-export-check.mjs --baseline=N # exit 1 if dead exports > N
  */
 
 import { readFileSync, readdirSync } from "fs";
@@ -18,10 +19,13 @@ import { fileURLToPath } from "url";
 
 const ROOT = join(fileURLToPath(import.meta.url), "../..");
 
-const ARGS = new Set(process.argv.slice(2));
+const ARGV = process.argv.slice(2);
+const ARGS = new Set(ARGV);
 const JSON_OUT = ARGS.has("--json");
 const SUMMARY_ONLY = ARGS.has("--summary");
 const ENFORCE = ARGS.has("--enforce");
+const BASELINE_ARG = ARGV.find((a) => a.startsWith("--baseline="));
+const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -112,5 +116,12 @@ console.log(`appear dead. Review before removing.\n`);
 
 if (ENFORCE && dead.length > 0) {
   console.error(`\n✖ --enforce: ${dead.length} dead export(s) found. Clean up before merging.`);
+  process.exit(1);
+}
+
+if (BASELINE !== null && Number.isFinite(BASELINE) && dead.length > BASELINE) {
+  console.error(
+    `\n✖ --baseline=${BASELINE}: ${dead.length} dead export(s) found (regression of ${dead.length - BASELINE}). Clean up new dead exports before merging.`,
+  );
   process.exit(1);
 }
