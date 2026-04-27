@@ -3512,4 +3512,24 @@
     }
   }
 
+  /* S106: extend per-section scoping to budget & guests sections.          */
+  @scope (#sec-budget) {
+    .budget-section-empty {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--color-text-muted, #888);
+      font-style: italic;
+    }
+  }
+
+  @scope (#sec-guests) {
+    .guests-toolbar-extras {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+  }
+
 } /* end @layer components */
