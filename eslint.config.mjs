@@ -206,6 +206,10 @@ export default [
               message: "Sections must import sync primitives via ../core/sync.js (B9 arch rule).",
             },
             {
+              name: "../services/sheets-impl.js",
+              message: "Sections must import sync primitives via ../core/sync.js (B9 arch rule).",
+            },
+            {
               name: "../services/backend.js",
               message:
                 "Sections must use ../repositories/ or dynamic import() for backend calls (B9 arch rule).",
@@ -214,6 +218,16 @@ export default [
               name: "../services/supabase.js",
               message:
                 "Sections must use ../repositories/ or dynamic import() for Supabase access (B9 arch rule).",
+            },
+            {
+              name: "../services/supabase-auth.js",
+              message:
+                "Sections must use ../services/auth.js or ../core/nav-auth.js for auth state (B9 arch rule).",
+            },
+            {
+              name: "../services/supabase-realtime.js",
+              message:
+                "Sections must use presence via ../services/presence.js or ../repositories/ (B9 arch rule).",
             },
           ],
         },
