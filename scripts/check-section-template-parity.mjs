@@ -35,8 +35,18 @@ if (missing.length === 0) {
 }
 
 const ENFORCE = process.argv.includes("--enforce");
+const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
+const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
 console.log(`[check-section-template-parity] ${missing.length} issue(s):\n`);
 for (const m of missing) console.log(`  ${m}`);
+if (BASELINE !== null && Number.isFinite(BASELINE)) {
+  if (missing.length > BASELINE) {
+    console.log(`\n[check-section-template-parity] BASELINE ${BASELINE}: ${missing.length} (regression). Failing.`);
+    process.exit(1);
+  }
+  console.log(`\n[check-section-template-parity] OK: ${missing.length} ≤ baseline ${BASELINE}.`);
+  process.exit(0);
+}
 if (ENFORCE) process.exit(1);
 console.log(
   "\n[check-section-template-parity] Advisory mode (no failure). Some entries are embedded sub-sections without standalone files. Re-run with --enforce to gate.",
