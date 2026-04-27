@@ -464,6 +464,46 @@ export async function migrateFromLocalStorage(prefix = STORAGE_PREFIX) {
   return count;
 }
 
+/**
+ * Audit `localStorage` for `${prefix}*` keys that have already been mirrored to
+ * IndexedDB. Returns the list of orphaned keys safe to remove. No-op outside
+ * an IDB-active environment. (S88 — IDB hot key cleanup.)
+ * @param {string} [prefix=STORAGE_PREFIX]
+ * @returns {Promise<string[]>}
+ */
+export async function auditLocalStorageRemnants(prefix = STORAGE_PREFIX) {
+  if (_adapterType !== "indexeddb") return [];
+  if (typeof localStorage === "undefined") return [];
+  /** @type {string[]} */
+  const orphans = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith(prefix)) continue;
+    const idbVal = await _idbAdapter.getItem(key);
+    if (idbVal !== null) orphans.push(key);
+  }
+  return orphans;
+}
+
+/**
+ * Remove orphan `${prefix}*` keys from `localStorage` once mirrored to IDB.
+ * Safer counterpart to {@link migrateFromLocalStorage}: only deletes when the
+ * IDB copy is present. (S88 — IDB hot key cleanup.)
+ * @param {string} [prefix=STORAGE_PREFIX]
+ * @returns {Promise<number>} Number of keys removed
+ */
+export async function cleanupLocalStorageRemnants(prefix = STORAGE_PREFIX) {
+  const orphans = await auditLocalStorageRemnants(prefix);
+  for (const key of orphans) {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* best-effort */
+    }
+  }
+  return orphans.length;
+}
+
 // ── Quota detection (Phase 1.3) ───────────────────────────────────────────
 
 /** Threshold (fraction 0–1) at which storage is considered nearly full. */

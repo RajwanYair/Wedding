@@ -25,6 +25,7 @@ import { updateNavForAuth } from "./core/nav-auth.js";
 import {
   initStorage,
   migrateFromLocalStorage,
+  cleanupLocalStorageRemnants,
   getAdapterType,
   readBrowserStorage,
   writeBrowserStorage,
@@ -151,6 +152,14 @@ let _activeSection = null;
     if (migrated > 0) {
       writeBrowserStorage(STORAGE_KEYS.IDB_MIGRATED, "1");
     }
+  }
+
+  // 0a2. S88 — best-effort cleanup of orphan localStorage entries that are
+  // already mirrored to IDB. Safe: only deletes when IDB has the same key.
+  if (getAdapterType() === "indexeddb") {
+    cleanupLocalStorageRemnants().catch(() => {
+      /* never break boot for storage cleanup */
+    });
   }
 
   // 0b. Production monitoring — opt-in via VITE_SENTRY_DSN. No-op without DSN.

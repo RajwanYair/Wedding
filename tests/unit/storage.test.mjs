@@ -9,6 +9,8 @@ import {
   storageSet,
   storageRemove,
   storageClear,
+  auditLocalStorageRemnants,
+  cleanupLocalStorageRemnants,
 } from "../../src/core/storage.js";
 
 describe("storage abstraction (F2.3)", () => {
@@ -60,5 +62,47 @@ describe("storage abstraction (F2.3)", () => {
     const t1 = await initStorage();
     const t2 = await initStorage();
     expect(t1).toBe(t2);
+  });
+
+  describe("auditLocalStorageRemnants / cleanupLocalStorageRemnants (S88)", () => {
+    it("returns empty array when adapter is not indexeddb", async () => {
+      await initStorage();
+      if (getAdapterType() !== "indexeddb") {
+        expect(await auditLocalStorageRemnants("wedding_v1_")).toEqual([]);
+      }
+    });
+
+    it("detects orphans when key exists in both localStorage and IDB", async () => {
+      await initStorage();
+      if (getAdapterType() !== "indexeddb") return;
+      try {
+        localStorage.setItem("wedding_v1_audit_probe", "x");
+      } catch {
+        return;
+      }
+      await storageSet("wedding_v1_audit_probe", "x");
+      const orphans = await auditLocalStorageRemnants("wedding_v1_");
+      expect(orphans).toContain("wedding_v1_audit_probe");
+      const removed = await cleanupLocalStorageRemnants("wedding_v1_");
+      expect(removed).toBeGreaterThan(0);
+      expect(localStorage.getItem("wedding_v1_audit_probe")).toBeNull();
+    });
+
+    it("ignores keys outside the prefix", async () => {
+      await initStorage();
+      if (getAdapterType() !== "indexeddb") return;
+      try {
+        localStorage.setItem("other_app_key", "y");
+      } catch {
+        return;
+      }
+      const orphans = await auditLocalStorageRemnants("wedding_v1_");
+      expect(orphans).not.toContain("other_app_key");
+      try {
+        localStorage.removeItem("other_app_key");
+      } catch {
+        /* ignore */
+      }
+    });
   });
 });
