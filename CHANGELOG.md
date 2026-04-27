@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.0.0] — 2026-05-02
+
+> **Backend convergence + CI quality bar.** 13 sprints land Phase A/B exit
+> criteria: every long-running audit is now either at-zero (`--enforce`) or
+> locked to a non-regression baseline (`--baseline=N`). Tokens encrypted at
+> rest. RSVP deep-links. E2E coverage of CRUD + RSVP. Auto code-splitting.
+
+### Added (12.0.0)
+
+- **ADR-042** — CI baseline-gating strategy. Central index for every locked audit baseline; documents the upgrade path from `--baseline=N` to `--enforce`.
+- **E2E coverage** — `tests/e2e/crud.spec.mjs` and `tests/e2e/rsvp-flow.spec.mjs` exercising guest add/edit/delete and the RSVP submission path. New `seedStoreData()` helper in `tests/e2e/_helpers.mjs`.
+- **AES-GCM secure storage for auth tokens** — `src/services/auth.js` now persists session payloads via `secureStorage` (ADR-026 Phase E1). `src/main.js` awaits `loadSession()` before mount.
+- **RSVP deep-link** — `?guest=<id>` opens the edit-guest modal directly via a synthetic `data-action="openEditGuestModal"` dispatch in `src/core/nav.js`.
+- **Locked CI baselines** — `audit:dead=193`, `audit:arch=15`, `audit:trusted-types=24`, `audit:aria-roles=18`, `audit:router=1`, `audit:section-templates=2`. All `--baseline` flags accept and enforce a numeric ceiling.
+- **JSDoc gate** — `audit:jsdoc --enforce` requires 100% JSDoc coverage on every export under `src/core/` and `src/services/`. Currently 500/500 documented.
+- **Hard CI gates** — `audit:plaintext-secrets`, `audit:coverage`, `audit:console-error`, `audit:base-section`, `audit:css-scope`, `audit:jsdoc` all run with `--enforce` (exit non-zero on any new violation).
+
+### Changed (12.0.0)
+
+- `vite.config.js` — removed `build.rollupOptions.output.manualChunks` per ADR-041; Rollup auto-splits via dynamic imports. `src/utils/**` coverage threshold relaxed 90 → 88.
+- `scripts/check-coverage-gate.mjs` — new floors: lines 49 / branches 41 / functions 54 / statements 48 (ADR-017).
+- `scripts/audit-console-error.mjs` — baseline 999 → 9 with clearer enforce message.
+- `scripts/audit-jsdoc.mjs` — baseline 999 → 0 (full coverage achieved).
+- `src/core/router.js` — JSDoc moved adjacent to `initRouterListener()` export so the audit detector sees it.
+- `src/sections/gallery.js` — auth check uses `currentUser()` instead of stale state.
+
+### Fixed (12.0.0)
+
+- `src/services/supabase-auth.js` `clearSession()` and `src/core/router.js` `initRouterListener()` now have detectable JSDoc, completing 100% coverage.
+
 ## [11.16.0] — 2026-04-26
 
 > Roadmap sprint batch — Phase B advisories: ADRs 039 (Preact Signals as store internals), 040 (Service Worker strategies + Background Sync), 041 (auto code-splitting), two new advisories (`audit:manual-chunks`, `audit:store-mutation-depth`), four
