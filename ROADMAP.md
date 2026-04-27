@@ -432,7 +432,7 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 
 > Versioning: **Active = current**, **Next = committed scope**, **Later = candidate scope**. Every phase boundary is a decision-review checkpoint with an ADR per "Replace" decision.
 
-### Phase A — v12.0.0 *Backend Convergence + P0 Fixes* — *Next*
+### Phase A — v12.0.0 *Backend Convergence + P0 Fixes* — *✅ Shipped 2026-04-27*
 
 **Goal:** make Supabase the **single** authoritative backend, fix all P0 security issues, repair the router.
 
