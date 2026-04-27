@@ -18,6 +18,7 @@ import {
   uniqueClicks,
   uniqueRsvps,
 } from "../services/invitation-analytics.js";
+import { getRsvpFunnel } from "../services/rsvp-analytics.js";
 import {
   renderDonut as _renderDonut,
   renderBar as _renderBar,
@@ -66,6 +67,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   storeSubscribeScoped("appErrors", renderErrorAnalytics, _SCOPE);
   // C1: invitation engagement funnel (Sprint 36)
   storeSubscribeScoped("invitationAnalytics", renderInvitationEngagementFunnel, _SCOPE);
+  // C1: RSVP conversion funnel (Sprint 44)
+  storeSubscribeScoped("guests", renderRsvpFunnel, _SCOPE);
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -84,6 +87,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
   renderSeatingScore(); // F4.3.4
   renderErrorAnalytics(); // Phase 10.3
   renderInvitationEngagementFunnel(); // C1 Sprint 36
+  renderRsvpFunnel(); // C1 Sprint 44
 }
 
 export function unmount() {
@@ -558,13 +562,60 @@ export function renderInvitationEngagementFunnel() {
   container.innerHTML = svg; // safe: numbers/CSS vars/escaped i18n strings
 }
 
+// ── C1: RSVP Conversion Funnel (rsvp-analytics.js, Sprint 44) ────────────
+
+/**
+ * Render 6-stage RSVP conversion funnel bar chart.
+ * Stages: Invited → Reachable → Responded → Confirmed → Attending → Seated
+ */
+export function renderRsvpFunnel() {
+  const container = document.getElementById("analyticsRsvpFunnel");
+  if (!container) return;
+
+  const funnel = getRsvpFunnel();
+
+  if (funnel.invited === 0) {
+    container.textContent = t("analytics_no_guests");
+    return;
+  }
+
+  const stages = [
+    { label: t("rsvp_funnel_invited"), value: funnel.invited, color: "var(--primary)" },
+    { label: t("rsvp_funnel_reachable"), value: funnel.reachable, color: "var(--info)" },
+    { label: t("rsvp_funnel_responded"), value: funnel.responded, color: "var(--warning, #f0ad4e)" },
+    { label: t("rsvp_funnel_confirmed"), value: funnel.confirmed, color: "var(--success)" },
+    { label: t("rsvp_funnel_attending"), value: funnel.attending, color: "var(--success)" },
+    { label: t("rsvp_funnel_seated"), value: funnel.seated, color: "var(--accent, #8b5cf6)" },
+  ];
+
+  const maxVal = Math.max(funnel.invited, 1);
+  const barH = 30;
+  const gap = 8;
+  const w = 340;
+  const h = stages.length * (barH + gap);
+  const title = t("analytics_rsvp_funnel_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escSvg(title)}"><title>${_escSvg(title)}</title>`;
+
+  stages.forEach((s, i) => {
+    const y = i * (barH + gap);
+    const barW = Math.max((s.value / maxVal) * (w - 100), 2);
+    const pct = funnel.invited > 0 ? Math.round((s.value / funnel.invited) * 100) : 0;
+    svg += `<text x="0" y="${y + 20}" font-size="11" fill="var(--text)">${_escSvg(s.label)}</text>`;
+    svg += `<rect x="90" y="${y + 2}" width="${barW}" height="${barH - 4}" fill="${s.color}" rx="4" opacity="0.85"/>`;
+    svg += `<text x="${90 + barW + 6}" y="${y + 20}" font-size="11" fill="var(--text)">${s.value} (${pct}%)</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/CSS vars/escaped i18n strings
+}
+
 // ── S8.3 Vendor Payment Timeline ─────────────────────────────────────────
 
 /**
  * Render vendor payment progress bars (paid vs total per vendor).
  */
-function _renderVendorTimeline() {
-  const container = document.getElementById("analyticsVendorTimeline");
+function _renderVendorTimeline() {  const container = document.getElementById("analyticsVendorTimeline");
   if (!container) return;
 
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
