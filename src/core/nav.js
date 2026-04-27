@@ -102,6 +102,23 @@ export function initRouter() {
 
   // Sprint 36: Handle ?token= deep links — navigate to rsvp section with token context
   const params = new URLSearchParams(location.search);
+
+  // Sprint 5 (ROADMAP §6 Phase A6): ?guest=<id> opens edit-guest modal directly.
+  // Allows shareable URLs like /#guests?... or /?guest=abc123 → guests section + modal.
+  const deepGuestId = params.get("guest");
+  if (deepGuestId) {
+    location.hash = "#guests";
+    // Defer modal open until after section mount + DOM settle.
+    setTimeout(() => {
+      const btn = document.createElement("button");
+      btn.dataset.action = "openEditGuestModal";
+      btn.dataset.actionArg = deepGuestId;
+      document.body.appendChild(btn);
+      btn.click();
+      btn.remove();
+    }, 250);
+  }
+
   const deepToken = params.get("token");
   if (deepToken) {
     import("../services/guest-token.js").then(({ getGuestByToken }) => {
