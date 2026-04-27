@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { createAuditPipeline } from "../../src/services/audit-pipeline.js";
+import { createAuditPipeline } from "../../src/services/audit.js";
 
 function makeSupabase() {
   const chain = {

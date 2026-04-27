@@ -165,3 +165,133 @@ function _getSessionId() {
   }
   return _sessionId;
 }
+
+// ── Audit Pipeline (S85 — merged from audit-pipeline.js) ──────────────────
+//
+// Batched, queued writer to `audit_log`. Used by integration tests and
+// future Sprint 88 IDB queue. Falls back to console.warn when supabase is null.
+
+/** @typedef {import("@supabase/supabase-js").SupabaseClient} SupabaseClient */
+
+/**
+ * @typedef {"low"|"medium"|"high"|"critical"} Severity
+ *
+ * @typedef {{
+ *   action: string,
+ *   entityType?: string,
+ *   entityId?: string,
+ *   userId?: string,
+ *   severity?: Severity,
+ *   metadata?: Record<string, unknown>
+ * }} AuditEvent
+ *
+ * @typedef {{
+ *   log(event: AuditEvent): void,
+ *   flush(): Promise<void>,
+ *   pending(): number,
+ *   destroy(): void
+ * }} AuditPipeline
+ */
+
+const PIPELINE_BATCH_SIZE = 20;
+const PIPELINE_FLUSH_MS = 5_000;
+
+const HIGH_SEVERITY_ACTIONS = new Set([
+  "guest.delete",
+  "guest.erase",
+  "user.ban",
+  "settings.change",
+  "admin.login",
+  "admin.logout",
+]);
+
+/**
+ * Resolve severity — caller hint is respected but certain actions are elevated.
+ * @param {string} action
+ * @param {Severity} [hint]
+ * @returns {Severity}
+ */
+function resolveSeverity(action, hint) {
+  if (HIGH_SEVERITY_ACTIONS.has(action)) {
+    const levels = ["low", "medium", "high", "critical"];
+    const hintIdx = hint ? levels.indexOf(hint) : -1;
+    return hintIdx >= 2 ? /** @type {Severity} */ (hint) : "high";
+  }
+  return hint ?? "low";
+}
+
+/**
+ * Create a batched audit pipeline.
+ *
+ * @param {SupabaseClient | null} supabase  Pass null for offline / test mode.
+ * @param {{ batchSize?: number, flushMs?: number }} [opts]
+ * @returns {AuditPipeline}
+ */
+export function createAuditPipeline(supabase, opts = {}) {
+  const batchSize = opts.batchSize ?? PIPELINE_BATCH_SIZE;
+  const flushMs = opts.flushMs ?? PIPELINE_FLUSH_MS;
+
+  /** @type {AuditEvent[]} */
+  const queue = [];
+  /** @type {ReturnType<typeof setTimeout> | null} */
+  let timer = null;
+  let destroyed = false;
+
+  function scheduleFlush() {
+    if (timer || destroyed) return;
+    timer = setTimeout(() => {
+      timer = null;
+      flushQueue();
+    }, flushMs);
+  }
+
+  async function flushQueue() {
+    if (queue.length === 0) return;
+    const batch = queue.splice(0, batchSize);
+    if (!supabase) {
+      for (const e of batch) {
+        console.warn("[audit]", e.action, e.severity, e.entityType, e.entityId);
+      }
+      return;
+    }
+    try {
+      await supabase.from("audit_log").insert(batch);
+    } catch {
+      queue.unshift(...batch);
+    }
+  }
+
+  return {
+    log(event) {
+      if (destroyed) return;
+      const enriched = {
+        ...event,
+        severity: resolveSeverity(event.action, event.severity),
+        logged_at: new Date().toISOString(),
+      };
+      queue.push(enriched);
+      if (queue.length >= batchSize) {
+        flushQueue();
+      } else {
+        scheduleFlush();
+      }
+    },
+    async flush() {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      await flushQueue();
+    },
+    pending() {
+      return queue.length;
+    },
+    destroy() {
+      destroyed = true;
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    },
+  };
+}

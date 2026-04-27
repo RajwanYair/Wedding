@@ -14,7 +14,7 @@ import { describe, it, expect, vi } from "vitest";
 import { decodeJwtPayload, hasRole, isTokenExpired } from "../../src/services/auth-claims.js";
 import { createRateLimiter } from "../../src/services/rate-limiter.js";
 import { PII_COLUMNS } from "../../src/services/gdpr-erasure.js";
-import { createAuditPipeline } from "../../src/services/audit-pipeline.js";
+import { createAuditPipeline } from "../../src/services/audit.js";
 import { generateKey, encryptField, decryptField } from "../../src/services/crypto.js";
 import { createSessionGuard } from "../../src/services/session-security.js";
 import { REQUIRED_RLS_TABLES } from "../../src/services/rls-audit.js";
