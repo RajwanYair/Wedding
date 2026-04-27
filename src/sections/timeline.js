@@ -10,6 +10,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
+import { getRunOfShow, formatTimeUntil } from "../services/event-schedule.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -18,8 +19,11 @@ export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("timeline", renderTimeline));
   _unsubs.push(storeSubscribe("weddingInfo", renderTimeline));
   _unsubs.push(storeSubscribe("timelineDone", renderTimeline)); // S24.1
+  _unsubs.push(storeSubscribe("timeline", renderRunOfShow)); // C1 Sprint 48
+  _unsubs.push(storeSubscribe("weddingInfo", renderRunOfShow)); // C1 Sprint 48
   renderTimeline();
   startTimelineAlarms();
+  renderRunOfShow(); // C1 Sprint 48
 }
 
 export function unmount() {
@@ -390,4 +394,53 @@ export function getUpcomingTimelineItems(limit = 3) {
     .sort((a, b) => String(a.time).localeCompare(String(b.time)))
     .slice(0, limit)
     .map((i) => ({ id: i.id, time: i.time, title: i.title || "", done: false }));
+}
+
+// ── C1: Run-of-Show panel (event-schedule.js, Sprint 48) ─────────────────
+
+/**
+ * Render an annotated run-of-show timeline in #timelineRunOfShow.
+ */
+export function renderRunOfShow() {
+  const container = document.getElementById("timelineRunOfShow");
+  if (!container) return;
+
+  const schedule = getRunOfShow();
+  if (schedule.length === 0) {
+    container.textContent = "";
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  schedule.forEach((ev) => {
+    const row = document.createElement("div");
+    row.className = `run-of-show-row${ev.isNext ? " run-of-show-row--next" : ""}${ev.isPast ? " run-of-show-row--past" : ""}`;
+
+    const time = document.createElement("span");
+    time.className = "run-of-show-time";
+    time.textContent = ev.time;
+
+    const icon = document.createElement("span");
+    icon.className = "run-of-show-icon";
+    icon.textContent = ev.icon;
+
+    const titleEl = document.createElement("span");
+    titleEl.className = "run-of-show-title";
+    titleEl.textContent = ev.title;
+
+    row.appendChild(time);
+    row.appendChild(icon);
+    row.appendChild(titleEl);
+
+    if (ev.isNext) {
+      const badge = document.createElement("span");
+      badge.className = "badge badge--info u-mr-xs";
+      badge.textContent = formatTimeUntil(ev.minutesDelta);
+      row.appendChild(badge);
+    }
+
+    frag.appendChild(row);
+  });
+
+  container.replaceChildren(frag);
 }
