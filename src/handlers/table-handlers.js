@@ -19,6 +19,10 @@ import {
   exportSeatMapJson,
 } from "../sections/tables.js";
 
+/**
+ * Register `data-action` handlers for the seating/tables section.
+ * Idempotent — call once at app boot.
+ */
 export function register() {
   on("saveTable", () => {
     const getVal = (/** @type {string} */ id) =>

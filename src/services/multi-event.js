@@ -23,15 +23,17 @@ import {
 
 /**
  * @typedef {{
- *   id:          string,
- *   name:        string,
- *   date?:       string,          // ISO date string
- *   venue?:      string,
+ *   id: string,
+ *   name: string,
+ *   date?: string,
+ *   venue?: string,
  *   description?: string,
- *   label?:      string,
- *   createdAt:   number,
- *   updatedAt:   number,
+ *   label?: string,
+ *   createdAt: number,
+ *   updatedAt: number,
  * }} WeddingEvent
+ *
+ * `date` is an ISO date string when present.
  */
 
 // ── Helpers ────────────────────────────────────────────────────────────────

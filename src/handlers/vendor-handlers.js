@@ -29,6 +29,10 @@ import {
   printMealPerTable,
 } from "../sections/analytics.js";
 
+/**
+ * Register `data-action` handlers for the vendors section.
+ * Idempotent — call once at app boot.
+ */
 export function register() {
   // ── Vendors ──
   on("saveVendor", () => {

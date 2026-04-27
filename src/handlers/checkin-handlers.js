@@ -18,6 +18,10 @@ import {
   printGuestQrBadges,
 } from "../sections/checkin.js";
 
+/**
+ * Register `data-action` handlers for the check-in section.
+ * Idempotent — call once at app boot.
+ */
 export function register() {
   on("checkInGuest", (el) => checkInGuest(el.dataset.actionArg ?? ""));
   on("checkinSearch", (_el, e) => {

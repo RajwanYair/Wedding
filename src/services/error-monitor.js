@@ -123,7 +123,8 @@ export function configureTransport(fn) {
 }
 
 /**
- * @internal Reset module state between tests.
+ * Reset module state between tests.
+ * @internal
  */
 export function _resetForTests() {
   _user = null;

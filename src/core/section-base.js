@@ -26,6 +26,10 @@ import { storeSubscribe } from "./store.js";
  * @typedef {() => void} CleanupFn
  */
 
+/**
+ * Base class for sections. Provides lifecycle hooks (mount/unmount),
+ * subscription tracking, and cleanup helpers shared by all sections.
+ */
 export class BaseSection {
   /** @type {string} */
   #name;

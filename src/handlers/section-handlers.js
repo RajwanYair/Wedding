@@ -26,6 +26,10 @@ import * as invitationSection from "../sections/invitation.js";
 import * as contactSection from "../sections/contact-collector.js";
 import * as landingSection from "../sections/landing.js";
 
+/**
+ * Register section-level `data-action` handlers (navigation, modals, etc).
+ * Idempotent — call once at app boot.
+ */
 export function register() {
   // ── RSVP ──
   on("submitRSVP", (_el, e) => {

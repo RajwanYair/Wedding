@@ -174,7 +174,10 @@ async function _processQueue() {
   }
 }
 
-/** @internal for tests only */
+/**
+ * Reset queue/state for tests only.
+ * @internal
+ */
 export function _resetForTesting() {
   _queue.clear();
   _inFlight.clear();

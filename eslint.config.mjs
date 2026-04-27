@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import jsdoc from "eslint-plugin-jsdoc";
 
 // Load shared base from parent tooling dir (local dev + CI with setup step)
 let shared;
@@ -247,6 +248,37 @@ export default [
     },
     rules: {
       "no-console": "off",
+    },
+  },
+  // S80 — JSDoc strict on public exports of core/services/handlers.
+  // audit-jsdoc.mjs already enforces 100% block presence on core+services;
+  // this layer adds syntax-level enforcement (param/returns/types) at lint time.
+  {
+    files: ["src/core/**/*.js", "src/services/**/*.js", "src/handlers/**/*.js"],
+    plugins: { jsdoc },
+    rules: {
+      "jsdoc/check-alignment": "error",
+      "jsdoc/check-param-names": "error",
+      "jsdoc/check-tag-names": "error",
+      "jsdoc/check-types": "error",
+      "jsdoc/empty-tags": "error",
+      "jsdoc/no-undefined-types": "off", // too noisy with our DOM/store types
+      "jsdoc/require-jsdoc": [
+        "error",
+        {
+          publicOnly: true,
+          require: {
+            FunctionDeclaration: true,
+            ClassDeclaration: true,
+            MethodDefinition: false,
+            ArrowFunctionExpression: false,
+            FunctionExpression: false,
+          },
+        },
+      ],
+      "jsdoc/require-param-name": "error",
+      "jsdoc/require-returns-check": "error",
+      "jsdoc/valid-types": "error",
     },
   },
 ];

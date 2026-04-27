@@ -24,6 +24,10 @@ import {
   mergeGuests,
 } from "../sections/guests.js";
 
+/**
+ * Register `data-action` handlers for the guests section.
+ * Idempotent — call once at app boot.
+ */
 export function register() {
   on("saveGuest", () => {
     /** @param {string} id @returns {string} */

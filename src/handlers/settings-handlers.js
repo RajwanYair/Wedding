@@ -36,6 +36,10 @@ import {
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
 
+/**
+ * Register `data-action` handlers for the settings section.
+ * Idempotent — call once at app boot.
+ */
 export function register() {
   // ── Sheets / Sync ──
   on("syncSheetsNow", async () => {

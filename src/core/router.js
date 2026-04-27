@@ -127,7 +127,8 @@ export function initRouterListener() {
 }
 
 /**
- * @internal Test helper. Resets module state between tests.
+ * Test helper. Resets module state between tests.
+ * @internal
  */
 export function _resetRouterForTests() {
   _subscribers.clear();
