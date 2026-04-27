@@ -146,6 +146,18 @@ export function register() {
     saveTransportSettings();
     showToast(t("settings_saved"), "success");
   });
+  on("saveTelemetryOptOut", () => {
+    const cb = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("telemetryOptOut")
+    );
+    try {
+      if (cb?.checked) localStorage.setItem("wedding_v1_telemetry_opt_out", "1");
+      else localStorage.removeItem("wedding_v1_telemetry_opt_out");
+    } catch {
+      /* storage disabled — silent */
+    }
+    showToast(t("settings_saved"), "success");
+  });
   on("addRegistryLink", () => {
     const urlInput = /** @type {HTMLInputElement|null} */ (
       document.getElementById("registryInputUrl")

@@ -357,6 +357,25 @@
       <div id="dataSummary"></div>
     </div>
 
+    <!-- Privacy / Telemetry -->
+    <div class="settings-card">
+      <h3>🛡️ <span data-i18n="privacy_settings_title">פרטיות וטלמטריה</span></h3>
+      <p class="section-desc" data-i18n="privacy_settings_desc">
+        ניטור שגיאות בייצור הוא אופציונלי ומופעל רק אם הוגדר DSN. כל מידע אישי
+        (אימייל, טלפון, אסימון) מוסר לפני שליחה.
+      </p>
+      <div class="form-group u-mb-sm">
+        <label class="form-checkbox">
+          <input
+            type="checkbox"
+            id="telemetryOptOut"
+            data-on-change="saveTelemetryOptOut"
+          />
+          <span data-i18n="telemetry_opt_out_label">השבת ניטור שגיאות (telemetry)</span>
+        </label>
+      </div>
+    </div>
+
     <!-- Transportation Settings -->
     <div class="settings-card">
       <h3>🚌 <span data-i18n="transport_settings_title">הגדרות הסעות</span></h3>

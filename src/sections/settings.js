@@ -129,6 +129,18 @@ function populateSettings() {
     }
   }
 
+  // Telemetry opt-out checkbox state (Sprint 78)
+  try {
+    const telemetryCb = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("telemetryOptOut")
+    );
+    if (telemetryCb) {
+      telemetryCb.checked = localStorage.getItem("wedding_v1_telemetry_opt_out") === "1";
+    }
+  } catch {
+    /* storage disabled */
+  }
+
   // Populate Sheets Web App URL if saved
   const sheetsUrl = getSheetsWebAppUrl();
   if (sheetsUrl) {

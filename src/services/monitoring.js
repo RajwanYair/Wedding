@@ -102,6 +102,16 @@ export async function initMonitoring(opts = {}) {
   if (_initialized) return _transport != null;
   _initialized = true;
 
+  // Honour user opt-out (localStorage flag set from Settings).
+  try {
+    if (typeof localStorage !== "undefined" &&
+        localStorage.getItem("wedding_v1_telemetry_opt_out") === "1") {
+      return false;
+    }
+  } catch {
+    /* private mode / disabled storage — fall through */
+  }
+
   const dsn =
     opts.dsn ??
     (typeof globalThis !== "undefined" && globalThis.process?.env?.VITE_SENTRY_DSN) ??
