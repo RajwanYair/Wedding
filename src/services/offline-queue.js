@@ -104,7 +104,7 @@ function _registerSyncTag() {
     sw.ready
       .then((reg) => {
         if (reg && "sync" in reg) {
-          return reg.sync.register("rsvp-sync");
+          return /** @type {{ register: (tag: string) => Promise<void> }} */ (reg.sync).register("rsvp-sync");
         }
       })
       .catch(() => {

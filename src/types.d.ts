@@ -42,7 +42,7 @@ export interface Guest {
   mealNotes: string;
   accessibility: string;
   transport: string;
-  tableId: string;
+  tableId: string | null | undefined;
   gift: string;
   notes: string;
   sent: boolean;

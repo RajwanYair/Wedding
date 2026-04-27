@@ -33,7 +33,9 @@ export function createSessionGuard(opts) {
   if (timeoutMs < 1) throw new RangeError("timeoutMs must be >= 1");
 
   let lastActivity = Date.now();
+  /** @type {ReturnType<typeof setTimeout> | null} */
   let timeoutHandle = null;
+  /** @type {ReturnType<typeof setTimeout> | null} */
   let warningHandle = null;
   let destroyed = false;
 

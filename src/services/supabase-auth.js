@@ -52,7 +52,7 @@ export function isSupabaseAuthConfigured() {
 
 /** @returns {SupabaseSession | null} */
 export function getSession() {
-  const sess = readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null);
+  const sess = /** @type {SupabaseSession | null} */ (readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null));
   if (!sess) return null;
   if (sess.expires_at && Date.now() / 1000 > sess.expires_at - 60) {
     // Token expired (or expiring in 60s) — attempt silent refresh
@@ -193,7 +193,7 @@ export function handleOAuthRedirect() {
 
     // Decode user from JWT payload
     const payload = JSON.parse(
-      atob(accessToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+      atob((accessToken.split(".")[1] ?? "e30=").replace(/-/g, "+").replace(/_/g, "/")),
     );
     const sess = /** @type {SupabaseSession} */ ({
       access_token: accessToken,

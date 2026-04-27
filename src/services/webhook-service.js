@@ -122,7 +122,9 @@ export function updateWebhook(id, patch) {
   const hooks = _getWebhooks();
   const idx = hooks.findIndex((h) => h.id === id);
   if (idx === -1) return false;
-  hooks[idx] = { ...hooks[idx], ...patch, updatedAt: Date.now() };
+  const current = hooks[idx];
+  if (!current) return false;
+  hooks[idx] = /** @type {import('../types').Webhook} */ ({ ...current, ...patch, updatedAt: Date.now() });
   _saveWebhooks(hooks);
   return true;
 }

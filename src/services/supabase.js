@@ -188,8 +188,8 @@ export async function fetchAuditLog(limit = 200) {
     return result.map((row) => ({
       action: row.action ?? "",
       entity: row.entity ?? "",
-      entityId: row.entity_id ?? null,
-      userEmail: row.user_email ?? "",
+      entity_id: row.entity_id ?? null,
+      user_email: row.user_email ?? "",
       ts: row.ts ?? "",
       diff: row.diff ?? null,
     }));

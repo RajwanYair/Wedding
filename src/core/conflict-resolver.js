@@ -156,7 +156,8 @@ export function autoResolve(conflicts, strategy) {
       chosen = lts >= rts ? c.localVal : c.remoteVal;
     }
 
-    patches[c.id][c.field] = chosen;
+    const patch = patches[c.id] ?? (patches[c.id] = {});
+    patch[c.field] = chosen;
   }
 
   return patches;

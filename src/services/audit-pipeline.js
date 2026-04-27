@@ -53,7 +53,7 @@ function resolveSeverity(action, hint) {
   if (HIGH_SEVERITY_ACTIONS.has(action)) {
     const levels = ["low", "medium", "high", "critical"];
     const hintIdx = hint ? levels.indexOf(hint) : -1;
-    return hintIdx >= 2 ? hint : "high";
+    return hintIdx >= 2 ? /** @type {Severity} */ (hint) : "high";
   }
   return hint ?? "low";
 }
@@ -71,6 +71,7 @@ export function createAuditPipeline(supabase, opts = {}) {
 
   /** @type {AuditEvent[]} */
   const queue = [];
+  /** @type {ReturnType<typeof setTimeout> | null} */
   let timer = null;
   let destroyed = false;
 

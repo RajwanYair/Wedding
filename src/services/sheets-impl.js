@@ -291,7 +291,8 @@ function _gvizToRows(data) {
     /** @type {Record<string, unknown>} */
     const obj = {};
     (row.c ?? []).forEach((cell, i) => {
-      obj[cols[i]] = cell?.v ?? null;
+      const key = cols[i];
+      if (key !== undefined) obj[key] = cell?.v ?? null;
     });
     return obj;
   });
@@ -365,7 +366,7 @@ export async function pullAllFromSheetsImpl() {
   }
 
   // Config sheet: key-value rows → weddingInfo object
-  const configRows = await sheetsReadImpl(_getSpreadsheetId(), _SHEET_NAMES.weddingInfo);
+  const configRows = await sheetsReadImpl(_getSpreadsheetId(), /** @type {string} */ (_SHEET_NAMES["weddingInfo"]));
   /** @type {Record<string, unknown>} */
   const info = {};
   configRows.forEach((row) => {
@@ -381,7 +382,7 @@ export async function pullAllFromSheetsImpl() {
 
   // TimelineDone sheet: key-value rows → { itemId: boolean } map
   try {
-    const doneRows = await sheetsReadImpl(_getSpreadsheetId(), _SHEET_NAMES.timelineDone);
+    const doneRows = await sheetsReadImpl(_getSpreadsheetId(), /** @type {string} */ (_SHEET_NAMES["timelineDone"]));
     /** @type {Record<string, boolean>} */
     const doneMap = {};
     doneRows.forEach((row) => {

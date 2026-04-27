@@ -51,7 +51,7 @@ function _gfMul(a, b) {
 function _rsEcc(data, poly) {
   const result = new Array(poly.length - 1).fill(0);
   for (const b of data) {
-    const top = b ^ /** @type {number} */ (result.shift());
+    const top = b ^ /** @type {number} */ (result.shift() ?? 0);
     result.push(0);
     if (top !== 0) {
       for (let i = 0; i < result.length; i++) {

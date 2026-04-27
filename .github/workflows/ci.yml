@@ -135,7 +135,7 @@ jobs:
 
       - name: TypeScript error count baseline (Sprint 19)
         if: matrix.node-version == '22'
-        run: npm run audit:tsc -- --enforce --baseline=184
+        run: npm run audit:tsc -- --enforce --baseline=160
         # ROADMAP §3.3 / Phase B2: trend tsc --noEmit error count downward.
         # Sprint 41 (v12.3.0): lowered 209→184 (-25 fixed in undo/sync-manager/md-to-html/guest-token/checkin-session/auth-claims/contact-dedup/currency/sheets-impl)
         # Tighten as core/services/handlers migrate to .ts strict.

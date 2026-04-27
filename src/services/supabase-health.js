@@ -58,6 +58,7 @@ export async function getHealthReport(supabase) {
   /** @type {Record<string, boolean>} */
   const tables = {};
   let overallOk = true;
+  /** @type {string | undefined} */
   let firstError;
 
   await Promise.all(
@@ -80,6 +81,7 @@ export async function getHealthReport(supabase) {
   );
 
   const latencyMs = Date.now() - start;
+  /** @type {{ ok: boolean; latencyMs: number; tables: Record<string, boolean>; error?: string }} */
   const report = { ok: overallOk, latencyMs, tables };
   if (firstError) report.error = firstError;
   return report;

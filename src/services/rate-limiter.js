@@ -28,11 +28,12 @@ export function createRateLimiter({ limit, windowMs }) {
   /**
    * @param {string} key
    */
+  /** @returns {{ tokens: number, windowStart: number }} */
   function ensureBucket(key) {
     if (!buckets.has(key)) {
       buckets.set(key, { tokens: limit, windowStart: Date.now() });
     }
-    return buckets.get(key);
+    return /** @type {{ tokens: number, windowStart: number }} */ (buckets.get(key));
   }
 
   /**

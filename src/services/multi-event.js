@@ -105,7 +105,9 @@ export function updateEvent(id, patch) {
   const events = _getEvents();
   const idx = events.findIndex((e) => e.id === id);
   if (idx === -1) return false;
-  const next = { ...events[idx], ...patch, updatedAt: Date.now() };
+  const current = events[idx];
+  if (!current) return false;
+  const next = /** @type {WeddingEvent} */ ({ ...current, ...patch, updatedAt: Date.now() });
   if (typeof patch.name === "string") next.label = patch.name.trim();
   events[idx] = next;
   _save(events);

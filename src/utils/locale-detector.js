@@ -14,7 +14,7 @@ const RTL_LANGS = new Set(["ar", "he", "fa", "ur", "yi", "dv", "ps", "sd", "ug"]
  * @returns {string}
  */
 export function primaryLang(tag) {
-  return tag.split(/[-_]/)[0].toLowerCase();
+  return (tag.split(/[-_]/)[0] ?? tag).toLowerCase();
 }
 
 /**
