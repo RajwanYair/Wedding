@@ -30,7 +30,7 @@ function _esc(val) {
  * @param {VCardSource} src
  * @returns {string}
  */
-export function buildVCard(src) {
+function buildVCard(src) {
   const fullName = src.name ?? "";
   const org = src.category ?? "";
   const phone = src.phone ?? "";
@@ -38,12 +38,7 @@ export function buildVCard(src) {
     .filter(Boolean)
     .join(" | ");
 
-  const lines = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    `FN:${_esc(fullName)}`,
-    `N:${_esc(fullName)};;;;`,
-  ];
+  const lines = ["BEGIN:VCARD", "VERSION:3.0", `FN:${_esc(fullName)}`, `N:${_esc(fullName)};;;;`];
 
   if (org) lines.push(`ORG:${_esc(org)}`);
   if (phone) lines.push(`TEL;TYPE=WORK,VOICE:${_esc(phone)}`);

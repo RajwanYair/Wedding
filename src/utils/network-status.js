@@ -39,7 +39,3 @@ export function onStatusChange(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
-
-export function isOnline() {
-  return typeof navigator !== "undefined" ? navigator.onLine : true;
-}
