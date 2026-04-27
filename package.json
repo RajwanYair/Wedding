@@ -53,6 +53,7 @@
     "audit:console-error": "node scripts/audit-console-error.mjs",
     "audit:section-templates": "node scripts/check-section-template-parity.mjs",
     "audit:base-section": "node scripts/audit-base-section.mjs",
+    "audit:section-lifecycle": "node scripts/audit-sections.mjs",
     "audit:jsdoc": "node scripts/audit-jsdoc.mjs",
     "audit:css-scope": "node scripts/audit-css-scope.mjs",
     "audit:section-i18n": "node scripts/audit-section-i18n.mjs",
@@ -61,7 +62,7 @@
     "audit:storage-prefix": "node scripts/audit-storage-prefix.mjs",
     "audit:tsc": "node scripts/audit-tsc.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
-    "audit:all": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch && npm run audit:actions && npm run audit:trusted-types && npm run audit:adrs && npm run audit:plaintext-secrets && npm run audit:router && npm run audit:aria-roles && npm run audit:console-error && npm run audit:section-templates && npm run audit:base-section && npm run audit:jsdoc && npm run audit:css-scope && npm run audit:section-i18n && npm run audit:manual-chunks && npm run audit:store-mutation-depth",
+    "audit:all": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch && npm run audit:actions && npm run audit:trusted-types && npm run audit:adrs && npm run audit:plaintext-secrets && npm run audit:router && npm run audit:aria-roles && npm run audit:console-error && npm run audit:section-templates && npm run audit:base-section && npm run audit:section-lifecycle && npm run audit:jsdoc && npm run audit:css-scope && npm run audit:section-i18n && npm run audit:manual-chunks && npm run audit:store-mutation-depth",
     "size": "node scripts/size-report.mjs",
     "ci": "npm run lint && npm run typecheck && npm run check:i18n && npm run check:credentials && npm run audit:security && npm run audit:sections && npm test && npm run build"
   },

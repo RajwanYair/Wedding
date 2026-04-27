@@ -107,6 +107,11 @@ jobs:
         run: npm run audit:base-section -- --enforce
         # ADR-034: pending count locked at 19; tighten as sections migrate.
 
+      - name: Section lifecycle audit (Sprint 40 / B1) — advisory
+        if: matrix.node-version == '22'
+        run: npm run audit:section-lifecycle
+        # Advisory: reports storeSubscribeScoped + cleanupScope adoption; exit 0 always.
+
       - name: CSS @scope baseline (ADR-036)
         if: matrix.node-version == '22'
         run: npm run audit:css-scope -- --enforce
