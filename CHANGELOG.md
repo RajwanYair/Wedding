@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.9] — 2026-04-28
+
+> **Sprints 108–117: Smart capabilities scaffolding (Cluster IV + V).**
+>
+> Backend dispatchers, AI-assist services, presence helpers, onboarding,
+> Stripe / Storage stubs, venue map + calendar URL builders, Arabic
+> locale bootstrap.
+
+### Added (12.5.9)
+
+- **S108** — `sendWhatsAppBulk(recipients, msg, onProgress?, sender?)` in `src/services/backend.js`: sequential WhatsApp Cloud dispatcher with progress callback and injectable sender for tests; returns `{ ok, failed, errors }`. 3 tests. (2562 → 2565)
+- **S109** — `src/services/search-index.js` `buildSearchIndex()` + `searchIndex(index, query, limit)`: Cmd-K-style index over sections, guests, tables, vendors with prefix/word-start/substring scoring. 5 tests. (2565 → 2570)
+- **S110** — `src/services/seating-solver.js` `solveSeating(guests, tables)`: greedy v1 group-aware seating with `avoidWith` conflicts and `mustWith` advisory; deterministic, returns `{ assignments, unsatisfied, score }`. 6 tests. (2570 → 2576)
+- **S111** — `src/services/message-tone.js` `applyTone(base, tone, lang)` + `generateToneVariants()`: 4 tones (formal/casual/playful/minimal) × he/en. 7 tests. (2576 → 2583)
+- **S112** — `src/services/presence-badges.js` `isFresh()`, `groupByViewing()`, `badgeFor(viewers, maxIcons)`: realtime presence helpers with stale-filter and overflow counter. 6 tests. (2583 → 2589)
+- **S113** — `src/services/onboarding.js` `getOnboardingState()`, `advanceOnboarding()`, `dismissOnboarding()`, `isOnboardingNeeded()`: 6-step first-run wizard state persisted to `wedding_v1_onboarding_state`. 6 tests. (2589 → 2595)
+- **S114** — `src/services/stripe-checkout.js` `buildCheckoutPayload()` +
+  `startCheckout()`: vendor line items → Stripe cents, edge-function
+  delegation via injectable sender. 6 tests. (2595 → 2601)
+- **S115** — `src/services/photo-gallery.js` `validatePhoto()`,
+  `buildPhotoKey()`, `uploadPhoto()`: mime/size validation, deterministic
+  event-scoped storage keys, Storage-client injection. 9 tests. (2601 → 2610)
+- **S116** — `src/utils/venue-links.js` `buildOsmEmbedUrl()`,
+  `buildWazeUrl()`, `buildGoogleMapsUrl()`, `buildGoogleCalendarUrl()`,
+  `buildIcsContent()`: key-free OpenStreetMap embed, Waze deep-link,
+  Google Calendar TEMPLATE URL, RFC 5545 .ics body. 8 tests. (2610 → 2618)
+- **S117** — `src/i18n/ar.json` (1201 keys, English fallback) with 30
+  critical UI keys translated to Arabic (`nav_*`, `stat_*`, `app_title`,
+  `progress_*`, charts/analytics titles); `scripts/translate-ar-critical.mjs`
+  helper; i18n parity green across `ar`/`en`/`he`.
+
+### Quality (12.5.9)
+
+- Lint: 0 errors / 0 warnings (ESLint + Stylelint + HTMLHint + markdownlint).
+- Tests: 2618 passing across 175 files (+56 from v12.5.8).
+- New services use dependency injection (sender / client params) — keeps unit tests deterministic without ESM module mocking.
+
 ## [12.5.8] — 2026-04-28
 
 > **Sprints 98–107: Architecture cleanup II.**
