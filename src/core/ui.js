@@ -201,16 +201,6 @@ function _removeFocusTrap(modal) {
 }
 
 /**
- * Show a confirmation dialog using the native `confirm()` API.
- * (Replace with a custom modal in a future sprint.)
- * @param {string} messageKey  i18n key
- * @returns {boolean}
- */
-export function confirmDialog(messageKey) {
-  return confirm(t(messageKey, messageKey));
-}
-
-/**
  * Show a confirmation dialog and optionally invoke a callback if confirmed.
  * Passes the resolved i18n message to the native confirm dialog.
  * @param {string} message  — already-translated string (or i18n key fallback)
