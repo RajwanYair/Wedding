@@ -69,6 +69,13 @@ jobs:
         run: npm run audit:actions
         # ROADMAP §5.3 #4: domain:verb namespacing. Advisory until v13.0.0.
 
+      - name: Section→service arch baseline (Phase B9)
+        if: matrix.node-version == '22'
+        run: npm run audit:arch -- --baseline=15
+        # ROADMAP §6 Phase B9: sections must route through src/repositories/.
+        # Baseline locked at v12.0.0; regressions fail CI. Hard --strict gate
+        # in v13.0.0 once all 15 violations are migrated.
+
       - name: Trusted Types sink advisory (ADR-018 Phase 1)
         if: matrix.node-version == '22'
         run: npm run audit:trusted-types

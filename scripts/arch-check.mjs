@@ -29,6 +29,8 @@ const FORBIDDEN = [
 ];
 
 const STRICT = process.argv.includes("--strict");
+const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
+const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
 
 /**
  * @param {string} dir
@@ -72,4 +74,10 @@ for (const v of violations) {
 console.log("");
 console.log("Sections should use src/repositories/ instead of importing services directly.");
 console.log("This script is advisory by default; run with --strict to fail CI.");
+if (BASELINE !== null && Number.isFinite(BASELINE) && violations.length > BASELINE) {
+  console.error(
+    `\n✖ --baseline=${BASELINE}: ${violations.length} violation(s) found (regression of ${violations.length - BASELINE}). Migrate new section→service imports to src/repositories/.`,
+  );
+  process.exit(1);
+}
 process.exit(STRICT ? 1 : 0);
