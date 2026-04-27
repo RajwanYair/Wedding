@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.1.0] — 2026-04-27
+
+> **CI quality bar — round 2.** Coverage floors lifted to v12.0.0 actuals;
+> two new gates (`audit:storage-prefix --enforce`, `audit:tsc --baseline=244`);
+> documentation refresh.
+
+### Added (12.1.0)
+
+- **`scripts/audit-storage-prefix.mjs`** + `audit:storage-prefix` npm script — enforces that only `src/core/storage.js` may directly access `wedding_v1_*` keys via `localStorage`. Baseline 0, `--enforce` in CI.
+- **`scripts/audit-tsc.mjs`** + `audit:tsc` npm script — counts `tsc --noEmit` errors under `checkJs` and gates regressions. Baseline locked at 244 (current actual); ROADMAP §3.3 / Phase B2 trends downward.
+- **README**: coverage badge (`50% lines · 42% branches`); ADRs badge bumped 22 → 42; tests badge refreshed to 2306.
+
+### Changed (12.1.0)
+
+- `scripts/check-coverage-gate.mjs` — floors lifted to v12.0.0 actuals: lines 50 / branches 42 / functions 55 / statements 49 (was 49/41/54/48).
+- `ROADMAP.md` — Phase A marked **Shipped 2026-04-27** at v12.0.0.
+- `SECURITY.md` — supported versions table refreshed: 12.x active, 11.x maintenance.
+- `docs/operations/disaster-recovery.md` — last-reviewed bumped to 2026-04-27.
+- `.github/workflows/ci.yml` — added two new gates (`audit:storage-prefix --enforce`, `audit:tsc --baseline=244`).
+
 ## [12.0.0] — 2026-05-02
 
 > **Backend convergence + CI quality bar.** 13 sprints land Phase A/B exit
