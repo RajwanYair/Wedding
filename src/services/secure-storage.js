@@ -211,3 +211,34 @@ export function removeSecure(key) {
 export function _resetKeyForTests() {
   _keyPromise = null;
 }
+
+/**
+ * Diagnostic — returns whether the secure-storage runtime is available and
+ * whether the device key + a sample sealed envelope exist. Used by Settings
+ * UI to surface "Storage encrypted ✓" / "Plaintext fallback" indicators.
+ *
+ * @param {string} [sampleKey="auth_session"]  Storage key (without prefix) to
+ *   check for a sealed envelope.
+ * @returns {{ available: boolean, deviceKeyPresent: boolean, sealed: boolean }}
+ */
+export function getSecureStorageStatus(sampleKey = "auth_session") {
+  const ls = _ls();
+  const subtle =
+    typeof globalThis.crypto !== "undefined" && typeof globalThis.crypto.subtle !== "undefined";
+  if (!ls || !subtle) {
+    return { available: false, deviceKeyPresent: false, sealed: false };
+  }
+  let deviceKeyPresent = false;
+  let sealed = false;
+  try {
+    deviceKeyPresent = Boolean(ls.getItem(KEY_NAME));
+    const raw = ls.getItem(STORAGE_PREFIX + sampleKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      sealed = Boolean(parsed && parsed.v === ENVELOPE_VERSION && parsed.d);
+    }
+  } catch {
+    /* ignore — corrupt or missing entries fall back to false */
+  }
+  return { available: true, deviceKeyPresent, sealed };
+}

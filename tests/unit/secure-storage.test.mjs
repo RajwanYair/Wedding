@@ -9,6 +9,7 @@ import {
   getSecure,
   removeSecure,
   rotateDeviceKey,
+  getSecureStorageStatus,
   _resetKeyForTests,
 } from "../../src/services/secure-storage.js";
 
@@ -74,5 +75,25 @@ describe("rotateDeviceKey", () => {
     rotateDeviceKey();
     // After rotation, the stored ciphertext is undecryptable -> null + removed
     expect(await getSecure("token")).toBeNull();
+  });
+});
+
+describe("getSecureStorageStatus", () => {
+  it("returns available=true when Web Crypto exists", () => {
+    const status = getSecureStorageStatus();
+    // happy-dom exposes crypto.subtle
+    expect(status.available).toBe(true);
+  });
+
+  it("deviceKeyPresent=false before any setSecure call", () => {
+    const status = getSecureStorageStatus();
+    expect(status.deviceKeyPresent).toBe(false);
+  });
+
+  it("deviceKeyPresent=true and sealed=true after setSecure on sample key", async () => {
+    await setSecure("auth_session", { user: "x" });
+    const status = getSecureStorageStatus("auth_session");
+    expect(status.deviceKeyPresent).toBe(true);
+    expect(status.sealed).toBe(true);
   });
 });
