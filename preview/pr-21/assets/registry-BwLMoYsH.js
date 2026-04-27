@@ -1,0 +1,13 @@
+var e=`<!-- Guest-facing registry links -->
+<div class="card card--narrow">
+  <div class="card-header">
+    <span class="icon">🎁</span>
+    <span data-i18n="registry_title">אתרי מתנות</span>
+  </div>
+  <p class="section-subtitle" data-i18n="registry_subtitle">
+    בחר אתר מתנות להציג לאורחים
+  </p>
+  <div id="registryLinks" class="registry-cards-list"></div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=registry-BwLMoYsH.js.map
