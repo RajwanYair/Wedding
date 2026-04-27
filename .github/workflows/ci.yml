@@ -82,6 +82,12 @@ jobs:
         # ADR-018 Phase 2 (v12.0.0): baseline-locked at current count.
         # Hard gate after sanitize.js hosts the named policy in v13.0.0.
 
+      - name: Console-error baseline gate
+        if: matrix.node-version == '22'
+        run: npm run audit:console-error -- --enforce
+        # Sprint 10 (v12.0.0): baseline locked at 9. Regressions fail CI;
+        # all new errors must route through services/error-monitor.js.
+
       - name: Plaintext-secrets gate (ADR-026 Phase E1)
         if: matrix.node-version == '22'
         run: npm run audit:plaintext-secrets -- --enforce

@@ -20,8 +20,8 @@ const ALLOWLIST = new Set([
   "src/services/health.js",
 ]);
 
-// Baseline — bumped down each migration phase.
-const BASELINE = 999;
+// Baseline — bumped down each migration phase. Locked at v12.0.0 (Sprint 10).
+const BASELINE = 9;
 
 const ENFORCE = process.argv.includes("--enforce");
 
@@ -70,7 +70,13 @@ if (ENFORCE && violations.length > BASELINE) {
   );
   process.exit(1);
 }
-console.log(
-  "\n[audit-console-error] Advisory mode (no failure). Re-run with --enforce to gate.",
-);
+if (ENFORCE) {
+  console.log(
+    `\n[audit-console-error] OK: ${violations.length} ≤ baseline ${BASELINE}.`,
+  );
+} else {
+  console.log(
+    "\n[audit-console-error] Advisory mode (no failure). Re-run with --enforce to gate.",
+  );
+}
 process.exit(0);
