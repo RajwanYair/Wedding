@@ -1,0 +1,81 @@
+var e=`<div
+  class="modal-overlay"
+  id="tableModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="tableModalTitle"
+>
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="tableModalTitle" data-i18n="modal_add_table">הוסף שולחן</h2>
+      <button
+        class="modal-close"
+        data-action="closeModal"
+        data-action-arg="tableModal"
+      >
+        &times;
+      </button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label data-i18n="label_table_name">שם / מספר שולחן</label>
+        <input
+          type="text"
+          id="tableName"
+          data-i18n-placeholder="ph_table_name"
+          placeholder="לדוגמה: שולחן 1"
+        />
+      </div>
+      <div class="form-group">
+        <label data-i18n="label_table_capacity">מספר מקומות</label>
+        <input
+          type="number"
+          id="tableCapacity"
+          min="1"
+          max="30"
+          value="10"
+          inputmode="numeric"
+        />
+      </div>
+    </div>
+    <div class="form-group" data-i18n-tooltip="tip_table_shape">
+      <label data-i18n="label_table_shape">צורת שולחן</label>
+      <select id="tableShape">
+        <option value="round" data-i18n="shape_round">עגול</option>
+        <option value="rect" data-i18n="shape_rect">מלבני</option>
+      </select>
+    </div>
+    <!-- Sprint 5: Table notes -->
+    <div class="form-group">
+      <label data-i18n="label_table_notes">הערות</label>
+      <input
+        type="text"
+        id="tableNotes"
+        data-i18n-placeholder="ph_table_notes"
+        placeholder="הערות לשולחן"
+        maxlength="200"
+      />
+    </div>
+    <input type="hidden" id="tableModalId" value="" />
+    <div class="modal-actions modal-actions--mt">
+      <button
+        class="btn btn-secondary"
+        data-action="closeModal"
+        data-action-arg="tableModal"
+        data-i18n="btn_cancel"
+      >
+        ביטול
+      </button>
+      <button
+        class="btn btn-primary"
+        id="btnSaveTable"
+        data-action="saveTable"
+        data-i18n="btn_save"
+      >
+        שמור
+      </button>
+    </div>
+  </div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=tableModal-DrcT0qL5.js.map

@@ -1,0 +1,176 @@
+var e=`<div class="card">
+  <div class="rsvp-hero">
+    <h2 data-i18n="rsvp_title">אישור הגעה</h2>
+    <p class="rsvp-subtitle" data-i18n="rsvp_subtitle">
+      נשמח לדעת שאתם מגיעים!
+    </p>
+    <!-- Sprint 4: Countdown to wedding -->
+    <p id="rsvpCountdown" class="rsvp-countdown u-text-muted"></p>
+
+    <div class="rsvp-form">
+      <!-- ── Step 1: Phone lookup ── -->
+      <div class="form-group">
+        <label data-i18n="rsvp_phone">טלפון</label>
+        <div class="rsvp-phone-row">
+          <input
+            type="tel"
+            id="rsvpPhone"
+            data-i18n-placeholder="ph_phone"
+            placeholder="050-0000000"
+            dir="ltr"
+            class="u-flex-1"
+            inputmode="tel"
+            enterkeyhint="next"
+            autocomplete="tel"
+            required
+            minlength="9"
+            pattern="[0-9+\\-\\s]*"
+            data-on-input="lookupRsvpByPhone"
+          />
+        </div>
+        <small
+          id="rsvpLookupStatus"
+          class="u-hidden"
+          aria-live="polite"
+          data-i18n="rsvp_phone_hint"
+          >הזן מספר טלפון כדי להתחיל</small
+        >
+      </div>
+
+      <!-- ── Step 2: Rest of form (revealed after phone entered) ── -->
+      <div id="rsvpDetails" class="u-hidden">
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="label_first_name">שם פרטי *</label>
+            <input
+              type="text"
+              id="rsvpFirstName"
+              data-i18n-placeholder="ph_first_name"
+              placeholder="שם פרטי"
+              autocomplete="given-name"
+              required
+              minlength="2"
+            />
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_last_name">שם משפחה</label>
+            <input
+              type="text"
+              id="rsvpLastName"
+              data-i18n-placeholder="ph_last_name"
+              placeholder="שם משפחה"
+              autocomplete="family-name"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-i18n="rsvp_side">בצד של</label>
+          <select id="rsvpSide">
+            <option value="groom" data-i18n="side_groom">צד חתן</option>
+            <option value="bride" data-i18n="side_bride">צד כלה</option>
+            <option value="mutual" data-i18n="side_mutual">משותף</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="rsvp_attending">האם מגיע/ה?</label>
+          <select id="rsvpAttending">
+            <option value="confirmed" data-i18n="rsvp_yes">
+              כן, מגיע/ה! 🎉
+            </option>
+            <option value="maybe" data-i18n="rsvp_maybe">אעדכן בהמשך 🤔</option>
+            <option value="declined" data-i18n="rsvp_no">לצערי לא 😢</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
+            <input
+              type="number"
+              id="rsvpGuests"
+              min="1"
+              max="20"
+              value="1"
+              inputmode="numeric"
+              enterkeyhint="next"
+            />
+          </div>
+          <div class="form-group">
+            <label data-i18n="rsvp_children">ילדים</label>
+            <input
+              type="number"
+              id="rsvpChildren"
+              min="0"
+              max="20"
+              value="0"
+              inputmode="numeric"
+              enterkeyhint="next"
+            />
+          </div>
+        </div>
+        <!-- S13.2 Plus-one names -->
+        <div id="plusOneNames" class="plusone-names-container"></div>
+        <div class="form-group">
+          <label data-i18n="rsvp_meal">סוג ארוחה</label>
+          <select id="rsvpMeal">
+            <option value="regular" data-i18n="meal_regular">רגיל</option>
+            <option value="vegetarian" data-i18n="meal_vegetarian">
+              צמחוני
+            </option>
+            <option value="vegan" data-i18n="meal_vegan">טבעוני</option>
+            <option value="kosher" data-i18n="meal_kosher">מהדרין</option>
+            <option value="gluten_free" data-i18n="meal_gluten_free">
+              ללא גלוטן
+            </option>
+            <option value="other" data-i18n="meal_other">אחר</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input type="checkbox" id="rsvpAccessibility" />
+            <span data-i18n="rsvp_accessibility"
+              >צרכי נגישות (כיסא גלגלים, מעלית, כניסה נגישה)</span
+            >
+          </label>
+        </div>
+        <div class="form-group">
+          <label data-i18n="rsvp_transport">הסעה</label>
+          <select id="rsvpTransport">
+            <option value="" data-i18n="transport_none">ללא הסעה</option>
+            <option value="tefachot" data-i18n="transport_tefachot">
+              ישיבת תפחות
+            </option>
+            <option value="jerusalem" data-i18n="transport_jerusalem">
+              ירושלים
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="rsvp_notes">הערות / מגבלות תזונה</label>
+          <textarea
+            id="rsvpNotes"
+            rows="3"
+            data-i18n-placeholder="ph_rsvp_notes"
+            placeholder="הערות מיוחדות, צמחוני, ללא גלוטן..."
+            enterkeyhint="done"
+          ></textarea>
+        </div>
+        <button
+          class="btn btn-primary btn-submit-full"
+          data-action="submitRSVP"
+        >
+          <span>✅</span> <span data-i18n="rsvp_submit">שלח אישור</span>
+        </button>
+      </div>
+
+      <!-- ── Confirmation message (shown after submit) ── -->
+      <div
+        id="rsvpConfirm"
+        class="rsvp-confirm u-hidden"
+        role="status"
+        aria-live="polite"
+      ></div>
+    </div>
+  </div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=rsvp-Dh2sgp6q.js.map

@@ -1,0 +1,160 @@
+var e=`<div class="card">
+  <div class="card-header">
+    <span class="icon">🎁</span>
+    <span data-i18n="budget_title">מתנות ותקציב</span>
+    <div class="budget-target-row">
+      <label
+        for="budgetTargetInput"
+        data-i18n="budget_target_label"
+        class="budget-label"
+        >תקציב מצופה ₪:</label
+      >
+      <input
+        type="number"
+        id="budgetTargetInput"
+        min="0"
+        step="100"
+        inputmode="numeric"
+        data-i18n-placeholder="budget_target_ph"
+        placeholder="0"
+        data-on-change="saveBudgetTarget"
+        data-on-enter="saveBudgetTarget"
+      />
+      <button
+        class="btn btn-secondary btn-small"
+        data-action="saveBudgetTarget"
+        data-i18n="budget_save"
+      >
+        שמור
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="budget-stats-row">
+    <div class="stat-card stat-card--flex">
+      <div class="stat-value" id="budgetStatGifts">0</div>
+      <div class="stat-label" data-i18n="budget_stat_received">
+        מתנות שהתקבלו
+      </div>
+    </div>
+    <div class="stat-card stat-card--flex">
+      <div class="stat-value" id="budgetStatTotal">—</div>
+      <div class="stat-label" data-i18n="budget_stat_total">סה״כ שהתקבל</div>
+    </div>
+    <div class="stat-card stat-card--flex">
+      <div class="stat-value" id="budgetStatPending">0</div>
+      <div class="stat-label" data-i18n="budget_stat_pending">
+        ממתינים למתנה
+      </div>
+    </div>
+    <div class="stat-card stat-card--flex">
+      <div class="stat-value" id="budgetStatBudget">—</div>
+      <div class="stat-label" data-i18n="budget_stat_budget">תקציב מצופה</div>
+    </div>
+    <div class="stat-card stat-card--flex">
+      <div class="stat-value" id="budgetStatPct">—</div>
+      <div class="stat-label" data-i18n="budget_stat_pct">% מהיעד</div>
+    </div>
+  </div>
+
+  <!-- Progress bar (shown only when budget is set) -->
+  <div id="budgetProgressWrap" class="u-hidden u-mb-md">
+    <div class="budget-progress-track">
+      <div id="budgetProgressBar"></div>
+    </div>
+    <span id="budgetProgressLabel" class="budget-progress-label"></span>
+  </div>
+
+  <!-- Gift table -->
+  <div class="u-overflow-x">
+    <table class="guest-table u-w-full">
+      <thead>
+        <tr>
+          <th data-i18n="col_name">שם</th>
+          <th class="u-text-center" data-i18n="col_gift_status">סטטוס</th>
+          <th data-i18n="col_gift">מתנה / סכום</th>
+          <th class="u-text-end" data-i18n="col_amount">סכום ₪</th>
+        </tr>
+      </thead>
+      <tbody id="budgetTableBody"></tbody>
+    </table>
+  </div>
+  <div id="budgetEmpty" class="budget-empty u-hidden">
+    <span class="empty-emoji">🎁</span>
+    <p data-i18n="budget_empty">
+      עדיין אין אורחים שאישרו הגעה. לאחר קבלת אישורים תוכל לעקוב אחר המתנות כאן.
+    </p>
+  </div>
+</div>
+
+<!-- Expense Tracker Card -->
+<div class="card u-mt-lg">
+  <div class="card-header">
+    <span class="icon">💸</span>
+    <span data-i18n="budget_expenses_title">הוצאות האירוע</span>
+    <div id="expenseAdminBar" class="admin-bar u-hidden">
+      <button
+        class="btn btn-primary btn-small"
+        data-action="openAddExpenseModal"
+      >
+        ➕ <span data-i18n="expense_add">הוסף הוצאה</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Expense total stat -->
+  <div class="expense-stats-row">
+    <div class="stat-card stat-card--flex-lg">
+      <div class="stat-value" id="expenseStatTotal">—</div>
+      <div class="stat-label" data-i18n="expense_total">סה"כ הוצאות</div>
+    </div>
+  </div>
+
+  <!-- Expense table -->
+  <div class="u-overflow-x">
+    <table class="guest-table u-w-full">
+      <thead>
+        <tr>
+          <th data-i18n="col_expense_category">קטגוריה</th>
+          <th data-i18n="col_expense_desc">תיאור</th>
+          <th data-i18n="col_expense_date">תאריך</th>
+          <th class="u-text-end" data-i18n="col_expense_amount">סכום</th>
+          <th id="expenseActionsHeader" class="u-text-center u-hidden">
+            פעולות
+          </th>
+        </tr>
+      </thead>
+      <tbody id="expenseList"></tbody>
+    </table>
+  </div>
+  <div id="expenseEmpty" class="budget-empty">
+    <span class="empty-emoji">💸</span>
+    <p data-i18n="expense_empty">
+      אין הוצאות עדיין. הוסף את הוצאות האירוע כאן.
+    </p>
+  </div>
+</div>
+
+<!-- S22.3 Expense Category Breakdown -->
+<div class="card">
+  <div class="card-header">
+    <span class="icon">📊</span>
+    <span data-i18n="expense_breakdown_title">הוצאות לפי קטגוריה</span>
+  </div>
+  <div class="u-overflow-x">
+    <table class="guest-table budget-vs-actual-table u-w-full">
+      <thead>
+        <tr>
+          <th data-i18n="col_expense_category">קטגוריה</th>
+          <th data-i18n="col_count">כמות</th>
+          <th class="u-text-end" data-i18n="col_actual">סכום</th>
+          <th class="u-text-end">%</th>
+        </tr>
+      </thead>
+      <tbody id="expenseCategoryTbody"></tbody>
+    </table>
+  </div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=budget-BBji05al.js.map

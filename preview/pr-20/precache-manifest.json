@@ -10,154 +10,234 @@
     "size": 1713
   },
   {
-    "url": "/Wedding/assets/app-badge-D_GPCTML.js",
-    "hash": "sha384-iK1SLr/QvsM8eHx2uXFTKrUYEaKht8Cvzqa8/9+tT0CBuN6qOMFYVjtyFWra2EM9",
+    "url": "/Wedding/assets/analytics-BsEpR9lu.js",
+    "hash": "sha384-GezEEsAXTJyQoddNoau57O04HjclkGgGSXepO7CsnmUKBHkBDoV7UbXPzr1xaYCS",
+    "size": 10705
+  },
+  {
+    "url": "/Wedding/assets/analytics-BsEpR9lu.js.map",
+    "hash": "sha384-+KnMlGhEkmXPTIQJOKa0rw5L6+/i+QqhFdzBvyu0wyQDtiYmO0sIXZjPNk2jFImo",
+    "size": 82
+  },
+  {
+    "url": "/Wedding/assets/app-badge-yPBgZRF2.js",
+    "hash": "sha384-mQhqS6TP9Q7YOrVc0KeEQ+JeYi97OydOoG+ccWPDUWvDFUixE5ISmtnDsFlRTX66",
     "size": 338
   },
   {
-    "url": "/Wedding/assets/app-badge-D_GPCTML.js.map",
-    "hash": "sha384-VwSlFNMLRFp3rjCCz+zD6jaMqDD5xISq7vwinYSFeNHDh1qphkPs6Rra/wU7MTGT",
+    "url": "/Wedding/assets/app-badge-yPBgZRF2.js.map",
+    "hash": "sha384-jQbrDxG8FR9RT9ONBEykB3P220mxavKPe183dQ+Fd1bmYqk9ADI8KycuWRpG2W2A",
     "size": 1332
   },
   {
-    "url": "/Wedding/assets/chunk-public-zCnbj-iD.js",
-    "hash": "sha384-D2SaW8br4dRTUgZsmZ3jo06Q2q55iB49tRaB8fq9K2nB3O2OSpa8p0hMA8cAYk0D",
-    "size": 33151
+    "url": "/Wedding/assets/budget-BBji05al.js",
+    "hash": "sha384-eSvrJMr7fhDJeu2F7b1Cd6cNcP383JMAFPL3mb/OAMA42PGroq7knJpa8C7V7IMI",
+    "size": 5326
   },
   {
-    "url": "/Wedding/assets/chunk-public-zCnbj-iD.js.map",
-    "hash": "sha384-yQ7VyG1sI5RPmegqhvBF6XvPsOph1VgYGHmstL/PkcGrOlTBGvqi0puRLEYho7qP",
-    "size": 166450
+    "url": "/Wedding/assets/budget-BBji05al.js.map",
+    "hash": "sha384-CFZ31cqPlEIucy5DRyx7Eu8QRkGoRNrBsj+TaU/pLLP+UqznbhqQ64l/YRbwM2pr",
+    "size": 79
   },
   {
-    "url": "/Wedding/assets/chunk-services-BJ7fXmoG.css",
-    "hash": "sha384-W6HPToG86pD7xryqIrsrwpYflEFQ3WlRMi9+MVmchEe3qRCeR4D7UW99srlZMQsp",
-    "size": 3073
+    "url": "/Wedding/assets/changelog-B0DVy58H.js",
+    "hash": "sha384-DKi/LSOeeYiigAGadNxELJ5WhlD5BxLPuudmPcpPaTwAmZ1QoJeQo0eqRtoqhwbl",
+    "size": 406
   },
   {
-    "url": "/Wedding/assets/chunk-services-Gbjh3GZf.js",
-    "hash": "sha384-asxT1gk/wxXmF5oPbHedWwpeG76ceYaU3App2tEbFf18qx3chcB1pv1BqKrWBsOH",
-    "size": 96210
+    "url": "/Wedding/assets/changelog-B0DVy58H.js.map",
+    "hash": "sha384-uHZmFhQtR0ljNiubZukBhEujytqvzMM1Hlv17HXmEFuc33/9rvCvzTq+YwTkgmXc",
+    "size": 82
   },
   {
-    "url": "/Wedding/assets/chunk-services-Gbjh3GZf.js.map",
-    "hash": "sha384-7lN9iLfrU3Y86vY4eMH24zSSXHs0rYhWHA5rQRj/Jjo6S32N9Cqpxyte3fFKG1th",
-    "size": 518985
+    "url": "/Wedding/assets/checkin-DLFnQe_b.js",
+    "hash": "sha384-GpPactldZ2WaYUQQsEMfvYuTrAyP1YnKKZzilf0YbS7WNQJPRcRUfEL2upThU/g5",
+    "size": 2995
   },
   {
-    "url": "/Wedding/assets/conflictModal-4wRjuhqI.js",
-    "hash": "sha384-YPNwdBl4+eHvVq0qKhiDqyGf97fB3vz4DzMHykpzeos4IKjknHuTYVHMJM2IhfZr",
+    "url": "/Wedding/assets/checkin-DLFnQe_b.js.map",
+    "hash": "sha384-+HFmHFqnmUdI1BU3k3sqhxlwHQaIjb2w7xW1t3abDQYLpE1jyyXI7I4Bjpf+XS/k",
+    "size": 80
+  },
+  {
+    "url": "/Wedding/assets/conflictModal-Dr002tSg.js",
+    "hash": "sha384-i1XeoHu8gkLyv64o2g9hxYERPyAQRWUg9g4LV5vbeYuZOWpZ7uJrTfM7aYH5BNbu",
     "size": 1243
   },
   {
-    "url": "/Wedding/assets/conflictModal-4wRjuhqI.js.map",
-    "hash": "sha384-5+mJLJIJQvjn84Rgod/WO+nNkP0sz2chMQtYqohvVw1M/h84XB4xBva8YSczkiyr",
+    "url": "/Wedding/assets/conflictModal-Dr002tSg.js.map",
+    "hash": "sha384-Fq3cSwB6f2jV8HZtkj93hBYcL2Jw6GqR83bKhMlL/+Ew/bWSJj+pGBiH+ZVNnaXy",
     "size": 86
   },
   {
-    "url": "/Wedding/assets/expenseModal-BXvjiLJr.js",
-    "hash": "sha384-rwPG+t/OJSJuohwIjJS7fHxLar0LpeuNrNlNL16rjaKTy38WeqHQr3HvhYTaUr7C",
-    "size": 2011
+    "url": "/Wedding/assets/constants-B-FNLGOE.js",
+    "hash": "sha384-RNS1wdMpo3iZ6J/qMGpLVpyYBCEICT5GTqu5qTmJiqizA0vG2MiXBCz0zjcusqHl",
+    "size": 2152
   },
   {
-    "url": "/Wedding/assets/expenseModal-BXvjiLJr.js.map",
-    "hash": "sha384-zcIs1YIEjSLhDQIEzGc05siIXxyDVWYC2eu009LQenYB5jNS/KUhpDf0TZcH0zZL",
+    "url": "/Wedding/assets/constants-B-FNLGOE.js.map",
+    "hash": "sha384-l+D8QfKlpsSlO/jqogf4bzk9LW7uUAvTMTKAOnwOcr3pU8v0ZJ62UTCdBgbss/aF",
+    "size": 8748
+  },
+  {
+    "url": "/Wedding/assets/contact-form-iMuCNQV-.js",
+    "hash": "sha384-u1saSil/60u+TuJ7nBSUwaAvwz8zb2LS9gBBu+8yYqmH+IgBZnRZwIn4bfUImAN0",
+    "size": 3197
+  },
+  {
+    "url": "/Wedding/assets/contact-form-iMuCNQV-.js.map",
+    "hash": "sha384-cJICBsaehmtcWytcBJYbg6XvKbClknuKPll6USmshh8kUyjSD2e/mqd3oTGY6hXX",
     "size": 85
   },
   {
-    "url": "/Wedding/assets/galleryLightbox-UUJWWpWR.js",
-    "hash": "sha384-6n/kTb/Rl2/UI/BKm+9jM0us4TtFLWy9tk3/VOlQBR363R/wcLMPfDpaOlezG58t",
+    "url": "/Wedding/assets/dashboard-2FdXzztD.js",
+    "hash": "sha384-yUF88h3ymOzTWZwErh3inXk3DMTfMoRvnT9gtdkAHvoUMejQ8pwaPlnQrg8hQ33O",
+    "size": 13703
+  },
+  {
+    "url": "/Wedding/assets/dashboard-2FdXzztD.js.map",
+    "hash": "sha384-FeCahq3e7L8yT2VlQH0HXxcP0v70Yan+F9zQXQ3Q72JNg5S81akiTP0H47jra6Un",
+    "size": 82
+  },
+  {
+    "url": "/Wedding/assets/en-CDkAVmlc.js",
+    "hash": "sha384-ns0HcIEdUQvgLVkoZ19iQuLqSykyYZ7CvQ573eXJVtPXy+D/z7IENZ3QhaZSEmnd",
+    "size": 77035
+  },
+  {
+    "url": "/Wedding/assets/en-CDkAVmlc.js.map",
+    "hash": "sha384-ctiRA/c+kq/e/QALxdh9lWBQrO+HtuYOixIEoKlAjLs9oa6lq+mgHOrtKsy6Ypxe",
+    "size": 57211
+  },
+  {
+    "url": "/Wedding/assets/expenseModal-BO5Un0zW.js",
+    "hash": "sha384-zFdohcA4rcSjlPmPoBN6FxdT5NeEjxatku8RKChgWlXU7XwPBW8MfvPb5etFUOpr",
+    "size": 2011
+  },
+  {
+    "url": "/Wedding/assets/expenseModal-BO5Un0zW.js.map",
+    "hash": "sha384-lQUovQRLchUrf/QMW5BLe0e08PVvrgMK8MMNXNXDPp+XPsaSQks+gsiAZxr8e+fA",
+    "size": 85
+  },
+  {
+    "url": "/Wedding/assets/gallery-DAtIdb4M.js",
+    "hash": "sha384-PpobiZo9/VN3uwpPd1tKrR29MlouqvATF3QMmi/TYktpmpMgOjzYHwrkTNw57aCH",
+    "size": 924
+  },
+  {
+    "url": "/Wedding/assets/gallery-DAtIdb4M.js.map",
+    "hash": "sha384-BYKo5AZW98jSJ1HaQw+pDHT5CT/ZHRXHx9AABXjqcFu1JzAIkKlSQh3JxgG4Kjmf",
+    "size": 80
+  },
+  {
+    "url": "/Wedding/assets/galleryLightbox-Ba4AKcw9.js",
+    "hash": "sha384-s0IN4S24pfdkCuxw7Ml3uwTcTuFLR3/4GjjAyLWHgAyF/xC8O3QGH0As4oGTqI0z",
     "size": 773
   },
   {
-    "url": "/Wedding/assets/galleryLightbox-UUJWWpWR.js.map",
-    "hash": "sha384-hOY+aU5gaCTdTx2JSp9QWhp68UnafMjWoTQp/QBjBY/T7+Z6VhOejkhMPfslfz5T",
+    "url": "/Wedding/assets/galleryLightbox-Ba4AKcw9.js.map",
+    "hash": "sha384-DoloLRYjYqzWdKmFJVPC1RS26S6kLSN1xjesncPcNu/fU8YeMFHOGIHx4FfW33+S",
     "size": 88
   },
   {
-    "url": "/Wedding/assets/guest-token-CUlXKh3s.js",
-    "hash": "sha384-f3QlbINHHDG42vsKLpgVMm3VFbeltdZJRXZgYpT4SaSe5E6wMU/Ql0Bq/WPyxP+d",
-    "size": 1022
+    "url": "/Wedding/assets/guest-landing-K8EGDITH.js",
+    "hash": "sha384-4OJwCq701eX85nY2ZXUKt3n+aVshKOuG9nKGMMHmg12sbf36ak5DikHnIRr6Udd8",
+    "size": 1357
   },
   {
-    "url": "/Wedding/assets/guest-token-CUlXKh3s.js.map",
-    "hash": "sha384-Xnxi3HSI4BpGyFoE7U+NTNJOa+Pzg+08wC4GPLp9qkw8Bgo2sh+48ZBOzth6UCg+",
+    "url": "/Wedding/assets/guest-landing-K8EGDITH.js.map",
+    "hash": "sha384-9fsjYU6PuCTJhSJtbOPh+GgXhj5/Y+EM6YRWI55vWG43RND+PpEXAp4JcwmApBiC",
+    "size": 86
+  },
+  {
+    "url": "/Wedding/assets/guest-token-cDBmavuS.js",
+    "hash": "sha384-kr1xnMnjhOKhxKKHtIvZh8LZM6hYUhPAQFEc3u1DNAfqR0k476whuOXIbmMEoD0w",
+    "size": 1082
+  },
+  {
+    "url": "/Wedding/assets/guest-token-cDBmavuS.js.map",
+    "hash": "sha384-kbxn2qq/XH9jX/XshN2ueKNbhqRGNhe1PVjS43DsK1V3TkhbJ451gBqt+3OlcI9z",
     "size": 9225
   },
   {
-    "url": "/Wedding/assets/guestModal-Bv-sqJRj.js",
-    "hash": "sha384-2VtJbfoP24bXwmy7Jw4efZU0u30xMcUm0l/LYwKKSe5mIEh34gmhNTMBf2WgTanj",
+    "url": "/Wedding/assets/guestModal-Dp0IYLz5.js",
+    "hash": "sha384-vuAgxse4A8k9WhbXDJGbjBvby8q/8gNYLBZU0i3/h2n3emndJMd9w2mRtf4ldxhI",
     "size": 9132
   },
   {
-    "url": "/Wedding/assets/guestModal-Bv-sqJRj.js.map",
-    "hash": "sha384-3RZDnzLT40yCU1Zvxy9I1VVosFi+FleQc3YumUAeB3qhk0yy8ogosvzwBF9fx3xZ",
+    "url": "/Wedding/assets/guestModal-Dp0IYLz5.js.map",
+    "hash": "sha384-HJhcQ6LJlZVOHaZDVuzGuKVQO+I8FcCTzmViNFVpw+yLEu3chdOZvRD3jNYaHWYb",
     "size": 83
   },
   {
-    "url": "/Wedding/assets/he-B5tEMDeU.js",
-    "hash": "sha384-ZGZZWJM3jm2FkvhsjtI0sNrffFinwqZsuDShvRRmKuM6OPWff08bsLjipgO8Kk/V",
+    "url": "/Wedding/assets/guests-D6z2F6Wb.js",
+    "hash": "sha384-VelT9ueQkUuxLZTgG8dTqQV63rzOWOdxtxwrF8sjRNcueOIy7UlDVa1Gys3JSTHL",
+    "size": 5630
+  },
+  {
+    "url": "/Wedding/assets/guests-D6z2F6Wb.js.map",
+    "hash": "sha384-rrvHT44MEVYUdwcIoC2aTklKguT6ATQAY57e4KESy8QtHMUs9GOVxV3VPc3lwUND",
+    "size": 79
+  },
+  {
+    "url": "/Wedding/assets/he-u0BcKJbq.js",
+    "hash": "sha384-50UGuetiRxJTWRt88J4+9H6yT2LqXwf4no+3OeV2rhTdxED1lugowRhVPNwmcn6g",
     "size": 55722
   },
   {
-    "url": "/Wedding/assets/he-B5tEMDeU.js.map",
-    "hash": "sha384-wL5HUYgGwV52OCVQvZGR0bG4vbMuibuzYUq/s+T7rvEbNjvF3HFUsEJk9uxnJsP5",
+    "url": "/Wedding/assets/he-u0BcKJbq.js.map",
+    "hash": "sha384-Kmht/RgTi3pQZlDbd/fYIbjTa82vve0FV2rB6uMTSSz8KRk++uRbVg53X9R7CLwK",
     "size": 68097
   },
   {
-    "url": "/Wedding/assets/index-Ck-e8Xx_.css",
-    "hash": "sha384-BjiYD7qgrMgN606MnqcPaaHWUA4/hgT16luGgeW/TD6tn+kopjPeaIVowhw0IV2Z",
-    "size": 65585
+    "url": "/Wedding/assets/index-BYeGzOaG.css",
+    "hash": "sha384-o3WguoeVCPKvoz7ikSUegsSuZvd4D3Qzx/D/PmiY5lJ0puZuFPegHMHL482/cUuJ",
+    "size": 68645
   },
   {
-    "url": "/Wedding/assets/index-VAHGmFnr.js",
-    "hash": "sha384-GXrJFLogJhLE+rkgGdM2USp6bS2XKara18p5SLZIziDP30oQkbBx3MhW8TDXuokN",
-    "size": 43543
+    "url": "/Wedding/assets/index-YcX8K7ON.js",
+    "hash": "sha384-fOruXcahsgNzq1SaFlcvtTpPnZztXMWxH3NI1jvqGH99D7VotDWbUXZn7ODrTToS",
+    "size": 226657
   },
   {
-    "url": "/Wedding/assets/index-VAHGmFnr.js.map",
-    "hash": "sha384-+R4oKactOaB15jSrAMiITa3XZkIKL4V5uU7gXzkl35bZ1Wt/4wgPZ5FvyTr9GS+Z",
-    "size": 166678
+    "url": "/Wedding/assets/index-YcX8K7ON.js.map",
+    "hash": "sha384-rId/974LDonRkTxDNgbEhJMwnk0kEzmTxRumZz7Pcn/tx7W2sFUaxOcT/RhalgsA",
+    "size": 843051
   },
   {
-    "url": "/Wedding/assets/locale-ar-DV0NRDQD.js",
-    "hash": "sha384-2gh6H9ikrImcZTUD1SlHRMoE9Djm+9Xpc7jsNBHDmew+IfvngAut17kHdIcK41TS",
-    "size": 93274
+    "url": "/Wedding/assets/invitation-CAKa9w0n.js",
+    "hash": "sha384-b1OEP4Wn+8siUXKYykASsf6r2RyQcJNlvexsCmKbX52mHPOXiSWJ3IpntTHl+Ar2",
+    "size": 5432
   },
   {
-    "url": "/Wedding/assets/locale-ar-DV0NRDQD.js.map",
-    "hash": "sha384-WIl7oOA/PGfQPwYfojv+i5L3QRXMXZ5Y/NuW+5Z2W+Lt52xxXMYvn0iiCxIdGSGa",
-    "size": 72302
+    "url": "/Wedding/assets/invitation-CAKa9w0n.js.map",
+    "hash": "sha384-sjkjhA4/9UAP7lZNFu1mPjovfD+LFGYopg9Gbc+80/URo8QLdYMWbxlJYbggwzKO",
+    "size": 83
   },
   {
-    "url": "/Wedding/assets/locale-en-BnZjC8lJ.js",
-    "hash": "sha384-Y+Bi0KEucIFjeDXs+qb/ACqqhQNpXS7J7jLbnfdLknvXHClTngDxaWeJ7UYDWg+w",
-    "size": 78173
+    "url": "/Wedding/assets/landing-DkQ5bGJV.js",
+    "hash": "sha384-vvtn0+tmu38V3ubVEH2XlIartoskGoJ7Yr6Xl4sVVnTpF425D1buzR5CcJ/4nFXR",
+    "size": 2656
   },
   {
-    "url": "/Wedding/assets/locale-en-BnZjC8lJ.js.map",
-    "hash": "sha384-uBriBBkML4lm761SmiB9MxooxZuIf6nqurahIyn9R+c9/g+dvrrEYx4Ymyr+TrXv",
-    "size": 57218
+    "url": "/Wedding/assets/landing-DkQ5bGJV.js.map",
+    "hash": "sha384-NnArpAmEelsQDqVWotYJ4jZCLYPIRXrzXlqa/7qMINSMqwBUsWtCOEisy+wLjnfO",
+    "size": 80
   },
   {
-    "url": "/Wedding/assets/locale-ru-BnCVPYKE.js",
-    "hash": "sha384-DxQgT/zjDyoqLY7yy5FIAIWqeydmTxlmsssWZyfpYkr+0pbc46mSu+6CMjYnoHfL",
-    "size": 96484
-  },
-  {
-    "url": "/Wedding/assets/locale-ru-BnCVPYKE.js.map",
-    "hash": "sha384-ONaM5iivaOqg/a3Dtu+j3yPTxaLaZkRwbhu9aiBWevx0+xdQBodYzzna9iJVfE2i",
-    "size": 75493
-  },
-  {
-    "url": "/Wedding/assets/network-status-Bh5Urc1k.js",
-    "hash": "sha384-+VIXrZrsdVNH+pgAL+RmZvCW/GEs47IiQgf5K1SvUbo1IRYNdSbbId/G/e2LHjzQ",
+    "url": "/Wedding/assets/network-status-DFbPR84L.js",
+    "hash": "sha384-K3E8y5QxEQA+DKuY2cu7p+D40FrWFN+PhBaYpPWuuQz0WpCzrceDvRLcnzJtFccX",
     "size": 546
   },
   {
-    "url": "/Wedding/assets/network-status-Bh5Urc1k.js.map",
-    "hash": "sha384-dvkKPpxzWGoDcRBl3Wuxvb8r1T6okMjabC3gzDBhITVFAwfK4jQZSVzF+KolFMhA",
+    "url": "/Wedding/assets/network-status-DFbPR84L.js.map",
+    "hash": "sha384-KfZdoIlJu51TEeE1dCocgB2+jizElMGN3mfdLcoXxK72yYjMPQU2ySvzZKf1+3iH",
     "size": 2024
+  },
+  {
+    "url": "/Wedding/assets/preload-helper-pK6g_zWx.js",
+    "hash": "sha384-bTRgVl2J5tBSl8tAOfMceMSTzSyHjjiZMpD4mUUYcgkuEtclKdAmmv6WacX9xZ0Z",
+    "size": 1215
   },
   {
     "url": "/Wedding/assets/print-B1NC0712.css",
@@ -165,399 +245,159 @@
     "size": 4376
   },
   {
-    "url": "/Wedding/assets/rolldown-runtime-lhHHWwHU.js",
-    "hash": "sha384-zVAmt8cZnT2/HjLATJaNmY3V7pvSvTzruKbacBqx9FdT82bTcl+kG0J5klHU7CdR",
-    "size": 158
+    "url": "/Wedding/assets/registry-BwLMoYsH.js",
+    "hash": "sha384-UofNlIbTXD1SaMLCMN4vOgT4N7a3O5A824ZldrRKYLokibdALJ5g9bf9Z5eUJtRQ",
+    "size": 472
   },
   {
-    "url": "/Wedding/assets/sec-analytics-5lmqczBX.js",
-    "hash": "sha384-WrikIdJ4lUrfa0Qz01xnysBa9jd9ZMEDFZJbu9RxCs6dawjCBI6paygAtmN/L3gz",
-    "size": 41069
+    "url": "/Wedding/assets/registry-BwLMoYsH.js.map",
+    "hash": "sha384-5fjDkybSH/whohS2kmEvWGXdvlftzIW0IQCv57a12Hjr9sAIQYI1itML3L/WLBuY",
+    "size": 81
   },
   {
-    "url": "/Wedding/assets/sec-analytics-5lmqczBX.js.map",
-    "hash": "sha384-2Aol5UkzoDl78cQhFHqRMmm/5A1RrRZEIZRChOmUh+0lA1qO7ZYkxlamkwDFZBmI",
-    "size": 126208
+    "url": "/Wedding/assets/rsvp-Dh2sgp6q.js",
+    "hash": "sha384-H5QUFqYgWc6DZWhOJBMl4eE7olffuYsY8VI2lCulZ5Uz/MaZQKunHQp+dlLY+16Y",
+    "size": 6354
   },
   {
-    "url": "/Wedding/assets/sec-budget-CPg62X-X.js",
-    "hash": "sha384-loe9oIrpJv7SywxTdmRUdKrQcHBMJ2VRXDeUtFX+EwEP52itcjq8/XB9kv3+T4PB",
-    "size": 6895
+    "url": "/Wedding/assets/rsvp-Dh2sgp6q.js.map",
+    "hash": "sha384-fhlzbACwPZZ9SoSmH7EvcYgRA2n0WS2tvZashh5xIvI0w3S8/X0VlFlaSuMziAtY",
+    "size": 77
   },
   {
-    "url": "/Wedding/assets/sec-budget-CPg62X-X.js.map",
-    "hash": "sha384-1jJTBwfMy9c2vNgms3W6GoVZUdsuTa0LV/+zvUS/dmwg3kUjODzN0iJ1TqKRsBvK",
-    "size": 24991
+    "url": "/Wedding/assets/settings-CZc7LYgB.js",
+    "hash": "sha384-MHJWXxGVUoqDCwtuZNjy9R8yECHa28fK9arfbEKBlgzJJHJbEgfZcldjPEo6i5dh",
+    "size": 22235
   },
   {
-    "url": "/Wedding/assets/sec-changelog-Cx9x2_Ml.js",
-    "hash": "sha384-c8mtGQwqH/YQnn2hq7I9OLoGECkKJPvGgDuPIBBrTXqHAompvXt9xM7Qll7pij1J",
-    "size": 1337
+    "url": "/Wedding/assets/settings-CZc7LYgB.js.map",
+    "hash": "sha384-yWK0KjvB1joGg5oTCF8Sdyg/dS6wSeuF9xXXSsJnQbRuGETjjG8l3H6MjgCXZ4fR",
+    "size": 81
   },
   {
-    "url": "/Wedding/assets/sec-changelog-Cx9x2_Ml.js.map",
-    "hash": "sha384-juvTa0EItBnhRq9UotNxwbnLA3ZXnC1GTQCa3Xa652pISwhECWv6tNnoHREj+pI3",
-    "size": 5572
+    "url": "/Wedding/assets/sheets-impl-D95kwaKQ.js",
+    "hash": "sha384-pMNpvRaOfOpEbNiVOD9b4pG054WZnvZv3358MebiLR62AEAsfcZpDuNfx07X1sof",
+    "size": 5773
   },
   {
-    "url": "/Wedding/assets/sec-checkin-CeZs-02M.js",
-    "hash": "sha384-lKqaU7eS905o2NAuHtpA6KW+7EU+jPExQCLOGDMEfYjmnVpeqlPmMvDk5qfCfpGh",
-    "size": 18980
+    "url": "/Wedding/assets/sheets-impl-D95kwaKQ.js.map",
+    "hash": "sha384-fnqsjRuQ6M6U0jxXAR/+6Tfj7oef/lLNtcJPtXPv+SVm7zYKq82081H1643DDRnO",
+    "size": 23549
   },
   {
-    "url": "/Wedding/assets/sec-checkin-CeZs-02M.js.map",
-    "hash": "sha384-irOt4Szdz01kZ5NH+lEkZPWRPyvfQYivP2YbYEeS3UIb0qVgZgruGg6o83bB34Nb",
-    "size": 69936
-  },
-  {
-    "url": "/Wedding/assets/sec-dashboard-BqCWJB1g.js",
-    "hash": "sha384-GnMOYuibGU5ENZTXPD3mcP8lpnmd6B5BapUfg8fDasALgi7Opzp62HYozVMyFqmP",
-    "size": 19253
-  },
-  {
-    "url": "/Wedding/assets/sec-dashboard-BqCWJB1g.js.map",
-    "hash": "sha384-PgOsf/qpbtAV+9RXGLZ9dk39XP/xdlU8GgaqrZ0JfTAhu4l1wE7or1Te6nq8qOe1",
-    "size": 62081
-  },
-  {
-    "url": "/Wedding/assets/sec-expenses-BZSDS5M1.js",
-    "hash": "sha384-VWaTpFMv/cCorzeMbyG6Vvw2mhCSETBdQfqpwArfypNZiU9GWTuoWeo2o16bpSG4",
-    "size": 4479
-  },
-  {
-    "url": "/Wedding/assets/sec-expenses-BZSDS5M1.js.map",
-    "hash": "sha384-vwf2cX/ayEm6dILI2XGucsdS6COBQKldDDWUiVOyX+QYeuz67Chc3HVtlvQZ3IPl",
-    "size": 13641
-  },
-  {
-    "url": "/Wedding/assets/sec-gallery-Ukd4cvKN.js",
-    "hash": "sha384-XGpAvRvjyggIOf/Q5JCnjXmPMy4T4vFYa2tUAaHtsBnK5yrARl3a1HZbGQQR8t/i",
-    "size": 3561
-  },
-  {
-    "url": "/Wedding/assets/sec-gallery-Ukd4cvKN.js.map",
-    "hash": "sha384-woOpVJIlk+iMCePGaHHP4+Zk+XdW/4aQplm3W1FtjegVVFh3F9hlDHVjb42CKCQ1",
-    "size": 10202
-  },
-  {
-    "url": "/Wedding/assets/sec-guests-2O5zZWJ9.js",
-    "hash": "sha384-YqrbioFcswKy6aJVR+/sy+tOgfzk2dRl1uMJZjbT7NkbK8cmTKr19xxrYXUX5MmI",
-    "size": 13638
-  },
-  {
-    "url": "/Wedding/assets/sec-guests-2O5zZWJ9.js.map",
-    "hash": "sha384-1Ergx2XAYun4H3C4k0sxGDg+Sq+BwkBvTW90xcFX4muRLf5t+IYjpejuUw77wTAB",
-    "size": 48842
-  },
-  {
-    "url": "/Wedding/assets/sec-invitation-D9BFzdlS.js",
-    "hash": "sha384-avqrw8EZUayzd94t7gYd4qpkBWZ8ar/L5xTjC3JPyWwvlSY4l3F/CWDYzdGeXJpT",
-    "size": 2840
-  },
-  {
-    "url": "/Wedding/assets/sec-invitation-D9BFzdlS.js.map",
-    "hash": "sha384-h691WMtfb9YOgEoc0Jszd4laH/EkOE27SiWKKSfsHHVxmdehm73jUbhUzI54VyzY",
-    "size": 8280
-  },
-  {
-    "url": "/Wedding/assets/sec-settings-DMbThS2v.js",
-    "hash": "sha384-Npzo6HDY7RSTpv8zigDmxFenT7wgXEXyKJUHRZeShX4jW8AR217DCXwYEnS0jy+c",
-    "size": 14673
-  },
-  {
-    "url": "/Wedding/assets/sec-settings-DMbThS2v.js.map",
-    "hash": "sha384-n+nT/K48mQIfeh1RiMFOFQvTLvdy6pvlhPMfcvQzl9aWHNXXXQ1eeHrm2R/kOBsx",
-    "size": 45898
-  },
-  {
-    "url": "/Wedding/assets/sec-tables-D6Yspw4H.js",
-    "hash": "sha384-Ia6nsIUVmQ6s88tx6cGgEexSxoFlOgfLybRkO2/LsyAWG1J9WGQeWLgO5jDzI0ef",
-    "size": 8855
-  },
-  {
-    "url": "/Wedding/assets/sec-tables-D6Yspw4H.js.map",
-    "hash": "sha384-CSTIfo2GvQYKeBYL+bpjWDRMV5x8sUrhwpkYlTUzYVc9OSCLC/GcQmUl7SEevVBE",
-    "size": 28831
-  },
-  {
-    "url": "/Wedding/assets/sec-timeline-CkkN95so.js",
-    "hash": "sha384-Lbe7gziu0lAZezz12aMmFw+piBAGV0WlXcinzl1pMYF1z8Lpj64PYUTesleqfXNQ",
-    "size": 7262
-  },
-  {
-    "url": "/Wedding/assets/sec-timeline-CkkN95so.js.map",
-    "hash": "sha384-7tpnANNrNTCNOC/tPbHykqJCGwOStwZT09Bph+HrQOgqdGkkOFPfepkQs9HZqJFQ",
-    "size": 21399
-  },
-  {
-    "url": "/Wedding/assets/sec-vendors-B27QWXwD.js",
-    "hash": "sha384-zj/2SANDsqEAFyTjdtQQwRxefi9BhGO6qWN5n61Wnfa6bK8HaBPOhgkXjjI2g92y",
-    "size": 8533
-  },
-  {
-    "url": "/Wedding/assets/sec-vendors-B27QWXwD.js.map",
-    "hash": "sha384-8EXEAXo7ANV9jBAp7ywy79iPB8rXvpP0NS867ULgYZxJ2BGrwEoFLRMo6MVBtepG",
-    "size": 28060
-  },
-  {
-    "url": "/Wedding/assets/sec-whatsapp-DD1d3FJY.js",
-    "hash": "sha384-Br9/z+wGqYbEWgRRac7+1fGFUW8qYCQOyq4tRm6vwlJz5efZbC1Jt2NwcUh4ew2R",
-    "size": 7698
-  },
-  {
-    "url": "/Wedding/assets/sec-whatsapp-DD1d3FJY.js.map",
-    "hash": "sha384-Wqcu3woEkhdbXFibWbipNQpRKPyECOD4ImXdjxLuCC4LSZhjP2D7BFdYuzt7crMM",
-    "size": 25366
-  },
-  {
-    "url": "/Wedding/assets/shortcutsModal-DsCQ32gZ.js",
-    "hash": "sha384-7W83cZiLHOmhM5tfeZusZosTeQcwGGDc9p8MKPcvLW7tQ6xH4fuFD2JOlqjpb1lZ",
+    "url": "/Wedding/assets/shortcutsModal-JE6AHIw_.js",
+    "hash": "sha384-+Le0Fc9HXYGsi8Jd5YM23GTml5tnZrSQKvvxzivWWTL93qZVqepzjG9L1AVQxhul",
     "size": 2094
   },
   {
-    "url": "/Wedding/assets/shortcutsModal-DsCQ32gZ.js.map",
-    "hash": "sha384-5EUACZ2fI/Wgowv0h6paehSs+PaORwZm1cXZ8iFVYmdHpgnInHlGPUlxB0UghA3Z",
+    "url": "/Wedding/assets/shortcutsModal-JE6AHIw_.js.map",
+    "hash": "sha384-GO6vt3VXvoO3rC/7Ez7F32S45GaLhfGuzy5NLHvQaRe4WF/oaTjLOEU6BTBe4anq",
     "size": 87
   },
   {
-    "url": "/Wedding/assets/supabase-Dlw6Oe39.js",
-    "hash": "sha384-yuRbdCoQ3fzxV4GWR/XrCrImTlK3UrwxT1cgz9h0S8NRgUS0nXCGCXNjWziAjhcP",
-    "size": 2255
+    "url": "/Wedding/assets/state-DHL4se0o.js",
+    "hash": "sha384-cdq+6yCGq6RJn+laOGZuWWTNTgrfxwavSKUMWR63YdZltLCjxOKRYjyzuxzOO+NC",
+    "size": 3932
   },
   {
-    "url": "/Wedding/assets/supabase-Dlw6Oe39.js.map",
-    "hash": "sha384-WDfbQXmzaRv/KRT3XQEHTMOFWhPNHvtfX5MHQmdh6KtCT/8Vb5mHw+mNippqLnhx",
+    "url": "/Wedding/assets/state-DHL4se0o.js.map",
+    "hash": "sha384-tMw5fDl8hRP5Yt8foXNwk7sSg7IHPcqwVBURWaglFjzTdMEqBMHLhS8Gct+4drEy",
+    "size": 29931
+  },
+  {
+    "url": "/Wedding/assets/supabase-BmVdAVyH.js",
+    "hash": "sha384-68X7TfIfyT9OiljCyhxVgTTT9hi94lPK2IfAgKUGwGThZwLpHhKO3Hqn5H68jE3L",
+    "size": 2247
+  },
+  {
+    "url": "/Wedding/assets/supabase-BmVdAVyH.js.map",
+    "hash": "sha384-7eMSYOwC9F/wyvDhT3U0+gUxyuYlgu49P8NaghSvmoNxrKPkbGPtoW4yNyFfeIWy",
     "size": 8900
   },
   {
-    "url": "/Wedding/assets/supabase-client-CA5SjjCm.js",
-    "hash": "sha384-WiVHYM5sGo0Wov3nI08iQ2/KpVmCMM3Dnav2zm/baB3hOdOITizwL0rW6D30R+zp",
-    "size": 101496
+    "url": "/Wedding/assets/supabase-client-BXW7sm1B.js",
+    "hash": "sha384-j7Us3g8Ogl+DOQwW7mnkHaHpPkxyFqEOv2u15j/Ksgl6Vs63rbcG+fWjTAw9FCZ3",
+    "size": 187282
   },
   {
-    "url": "/Wedding/assets/supabase-client-CA5SjjCm.js.map",
-    "hash": "sha384-enWxaToZYx08XKp1uP340Z17KKpK6ACZps3gtHEk0OdYSNykWss+NsJ6L0xP2Fl6",
-    "size": 558554
+    "url": "/Wedding/assets/supabase-realtime-Cg31pfMq.js",
+    "hash": "sha384-uJcbvw8myFeasjxfTqXZTMB/7VwmSGjLr0mahxFTcEPakiCBlXqq21lC3z0gWxdz",
+    "size": 1395
   },
   {
-    "url": "/Wedding/assets/supabase-realtime-BcN01YcY.js",
-    "hash": "sha384-FzAQ0J8+j/gdy2aolqHVgpX48C201CljH6Q37fdF61UVb3RxsGUKX7ginJct6xpR",
-    "size": 1359
-  },
-  {
-    "url": "/Wedding/assets/supabase-realtime-BcN01YcY.js.map",
-    "hash": "sha384-yL0VO76OiPY4FAmzq2NEwisBR2wUfiH/udJiDOC80vwObCnk1QdAboWCtDbAvwA6",
+    "url": "/Wedding/assets/supabase-realtime-Cg31pfMq.js.map",
+    "hash": "sha384-ch3KYtnOre8ZZJbIviCT3ezjwuM224IvWR3D2RakW3SUUZcf6eqQtALq8dzWxD5q",
     "size": 14922
   },
   {
-    "url": "/Wedding/assets/tableModal-CS_BlBk9.js",
-    "hash": "sha384-bPxJ7LXfFmdE2FuFXZtYq210UO4y5z3jZb+DyXNrMAGVNJlQTk/Z/SF+jZDoO6e+",
+    "url": "/Wedding/assets/tableModal-DrcT0qL5.js",
+    "hash": "sha384-lcw0C8AD3UPFqfHUpV0eXCK63+ZiwVc14wg+MrxnC4Jkj8MFr8m66ySxVs+6IEnz",
     "size": 2277
   },
   {
-    "url": "/Wedding/assets/tableModal-CS_BlBk9.js.map",
-    "hash": "sha384-kVUouHB10+1GIwy2erhOYymCfueuPpxC1eZAPR6LvXbCeCG6lcrGQmG0mxxahbtO",
+    "url": "/Wedding/assets/tableModal-DrcT0qL5.js.map",
+    "hash": "sha384-p3QmeFK4qmF1PQ4676lZ8Y2I5a1WGPaXwn4k22MCiu8V57FHPr2g1pCckuwPHr3t",
     "size": 83
   },
   {
-    "url": "/Wedding/assets/template-analytics-C-XSuDDS.js",
-    "hash": "sha384-S9WmLqsYogVmny/XNl1mFYMdWOSGX99LeZwankD3yfKmpFTVzUcUJcpK2bGgW9wh",
-    "size": 10775
+    "url": "/Wedding/assets/tables-BONUrshC.js",
+    "hash": "sha384-lbgQ0pRRQFNKfSFbXFlJFliom8dAKkHkFkaFjoKhxM8Zz/SKbyK8+BsM5YL60xLG",
+    "size": 2496
   },
   {
-    "url": "/Wedding/assets/template-analytics-C-XSuDDS.js.map",
-    "hash": "sha384-mh6lqr9hpRqnYZduxcOOYj7zMzvRvBipc/BVBds5EEvheTi4p/xqyKkhvpSLAfW+",
-    "size": 91
+    "url": "/Wedding/assets/tables-BONUrshC.js.map",
+    "hash": "sha384-UXrXJyngKLlYM9XqLwp4ZanQvpYgSqtcqSWN2QWbY5wHhjL1HMAgMBbSACOiq6I3",
+    "size": 79
   },
   {
-    "url": "/Wedding/assets/template-budget-D9BAxiCA.js",
-    "hash": "sha384-8Y19JcebNFv/SCSO1Bgxy5I9BwMAlXb39yuLTr60HOecqT/oK4JKa1ZpbOef/tHy",
-    "size": 5396
+    "url": "/Wedding/assets/timeline-Ba13mTD_.js",
+    "hash": "sha384-lB2hrk4EVcYuCM45lZ1S67p4HMq1zSqGPT9R4XnSSOZPKDj4nW4G9aqaBUpomuDQ",
+    "size": 875
   },
   {
-    "url": "/Wedding/assets/template-budget-D9BAxiCA.js.map",
-    "hash": "sha384-HsvrtKBSBXMi6kI+A0SpsRalvRJdiCO4kwyDgfwxNOHR0CZeJ9PjDOJgjcSR20ED",
-    "size": 88
+    "url": "/Wedding/assets/timeline-Ba13mTD_.js.map",
+    "hash": "sha384-QA2ZmRTkMAPEIlbQvyI8sUrYWCZC021QWa1t9tI4GRD192FIX5Jb8slrJh/GpmpK",
+    "size": 81
   },
   {
-    "url": "/Wedding/assets/template-changelog-Dx7-9zrM.js",
-    "hash": "sha384-Si7jJLc1ffX/YiEyc4fFGus2QzmUK+MUncdnCQvXlDFEZBw1Wegt3mTZ09EK/yEc",
-    "size": 476
-  },
-  {
-    "url": "/Wedding/assets/template-changelog-Dx7-9zrM.js.map",
-    "hash": "sha384-f7hvirvnQdQeYNsYsGz5zUpkG1S4QEjVkLnzk/LCX2Z2KYoo+FhB4j1KjxQm+W+K",
-    "size": 91
-  },
-  {
-    "url": "/Wedding/assets/template-checkin-BMPB88aN.js",
-    "hash": "sha384-LXRtzEZKnpNxnV0u7VTQNHRWgn30ThQoMO7SgLMNpTZYD6KouJmbnC6bNXjjQ5WZ",
-    "size": 3065
-  },
-  {
-    "url": "/Wedding/assets/template-checkin-BMPB88aN.js.map",
-    "hash": "sha384-sLBjTiWxBbaypxMbsWApFPv0V/1gE/nZKro7eyG0Qj2NNd8csE2eLgH9jqFdd7YD",
-    "size": 89
-  },
-  {
-    "url": "/Wedding/assets/template-contact-form-tshCrYyj.js",
-    "hash": "sha384-dh/QTflDb2xvavMOuEJUYNNIsz/M0WXHwrkpXlG3VCcb6LJ+gBZluh21+zImCZ0r",
-    "size": 3267
-  },
-  {
-    "url": "/Wedding/assets/template-contact-form-tshCrYyj.js.map",
-    "hash": "sha384-a7F+iGJAPWo5wg8Z7E9n1kJY0kzZw/9j9kS7XAhMCzGWyXEFnJl5RfAjFdw4y4NF",
-    "size": 94
-  },
-  {
-    "url": "/Wedding/assets/template-dashboard-2CkJ78AH.js",
-    "hash": "sha384-LiYwf6xwuI7ArNOoPeA3U6aU3ikEpCK9B+wjXyQk82LBloI/SppJJqzEdAZHnV40",
-    "size": 13773
-  },
-  {
-    "url": "/Wedding/assets/template-dashboard-2CkJ78AH.js.map",
-    "hash": "sha384-4Ma61BNCJQV7sHZJx55IUD4OtHDGo13KkekQxDBxCs420ysmuTesNsd66zFVuhKH",
-    "size": 91
-  },
-  {
-    "url": "/Wedding/assets/template-gallery-BMvfLfYh.js",
-    "hash": "sha384-OIwcqmQTnbBBpKOIzaA4K0hnmmTKhGAkJwdO9TFbHt1pOp6YZvYtgVftPYNizLJl",
-    "size": 994
-  },
-  {
-    "url": "/Wedding/assets/template-gallery-BMvfLfYh.js.map",
-    "hash": "sha384-ja5gSEm9h+O6GaWGI7jllncdwNBJGxygGefVwDgNV3V3jmJP9hnqDZfVBNepvP9S",
-    "size": 89
-  },
-  {
-    "url": "/Wedding/assets/template-guest-landing-Bj4oIFdv.js",
-    "hash": "sha384-7/Fh7SmBLdc93JwWpvz9ttbUdnotVKD/mkrj6RLaa1tWNmnjW5Q60fLEgSo6nG27",
-    "size": 1427
-  },
-  {
-    "url": "/Wedding/assets/template-guest-landing-Bj4oIFdv.js.map",
-    "hash": "sha384-K8+HP+TzEnRNEpZDcIiPskr9XTsKhP2j358oweXk2wM+nVb3bNiSCC36QDJjlSCi",
-    "size": 95
-  },
-  {
-    "url": "/Wedding/assets/template-guests-DbxDXzzT.js",
-    "hash": "sha384-5fyg4KatTONBmbhW8m+5flSQf1l+UyzC5xQUmaup3jhTM1ZzuPJ5lxPV5c9eM+zC",
-    "size": 5700
-  },
-  {
-    "url": "/Wedding/assets/template-guests-DbxDXzzT.js.map",
-    "hash": "sha384-cpwmTg6VHSEqapWRDLu76PWIKl+zTYwyUMs/Mik5RatIFpLeIQocLHeUUMs4lagp",
-    "size": 88
-  },
-  {
-    "url": "/Wedding/assets/template-invitation-D70kskDq.js",
-    "hash": "sha384-hn29ufibKFap9h19dC7v1IroebABv14TLkRykXJ3XDEsJd2RVCP7LShLOKCXgiBY",
-    "size": 5502
-  },
-  {
-    "url": "/Wedding/assets/template-invitation-D70kskDq.js.map",
-    "hash": "sha384-abQlucE+O9iuTUGXV49F0zr9d7LcRzqEfFCDWK8F2eDT+oO92wv8la21QS7uOCbR",
-    "size": 92
-  },
-  {
-    "url": "/Wedding/assets/template-landing-C-rPSaF1.js",
-    "hash": "sha384-dH2G7HYO9h6GBvGwspl/jpWI0TNZi6upc2PpNQBFzfH0c7L4JdCI7AKPcyHJf316",
-    "size": 2726
-  },
-  {
-    "url": "/Wedding/assets/template-landing-C-rPSaF1.js.map",
-    "hash": "sha384-HEqsJJ1+3Ba3xGf8+fm052FaZkOWJHUXsc5m/fdHCFrKotPieLNwjWYfaztfQxaQ",
-    "size": 89
-  },
-  {
-    "url": "/Wedding/assets/template-registry-1PGB_xyK.js",
-    "hash": "sha384-R9iZRxco7ClB+vtmW5NyHQbD+1rUlMFuZO0npC1b4hhJvPa/riSgsyqvhcWQlX/o",
-    "size": 542
-  },
-  {
-    "url": "/Wedding/assets/template-registry-1PGB_xyK.js.map",
-    "hash": "sha384-IF+vO75elOSrYHmqsTqB2iphUyY0HIteDDeXaxNax2VWWBE1eGW54v6Ay5lj0QSa",
-    "size": 90
-  },
-  {
-    "url": "/Wedding/assets/template-rsvp-BD30IeEV.js",
-    "hash": "sha384-LgiJIrT594NNzlhbgF+lLEdxWw3klZSYIz/EYAfTZ9iUZR3ytiyIv6n4OVaTbyWS",
-    "size": 6424
-  },
-  {
-    "url": "/Wedding/assets/template-rsvp-BD30IeEV.js.map",
-    "hash": "sha384-khnvoIpe1ejuDL+96jD5DVXw407YABlp848XU7D3KcwmCS13CzHo8Hpz4VKt0cXO",
-    "size": 86
-  },
-  {
-    "url": "/Wedding/assets/template-settings-hw08BrNX.js",
-    "hash": "sha384-sIB8PSDYz4jxpaAe01uuJq9TwFfaMMu9EDsTrIjF4XLGH9pnJbKmPnrAuK2ZMrME",
-    "size": 22305
-  },
-  {
-    "url": "/Wedding/assets/template-settings-hw08BrNX.js.map",
-    "hash": "sha384-64pQDjmNhFFCJglknhC8zI/g852ujzFF+5EUtFqUllEJCX5jRZnJlFlLwfGse3Sq",
-    "size": 90
-  },
-  {
-    "url": "/Wedding/assets/template-tables-DX668JVS.js",
-    "hash": "sha384-CnBm9XWkYE5GFQbvOOXm+w7owAHgaDfDKXAgaWb3e3gb2yCCjFpsFnZuHXzxhlMM",
-    "size": 2566
-  },
-  {
-    "url": "/Wedding/assets/template-tables-DX668JVS.js.map",
-    "hash": "sha384-PvFtJiU6gqfV3tFm1RVuHrLHe1VY+ZZVEw3Rv9bC3/cuhj0uiGk3zTcya9mLQQdF",
-    "size": 88
-  },
-  {
-    "url": "/Wedding/assets/template-timeline-CRZKP7tz.js",
-    "hash": "sha384-PCAAML1EIs8rdMNPL86kmFk2RM6kV7YGNGE21vYaffy0UoCmqgyZSXwWUmKN1EuC",
-    "size": 945
-  },
-  {
-    "url": "/Wedding/assets/template-timeline-CRZKP7tz.js.map",
-    "hash": "sha384-aBxFzDVoAfqnKoN6N57biaDTYBJ1N7D3aRNrL7OtQeF9HvKvJfliyCu/PcXzalSc",
-    "size": 90
-  },
-  {
-    "url": "/Wedding/assets/template-vendors-CBJIzwou.js",
-    "hash": "sha384-1Ngf42lxEM9Ep5Mr4W+nTlX0YSWonKVmUD+H3lf4Rvy3UF67pA5sDdTDxK9Z6d8U",
-    "size": 1940
-  },
-  {
-    "url": "/Wedding/assets/template-vendors-CBJIzwou.js.map",
-    "hash": "sha384-5cEkWJLCVP6bf/KoLkd/JcbKfpirzu/vEphzG/btjlf3qr9mVss9KSNsGOgv7Sy8",
-    "size": 89
-  },
-  {
-    "url": "/Wedding/assets/template-whatsapp-iKKWs7Cx.js",
-    "hash": "sha384-YJSH2oz53a+IZonk0UlDUrRM8i851NnKUEnRT04fh/H7RXIj07DJzmo9Fk2cradM",
-    "size": 4118
-  },
-  {
-    "url": "/Wedding/assets/template-whatsapp-iKKWs7Cx.js.map",
-    "hash": "sha384-lH7Gtdwk8imWef6dOahRUTT1fqqJ6bHoq1ZOcTFnzb6zi3Kwj+OwBK32feJ9lskY",
-    "size": 90
-  },
-  {
-    "url": "/Wedding/assets/timelineModal-D9qVwzdu.js",
-    "hash": "sha384-Ua8+vaQ8jU1KTCs5zYyNZkLMpD1CLLEV6RtWeZdJYIRNVlZsqZz+AEw6txfO3TQR",
+    "url": "/Wedding/assets/timelineModal-DU1vC9Gt.js",
+    "hash": "sha384-PT1ZY1ynpLxukWkNlK6kw5qpkDDyyu441Ca/jWBMWk3PbNW26vWcNC3V7rLRrS6i",
     "size": 2196
   },
   {
-    "url": "/Wedding/assets/timelineModal-D9qVwzdu.js.map",
-    "hash": "sha384-TrKSdiRKt59rkhTzwBrAscSZAvMV3u1Eoz50OfYgWoaptP32prZEFpj1xLT82RrL",
+    "url": "/Wedding/assets/timelineModal-DU1vC9Gt.js.map",
+    "hash": "sha384-Iszxj6LjwRP5+a6MeWsUl4vqNfFT8CGGpL8uZpDgZwnSTC2rk2twRzg3DgmqbOQ3",
     "size": 86
   },
   {
-    "url": "/Wedding/assets/vendorModal-C6vUjbCb.js",
-    "hash": "sha384-tOI56YKDW5XVdvR/vp5fLumg6o2YIvDIcin2nVA7U70TX85JCvBeTmTUv6qXoufU",
+    "url": "/Wedding/assets/vendorModal-BDSH9dZ8.js",
+    "hash": "sha384-Ceb++iS1J3CCJ3JVcFE5vVtsknG3iVTf+xIJhtkaQ8soUL9H2RcfPV4OQJwrljK5",
     "size": 4537
   },
   {
-    "url": "/Wedding/assets/vendorModal-C6vUjbCb.js.map",
-    "hash": "sha384-PAbEBYU37zDs0DcDEBRpeNFOguHeWLzOPVhKqHsxS6gr8AwplY3DCjF6+v3hL+To",
+    "url": "/Wedding/assets/vendorModal-BDSH9dZ8.js.map",
+    "hash": "sha384-ZVrEnihg5D4AVzIpfljP1wRBp6xN+1bIlUOdJGFfKDdB56od6GPnScT13Ch0U2NO",
     "size": 84
+  },
+  {
+    "url": "/Wedding/assets/vendors-S2g-j8l1.js",
+    "hash": "sha384-c4RWXJQZo4iuLreDIS2Dv07gkVQlpbzfDymBi74hPfJXEEDYF9cQFcunih5RKmcO",
+    "size": 1870
+  },
+  {
+    "url": "/Wedding/assets/vendors-S2g-j8l1.js.map",
+    "hash": "sha384-RxE4gPCmryLhhU2wzv1sMa5dcFi1h2UF3RKrHeWaVjyugAqSjk7jAB8hKXXU/ymY",
+    "size": 80
+  },
+  {
+    "url": "/Wedding/assets/whatsapp-BxIEfvAp.js",
+    "hash": "sha384-ZW59G/lGZiCVv/b6obHHEbnz5tOeUIw82Mkn1RnTXPnhlzGvAWrTUlEawsdG+ktZ",
+    "size": 4048
+  },
+  {
+    "url": "/Wedding/assets/whatsapp-BxIEfvAp.js.map",
+    "hash": "sha384-9kZk+TDi2Q8jD/qBckljGixihgK7XZFjlmZVP2+dQrrPIe2u7R813rqFR2LdkkeD",
+    "size": 81
   },
   {
     "url": "/Wedding/icon-192.png",
@@ -576,8 +416,8 @@
   },
   {
     "url": "/Wedding/index.html",
-    "hash": "sha384-d4pze07OFZ/Fm1CPUskVhGtLwzmftVlbOrkW0d1ZjkhgpOkPtEZb+K4ZQzNTJiHc",
-    "size": 37371
+    "hash": "sha384-dG/IYAJlVnztdA7o6w+h0y1mn1DsADWqJ/4OdGtvGSntHF9T+WQ9tH8eqXSKEf0D",
+    "size": 35816
   },
   {
     "url": "/Wedding/invitation.jpg",

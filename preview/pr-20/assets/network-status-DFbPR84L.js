@@ -1,0 +1,2 @@
+var e=new Set,t=!1,n=typeof navigator<`u`?navigator.onLine:!0;function r(t){if(t!==n){n=t,document.body?.classList.toggle(`is-offline`,!t);for(let n of e)try{n(t)}catch{}}}function i(){t||typeof window>`u`||(t=!0,window.addEventListener(`online`,()=>r(!0)),window.addEventListener(`offline`,()=>r(!1)),document.body?.classList.toggle(`is-offline`,!navigator.onLine))}function a(t){return typeof t==`function`?(e.add(t),()=>e.delete(t)):()=>{}}export{i as initNetworkStatus,a as onStatusChange};
+//# sourceMappingURL=network-status-DFbPR84L.js.map
