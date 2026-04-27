@@ -48,6 +48,24 @@ function _withViewTransition(fn) {
 }
 
 /**
+ * Public wrapper around `document.startViewTransition`. Sections and handlers
+ * can use this to animate their own DOM mutations with the same fallback
+ * (executes the callback synchronously when the API is unavailable). (S92)
+ * @param {() => void} fn
+ */
+export function withViewTransition(fn) {
+  _withViewTransition(fn);
+}
+
+/**
+ * Returns true when the View Transitions API is available. (S92)
+ * @returns {boolean}
+ */
+export function isViewTransitionSupported() {
+  return typeof document !== "undefined" && typeof document.startViewTransition === "function";
+}
+
+/**
  * Navigate to a section by name. Pushes a history entry (back button works).
  * @param {string} name
  */
@@ -86,10 +104,12 @@ export function initRouter() {
     const hash = location.hash.slice(1).trim();
     const name = _sections.includes(hash) ? hash : "dashboard";
     _activeSection = name;
-    const tab = document.querySelector(
-      `[data-action="showSection"][data-action-arg="${CSS.escape(name)}"]`,
-    );
-    if (tab) tab.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    _withViewTransition(() => {
+      const tab = document.querySelector(
+        `[data-action="showSection"][data-action-arg="${CSS.escape(name)}"]`,
+      );
+      if (tab) tab.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    });
   }
   window.addEventListener("hashchange", _handleHash, { passive: true });
   // popstate fires when the user navigates back/forward via History API.

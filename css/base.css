@@ -111,3 +111,34 @@
     font-family: sans-serif;
   }
 } /* end @layer base */
+
+/* S92 — View Transitions API: smooth crossfade between sections.
+   Pseudo-elements live outside @layer scope so they cascade above all rules.
+   `prefers-reduced-motion` users bypass the animation entirely. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+::view-transition-old(root) {
+  animation-name: wm-fade-out;
+}
+::view-transition-new(root) {
+  animation-name: wm-fade-in;
+}
+@keyframes wm-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes wm-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
