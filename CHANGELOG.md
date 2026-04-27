@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.2.0] — 2026-05-06
+
+> **Architecture bridge + C1 service wiring + i18n audit + tsc reduction.** Sprints 24–31 eliminate all
+> direct section→service cross-layer imports, wire three dormant analytics services to their UI sections,
+> add an i18n coverage audit gate, and cut TypeScript errors by 35 (244 → 209).
+
+### Added (12.2.0)
+
+- **`src/core/sync.js`** — thin re-export bridge for `enqueueWrite`, `syncStoreKeyToSheets`,
+  `appendToRsvpLog`, `queueSize`, `queueKeys`, `onSyncStatus` from `services/sheets.js`.
+  Sections must import sync utilities from `core/sync` only (arch-check enforced).
+- **Seating constraint violations in Tables section** — `validateSeating()` from
+  `seating-constraints.js` wired to `renderTables()`; violation badge (`⚠`) and banner listing
+  up to 5 offending pairs rendered per cycle. CSS: `.table-card--violation`,
+  `.constraint-violation-badge`, `.constraint-violations-banner`. Five new i18n keys.
+- **Top-5 expense categories panel in Expenses section** — `getTopCategories()` from
+  `expense-analytics.js` drives `#expenseTopCategories` card on every render.
+  CSS: `.expense-top-categories-*`. One new i18n key.
+- **Budget envelope summaries in Budget section** — `getAllSummaries()` from `budget-tracker.js`
+  drives `#budgetEnvelopeSummary` card with over-budget highlighting; reactive via `storeSubscribe`.
+  CSS: `.budget-envelope-*`. Two new i18n keys.
+- **HTML containers** added to `src/templates/budget.html` for all three new panels.
+- **`scripts/audit-i18n-coverage.mjs`** + `audit:i18n-coverage` npm script — scans `t('key')` and
+  `data-i18n=` across `src/`, cross-checks `he.json` + `en.json`.
+  Supports `--enforce`, `--baseline=N`, `--show-dead`, `--json`. Enforced in CI at `--baseline=0`.
+- **13 missing i18n keys** added to `he.json` + `en.json`: `analytics_no_data`, `close`,
+  `col_vendor`, `col_vendors`, `delete`, `expense_other`, `label_status`, `label_wedding_date`,
+  `no_data`, `photo`, `total`, `vendor_contact`, `vendors`.
+
+### Changed (12.2.0)
+
+- **Architecture violations 15 → 3** — 12 sections redirected from direct `services/sheets.js`
+  imports to `core/sync.js` bridge; three intentional violations remain
+  (invitation.js + settings.js → backend.js/supabase.js). CI arch `--baseline=15 → --baseline=3`.
+- **TypeScript error baseline 244 → 209** — JSDoc param types added to `qr-code.js` (22→0),
+  `storage.js`, `section-base.js`, `store.js`, `route-table.js`, `template-loader.js`,
+  `conflict-resolver.js`, `i18n.js`, `secure-storage.js`. CI tsc `--baseline=244 → --baseline=209`.
+- `.github/workflows/ci.yml` — three CI gate updates above;
+  new `audit:i18n-coverage --enforce --baseline=0` gate.
+
 ## [12.1.0] — 2026-04-27
 
 > **CI quality bar — round 2.** Coverage floors lifted to v12.0.0 actuals;

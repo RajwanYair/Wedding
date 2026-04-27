@@ -465,6 +465,8 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 | B9 | Repositories enforcement | `arch-check.mjs --strict` in CI; ESLint `no-restricted-imports` | Sections cannot import services directly |
 | B10 | Supply-chain | SBOM (CycloneDX), Trivy weekly, OpenSSF Scorecard | Workflows green; badges in README |
 
+> **v12.2.0 progress**: B2 tsc baseline 244→209 (35 errors fixed with JSDoc types); B9 arch violations 15→3 (12 sections redirected via `core/sync.js` bridge, CI `--baseline=3`). `audit:i18n-coverage --enforce --baseline=0` added to CI.
+
 **Phase OKR:** *strict TS in core; strict architecture; strict supply-chain; no dead code; signals everywhere internally.*
 
 ### Phase C — v14.0.0 *Smart & Native-Class* — *Later*
@@ -472,6 +474,8 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 | # | Workstream | Deliverable |
 | --- | --- | --- |
 | C1 | Wire dormant utilities | Connect 15+ built-but-unwired utils to UI (table below) |
+
+> **v12.2.0 progress (C1)**: 3/15 utilities wired — `seating-constraints.js` → Tables section (constraint badges + banner); `expense-analytics.js` → Expenses section (top-5 categories panel); `budget-tracker.js` → Budget section (envelope summaries card).
 | C2 | AI | Seating CSP solver UI + invitation copy via edge LLM proxy (BYO key) |
 | C3 | WhatsApp | Cloud API end-to-end; template approval; delivery webhooks; A/B tests |
 | C4 | Realtime | Presence badges, live cursors, conflict-resolver wired in UI |
@@ -734,8 +738,10 @@ These remain explicitly **open** for review at each phase boundary; defaults bel
 | v11.0.0 | Production cleanup, dead utils purge, handler test consolidation | Done |
 | v11.1.0 | Phase A foundation: monitoring adapter, secure storage, BaseSection, route-table, calendar-link, action namespacing, LH-CI advisory | Done |
 | v11.2.0 | Quality + tooling consolidation: Prettier, format gate, ARCHITECTURE diagrams, footprint reduction | Done |
-| **v11.3.0** | Production hardening: pinned actions, Lighthouse hard gate, htmlhint config consolidation, prettier in shared tooling | **Active** |
-| v12.0.0 | Backend convergence — Supabase primary, Sheets deprecated, IDB + encryption, router, edge functions, Sentry on, coverage gate | **Next** |
+| v11.3.0 | Production hardening: pinned actions, Lighthouse hard gate, htmlhint config consolidation, prettier in shared tooling | Done |
+| v12.0.0 | Backend convergence — Supabase primary, Sheets deprecated, IDB + encryption, router, edge functions, Sentry on, coverage gate | Done |
+| v12.1.0 | CI quality bar round 2 — coverage floors lifted; `audit:storage-prefix` + `audit:tsc` gates at baseline | Done |
+| **v12.2.0** | Architecture bridge, C1 wiring (3/15 utilities), i18n coverage audit, tsc 244→209 | **Done** |
 | v13.0.0 | DX & type safety — TS strict in core, signals internals, SW rewrite, dead-export purge, BaseSection across all sections, supply-chain hardening | **Next** |
 | v14.0.0 | Smart features — AI seating + copy, WABA, realtime presence, Stripe, photos, QR kiosk, calendar sync, maps | Later |
 | v15.0.0 | Platform & scale — org/team mode, public site builder, plugins, FR + ES, Cloudflare CDN, Capacitor wrapper | Later |
@@ -743,4 +749,4 @@ These remain explicitly **open** for review at each phase boundary; defaults bel
 
 ---
 
-*Last updated: 2026-04-26 · v11.3.0 · Living document — re-audit §3, §4 and §9 at every phase boundary. Every "Replace" or "Adjust" decision requires a new ADR in [docs/adr/](docs/adr/).*
+*Last updated: 2026-05-06 · v12.2.0 · Living document — re-audit §3, §4 and §9 at every phase boundary. Every "Replace" or "Adjust" decision requires a new ADR in [docs/adr/](docs/adr/).*
