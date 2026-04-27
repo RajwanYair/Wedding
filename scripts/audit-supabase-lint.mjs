@@ -26,7 +26,7 @@ import { parseAuditArgs } from "./lib/audit-utils.mjs";
 const ROOT = process.cwd();
 const DIR = join(ROOT, "supabase", "migrations");
 const { enforce: ENFORCE, baseline: BASELINE_ARG } = parseAuditArgs();
-const BASELINE_DEFAULT = 3; // 003/004/008 — legacy migrations, immutable.
+const BASELINE_DEFAULT = 1; // 008_unique_guest_phone — legacy, immutable.
 const BASELINE = BASELINE_ARG > 0 ? BASELINE_ARG : BASELINE_DEFAULT;
 
 /**
@@ -91,17 +91,31 @@ for (const f of files) {
     });
   }
 
-  // CREATE guards (skip CREATE OR REPLACE / CREATE … IF NOT EXISTS)
+  // CREATE guards (skip CREATE OR REPLACE / CREATE … IF NOT EXISTS).
+  // Postgres `CREATE TRIGGER` does NOT support IF NOT EXISTS; the
+  // canonical idempotent pattern is `DROP TRIGGER IF EXISTS … CREATE
+  // TRIGGER`. We accept either form.
   const createRe = /\bcreate\s+(table|index|unique\s+index|trigger)\b/gi;
   for (const m of sql.matchAll(createRe)) {
     const slice = sql.slice(m.index ?? 0, (m.index ?? 0) + 200);
-    if (!/if\s+not\s+exists/i.test(slice)) {
-      const lineNo = sql.slice(0, m.index ?? 0).split(/\n/).length;
-      violations.push({
-        file: f,
-        msg: `CREATE ${m[1].toUpperCase()} without IF NOT EXISTS (line ~${lineNo})`,
-      });
+    if (/if\s+not\s+exists/i.test(slice)) continue;
+    if (/^trigger$/i.test(m[1])) {
+      // Look back for a matching `DROP TRIGGER IF EXISTS <same name>`.
+      const before = sql.slice(0, m.index ?? 0);
+      const nameMatch = slice.match(/\btrigger\s+([A-Za-z_][\w]*)/i);
+      const name = nameMatch?.[1];
+      if (
+        name &&
+        new RegExp(`drop\\s+trigger\\s+if\\s+exists\\s+${name}\\b`, "i").test(before)
+      ) {
+        continue;
+      }
     }
+    const lineNo = sql.slice(0, m.index ?? 0).split(/\n/).length;
+    violations.push({
+      file: f,
+      msg: `CREATE ${m[1].toUpperCase()} without IF NOT EXISTS (line ~${lineNo})`,
+    });
   }
 
   // ALTER TABLE ADD COLUMN guard
@@ -129,6 +143,6 @@ if (ENFORCE && violations.length > BASELINE) {
   process.exit(1);
 }
 console.log(
-  `\n[audit-supabase-lint] Baseline ${BASELINE} (legacy 003/004/008). Re-run with --enforce to gate.`,
+  `\n[audit-supabase-lint] Baseline ${BASELINE} (legacy 008). Re-run with --enforce to gate.`,
 );
 process.exit(0);
