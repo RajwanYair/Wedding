@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v12.5.2
+# Wedding Manager — Roadmap v12.5.3
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/)
@@ -30,11 +30,13 @@ Previous roadmap items still relevant are consolidated below. Nothing has been s
 
 ## 0. North Star & Current State
 
-### Actual state — v12.5.2 · 2026-04-27
+### Actual state — v12.5.3 · 2026-04-27
 
 | Metric | Value | Health |
 | --- | --- | --- |
 | Tests | **2 509 passing · 155 files · 0 Node warnings** | ✅ |
+| TypeScript errors | **134** (was 157; trending down) | ⚠ |
+| Dead exports | **85** (was 117; trending down) | ⚠ |
 | Lint | 0 errors · 0 warnings | ✅ |
 | Sections | 19 section modules · 18 templates · 8 modals | ✅ |
 | Services | **62 files** (~3× the healthy max) | ⚠ consolidation needed |
@@ -45,7 +47,7 @@ Previous roadmap items still relevant are consolidated below. Nothing has been s
 | Active backend | `BACKEND_TYPE = "sheets"` — **Supabase not yet primary** | ❌ P0 |
 | Auth tokens | Plaintext in `localStorage` | ❌ P0 |
 | Bundle | ~45 KB gzip · hard CI gate ≤ 60 KB | ✅ |
-| Node version | 25.9.0 — **non-LTS, no security patches** | ⚠ |
+| Node version | 25.9.0 local · **22 LTS in CI + `.nvmrc`** | ⚠ switch local to 22 LTS |
 | Deploy | GitHub Pages · <https://rajwanyair.github.io/Wedding> | ✅ |
 
 ### North Star
