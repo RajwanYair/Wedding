@@ -4,9 +4,74 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.0] — 2026-05-08
+
+> **C1 UX utilities (QR badges, message personalizer, notification prefs, PDF export) +
+> B7 @scope CSS + B4 SW Background Sync + B1 audit:sections --strict + B10 security workflow + A3 crypto wiring.**
+> Sprints 54–63 add five user-facing utilities, upgrade the service worker with an IndexedDB-backed
+> sync queue, enforce section template coverage in CI, introduce a unified security workflow,
+> and wire AES-GCM encryption end-to-end through crypto.js → secure-storage.js.
+
+### Added (12.5.0)
+
+- **Print Guest QR Badges** (`src/sections/checkin.js`) — `printGuestQrBadges()` opens a
+  printable window with per-guest QR code badges using `getQrDataUrl(buildCheckinUrl(id), 120)`.
+  Button added to check-in toolbar; wired via `checkin-handlers.js`. (Sprint 54)
+- **`src/services/message-personalizer.js`** — WhatsApp template personalizer. Exports
+  `personalizeMessage(template, guest, info, tableName?)`, `getVariableHints()`,
+  `WEDDING_TEMPLATES`. Bridges single-brace `{var}` legacy format and double-brace `{{var}}`
+  engine. (Sprint 55)
+- **WhatsApp variable chips** — clickable `{variable}` chip bar below the message textarea in
+  the WhatsApp section. `renderVariableChips()` in `whatsapp.js` renders chips; CSS added to
+  `components.css`. (Sprint 55)
+- **Notification preferences card** (`src/sections/settings.js`) — `_renderNotifPrefsCard()`
+  renders channel (push/email/WhatsApp/SMS) and event (RSVP confirmed/reminder/table
+  assigned/campaign/system) checkboxes. Backed by `src/utils/notification-preferences.js`.
+  (Sprint 56)
+- **`src/utils/pdf-export.js`** — zero-dependency PDF/print export. Exports
+  `buildPrintHtml(title, columns, rows, opts?)`, `printGuestList()`, `printTableLayout()`.
+  "Export PDF" buttons added to Guests and Tables sections. (Sprint 57)
+- **`@scope` CSS per-section isolation** (`css/components.css`) — four `@scope` blocks
+  (`#sec-rsvp`, `#sec-analytics`, `#sec-timeline`, `#sec-checkin`) prevent generic class names
+  from bleeding across section boundaries. Chrome 118+ / Safari 17.4+; graceful degradation
+  for older browsers. (Sprint 58 / B7)
+- **SW IndexedDB Background Sync queue** (`public/sw.js`) — `openSyncDb`, `idbGetAll`,
+  `idbDelete`, `flushQueue` helpers store failed sync payloads in IndexedDB.
+  Handles both `"rsvp-sync"` and `"write-sync"` tags; `QUEUE_SYNC` message type lets clients
+  enqueue payloads for offline retry. (Sprint 59 / B4)
+- **`audit:sections --strict` CI gate** (`scripts/validate-sections.mjs`) — `--strict` flag
+  treats missing template files as errors (with `SKIP_TEMPLATE` exemption for known sub-sections
+  `expenses` and `contact-collector`). CI updated to pass `--strict`. (Sprint 60 / B1)
+- **`security.yml` unified security workflow** (`.github/workflows/security.yml`) — orchestrates
+  npm audit (moderate+), dependency diff on PRs, and inline security scan. Status gate job
+  `"Security / gate"` enables single-job branch-protection rules. (Sprint 61 / B10)
+- **`crypto.js` → `secure-storage.js` wiring** — `secure-storage.js` now imports
+  `importRawKey`, `encryptField`, `decryptField` from `crypto.js` instead of duplicating
+  inline Web Crypto calls. New envelope format `{ v, d }` stores `encryptField()` output;
+  backward-compatible fallback reads legacy `{ v, iv, ct }` envelopes. (Sprint 62 / A3)
+
+### Changed (12.5.0)
+
+- `secure-storage.js` envelope format updated from `{ v, iv, ct }` to `{ v, d }` (d = single
+  base64 IV+ciphertext string from `encryptField()`). Old envelopes are still readable.
+- `validate-sections.mjs` gains `--strict` mode and `SKIP_TEMPLATE` exemption set.
+- `ci.yml` Section contract validation step now passes `--strict`.
+- SW `message` handler now supports both `"SKIP_WAITING"` string and `{ type: "QUEUE_SYNC" }`
+  object messages.
+
+### Tests (12.5.0)
+
+- `tests/unit/checkin-qr-badges.test.mjs` — 13 tests (Sprint 54)
+- `tests/unit/message-personalizer.test.mjs` — 24 tests (Sprint 55)
+- `tests/unit/pdf-export.test.mjs` — 22 tests (Sprint 57)
+- `tests/unit/sw-background-sync.test.mjs` — 24 tests (Sprint 59)
+- `tests/unit/validate-sections-strict.test.mjs` — 15 tests (Sprint 60)
+- `tests/unit/secure-storage-crypto-wiring.test.mjs` — 21 tests (Sprint 62)
+- **Total: 2509 tests across 155 test files**
+
 ## [12.4.0] — 2026-05-08
 
-> **C1 utility wiring (RSVP/vendor/budget analytics, changelog parser, event schedule) + B6 coverage gate + B2 tsc fixes + A1 migration audit.**
+> **C1 utility wiring (analytics, changelog parser, event schedule) + B6 coverage gate + B2 tsc fixes + A1 migration audit.**
 > Sprints 44–53 wire five Sprint 44-48 analytics/scheduling utilities to their UI sections,
 > add 83 unit tests, cut TypeScript errors 184→160 (-24), add Supabase migration audit script,
 > and recalibrate coverage thresholds.

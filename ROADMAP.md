@@ -468,6 +468,11 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 > **v12.2.0 progress**: B2 tsc baseline 244→209 (35 errors fixed with JSDoc types); B9 arch violations 15→3 (12 sections redirected via `core/sync.js` bridge, CI `--baseline=3`). `audit:i18n-coverage --enforce --baseline=0` added to CI.
 > **v12.3.0 progress**: B1 `audit:section-lifecycle` advisory script added to CI; B2 tsc baseline 209→184 (-25 type errors fixed); B9 ESLint `no-restricted-imports` blocks static section→service imports; dead-export baseline 193→192.
 > **v12.4.0 progress**: B2 tsc baseline 184→160 (-24 errors fixed); B6 coverage gate recalibrated (83 new tests, thresholds aligned to actuals); B5 dead-export baseline stabilised at 201; A1 `audit:supabase` migration quality script added.
+> **v12.5.0 progress**: B7 `@scope` CSS per-section isolation (4 scope blocks);
+> B4 SW IndexedDB Background Sync queue (`rsvp-sync` + `write-sync`);
+> B1 `audit:sections --strict` template gate in CI;
+> B10 unified `security.yml` workflow (npm audit moderate+, dep-diff, security scan, gate job);
+> A3 `crypto.js` → `secure-storage.js` wiring (encryptField/decryptField, backward-compat envelope).
 
 **Phase OKR:** *strict TS in core; strict architecture; strict supply-chain; no dead code; signals everywhere internally.*
 
@@ -482,6 +487,10 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 > **v12.4.0 progress (C1)**: 12/15 utilities wired — additionally: `rsvp-analytics.js` → Analytics RSVP funnel;
 > `vendor-analytics.js` → Vendors overdue banner; `budget-burndown.js` → Budget burndown card;
 > `changelog-parser.js` → Dashboard What's New; `event-schedule.js` → Timeline run-of-show countdown.
+> **v12.5.0 progress (C1)**: 15/15+ utilities wired — additionally: Print Guest QR Badges;
+> `message-personalizer.js` → WhatsApp variable chips;
+> `notification-preferences.js` → Settings panel;
+> `pdf-export.js` → Guests + Tables "Export PDF" buttons.
 | C2 | AI | Seating CSP solver UI + invitation copy via edge LLM proxy (BYO key) |
 | C3 | WhatsApp | Cloud API end-to-end; template approval; delivery webhooks; A/B tests |
 | C4 | Realtime | Presence badges, live cursors, conflict-resolver wired in UI |
