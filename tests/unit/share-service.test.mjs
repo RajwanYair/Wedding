@@ -1,11 +1,13 @@
 /**
- * tests/unit/share-service.test.mjs — Sprint 132
+ * tests/unit/share-service.test.mjs — Sprint 132 (merged into share.js in S86)
  */
 
 import { describe, it, expect, vi } from "vitest";
 import {
-  isNativeShareSupported, share, buildShareUrl,
-} from "../../src/services/share-service.js";
+  isNativeShareSupported,
+  shareWithFallback as share,
+  buildShareUrl,
+} from "../../src/services/share.js";
 
 describe("isNativeShareSupported", () => {
   it("returns boolean", () => {

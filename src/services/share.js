@@ -91,3 +91,74 @@ export async function shareGuestRsvpLink(guest, options = {}) {
     url,
   });
 }
+
+// ── Share with clipboard fallback (S86 — merged from share-service.js) ────
+//
+// `shareWithFallback` differs from `share()` above: it never throws, returns a
+// structured ShareResult, and falls back to clipboard when Web Share is
+// unavailable. Useful for invitations/links where best-effort is acceptable.
+
+/**
+ * @typedef {{ method: "native"|"clipboard"|"none", success: boolean, error?: string }} ShareResult
+ */
+
+/** Alias for {@link isShareSupported} kept for API compatibility. */
+export const isNativeShareSupported = isShareSupported;
+
+/**
+ * Attempt to share data using Web Share API with clipboard fallback.
+ * @param {ShareData} data
+ * @param {{
+ *   nativeShare?: ((data: ShareData) => Promise<void>) | null,
+ *   clipboardWrite?: ((text: string) => Promise<void>) | null,
+ * }} [overrides]  Injectable overrides for testability
+ * @returns {Promise<ShareResult>}
+ */
+export async function shareWithFallback(data, overrides = {}) {
+  const nativeShare =
+    overrides.nativeShare !== undefined
+      ? overrides.nativeShare
+      : (typeof navigator !== "undefined" && navigator.share?.bind(navigator)) || null;
+  const clipWrite =
+    overrides.clipboardWrite !== undefined
+      ? overrides.clipboardWrite
+      : (typeof navigator !== "undefined" &&
+          navigator.clipboard?.writeText?.bind(navigator.clipboard)) ||
+        null;
+
+  if (nativeShare) {
+    try {
+      await nativeShare(data);
+      return { method: "native", success: true };
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        return { method: "native", success: false, error: "AbortError" };
+      }
+      // fall through to clipboard
+    }
+  }
+
+  const text = [data.title, data.text, data.url].filter(Boolean).join("\n");
+  if (clipWrite) {
+    try {
+      await clipWrite(text);
+      return { method: "clipboard", success: true };
+    } catch (err) {
+      return { method: "clipboard", success: false, error: String(err) };
+    }
+  }
+
+  return { method: "none", success: false, error: "No share API available" };
+}
+
+/**
+ * Build a share URL for a wedding RSVP page.
+ * @param {string} baseUrl
+ * @param {{ eventId?: string }} [opts]
+ * @returns {string}
+ */
+export function buildShareUrl(baseUrl, { eventId } = {}) {
+  const url = new URL(baseUrl);
+  if (eventId) url.searchParams.set("event", eventId);
+  return url.toString();
+}
