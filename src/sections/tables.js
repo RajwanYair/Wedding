@@ -12,6 +12,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { TABLE_SHAPES } from "../core/constants.js";
+import { validateSeating } from "../services/seating-constraints.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -129,6 +130,24 @@ export function renderTables() {
   if (!floor) return;
 
   floor.textContent = "";
+
+  // Compute seating constraint violations (Sprint 26 / C1)
+  const guestTableMap = new Map(guests.filter((g) => g.tableId).map((g) => [g.id, g.tableId]));
+  const tablesForValidation = tables.map((tb) => ({
+    id: tb.id,
+    guestIds: guests.filter((g) => g.tableId === tb.id).map((g) => g.id),
+  }));
+  const violations = validateSeating(tablesForValidation);
+  /** @type {Set<string>} */
+  const violatingTableIds = new Set();
+  for (const v of violations) {
+    const tA = guestTableMap.get(v.guestId);
+    const tB = guestTableMap.get(v.targetGuestId);
+    if (tA) violatingTableIds.add(tA);
+    if (tB) violatingTableIds.add(tB);
+  }
+  _renderConstraintsBanner(violations, guests, floor);
+
   tables.forEach((tb) => {
     const seated = guests.filter((g) => g.tableId === tb.id).length;
     const card = document.createElement("div");
@@ -175,6 +194,16 @@ export function renderTables() {
       if (guestId) _assignGuestToTable(guestId, tb.id);
     });
 
+    // Sprint 26: mark tables with constraint violations
+    if (violatingTableIds.has(tb.id)) {
+      card.classList.add("table-card--violation");
+      const badge = document.createElement("span");
+      badge.className = "constraint-violation-badge";
+      badge.setAttribute("aria-label", t("seating_constraint_violation_hint"));
+      badge.textContent = "⚠";
+      name.appendChild(badge);
+    }
+
     floor.appendChild(card);
   });
 
@@ -187,6 +216,52 @@ export function renderTables() {
 
   // S11.2 Transport manifest
   _renderTransportManifest(guests);
+}
+
+// ── Constraint violations banner (Sprint 26 / C1) ─────────────────────
+
+/**
+ * Render a seating-constraint violations banner above the floor.
+ * Clears any previous banner first.
+ *
+ * @param {import('../services/seating-constraints.js').ConstraintViolation[]} violations
+ * @param {any[]} guests
+ * @param {HTMLElement} floor
+ */
+function _renderConstraintsBanner(violations, guests, floor) {
+  const bannerId = "seating-constraints-banner";
+  const parent = floor.parentElement;
+  const existing = parent?.querySelector(`#${bannerId}`);
+  if (existing) existing.remove();
+  if (!violations.length || !parent) return;
+
+  const banner = document.createElement("div");
+  banner.id = bannerId;
+  banner.className = "constraint-violations-banner";
+  banner.setAttribute("role", "alert");
+
+  const heading = document.createElement("strong");
+  heading.textContent = `⚠ ${t("seating_constraints_violations")}: ${violations.length}`;
+  banner.appendChild(heading);
+
+  const list = document.createElement("ul");
+  violations.slice(0, 5).forEach((v) => {
+    const gA = guests.find((g) => g.id === v.guestId);
+    const gB = guests.find((g) => g.id === v.targetGuestId);
+    const nameA = gA ? `${gA.firstName} ${gA.lastName ?? ""}`.trim() : v.guestId;
+    const nameB = gB ? `${gB.firstName} ${gB.lastName ?? ""}`.trim() : v.targetGuestId;
+    const key = v.type === "near" ? "seating_violation_near" : "seating_violation_far";
+    const li = document.createElement("li");
+    li.textContent = t(key).replace("{a}", nameA).replace("{b}", nameB);
+    list.appendChild(li);
+  });
+  if (violations.length > 5) {
+    const extra = document.createElement("li");
+    extra.textContent = `${violations.length - 5} ${t("seating_constraints_more")}`;
+    list.appendChild(extra);
+  }
+  banner.appendChild(list);
+  parent.insertBefore(banner, floor);
 }
 
 /** @param {any[]} guests */
