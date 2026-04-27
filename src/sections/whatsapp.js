@@ -12,6 +12,7 @@ import { t } from "../core/i18n.js";
 import { readBrowserStorageJson, writeBrowserStorage } from "../core/storage.js";
 import { cleanPhone } from "../utils/phone.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
+import { personalizeMessage, getVariableHints } from "../services/message-personalizer.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -19,12 +20,50 @@ const _unsubs = [];
 export function mount(_container) {
   _unsubs.push(storeSubscribe("guests", renderWhatsApp));
   _unsubs.push(storeSubscribe("weddingInfo", renderWhatsApp));
+  renderVariableChips();
   renderWhatsApp();
 }
 
 export function unmount() {
   _unsubs.forEach((fn) => fn());
   _unsubs.length = 0;
+}
+
+/**
+ * Render clickable variable chips below the WhatsApp textarea.
+ * Clicking a chip inserts the placeholder token at the cursor position.
+ */
+export function renderVariableChips() {
+  const container = document.getElementById("waVariableChips");
+  if (!container) return;
+  container.textContent = "";
+
+  const label = document.createElement("span");
+  label.className = "wa-chips-label";
+  label.setAttribute("data-i18n", "wa_variable_chips_label");
+  label.textContent = t("wa_variable_chips_label");
+  container.appendChild(label);
+
+  for (const hint of getVariableHints()) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "wa-chip";
+    chip.textContent = hint.label;
+    chip.title = hint.exampleHe;
+    chip.addEventListener("click", () => {
+      const ta = /** @type {HTMLTextAreaElement|null} */ (
+        document.getElementById("waTemplate")
+      );
+      if (!ta) return;
+      const start = ta.selectionStart ?? ta.value.length;
+      const end = ta.selectionEnd ?? start;
+      ta.value = ta.value.slice(0, start) + hint.label + ta.value.slice(end);
+      ta.selectionStart = ta.selectionEnd = start + hint.label.length;
+      ta.focus();
+      updateWaPreview(ta.value);
+    });
+    container.appendChild(chip);
+  }
 }
 
 export function renderWhatsApp() {
@@ -123,15 +162,9 @@ export function buildWhatsAppMessage(guestId, template) {
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 function _interpolate(template, guest, info) {
-  const baseUrl = window.location.origin + window.location.pathname;
-  const rsvpLink = `${baseUrl}?guestId=${encodeURIComponent(guest.id)}#rsvp`;
-  return template
-    .replace(/\{name\}/g, `${guest.firstName} ${guest.lastName || ""}`.trim())
-    .replace(/\{date\}/g, info.date || "")
-    .replace(/\{venue\}/g, info.venue || "")
-    .replace(/\{groom\}/g, info.groom || "")
-    .replace(/\{bride\}/g, info.bride || "")
-    .replace(/\{rsvpLink\}/g, rsvpLink);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const tableName = tables.find((t) => t.id === guest.tableId)?.name ?? "";
+  return personalizeMessage(template, guest, info, tableName);
 }
 
 function _defaultTemplate(info) {

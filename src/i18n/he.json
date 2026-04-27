@@ -812,6 +812,7 @@
   "rsvp_add_to_google": "Google Calendar",
   "rsvp_download_ics": "הורד קובץ .ics",
   "wa_default_template": "שלום {name} 💍\n\n{groom} & {bride} שמחים להזמין אותך לחגוג איתנו!\n\n📅 {date}\n📍 {venue}\n\n❤️ נשמח מאוד לראותך!\n\n👰🤵 בואו נחגוג ביחד!",
+  "wa_variable_chips_label": "שדות זמינים:",
   "language_switched": "השפה הוחלפה",
   "contact_sent": "הפרטים נשלחו בהצלחה!",
   "error_green_api_config": "יש להגדיר Green API תחילה בהגדרות",

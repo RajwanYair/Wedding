@@ -812,6 +812,7 @@
   "rsvp_add_to_google": "Google Calendar",
   "rsvp_download_ics": "Download .ics",
   "wa_default_template": "Hello {name} 💍\n\n{groom} & {bride} are delighted to invite you to celebrate with us!\n\n📅 {date}\n📍 {venue}\n\n❤️ We would love to see you there!\n\n👰🤵 Let's celebrate together!",
+  "wa_variable_chips_label": "Available fields:",
   "language_switched": "Language switched",
   "contact_sent": "Details sent successfully!",
   "error_green_api_config": "Please configure Green API credentials in Settings first",
