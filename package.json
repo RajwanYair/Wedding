@@ -41,6 +41,7 @@
     "audit:security": "node scripts/security-scan.mjs",
     "audit:sections": "node scripts/validate-sections.mjs",
     "audit:arch": "node scripts/arch-check.mjs",
+    "audit:i18n-coverage": "node scripts/audit-i18n-coverage.mjs",
     "audit:actions": "node scripts/check-action-namespace.mjs",
     "audit:trusted-types": "node scripts/audit-trusted-types.mjs",
     "audit:adrs": "node scripts/check-adr-coverage.mjs",

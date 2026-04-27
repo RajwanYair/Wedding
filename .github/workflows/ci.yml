@@ -76,6 +76,11 @@ jobs:
         # Baseline locked at v12.0.0; regressions fail CI. Hard --strict gate
         # in v13.0.0 once all 15 violations are migrated.
 
+      - name: i18n coverage (Sprint 30 advisory)
+        if: matrix.node-version == '22'
+        run: npm run audit:i18n-coverage -- --enforce --baseline=0
+        # Fails if any t('key') in source is missing from he.json or en.json.
+
       - name: Trusted Types sink baseline (ADR-018 Phase 2)
         if: matrix.node-version == '22'
         run: npm run audit:trusted-types -- --baseline=24
