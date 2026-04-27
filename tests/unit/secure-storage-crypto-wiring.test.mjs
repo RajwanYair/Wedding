@@ -12,6 +12,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
+import { createLocalStorageMock } from "./helpers.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ssPath = path.resolve(__dirname, "../../src/services/secure-storage.js");
@@ -126,12 +127,9 @@ describe("secure-storage.js → crypto.js round-trip (runtime)", () => {
   let store;
 
   beforeEach(() => {
-    store = {};
-    vi.stubGlobal("localStorage", {
-      getItem: (k) => store[k] ?? null,
-      setItem: (k, v) => { store[k] = v; },
-      removeItem: (k) => { delete store[k]; },
-    });
+    const { mock: lsMock, store: lsData } = createLocalStorageMock();
+    store = lsData;
+    vi.stubGlobal("localStorage", lsMock);
   });
 
   it("setSecure + getSecure round-trips a string value", async () => {

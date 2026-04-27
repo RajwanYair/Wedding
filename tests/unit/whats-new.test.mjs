@@ -5,6 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { TEST_STORAGE_KEYS } from "../test-constants.mjs";
+import { createLocalStorageMock, clearStore } from "./helpers.js";
 
 vi.mock("../../src/core/config.js", () => ({
   APP_VERSION: "7.6.0",
@@ -17,17 +18,13 @@ vi.mock("../../src/core/i18n.js", () => ({
 const LAST_SEEN_KEY = TEST_STORAGE_KEYS.LAST_SEEN_VERSION;
 
 // localStorage mock
-let _store = {};
-vi.stubGlobal("localStorage", {
-  getItem: (k) => (_store[k] ?? null),
-  setItem: (k, v) => { _store[k] = String(v); },
-  removeItem: (k) => { delete _store[k]; },
-});
+const { mock: _lsMock, store: _store } = createLocalStorageMock();
+vi.stubGlobal("localStorage", _lsMock);
 
 import { maybeShowWhatsNew } from "../../src/core/whats-new.js";
 
 beforeEach(() => {
-  _store = {};
+  clearStore(_store);
   document.body.innerHTML = "";
 });
 

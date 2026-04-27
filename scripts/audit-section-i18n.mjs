@@ -11,13 +11,15 @@
  * metric for translatability.
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { walk } from "./lib/file-walker.mjs";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const DIRS = ["src/templates", "src/modals"];
 
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 const BASELINE = 999;
 
 const VISIBLE_TAGS = /<(h[1-6]|p|button|label|a|span|summary|legend|option|th|td)\b[^>]*>([^<]*[\p{L}\p{N}][^<]*)</giu;
@@ -27,19 +29,9 @@ const reports = [];
 let totalVisible = 0;
 let totalI18n = 0;
 
-function walk(dir, out = []) {
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    const s = statSync(p);
-    if (s.isDirectory()) walk(p, out);
-    else if (name.endsWith(".html")) out.push(p);
-  }
-  return out;
-}
-
 for (const d of DIRS) {
   const abs = join(ROOT, d);
-  for (const file of walk(abs)) {
+  for (const file of walk(abs, ".html")) {
     const rel = relative(ROOT, file).split(sep).join("/");
     const src = readFileSync(file, "utf8");
     let visible = 0;

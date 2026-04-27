@@ -29,16 +29,7 @@ jobs:
     name: npm audit (moderate+)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: Run npm audit
         run: npm audit --audit-level=moderate
@@ -92,16 +83,7 @@ jobs:
     name: Source security scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: Run custom security audit
         run: npm run audit:security

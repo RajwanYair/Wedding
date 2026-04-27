@@ -15,12 +15,13 @@ const scriptPath = path.resolve(__dirname, "../../scripts/validate-sections.mjs"
 const SRC = readFileSync(scriptPath, "utf8");
 
 describe("validate-sections.mjs --strict mode (B1)", () => {
-  it("reads --strict flag from process.argv", () => {
-    expect(SRC).toContain('process.argv.includes("--strict")');
+  it("reads --strict flag via parseAuditArgs", () => {
+    expect(SRC).toContain('parseAuditArgs()');
+    expect(SRC).toContain('strict');
   });
 
-  it("declares STRICT constant", () => {
-    expect(SRC).toContain("const STRICT = process.argv.includes");
+  it("declares STRICT constant from parseAuditArgs", () => {
+    expect(SRC).toContain("const { strict: STRICT }");
   });
 
   it("defines SKIP_TEMPLATE set for known sub-sections", () => {

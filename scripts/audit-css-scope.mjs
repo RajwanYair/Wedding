@@ -10,11 +10,12 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const CSS_DIR = join(ROOT, "css");
 
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 const BASELINE = 4;
 
 const files = readdirSync(CSS_DIR).filter((n) => n.endsWith(".css"));

@@ -4,6 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { STORAGE_KEYS } from "../../src/core/constants.js";
+import { createLocalStorageMock, clearStore } from "./helpers.js";
 
 vi.mock("../../src/core/config.js", () => ({
   BACKEND_TYPE: "supabase",
@@ -17,20 +18,15 @@ vi.mock("../../src/core/state.js", () => ({
 }));
 
 // ── localStorage mock ──────────────────────────────────────────────────────
-let _store = {};
-vi.stubGlobal("localStorage", {
-  getItem: (k) => (_store[k] ?? null),
-  setItem: (k, v) => { _store[k] = String(v); },
-  removeItem: (k) => { delete _store[k]; },
-  clear: () => { _store = {}; },
-});
+const { mock: _lsMock, store: _store } = createLocalStorageMock();
+vi.stubGlobal("localStorage", _lsMock);
 
 import { audit } from "../../src/services/audit.js";
 
 const SESSION_KEY = STORAGE_KEYS.SUPABASE_SESSION;
 
 beforeEach(() => {
-  _store = {};
+  clearStore(_store);
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
 });
 

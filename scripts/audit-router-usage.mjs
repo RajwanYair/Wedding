@@ -14,9 +14,10 @@
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = "src";
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 
 const PATTERNS = [
   {
@@ -91,8 +92,8 @@ for (const v of violations) {
   console.log(`    fix: ${v.fixHint}`);
 }
 console.log();
-const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
-const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+const { baseline: _baseline } = parseAuditArgs();
+const BASELINE = _baseline > 0 ? _baseline : null;
 if (BASELINE !== null && Number.isFinite(BASELINE)) {
   if (violations.length > BASELINE) {
     console.log(`[audit-router-usage] BASELINE ${BASELINE}: ${violations.length} call site(s) (regression). Failing.`);

@@ -22,10 +22,11 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const MIGRATIONS_DIR = join(ROOT, "supabase", "migrations");
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 

@@ -19,6 +19,7 @@
 
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 // Sprint 51 (B6): recalibrated to post-Sprint 44-51 actuals (83 new tests added).
 // Global actuals: lines ~47%, branches ~41%, functions ~54%, statements ~48%.
@@ -50,7 +51,7 @@ function readSummary() {
 }
 
 function main() {
-  const enforce = process.argv.includes("--enforce");
+  const { enforce } = parseAuditArgs();
   const summary = readSummary();
   if (!summary) {
     console.log("\n[coverage] no coverage-summary.json found.");

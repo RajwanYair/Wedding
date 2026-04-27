@@ -12,12 +12,13 @@
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const REPO_ROOT = process.cwd();
 const VITE_FILE = join(REPO_ROOT, "vite.config.js");
 const BASELINE = 8; // current rule count; must not grow; target: 0 (ADR-041 MC3)
 
-const enforce = process.argv.includes("--enforce");
+const { enforce } = parseAuditArgs();
 
 if (!existsSync(VITE_FILE)) {
   console.error("[audit:manual-chunks] vite.config.js not found");

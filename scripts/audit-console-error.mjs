@@ -8,8 +8,10 @@
  *   1  → only when `--enforce` is passed AND violations > BASELINE.
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { walk } from "./lib/file-walker.mjs";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const SRC = join(ROOT, "src");
@@ -23,17 +25,7 @@ const ALLOWLIST = new Set([
 // Baseline — bumped down each migration phase. Locked at v12.0.0 (Sprint 10).
 const BASELINE = 9;
 
-const ENFORCE = process.argv.includes("--enforce");
-
-function walk(dir, out = []) {
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    const s = statSync(p);
-    if (s.isDirectory()) walk(p, out);
-    else if (name.endsWith(".js")) out.push(p);
-  }
-  return out;
-}
+const { enforce: ENFORCE } = parseAuditArgs();
 
 const violations = [];
 for (const file of walk(SRC)) {

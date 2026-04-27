@@ -9,24 +9,16 @@
  * `eslint-plugin-jsdoc` plugin for syntax-level enforcement.
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { walk } from "./lib/file-walker.mjs";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const TARGET_DIRS = ["src/core", "src/services"];
 
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 const BASELINE = 0;
-
-function walk(dir, out = []) {
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    const s = statSync(p);
-    if (s.isDirectory()) walk(p, out);
-    else if (name.endsWith(".js") && !name.endsWith(".test.js")) out.push(p);
-  }
-  return out;
-}
 
 const exportFuncRe =
   /^(\s*)export\s+(?:async\s+)?(?:function\s+([A-Za-z_$][\w$]*)|const\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s+)?(?:\([^)]*\)|[A-Za-z_$][\w$]*)\s*=>)/gm;
@@ -37,7 +29,7 @@ const violations = [];
 
 for (const d of TARGET_DIRS) {
   const abs = join(ROOT, d);
-  for (const file of walk(abs)) {
+  for (const file of walk(abs, ".js").filter((f) => !f.endsWith(".test.js"))) {
     const rel = relative(ROOT, file).split(sep).join("/");
     const src = readFileSync(file, "utf8");
     const lines = src.split(/\r?\n/);

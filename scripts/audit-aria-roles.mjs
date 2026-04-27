@@ -14,9 +14,10 @@
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, extname } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOTS = ["src/templates", "src/modals", "index.html"];
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 
 /** @type {{ file: string, line: number, rule: string, snippet: string }[]} */
 const violations = [];
@@ -109,8 +110,8 @@ for (const v of violations) {
   console.log(`    > ${v.snippet}`);
 }
 console.log();
-const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
-const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+const { baseline: _baseline } = parseAuditArgs();
+const BASELINE = _baseline > 0 ? _baseline : null;
 if (BASELINE !== null && Number.isFinite(BASELINE)) {
   if (violations.length > BASELINE) {
     console.log(`[audit-aria-roles] BASELINE ${BASELINE}: ${violations.length} issue(s) (regression). Failing.`);

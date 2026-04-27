@@ -8,6 +8,7 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const CONSTANTS = readFileSync(join(ROOT, "src/core/constants.js"), "utf8");
@@ -34,9 +35,8 @@ if (missing.length === 0) {
   process.exit(0);
 }
 
-const ENFORCE = process.argv.includes("--enforce");
-const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
-const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+const { enforce: ENFORCE, baseline: _bArg } = parseAuditArgs();
+const BASELINE = _bArg > 0 ? _bArg : null;
 console.log(`[check-section-template-parity] ${missing.length} issue(s):\n`);
 for (const m of missing) console.log(`  ${m}`);
 if (BASELINE !== null && Number.isFinite(BASELINE)) {

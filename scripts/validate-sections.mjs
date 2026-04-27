@@ -22,6 +22,7 @@ import { readdir, access } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import process from "node:process";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SECTIONS_DIR = resolve(__dirname, "../src/sections");
@@ -36,7 +37,7 @@ const SKIP_TEMPLATE = new Set(["expenses", "contact-collector"]);
 const VALID_CAPS = new Set(["offline", "public", "printable", "shortcuts", "analytics"]);
 
 /** Whether --strict was passed on the command line */
-const STRICT = process.argv.includes("--strict");
+const { strict: STRICT } = parseAuditArgs();
 
 let allOk = true;
 const results = [];

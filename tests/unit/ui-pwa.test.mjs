@@ -4,21 +4,14 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createLocalStorageMock, clearStore } from "./helpers.js";
 
 vi.mock("../../src/core/i18n.js", () => ({
   t: (key) => key,
 }));
 
-let _store = {};
-vi.stubGlobal("localStorage", {
-  getItem: (key) => (_store[key] ?? null),
-  setItem: (key, value) => {
-    _store[key] = String(value);
-  },
-  removeItem: (key) => {
-    delete _store[key];
-  },
-});
+const { mock: _lsMock, store: _store } = createLocalStorageMock();
+vi.stubGlobal("localStorage", _lsMock);
 
 const matchMedia = vi.fn(() => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
 Object.defineProperty(window, "matchMedia", {
@@ -29,7 +22,7 @@ Object.defineProperty(window, "matchMedia", {
 const { initInstallPrompt, showUpdateBanner } = await import("../../src/core/ui.js");
 
 beforeEach(() => {
-  _store = {};
+  clearStore(_store);
   document.body.innerHTML = "";
   vi.useRealTimers();
   matchMedia.mockClear();

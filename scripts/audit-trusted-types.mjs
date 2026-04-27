@@ -17,8 +17,10 @@
  * The script tolerates sinks routed through `src/utils/sanitize.js` because
  * that module is the chosen seam (it will host the named policy).
  */
-import { readFileSync, statSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { walk as walkDir } from "./lib/file-walker.mjs";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const SRC = join(ROOT, "src");
@@ -39,19 +41,6 @@ const sinkPatterns = [
 
 const findings = [];
 
-function walk(dir) {
-  for (const entry of readdirSync(dir)) {
-    const p = join(dir, entry);
-    const s = statSync(p);
-    if (s.isDirectory()) {
-      if (entry === "node_modules" || entry === "dist") continue;
-      walk(p);
-    } else if (s.isFile() && p.endsWith(".js")) {
-      scanFile(p);
-    }
-  }
-}
-
 function scanFile(absPath) {
   const rel = relative(ROOT, absPath).split(sep).join("/");
   const relWindowsCheck = relative(ROOT, absPath);
@@ -67,7 +56,7 @@ function scanFile(absPath) {
   }
 }
 
-walk(SRC);
+for (const f of walkDir(SRC, ".js")) scanFile(f);
 
 const grouped = findings.reduce((acc, f) => {
   acc[f.sink] = (acc[f.sink] ?? 0) + 1;
@@ -86,8 +75,8 @@ console.log(
   `audit:trusted-types — ${findings.length} potential sink usages across ${report.files.length} files (advisory; ADR-018 Phase 1).`,
 );
 
-const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
-const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+const { baseline: _bArg } = parseAuditArgs();
+const BASELINE = _bArg > 0 ? _bArg : null;
 if (BASELINE !== null && Number.isFinite(BASELINE) && findings.length > BASELINE) {
   console.error(
     `\n✖ --baseline=${BASELINE}: ${findings.length} sink(s) found (regression of ${findings.length - BASELINE}). Route new HTML writes through src/utils/sanitize.js.`,

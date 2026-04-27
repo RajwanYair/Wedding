@@ -11,8 +11,9 @@
  * Pass `--enforce` to exit 1 on any violation (target: v12.0.0).
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
+import { walk } from "./lib/file-walker.mjs";
 
 const ROOT = "src";
 const SENSITIVE_KEYS = [
@@ -29,20 +30,9 @@ const ALLOWLIST = new Set([
   "src/core/storage.js",
 ]);
 
-function walk(dir) {
-  const out = [];
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    const st = statSync(full);
-    if (st.isDirectory()) out.push(...walk(full));
-    else if (entry.endsWith(".js")) out.push(full);
-  }
-  return out;
-}
-
 function main() {
-  const enforce = process.argv.includes("--enforce");
-  const files = walk(ROOT);
+  const { enforce } = parseAuditArgs();
+  const files = walk(ROOT, ".js");
   const violations = [];
 
   for (const f of files) {

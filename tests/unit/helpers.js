@@ -206,3 +206,43 @@ export function assertHandlerRegistration({ name, register, on, actions, args = 
 
   return true;
 }
+
+// ── localStorage mock factory ─────────────────────────────────────────────────
+
+/**
+ * Create a minimal localStorage mock backed by a plain object.
+ *
+ * Returns `{ mock, store }` where:
+ *   - `mock`  is the object suitable for `vi.stubGlobal("localStorage", mock)`
+ *   - `store` is the underlying `{}` — reset it between tests with `Object.keys(store).forEach(k => delete store[k])` or `clearStore(store)`.
+ *
+ * Usage:
+ *   const { mock: lsMock, store: lsStore } = createLocalStorageMock();
+ *   vi.stubGlobal("localStorage", lsMock);
+ *   beforeEach(() => clearStore(lsStore));
+ *
+ * @returns {{ mock: Storage, store: Record<string, string> }}
+ */
+export function createLocalStorageMock() {
+  /** @type {Record<string, string>} */
+  const store = {};
+  const mock = /** @type {Storage} */ ({
+    getItem: (k) => (store[k] ?? null),
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; },
+    clear: () => { Object.keys(store).forEach((k) => delete store[k]); },
+    get length() { return Object.keys(store).length; },
+    key: (i) => Object.keys(store)[i] ?? null,
+  });
+  return { mock, store };
+}
+
+/**
+ * Clear all entries from a store object returned by `createLocalStorageMock()`.
+ * Useful in `beforeEach` to reset between tests.
+ *
+ * @param {Record<string, string>} store
+ */
+export function clearStore(store) {
+  Object.keys(store).forEach((k) => delete store[k]);
+}

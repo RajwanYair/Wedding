@@ -14,6 +14,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SECTIONS_DIR = join(ROOT, "src", "sections");
@@ -28,9 +29,8 @@ const FORBIDDEN = [
   "../services/supabase-realtime.js",
 ];
 
-const STRICT = process.argv.includes("--strict");
-const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
-const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+const { strict: STRICT, baseline: _bArg } = parseAuditArgs();
+const BASELINE = _bArg > 0 ? _bArg : null;
 
 /**
  * @param {string} dir

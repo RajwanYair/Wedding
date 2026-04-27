@@ -14,25 +14,15 @@
  *
  * Advisory only.
  */
-import { readdirSync, statSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, relative } from "node:path";
+import { walk } from "./lib/file-walker.mjs";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const REPO_ROOT = process.cwd();
 const SRC = join(REPO_ROOT, "src");
-const enforce = process.argv.includes("--enforce");
+const { enforce } = parseAuditArgs();
 const BASELINE = 999;
-
-/** @param {string} dir */
-function walk(dir) {
-  const out = [];
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    const st = statSync(p);
-    if (st.isDirectory()) out.push(...walk(p));
-    else if (p.endsWith(".js")) out.push(p);
-  }
-  return out;
-}
 
 const CHAINED = /storeGet\(\s*["'][^"']+["']\s*\)\s*(?:\[[^\]]+\]|\.[a-zA-Z_]+)+\s*=/;
 const MUTATING =
@@ -40,7 +30,7 @@ const MUTATING =
 
 const findings = [];
 
-for (const file of walk(SRC)) {
+for (const file of walk(SRC, ".js")) {
   const rel = relative(REPO_ROOT, file).replace(/\\/g, "/");
   const lines = readFileSync(file, "utf8").split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {

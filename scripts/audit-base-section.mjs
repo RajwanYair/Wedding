@@ -9,11 +9,12 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
 const SECTIONS = join(ROOT, "src/sections");
 
-const ENFORCE = process.argv.includes("--enforce");
+const { enforce: ENFORCE } = parseAuditArgs();
 const BASELINE = 19;
 
 const files = readdirSync(SECTIONS).filter((n) => n.endsWith(".js"));

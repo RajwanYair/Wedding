@@ -24,16 +24,13 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SRC_DIR = join(ROOT, "src");
 const I18N_DIR = join(ROOT, "src", "i18n");
 
-const ENFORCE = process.argv.includes("--enforce");
-const SHOW_DEAD = process.argv.includes("--show-dead");
-const JSON_OUT = process.argv.includes("--json");
-const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
-const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : 0;
+const { enforce: ENFORCE, showDead: SHOW_DEAD, json: JSON_OUT, baseline: BASELINE } = parseAuditArgs();
 
 // ── File walker ────────────────────────────────────────────────────────────
 
