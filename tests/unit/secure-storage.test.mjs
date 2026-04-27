@@ -34,8 +34,11 @@ describe("setSecure / getSecure", () => {
     await setSecure("token", "super-secret-value-xyz");
     const raw = localStorage.getItem("wedding_v1_token");
     expect(raw).not.toContain("super-secret-value-xyz");
-    expect(raw).toMatch(/"iv"/);
-    expect(raw).toMatch(/"ct"/);
+    // Sprint 62: new envelope format uses { v, d } (d = encryptField output)
+    const env = JSON.parse(raw);
+    expect(env.v).toBe(1);
+    expect(env.d).toBeTruthy();
+    expect(typeof env.d).toBe("string");
   });
 
   it("returns null for missing keys", async () => {

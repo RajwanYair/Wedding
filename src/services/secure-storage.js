@@ -20,10 +20,9 @@
  */
 
 import { STORAGE_PREFIX } from "../core/config.js";
+import { importRawKey, encryptField, decryptField } from "./crypto.js";
 
 const KEY_NAME = `${STORAGE_PREFIX}device_key`;
-const ALGO = "AES-GCM";
-const IV_LEN = 12;
 const KEY_LEN = 32;
 const ENVELOPE_VERSION = 1;
 
@@ -88,7 +87,7 @@ function _getKey() {
         /* quota / blocked */
       }
     }
-    return crypto.subtle.importKey("raw", raw, ALGO, false, ["encrypt", "decrypt"]);
+    return importRawKey(raw);
   })();
   return _keyPromise;
 }
@@ -119,14 +118,9 @@ export async function setSecure(key, value) {
   const ls = _ls();
   if (!ls) return;
   const cryptoKey = await _getKey();
-  const iv = crypto.getRandomValues(new Uint8Array(IV_LEN));
-  const plaintext = new TextEncoder().encode(JSON.stringify(value));
-  const ctBuf = await crypto.subtle.encrypt({ name: ALGO, iv }, cryptoKey, plaintext);
-  const envelope = JSON.stringify({
-    v: ENVELOPE_VERSION,
-    iv: toB64(iv),
-    ct: toB64(new Uint8Array(ctBuf)),
-  });
+  // encryptField() returns base64(iv[12] ++ ciphertext) from crypto.js
+  const sealed = await encryptField(cryptoKey, JSON.stringify(value));
+  const envelope = JSON.stringify({ v: ENVELOPE_VERSION, d: sealed });
   ls.setItem(STORAGE_PREFIX + key, envelope);
 }
 
@@ -144,7 +138,7 @@ export async function getSecure(key) {
   const raw = ls.getItem(STORAGE_PREFIX + key);
   if (!raw) return null;
 
-  /** @type {{ v: number, iv: string, ct: string } | null} */
+  /** @type {{ v: number, d?: string, iv?: string, ct?: string } | null} */
   let env = null;
   try {
     env = JSON.parse(raw);
@@ -152,7 +146,7 @@ export async function getSecure(key) {
     /* not JSON */
   }
 
-  if (!env || env.v !== ENVELOPE_VERSION || !env.iv || !env.ct) {
+  if (!env || env.v !== ENVELOPE_VERSION) {
     // Legacy / unsealed: drop it so we never surface plaintext.
     try {
       ls.removeItem(STORAGE_PREFIX + key);
@@ -164,10 +158,30 @@ export async function getSecure(key) {
 
   try {
     const cryptoKey = await _getKey();
-    const iv = fromB64(env.iv);
-    const ct = fromB64(env.ct);
-    const plain = await crypto.subtle.decrypt({ name: ALGO, iv }, cryptoKey, ct);
-    return /** @type {T} */ (JSON.parse(new TextDecoder().decode(plain)));
+
+    // New format (Sprint 62): { v, d } — d is encryptField() output
+    if (env.d) {
+      const plain = await decryptField(cryptoKey, env.d);
+      return /** @type {T} */ (JSON.parse(plain));
+    }
+
+    // Legacy format: { v, iv, ct } — inline AES-GCM (pre-Sprint 62)
+    if (env.iv && env.ct) {
+      const iv = fromB64(env.iv);
+      const ct = fromB64(env.ct);
+      const IV_LEN_LEGACY = 12;
+      const combined = new Uint8Array(IV_LEN_LEGACY + ct.byteLength);
+      combined.set(iv, 0);
+      combined.set(ct, IV_LEN_LEGACY);
+      // Re-encode as the format expected by decryptField (base64 iv+ct)
+      const b64 = btoa(String.fromCharCode(...combined));
+      const plain = await decryptField(cryptoKey, b64);
+      return /** @type {T} */ (JSON.parse(plain));
+    }
+
+    // Unrecognised format — drop it
+    ls.removeItem(STORAGE_PREFIX + key);
+    return null;
   } catch {
     // Wrong key (e.g. rotated) — drop the unreadable entry.
     try {
