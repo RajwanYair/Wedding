@@ -42,6 +42,40 @@ export function unmount() {
   _giftMode = false;
   stopQrScan();
   stopNFCCheckin();
+  // S107: leave kiosk mode when navigating away.
+  if (document.body.classList.contains("kiosk-mode")) {
+    setKioskMode(false);
+  }
+}
+
+/**
+ * S107 — toggle kiosk mode for day-of check-in stations.
+ * Adds/removes `kiosk-mode` on `<body>`; CSS hides global chrome and locks
+ * landscape orientation when supported. Pure UI stub — no auth changes.
+ * @param {boolean} [on] explicit state; toggles when omitted
+ * @returns {boolean} new state
+ */
+export function setKioskMode(on) {
+  const body = document.body;
+  const next = typeof on === "boolean" ? on : !body.classList.contains("kiosk-mode");
+  body.classList.toggle("kiosk-mode", next);
+  body.setAttribute("data-kiosk", next ? "on" : "off");
+  if (next) {
+    void lockOrientation("landscape").catch(() => {});
+    announce(t("kiosk_on") || "Kiosk mode enabled");
+  } else {
+    unlockOrientation();
+    announce(t("kiosk_off") || "Kiosk mode disabled");
+  }
+  return next;
+}
+
+/**
+ * S107 — query helper for tests.
+ * @returns {boolean}
+ */
+export function isKioskMode() {
+  return document.body.classList.contains("kiosk-mode");
 }
 
 /**

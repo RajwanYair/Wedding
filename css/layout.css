@@ -434,4 +434,21 @@
   .bottom-nav {
     bottom: 1.5rem;
   }
+
+  /* ── S107: Kiosk Mode (day-of check-in stations) ────────────────────── */
+  body.kiosk-mode header,
+  body.kiosk-mode .bottom-nav,
+  body.kiosk-mode .status-bar,
+  body.kiosk-mode .breadcrumbs {
+    display: none !important;
+  }
+
+  body.kiosk-mode {
+    cursor: none;
+  }
+
+  body.kiosk-mode main {
+    padding: 0;
+    margin: 0;
+  }
 } /* end @layer layout */
