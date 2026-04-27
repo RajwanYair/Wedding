@@ -4,7 +4,43 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [12.5.9] — 2026-04-28
+## [12.6.0] — 2026-04-28
+
+> **Sprints 118–127: Locales, charts & polish (Cluster V).**
+>
+> ICU MessageFormat, live theme variable editor, print-prep, notification
+> centre, vendor & RSVP analytics, budget projection, run-of-show editor,
+> What's New decision engine, and a Cloudflare CDN image URL builder.
+
+### Added (12.6.0)
+
+- **S118** — `src/utils/icu-format.js` `formatMessage(pattern, vars, locale)`: minimal ICU MessageFormat
+  with `{n, plural, ...}` and `{g, select, ...}`, nested patterns, cached `Intl.PluralRules`. 10 tests.
+  (2618 → 2628)
+- **S119** — `src/services/theme-vars.js` `THEME_VARS` catalog +
+  `sanitizeThemeVars()` / `applyThemeVars()` / `serializeThemeVars()` /
+  `deserializeThemeVars()`: live-edit CSS custom properties with revert
+  function and hex/length validation. 7 tests. (2628 → 2635)
+- **S120** — `src/services/print-rows.js` `buildGuestRows()`, `buildSeatingRows()`, `buildPrintableHtml()`, `printHtmlDocument()`: PDF/print preparation, RTL-default, structured popup-blocked error codes. 7 tests. (2635 → 2642)
+- **S121** — `src/services/notification-centre.js` `pushNotification()`,
+  `listNotifications()`, `unreadCount()`, `markRead()`, `markAllRead()`, `clearRead()`,
+  `subscribe()`: localStorage-backed feed with cap and listeners. 7 tests. (2642 → 2649)
+- **S122** — `src/services/vendor-timeline.js` `buildPaymentTimeline()`, `buildOutstandingByVendor()`, `topVendorsByCost()`: pure analytics over vendor payments. 5 tests. (2649 → 2654)
+- **S123** — `src/services/rsvp-funnel.js` `buildRsvpFunnel()` + `rsvpConversionRate()`: 5-step funnel (invited → sent → opened → responded → confirmed) with per-step counts, percentages, and dropoff. 5 tests. (2654 → 2659)
+- **S124** — `src/services/budget-projection.js` `buildBurndownSeries()`, `projectOverrun()`,
+  `categoryBreakdown()`: per-day budget burndown and linear overrun projection by event date.
+  6 tests. (2659 → 2665)
+- **S125** — `src/services/run-of-show.js` `loadRunOfShow()`, `saveRunOfShow()`,
+  `buildDefaultTimeline()`, `sortTimeline()`, `detectOverlaps()`, `shiftTimeline()`:
+  localStorage-backed itinerary editor with HH:MM helpers and Hebrew default template.
+  7 tests. (2665 → 2672)
+- **S126** — `src/services/whats-new-engine.js` `compareSemver()`, `shouldShowWhatsNew()`, `collectNewerEntries()`, `flattenItems()`: DOM-free What's New decision engine complementing the existing `src/core/whats-new.js` modal. 6 tests. (2672 → 2678)
+- **S127** — `src/utils/cdn-image.js` `buildCdnImageUrl()`, `buildSrcset()`, `defaultSizes()`: Cloudflare image-resizing URL builder with whitelisted fit/format/gravity, host/source slash hygiene, and responsive `srcset`. 9 tests. (2678 → 2687)
+
+### Changed (12.6.0)
+
+- Test count: **2618 → 2687** (+69 unit tests across 10 new modules).
+- All new modules are pure / DOM-free where possible and use the established sender / client injection pattern for testability.
 
 > **Sprints 108–117: Smart capabilities scaffolding (Cluster IV + V).**
 >
