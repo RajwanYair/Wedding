@@ -958,6 +958,7 @@
   "print_timeline": "Print Schedule",
   "accessibility_filter": "Accessibility only",
   "expense_filter_by_cat": "Filter by category",
+  "expense_top_categories": "Top expense categories",
   "all_categories": "All categories",
   "overdue": "overdue",
   "col_time": "Time",

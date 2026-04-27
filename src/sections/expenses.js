@@ -10,6 +10,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
+import { getTopCategories } from "../services/expense-analytics.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -139,6 +140,48 @@ export function renderExpenses() {
   // Show admin actions header when there are expenses
   const actionsHeader = document.getElementById("expenseActionsHeader");
   if (actionsHeader) actionsHeader.classList.toggle("u-hidden", expenses.length === 0);
+
+  // Sprint 27 / C1: top-categories analytics panel
+  _renderTopCategoriesPanel();
+}
+
+// ── Top-categories analytics panel (Sprint 27 / C1) ──────────────────────
+
+/**
+ * Render the top-5 expense categories breakdown panel.
+ * Uses a dedicated `#expenseTopCategories` container if present.
+ */
+function _renderTopCategoriesPanel() {
+  const container = document.getElementById("expenseTopCategories");
+  if (!container) return;
+
+  const top = getTopCategories(5);
+  container.textContent = "";
+
+  if (top.length === 0) return;
+
+  const title = document.createElement("h4");
+  title.className = "expense-top-categories-title";
+  title.setAttribute("data-i18n", "expense_top_categories");
+  title.textContent = t("expense_top_categories");
+  container.appendChild(title);
+
+  const list = document.createElement("ul");
+  list.className = "expense-top-categories-list";
+  top.forEach(({ category, total, count }) => {
+    const li = document.createElement("li");
+    li.className = "expense-top-categories-item";
+    const catSpan = document.createElement("span");
+    catSpan.className = "expense-cat-label";
+    catSpan.textContent = category;
+    const statsSpan = document.createElement("span");
+    statsSpan.className = "expense-cat-stats";
+    statsSpan.textContent = `₪${total} (${count})`;
+    li.appendChild(catSpan);
+    li.appendChild(statsSpan);
+    list.appendChild(li);
+  });
+  container.appendChild(list);
 }
 
 /**
