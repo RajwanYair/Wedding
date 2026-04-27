@@ -151,27 +151,105 @@ self.addEventListener("fetch", function (e) {
   }
 });
 
-// ── Background Sync: flush offline RSVP queue ────────────────────────────────
-// Tags: "rsvp-sync" (registered by rsvp.js when submission occurs offline)
+// ── IndexedDB helpers for sync queue ─────────────────────────────────────────
+const IDB_NAME = "wedding-sync-queue";
+const IDB_VERSION = 1;
+const IDB_STORE = "pending";
+
+function openSyncDb() {
+  return new Promise(function (resolve, reject) {
+    const req = indexedDB.open(IDB_NAME, IDB_VERSION);
+    req.onupgradeneeded = function (e) {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE, { keyPath: "id", autoIncrement: true });
+      }
+    };
+    req.onsuccess = function (e) { resolve(e.target.result); };
+    req.onerror = function (e) { reject(e.target.error); };
+  });
+}
+
+function idbGetAll(db) {
+  return new Promise(function (resolve, reject) {
+    const tx = db.transaction(IDB_STORE, "readonly");
+    const req = tx.objectStore(IDB_STORE).getAll();
+    req.onsuccess = function (e) { resolve(e.target.result); };
+    req.onerror = function (e) { reject(e.target.error); };
+  });
+}
+
+function idbDelete(db, id) {
+  return new Promise(function (resolve, reject) {
+    const tx = db.transaction(IDB_STORE, "readwrite");
+    const req = tx.objectStore(IDB_STORE).delete(id);
+    req.onsuccess = function () { resolve(); };
+    req.onerror = function (e) { reject(e.target.error); };
+  });
+}
+
+/** Flush all pending sync records, notifying window clients to retry them. */
+function flushQueue(tag) {
+  return openSyncDb()
+    .then(function (db) {
+      return idbGetAll(db).then(function (items) {
+        const tagItems = items.filter(function (item) { return item.tag === tag; });
+        if (tagItems.length === 0) return;
+        return self.clients
+          .matchAll({ type: "window", includeUncontrolled: true })
+          .then(function (clients) {
+            const type =
+              tag === "rsvp-sync" ? "RSVP_SYNC_READY" : "WRITE_SYNC_READY";
+            return Promise.all(
+              tagItems.map(function (item) {
+                clients.forEach(function (c) {
+                  c.postMessage({ type, payload: item.payload });
+                });
+                // Remove the flushed item after notifying clients
+                return idbDelete(db, item.id);
+              }),
+            );
+          });
+      });
+    });
+}
+
+// ── Background Sync: flush offline RSVP / write queue ────────────────────────
+// Tags: "rsvp-sync"  — registered by rsvp.js when submission occurs offline
+//       "write-sync" — registered by enqueueWrite() when Sheets sync fails
 const RSVP_SYNC_TAG = "rsvp-sync";
+const WRITE_SYNC_TAG = "write-sync";
 
 self.addEventListener("sync", function (e) {
-  if (e.tag === RSVP_SYNC_TAG) {
-    e.waitUntil(
-      self.clients
-        .matchAll({ type: "window", includeUncontrolled: true })
-        .then(function (clients) {
-          clients.forEach(function (c) {
-            c.postMessage({ type: "RSVP_SYNC_READY" });
-          });
-        }),
-    );
+  if (e.tag === RSVP_SYNC_TAG || e.tag === WRITE_SYNC_TAG) {
+    e.waitUntil(flushQueue(e.tag));
   }
 });
 
 // ── Message: SKIP_WAITING — new SW takes over immediately ────────────────────
+// Also handles QUEUE_SYNC to add a pending item to IndexedDB.
 self.addEventListener("message", function (e) {
-  if (e.data === "SKIP_WAITING") self.skipWaiting();
+  if (e.data === "SKIP_WAITING") {
+    self.skipWaiting();
+    return;
+  }
+  if (e.data && e.data.type === "QUEUE_SYNC") {
+    // Client registers a payload for later retry; store in IndexedDB.
+    openSyncDb()
+      .then(function (db) {
+        return new Promise(function (resolve, reject) {
+          const tx = db.transaction(IDB_STORE, "readwrite");
+          const req = tx.objectStore(IDB_STORE).add({
+            tag: e.data.tag || WRITE_SYNC_TAG,
+            payload: e.data.payload || null,
+            ts: Date.now(),
+          });
+          req.onsuccess = function () { resolve(); };
+          req.onerror = function (ev) { reject(ev.target.error); };
+        });
+      })
+      .catch(function () { /* non-fatal */ });
+  }
 });
 // ── Push: show notification to admin ────────────────────────────────────────────
 self.addEventListener("push", function (e) {
