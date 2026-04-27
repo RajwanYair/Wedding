@@ -10,6 +10,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
+import { getAllSummaries } from "../services/budget-tracker.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -20,12 +21,14 @@ export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("weddingInfo", renderBudget));
   _unsubs.push(storeSubscribe("expenses", renderBudgetProgress));
   _unsubs.push(storeSubscribe("vendors", renderBudgetProgress));
+  _unsubs.push(storeSubscribe("budgetEnvelopes", _renderEnvelopeSummary));
   // S22.3 expense category breakdown
   _unsubs.push(storeSubscribe("expenses", renderExpenseCategoryBreakdown));
   _unsubs.push(storeSubscribe("vendors", renderExpenseCategoryBreakdown));
   renderBudget();
   renderBudgetProgress();
   renderExpenseCategoryBreakdown(); // S22.3
+  _renderEnvelopeSummary(); // Sprint 28 / C1
 }
 
 export function unmount() {
@@ -146,6 +149,46 @@ export function renderBudget() {
 function _statText(/** @type {string} */ id, /** @type {string|number} */ value) {
   const el = document.getElementById(id);
   if (el) el.textContent = String(value);
+}
+
+// ── Budget-envelope summary panel (Sprint 28 / C1) ────────────────────────
+
+/**
+ * Render a budget-envelope summary into #budgetEnvelopeSummary (if present).
+ * Shows each envelope's limit, spent, remaining, and over-budget status.
+ */
+function _renderEnvelopeSummary() {
+  const container = document.getElementById("budgetEnvelopeSummary");
+  if (!container) return;
+
+  const summaries = getAllSummaries();
+  const entries = Object.entries(summaries);
+  container.textContent = "";
+
+  if (entries.length === 0) return;
+
+  const title = document.createElement("h4");
+  title.className = "budget-envelopes-title";
+  title.setAttribute("data-i18n", "budget_envelopes_title");
+  title.textContent = t("budget_envelopes_title");
+  container.appendChild(title);
+
+  const list = document.createElement("ul");
+  list.className = "budget-envelopes-list";
+  entries.forEach(([category, s]) => {
+    const li = document.createElement("li");
+    li.className = `budget-envelope-item${s.isOver ? " budget-envelope-item--over" : ""}`;
+    const catSpan = document.createElement("span");
+    catSpan.className = "budget-envelope-cat";
+    catSpan.textContent = category;
+    const statsSpan = document.createElement("span");
+    statsSpan.className = "budget-envelope-stats";
+    statsSpan.textContent = `₪${s.spent} / ₪${s.limit}${s.isOver ? ` ⚠ ${t("budget_envelope_over")}` : ""}`;
+    li.appendChild(catSpan);
+    li.appendChild(statsSpan);
+    list.appendChild(li);
+  });
+  container.appendChild(list);
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────

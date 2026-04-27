@@ -709,6 +709,8 @@
   "reset_checkins": "אפס הכל",
   "filter_by_category": "סינון לפי קטגוריה",
   "budget_progress": "התקדמות תקציב",
+  "budget_envelopes_title": "מעטפות תקציב",
+  "budget_envelope_over": "חרג מהתקציב",
   "budget_chart": "פירוט הוצאות",
   "import_guests_csv": "ייבוא מ-CSV",
   "saved": "נשמר",

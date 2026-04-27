@@ -708,6 +708,8 @@
   "reset_checkins": "Reset all",
   "filter_by_category": "Filter by category",
   "budget_progress": "Budget progress",
+  "budget_envelopes_title": "Budget envelopes",
+  "budget_envelope_over": "over budget",
   "budget_chart": "Expense breakdown",
   "import_guests_csv": "Import from CSV",
   "saved": "Saved",
