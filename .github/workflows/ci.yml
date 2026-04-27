@@ -54,8 +54,10 @@ jobs:
       - name: Security scan (innerHTML / eval / http:// patterns)
         run: npm run audit:security
 
-      - name: Section contract validation
-        run: npm run audit:sections
+      - name: Section contract validation (--strict, Sprint 60 B1)
+        run: npm run audit:sections -- --strict
+        # B1: --strict mode treats missing template files as errors.
+        # Known sub-sections without templates (expenses, contact-collector) are exempt.
 
       - name: Dead-export baseline gate (Phase B5)
         if: matrix.node-version == '22'
