@@ -20,8 +20,10 @@ const _unsubs = [];
 export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("vendors", renderVendors));
   _unsubs.push(storeSubscribe("vendors", renderOverdueChip)); // S23.5
+  _unsubs.push(storeSubscribe("vendors", renderVendorPaymentTimeline)); // C1 Sprint 45
   renderVendors();
   renderOverdueChip(); // S23.5
+  renderVendorPaymentTimeline(); // C1 Sprint 45
 }
 
 export function unmount() {
@@ -501,4 +503,50 @@ export function getVendorBudgetShare() {
       share: Math.round(((v.price || 0) / total) * 100),
     }))
     .sort((a, b) => b.share - a.share);
+}
+
+// ── C1: Vendor Payment Timeline (vendor-analytics.js, Sprint 45) ─────────
+
+/**
+ * Render per-category payment progress bars in #vendorPaymentTimeline.
+ */
+export function renderVendorPaymentTimeline() {
+  const container = document.getElementById("vendorPaymentTimeline");
+  if (!container) return;
+
+  const categories = getVendorsByCategory();
+  if (categories.length === 0) {
+    container.textContent = "";
+    return;
+  }
+
+  const maxTotal = Math.max(...categories.map((c) => c.totalCost), 1);
+  const rowH = 32;
+  const gap = 8;
+  const labelW = 90;
+  const barMaxW = 180;
+  const w = labelW + barMaxW + 80;
+  const h = categories.length * (rowH + gap);
+  const title = t("vendor_payment_timeline_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escStr(title)}"><title>${_escStr(title)}</title>`;
+
+  categories.forEach((cat, i) => {
+    const y = i * (rowH + gap);
+    const paidW = Math.max((cat.totalPaid / maxTotal) * barMaxW, 2);
+    const totalW = Math.max((cat.totalCost / maxTotal) * barMaxW, 2);
+    const pct = cat.totalCost > 0 ? Math.round((cat.totalPaid / cat.totalCost) * 100) : 0;
+    svg += `<text x="0" y="${y + 21}" font-size="11" fill="var(--text)">${_escStr(cat.category)}</text>`;
+    svg += `<rect x="${labelW}" y="${y + 4}" width="${totalW}" height="${rowH - 8}" fill="var(--surface-2,#e2e8f0)" rx="4"/>`;
+    svg += `<rect x="${labelW}" y="${y + 4}" width="${paidW}" height="${rowH - 8}" fill="var(--success)" rx="4" opacity="0.85"/>`;
+    svg += `<text x="${labelW + totalW + 6}" y="${y + 21}" font-size="11" fill="var(--text)">${pct}%</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/CSS vars/escaped category strings
+}
+
+/** Escape a string for SVG text content. */
+function _escStr(str) {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }

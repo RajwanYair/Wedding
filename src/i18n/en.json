@@ -54,6 +54,7 @@
   "rsvp_funnel_confirmed": "Confirmed",
   "rsvp_funnel_attending": "Attending",
   "rsvp_funnel_seated": "Seated",
+  "vendor_payment_timeline_title": "Vendor Payment Progress",
   "invite_funnel_invited": "Invited",
   "invite_funnel_opened": "Opened",
   "invite_funnel_clicked": "Clicked",
