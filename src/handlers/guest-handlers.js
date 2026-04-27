@@ -113,4 +113,7 @@ export function register() {
     showToast(t("merge_success") || "Merged", "success");
     renderDuplicates();
   });
+  on("printGuestList", () =>
+    import("../utils/pdf-export.js").then(({ printGuestList }) => printGuestList()),
+  );
 }

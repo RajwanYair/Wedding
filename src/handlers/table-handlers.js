@@ -46,6 +46,9 @@ export function register() {
   on("printTransportManifest", () => printTransportManifest());
   on("exportSeatMapCsv", () => exportSeatMapCsv());
   on("exportSeatMapJson", () => exportSeatMapJson());
+  on("printTableLayout", () =>
+    import("../utils/pdf-export.js").then(({ printTableLayout }) => printTableLayout()),
+  );
   on("deleteTable", (el) =>
     showConfirmDialog(t("confirm_delete"), () => deleteTable(el.dataset.actionArg ?? "")),
   );
