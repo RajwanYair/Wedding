@@ -12,6 +12,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { pushUndo } from "../utils/undo.js";
 import { cleanPhone } from "../utils/phone.js";
 import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
+import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -157,6 +158,26 @@ export function renderVendors() {
     vcardLink.title = t("vendor_download_contact");
     vcardLink.textContent = "👤";
     actionsTd.appendChild(vcardLink);
+    // C1 Sprint 38: payment link buttons (Bit + PayBox) when vendor has unpaid balance
+    const remaining = (v.price || 0) - (v.paid || 0);
+    if (v.phone && remaining > 0) {
+      const bitLink = document.createElement("a");
+      bitLink.href = buildBitLink({ phone: v.phone, amount: remaining, description: v.name });
+      bitLink.target = "_blank";
+      bitLink.rel = "noopener noreferrer";
+      bitLink.className = "btn btn-small btn-ghost u-mr-xs";
+      bitLink.title = t("vendor_pay_bit");
+      bitLink.textContent = "💳";
+      actionsTd.appendChild(bitLink);
+      const payboxLink = document.createElement("a");
+      payboxLink.href = buildPayBoxLink({ phone: v.phone, amount: remaining, description: v.name });
+      payboxLink.target = "_blank";
+      payboxLink.rel = "noopener noreferrer";
+      payboxLink.className = "btn btn-small btn-ghost u-mr-xs";
+      payboxLink.title = t("vendor_pay_paybox");
+      payboxLink.textContent = "📲";
+      actionsTd.appendChild(payboxLink);
+    }
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
     editBtn.textContent = t("btn_edit");

@@ -988,6 +988,8 @@
   "label_vendor_contract_url": "Contract URL",
   "vendor_open_contract": "Open contract",
   "vendor_download_contact": "Download contact",
+  "vendor_pay_bit": "Pay with Bit",
+  "vendor_pay_paybox": "Pay with PayBox",
   "export_gifts_csv": "Export gifts",
   "guest_notes_expand": "Show notes",
   "dash_checkin_progress_title": "Check-in progress",
