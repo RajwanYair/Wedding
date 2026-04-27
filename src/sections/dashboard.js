@@ -12,6 +12,7 @@ import { daysUntil, formatDateHebrew } from "../utils/date.js";
 import { load, save } from "../core/state.js";
 import { renderArrivalForecast } from "./analytics.js";
 import { RSVP_RESPONSE_STATUSES } from "../core/constants.js";
+import { getLatestEntry, flattenItems } from "../utils/changelog-parser.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -86,6 +87,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   updateCountdown();
   updateRsvpDeadlineBanner();
   _startCountdownTimer();
+  // C1 Sprint 47: What's New panel (async, non-blocking)
+  renderWhatsNewPanel();
   // S2.6: wire stat counter observer after first render
   setTimeout(initStatCounterObserver, 0);
 }
@@ -1060,4 +1063,55 @@ export function getDashboardSnapshot() {
     totalTables: tables.length,
     daysUntilWedding,
   };
+}
+
+// ── C1: What's New Panel (changelog-parser.js, Sprint 47) ────────────────
+
+/**
+ * Fetch CHANGELOG.md and render the latest version's highlights in
+ * #dashWhatsNewContent.  Non-blocking — silently hides the card on error.
+ */
+export async function renderWhatsNewPanel() {
+  const card = document.getElementById("dashWhatsNewCard");
+  if (!card) return;
+  try {
+    const base = import.meta.env.BASE_URL ?? "/";
+    const url = `${base.replace(/\/$/, "")}/CHANGELOG.md`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      /** @type {HTMLElement} */ (card).hidden = true;
+      return;
+    }
+    const text = await res.text();
+    const latest = getLatestEntry(text);
+    if (!latest) {
+      /** @type {HTMLElement} */ (card).hidden = true;
+      return;
+    }
+
+    const content = document.getElementById("dashWhatsNewContent");
+    if (!content) return;
+
+    const title = document.getElementById("dashWhatsNewVersion");
+    if (title) title.textContent = `v${latest.version} — ${latest.date}`;
+
+    const items = flattenItems(latest, 6);
+    if (items.length === 0) {
+      /** @type {HTMLElement} */ (card).hidden = true;
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "u-list-plain u-text-sm";
+    items.forEach((txt) => {
+      const li = document.createElement("li");
+      li.textContent = txt; // textContent — no innerHTML
+      list.appendChild(li);
+    });
+    content.replaceChildren(list);
+    /** @type {HTMLElement} */ (card).hidden = false;
+  } catch {
+    const c = document.getElementById("dashWhatsNewCard");
+    if (c) /** @type {HTMLElement} */ (c).hidden = true;
+  }
 }

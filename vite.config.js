@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { copyFileSync } from "node:fs";
+import { copyFileSync, readFileSync } from "node:fs";
 
 // Suppress Node.js '--localstorage-file' warning emitted in Vitest worker forks.
 // NODE_NO_WARNINGS is inherited by child_process.fork() workers.
@@ -15,6 +15,17 @@ const TEMP_BASE = join(tmpdir(), "wedding-dev");
 function copyChangelog() {
   return {
     name: "copy-changelog",
+    configureServer(server) {
+      // Serve CHANGELOG.md from root during dev (`/CHANGELOG.md`).
+      server.middlewares.use((req, res, next) => {
+        if (req.url === "/CHANGELOG.md" || req.url === "/Wedding/CHANGELOG.md") {
+          res.setHeader("Content-Type", "text/markdown; charset=utf-8");
+          res.end(readFileSync("CHANGELOG.md", "utf-8"));
+          return;
+        }
+        next();
+      });
+    },
     closeBundle() {
       copyFileSync("CHANGELOG.md", join("dist", "CHANGELOG.md"));
     },
