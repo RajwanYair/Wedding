@@ -240,6 +240,28 @@ export function cycleTheme() {
 }
 
 /**
+ * Apply a specific theme by name. Validates against the known theme list.
+ * Used by the Settings live theme picker (Sprint 74).
+ * @param {string} name - One of "default" | "rosegold" | "gold" | "emerald" | "royal" | "high-contrast"
+ */
+export function applyTheme(name) {
+  const idx = THEMES.indexOf(name);
+  const theme = idx !== -1 ? name : "default";
+  _themeIdx = idx !== -1 ? idx : 0;
+  document.body.className = document.body.className.replace(/\btheme-\S+/g, "").trim();
+  if (theme !== "default") document.body.classList.add(`theme-${theme}`);
+  writeBrowserStorage(STORAGE_KEYS.THEME, theme);
+}
+
+/**
+ * Return the currently active theme name.
+ * @returns {string}
+ */
+export function getActiveTheme() {
+  return THEMES[_themeIdx] ?? "default";
+}
+
+/**
  * Toggle light/dark mode (adds/removes `.light-mode` on body).
  */
 export function toggleLightMode() {

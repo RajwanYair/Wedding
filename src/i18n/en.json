@@ -1188,5 +1188,8 @@
   "offline_indicator": "Offline",
   "checkin_qr_label": "Guest check-in QR code",
   "checkin_print_qr_badges": "Print QR Badges",
-  "checkin_qr_badge_page_title": "Guest QR Check-in Badges"
+  "checkin_qr_badge_page_title": "Guest QR Check-in Badges",
+  "theme_picker_title": "Color theme",
+  "theme_picker_desc": "Choose the app design theme",
+  "theme_applied": "Theme applied"
 }

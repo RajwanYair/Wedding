@@ -20,6 +20,7 @@ import {
   queueKeys,
   onSyncStatus,
 } from "../core/sync.js";
+import { getActiveTheme } from "../core/ui.js";
 import {
   isPushSupported,
   requestPushPermission,
@@ -115,6 +116,18 @@ export function setTheme(theme) {
 function populateSettings() {
   // Wedding info fields live in the invitation section; just update data summary here.
   updateDataSummary();
+
+  // Mark active theme swatch (Sprint 74)
+  const activeName = getActiveTheme();
+  const picker = document.getElementById("themePicker");
+  if (picker) {
+    for (const btn of picker.querySelectorAll(".theme-swatch")) {
+      btn.classList.toggle(
+        "theme-swatch--active",
+        btn instanceof HTMLElement && btn.dataset.actionArg === activeName,
+      );
+    }
+  }
 
   // Populate Sheets Web App URL if saved
   const sheetsUrl = getSheetsWebAppUrl();

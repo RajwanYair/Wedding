@@ -1188,5 +1188,8 @@
   "offline_indicator": "ללא חיבור",
   "checkin_qr_label": "קוד QR לצ'ק-אין אורח",
   "checkin_print_qr_badges": "הדפס תגי QR",
-  "checkin_qr_badge_page_title": "תגי QR לציון אורחים"
+  "checkin_qr_badge_page_title": "תגי QR לציון אורחים",
+  "theme_picker_title": "ערכת צבעים",
+  "theme_picker_desc": "בחר ערכת עיצוב לאפליקציה",
+  "theme_applied": "ערכת הצבעים שונתה"
 }

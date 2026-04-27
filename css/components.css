@@ -933,7 +933,44 @@
     line-height: 1.5;
   }
 
-  /* ── Sortable Table Headers ── */
+  /* ── Theme Picker (Sprint 74) ── */
+  .theme-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.25rem 0;
+  }
+  .theme-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+    outline-offset: 3px;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--gold);
+    }
+    &.theme-swatch--active {
+      border-color: var(--gold);
+      transform: scale(1.12);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.35);
+    }
+
+    /* Swatch colors (one per theme) */
+    &.theme-swatch--default        { background: #7c3aed; }
+    &.theme-swatch--rosegold       { background: #c9706a; }
+    &.theme-swatch--gold           { background: #b8860b; }
+    &.theme-swatch--emerald        { background: #065f46; }
+    &.theme-swatch--royal          { background: #1e3a8a; }
+    &.theme-swatch--high-contrast  { background: #000; border-color: #fff; }
+  }
+
+
   .guest-table th {
     cursor: pointer;
     -webkit-user-select: none;

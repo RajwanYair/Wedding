@@ -4,7 +4,7 @@
 
 import { on } from "../core/events.js";
 import { t, normalizeUiLanguage, nextUiLanguage } from "../core/i18n.js";
-import { showToast, closeModal } from "../core/ui.js";
+import { showToast, closeModal, applyTheme } from "../core/ui.js";
 import { applyConflictResolutions, getPendingConflicts } from "../core/conflict-resolver.js";
 import { save } from "../core/state.js";
 import {
@@ -190,4 +190,20 @@ export function register() {
   on("generateRsvpQrCode", () => generateRsvpQrCode());
   on("printRsvpQr", () => window.print());
   on("printGuestCards", () => window.print());
+  // Sprint 74 — Live theme picker: setTheme action dispatched by swatch buttons in settings.html
+  on("setTheme", (el) => {
+    const name = el.dataset.actionArg ?? "default";
+    applyTheme(name);
+    // Update active swatch UI
+    const picker = document.getElementById("themePicker");
+    if (picker) {
+      for (const btn of picker.querySelectorAll(".theme-swatch")) {
+        btn.classList.toggle(
+          "theme-swatch--active",
+          btn instanceof HTMLElement && btn.dataset.actionArg === name,
+        );
+      }
+    }
+    showToast(t("theme_applied"), "success");
+  });
 }
