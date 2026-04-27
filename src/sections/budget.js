@@ -11,6 +11,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getAllSummaries } from "../services/budget-tracker.js";
+import { getBurndownData } from "../services/budget-burndown.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -25,10 +26,14 @@ export function mount(/** @type {HTMLElement} */ _container) {
   // S22.3 expense category breakdown
   _unsubs.push(storeSubscribe("expenses", renderExpenseCategoryBreakdown));
   _unsubs.push(storeSubscribe("vendors", renderExpenseCategoryBreakdown));
+  // C1 Sprint 46: budget burn-down
+  _unsubs.push(storeSubscribe("expenses", renderBudgetBurndownChart));
+  _unsubs.push(storeSubscribe("weddingInfo", renderBudgetBurndownChart));
   renderBudget();
   renderBudgetProgress();
   renderExpenseCategoryBreakdown(); // S22.3
   _renderEnvelopeSummary(); // Sprint 28 / C1
+  renderBudgetBurndownChart(); // C1 Sprint 46
 }
 
 export function unmount() {
@@ -394,6 +399,72 @@ export function getPaymentUtilization() {
       rate: committed > 0 ? Math.round((paid / committed) * 100) : 0,
     }))
     .sort((a, b) => b.committed - a.committed);
+}
+
+// ── C1: Budget Burn-Down Chart (budget-burndown.js, Sprint 46) ───────────
+
+/**
+ * Render a cumulative spend area chart (SVG) in #budgetBurndownChart.
+ */
+export function renderBudgetBurndownChart() {
+  const container = document.getElementById("budgetBurndownChart");
+  if (!container) return;
+
+  const { points, totalBudget, totalSpent } = getBurndownData();
+
+  if (points.length === 0) {
+    container.textContent = t("budget_burndown_no_data");
+    return;
+  }
+
+  const w = 320;
+  const h = 120;
+  const padL = 40;
+  const padB = 20;
+  const chartW = w - padL - 8;
+  const chartH = h - padB - 8;
+  const maxY = Math.max(totalBudget, totalSpent, 1);
+
+  /** @param {number} val @returns {number} */
+  const scaleY = (val) => h - padB - (val / maxY) * chartH;
+  /** @param {number} i @returns {number} */
+  const scaleX = (i) => padL + (i / Math.max(points.length - 1, 1)) * chartW;
+
+  // Build polyline points string
+  const linePts = points.map((p, i) => `${scaleX(i)},${scaleY(p.cumulative)}`).join(" ");
+  // Budget target line (horizontal)
+  const targetY = scaleY(totalBudget);
+
+  const pct = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
+  const title = t("budget_burndown_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escBudget(title)}"><title>${_escBudget(title)}</title>`;
+
+  // Budget target dashed line
+  if (totalBudget > 0) {
+    svg += `<line x1="${padL}" y1="${targetY}" x2="${w - 8}" y2="${targetY}" stroke="var(--danger,#ef4444)" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>`;
+    svg += `<text x="${w - 6}" y="${targetY + 4}" font-size="9" fill="var(--danger,#ef4444)" text-anchor="end">${_escBudget(t("budget_burndown_target"))}</text>`;
+  }
+
+  // Spend polyline
+  if (points.length > 1) {
+    svg += `<polyline points="${linePts}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;
+  }
+
+  // Axes labels
+  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0].date}</text>`;
+  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1].date}</text>`;
+
+  // Summary badge
+  svg += `<text x="${w / 2}" y="14" font-size="10" fill="var(--text)" text-anchor="middle">${totalSpent.toLocaleString()} ₪ (${pct}%)</text>`;
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/dates/escaped i18n strings
+}
+
+/** Escape string for SVG attribute/text content. */
+function _escBudget(str) {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 /**
