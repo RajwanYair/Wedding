@@ -54,7 +54,7 @@ export function buildPhotoKey({ eventId, uploaderId, filename, now }) {
   const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
   const safe = filename
     .normalize("NFKD")
-    .replace(/[^\w.\-]/g, "_")
+    .replace(/[^\w.-]/g, "_")
     .slice(0, 80);
   return `events/${eventId}/${yyyy}/${mm}/${uploaderId}__${safe}`;
 }
