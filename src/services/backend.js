@@ -340,3 +340,42 @@ export function isSheetsMirrorEnabled() {
 export async function sendWhatsAppCloudMessage(to, msg) {
   return callEdgeFunction("whatsapp-send", { to, ...msg });
 }
+
+/**
+ * S108 — Bulk WhatsApp send. Iterates sequentially, reports progress, and
+ * tolerates per-recipient failures. Returns aggregate result.
+ *
+ * @param {string[]} recipients - E.164 numbers
+ * @param {{ text?: string, template?: string, lang?: string, params?: string[] }} msg
+ * @param {(i: number, total: number, ok: boolean) => void} [onProgress]
+ * @param {(to: string, msg: object) => Promise<{ok: boolean, error?: string}>} [sender]
+ *        Optional override (used by tests). Defaults to `sendWhatsAppCloudMessage`.
+ * @returns {Promise<{ ok: number, failed: number, errors: Array<{to: string, error: string}> }>}
+ */
+export async function sendWhatsAppBulk(recipients, msg, onProgress, sender) {
+  const send = sender ?? sendWhatsAppCloudMessage;
+  let ok = 0;
+  let failed = 0;
+  /** @type {Array<{to: string, error: string}>} */
+  const errors = [];
+  const total = recipients.length;
+  for (let i = 0; i < total; i += 1) {
+    const to = recipients[i];
+    try {
+      const res = await send(to, msg);
+      if (res?.ok) {
+        ok += 1;
+      } else {
+        failed += 1;
+        errors.push({ to, error: res?.error ?? "unknown" });
+      }
+      onProgress?.(i + 1, total, Boolean(res?.ok));
+    } catch (err) {
+      failed += 1;
+      const message = err instanceof Error ? err.message : String(err);
+      errors.push({ to, error: message });
+      onProgress?.(i + 1, total, false);
+    }
+  }
+  return { ok, failed, errors };
+}
