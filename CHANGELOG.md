@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.2] — 2026-04-27
+
+> **Cleanup pass: dead-export audit accuracy + 85 false positives eliminated.**
+
+### Fixed (12.5.2)
+
+- **`scripts/dead-export-check.mjs`** — Regex now detects two import patterns
+  it previously missed:
+  - Dynamic destructured imports: `const { sym } = await import("...")` and
+    `require(...)`.
+  - Re-export forwarding: `export { sym } from "..."`.
+
+  The script now also scopes the search corpus to *external* files (excluding
+  the symbol's own defining file), preventing the export site itself from
+  inflating the live count. Result: dead-export count drops from
+  **202 → 117** — no code removed; the 85 difference were always live but
+  invisible to the old script. (Sprint 65)
+
+### Changed (12.5.2)
+
+- **`.github/workflows/ci.yml`** — Lowered `audit:dead --baseline` from
+  `201` to `117` to lock in the new accurate count and prevent regression.
+  (Sprint 65)
+- **Version bump** — `12.5.1 → 12.5.2` propagated via `npm run sync:version`
+  to 11 version-bearing files (`src/core/config.js`, `public/sw.js`,
+  `README.md`, `tests/wedding.test.mjs`, `ARCHITECTURE.md`, `src/types.d.ts`,
+  `AGENTS.md`, copilot instructions, workspace instructions, copilot config,
+  ci workflow header). (Sprint 65)
+
+### Notes (12.5.2)
+
+This is a tooling-accuracy patch — no application code or tests were
+modified. Cleanup of the remaining 117 dead exports, splitting
+`css/components.css` (3 304 lines), and consolidating
+`src/sections/analytics.js` (1 857 lines) and `src/sections/dashboard.js`
+(1 009 lines) are scheduled for ROADMAP Phase A/B (v13.0.0+).
+
 ## [12.5.1] — 2026-04-27
 
 > **Production hardening, accessibility, and deduplication polish.**

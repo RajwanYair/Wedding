@@ -52,8 +52,6 @@ const testFiles = getAllJs(join(ROOT, "tests"));
 const scriptFiles = getAllJs(join(ROOT, "scripts"));
 const allFiles = [...srcFiles, ...testFiles, ...scriptFiles];
 
-const corpus = allFiles.map((f) => readFileSync(f, "utf8")).join("\n");
-
 // ── Export discovery ────────────────────────────────────────────────────────
 
 const EXPORT_RE = /^export (?:(?:async )?function|const|class|let) ([a-zA-Z_$][a-zA-Z0-9_$]*)/gm;
@@ -74,14 +72,40 @@ for (const f of srcFiles) {
 /** @type {Array<{sym: string, file: string}>} */
 const dead = [];
 
+// Build a corpus excluding the defining file for each symbol so we count
+// only external usages. This avoids the export site (`export function sym`)
+// inflating the live count, while still catching every real consumer.
+const fileContents = new Map(allFiles.map((f) => [f, readFileSync(f, "utf8")]));
+const fullToShort = new Map(allFiles.map((f) => [shortPath(f), f]));
+
 for (const { sym, file } of allExports) {
-  // 1. Named import: import { sym } from ...
-  const importRe = new RegExp(`import[^;]*\\b${sym}\\b`, "g");
-  const importCount = (corpus.match(importRe) ?? []).length;
-  // 2. Namespace property access: ns.sym( or ns?.sym(
-  const nsAccessRe = new RegExp(`\\.${sym}[\\s\\S]{0,2}\\(|\\[['"\`]${sym}['"\`]\\]`, "g");
-  const nsAccessCount = (corpus.match(nsAccessRe) ?? []).length;
-  if (importCount === 0 && nsAccessCount === 0) dead.push({ sym, file });
+  const definingAbs = fullToShort.get(file);
+  // External corpus = every file except the defining one.
+  let externalUses = 0;
+  for (const [path, content] of fileContents) {
+    if (path === definingAbs) continue;
+    // 1. Static named import: import { sym } from "..."
+    const staticImportRe = new RegExp(`import[^;]*\\b${sym}\\b`, "g");
+    // 2. Dynamic destructured import: const { sym } = await import("...")
+    //    or  const { sym } = require("..."). Match a `{` followed (across
+    //    newlines, no `;`) by the symbol followed by another non-`;` run
+    //    that ends at `await import(` or `require(`.
+    const dynamicImportRe = new RegExp(
+      `\\{[^;}]*\\b${sym}\\b[^;}]*\\}\\s*=\\s*(?:await\\s+import|require)\\s*\\(`,
+      "g",
+    );
+    // 3. Namespace property access: ns.sym( or ns?.sym(  or  ns["sym"]
+    const nsAccessRe = new RegExp(`\\.${sym}[\\s\\S]{0,2}\\(|\\[['"\`]${sym}['"\`]\\]`, "g");
+    // 4. Re-export: export { sym } from "..."  or  export { sym }
+    const reExportRe = new RegExp(`export\\s*\\{[^}]*\\b${sym}\\b[^}]*\\}`, "g");
+
+    externalUses += (content.match(staticImportRe) ?? []).length;
+    externalUses += (content.match(dynamicImportRe) ?? []).length;
+    externalUses += (content.match(nsAccessRe) ?? []).length;
+    externalUses += (content.match(reExportRe) ?? []).length;
+    if (externalUses > 0) break; // early exit once a usage is found
+  }
+  if (externalUses === 0) dead.push({ sym, file });
 }
 
 // ── Report ─────────────────────────────────────────────────────────────────

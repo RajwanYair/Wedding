@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v12.5.1
+# Wedding Manager — Roadmap v12.5.2
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/)
@@ -30,7 +30,7 @@ Previous roadmap items still relevant are consolidated below. Nothing has been s
 
 ## 0. North Star & Current State
 
-### Actual state — v12.5.1 · 2026-04-27
+### Actual state — v12.5.2 · 2026-04-27
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -668,7 +668,7 @@ supabase.auth.onAuthStateChange((_event, session) => {
 
 ## 8. Success Metrics & SLOs
 
-| Metric | v12.5.1 (now) | v13 target | v14 target | v15 target |
+| Metric | v12.5.2 (now) | v13 target | v14 target | v15 target |
 | --- | --- | --- | --- | --- |
 | Tests passing | 2 509 / 2 509 | ≥ 2 700 | ≥ 2 900 | ≥ 3 100 |
 | Coverage (lines enforced) | advisory | ≥ 80 % | ≥ 85 % | ≥ 90 % |
@@ -742,6 +742,7 @@ These principles govern every PR, every architecture decision, and every new fea
 | Version | Status | Theme | Key deliverables |
 | --- | --- | --- | --- |
 | v12.5.1 | **Released 2026-04-27** | Production hardening | A11y `for=` labels, `-webkit-user-select` prefix, TS strict analytics, CI action version pins, htmlhintrc cleanup |
+| v12.5.2 | **Released 2026-04-27** | Tooling accuracy | Dead-export audit regex fix (202 false-positives → 117 actual); CI baseline lowered 201 → 117 |
 | v12.6.x | Candidate patches | Node LTS + monitoring | Switch to Node 22 LTS; activate Sentry adapter; coverage gate |
 | **v13.0.0** | **Next** | Backend convergence + P0 security | Supabase primary, Supabase Auth (drop 3 SDKs), encrypted IDB, pushState router, edge functions, monitoring |
 | v13.x | Patch series | | Service consolidation; dead-export purge; arch enforcement patches |
@@ -754,4 +755,4 @@ These principles govern every PR, every architecture decision, and every new fea
 
 ---
 
-*Last updated: 2026-04-27 · v12.5.1 · Commit b4b2076 · See [CHANGELOG.md](CHANGELOG.md) for detailed history.*
+*Last updated: 2026-04-27 · v12.5.2 · See [CHANGELOG.md](CHANGELOG.md) for detailed history.*
