@@ -105,7 +105,7 @@
   <!-- S11.4 Batch Action Toolbar -->
   <div class="batch-toolbar u-hidden" id="batchToolbar">
     <span id="batchCount" class="u-mr-sm"></span>
-    <select id="batchStatusSelect" class="u-mr-sm">
+    <select id="batchStatusSelect" class="u-mr-sm" data-i18n-aria="batch_set_status">
       <option value="" data-i18n="batch_set_status">שנה סטטוס</option>
       <option value="confirmed" data-i18n="status_confirmed">אישרו</option>
       <option value="pending" data-i18n="status_pending">ממתינים</option>
@@ -121,7 +121,8 @@
     <table class="guest-table" id="guestTable">
       <thead>
         <tr>
-          <th class="th-checkbox"><input type="checkbox" id="selectAllGuests" data-action="toggleSelectAll" /></th>
+          <th class="th-checkbox"><input type="checkbox" id="selectAllGuests" data-action="toggleSelectAll"
+              data-i18n-aria="a11y_select_all" /></th>
           <th
             id="th-firstName"
             data-action="sortGuestsBy"

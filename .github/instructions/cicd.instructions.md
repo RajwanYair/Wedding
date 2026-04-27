@@ -46,3 +46,15 @@ Commit after **every Copilot chat session** or sprint with a clear summary messa
 - Use `${{ secrets.TOKEN }}` for credentials
 - Pin action versions to specific tags (e.g. `@v4`, not `@latest`)
 - `npm audit --audit-level=high` must return 0 high/critical vulns before tagging
+
+## VS Code Extension — Known False Positives
+
+The GitHub Actions extension cannot always resolve all action versions from GitHub. These are confirmed valid and intentional:
+
+| Location | Warning | Why it's correct |
+| --- | --- | --- |
+| `deploy.yml` | `github-pages` env name "not valid" | GitHub Pages **requires** this exact environment name for `actions/deploy-pages` |
+| `project-automation.yml` | `actions/labeler@v5` not found | Valid published tag; extension resolution is offline/cached |
+| `sbom.yml` / `scorecard.yml` | `actions/upload-artifact@v4` not found | Same action + version works without error in `ci.yml` — extension cache issue |
+
+Do **not** change these to work around the extension warning.

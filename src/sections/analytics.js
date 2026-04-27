@@ -229,7 +229,7 @@ export function renderBudgetChart() {
   const bars = Array.from(catMap.entries()).map(([label, value], i) => ({
     label,
     value,
-    color: colors[i % colors.length],
+    color: colors[i % colors.length] ?? "var(--primary)",
   }));
 
   _renderBar("analyticsBudgetBar", bars);
@@ -612,7 +612,7 @@ export function renderRsvpFunnel() {
   // Overall conversion rate badge (unseated risk)
   const rates = getRsvpConversionRates();
   const unseated = unseatedConfirmedCount();
-  const overall = Math.round(rates.overallRate * 100);
+  const overall = Math.round((rates.overallRate ?? 0) * 100);
   const rateEl = document.getElementById("analyticsRsvpFunnelRate");
   if (rateEl) rateEl.textContent = `${overall}% ${t("rsvp_funnel_overall_rate")} · ${unseated} ${t("rsvp_funnel_unseated")}`;
 }
@@ -1263,7 +1263,7 @@ export function renderExpenseDonut() {
   const slices = topCats.map(({ category, total }, i) => ({
     label: category,
     value: total,
-    color: colors[i % colors.length],
+    color: colors[i % colors.length] ?? "var(--primary)",
   }));
   _renderDonut("analyticsExpenseDonut", slices);
 
@@ -1522,7 +1522,7 @@ export function renderTagBreakdown() {
   }
 
   const entries = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15);
-  const max = entries[0][1];
+  const max = entries[0]?.[1] ?? 1;
   entries.forEach(([tag, count]) => {
     const row = document.createElement("div");
     row.className = "tag-breakdown-row";

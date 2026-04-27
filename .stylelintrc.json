@@ -4,6 +4,9 @@
     "property-no-unknown": [true, { "ignoreProperties": ["--mouse-x", "--mouse-y"] }],
     "selector-type-no-unknown": [true, { "ignoreTypes": ["/^--/"] }],
     "at-rule-no-unknown": [true, { "ignoreAtRules": ["property"] }],
-    "property-no-vendor-prefix": [true, { "ignoreProperties": ["-webkit-backdrop-filter"] }]
+    "property-no-vendor-prefix": [
+      true,
+      { "ignoreProperties": ["-webkit-backdrop-filter", "-webkit-user-select"] }
+    ]
   }
 }

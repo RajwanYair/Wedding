@@ -10,7 +10,7 @@
     <div class="rsvp-form">
       <!-- ── Step 1: Phone lookup ── -->
       <div class="form-group">
-        <label data-i18n="rsvp_phone">טלפון</label>
+        <label for="rsvpPhone" data-i18n="rsvp_phone">טלפון</label>
         <div class="rsvp-phone-row">
           <input
             type="tel"
@@ -41,7 +41,7 @@
       <div id="rsvpDetails" class="u-hidden">
         <div class="form-row">
           <div class="form-group">
-            <label data-i18n="label_first_name">שם פרטי *</label>
+            <label for="rsvpFirstName" data-i18n="label_first_name">שם פרטי *</label>
             <input
               type="text"
               id="rsvpFirstName"
@@ -53,7 +53,7 @@
             />
           </div>
           <div class="form-group">
-            <label data-i18n="label_last_name">שם משפחה</label>
+            <label for="rsvpLastName" data-i18n="label_last_name">שם משפחה</label>
             <input
               type="text"
               id="rsvpLastName"
@@ -64,7 +64,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label data-i18n="rsvp_side">בצד של</label>
+          <label for="rsvpSide" data-i18n="rsvp_side">בצד של</label>
           <select id="rsvpSide">
             <option value="groom" data-i18n="side_groom">צד חתן</option>
             <option value="bride" data-i18n="side_bride">צד כלה</option>
@@ -72,7 +72,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label data-i18n="rsvp_attending">האם מגיע/ה?</label>
+          <label for="rsvpAttending" data-i18n="rsvp_attending">האם מגיע/ה?</label>
           <select id="rsvpAttending">
             <option value="confirmed" data-i18n="rsvp_yes">
               כן, מגיע/ה! 🎉
@@ -83,7 +83,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
+            <label for="rsvpGuests" data-i18n="rsvp_plus">מספר מלווים (כולל אותך)</label>
             <input
               type="number"
               id="rsvpGuests"
@@ -95,7 +95,7 @@
             />
           </div>
           <div class="form-group">
-            <label data-i18n="rsvp_children">ילדים</label>
+            <label for="rsvpChildren" data-i18n="rsvp_children">ילדים</label>
             <input
               type="number"
               id="rsvpChildren"
@@ -110,7 +110,7 @@
         <!-- S13.2 Plus-one names -->
         <div id="plusOneNames" class="plusone-names-container"></div>
         <div class="form-group">
-          <label data-i18n="rsvp_meal">סוג ארוחה</label>
+          <label for="rsvpMeal" data-i18n="rsvp_meal">סוג ארוחה</label>
           <select id="rsvpMeal">
             <option value="regular" data-i18n="meal_regular">רגיל</option>
             <option value="vegetarian" data-i18n="meal_vegetarian">
@@ -133,7 +133,7 @@
           </label>
         </div>
         <div class="form-group">
-          <label data-i18n="rsvp_transport">הסעה</label>
+          <label for="rsvpTransport" data-i18n="rsvp_transport">הסעה</label>
           <select id="rsvpTransport">
             <option value="" data-i18n="transport_none">ללא הסעה</option>
             <option value="tefachot" data-i18n="transport_tefachot">
@@ -145,7 +145,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label data-i18n="rsvp_notes">הערות / מגבלות תזונה</label>
+          <label for="rsvpNotes" data-i18n="rsvp_notes">הערות / מגבלות תזונה</label>
           <textarea
             id="rsvpNotes"
             rows="3"

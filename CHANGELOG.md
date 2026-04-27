@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.1] — 2026-04-27
+
+> **Production hardening, accessibility, and deduplication polish.**
+
+### Fixed (12.5.1)
+
+- **Accessibility** (`src/templates/rsvp.html`) — Added `for=` attribute to all `<label>` elements so they are properly associated with their form controls (WCAG 1.3.1). (Sprint 64)
+- **Accessibility** (`src/templates/guests.html`) — Added `data-i18n-aria="batch_set_status"` on `#batchStatusSelect` and `data-i18n-aria="a11y_select_all"` on `#selectAllGuests`. New i18n keys added to both `he.json` and `en.json`. (Sprint 64)
+- **Accessibility** (`src/templates/whatsapp.html`) — Added `for="waTemplate"` on the WhatsApp template label. (Sprint 64)
+- **CSS vendor prefix** (`css/layout.css`, `css/components.css`) — Added `-webkit-user-select: none` before `user-select: none` in 3 locations for full Safari 3+ support. Updated `.stylelintrc.json` to allow the required prefix. (Sprint 64)
+- **TypeScript strict** (`src/sections/analytics.js`) — `color` property now uses `?? "var(--primary)"` fallback (×2), `rates.overallRate` guarded with `?? 0`, and `entries[0]` access guarded with `?.[1] ?? 1`. (Sprint 64)
+- **Config** (`tsconfig.json`) — Added `forceConsistentCasingInFileNames: true` to satisfy VS Code TypeScript checker. (Sprint 64)
+
+### Changed (12.5.1)
+
+- **GitHub Actions** — Corrected action version pins: `checkout@v6.0.2`→`@v6`, `setup-node@v6.4.0`→`@v6`, `codeql-action/upload-sarif@v3`→`@v4` across 5 workflow files and the composite action. (Sprint 64)
+- **CI instructions** (`.github/instructions/cicd.instructions.md`) — Documented confirmed VS Code extension false-positives so they are never incorrectly changed. (Sprint 64)
+- **`.htmlhintrc`** — Removed 5 explicitly-`false` disabled rules (`spec-char-escape`, `style-disabled`, `inline-style-disabled`, `inline-script-disabled`, `head-script-disabled`); no-op changes, cleaner config. (Sprint 64)
+- **`.gitignore`** — Added `test_results.json` to ignored artifacts. (Sprint 64)
+- **Deduplication** (`scripts/lib/`) — Extracted shared `walk()` and `parseAuditArgs()` to `scripts/lib/file-walker.mjs` and `scripts/lib/audit-utils.mjs`; 16 audit scripts updated. (Sprint 63)
+- **Deduplication** (`tests/unit/helpers.js`) — Added `createLocalStorageMock()` and `clearStore()` factory functions; 4 test files updated. (Sprint 63)
+- **GitHub Actions** — Added `.github/actions/node-setup` reusable composite action; applied to `security.yml` and `sbom.yml`. (Sprint 63)
+- **Shared tooling** (`../MyScripts/`) — Updated `jsdom` 29.0.2→29.1.0 and `stylelint` 17.9.0→17.9.1. (Sprint 64)
+
 ## [12.5.0] — 2026-05-08
 
 > **C1 UX utilities (QR badges, message personalizer, notification prefs, PDF export) +

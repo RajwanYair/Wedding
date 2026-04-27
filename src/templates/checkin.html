@@ -58,6 +58,7 @@
   </div>
   <!-- S12.3 QR Scanner Viewport -->
   <div id="qrScannerBox" class="qr-scanner-box u-hidden">
+    <!-- playsinline is required for iOS Safari inline video; Firefox ignores it gracefully -->
     <video id="qrVideo" autoplay playsinline class="qr-video"></video>
     <button class="btn btn-danger btn-small qr-close-btn" data-action="stopQrScan">✕</button>
   </div>

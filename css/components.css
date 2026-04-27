@@ -936,6 +936,7 @@
   /* ── Sortable Table Headers ── */
   .guest-table th {
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
     position: relative;
   }
@@ -2786,6 +2787,7 @@
     border-radius: 8px;
     color: transparent;
     pointer-events: none;
+    -webkit-user-select: none;
     user-select: none;
   }
   @keyframes skeleton-shimmer {

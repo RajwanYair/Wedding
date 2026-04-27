@@ -866,6 +866,7 @@
   "batch_set_status": "שנה סטטוס",
   "batch_apply": "החל",
   "batch_delete": "מחק נבחרים",
+  "a11y_select_all": "בחר/בטל בחירת כל האורחים",
   "batch_selected_count": "{n} נבחרו",
   "batch_success": "הסטטוס עודכן בהצלחה",
   "batch_deleted": "האורחים הנבחרים נמחקו",

@@ -473,6 +473,7 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 > B1 `audit:sections --strict` template gate in CI;
 > B10 unified `security.yml` workflow (npm audit moderate+, dep-diff, security scan, gate job);
 > A3 `crypto.js` → `secure-storage.js` wiring (encryptField/decryptField, backward-compat envelope).
+> **v12.5.1 patch**: accessibility (for= labels, aria-labels), CSS -webkit-user-select prefix, TS strict fixes in analytics.js, CI action version pins corrected, htmlhintrc cleaned, scripts/lib deduplication, shared tooling updated.
 
 **Phase OKR:** *strict TS in core; strict architecture; strict supply-chain; no dead code; signals everywhere internally.*
 

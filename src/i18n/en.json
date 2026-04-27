@@ -866,6 +866,7 @@
   "batch_set_status": "Set Status",
   "batch_apply": "Apply",
   "batch_delete": "Delete Selected",
+  "a11y_select_all": "Select / deselect all guests",
   "batch_selected_count": "{n} selected",
   "batch_success": "Status updated successfully",
   "batch_deleted": "Selected guests deleted",
