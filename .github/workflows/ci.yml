@@ -116,6 +116,12 @@ jobs:
         run: npm run audit:jsdoc -- --enforce
         # 100% JSDoc coverage on src/core/ and src/services/ exports.
 
+      - name: Storage-prefix isolation gate (Sprint 18)
+        if: matrix.node-version == '22'
+        run: npm run audit:storage-prefix -- --enforce --baseline=0
+        # ROADMAP §3.2 / Phase B: only src/core/storage.js may touch
+        # `wedding_v1_*` keys directly. Sections must use the storage layer.
+
       - name: Plaintext-secrets gate (ADR-026 Phase E1)
         if: matrix.node-version == '22'
         run: npm run audit:plaintext-secrets -- --enforce
