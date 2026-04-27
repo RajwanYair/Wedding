@@ -1167,5 +1167,7 @@
   "network_back_online": "החיבור הושב",
   "session_expired": "הפעילות שלך פקעה. אנא התחבר מחדש.",
   "offline_indicator": "ללא חיבור",
-  "checkin_qr_label": "קוד QR לצ'ק-אין אורח"
+  "checkin_qr_label": "קוד QR לצ'ק-אין אורח",
+  "checkin_print_qr_badges": "הדפס תגי QR",
+  "checkin_qr_badge_page_title": "תגי QR לציון אורחים"
 }

@@ -1167,5 +1167,7 @@
   "network_back_online": "Back online",
   "session_expired": "Your session has expired. Please sign in again.",
   "offline_indicator": "Offline",
-  "checkin_qr_label": "Guest check-in QR code"
+  "checkin_qr_label": "Guest check-in QR code",
+  "checkin_print_qr_badges": "Print QR Badges",
+  "checkin_qr_badge_page_title": "Guest QR Check-in Badges"
 }

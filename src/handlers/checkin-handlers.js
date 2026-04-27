@@ -15,6 +15,7 @@ import {
   stopQrScan,
   startNFCCheckin,
   stopNFCCheckin,
+  printGuestQrBadges,
 } from "../sections/checkin.js";
 
 export function register() {
@@ -34,6 +35,7 @@ export function register() {
   on("stopQrScan", () => stopQrScan());
   on("startNFCCheckin", () => startNFCCheckin());
   on("stopNFCCheckin", () => stopNFCCheckin());
+  on("printGuestQrBadges", () => printGuestQrBadges());
   on("writeNFCForGuest", (el) =>
     import("../services/nfc.js").then(({ writeNFCTag }) =>
       writeNFCTag(el.dataset.actionArg ?? "").catch(() => {}),

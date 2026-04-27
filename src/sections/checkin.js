@@ -12,7 +12,7 @@ import { announce } from "../core/ui.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { isNFCSupported, startNFCScan } from "../services/nfc.js";
 import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
-import { buildCheckinUrl, renderQrToCanvas } from "../utils/qr-code.js";
+import { buildCheckinUrl, getQrDataUrl, renderQrToCanvas } from "../utils/qr-code.js";
 /** @type {(() => void)[]} */
 const _unsubs = [];
 
@@ -227,6 +227,57 @@ export function resetAllCheckins() {
   }));
   storeSet("guests", guests);
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+}
+
+/**
+ * Print a sheet of per-guest QR badge cards for event-day check-in.
+ * Opens a new window with one badge per confirmed guest, then triggers print.
+ * Each QR encodes the guest's canonical check-in URL from `buildCheckinUrl()`.
+ */
+export function printGuestQrBadges() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter(
+    (g) => g.status === "confirmed",
+  );
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+
+  const title = t("checkin_qr_badge_page_title");
+  const badges = guests.map((g) => {
+    const url = buildCheckinUrl(g.id);
+    const dataUrl = getQrDataUrl(url, 120) ?? "";
+    const tableName =
+      tables.find((tb) => tb.id === g.tableId)?.name ?? g.tableId ?? "";
+    return { g, dataUrl, tableName };
+  });
+
+  const html = [
+    "<!DOCTYPE html><html dir='rtl'><head>",
+    "<meta charset='utf-8'>",
+    `<title>${title}</title>`,
+    "<style>",
+    "body{font-family:sans-serif;background:#fff;margin:0;padding:1rem}",
+    ".badges{display:flex;flex-wrap:wrap;gap:0.75rem}",
+    ".badge{border:1px solid #ccc;border-radius:6px;padding:0.5rem;",
+    "width:140px;text-align:center;break-inside:avoid}",
+    ".badge img{display:block;margin:0 auto 0.25rem}",
+    ".badge .name{font-weight:bold;font-size:0.8rem;overflow-wrap:break-word}",
+    ".badge .table{font-size:0.7rem;color:#666}",
+    "@media print{@page{margin:0.5cm}.badges{gap:0.5rem}}",
+    "</style></head><body>",
+    `<h2 style='margin:0 0 0.5rem;font-size:1rem'>${title}</h2>`,
+    "<div class='badges'>",
+    ...badges.map(
+      ({ g, dataUrl, tableName }) =>
+        `<div class='badge'>${dataUrl ? `<img src='${dataUrl}' width='120' height='120' alt='QR'>` : ""}<div class='name'>${g.firstName} ${g.lastName ?? ""}</div>${tableName ? `<div class='table'>${tableName}</div>` : ""}</div>`,
+    ),
+    "</div></body></html>",
+  ].join("");
+
+  const win = window.open("", "_blank", "width=900,height=700");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  win.print();
 }
 
 /**
