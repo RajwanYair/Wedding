@@ -2164,6 +2164,90 @@
     padding: 2rem;
     color: var(--text-muted);
   }
+
+  /* Sprint 26 / C1 — seating constraint violation markers */
+  .table-card--violation {
+    border: 2px solid var(--color-danger, #dc3545);
+  }
+  .constraint-violation-badge {
+    color: var(--color-danger, #dc3545);
+    margin-inline-start: 0.35rem;
+    font-size: 0.9em;
+  }
+  .constraint-violations-banner {
+    background: color-mix(in srgb, var(--color-danger, #dc3545) 12%, transparent);
+    border: 1px solid var(--color-danger, #dc3545);
+    border-radius: var(--radius-md, 6px);
+    padding: 0.75rem 1rem;
+    margin-block-end: 1rem;
+
+    & ul {
+      margin: 0.5rem 0 0;
+      padding-inline-start: 1.25rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Sprint 27 / C1 — top expense categories */
+  .expense-top-categories-title {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .expense-top-categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .expense-top-categories-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  .expense-cat-label {
+    font-weight: 500;
+  }
+  .expense-cat-stats {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  /* Sprint 28 / C1 — budget envelope summaries */
+  .budget-envelopes-title {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .budget-envelopes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .budget-envelope-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.budget-envelope-item--over {
+      color: var(--color-danger, #dc3545);
+    }
+  }
+  .budget-envelope-cat {
+    font-weight: 500;
+  }
+  .budget-envelope-stats {
+    font-size: 0.875rem;
+  }
   .empty-emoji {
     font-size: 2rem;
     display: block;
