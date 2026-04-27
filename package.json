@@ -58,6 +58,7 @@
     "audit:manual-chunks": "node scripts/audit-manual-chunks.mjs",
     "audit:store-mutation-depth": "node scripts/audit-store-mutation-depth.mjs",
     "audit:storage-prefix": "node scripts/audit-storage-prefix.mjs",
+    "audit:tsc": "node scripts/audit-tsc.mjs",
     "audit": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch",
     "audit:all": "npm run audit:dead && npm run audit:security && npm run audit:sections && npm run audit:arch && npm run audit:actions && npm run audit:trusted-types && npm run audit:adrs && npm run audit:plaintext-secrets && npm run audit:router && npm run audit:aria-roles && npm run audit:console-error && npm run audit:section-templates && npm run audit:base-section && npm run audit:jsdoc && npm run audit:css-scope && npm run audit:section-i18n && npm run audit:manual-chunks && npm run audit:store-mutation-depth",
     "size": "node scripts/size-report.mjs",
