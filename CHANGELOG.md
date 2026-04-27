@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.5] — 2026-04-27
+
+> **Sprint 77: ROADMAP deep rethink — every decision reopened to first principles.**
+
+### Changed (12.5.5)
+
+- **`ROADMAP.md`** — Comprehensive rewrite (~960 lines) reopening every
+  architectural decision (frontend, backend, language, docs, code methods,
+  configuration, tools, external APIs, database, infrastructure). Adds:
+  - **Executive Summary (TL;DR)** with the single highest-leverage decision
+    (flip `BACKEND_TYPE` → Supabase), top 5 P0 problems, top 3 unique moats.
+  - **§2 Decisions Reopened — Master Verdict Matrix** (60 rows) — every
+    significant decision with a binding verdict (keep / replace / extend) and
+    a one-line rationale.
+  - **§4 Lessons Learned** — what we got right (10 items) and wrong (15 items
+    with concrete fixes), plus an explicit anti-patterns list.
+  - **§5 Competitive Harvest** — extended 14-product comparison adding
+    *edge runtime*, *AI-native*, and *bundle gzip* dimensions; sharper
+    "capabilities to harvest" with concrete sources; refreshed Lystio (IL)
+    direct local benchmark.
+  - **§9 Phased Plan** — extended through v18 (AI-native + compliance pack).
+  - **§10 Sprint Backlog 77 → 130** — 54 numbered, ordered, sized sprints
+    grouped into 5 clusters mapping to v12.6 → v16 milestones.
+  - **§12 Cost & Self-Hosting Profile** — explicit free-tier coverage table;
+    confirms $0/month single-event target.
+  - **§13 Metrics & SLOs** — extended through v16; added FCP/TTI/CLS/RTL
+    parity SLOs.
+  - **§14 Open Decisions Register** — added OD-13 (analytics), OD-14 (edge
+    runtime split), OD-15 (revised TS migration → JSDoc-strict), OD-16
+    (coverage tool), OD-17 (CRDT), OD-18 (bundler), OD-19 (package manager),
+    OD-20 (deployment target).
+  - **Revised decisions** with explicit reasoning:
+    - **Edge runtime: hybrid** — Supabase Edge for DB-coupled work; Cloudflare
+      Workers for stateless proxy/AI/WABA (cold-start + free-tier wins).
+    - **Code language: stay JSDoc-strict; drive TSC errors → 0** — full TS
+      migration disruption exceeds marginal benefit.
+    - **Drop Facebook OAuth entirely** — low adoption, high bundle cost.
+    - **Stay Vite + npm** — Bun/pnpm considered and rejected on cost/benefit.
+- **`package.json`** — Version `12.5.4` → `12.5.5`.
+
 ## [12.5.4] — 2026-04-27
 
 > **Sprints 67–76: Node LTS pinning, supply-chain hardening, secrets runbook,
