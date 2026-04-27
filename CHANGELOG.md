@@ -4,6 +4,53 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.8] — 2026-04-28
+
+> **Sprints 98–107: Architecture cleanup II.**
+>
+> Native `<dialog>` modal pathway, signals scaffold, BaseSection POC, dialog
+> migration ADR, modal adoption audit, `@scope` CSS extension, kiosk mode
+> stub, TypeScript globalThis casts, dead-export reduction.
+
+### Added (12.5.8)
+
+- **S98** — TypeScript `globalThis` casts in `src/core/trusted-types.js` and `src/core/config-scopes.js`; resolves TS7017 index-signature errors (178 → 168). (no test delta)
+- **S99** — Removed 7 dead exports from `src/core/storage.js`
+  (`listBrowserStorageKeys`, `removeSessionStorage`,
+  `readSessionStorageJson`, `writeSessionStorageJson`, `getStorageQuota`,
+  `checkStorageHealth`, `QUOTA_WARNING_THRESHOLD`) and 1 from
+  `src/core/ui.js` (`confirmDialog`); dead-export count 82 → 78.
+- **S100** — `src/sections/changelog.js` migrated to BaseSection via `fromSection()` adapter; first of 19 sections adopted. (no test delta)
+- **S101** — `src/core/signals.js`: `signal(key)` + `computed(project, sources)` Preact-compatible facade backed by store; 5 tests. (2548 → 2553)
+- **S102** — `src/core/dialog.js`: native `<dialog>` helpers (`isDialogSupported`, `openDialog`, `closeDialog`, `toggleDialog`, `awaitDialogClose`); 4 tests; modal HTML migration deferred. (2553 → 2557)
+- **S103** — `openModal`/`closeModal` in `src/core/ui.js` detect `<dialog>`
+  elements and delegate to `showModal()`/`close()`; legacy `.modal-overlay`
+  divs continue to use the JS focus-trap path; new
+  `scripts/audit-modals.mjs` reports adoption ratio.
+- **S104** — ADR 013: native `<dialog>` migration plan — documents focus-trap retirement schedule (deferred until last `.modal-overlay` migrated, target v14). (no test delta)
+- **S105** — `audit:modals` npm script wired in; `tests/unit/ui-dialog-branch.test.mjs` verifies openModal/closeModal native + legacy branches; `manualChunks` already absent (verified by `audit:manual-chunks`). (2557 → 2559)
+- **S106** — `@scope` CSS extension to `#sec-budget` and `#sec-guests`; per-section scope coverage 4/19 → 6/19. (no test delta)
+- **S107** — QR/NFC kiosk UI stub: `setKioskMode`/`isKioskMode` exports in
+  `src/sections/checkin.js` (toggles `body.kiosk-mode` + locks landscape
+  orientation); CSS hides header/nav/breadcrumbs/status-bar/cursor in kiosk
+  mode; 3 i18n keys (`kiosk_on`, `kiosk_off`, `kiosk_toggle`) for `he`+`en`;
+  3 tests. (2559 → 2562)
+
+### Changed (12.5.8)
+
+- `src/core/ui.js` — `openModal`/`closeModal` now branch on element tag (`<dialog>` vs legacy overlay).
+- `src/sections/changelog.js` — refactored to extend `BaseSection`; mount/unmount/capabilities re-exported via `fromSection()`.
+- `css/components.css` — added `@scope (#sec-budget)` and `@scope (#sec-guests)` blocks.
+- `css/layout.css` — added `body.kiosk-mode` rules.
+
+### Tests (12.5.8)
+
+- 2562 tests across 166 files (was 2548 / 162). +14 tests, +4 files. 0 Node warnings, 0 lint errors/warnings.
+
+### Docs (12.5.8)
+
+- `docs/adr/013-native-dialog-migration.md` — migration plan and focus-trap retirement schedule.
+
 ## [12.5.7] — 2026-04-28
 
 > **Sprints 88–97: Backend convergence prep II.**
