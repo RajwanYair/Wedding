@@ -562,28 +562,15 @@ function _registerHandlers() {
     }
   });
   on("loginFacebook", () => {
-    const fb = /** @type {any} */ (window).FB;
-    if (!fb) return;
-    fb.login(
-      (/** @type {any} */ response) => {
-        if (response.authResponse) {
-          fb.api("/me", { fields: "name,email,picture" }, (/** @type {any} */ profile) => {
-            const result = loginOAuth(
-              profile.email || "",
-              profile.name,
-              profile.picture?.data?.url || "",
-              "facebook",
-            );
-            if (result) {
-              closeModal("authOverlay");
-              _switchSection("dashboard");
-              showToast(t("auth_welcome", { name: result.name }), "success");
-            }
-          });
-        }
-      },
-      { scope: "public_profile,email" },
-    );
+    // S93: Facebook JS SDK (window.FB) removed. Route the OAuth flow through
+    // Supabase Auth's `/auth/v1/authorize?provider=facebook` redirect. The
+    // legacy SDK is no longer loaded; the action now ends in a server-side
+    // OAuth round-trip. No-op when Supabase Auth is not configured.
+    import("./services/supabase-auth.js")
+      .then(({ signInWithProvider }) => signInWithProvider("facebook"))
+      .catch(() => {
+        showToast(t("auth_provider_unavailable") ?? "Provider unavailable", "error");
+      });
   });
   on("loginApple", () => {
     const AppleID = /** @type {any} */ (window).AppleID;

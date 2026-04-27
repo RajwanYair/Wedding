@@ -168,8 +168,8 @@ export default [
       ...langOpts,
       globals: {
         ...browserGlobals,
-        // Wedding-specific OAuth provider globals
-        FB: "readonly",
+        // Wedding-specific OAuth provider globals (Apple GIS, Google Identity).
+        // Facebook JS SDK was removed in S93 — Supabase Auth handles FB OAuth.
         AppleID: "readonly",
         google: "readonly",
         // Service Worker API globals (not in all shared configs)
