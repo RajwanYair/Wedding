@@ -3390,4 +3390,87 @@
   ::-webkit-scrollbar-thumb:hover {
     background: color-mix(in sRGB, var(--accent) 50%, transparent);
   }
+
+  /* ── B7 Sprint 58: @scope per-section isolation ──────────────────────── */
+  /* Prevent generic class names from bleeding across section boundaries.   */
+  /* Only browsers supporting @scope (Chrome 118+, Safari 17.4+) apply.     */
+  /* Legacy browsers continue to use the unscoped selectors above.          */
+
+  @scope (#sec-rsvp) {
+    .rsvp-hero {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .rsvp-calendar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      justify-content: center;
+    }
+
+    .rsvp-calendar-actions .btn {
+      font-size: 0.85rem;
+    }
+  }
+
+  @scope (#sec-analytics) {
+    .analytics-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+
+    .funnel-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+  }
+
+  @scope (#sec-timeline) {
+    .run-of-show-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+    }
+
+    .run-of-show-time {
+      flex-shrink: 0;
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-text-muted, #888);
+      min-width: 3.5rem;
+    }
+  }
+
+  @scope (#sec-checkin) {
+    .checkin-stats {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .checkin-progress-track {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .checkin-progress-fill {
+      height: 100%;
+      background: var(--positive, #34d399);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+  }
+
 } /* end @layer components */
