@@ -10,6 +10,7 @@
 
 import { DEBOUNCE_MS, MAX_RETRIES, BACKOFF_BASE_MS } from "../core/config.js";
 import { storageGet, storageSet, storageRemove } from "../core/storage.js";
+import { registerBackgroundSync } from "./background-sync.js";
 import {
   syncStoreKey,
   appendRsvpLog,
@@ -92,6 +93,8 @@ async function _flush(key) {
     } else {
       _retryCount.delete(key);
       _setStatus("error");
+      // S89: ask the SW to retry once connectivity returns.
+      registerBackgroundSync().catch(() => {});
     }
   }
 }
