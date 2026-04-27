@@ -7,7 +7,6 @@
 import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
-import { createMissingTabs } from "../services/backend.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -57,7 +56,9 @@ export function updateWeddingDetails() {
   const namesChanged =
     (prevGroomEn && newGroomEn !== prevGroomEn) || (prevBrideEn && newBrideEn !== prevBrideEn);
   if (namesChanged && window.confirm(t("backend_reinit_prompt"))) {
-    createMissingTabs()
+    // Dynamic import: sections must not statically import services (B9 arch rule)
+    import("../services/backend.js")
+      .then(({ createMissingTabs }) => createMissingTabs())
       .then(() => {
         window.alert(t("backend_reinit_done"));
       })

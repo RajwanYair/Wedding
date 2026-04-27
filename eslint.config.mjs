@@ -192,6 +192,34 @@ export default [
     },
     rules: { "no-console": "off" },
   },
+  // Section files — enforce arch boundary: sections must not statically import heavy services
+  // (B9 ROADMAP Phase B). Use src/core/sync.js bridge, src/repositories/, or dynamic import().
+  {
+    files: ["src/sections/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "../services/sheets.js",
+              message: "Sections must import sync primitives via ../core/sync.js (B9 arch rule).",
+            },
+            {
+              name: "../services/backend.js",
+              message:
+                "Sections must use ../repositories/ or dynamic import() for backend calls (B9 arch rule).",
+            },
+            {
+              name: "../services/supabase.js",
+              message:
+                "Sections must use ../repositories/ or dynamic import() for Supabase access (B9 arch rule).",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Test files — happy-dom + Node globals (vi, global, browser APIs not in root config)
   {
     files: ["tests/**"],
