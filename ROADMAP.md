@@ -466,6 +466,7 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 | B10 | Supply-chain | SBOM (CycloneDX), Trivy weekly, OpenSSF Scorecard | Workflows green; badges in README |
 
 > **v12.2.0 progress**: B2 tsc baseline 244→209 (35 errors fixed with JSDoc types); B9 arch violations 15→3 (12 sections redirected via `core/sync.js` bridge, CI `--baseline=3`). `audit:i18n-coverage --enforce --baseline=0` added to CI.
+> **v12.3.0 progress**: B1 `audit:section-lifecycle` advisory script added to CI; B2 tsc baseline 209→184 (-25 type errors fixed); B9 ESLint `no-restricted-imports` blocks static section→service imports; dead-export baseline 193→192.
 
 **Phase OKR:** *strict TS in core; strict architecture; strict supply-chain; no dead code; signals everywhere internally.*
 
@@ -475,7 +476,8 @@ Lystio is the dominant Israeli wedding platform. Direct comparison:
 | --- | --- | --- |
 | C1 | Wire dormant utilities | Connect 15+ built-but-unwired utils to UI (table below) |
 
-> **v12.2.0 progress (C1)**: 3/15 utilities wired — `seating-constraints.js` → Tables section (constraint badges + banner); `expense-analytics.js` → Expenses section (top-5 categories panel); `budget-tracker.js` → Budget section (envelope summaries card).
+> **v12.2.0 progress (C1)**: 3/15 utilities wired — `seating-constraints.js` → Tables; `expense-analytics.js` → Expenses; `budget-tracker.js` → Budget.
+> **v12.3.0 progress (C1)**: 7/15 utilities wired — additionally: `invitation-analytics.js` → Analytics funnel; `vcard.js` + `payment-link.js` → Vendors; `seating-exporter.js` → Tables export CSV/JSON.
 | C2 | AI | Seating CSP solver UI + invitation copy via edge LLM proxy (BYO key) |
 | C3 | WhatsApp | Cloud API end-to-end; template approval; delivery webhooks; A/B tests |
 | C4 | Realtime | Presence badges, live cursors, conflict-resolver wired in UI |

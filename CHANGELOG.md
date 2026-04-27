@@ -4,11 +4,48 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [12.2.0] — 2026-05-06
+## [12.3.0] — 2026-05-08
 
-> **Architecture bridge + C1 service wiring + i18n audit + tsc reduction.** Sprints 24–31 eliminate all
-> direct section→service cross-layer imports, wire three dormant analytics services to their UI sections,
-> add an i18n coverage audit gate, and cut TypeScript errors by 35 (244 → 209).
+> **Architecture enforcement + C1 utility wiring (seating exporter, vCard, payment links, analytics funnel).**
+> Sprints 34–43 add ESLint no-restricted-imports guard for sections, wire five dormant C1 utilities
+> to their UI sections, cut TypeScript errors 209→184 (-25), and add section lifecycle auditing.
+
+### Added (12.3.0)
+
+- **`src/utils/vcard.js`** — vCard 3.0 builder for vendor contacts. Exports `buildVCard()`,
+  `buildVCardDataUrl()`, `getVCardFilename()`. Wired to Vendors section as "Download contact" button.
+- **`src/utils/payment-link.js`** — Israeli payment deep-links (Bit, PayBox) + PayPal.me.
+  Exports `buildBitLink()`, `buildPayBoxLink()`, `buildPayPalLink()`, `buildAllPaymentLinks()`.
+  Wired to Vendors section: Bit + PayBox buttons appear when vendor has outstanding balance.
+- **`src/services/seating-exporter.js`** — seating chart export helpers.
+  Exports `buildSeatRows()`, `seatRowsToCsv()` (UTF-8 BOM, Excel-safe), `seatRowsToJson()`,
+  `downloadTextFile()`. Wired to Tables section via `exportSeatMapCsv()` + `exportSeatMapJson()`.
+- **Invitation engagement funnel in Analytics** — `renderInvitationEngagementFunnel()` renders a
+  4-stage SVG funnel (Invited→Opened→Clicked→RSVP'd) in `#analyticsInviteFunnel`; data from
+  `invitation-analytics.js`. New card in `src/templates/analytics.html`.
+- **Export Seating CSV / JSON buttons** in Tables toolbar — `data-action="exportSeatMapCsv"` and
+  `exportSeatMapJson`; registered in `table-handlers.js` and `action-registry.js`.
+- **`scripts/audit-sections.mjs`** + `audit:section-lifecycle` npm script — advisory scan of all
+  `src/sections/*.js` for `storeSubscribeScoped` + `cleanupScope` adoption. Added to `audit:all`
+  and CI as an advisory step.
+- **9 new i18n keys** (he + en): `btn_export_seating_csv`, `btn_export_seating_json`,
+  `tip_export_seating_csv`, `tip_export_seating_json`, `seating_export_col_table`,
+  `seating_export_col_seat`, `seating_export_col_guest`, `seating_export_col_count`,
+  `vendor_download_contact`, `vendor_pay_bit`, `vendor_pay_paybox`, `analytics_invite_funnel_title`,
+  `invite_funnel_invited`, `invite_funnel_opened`, `invite_funnel_clicked`, `invite_funnel_rsvpd`.
+
+### Changed (12.3.0)
+
+- **ESLint `no-restricted-imports`** rule added for `src/sections/**` — blocks static imports of
+  `../services/sheets.js`, `../services/backend.js`, `../services/supabase.js` from section files.
+  `src/sections/invitation.js` migrated to dynamic `import()` for `createMissingTabs`.
+- **TypeScript error baseline lowered 209 → 184** (-25 errors fixed in `undo.js`, `sync-manager.js`,
+  `md-to-html.js`, `guest-token.js`, `sheets-impl.js`, `contact-dedup.js`, `checkin-session.js`,
+  `auth-claims.js`, `currency.js`).
+- **Dead-export baseline lowered 193 → 192** (wired import in `dashboard.js`).
+- **CI**: advisory `audit:section-lifecycle` step added after BaseSection adoption check.
+
+## [12.2.0] — 2026-05-06
 
 ### Added (12.2.0)
 
