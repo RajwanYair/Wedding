@@ -60,23 +60,6 @@ function _applyDirection(lang) {
 }
 
 /**
- * Preload a secondary locale into the module cache during idle time.
- * Does NOT switch the active language — just primes the dynamic import.
- * @param {'he'|'en'} lang
- */
-export function preloadLocale(lang) {
-  const loader = () => {
-    if (lang === "en") import("../i18n/en.json");
-    // he is bundled eagerly — no preload needed
-  };
-  if (typeof requestIdleCallback === "function") {
-    requestIdleCallback(loader, { timeout: 5000 });
-  } else {
-    setTimeout(loader, 3000);
-  }
-}
-
-/**
  * Load the English locale into `_fallbackDict` so that `t()` returns an
  * English string for any key not present in the current locale's dictionary.
  * Safe to call multiple times — only fetches once. (Phase 4.3 — i18n fallback)
@@ -327,19 +310,6 @@ export function formatCurrency(value, currency) {
 }
 
 /**
- * Format a list of strings using Intl.ListFormat (S22a).
- * e.g. ["Alice", "Bob", "Carla"] → "Alice, Bob, and Carla" (en) / "Alice, Bob, ו-Carla" (he)
- * @param {string[]} items
- * @param {"conjunction"|"disjunction"|"unit"} [type]
- * @returns {string}
- */
-export function formatList(items, type = "conjunction") {
-  if (items.length === 0) return "";
-  const lf = new Intl.ListFormat(_locale(), { style: "long", type });
-  return lf.format(items);
-}
-
-/**
  * Format a date using the locale-appropriate short format.
  * Hebrew → DD/MM/YYYY  (Intl adapts automatically)
  * English → MM/DD/YYYY
@@ -358,17 +328,6 @@ export function formatShortDate(value) {
     dateStyle: "short",
     timeZone: "Asia/Jerusalem",
   }).format(d);
-}
-
-/**
- * Format a number using Intl.PluralRules (S22a) — returns the plural category.
- * Useful for a11y text: "1 אורח" vs "2 אורחים".
- * @param {number} count
- * @returns {"zero"|"one"|"two"|"few"|"many"|"other"}
- */
-export function pluralCategory(count) {
-  const pr = new Intl.PluralRules(_locale());
-  return /** @type {"zero"|"one"|"two"|"few"|"many"|"other"} */ (pr.select(count));
 }
 
 // ── S22b — RTL helpers (explicit per-locale) ─────────────────────────────
