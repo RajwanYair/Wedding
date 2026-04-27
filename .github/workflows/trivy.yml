@@ -23,7 +23,7 @@ jobs:
     permissions:
       security-events: write
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
       - name: Run Trivy (filesystem)
         uses: aquasecurity/trivy-action@0.28.0
@@ -48,13 +48,13 @@ jobs:
           exit-code: "0"
 
       - name: Upload filesystem SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-fs.sarif
           category: trivy-fs
 
       - name: Upload config SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-config.sarif
           category: trivy-config
