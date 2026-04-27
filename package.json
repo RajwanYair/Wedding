@@ -58,6 +58,7 @@
     "audit:css-scope": "node scripts/audit-css-scope.mjs",
     "audit:section-i18n": "node scripts/audit-section-i18n.mjs",
     "audit:manual-chunks": "node scripts/audit-manual-chunks.mjs",
+    "audit:modals": "node scripts/audit-modals.mjs",
     "audit:store-mutation-depth": "node scripts/audit-store-mutation-depth.mjs",
     "audit:storage-prefix": "node scripts/audit-storage-prefix.mjs",
     "audit:tsc": "node scripts/audit-tsc.mjs",
