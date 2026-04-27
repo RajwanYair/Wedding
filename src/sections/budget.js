@@ -11,7 +11,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getAllSummaries } from "../services/budget-tracker.js";
-import { getBurndownData } from "../services/budget-burndown.js";
+import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct } from "../services/budget-burndown.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -460,6 +460,16 @@ export function renderBudgetBurndownChart() {
 
   svg += `</svg>`;
   container.innerHTML = svg; // safe: numbers/dates/escaped i18n strings
+
+  // Consumption % and projected date below chart
+  const pctEl = document.getElementById("budgetBurndownPct");
+  if (pctEl) {
+    const consumption = getBudgetConsumptionPct();
+    const projDate = getProjectedEndDate();
+    pctEl.textContent = projDate
+      ? `${consumption}% ${t("budget_burndown_consumed")} · ${t("budget_burndown_projected")} ${projDate}`
+      : `${consumption}% ${t("budget_burndown_consumed")}`;
+  }
 }
 
 /** Escape string for SVG attribute/text content. */

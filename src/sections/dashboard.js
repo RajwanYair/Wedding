@@ -12,7 +12,8 @@ import { daysUntil, formatDateHebrew } from "../utils/date.js";
 import { load, save } from "../core/state.js";
 import { renderArrivalForecast } from "./analytics.js";
 import { RSVP_RESPONSE_STATUSES } from "../core/constants.js";
-import { getLatestEntry, flattenItems } from "../utils/changelog-parser.js";
+import { getLatestEntry, getEntriesSince, flattenItems } from "../utils/changelog-parser.js";
+import { STORAGE_KEYS } from "../core/constants.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -1083,8 +1084,11 @@ export async function renderWhatsNewPanel() {
       return;
     }
     const text = await res.text();
-    const latest = getLatestEntry(text);
-    if (!latest) {
+    // Show entries since last-seen version (or just the latest entry)
+    const lastSeen = localStorage.getItem(STORAGE_KEYS.LAST_SEEN_VERSION) ?? "";
+    const recentEntries = lastSeen ? getEntriesSince(text, lastSeen) : [];
+    const entry = recentEntries[0] ?? getLatestEntry(text);
+    if (!entry) {
       /** @type {HTMLElement} */ (card).hidden = true;
       return;
     }
@@ -1093,9 +1097,9 @@ export async function renderWhatsNewPanel() {
     if (!content) return;
 
     const title = document.getElementById("dashWhatsNewVersion");
-    if (title) title.textContent = `v${latest.version} — ${latest.date}`;
+    if (title) title.textContent = `v${entry.version} — ${entry.date}`;
 
-    const items = flattenItems(latest, 6);
+    const items = flattenItems(entry, 6);
     if (items.length === 0) {
       /** @type {HTMLElement} */ (card).hidden = true;
       return;

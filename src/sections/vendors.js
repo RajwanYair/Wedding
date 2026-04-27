@@ -13,6 +13,7 @@ import { pushUndo } from "../utils/undo.js";
 import { cleanPhone } from "../utils/phone.js";
 import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
 import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
+import { getOverdueVendors } from "../services/vendor-analytics.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -199,10 +200,9 @@ export function renderVendors() {
 
   const bannerEl = document.getElementById("vendorTotalBanner");
   if (bannerEl) {
-    const total = vendors.reduce((s, v) => s + (v.price || 0), 0);
-    const paid = vendors.reduce((s, v) => s + (v.paid || 0), 0);
+    const { totalCost, totalPaid, outstanding } = getVendorPaymentSummary();
     bannerEl.textContent =
-      t("vendor_total", { total, paid, remaining: total - paid }) || `₪${paid} / ₪${total}`;
+      t("vendor_total", { total: totalCost, paid: totalPaid, remaining: outstanding }) || `₪${totalPaid} / ₪${totalCost}`;
   }
   const emptyEl = document.getElementById("vendorsEmpty");
   if (emptyEl) emptyEl.hidden = vendors.length > 0;
@@ -305,11 +305,7 @@ export function getVendorStats() {
 export function renderOverdueChip() {
   const chip = document.getElementById("vendorOverdueChip");
   if (!chip) return;
-  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
-  const now = new Date();
-  const count = vendors.filter(
-    (v) => v.dueDate && new Date(v.dueDate) < now && (v.paid || 0) < (v.price || 0),
-  ).length;
+  const count = getOverdueVendors().length;
   if (count > 0) {
     chip.textContent = `⚠️ ${count} ${t("vendor_overdue_count")}`;
     /** @type {HTMLElement} */ (chip).hidden = false;

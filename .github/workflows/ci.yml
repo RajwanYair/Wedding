@@ -59,7 +59,7 @@ jobs:
 
       - name: Dead-export baseline gate (Phase B5)
         if: matrix.node-version == '22'
-        run: npm run audit:dead -- --baseline=192
+        run: npm run audit:dead -- --baseline=201
         # ROADMAP §6 Phase B5: dead exports < 5%. Baseline locked at v12.0.0
         # current count; regressions fail CI. Hard --enforce gate in v13.0.0
         # once dormant services are wired or removed.

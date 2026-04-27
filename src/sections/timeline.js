@@ -10,7 +10,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
-import { getRunOfShow, formatTimeUntil } from "../services/event-schedule.js";
+import { getRunOfShow, getNextItem, formatTimeUntil } from "../services/event-schedule.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -443,4 +443,13 @@ export function renderRunOfShow() {
   });
 
   container.replaceChildren(frag);
+
+  // Next-up countdown caption
+  const captionEl = document.getElementById("timelineRunOfShowNext");
+  if (captionEl) {
+    const next = getNextItem();
+    captionEl.textContent = next
+      ? `${next.icon} ${next.title} — ${formatTimeUntil(next.minutesDelta)}`
+      : "";
+  }
 }

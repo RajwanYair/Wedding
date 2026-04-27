@@ -18,7 +18,7 @@ import {
   uniqueClicks,
   uniqueRsvps,
 } from "../services/invitation-analytics.js";
-import { getRsvpFunnel } from "../services/rsvp-analytics.js";
+import { getRsvpFunnel, getRsvpConversionRates, unseatedConfirmedCount } from "../services/rsvp-analytics.js";
 import {
   renderDonut as _renderDonut,
   renderBar as _renderBar,
@@ -608,6 +608,13 @@ export function renderRsvpFunnel() {
 
   svg += `</svg>`;
   container.innerHTML = svg; // safe: numbers/CSS vars/escaped i18n strings
+
+  // Overall conversion rate badge (unseated risk)
+  const rates = getRsvpConversionRates();
+  const unseated = unseatedConfirmedCount();
+  const overall = Math.round(rates.overallRate * 100);
+  const rateEl = document.getElementById("analyticsRsvpFunnelRate");
+  if (rateEl) rateEl.textContent = `${overall}% ${t("rsvp_funnel_overall_rate")} · ${unseated} ${t("rsvp_funnel_unseated")}`;
 }
 
 // ── S8.3 Vendor Payment Timeline ─────────────────────────────────────────
