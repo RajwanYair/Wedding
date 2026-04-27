@@ -11,6 +11,7 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { pushUndo } from "../utils/undo.js";
 import { cleanPhone } from "../utils/phone.js";
+import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -148,6 +149,14 @@ export function renderVendors() {
       contractLink.textContent = "📄";
       actionsTd.appendChild(contractLink);
     }
+    // C1 Sprint 37: vCard download button
+    const vcardLink = document.createElement("a");
+    vcardLink.href = buildVCardDataUrl(v);
+    vcardLink.download = getVCardFilename(v);
+    vcardLink.className = "btn btn-small btn-ghost u-mr-xs";
+    vcardLink.title = t("vendor_download_contact");
+    vcardLink.textContent = "👤";
+    actionsTd.appendChild(vcardLink);
     const editBtn = document.createElement("button");
     editBtn.className = "btn btn-small btn-secondary";
     editBtn.textContent = t("btn_edit");
