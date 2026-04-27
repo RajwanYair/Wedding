@@ -109,6 +109,16 @@ for (const v of violations) {
   console.log(`    > ${v.snippet}`);
 }
 console.log();
+const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
+const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : null;
+if (BASELINE !== null && Number.isFinite(BASELINE)) {
+  if (violations.length > BASELINE) {
+    console.log(`[audit-aria-roles] BASELINE ${BASELINE}: ${violations.length} issue(s) (regression). Failing.`);
+    process.exit(1);
+  }
+  console.log(`[audit-aria-roles] OK: ${violations.length} ≤ baseline ${BASELINE}.`);
+  process.exit(0);
+}
 console.log(
   ENFORCE
     ? "[audit-aria-roles] ENFORCE mode: failing build."

@@ -15,7 +15,7 @@ const ROOT = process.cwd();
 const CSS_DIR = join(ROOT, "css");
 
 const ENFORCE = process.argv.includes("--enforce");
-const BASELINE = 999;
+const BASELINE = 4;
 
 const files = readdirSync(CSS_DIR).filter((n) => n.endsWith(".css"));
 

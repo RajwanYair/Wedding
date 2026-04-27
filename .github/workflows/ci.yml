@@ -88,6 +88,24 @@ jobs:
         # Sprint 10 (v12.0.0): baseline locked at 9. Regressions fail CI;
         # all new errors must route through services/error-monitor.js.
 
+      - name: ARIA roles baseline (Sprint 11)
+        if: matrix.node-version == '22'
+        run: npm run audit:aria-roles -- --baseline=18
+
+      - name: Router-usage baseline (ADR-025 R1)
+        if: matrix.node-version == '22'
+        run: npm run audit:router -- --baseline=1
+
+      - name: BaseSection adoption baseline (ADR-034)
+        if: matrix.node-version == '22'
+        run: npm run audit:base-section -- --enforce
+        # ADR-034: pending count locked at 19; tighten as sections migrate.
+
+      - name: CSS @scope baseline (ADR-036)
+        if: matrix.node-version == '22'
+        run: npm run audit:css-scope -- --enforce
+        # ADR-036: unscoped [data-section="…"] selectors locked at 4.
+
       - name: Plaintext-secrets gate (ADR-026 Phase E1)
         if: matrix.node-version == '22'
         run: npm run audit:plaintext-secrets -- --enforce

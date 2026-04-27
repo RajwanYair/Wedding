@@ -14,7 +14,7 @@ const ROOT = process.cwd();
 const SECTIONS = join(ROOT, "src/sections");
 
 const ENFORCE = process.argv.includes("--enforce");
-const BASELINE = 999;
+const BASELINE = 19;
 
 const files = readdirSync(SECTIONS).filter((n) => n.endsWith(".js"));
 
