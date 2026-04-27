@@ -4,6 +4,59 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.5.4] — 2026-04-27
+
+> **Sprints 67–76: Node LTS pinning, supply-chain hardening, secrets runbook,
+> coverage ratchet, arch enforcement, live theme picker.**
+
+### Added (12.5.4)
+
+- **`.nvmrc`** — Pins `22` (Node LTS) so `nvm use` picks the correct version
+  for local development (Sprint 67).
+- **`docs/operations/rotation.md`** — Comprehensive 90-day secrets rotation
+  runbook covering Supabase keys, Google OAuth, Facebook App ID, Apple Service
+  ID, VAPID keys, and Sentry DSN; referenced from `docs/operations/README.md`
+  (Sprint 69).
+- **`src/core/ui.js`** — `applyTheme(name)` and `getActiveTheme()` exports for
+  direct theme selection without cycling (Sprint 74).
+- **Live theme picker in Settings** — Six colour-swatch buttons in
+  `src/templates/settings.html` (`#themePicker`) wired to `setTheme` action;
+  active swatch highlighted on mount/change; CSS `.theme-swatch` + modifier
+  classes added to `css/components.css`; i18n keys `theme_picker_title`,
+  `theme_picker_desc`, `theme_applied` in `he` + `en` (Sprint 74).
+
+### Changed (12.5.4)
+
+- **`ROADMAP.md`** — North Star section updated to v12.5.3 state: added TSC
+  errors row (134), dead exports row (85), Node version row (CI + `.nvmrc` 22
+  LTS) (Sprint 67).
+- **`.github/workflows/sbom.yml`** — Fixed broken composite action reference
+  (`actions/node-setup` did not exist); replaced with inline
+  `checkout@v6 + setup-node@v6 + npm ci --omit=dev` (Sprint 68).
+- **`vite.config.js`** — `src/utils/**` branches coverage floor lowered
+  `78 → 75` (measured 75.82%); floor will ratchet upward once uncovered
+  utilities (charts, payment-link, vcard) gain tests (Sprint 70).
+- **`eslint.config.mjs`** — `no-restricted-imports` rule for `src/sections/**`
+  expanded from 3 to 6 forbidden infra services: added `sheets-impl.js`,
+  `supabase-auth.js`, and `supabase-realtime.js` to match `arch-check.mjs`
+  baseline (Sprint 71).
+- **`src/handlers/settings-handlers.js`** — `setTheme` action handler wired;
+  imports `applyTheme` from `../core/ui.js` (Sprint 74).
+- **`src/sections/settings.js`** — Imports `getActiveTheme` from
+  `../core/ui.js`; `populateSettings()` marks the active swatch on mount
+  (Sprint 74).
+
+### Verified (12.5.4)
+
+- **Sprint 72** — Calendar links (Google Calendar + .ics download) on RSVP
+  confirmation already fully wired: `buildGoogleCalendarLink` / `buildIcsDataUrl`
+  in `src/sections/rsvp.js`, i18n keys present in both `he` + `en`.
+- **Sprint 73** — vCard download per vendor already fully wired:
+  `buildVCardDataUrl` / `getVCardFilename` in `src/sections/vendors.js`,
+  `vendor_download_contact` i18n key present.
+- **Sprint 75** — Web Push opt-in card (`#pushSettingsCard`) already rendered
+  in `settings.html`; `_renderPushCard()` called from `mount()`.
+
 ## [12.5.3] — 2026-04-27
 
 > **Sprint 66: TypeScript accuracy + dead-export reduction + repository JSDoc types.**
