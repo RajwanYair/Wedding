@@ -24,7 +24,7 @@ const _inFlight = new Set();
 /** @type {Set<string>} */
 const _failed = new Set();
 
-/** @type {NodeJS.Timeout | null} */
+/** @type {ReturnType<typeof setTimeout> | null} */
 let _flushTimer = null;
 
 /** @type {boolean} */

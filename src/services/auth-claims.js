@@ -22,7 +22,7 @@ export function decodeJwtPayload(token) {
     const parts = token.split(".");
     if (parts.length < 2) return {};
     // base64url → base64
-    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const b64 = (parts[1] ?? "").replace(/-/g, "+").replace(/_/g, "/");
     const json = atob(b64);
     return JSON.parse(json);
   } catch {

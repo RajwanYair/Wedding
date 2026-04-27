@@ -76,6 +76,7 @@ export function findDuplicates(contacts, { phoneThreshold = 1, nameThreshold = 0
     for (let j = i + 1; j < contacts.length; j++) {
       const a = contacts[i];
       const b = contacts[j];
+      if (!a || !b) continue;
 
       // Phone match
       const pa = _normalisePhone(a.phone);

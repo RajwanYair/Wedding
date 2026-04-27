@@ -35,7 +35,7 @@ export function popUndo() {
  * @returns {UndoEntry | null}
  */
 export function peekUndo() {
-  return _stack.length > 0 ? _stack[_stack.length - 1] : null;
+  return _stack.length > 0 ? (_stack[_stack.length - 1] ?? null) : null;
 }
 
 /**

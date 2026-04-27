@@ -107,7 +107,7 @@ export function parseToken(token) {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
-    const payload = JSON.parse(b64urlDecode(parts[1]));
+    const payload = JSON.parse(b64urlDecode(parts[1] ?? ""));
     if (typeof payload.guestId !== "string") return null;
     if (typeof payload.exp !== "number") return null;
     return { guestId: payload.guestId, exp: payload.exp };

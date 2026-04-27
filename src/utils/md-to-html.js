@@ -35,8 +35,8 @@ export function mdToHtml(md) {
         out.push("</ul>");
         inList = false;
       }
-      const level = h[1].length;
-      const text = _escapeHtml(_inlineFormat(h[2]));
+      const level = (h[1] ?? "#").length;
+      const text = _escapeHtml(_inlineFormat(h[2] ?? ""));
       out.push(`<h${level + 1}>${text}</h${level + 1}>`);
       continue;
     }

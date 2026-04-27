@@ -11,12 +11,12 @@
 export const SUPPORTED_CURRENCIES = /** @type {const} */ (["ILS", "USD", "EUR", "GBP"]);
 
 /** Default locale per currency. */
-const CURRENCY_LOCALE = {
+const CURRENCY_LOCALE = /** @type {Record<string, string>} */ ({
   ILS: "he-IL",
   USD: "en-US",
   EUR: "de-DE",
   GBP: "en-GB",
-};
+});
 
 // ─── Formatting ───────────────────────────────────────────────────────────────
 

@@ -173,6 +173,7 @@ export async function sheetsPostImpl(payload) {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     return resp.json();
   }
+  throw new Error("Max retries exceeded");
 }
 
 /**

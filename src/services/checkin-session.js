@@ -71,8 +71,9 @@ export function startSession(opts = {}) {
 export function endSession(sessionId) {
   const sessions = _getSessions();
   const idx = sessions.findIndex((s) => s.id === sessionId);
-  if (idx === -1 || !sessions[idx].active) return false;
-  sessions[idx] = { ...sessions[idx], active: false, endedAt: Date.now() };
+  const _sess = sessions[idx];
+  if (idx === -1 || !_sess || !_sess.active) return false;
+  sessions[idx] = { ..._sess, active: false, endedAt: Date.now() };
   _save(sessions);
   return true;
 }
@@ -100,6 +101,7 @@ export function checkIn(sessionId, guestId, partySize = 1) {
   const idx = sessions.findIndex((s) => s.id === sessionId);
   if (idx === -1) return "session_not_found";
   const session = sessions[idx];
+  if (!session) return "session_not_found";
   if (!session.active) return "session_ended";
   if (session.checkIns[guestId]) return "already_checked_in";
   session.checkIns[guestId] = { ts: Date.now(), partySize };
