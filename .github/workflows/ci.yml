@@ -102,10 +102,10 @@ jobs:
 
       - name: Coverage gate (global totals)
         if: matrix.node-version == '22'
-        run: npm run audit:coverage
-        # Reads coverage/coverage-summary.json (json-summary reporter) and checks
-        # global line/branch/function/statement floors. Advisory; use --enforce once
-        # overall coverage is stable.
+        run: npm run audit:coverage -- --enforce
+        # ROADMAP §6 Phase A9: hard gate at v12.0.0 non-regression floors
+        # (49% lines / 41% branches / 54% functions / 49% statements).
+        # Tighten floors each sprint; ROADMAP long-term target is 80/75/80/80.
 
   security-scan:
     name: Security Scan
