@@ -64,6 +64,7 @@ import {
 } from "./core/ui.js";
 import { fetchGasVersion } from "./core/status-bar.js";
 import { injectTemplate } from "./core/template-loader.js";
+import { installTrustedTypesPolicy } from "./core/trusted-types.js";
 
 // ── Services ──────────────────────────────────────────────────────────────
 import {
@@ -143,10 +144,16 @@ let _activeSection = null;
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────
 (async function bootstrap() {
-  // 0. Storage layer — initialise IndexedDB / localStorage / memory adapter
-  await initStorage();
+  // S90: Install Trusted Types policy before any innerHTML assignments.
+  // No-op in browsers without TT support.
+  try {
+    installTrustedTypesPolicy();
+  } catch {
+    /* never break boot for security policy install */
+  }
 
-  // 0a. One-time migration from localStorage → IndexedDB (S16)
+  // 0. Storage layer — initialise IndexedDB / localStorage / memory adapter
+  await initStorage();  // 0a. One-time migration from localStorage → IndexedDB (S16)
   if (getAdapterType() === "indexeddb" && readBrowserStorage(STORAGE_KEYS.IDB_MIGRATED) !== "1") {
     const migrated = await migrateFromLocalStorage();
     if (migrated > 0) {
