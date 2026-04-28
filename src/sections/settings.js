@@ -44,6 +44,7 @@ import {
   importThemeJson,
 } from "../services/theme-export.js";
 import { validatePluginManifest } from "../services/plugin-manifest.js";
+import { addAdminUser, removeAdminUser } from "../services/admin.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -432,9 +433,25 @@ export function addApprovedEmail() {
     list.push(email);
     storeSet("approvedEmails", list);
     save("approvedEmails", list);
+    addAdminUser(email).catch(() => {});
     _renderApprovedEmails();
   }
   input.value = "";
+}
+
+/**
+ * Remove an email from the approved admin allowlist.
+ * @param {HTMLElement} triggerEl  The remove button (carries data-email attribute)
+ */
+export function removeApprovedEmail(triggerEl) {
+  const email = triggerEl.dataset.email ?? triggerEl.closest("[data-email]")?.dataset.email ?? "";
+  if (!email) return;
+  const list = /** @type {string[]} */ (storeGet("approvedEmails") ?? []);
+  const updated = list.filter((e) => e.trim().toLowerCase() !== email.trim().toLowerCase());
+  storeSet("approvedEmails", updated);
+  save("approvedEmails", updated);
+  removeAdminUser(email).catch(() => {});
+  _renderApprovedEmails();
 }
 
 /**
@@ -561,6 +578,14 @@ function _renderApprovedEmails() {
     const span = document.createElement("span");
     span.textContent = email;
     row.appendChild(span);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-icon btn-danger btn-small";
+    btn.setAttribute("data-action", "removeApprovedEmail");
+    btn.setAttribute("data-email", email);
+    btn.setAttribute("aria-label", t("admin_remove_email") || "Remove");
+    btn.textContent = t("admin_remove_email") || "✕";
+    row.appendChild(btn);
     container.appendChild(row);
   });
 }

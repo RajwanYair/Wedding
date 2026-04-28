@@ -833,6 +833,7 @@
   "error_network": "Network error — check your internet connection",
   "analytics_meal_summary_title": "Meal Summary for Catering",
   "no_approved_emails": "No admins added yet",
+  "admin_remove_email": "Remove",
   "all_guests_seated": "All guests are seated ✅",
   "count": "guests",
   "your_table": "Your table",

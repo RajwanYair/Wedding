@@ -29,6 +29,7 @@ import {
   saveBackendType,
   saveTransportSettings,
   addApprovedEmail,
+  removeApprovedEmail,
   clearAuditLog,
   clearErrorLog,
   generateRsvpQrCode,
@@ -185,6 +186,7 @@ export function register() {
     if (nameInput) nameInput.value = "";
   });
   on("addApprovedEmail", () => addApprovedEmail());
+  on("removeApprovedEmail", (el) => removeApprovedEmail(el));
   on("clearAllData", () => clearAllData());
   on("switchLanguage", async () => {
     const current = normalizeUiLanguage(load("lang", "he"));

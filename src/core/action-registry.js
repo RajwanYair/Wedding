@@ -149,6 +149,7 @@ export const ACTIONS = /** @type {const} */ ({
   SUPABASE_CHECK_CONNECTION: "supabaseCheckConnection",
   SAVE_TRANSPORT_SETTINGS: "saveTransportSettings",
   ADD_APPROVED_EMAIL: "addApprovedEmail",
+  REMOVE_APPROVED_EMAIL: "removeApprovedEmail",
   CLEAR_ALL_DATA: "clearAllData",
   CLEAR_AUDIT_LOG: "clearAuditLog",
   REFRESH_AUDIT_LOG: "refreshAuditLog",
