@@ -1336,5 +1336,12 @@
   "dns_note_replace_project": "Reemplaza con el nombre de tu proyecto Cloudflare",
   "dns_note_replace_service": "Reemplaza con el nombre de tu servicio Render",
   "dns_note_netlify_lb": "IP del balanceador de carga de Netlify",
-  "dns_note_cf_root_cname": "CNAME raíz — compatible solo con DNS de Cloudflare"
+  "dns_note_cf_root_cname": "CNAME raíz — compatible solo con DNS de Cloudflare",
+  "monitoring_title": "Informes de errores",
+  "monitoring_description": "Elige si deseas enviar informes de errores anónimos.",
+  "monitoring_opt_in": "Activar informes de errores",
+  "monitoring_enabled_toast": "Informes de errores activados",
+  "monitoring_disabled_toast": "Informes de errores desactivados",
+  "plural_chars": "{count, plural, one {# carácter restante} other {# caracteres restantes}}",
+  "print_preview_open": "Vista previa de impresión"
 }

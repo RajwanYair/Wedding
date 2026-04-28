@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.1.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.2.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,16 +20,14 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2025-07-04, v13.1.0):** **3 109 tests passing** across 222 files · 0 lint errors / 0 warnings
+**State (2025-07-10, v13.2.0):** **3 109 tests passing** across 222 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
-CI + `.nvmrc` · GitHub Pages deploy · **4 locales** (HE primary · EN · AR · FR · ES scaffold) · 22
+CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 22
 Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
-Sprints 118–137 complete (Cluster V): ICU MessageFormat, theme.json export, print prep, notification
-centre, vendor analytics, RSVP funnel, budget burndown, run-of-show editor, What's New engine, CDN
-image builder, DNS CNAME helpers, deploy-button URLs, Lighthouse-CI config, theme export/import,
-workspace RBAC, plugin manifest validator, public website builder data model, FR locale bootstrap,
-Capacitor config builder, ES locale scaffold.
+Sprints 118–137 complete (Cluster V); S196–S205 complete (Cluster VI): deploy buttons, DNS CNAME UI,
+PII bootstrap, ICU plurals sweep, FR/ES critical translation, IDB write queue, print preview picker,
+GlitchTip/Sentry monitoring activation.
 
 **The one decision that matters most:** flip `BACKEND_TYPE` from `"sheets"` to `"supabase"`.
 This single line of code unblocks every other capability in this roadmap. Three major versions
@@ -78,7 +76,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.1.0 · 2025-07-04
+### Actual state — v13.2.0 · 2025-07-10
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -91,7 +89,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
-| i18n keys (HE = primary) | **1 201** keys × 5 locales (HE · EN · AR · FR · ES scaffold) | ✅ HE/EN/AR · ⚠ FR/ES translation |
+| i18n keys (HE = primary) | **1 208** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ HE/EN/AR/FR/ES |
 | DB migrations | **22** Supabase migrations | ✅ |
 | Active backend | `BACKEND_TYPE = "sheets"` · Supabase wired but not primary | ❌ P0 (flip in v13) |
 | Auth tokens | plaintext in `localStorage` | ❌ P0 (encrypt in v13) |

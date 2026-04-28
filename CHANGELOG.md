@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.2.0] — 2025-07-10
+
+> **S196–S205: Deploy buttons, DNS UI, PII bootstrap, ICU plurals, FR/ES translation, IDB queue, print preview, GlitchTip monitoring.**
+
+### Added
+
+- **S196** — Deploy-button widget in Settings: `buildAllDeployButtons()` from `src/utils/deploy-buttons.js`; Vercel, Netlify, Railway, Render one-click buttons
+- **S198** — DNS / CNAME instructions panel in Website Builder: `validateDomain()` + `buildDnsInstructions()` in `src/utils/dns-cname.js`; live DNS record table on domain input
+- **S203** — IndexedDB persistent write queue: `src/utils/idb-queue.js` (`idbQueueRead`, `idbQueueWrite`, `idbQueueClear`); `offline-queue.js` now dual-writes to IDB + localStorage
+
+### Changed
+
+- **S199** — PII storage migration activated in `src/main.js`: `migratePlaintextPii()` runs on startup
+- **S200** — ICU plural sweep: `plural_days`, `plural_guests`, `plural_chars` keys replace ad-hoc string concatenation in dashboard, analytics, and WhatsApp sections
+- **S202** — FR/ES critical key translation: 29 keys each patched in `fr.json` and `es.json` via `scripts/translate-fr-es-critical.mjs`
+- **S204** — Print preview section picker: auto-renders on `openPrintPreview` action via `requestAnimationFrame`; Print Preview button added to guests template
+- **S205** — GlitchTip/Sentry DSN activation: `monitoring.js` now resolves `VITE_GLITCHTIP_DSN` before `VITE_SENTRY_DSN`; monitoring opt-in toggle in Settings
+
 ## [13.1.0] — 2025-07-04
 
 > **S186–S195: Service consolidation 83→70 files; BaseSection scoped lifecycle upgrade.**

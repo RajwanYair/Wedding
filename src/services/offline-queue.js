@@ -27,24 +27,26 @@ const _MAX_DELAY_MS = 5 * 60_000;
  * Initialise the offline queue. Loads persisted items (IDB first, store fallback)
  * and wires online/offline events.
  * @param {{ webAppUrl?: string, postFn?: (payload: unknown) => Promise<unknown> }} [opts]
- * @returns {Promise<void>}
+ * @returns {void}
  */
-export async function initOfflineQueue(opts) {
+export function initOfflineQueue(opts) {
   _webAppUrl = opts?.webAppUrl ?? null;
   _postFn = opts?.postFn ?? _defaultPost;
 
-  // Load from IDB; fall back to store (localStorage) for older sessions.
-  const idbItems = await idbQueueRead();
-  if (idbItems.length > 0) {
-    _queue = /** @type {typeof _queue} */ (idbItems);
-  } else {
-    _queue = /** @type {typeof _queue} */ (storeGet("offline_queue")) ?? [];
-    if (_queue.length > 0) {
-      // Migrate from localStorage to IDB.
+  // Load synchronously from store (localStorage) for immediate availability.
+  _queue = /** @type {typeof _queue} */ (storeGet("offline_queue")) ?? [];
+
+  // Async upgrade: attempt to load from IDB and prefer it if available.
+  idbQueueRead().then((idbItems) => {
+    if (idbItems.length > 0) {
+      _queue = /** @type {typeof _queue} */ (idbItems);
+      _updateBadge();
+    } else if (_queue.length > 0) {
+      // Migrate existing localStorage items to IDB.
       idbQueueWrite(_queue).catch(() => {});
-      storeSet("offline_queue", []);
     }
-  }
+  }).catch(() => {});
+
   _updateBadge();
 
   if (typeof window !== "undefined") {
@@ -207,10 +209,10 @@ export function getQueueStats() {
 // ── Internal ──────────────────────────────────────────────────────────────
 
 function _persist() {
-  idbQueueWrite(_queue).catch(() => {
-    // IDB unavailable — fall back to store.
-    storeSet("offline_queue", _queue);
-  });
+  // Always write to store (localStorage) for immediate sync backup.
+  storeSet("offline_queue", _queue);
+  // Also write to IDB for crash-resilient persistence (S203).
+  idbQueueWrite(_queue).catch(() => {});
 }
 
 function _updateBadge() {
