@@ -497,13 +497,25 @@
   <div id="placeCardsGrid" class="place-cards-grid" aria-hidden="true"></div>
   <div id="tableSignsGrid" class="table-signs-grid" aria-hidden="true"></div>
 
-  <!-- Expense Modal -->
+  <!-- Expense Modal (S174: native <dialog>) -->
     <!-- S1: expenseModal loaded lazily — src/modals/expenseModal.html -->
-  <div id="expenseModal" class="modal-overlay" data-modal="expenseModal" role="dialog" aria-modal="true" hidden></div>
+  <dialog id="expenseModal" class="modal-dialog" data-modal="expenseModal" aria-labelledby="expenseModalTitle"></dialog>
 
   <!-- Timeline Item Modal -->
     <!-- S1: timelineModal loaded lazily — src/modals/timelineModal.html -->
   <div id="timelineModal" class="modal-overlay" data-modal="timelineModal" role="dialog" aria-modal="true" hidden></div>
+
+  <!-- Conflict Resolution Modal (S174: native <dialog>) -->
+    <!-- S1: conflictModal loaded lazily — src/modals/conflictModal.html -->
+  <dialog id="conflictModal" class="modal-dialog" data-modal="conflictModal" aria-labelledby="conflictModalTitle"></dialog>
+
+  <!-- Keyboard Shortcuts Modal (S174: native <dialog>) -->
+    <!-- S1: shortcutsModal loaded lazily — src/modals/shortcutsModal.html -->
+  <dialog id="shortcutsModal" class="modal-dialog" data-modal="shortcutsModal"></dialog>
+
+  <!-- Print Preview Modal (S174: native <dialog>) -->
+    <!-- S1: printPreviewModal loaded lazily — src/modals/printPreviewModal.html -->
+  <dialog id="printPreviewModal" class="modal-dialog" data-modal="printPreviewModal" aria-labelledby="printPreviewTitle"></dialog>
 
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer" role="region" aria-live="polite" aria-atomic="false" aria-label="Notifications" data-i18n-aria="notifications_region"></div>

@@ -1,12 +1,11 @@
 <!-- S15.2 Keyboard Shortcuts Help Modal -->
-<div class="modal-overlay" id="shortcutsModal" aria-hidden="true">
-  <div class="modal-box modal-box--md">
-    <div class="modal-header">
-      <h2 data-i18n="shortcuts_title">קיצורי מקלדת</h2>
-      <button class="modal-close" data-action="closeModal" data-action-arg="shortcutsModal">&times;</button>
+<div class="modal">
+  <div class="modal-header">
+    <h2 data-i18n="shortcuts_title">קיצורי מקלדת</h2>
+    <button class="modal-close" data-action="closeModal" data-action-arg="shortcutsModal">&times;</button>
     </div>
-    <div class="modal-body">
-      <table class="shortcuts-table">
+  <div class="modal-body">
+    <table class="shortcuts-table">
         <thead>
           <tr>
             <th data-i18n="shortcuts_key">מקש</th>
@@ -27,9 +26,8 @@
           <tr><td><kbd>?</kbd></td><td data-i18n="shortcuts_help">פתח חלון עזרה זה</td></tr>
         </tbody>
       </table>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" data-action="closeModal" data-action-arg="shortcutsModal" data-i18n="btn_close">סגור</button>
-    </div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-secondary" data-action="closeModal" data-action-arg="shortcutsModal" data-i18n="btn_close">סגור</button>
   </div>
 </div>
