@@ -1146,6 +1146,7 @@
   "plural_guests": "{count, plural, =0 {אין אורחים} one {אורח אחד} two {שני אורחים} few {# אורחים} many {# אורחים} other {# אורחים}}",
   "plural_tables": "{count, plural, =0 {אין שולחנות} one {שולחן אחד} two {שני שולחנות} few {# שולחנות} many {# שולחנות} other {# שולחנות}}",
   "plural_days": "{count, plural, =0 {היום} one {יום אחד} two {יומיים} few {# ימים} many {# ימים} other {# ימים}}",
+  "plural_chars": "{count, plural, one {תו אחד נותר} other {# תווים נותרים}}",
   "plural_children": "{count, plural, =0 {אין ילדים} one {ילד אחד} two {שני ילדים} few {# ילדים} many {# ילדים} other {# ילדים}}",
   "plural_vendors": "{count, plural, =0 {אין ספקים} one {ספק אחד} two {שני ספקים} few {# ספקים} many {# ספקים} other {# ספקים}}",
   "plural_items": "{count, plural, =0 {אין פריטים} one {פריט אחד} two {שני פריטים} few {# פריטים} many {# פריטים} other {# פריטים}}",

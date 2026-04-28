@@ -1246,7 +1246,7 @@ export function printDietaryCards() {
       mealCounts[m] = (mealCounts[m] || 0) + (g.count || 1);
     });
     lines.push(
-      `<div class="card"><h3>${_escSvg(tb.name)} (${seated.reduce((s, g) => s + (g.count || 1), 0)} ${t("stat_guests")})</h3>`,
+      `<div class="card"><h3>${_escSvg(tb.name)} (${t("plural_guests", { count: seated.reduce((s, g) => s + (g.count || 1), 0) })})</h3>`,
     );
     lines.push(
       `<table><thead><tr><th>${t("col_name")}</th><th>${t("col_meal")}</th><th>${t("label_meal_notes")}</th><th>${t("col_count")}</th></tr></thead><tbody>`,

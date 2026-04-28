@@ -192,7 +192,7 @@ export function updateCountdown() {
     const hours = Math.floor((diff % 86_400_000) / 3_600_000);
     const mins = Math.floor((diff % 3_600_000) / 60_000);
     const secs = Math.floor((diff % 60_000) / 1_000);
-    el.countdown.textContent = `${days} ${t("countdown_days")} ${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    el.countdown.textContent = `${t("plural_days", { count: days })} ${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   }
   if (el.weddingDateDisplay) {
     el.weddingDateDisplay.textContent = formatDateHebrew(dateStr);

@@ -212,7 +212,7 @@ export function updateWaPreview(templateText, guest) {
   if (charCountEl) {
     const len = message.length;
     const left = Math.max(0, 4096 - len);
-    charCountEl.textContent = `${len} / 4096 (${left} ${t("wa_chars_left") || "characters left"})`;
+    charCountEl.textContent = `${len} / 4096 (${t("plural_chars", { count: left })})`;
     charCountEl.classList.toggle("wa-char-warn", left < 200);
   }
 }
