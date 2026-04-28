@@ -39,7 +39,7 @@ vi.mock("../../src/services/sheets.js", () => ({
   createMissingSheetTabs: vi.fn(),
 }));
 
-vi.mock("../../src/services/sheets-impl.js", () => ({
+vi.mock("../../src/services/sheets.js", () => ({
   syncStoreKeyToSheetsImpl: vi.fn(),
   appendToRsvpLogImpl: vi.fn(),
   sheetsCheckConnectionImpl: vi.fn(),

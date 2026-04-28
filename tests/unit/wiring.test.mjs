@@ -9,7 +9,7 @@
  *   4. src/sections/index.js        (barrel exports)
  *   5. index.html                   (section containers + data-template + nav tabs)
  *   6. src/templates/*.html          (template files exist on disk)
- *   7. src/services/sheets-impl.js  (_SHEET_NAMES + _COL_ORDER)
+ *   7. src/services/sheets.js  (_SHEET_NAMES + _COL_ORDER)
  *   8. src/i18n/he.json + en.json  (i18n keys for nav)
  *
  * These tests read source files as text and verify cross-references.
@@ -34,7 +34,7 @@ const NAV_JS = readFileSync(resolve(root, "src", "core", "nav.js"), "utf8");
 const MAIN_JS = readFileSync(resolve(root, "src", "main.js"), "utf8");
 const SECTION_RESOLVER_JS = readFileSync(resolve(root, "src", "core", "section-resolver.js"), "utf8");
 const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
-const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets-impl.js"), "utf8");
+const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets.js"), "utf8");
 const CONSTANTS_JS = readFileSync(resolve(root, "src", "core", "constants.js"), "utf8");
 const I18N_HE = JSON.parse(readFileSync(resolve(root, "src", "i18n", "he.json"), "utf8"));
 const I18N_EN = JSON.parse(readFileSync(resolve(root, "src", "i18n", "en.json"), "utf8"));

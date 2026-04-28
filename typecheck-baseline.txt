@@ -126,9 +126,9 @@ src/services/session-security.js::TS7005::Variable 'timeoutHandle' implicitly ha
 src/services/session-security.js::TS7005::Variable 'warningHandle' implicitly has an 'any' type.
 src/services/session-security.js::TS7034::Variable 'timeoutHandle' implicitly has type 'any' in some locations where its type cannot be determined.
 src/services/session-security.js::TS7034::Variable 'warningHandle' implicitly has type 'any' in some locations where its type cannot be determined.
-src/services/sheets-impl.js::TS2345::Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
-src/services/sheets-impl.js::TS2538::Type 'undefined' cannot be used as an index type.
-src/services/sheets-impl.js::TS7030::Not all code paths return a value.
+src/services/sheets.js::TS2345::Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+src/services/sheets.js::TS2538::Type 'undefined' cannot be used as an index type.
+src/services/sheets.js::TS7030::Not all code paths return a value.
 src/services/supabase-auth.js::TS2339::Property 'expires_at' does not exist on type 'never'.
 src/services/supabase-auth.js::TS2339::Property 'refresh_token' does not exist on type 'never'.
 src/services/supabase-auth.js::TS2532::Object is possibly 'undefined'.

@@ -22,7 +22,6 @@ const SECTIONS_DIR = join(ROOT, "src", "sections");
 /** Forbidden import targets when read from src/sections/*.js */
 const FORBIDDEN = [
   "../services/sheets.js",
-  "../services/sheets-impl.js",
   "../services/backend.js",
   "../services/supabase.js",
   "../services/supabase-auth.js",

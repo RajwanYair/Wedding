@@ -18,7 +18,7 @@ vi.mock("../../src/core/store.js", () => ({
   storeSet: vi.fn(),
 }));
 
-import { validateSchema, schemaHandshake, fetchServerSchema } from "../../src/services/sheets-impl.js";
+import { validateSchema, schemaHandshake, fetchServerSchema } from "../../src/services/sheets.js";
 
 // ── validateSchema ────────────────────────────────────────────────────────
 

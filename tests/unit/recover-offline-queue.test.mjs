@@ -41,6 +41,13 @@ vi.mock("../../src/core/config.js", () => ({
   DEBOUNCE_MS: 100,
   MAX_RETRIES: 2,
   BACKOFF_BASE_MS: 100,
+  STORAGE_PREFIX: "wedding_v1_",
+  SHEETS_WEBAPP_URL: "",
+  SPREADSHEET_ID: "",
+  ADMIN_EMAILS: [],
+  BACKEND_TYPE: "sheets",
+  SUPABASE_URL: "",
+  SUPABASE_ANON_KEY: "",
 }));
 
 const { enqueueWrite, recoverOfflineQueue } = await import("../../src/services/sheets.js");

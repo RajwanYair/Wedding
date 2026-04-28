@@ -207,10 +207,6 @@ export default [
               message: "Sections must import sync primitives via ../core/sync.js (B9 arch rule).",
             },
             {
-              name: "../services/sheets-impl.js",
-              message: "Sections must import sync primitives via ../core/sync.js (B9 arch rule).",
-            },
-            {
               name: "../services/backend.js",
               message:
                 "Sections must use ../repositories/ or dynamic import() for backend calls (B9 arch rule).",

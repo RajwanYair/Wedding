@@ -23,9 +23,9 @@ let _sheetLog = null;
 let _sheetCheck = null;
 /** @type {typeof import('./sheets.js').createMissingSheetTabs | null} */
 let _sheetCreate = null;
-/** @type {typeof import('./sheets-impl.js').pullAllFromSheetsImpl | null} */
+/** @type {typeof import('./sheets.js').pullAllFromSheetsImpl | null} */
 let _sheetPull = null;
-/** @type {typeof import('./sheets-impl.js').pushAllToSheetsImpl | null} */
+/** @type {typeof import('./sheets.js').pushAllToSheetsImpl | null} */
 let _sheetPushAll = null;
 
 /** @type {typeof import('./supabase.js').syncStoreKeyToSupabase | null} */
@@ -88,7 +88,7 @@ export function isBackendFlipReady() {
 
 async function _loadSheetsModule() {
   if (_sheetSync) return;
-  const m = await import("./sheets-impl.js");
+  const m = await import("./sheets.js");
   _sheetSync = m.syncStoreKeyToSheetsImpl;
   _sheetLog = m.appendToRsvpLogImpl;
   _sheetCheck = m.sheetsCheckConnectionImpl;
