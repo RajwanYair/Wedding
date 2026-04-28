@@ -17,6 +17,7 @@
  */
 
 import { SECTION_LIST } from "./constants.js";
+import { FEATURE_PUSHSTATE_ROUTER } from "./config.js";
 
 const _validSections = new Set(SECTION_LIST);
 
@@ -32,9 +33,9 @@ function _isValid(name) {
 }
 
 /**
- * Build a URL for a route. Path style uses `#section` for now to remain
- * compatible with the GitHub Pages base path; ADR-025 R3 flips this to
- * a real path under `import.meta.env.BASE_URL`.
+ * Build a URL for a route. When FEATURE_PUSHSTATE_ROUTER is true, uses a
+ * real path URL under BASE_URL (ADR-025 R3). Default: hash-based for
+ * backward-compat with GitHub Pages.
  *
  * @param {string} name
  * @param {Record<string, string|number|undefined>} [params]
@@ -47,6 +48,11 @@ function _buildUrl(name, params = {}) {
     search.set(k, String(v));
   }
   const qs = search.toString();
+  if (FEATURE_PUSHSTATE_ROUTER) {
+    const base = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) ?? "/";
+    const path = `${base.replace(/\/$/, "")}/${name}`;
+    return qs ? `${path}?${qs}` : path;
+  }
   return `#${name}${qs ? `?${qs}` : ""}`;
 }
 
@@ -57,6 +63,17 @@ function _buildUrl(name, params = {}) {
  * @returns {Route}
  */
 export function currentRoute() {
+  if (FEATURE_PUSHSTATE_ROUTER) {
+    const base = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) ?? "/";
+    // Strip base prefix, e.g. "/Wedding/guests?id=1" → section="guests"
+    const pathname = location.pathname;
+    const stripped = pathname.slice(base.replace(/\/$/, "").length).replace(/^\//, "");
+    const [section = "", qs = ""] = (stripped + (location.search || "")).split("?");
+    /** @type {Record<string, string>} */
+    const params = {};
+    for (const [k, v] of new URLSearchParams(qs)) params[k] = v;
+    return { section: _isValid(section) ? section : "dashboard", params };
+  }
   const raw = (location.hash || "").slice(1);
   if (!raw) return { section: "dashboard", params: {} };
   const [section, qs = ""] = raw.split("?");

@@ -28,7 +28,7 @@ vi.mock("../../src/core/state.js", () => ({
   getActiveEventId: vi.fn(() => "default"),
   load: vi.fn((key, fallback) => {
     try {
-      const raw = localStorage.getItem("wedding_v1_" + key);
+      const raw = localStorage.getItem(`wedding_v1_${key}`);
       if (raw === null) return fallback;
       return JSON.parse(raw);
     } catch {

@@ -57,5 +57,18 @@ export const BACKOFF_BASE_MS = 2000;
 /** Cloudflare CDN host for image resizing. Empty = pass-through (no CDN). */
 export const CDN_IMAGE_HOST = "";
 
+// ── Feature flags (S159 / S160) ──────────────────────────────────────────
+/**
+ * S159: When true, navigate() emits real path-based URLs instead of hash URLs.
+ * ADR-025 R3 flip. Keep false until GitHub Pages rewrites are configured.
+ */
+export const FEATURE_PUSHSTATE_ROUTER = false;
+
+/**
+ * S160: When true, every backend write goes to BOTH sheets and supabase
+ * backends and logs divergence to the console. For rehearsal/testing only.
+ */
+export const FEATURE_DUAL_WRITE = false;
+
 // ── Domain enums ──────────────────────────────────────────────────────────
 // Centralised in src/core/constants.js — import from there.
