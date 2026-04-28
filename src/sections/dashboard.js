@@ -365,7 +365,7 @@ function renderExpenseSummary() {
   const overdueEl = document.getElementById("dashOverdueVendors");
   if (overdueEl) {
     if (overdue.length > 0) {
-      overdueEl.textContent = `⚠️ ${overdue.length} ${t("vendor_overdue_count")}`;
+      overdueEl.textContent = `⚠️ ${t("plural_vendors_overdue", { count: overdue.length })}`;
       overdueEl.classList.remove("u-hidden");
     } else {
       overdueEl.classList.add("u-hidden");
@@ -584,9 +584,9 @@ function renderActivityFeed() {
 function _timeAgo(date) {
   const diff = Math.floor((Date.now() - date.getTime()) / 1000);
   if (diff < 60) return t("time_just_now");
-  if (diff < 3600) return `${Math.floor(diff / 60)} ${t("time_minutes_ago")}`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} ${t("time_hours_ago")}`;
-  return `${Math.floor(diff / 86400)} ${t("time_days_ago")}`;
+  if (diff < 3600) return t("plural_time_minutes_ago", { count: Math.floor(diff / 60) });
+  if (diff < 86400) return t("plural_time_hours_ago", { count: Math.floor(diff / 3600) });
+  return t("plural_time_days_ago", { count: Math.floor(diff / 86400) });
 }
 
 // ── S19.3 Vendor Category Dashboard Card ─────────────────────────────────
@@ -692,7 +692,7 @@ function renderFollowUpList() {
   if (pending.length > 15) {
     const more = document.createElement("div");
     more.className = "u-text-muted u-text-sm u-mt-xs";
-    more.textContent = `+${pending.length - 15} ${t("more_guests")}`;
+    more.textContent = t("plural_more_guests", { count: pending.length - 15 });
     el.appendChild(more);
   }
 }

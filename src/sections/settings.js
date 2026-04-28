@@ -208,7 +208,7 @@ function updateDataSummary() {
   if (!el.dataSummary) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  el.dataSummary.textContent = `${guests.length} ${t("guests")} · ${tables.length} ${t("tables")}`;
+  el.dataSummary.textContent = t("plural_data_summary", { guests: guests.length, tables: tables.length });
 }
 
 // ── Data management ───────────────────────────────────────────────────────

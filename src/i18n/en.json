@@ -1304,5 +1304,17 @@
   "print_seating": "Seating chart",
   "print_execute": "🖨️ Print",
   "print_no_data": "No data to print",
-  "print_empty_table": "Empty table"
+  "print_empty_table": "Empty table",
+  "plural_guests": "{count, plural, =0 {No guests} one {# guest} other {# guests}}",
+  "plural_tables": "{count, plural, =0 {No tables} one {# table} other {# tables}}",
+  "plural_vendors_overdue": "{count, plural, =0 {No overdue vendors} one {# overdue vendor} other {# overdue vendors}}",
+  "plural_time_minutes_ago": "{count, plural, one {# minute ago} other {# minutes ago}}",
+  "plural_time_hours_ago": "{count, plural, one {# hour ago} other {# hours ago}}",
+  "plural_time_days_ago": "{count, plural, one {# day ago} other {# days ago}}",
+  "plural_more_guests": "{count, plural, one {+# more guest} other {+# more guests}}",
+  "plural_data_summary": "{guests, plural, =0 {No guests} one {# guest} other {# guests}} · {tables, plural, =0 {No tables} one {# table} other {# tables}}",
+  "plural_seated": "{count, plural, =0 {0 seated} one {# seated} other {# seated}}",
+  "plural_constraints_more": "{count, plural, one {+# more constraint} other {+# more constraints}}",
+  "plural_transport_passengers": "{count, plural, one {# passenger} other {# passengers}}",
+  "plural_timeline_alarm": "{count, plural, one {# minute left} other {# minutes left}}"
 }

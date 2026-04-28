@@ -312,7 +312,7 @@ export function renderOverdueChip() {
   if (!chip) return;
   const count = getOverdueVendors().length;
   if (count > 0) {
-    chip.textContent = `⚠️ ${count} ${t("vendor_overdue_count")}`;
+    chip.textContent = `⚠️ ${t("plural_vendors_overdue", { count })}`;
     /** @type {HTMLElement} */ (chip).hidden = false;
   } else {
     /** @type {HTMLElement} */ (chip).hidden = true;

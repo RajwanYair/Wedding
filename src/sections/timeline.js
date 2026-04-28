@@ -226,7 +226,7 @@ export function stopTimelineAlarms() {
  */
 function _fireTimelineAlert(item, diffMs) {
   const minutesLeft = Math.round(diffMs / 60000);
-  const msg = `${item.icon ?? "📍"} ${item.title} — ${minutesLeft} ${t("timeline_alarm_minutes")}`;
+  const msg = `${item.icon ?? "📍"} ${item.title} — ${t("plural_timeline_alarm", { count: minutesLeft })}`;
 
   // Try browser notification
   if ("Notification" in window && Notification.permission === "granted") {

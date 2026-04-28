@@ -165,7 +165,7 @@ export function renderTables() {
     card.appendChild(name);
 
     const info = document.createElement("p");
-    info.textContent = `${seated}/${tb.capacity} ${t("seated")}`;
+    info.textContent = `${seated}/${tb.capacity} ${t("plural_seated", { count: seated })}`;
     card.appendChild(info);
 
     // Action buttons
@@ -263,7 +263,7 @@ function _renderConstraintsBanner(violations, guests, floor) {
   });
   if (violations.length > 5) {
     const extra = document.createElement("li");
-    extra.textContent = `${violations.length - 5} ${t("seating_constraints_more")}`;
+    extra.textContent = t("plural_constraints_more", { count: violations.length - 5 });
     list.appendChild(extra);
   }
   banner.appendChild(list);
@@ -350,7 +350,7 @@ function _renderTransportManifest(guests) {
 
     const header = document.createElement("h4");
     const totalPax = passengers.reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
-    header.textContent = `🚌 ${route} — ${totalPax} ${t("transport_passengers")}`;
+    header.textContent = `🚌 ${route} — ${t("plural_transport_passengers", { count: totalPax })}`;
     section.appendChild(header);
 
     const table = document.createElement("table");
