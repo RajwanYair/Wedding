@@ -3567,6 +3567,61 @@
     }
   }
 
+  /* S175: extend per-section scoping to tables, whatsapp, vendors, invitation. */
+  @scope (#sec-tables) {
+    .seating-floor {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.2rem;
+      padding: 1rem 0;
+    }
+
+    .table-card {
+      cursor: pointer;
+      position: relative;
+    }
+  }
+
+  @scope (#sec-whatsapp) {
+    .whatsapp-preview {
+      background: #0b141a;
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      border: 1px solid rgba(37, 211, 102, 0.2);
+    }
+  }
+
+  @scope (#sec-vendors) {
+    .vendor-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+    }
+
+    .payment-badge {
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.82em;
+      font-weight: 600;
+    }
+  }
+
+  @scope (#sec-invitation) {
+    .invitation-preview {
+      background: linear-gradient(
+        135deg,
+        rgba(212, 165, 116, 0.08),
+        rgba(232, 160, 180, 0.05)
+      );
+      border: 2px solid rgba(212, 165, 116, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+  }
+
   /* ── Print Preview Modal (S149) ── */
   .print-picker-row {
     display: flex;
