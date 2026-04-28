@@ -7,7 +7,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 
 import { initStore } from "../../src/core/store.js";
-import { initSyncTracker, setSyncState, markSynced, markSyncError } from "../../src/services/sync-tracker.js";
+import { initSyncTracker, setSyncState, markSynced, markSyncError } from "../../src/services/sync-manager.js";
 const {
   getSyncStatus,
   getQueueDepth,
@@ -15,7 +15,7 @@ const {
   isSyncHealthy,
   getFailedDomains,
   getPendingDomains,
-} = await import("../../src/services/sync-tracker.js");
+} = await import("../../src/services/sync-manager.js");
 
 const TEST_KEYS = ["guests", "tables", "vendors"];
 

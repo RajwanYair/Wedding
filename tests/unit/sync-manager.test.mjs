@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   enqueueSync,
   flushSync,
-  getSyncStatus,
+  getQueueStatus,
   getPendingKeys,
   getFailedKeys,
   clearFailure,
@@ -19,10 +19,10 @@ beforeEach(() => {
   _resetForTesting();
 });
 
-describe("enqueueSync / getSyncStatus", () => {
+describe("enqueueSync / getQueueStatus", () => {
   it("increments queued count when task is enqueued", () => {
     enqueueSync("guests", vi.fn().mockResolvedValue());
-    const status = getSyncStatus();
+    const status = getQueueStatus();
     expect(status.queued).toBe(1);
   });
 
@@ -31,13 +31,13 @@ describe("enqueueSync / getSyncStatus", () => {
     const fn2 = vi.fn().mockResolvedValue();
     enqueueSync("guests", fn1);
     enqueueSync("guests", fn2);
-    expect(getSyncStatus().queued).toBe(1);
+    expect(getQueueStatus().queued).toBe(1);
   });
 
   it("enqueues multiple different keys", () => {
     enqueueSync("guests", vi.fn().mockResolvedValue());
     enqueueSync("tables", vi.fn().mockResolvedValue());
-    expect(getSyncStatus().queued).toBe(2);
+    expect(getQueueStatus().queued).toBe(2);
   });
 });
 
@@ -66,13 +66,13 @@ describe("flushSync — success path", () => {
   it("clears the queue after success", async () => {
     enqueueSync("guests", vi.fn().mockResolvedValue());
     await flushSync();
-    expect(getSyncStatus().queued).toBe(0);
+    expect(getQueueStatus().queued).toBe(0);
   });
 
   it("marks inFlight as 0 after completion", async () => {
     enqueueSync("guests", vi.fn().mockResolvedValue());
     await flushSync();
-    expect(getSyncStatus().inFlight).toBe(0);
+    expect(getQueueStatus().inFlight).toBe(0);
   });
 });
 
