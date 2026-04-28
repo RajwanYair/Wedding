@@ -3622,7 +3622,119 @@
     }
   }
 
-  /* ── Print Preview Modal (S149) ── */
+  /* S180: extend per-section scoping to expenses, gallery, settings, landing,
+     registry, dashboard, workspace-switcher, website-builder. */
+
+  @scope (#sec-expenses) {
+    .expense-stats-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .expense-top-categories-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  @scope (#sec-gallery) {
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  @scope (#sec-settings) {
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .settings-card {
+      background: var(--bg-card);
+      border: var(--card-border);
+      border-radius: 14px;
+      padding: 1.2rem;
+    }
+  }
+
+  @scope (#sec-landing) {
+    .landing-couple-name {
+      font-size: 2.2em;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .landing-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  @scope (#sec-registry) {
+    .registry-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .registry-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      text-decoration: none;
+    }
+  }
+
+  @scope (#sec-dashboard) {
+    .countdown {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      text-align: center;
+      min-width: 3.5rem;
+    }
+  }
+
+  @scope (#sec-workspace-switcher) {
+    .workspace-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  @scope (#sec-website-builder) {
+    .website-builder-preview {
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      min-height: 200px;
+    }
+  }
+
+
   .print-picker-row {
     display: flex;
     align-items: center;
