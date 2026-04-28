@@ -23,6 +23,28 @@ import {
  */
 const RELEASE_ENTRIES = [
   {
+    version: "13.2.0",
+    date: "2026-04-29",
+    items: [
+      "whats_new_deploy_buttons",
+      "whats_new_dns_ui",
+      "whats_new_idb_queue",
+      "whats_new_print_preview",
+      "whats_new_glitchtip",
+      "whats_new_notif_panel",
+    ],
+  },
+  {
+    version: "13.1.0",
+    date: "2026-04-10",
+    items: [
+      "whats_new_pii_encryption",
+      "whats_new_icu_plurals",
+      "whats_new_fr_es_locale",
+      "whats_new_service_worker",
+    ],
+  },
+  {
     version: "12.8.0",
     date: "2026-04-28",
     items: [

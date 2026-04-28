@@ -1343,5 +1343,15 @@
   "monitoring_enabled_toast": "Informes de errores activados",
   "monitoring_disabled_toast": "Informes de errores desactivados",
   "plural_chars": "{count, plural, one {# carácter restante} other {# caracteres restantes}}",
-  "print_preview_open": "Vista previa de impresión"
+  "print_preview_open": "Vista previa de impresión",
+  "whats_new_deploy_buttons": "Despliegue con un clic en Vercel, Netlify, Cloudflare y Render",
+  "whats_new_dns_ui": "Instrucciones DNS/CNAME en el constructor de sitio web",
+  "whats_new_pii_encryption": "Actualización automática de cifrado PII al iniciar",
+  "whats_new_icu_plurals": "Formas de plural correctas en todos los idiomas",
+  "whats_new_fr_es_locale": "Traducciones al francés y español completadas",
+  "whats_new_idb_queue": "La cola de escritura sin conexión sobrevive a fallos",
+  "whats_new_print_preview": "Vista previa de impresión con selector de plantilla",
+  "whats_new_glitchtip": "Informe de errores opcional vía GlitchTip",
+  "whats_new_notif_panel": "Campana de notificaciones y selector de espacio de trabajo conectados",
+  "whats_new_service_worker": "Service Worker guarda escrituras entre sesiones"
 }

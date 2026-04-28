@@ -66,6 +66,7 @@ import { fetchGasVersion } from "./core/status-bar.js";
 import { injectTemplate } from "./core/template-loader.js";
 import { installTrustedTypesPolicy } from "./core/trusted-types.js";
 import { initDualWrite } from "./services/dual-write.js";
+import { maybeShowWhatsNew } from "./core/whats-new.js";
 
 // ── Services ──────────────────────────────────────────────────────────────
 import {
@@ -285,7 +286,10 @@ let _activeSection = null;
   const user = await loadSession();
   if (!user) loginAnonymous(); // fires onAuthChange immediately
 
-  // 5a. S10.3 — Presence indicator for admins
+  // 5a. S207 — Show What's New dialog if version bumped since user's last visit
+  maybeShowWhatsNew(currentUser());
+
+  // 5b. S10.3 — Presence indicator for admins
   if (currentUser()?.isAdmin) startPresence();
   onPresenceChange((users) => {
     const badge = document.getElementById("presenceBadge");

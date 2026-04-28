@@ -1343,5 +1343,15 @@
   "monitoring_enabled_toast": "Rapport d'erreurs activé",
   "monitoring_disabled_toast": "Rapport d'erreurs désactivé",
   "plural_chars": "{count, plural, one {# caractère restant} other {# caractères restants}}",
-  "print_preview_open": "Aperçu avant impression"
+  "print_preview_open": "Aperçu avant impression",
+  "whats_new_deploy_buttons": "Déploiement en un clic sur Vercel, Netlify, Cloudflare et Render",
+  "whats_new_dns_ui": "Instructions DNS/CNAME dans le constructeur de site web",
+  "whats_new_pii_encryption": "Mise à jour automatique du chiffrement PII au démarrage",
+  "whats_new_icu_plurals": "Formes plurielles correctes dans toutes les langues",
+  "whats_new_fr_es_locale": "Traductions en français et espagnol terminées",
+  "whats_new_idb_queue": "La file d'écriture hors ligne survit aux plantages",
+  "whats_new_print_preview": "Aperçu d'impression avec sélecteur de modèle",
+  "whats_new_glitchtip": "Rapport d'erreurs optionnel via GlitchTip",
+  "whats_new_notif_panel": "Cloche de notification et sélecteur d'espace de travail connectés",
+  "whats_new_service_worker": "Service Worker sauvegarde les écritures entre les sessions"
 }

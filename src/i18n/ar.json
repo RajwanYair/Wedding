@@ -1200,5 +1200,15 @@
   "checkin_qr_badge_page_title": "Guest QR Check-in Badges",
   "theme_picker_title": "Color theme",
   "theme_picker_desc": "Choose the app design theme",
-  "theme_applied": "Theme applied"
+  "theme_applied": "Theme applied",
+  "whats_new_deploy_buttons": "نشر بنقرة واحدة على Vercel وNetlify وCloudflare وRender",
+  "whats_new_dns_ui": "تعليمات DNS/CNAME في منشئ الموقع الإلكتروني",
+  "whats_new_pii_encryption": "ترقية تشفير PII التلقائي عند بدء التشغيل",
+  "whats_new_icu_plurals": "صيغ الجمع الصحيحة في جميع اللغات",
+  "whats_new_fr_es_locale": "اكتملت الترجمات الفرنسية والإسبانية",
+  "whats_new_idb_queue": "قائمة الكتابة غير المتصلة تبقى عبر تعطل الصفحة",
+  "whats_new_print_preview": "معاينة الطباعة مع منتقي القوالب",
+  "whats_new_glitchtip": "الإبلاغ الاختياري عن الأخطاء عبر GlitchTip",
+  "whats_new_notif_panel": "تم توصيل جرس الإشعارات ومحول مساحة العمل",
+  "whats_new_service_worker": "Service Worker يحفظ الكتابات بين الجلسات"
 }
