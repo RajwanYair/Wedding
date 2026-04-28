@@ -329,7 +329,7 @@ let _pendingSW = /** @type {ServiceWorker | null} */ (null);
  * Tell the waiting SW to skip waiting (triggers controllerchange → reload),
  * or hard-reload if no SW is pending.
  */
-export function applyUpdate() {
+function applyUpdate() {
   if (_pendingSW) {
     _pendingSW.postMessage("SKIP_WAITING");
   } else {

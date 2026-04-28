@@ -58,7 +58,7 @@ export function buildPayBoxLink(src) {
  * @param {string} [username]
  * @returns {string}
  */
-export function buildPayPalLink(src, username = "") {
+function buildPayPalLink(src, username = "") {
   const base = username ? `${_PAYPAL_BASE}/${encodeURIComponent(username)}` : _PAYPAL_BASE;
   return src.amount && src.amount > 0 ? `${base}/${src.amount}` : base;
 }
@@ -69,7 +69,8 @@ export function buildPayPalLink(src, username = "") {
  * @param {string} [paypalUsername]
  * @returns {{ bit: string, paybox: string, paypal: string }}
  */
-export function buildAllPaymentLinks(src, paypalUsername = "") {
+// eslint-disable-next-line no-unused-vars -- retained for potential future use; not yet wired to UI
+function buildAllPaymentLinks(src, paypalUsername = "") {
   return {
     bit: buildBitLink(src),
     paybox: buildPayBoxLink(src),
