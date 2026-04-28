@@ -155,7 +155,6 @@ export async function openModal(modalId) {
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
   );
   /** @type {HTMLElement | null} */ (first)?.focus();
-  _installFocusTrap(modal);
 }
 
 /**
@@ -183,62 +182,8 @@ export function closeModal(modalId) {
   modal.classList.add("auth-hidden");
   modal.setAttribute("aria-hidden", "true");
   modal.removeAttribute("aria-modal");
-  _removeFocusTrap(modal);
   _modalOpener?.focus();
   _modalOpener = null;
-}
-
-// ── Focus Trap (Sprint 1: A11y) ───────────────────────────────────────────
-
-/** @type {WeakMap<HTMLElement, (e: KeyboardEvent) => void>} */
-const _trapListeners = new WeakMap();
-
-/**
- * Install a keyboard focus trap on a modal element.
- * Tab/Shift+Tab cycle within the modal. Escape closes it.
- * @param {HTMLElement} modal
- */
-function _installFocusTrap(modal) {
-  if (_trapListeners.has(modal)) return;
-  const handler = /** @param {KeyboardEvent} e */ (e) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      closeModal(modal.id);
-      return;
-    }
-    if (e.key !== "Tab") return;
-    const focusable = /** @type {HTMLElement[]} */ ([
-      ...modal.querySelectorAll(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-      ),
-    ]);
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (e.shiftKey) {
-      if (document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      }
-    } else if (document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  };
-  _trapListeners.set(modal, handler);
-  modal.addEventListener("keydown", handler);
-}
-
-/**
- * Remove the focus trap from a modal element.
- * @param {HTMLElement} modal
- */
-function _removeFocusTrap(modal) {
-  const handler = _trapListeners.get(modal);
-  if (handler) {
-    modal.removeEventListener("keydown", handler);
-    _trapListeners.delete(modal);
-  }
 }
 
 /**
