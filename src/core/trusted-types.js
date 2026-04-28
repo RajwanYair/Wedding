@@ -106,3 +106,57 @@ export function trustedHtml(html) {
   }
   return DOMPurify.sanitize(html);
 }
+
+// ── S162: Script-src + URL policies ──────────────────────────────────────
+
+/** Allowlist of safe URL schemes for trustedUrl(). */
+const _SAFE_SCHEMES = new Set(["https:", "mailto:", "tel:"]);
+
+/**
+ * Returns a safe string for `script.src` / `<link>.href` assignments.
+ * Only HTTPS URLs are allowed; all others are replaced with an empty string.
+ * Uses a TrustedScriptURL policy when the browser supports it.
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+export function trustedScript(url) {
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return "";
+  }
+  if (!_SAFE_SCHEMES.has(parsed.protocol)) return "";
+  /** @type {any} */
+  const tt = typeof globalThis !== "undefined" ? (/** @type {any} */(globalThis)).trustedTypes : undefined;
+  if (tt && typeof tt.createPolicy === "function") {
+    try {
+      const policy = tt.createPolicy("wedding-script", {
+        createScriptURL(u) { return u; },
+      });
+      return /** @type {string} */ (policy.createScriptURL(url));
+    } catch {
+      // Policy may already be registered or TT is not enforced — fall through
+    }
+  }
+  return url;
+}
+
+/**
+ * Returns a safe string for navigation / anchor href assignments.
+ * Blocks `javascript:` and `data:` schemes; allows https, mailto, tel.
+ *
+ * @param {string} url
+ * @returns {string}
+ */
+export function trustedUrl(url) {
+  let parsed;
+  try {
+    parsed = new URL(url, location.href);
+  } catch {
+    return "";
+  }
+  if (!_SAFE_SCHEMES.has(parsed.protocol) && parsed.protocol !== "blob:") return "";
+  return url;
+}

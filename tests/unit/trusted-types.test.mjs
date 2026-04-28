@@ -9,6 +9,8 @@ import {
   isTrustedTypesSupported,
   installTrustedTypesPolicy,
   trustedHtml,
+  trustedScript,
+  trustedUrl,
 } from "../../src/core/trusted-types.js";
 
 describe("trusted-types (S90)", () => {
@@ -57,5 +59,54 @@ describe("trusted-types (S90)", () => {
     const html = policy?.sanitize('<b>ok</b><script>1</script>');
     expect(html).toContain("<b>ok</b>");
     expect(html).not.toContain("<script>");
+  });
+});
+
+// ── S162: trustedScript + trustedUrl ─────────────────────────────────────
+describe("trustedScript (S162)", () => {
+  it("allows https URLs", () => {
+    const url = "https://cdn.example.com/script.js";
+    expect(trustedScript(url)).toBe(url);
+  });
+
+  it("blocks http URLs", () => {
+    expect(trustedScript("http://cdn.example.com/script.js")).toBe("");
+  });
+
+  it("blocks javascript: scheme", () => {
+    expect(trustedScript("javascript:alert(1)")).toBe("");
+  });
+
+  it("blocks data: URLs", () => {
+    expect(trustedScript("data:text/javascript,alert(1)")).toBe("");
+  });
+
+  it("returns empty string for invalid URLs", () => {
+    expect(trustedScript("not-a-url")).toBe("");
+  });
+});
+
+describe("trustedUrl (S162)", () => {
+  it("allows https URLs", () => {
+    const url = "https://example.com/page";
+    expect(trustedUrl(url)).toBe(url);
+  });
+
+  it("allows mailto: URLs", () => {
+    const url = "mailto:user@example.com";
+    expect(trustedUrl(url)).toBe(url);
+  });
+
+  it("allows tel: URLs", () => {
+    const url = "tel:+972501234567";
+    expect(trustedUrl(url)).toBe(url);
+  });
+
+  it("blocks javascript: URLs", () => {
+    expect(trustedUrl("javascript:alert(1)")).toBe("");
+  });
+
+  it("returns empty string for invalid URLs", () => {
+    expect(trustedUrl(":::not-valid")).toBe("");
   });
 });
