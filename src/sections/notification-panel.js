@@ -1,5 +1,6 @@
 /**
  * src/sections/notification-panel.js — S143 notification centre dropdown.
+ * S173: Migrated to BaseSection lifecycle.
  *
  * Wires the header bell icon to notification-centre.js. Renders unread
  * count badge and a dropdown panel with notification items.
@@ -13,9 +14,16 @@ import {
   markAllRead,
   subscribe,
 } from "../services/notification-centre.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
-/** @type {(() => void)|null} */
-let _unsub = null;
+class NotificationPanelSection extends BaseSection {
+  onMount() {
+    updateBellBadge();
+    this.addCleanup(subscribe(() => updateBellBadge()));
+  }
+}
+
+export const { mount, unmount, capabilities } = fromSection(new NotificationPanelSection("notification-panel"));
 
 /** Update the bell badge count. */
 export function updateBellBadge() {
@@ -99,20 +107,6 @@ export function markAllNotifRead() {
   markAllRead();
   renderNotifList();
   updateBellBadge();
-}
-
-/** Mount — subscribe to notification changes. */
-export function mount() {
-  updateBellBadge();
-  _unsub = subscribe(() => updateBellBadge());
-}
-
-/** Unmount — unsubscribe. */
-export function unmount() {
-  if (_unsub) {
-    _unsub();
-    _unsub = null;
-  }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────

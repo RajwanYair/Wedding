@@ -1,5 +1,6 @@
 /**
  * src/sections/contact-collector.js — Contact collection section (S0.8)
+ * S173: Migrated to BaseSection lifecycle.
  *
  * Lets guests submit their contact details (phone, email, dietary).
  */
@@ -10,16 +11,11 @@ import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { uid } from "../utils/misc.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
-/** @type {HTMLElement|null} */
-let _container = null;
+class ContactCollectorSection extends BaseSection {}
 
-export function mount(/** @type {HTMLElement} */ container) {
-  _container = container;
-}
-export function unmount() {
-  _container = null;
-}
+export const { mount, unmount, capabilities } = fromSection(new ContactCollectorSection("contact-collector"));
 
 /**
  * @param {Record<string, unknown>} data

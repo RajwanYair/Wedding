@@ -1,24 +1,22 @@
 /**
  * src/sections/registry.js — Gift registry section ESM module (S0.8)
+ * S173: Migrated to BaseSection lifecycle.
  *
  * Displays gift registry links (read-only for guests).
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
 import { t } from "../core/i18n.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("weddingInfo", renderRegistry));
-  renderRegistry();
+class RegistrySection extends BaseSection {
+  onMount() {
+    this.subscribe("weddingInfo", renderRegistry);
+    renderRegistry();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new RegistrySection("registry"));
 
 export function renderRegistry() {
   const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
