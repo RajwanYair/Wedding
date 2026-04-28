@@ -54,7 +54,7 @@ export function getBackendType() {
 // readiness check. The actual flip is gated by `BACKEND_TYPE` config.
 
 /** Default backend candidate for the next major version. */
-export const BACKEND_FLIP_CANDIDATE = "supabase";
+const _BACKEND_FLIP_CANDIDATE = "supabase";
 
 /**
  * Whether dual-write mode is currently active. Either the build-time config

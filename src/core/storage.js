@@ -307,7 +307,7 @@ export function writeSessionStorage(key, value) {
  * Remove a value from sessionStorage.
  * @param {string} key
  */
-export function removeSessionStorage(key) {
+function _removeSessionStorage(key) {
   try {
     _getBrowserStorage("session")?.removeItem(key);
   } catch {
@@ -322,7 +322,7 @@ export function removeSessionStorage(key) {
  * @param {T} fallback
  * @returns {T}
  */
-export function readSessionStorageJson(key, fallback) {
+function _readSessionStorageJson(key, fallback) {
   return _parseJson(readSessionStorage(key), fallback);
 }
 
@@ -331,7 +331,7 @@ export function readSessionStorageJson(key, fallback) {
  * @param {string} key
  * @param {unknown} value
  */
-export function writeSessionStorageJson(key, value) {
+function _writeSessionStorageJson(key, value) {
   try {
     writeSessionStorage(key, JSON.stringify(value));
   } catch {
@@ -396,7 +396,7 @@ export async function storageSet(key, value) {
  * @param {Array<[string, string]>} entries  Array of [key, value] tuples
  * @returns {Promise<void>}
  */
-export async function storageSetBatch(entries) {
+async function _storageSetBatch(entries) {
   if (entries.length === 0) return;
   if (_adapterType === "indexeddb" && "setItemBatch" in _adapter) {
     return /** @type {typeof _idbAdapter} */ (_adapter).setItemBatch(entries);
@@ -519,7 +519,7 @@ async function _getStorageQuota() {
  * Internal storage-health diagnostic. Not exported in the public API.
  * @returns {Promise<{ adapter: AdapterType, quota: StorageQuota | null, nearFull: boolean }>}
  */
-export async function checkStorageHealthInternal() {
+async function _checkStorageHealthInternal() {
   const quota = await _getStorageQuota();
   return {
     adapter: _adapterType,

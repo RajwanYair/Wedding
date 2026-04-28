@@ -350,7 +350,7 @@ function _dispatch(table, payload) {
  * @param {import("@supabase/supabase-js").SupabaseClient} client
  * @param {string[]} [tables] — which tables to subscribe to (default: guests + config)
  */
-export function activateSDKRealtime(client, tables = ["guests", "tables", "config"]) {
+function activateSDKRealtime(client, tables = ["guests", "tables", "config"]) {
   // Tear down any existing SDK channels before creating new ones
   deactivateSDKRealtime(client);
 
@@ -384,7 +384,7 @@ export function activateSDKRealtime(client, tables = ["guests", "tables", "confi
  * Remove all SDK-based realtime subscriptions.
  * @param {import("@supabase/supabase-js").SupabaseClient} client
  */
-export async function deactivateSDKRealtime(client) {
+async function deactivateSDKRealtime(client) {
   for (const [table, channel] of _sdkChannels.entries()) {
     try {
       await client.removeChannel(channel);

@@ -35,7 +35,7 @@ import { storeGet, storeSet, storeSubscribe } from "./store.js";
  * @param {string} key
  * @returns {Signal<T>}
  */
-export function signal(key) {
+function _signal(key) {
   return Object.freeze({
     get key() {
       return key;
@@ -70,7 +70,7 @@ export function signal(key) {
  * @param {Signal<unknown>[]} sources  Source signals to listen on
  * @returns {Signal<T>}
  */
-export function computed(project, sources) {
+function _computed(project, sources) {
   /** @type {Set<(v: T) => void>} */
   const subs = new Set();
   const fireAll = () => {

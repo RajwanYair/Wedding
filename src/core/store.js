@@ -153,16 +153,7 @@ function _flushPausedNotifications() {
 // ── Persistence ───────────────────────────────────────────────────────────
 
 /** @type {((key: string, err: unknown) => void) | null} */
-let _onStorageError = null;
-
-/**
- * Register a callback invoked when localStorage persistence fails (F1.5.5).
- * Useful for surfacing quota errors in the UI or triggering cleanup.
- * @param {(key: string, err: unknown) => void} fn
- */
-export function onStorageError(fn) {
-  _onStorageError = fn;
-}
+const _onStorageError = null;
 
 /** @param {string} key */
 function _scheduleSave(key) {

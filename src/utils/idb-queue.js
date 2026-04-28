@@ -92,7 +92,7 @@ export async function idbQueueWrite(items) {
  * Remove all items from the IDB store.
  * @returns {Promise<void>}
  */
-export async function idbQueueClear() {
+async function _idbQueueClear() {
   const db = await _open();
   if (!db) return;
   return new Promise((resolve) => {

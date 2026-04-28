@@ -185,7 +185,7 @@ export async function sheetsPost(payload) {
  * @param {string} sheetName
  * @returns {Promise<Array<Record<string, unknown>>>}
  */
-export async function sheetsRead(spreadsheetId, sheetName) {
+async function _sheetsRead(spreadsheetId, sheetName) {
   return sheetsReadImpl(spreadsheetId, sheetName);
 }
 
@@ -530,7 +530,7 @@ function _recordToRow(record, storeKey) {
  * @param {Record<string, unknown>} payload
  * @returns {Promise<unknown>}
  */
-export async function sheetsPostImpl(payload) {
+async function sheetsPostImpl(payload) {
   const url = _getWebAppUrl();
   if (!url) throw new Error("SHEETS_WEBAPP_URL not configured");
 
@@ -560,7 +560,7 @@ export async function sheetsPostImpl(payload) {
  * @param {string} storeKey
  * @returns {Promise<void>}
  */
-export async function syncStoreKeyToSheetsImpl(storeKey) {
+async function syncStoreKeyToSheetsImpl(storeKey) {
   if (!_getWebAppUrl()) return;
   const sheetName = _SHEET_NAMES[storeKey];
   if (!sheetName) return;
@@ -595,7 +595,7 @@ export async function syncStoreKeyToSheetsImpl(storeKey) {
  * @param {{ phone: string, firstName: string, lastName: string, status: string, count: number, timestamp: string }} entry
  * @returns {Promise<void>}
  */
-export async function appendToRsvpLogImpl(entry) {
+async function _appendToRsvpLogImpl(entry) {
   if (!_getWebAppUrl()) return;
   await sheetsPostImpl({
     action: "append",
@@ -614,7 +614,7 @@ export async function appendToRsvpLogImpl(entry) {
  * Verify the Apps Script Web App is reachable.
  * @returns {Promise<boolean>}
  */
-export async function sheetsCheckConnectionImpl() {
+async function _sheetsCheckConnectionImpl() {
   const url = _getWebAppUrl();
   if (!url) return false;
   try {
@@ -631,7 +631,7 @@ export async function sheetsCheckConnectionImpl() {
  * Ask the Apps Script to create any missing sheet tabs.
  * @returns {Promise<unknown>}
  */
-export async function createMissingSheetTabsImpl() {
+async function _createMissingSheetTabsImpl() {
   return sheetsPostImpl({ action: "ensureSheets" });
 }
 
@@ -641,7 +641,7 @@ export async function createMissingSheetTabsImpl() {
  * @param {string} sheetName
  * @returns {Promise<Array<Record<string, unknown>>>}
  */
-export async function sheetsReadImpl(spreadsheetId, sheetName) {
+async function sheetsReadImpl(spreadsheetId, sheetName) {
   const url = new URL(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq`);
   url.searchParams.set("sheet", sheetName);
   url.searchParams.set("tqx", "out:json");

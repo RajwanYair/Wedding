@@ -21,7 +21,7 @@ function _getKey() {
 }
 
 /** @returns {boolean} */
-export function isConfigured() {
+function isConfigured() {
   return Boolean(_getUrl() && _getKey());
 }
 
@@ -142,7 +142,7 @@ export async function appendToRsvpLogSupabase(entry) {
  * @param {string} table  Supabase table name
  * @returns {Promise<any[]>}
  */
-export async function supabaseRead(table) {
+async function _supabaseRead(table) {
   if (!isConfigured()) return [];
   const result = await _rest(`/rest/v1/${table}?select=*`, {
     method: "GET",
