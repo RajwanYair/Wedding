@@ -37,6 +37,7 @@ import {
   exportThemeToJson,
   importThemeFromJson,
   installPlugin,
+  toggleMonitoring,
 } from "../sections/settings.js";
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
@@ -238,4 +239,6 @@ export function register() {
   on("previewWebsite", () => previewWebsite());
   // Sprint 141 — Plugin manager
   on("installPlugin", () => installPlugin());
+  // S205 — Monitoring opt-in toggle
+  on("toggleMonitoring", () => toggleMonitoring());
 }

@@ -62,6 +62,8 @@ class SettingsSection extends BaseSection {
     _renderThemeVarsEditor();
     // Wire one-click deploy buttons (S196)
     _renderDeployButtons();
+    // Wire monitoring opt-in toggle (S205)
+    _renderMonitoringToggle();
   }
 }
 
@@ -1299,5 +1301,27 @@ function _renderDeployButtons() {
     a.rel = "noopener noreferrer";
     a.textContent = `${emoji} ${label}`;
     container.appendChild(a);
+  }
+}
+// ── Monitoring toggle (S205 / Roadmap S156) ───────────────────────────────
+
+const _TELEMETRY_KEY = "wedding_v1_telemetry_opt_out";
+
+function _renderMonitoringToggle() {
+  const checkbox = /** @type {HTMLInputElement|null} */ (document.getElementById("monitoringOptIn"));
+  if (!checkbox) return;
+  const optedOut = localStorage.getItem(_TELEMETRY_KEY) === "1";
+  checkbox.checked = !optedOut;
+}
+
+export function toggleMonitoring() {
+  const checkbox = /** @type {HTMLInputElement|null} */ (document.getElementById("monitoringOptIn"));
+  if (!checkbox) return;
+  if (checkbox.checked) {
+    localStorage.removeItem(_TELEMETRY_KEY);
+    showToast(t("monitoring_enabled_toast"), "success");
+  } else {
+    localStorage.setItem(_TELEMETRY_KEY, "1");
+    showToast(t("monitoring_disabled_toast"), "info");
   }
 }

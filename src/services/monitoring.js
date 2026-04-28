@@ -112,10 +112,14 @@ export async function initMonitoring(opts = {}) {
     /* private mode / disabled storage — fall through */
   }
 
+  const _env = (typeof import.meta !== "undefined" && /** @type {any} */ (import.meta).env) ?? {};
+  const _proc = (typeof globalThis !== "undefined" && globalThis.process?.env) ?? {};
   const dsn =
     opts.dsn ??
-    (typeof globalThis !== "undefined" && globalThis.process?.env?.VITE_SENTRY_DSN) ??
-    (typeof import.meta !== "undefined" && /** @type {any} */ (import.meta).env?.VITE_SENTRY_DSN);
+    _env.VITE_GLITCHTIP_DSN ??
+    _proc.VITE_GLITCHTIP_DSN ??
+    _env.VITE_SENTRY_DSN ??
+    _proc.VITE_SENTRY_DSN;
 
   if (!dsn) return false;
 
