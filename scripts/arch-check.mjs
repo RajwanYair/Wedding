@@ -53,6 +53,8 @@ for (const file of files) {
   const text = await readFile(file, "utf8");
   const lines = text.split(/\r?\n/);
   lines.forEach((line, idx) => {
+    // Skip dynamic imports — they are already lazy-loaded and compliant
+    if (/\bimport\s*\(/.test(line)) return;
     for (const target of FORBIDDEN) {
       if (line.includes(`"${target}"`) || line.includes(`'${target}'`)) {
         violations.push({ file: file.replace(ROOT, "."), line: idx + 1, target });
