@@ -20,6 +20,10 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [he, en, ar, ru]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -31,25 +35,32 @@ jobs:
         run: npm ci
 
       - name: Build production bundle for Lighthouse
-        # Override base path: GH Pages deploys under /Wedding/, but lhci
-        # serves staticDistDir at /. Without this override every asset 404s
-        # and Lighthouse measures a broken page.
         env:
           VITE_BASE: "/"
         run: npm run build
 
+      - name: Generate per-locale LH config
+        run: |
+          node -e "
+            import('file://' + process.cwd() + '/src/services/lighthouse-config.js')
+              .then(m => {
+                const cfg = m.buildLighthouseConfig('${{ matrix.locale }}');
+                require('fs').writeFileSync('.lighthouserc-locale.json', JSON.stringify(cfg, null, 2));
+              });
+          "
+
       - name: Install Lighthouse CI
         run: npm i -g @lhci/cli@0.14.x
 
-      - name: Run Lighthouse CI
-        run: lhci autorun --config=.lighthouserc.json
+      - name: Run Lighthouse CI (${{ matrix.locale }})
+        run: lhci autorun --config=.lighthouserc-locale.json
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
-      - name: Upload Lighthouse artifact
+      - name: Upload Lighthouse artifact (${{ matrix.locale }})
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-reports
+          name: lighthouse-reports-${{ matrix.locale }}
           path: .lighthouseci
           retention-days: 14
