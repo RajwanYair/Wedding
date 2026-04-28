@@ -221,7 +221,7 @@ let _activeSection = null;
   restoreActiveEvent();
 
   // 3. Reactive store — seed with persisted data from localStorage
-  initStore(buildStoreDefs());
+  initStore(await buildStoreDefs());
 
   // 3a. Seed default weddingInfo for the "default" event if empty.
   // Source-of-truth defaults live in `public/wedding.json` (deploy-time config).
@@ -484,7 +484,7 @@ async function _doSwitchEvent(eventId) {
   }
   // switch
   setActiveEvent(eventId);
-  reinitStore(buildStoreDefs());
+  reinitStore(await buildStoreDefs());
   // refresh UI
   dashboardSection.updateTopBar();
   dashboardSection.updateCountdown();

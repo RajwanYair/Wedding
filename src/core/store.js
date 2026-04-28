@@ -13,6 +13,7 @@
 
 import { STORAGE_PREFIX } from "./config.js";
 import { getActiveEventId } from "./state.js";
+import { isPiiKey, savePii } from "../services/pii-storage.js";
 
 /** @type {Map<string, Set<Function>>} */
 const _subs = new Map();
@@ -175,11 +176,16 @@ function _flush() {
   _dirty.forEach((key) => {
     const storageKey = _persistMap.get(key);
     if (!storageKey) return;
-    try {
-      localStorage.setItem(pfx + storageKey, JSON.stringify(_state[key]));
-    } catch (err) {
-      console.warn(`[store] Failed to persist "${key}":`, err);
-      _onStorageError?.(key, err);
+    if (isPiiKey(key)) {
+      // PII keys: fire-and-forget encrypted write (S157)
+      savePii(storageKey, _state[key]);
+    } else {
+      try {
+        localStorage.setItem(pfx + storageKey, JSON.stringify(_state[key]));
+      } catch (err) {
+        console.warn(`[store] Failed to persist "${key}":`, err);
+        _onStorageError?.(key, err);
+      }
     }
   });
   _dirty.clear();

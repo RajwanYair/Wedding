@@ -6,6 +6,20 @@ import { describe, it, expect, vi } from "vitest";
 
 vi.mock("../../src/core/state.js", () => ({
   load: vi.fn((key, def) => def),
+  getActiveEventId: vi.fn(() => "default"),
+}));
+
+vi.mock("../../src/core/config.js", () => ({
+  STORAGE_PREFIX: "wedding_v1_",
+}));
+
+vi.mock("../../src/services/secure-storage.js", () => ({
+  setSecure: vi.fn(async () => {}),
+  getSecure: vi.fn(async () => null),
+  removeSecure: vi.fn(),
+  importRawKey: vi.fn(async () => ({})),
+  encryptField: vi.fn(async (_k, v) => btoa(v)),
+  decryptField: vi.fn(async (_k, v) => atob(v)),
 }));
 
 import { defaultWeddingInfo, defaultTimeline, buildStoreDefs } from "../../src/core/defaults.js";
@@ -61,38 +75,38 @@ describe("defaultTimeline", () => {
 });
 
 describe("buildStoreDefs", () => {
-  it("returns an object", () => {
-    const defs = buildStoreDefs();
+  it("returns an object", async () => {
+    const defs = await buildStoreDefs();
     expect(typeof defs).toBe("object");
   });
 
-  it("includes guests key with value array", () => {
-    const defs = buildStoreDefs();
+  it("includes guests key with value array", async () => {
+    const defs = await buildStoreDefs();
     expect(defs.guests).toBeDefined();
     expect(Array.isArray(defs.guests.value)).toBe(true);
   });
 
-  it("includes campaigns key with value array", () => {
-    const defs = buildStoreDefs();
+  it("includes campaigns key with value array", async () => {
+    const defs = await buildStoreDefs();
     expect(defs.campaigns).toBeDefined();
     expect(Array.isArray(defs.campaigns.value)).toBe(true);
   });
 
-  it("includes tables key with value array", () => {
-    const defs = buildStoreDefs();
+  it("includes tables key with value array", async () => {
+    const defs = await buildStoreDefs();
     expect(Array.isArray(defs.tables.value)).toBe(true);
   });
 
-  it("includes vendors, expenses, weddingInfo", () => {
-    const defs = buildStoreDefs();
+  it("includes vendors, expenses, weddingInfo", async () => {
+    const defs = await buildStoreDefs();
     expect(defs.vendors).toBeDefined();
     expect(defs.expenses).toBeDefined();
     expect(defs.appErrors).toBeDefined();
     expect(defs.weddingInfo).toBeDefined();
   });
 
-  it("includes canonical runtime support keys used by services and settings", () => {
-    const defs = buildStoreDefs();
+  it("includes canonical runtime support keys used by services and settings", async () => {
+    const defs = await buildStoreDefs();
     [
       "approvedEmails",
       "auditLog",
@@ -119,19 +133,19 @@ describe("buildStoreDefs", () => {
     });
   });
 
-  it("weddingInfo merges defaultWeddingInfo", () => {
-    const defs = buildStoreDefs();
+  it("weddingInfo merges defaultWeddingInfo", async () => {
+    const defs = await buildStoreDefs();
     expect(defs.weddingInfo.value).toMatchObject({ time: "18:00" });
   });
 
-  it("timeline defaults when no saved timeline", () => {
-    const defs = buildStoreDefs();
+  it("timeline defaults when no saved timeline", async () => {
+    const defs = await buildStoreDefs();
     expect(Array.isArray(defs.timeline.value)).toBe(true);
     expect(defs.timeline.value.length).toBeGreaterThan(0);
   });
 
-  it("all values have storageKey", () => {
-    const defs = buildStoreDefs();
+  it("all values have storageKey", async () => {
+    const defs = await buildStoreDefs();
     for (const [, def] of Object.entries(defs)) {
       expect(typeof def.storageKey).toBe("string");
     }

@@ -166,12 +166,12 @@ describe("Current architecture", function () {
   });
 
   it("defaults and constants include canonical campaign store support", function () {
-    assert.ok(read("src/core/defaults.js").includes('campaigns: { value: load("campaigns", []), storageKey: "campaigns" }'));
+    assert.ok(read("src/core/defaults.js").includes('campaigns: { value: await _load("campaigns", []), storageKey: "campaigns" }'));
     assert.ok(constantsSource.includes('campaigns: DATA_CLASS.ADMIN_SENSITIVE'));
   });
 
   it("defaults and constants include canonical appErrors support", function () {
-    assert.ok(read("src/core/defaults.js").includes('appErrors: { value: load("appErrors", []), storageKey: "appErrors" }'));
+    assert.ok(read("src/core/defaults.js").includes('appErrors: { value: await _load("appErrors", []), storageKey: "appErrors" }'));
     assert.ok(constantsSource.includes('appErrors: DATA_CLASS.OPERATIONAL'));
   });
 

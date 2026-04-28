@@ -7,6 +7,7 @@
  */
 
 import { load } from "./state.js";
+import { isPiiKey, loadPii } from "../services/pii-storage.js";
 
 // ── Default data ──────────────────────────────────────────────────────────
 
@@ -38,90 +39,104 @@ export const defaultTimeline = [
 // ── Store definition builder ──────────────────────────────────────────────
 
 /**
- * Build store definitions from the CURRENT event's localStorage.
- * @returns {Record<string, { value: unknown, storageKey?: string }>}
+ * Load a store value — uses encrypted storage for PII keys,
+ * plain localStorage for others.
+ * @template T
+ * @param {string} key
+ * @param {T} fallback
+ * @returns {Promise<T>}
  */
-export function buildStoreDefs() {
-  const savedInfo = /** @type {Record<string, string>} */ (load("weddingInfo", {}));
+async function _load(key, fallback) {
+  if (isPiiKey(key)) return loadPii(key, fallback);
+  return /** @type {T} */ (load(key, fallback) ?? fallback);
+}
+
+/**
+ * Build store definitions from the CURRENT event's localStorage.
+ * Async because PII keys are loaded from encrypted storage.
+ * @returns {Promise<Record<string, { value: unknown, storageKey?: string }>>}
+ */
+export async function buildStoreDefs() {
+  const savedInfo = /** @type {Record<string, string>} */ (await _load("weddingInfo", {}));
   const weddingInfo = { ...defaultWeddingInfo, ...savedInfo };
 
-  const savedTimeline = load("timeline", null);
+  const savedTimeline = await _load("timeline", null);
   const timeline =
     savedTimeline && /** @type {any[]} */ (savedTimeline).length > 0
       ? savedTimeline
       : defaultTimeline;
 
   return {
-    guests: { value: load("guests", []), storageKey: "guests" },
-    campaigns: { value: load("campaigns", []), storageKey: "campaigns" },
+    guests: { value: await _load("guests", []), storageKey: "guests" },
+    campaigns: { value: await _load("campaigns", []), storageKey: "campaigns" },
     approvedEmails: {
-      value: load("approvedEmails", []),
+      value: await _load("approvedEmails", []),
       storageKey: "approvedEmails",
     },
-    auditLog: { value: load("auditLog", []), storageKey: "auditLog" },
-    backendType: { value: load("backendType", ""), storageKey: "backendType" },
-    tables: { value: load("tables", []), storageKey: "tables" },
-    vendors: { value: load("vendors", []), storageKey: "vendors" },
-    expenses: { value: load("expenses", []), storageKey: "expenses" },
+    auditLog: { value: await _load("auditLog", []), storageKey: "auditLog" },
+    backendType: { value: await _load("backendType", ""), storageKey: "backendType" },
+    tables: { value: await _load("tables", []), storageKey: "tables" },
+    vendors: { value: await _load("vendors", []), storageKey: "vendors" },
+    expenses: { value: await _load("expenses", []), storageKey: "expenses" },
     donationGoals: {
-      value: load("donationGoals", []),
+      value: await _load("donationGoals", []),
       storageKey: "donationGoals",
     },
-    donations: { value: load("donations", []), storageKey: "donations" },
-    appErrors: { value: load("appErrors", []), storageKey: "appErrors" },
+    donations: { value: await _load("donations", []), storageKey: "donations" },
+    appErrors: { value: await _load("appErrors", []), storageKey: "appErrors" },
     weddingInfo: { value: weddingInfo, storageKey: "weddingInfo" },
-    gallery: { value: load("gallery", []), storageKey: "gallery" },
+    gallery: { value: await _load("gallery", []), storageKey: "gallery" },
     timeline: { value: timeline, storageKey: "timeline" },
-    contacts: { value: load("contacts", []), storageKey: "contacts" },
-    budget: { value: load("budget", []), storageKey: "budget" },
+    contacts: { value: await _load("contacts", []), storageKey: "contacts" },
+    budget: { value: await _load("budget", []), storageKey: "budget" },
     budgetEnvelopes: {
-      value: load("budgetEnvelopes", {}),
+      value: await _load("budgetEnvelopes", {}),
       storageKey: "budgetEnvelopes",
     },
     checkinSessions: {
-      value: load("checkinSessions", []),
+      value: await _load("checkinSessions", []),
       storageKey: "checkinSessions",
     },
-    deliveries: { value: load("deliveries", []), storageKey: "deliveries" },
+    deliveries: { value: await _load("deliveries", []), storageKey: "deliveries" },
     issuedTokens: {
-      value: load("issuedTokens", []),
+      value: await _load("issuedTokens", []),
       storageKey: "issuedTokens",
     },
     notificationPreferences: {
-      value: load("notificationPreferences", {}),
+      value: await _load("notificationPreferences", {}),
       storageKey: "notificationPreferences",
     },
     offline_queue: {
-      value: load("offline_queue", []),
+      value: await _load("offline_queue", []),
       storageKey: "offline_queue",
     },
     push_subscriptions: {
-      value: load("push_subscriptions", []),
+      value: await _load("push_subscriptions", []),
       storageKey: "push_subscriptions",
     },
-    rsvp_log: { value: load("rsvp_log", []), storageKey: "rsvp_log" },
+    rsvp_log: { value: await _load("rsvp_log", []), storageKey: "rsvp_log" },
     seatingConstraints: {
-      value: load("seatingConstraints", []),
+      value: await _load("seatingConstraints", []),
       storageKey: "seatingConstraints",
     },
     sheetsWebAppUrl: {
-      value: load("sheetsWebAppUrl", ""),
+      value: await _load("sheetsWebAppUrl", ""),
       storageKey: "sheetsWebAppUrl",
     },
     supabaseAnonKey: {
-      value: load("supabaseAnonKey", ""),
+      value: await _load("supabaseAnonKey", ""),
       storageKey: "supabaseAnonKey",
     },
-    supabaseUrl: { value: load("supabaseUrl", ""), storageKey: "supabaseUrl" },
+    supabaseUrl: { value: await _load("supabaseUrl", ""), storageKey: "supabaseUrl" },
     timelineDone: {
-      value: load("timelineDone", {}),
+      value: await _load("timelineDone", {}),
       storageKey: "timelineDone",
     },
-    commLog: { value: load("commLog", []), storageKey: "commLog" },
+    commLog: { value: await _load("commLog", []), storageKey: "commLog" },
     webhookDeliveries: {
-      value: load("webhookDeliveries", []),
+      value: await _load("webhookDeliveries", []),
       storageKey: "webhookDeliveries",
     },
-    webhooks: { value: load("webhooks", []), storageKey: "webhooks" },
+    webhooks: { value: await _load("webhooks", []), storageKey: "webhooks" },
   };
 }
