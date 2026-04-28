@@ -73,4 +73,22 @@
       <div id="wbPreviewContent" class="website-preview-content"></div>
     </div>
   </div>
+
+  <!-- DNS Instructions (S198 / Roadmap S154) -->
+  <div class="settings-card u-mt-md" id="wbDnsCard">
+    <h3>🌐 <span data-i18n="dns_title">הגדרות DNS לדומיין מותאם אישית</span></h3>
+    <p class="section-desc" data-i18n="dns_description">הוסף את רשומות ה-DNS הבאות אצל ספק הדומיין שלך:</p>
+    <div class="form-group u-mt-sm">
+      <label for="wbCustomDomain" data-i18n="domain_custom_label">דומיין מותאם</label>
+      <input
+        type="text"
+        id="wbCustomDomain"
+        class="form-control"
+        placeholder="rsvp.example.com"
+        data-action="wbDomainInput"
+        dir="ltr"
+      />
+    </div>
+    <div id="wbDnsInstructions" class="dns-instructions u-mt-sm" hidden></div>
+  </div>
 </div>

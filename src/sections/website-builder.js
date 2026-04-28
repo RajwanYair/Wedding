@@ -16,6 +16,7 @@ import {
   WEBSITE_SECTIONS,
 } from "../services/website-builder.js";
 import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage.js";
+import { validateDomain, buildDnsInstructions } from "../utils/dns-cname.js";
 
 const STORAGE_KEY = "wedding_v1_website_config";
 
@@ -27,6 +28,7 @@ class WebsiteBuilderSection extends BaseSection {
     _loadSavedConfig();
     _wireVisibilityToggle();
     _wireSlugPreview();
+    _wireDnsInstructions();
   }
 }
 
@@ -204,4 +206,49 @@ export function previewWebsite() {
     sectionsList.appendChild(li);
   }
   content.appendChild(sectionsList);
+}
+// ── DNS instructions (S198 / Roadmap S154) ───────────────────────────────
+
+function _wireDnsInstructions() {
+  const input = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCustomDomain"));
+  const panel = document.getElementById("wbDnsInstructions");
+  if (!input || !panel) return;
+
+  input.addEventListener("input", () => {
+    const raw = input.value.trim();
+    panel.hidden = !raw;
+    panel.textContent = "";
+    if (!raw) return;
+
+    const validation = validateDomain(raw);
+    if (!validation.ok) {
+      const msg = document.createElement("p");
+      msg.className = "error-text";
+      msg.textContent = t(`dns_error_${validation.error}`) || validation.error;
+      panel.appendChild(msg);
+      return;
+    }
+
+    const result = buildDnsInstructions(validation.domain);
+    if (!result.ok) return;
+
+    const table = document.createElement("table");
+    table.className = "dns-table";
+    const head = table.createTHead().insertRow();
+    for (const key of ["dns_col_type", "dns_col_name", "dns_col_value", "dns_col_ttl"]) {
+      const th = document.createElement("th");
+      th.textContent = t(key);
+      head.appendChild(th);
+    }
+    const tbody = table.createTBody();
+    for (const rec of result.records) {
+      const row = tbody.insertRow();
+      for (const cell of [rec.type, rec.host, rec.value, String(rec.ttl)]) {
+        const td = row.insertCell();
+        td.textContent = cell;
+        td.dir = "ltr";
+      }
+    }
+    panel.appendChild(table);
+  });
 }
