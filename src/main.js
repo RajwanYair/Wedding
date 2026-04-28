@@ -80,6 +80,7 @@ import {
 } from "./services/auth.js";
 import { startPresence, onPresenceChange } from "./services/presence.js";
 import { initMonitoring, initWebVitals, captureException } from "./services/monitoring.js";
+import { migratePlaintextPii } from "./services/pii-storage.js";
 import {
   syncSheetsNow,
   onSyncStatus,
@@ -226,6 +227,9 @@ let _activeSection = null;
 
   // 3. Reactive store — seed with persisted data from localStorage
   initStore(await buildStoreDefs());
+
+  // 3b. Migrate any plaintext PII keys to AES-GCM encrypted storage (S199/S157)
+  migratePlaintextPii().catch(() => {});
 
   // 3a. Seed default weddingInfo for the "default" event if empty.
   // Source-of-truth defaults live in `public/wedding.json` (deploy-time config).
