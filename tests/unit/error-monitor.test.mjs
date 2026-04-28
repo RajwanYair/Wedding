@@ -10,7 +10,7 @@ import {
   setUser,
   configureTransport,
   _resetForTests,
-} from "../../src/services/error-monitor.js";
+} from "../../src/services/error-service.js";
 
 beforeEach(() => {
   _resetForTests();

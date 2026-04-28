@@ -17,7 +17,7 @@
  *   try { ... } catch (e) { captureException(e, { section: "guests" }); }
  */
 
-import { captureError } from "./error-pipeline.js";
+import { captureError } from "./error-service.js";
 import { APP_VERSION } from "../core/config.js";
 
 // ── Constants ──────────────────────────────────────────────────────────────

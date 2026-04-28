@@ -6,10 +6,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   parseDsn,
   buildErrorPayload,
-  captureError,
+  captureProxyError as captureError,
   installErrorProxy,
   isErrorProxyActive,
-} from "../../src/services/error-proxy.js";
+} from "../../src/services/error-service.js";
 
 // Polyfill globalThis event methods for Node
 if (!globalThis.addEventListener) {

@@ -25,7 +25,7 @@ const {
   clearErrors,
   getErrorSummary,
   getRecentErrorCount,
-} = await import("../../src/services/error-pipeline.js");
+} = await import("../../src/services/error-service.js");
 
 function seedStore() {
   initStore({
