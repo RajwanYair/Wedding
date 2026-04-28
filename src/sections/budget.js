@@ -12,6 +12,7 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getAllSummaries } from "../services/budget-tracker.js";
 import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct } from "../services/budget-burndown.js";
+import { projectOverrun } from "../services/budget-projection.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -29,11 +30,15 @@ export function mount(/** @type {HTMLElement} */ _container) {
   // C1 Sprint 46: budget burn-down
   _unsubs.push(storeSubscribe("expenses", renderBudgetBurndownChart));
   _unsubs.push(storeSubscribe("weddingInfo", renderBudgetBurndownChart));
+  // S145: budget projection panel
+  _unsubs.push(storeSubscribe("expenses", renderBudgetProjection));
+  _unsubs.push(storeSubscribe("weddingInfo", renderBudgetProjection));
   renderBudget();
   renderBudgetProgress();
   renderExpenseCategoryBreakdown(); // S22.3
   _renderEnvelopeSummary(); // Sprint 28 / C1
   renderBudgetBurndownChart(); // C1 Sprint 46
+  renderBudgetProjection(); // S145
 }
 
 export function unmount() {
@@ -475,6 +480,51 @@ export function renderBudgetBurndownChart() {
 /** Escape string for SVG attribute/text content. */
 function _escBudget(str) {
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// ── S145: Budget projection panel ────────────────────────────────────────
+
+/**
+ * Render projection stats (daily burn, projected total, overrun warning)
+ * in #budgetProjectionPanel using the pure budget-projection.js service.
+ */
+export function renderBudgetProjection() {
+  const panel = document.getElementById("budgetProjectionPanel");
+  if (!panel) return;
+
+  const info = /** @type {any} */ (storeGet("weddingInfo") ?? {});
+  const target = Number(info.budgetTarget) || 0;
+  const eventDate = info.weddingDate || "";
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []).map((e) => ({
+    amount: Number(e.amount) || 0,
+    paidAt: e.date || e.createdAt || "",
+    category: e.category,
+  }));
+
+  if (!target || !eventDate || expenses.length === 0) {
+    panel.classList.add("u-hidden");
+    return;
+  }
+
+  const { projectedSpend, projectedOverrun, dailyBurn } = projectOverrun(
+    target,
+    expenses,
+    eventDate,
+  );
+
+  panel.classList.remove("u-hidden");
+  _statText("projDailyBurn", `₪${Math.round(dailyBurn).toLocaleString()}`);
+  _statText("projProjectedSpend", `₪${Math.round(projectedSpend).toLocaleString()}`);
+
+  const overrunRow = document.getElementById("projOverrunRow");
+  if (overrunRow) {
+    if (projectedOverrun > 0) {
+      overrunRow.classList.remove("u-hidden");
+      _statText("projOverrun", `₪${Math.round(projectedOverrun).toLocaleString()}`);
+    } else {
+      overrunRow.classList.add("u-hidden");
+    }
+  }
 }
 
 /**

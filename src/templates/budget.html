@@ -183,4 +183,20 @@
   </div>
   <div id="budgetBurndownChart"></div>
   <p id="budgetBurndownPct" class="u-text-sm u-text-muted u-mt-xs"></p>
+
+  <!-- S145: Projection overlay -->
+  <div id="budgetProjectionPanel" class="budget-projection-panel u-hidden u-mt-sm">
+    <div class="budget-projection-row">
+      <span data-i18n="budget_proj_daily_burn">צריכה יומית ממוצעת</span>
+      <strong id="projDailyBurn">—</strong>
+    </div>
+    <div class="budget-projection-row">
+      <span data-i18n="budget_proj_projected_spend">צפי הוצאות כולל</span>
+      <strong id="projProjectedSpend">—</strong>
+    </div>
+    <div id="projOverrunRow" class="budget-projection-row budget-projection-row--warn u-hidden">
+      <span data-i18n="budget_proj_overrun">חריגה צפויה</span>
+      <strong id="projOverrun">—</strong>
+    </div>
+  </div>
 </div>

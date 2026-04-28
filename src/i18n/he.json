@@ -1278,5 +1278,8 @@
   "ros_minutes": "דק׳",
   "ros_remove_item": "הסר פעילות",
   "ros_overlap_warning": "חפיפות בין פעילויות",
-  "ros_timeline_aria": "לוח זמנים ליום החתונה"
+  "ros_timeline_aria": "לוח זמנים ליום החתונה",
+  "budget_proj_daily_burn": "צריכה יומית ממוצעת",
+  "budget_proj_projected_spend": "צפי הוצאות כולל",
+  "budget_proj_overrun": "חריגה צפויה"
 }

@@ -1278,5 +1278,8 @@
   "ros_minutes": "min",
   "ros_remove_item": "Remove activity",
   "ros_overlap_warning": "Overlapping activities",
-  "ros_timeline_aria": "Wedding day timeline"
+  "ros_timeline_aria": "Wedding day timeline",
+  "budget_proj_daily_burn": "Average daily burn",
+  "budget_proj_projected_spend": "Projected total spend",
+  "budget_proj_overrun": "Projected overrun"
 }

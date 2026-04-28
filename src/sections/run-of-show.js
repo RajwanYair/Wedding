@@ -106,9 +106,7 @@ export function renderTimeline() {
 /** Add a new timeline item. */
 export function addItem() {
   const last = _items[_items.length - 1];
-  const startMin = last
-    ? _parseHmm(last.startTime) + last.durationMinutes
-    : 18 * 60;
+  const startMin = last ? _parseHmm(last.startTime) + last.durationMinutes : 18 * 60;
   const id = `t_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
   _items.push({
     id,

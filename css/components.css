@@ -3532,6 +3532,24 @@
     }
   }
 
+  /* ── Budget Projection Panel (S145) ── */
+  .budget-projection-panel {
+    padding: 0.75rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+  }
+
+  .budget-projection-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+  }
+
+  .budget-projection-row--warn {
+    color: var(--danger);
+  }
+
   /* ── Run-of-Show Editor (S144) ── */
   .ros-toolbar {
     display: flex;
@@ -3557,7 +3575,7 @@
     transition: box-shadow var(--transition-fast);
 
     &:hover {
-      box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
     }
 
     &:active {
