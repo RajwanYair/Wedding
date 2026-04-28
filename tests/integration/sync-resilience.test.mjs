@@ -32,10 +32,9 @@ vi.mock("../../src/core/storage.js", () => ({
 import { initStore } from "../../src/core/store.js";
 const { enqueueWrite, onSyncStatus, syncStatus } =
   await import("../../src/services/sheets.js");
-const { initSyncTracker, getSyncState, markSyncing, markSynced, markSyncError, markAllOffline, markAllOnline } =
-  await import("../../src/services/sync-tracker.js");
-const { getSyncStatus, isSyncHealthy, getFailedDomains, getPendingDomains } =
-  await import("../../src/services/sync-tracker.js");
+const { initSyncTracker, getSyncState, markSyncing, markSynced, markSyncError, markAllOffline, markAllOnline,
+        getSyncStatus, isSyncHealthy, getFailedDomains, getPendingDomains } =
+  await import("../../src/services/sync-manager.js");
 import { syncStoreKey } from "../../src/services/backend.js";
 
 const KEYS = ["guests", "tables", "vendors", "expenses"];

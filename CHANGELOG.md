@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.1.0] — 2025-07-04
+
+> **S186–S195: Service consolidation 83→70 files; BaseSection scoped lifecycle upgrade.**
+
+### Changed
+
+- **S186** — Seating cluster (3→1): merged `seating-optimizer.js` + `seating-constraints.js` → `seating.js`
+- **S187** — Presence cluster (3→1): merged `presence-heartbeat.js` + `presence-sync.js` → `presence.js`
+- **S188** — Notification cluster (2→1): merged `notification-preferences.js` → `notification-centre.js`
+- **S189** — Error cluster (3→1): merged `error-monitor.js` + `error-pipeline.js` + `error-proxy.js` → `error-service.js`
+- **S190** — Sync cluster (2→1): merged `sync-tracker.js` → `sync-manager.js`; `getSyncStatus()` renamed to `getQueueStatus()`
+- **S191** — Campaign cluster (2→1): merged `wa-campaign.js` → `campaign.js`
+- **S192** — Supabase cluster (2→1): merged `supabase-health.js` → `supabase.js`
+- **S193** — Budget cluster (2→1): merged `budget-tracker.js` → `budget-burndown.js`
+- **S194** — Auth cluster (2→1): merged `auth-claims.js` + `oauth-providers.js` → `auth.js`
+- **S195** — `BaseSection.subscribe()` now uses `storeSubscribeScoped` + `cleanupScope`; all 23 sections fully adopted
+
 ## [13.0.0] — 2025-06-12
 
 > **S183–S185: Dead-export purge, arch-check enforcement, service consolidation.**

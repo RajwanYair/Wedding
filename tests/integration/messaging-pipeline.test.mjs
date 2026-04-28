@@ -32,7 +32,7 @@ import { initStore } from "../../src/core/store.js";
 const { createCampaign, queueCampaign, getCampaign, getCampaignStats } =
   await import("../../src/services/campaign.js");
 const { runWACampaign, sendAdHocWhatsApp } =
-  await import("../../src/services/wa-campaign.js");
+  await import("../../src/services/campaign.js");
 const { sendEmailCampaign } =
   await import("../../src/services/email-service.js");
 const { recordDelivery, getDeliveryHistory, getDeliveryStats } =

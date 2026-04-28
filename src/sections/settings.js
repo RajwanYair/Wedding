@@ -26,7 +26,7 @@ import {
 import {
   getPreferences,
   updatePreferences,
-} from "../services/notification-preferences.js";
+} from "../services/notification-centre.js";
 import {
   THEME_VARS,
   applyThemeVars,

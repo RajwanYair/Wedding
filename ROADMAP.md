@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.0.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.1.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,7 +20,7 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2025-06-12, v13.0.0):** **3 109 tests passing** across 222 files · 0 lint errors / 0 warnings
+**State (2025-07-04, v13.1.0):** **3 109 tests passing** across 222 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **4 locales** (HE primary · EN · AR · FR · ES scaffold) · 22
@@ -78,7 +78,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.0.0 · 2025-06-12
+### Actual state — v13.1.0 · 2025-07-04
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -87,7 +87,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 | Dead exports | purged in S183 (0 unused exports) | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
 | Sections | **23** modules · **18** templates · **8** modals | ✅ |
-| Services | **83** files | ⚠ target ≤ 25 (Phase B1) |
+| Services | **70** files (was 83 at v13.0) | ⚠ target ≤ 25 (Phase B1) |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |

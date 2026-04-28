@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { decodeJwtPayload, hasRole, isTokenExpired } from "../../src/services/auth-claims.js";
+import { decodeJwtPayload, hasRole, isTokenExpired } from "../../src/services/auth.js";
 import { createRateLimiter } from "../../src/services/rate-limiter.js";
 import { PII_COLUMNS } from "../../src/services/gdpr-erasure.js";
 import { createAuditPipeline } from "../../src/services/audit.js";
