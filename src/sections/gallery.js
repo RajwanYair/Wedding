@@ -10,6 +10,8 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { currentUser } from "../services/auth.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
+import { CDN_IMAGE_HOST } from "../core/config.js";
+import { buildCdnImageUrl, buildSrcset, defaultSizes } from "../utils/cdn-image.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -97,7 +99,7 @@ export function openLightbox(id) {
   img.alt = photo.caption || t("photo");
   img.decoding = "async"; // S4.6 — decode off main thread
   if (photo.url && (photo.url.startsWith("https://") || photo.url.startsWith("data:image/"))) {
-    img.src = photo.url;
+    img.src = buildCdnImageUrl(photo.url, { width: 1200, format: "auto", quality: 85 }, CDN_IMAGE_HOST);
   }
 
   const closeBtn = document.createElement("button");
@@ -160,7 +162,12 @@ export function renderGallery() {
     img.className = "gallery-item-img";
     // Use a safe URL — only set src if url is a data: or https: URL
     if (p.url && (p.url.startsWith("https://") || p.url.startsWith("data:image/"))) {
-      img.src = p.url;
+      img.src = buildCdnImageUrl(p.url, { width: 400, format: "auto", quality: 80 }, CDN_IMAGE_HOST);
+      const srcset = buildSrcset(p.url, [320, 480, 640], { format: "auto", quality: 80 }, CDN_IMAGE_HOST);
+      if (srcset) {
+        img.srcset = srcset;
+        img.sizes = defaultSizes();
+      }
     }
     img.addEventListener("click", () => openLightbox(p.id));
     item.appendChild(img);

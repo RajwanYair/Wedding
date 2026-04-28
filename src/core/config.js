@@ -53,5 +53,9 @@ export const DEBOUNCE_MS = 1500;
 export const MAX_RETRIES = 4;
 export const BACKOFF_BASE_MS = 2000;
 
+// ── CDN / Image Resizing (S151) ──────────────────────────────────────────
+/** Cloudflare CDN host for image resizing. Empty = pass-through (no CDN). */
+export const CDN_IMAGE_HOST = "";
+
 // ── Domain enums ──────────────────────────────────────────────────────────
 // Centralised in src/core/constants.js — import from there.
