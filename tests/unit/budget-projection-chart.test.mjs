@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 const { buildBurndownSeries, projectOverrun, categoryBreakdown } = await import(
-  "../../src/services/budget-projection.js"
+  "../../src/services/budget-burndown.js"
 );
 
 describe("BudgetProjectionChart (Sprint 145)", () => {

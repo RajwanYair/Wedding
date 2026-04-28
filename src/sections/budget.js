@@ -12,8 +12,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getAllSummaries } from "../services/budget-tracker.js";
-import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct } from "../services/budget-burndown.js";
-import { projectOverrun } from "../services/budget-projection.js";
+import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct, projectOverrun } from "../services/budget-burndown.js";
 
 class BudgetSection extends BaseSection {
   async onMount() {

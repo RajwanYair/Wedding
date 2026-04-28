@@ -6,7 +6,7 @@ import {
   buildBurndownSeries,
   projectOverrun,
   categoryBreakdown,
-} from "../../src/services/budget-projection.js";
+} from "../../src/services/budget-burndown.js";
 
 const exp = [
   { amount: 1000, paidAt: "2026-04-01T08:00:00Z", category: "venue" },

@@ -14,8 +14,7 @@ import { pushUndo } from "../utils/undo.js";
 import { cleanPhone } from "../utils/phone.js";
 import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
 import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
-import { getOverdueVendors } from "../services/vendor-analytics.js";
-import { buildPaymentTimeline, topVendorsByCost } from "../services/vendor-timeline.js";
+import { getOverdueVendors, buildPaymentTimeline, topVendorsByCost } from "../services/vendor-analytics.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {

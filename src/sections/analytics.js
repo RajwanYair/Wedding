@@ -18,7 +18,7 @@ import {
   uniqueClicks,
   uniqueRsvps,
 } from "../services/invitation-analytics.js";
-import { getRsvpFunnel, getRsvpConversionRates, unseatedConfirmedCount } from "../services/rsvp-analytics.js";
+import { getRsvpFunnel, getRsvpConversionRates, unseatedConfirmedCount, buildRsvpFunnel, rsvpConversionRate } from "../services/rsvp-analytics.js";
 import {
   renderDonut as _renderDonut,
   renderBar as _renderBar,
@@ -26,7 +26,6 @@ import {
   escSvg as _escSvg,
   escHtml as _escHtml,
 } from "../utils/charts.js";
-import { buildRsvpFunnel, rsvpConversionRate } from "../services/rsvp-funnel.js";
 
 const _SCOPE = "analytics";
 
