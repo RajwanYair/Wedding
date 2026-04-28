@@ -5,7 +5,8 @@
  * No window.* dependencies.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
@@ -20,24 +21,17 @@ import {
   downloadTextFile,
 } from "../services/seating-exporter.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
-/**
- * @param {HTMLElement} _container
- */
-export function mount(_container) {
-  _unsubs.push(storeSubscribe("tables", renderTables));
-  _unsubs.push(storeSubscribe("guests", renderTables));
-  renderTables();
+class TablesSection extends BaseSection {
+  async onMount() {
+    this.subscribe("tables", renderTables);
+    this.subscribe("guests", renderTables);
+    renderTables();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new TablesSection("tables"));
 
 // ── Table CRUD ────────────────────────────────────────────────────────────
 

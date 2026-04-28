@@ -4,7 +4,8 @@
  * Expense CRUD with category breakdown and Sheets sync.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
@@ -12,21 +13,17 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getTopCategories } from "../services/expense-analytics.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
 /** @type {string} active expense category filter; "all" means no filter */
 let _expenseCatFilter = "all";
 
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("expenses", renderExpenses));
-  renderExpenses();
+class ExpensesSection extends BaseSection {
+  async onMount() {
+    this.subscribe("expenses", renderExpenses);
+    renderExpenses();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new ExpensesSection("expenses"));
 
 /**
  * @param {Record<string, unknown>} data

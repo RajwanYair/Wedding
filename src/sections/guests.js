@@ -5,7 +5,8 @@
  * No window.* dependencies — uses reactive store and named imports.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
@@ -14,9 +15,6 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { guestMatchesQuery } from "../utils/guest-search.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
-
-/** @type {(() => void)[]} */
-const _unsubs = [];
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -32,20 +30,14 @@ let _searchQuery = "";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
-/**
- * Mount the guests section.
- * @param {HTMLElement} _container
- */
-export function mount(_container) {
-  _unsubs.push(storeSubscribe("guests", renderGuests));
-  renderGuests();
+class GuestsSection extends BaseSection {
+  async onMount() {
+    this.subscribe("guests", renderGuests);
+    renderGuests();
+  }
 }
 
-/** Unmount — unsubscribe from store. */
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new GuestsSection("guests"));
 
 // ── Guest CRUD ────────────────────────────────────────────────────────────
 

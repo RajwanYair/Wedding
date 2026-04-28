@@ -4,7 +4,8 @@
  * Vendor CRUD with payment tracking and Sheets sync.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
@@ -16,26 +17,22 @@ import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
 import { getOverdueVendors } from "../services/vendor-analytics.js";
 import { buildPaymentTimeline, topVendorsByCost } from "../services/vendor-timeline.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("vendors", renderVendors));
-  _unsubs.push(storeSubscribe("vendors", renderOverdueChip)); // S23.5
-  _unsubs.push(storeSubscribe("vendors", renderVendorPaymentTimeline)); // C1 Sprint 45
-  _unsubs.push(storeSubscribe("vendors", renderVendorSpendTimeline)); // S147
-  _unsubs.push(storeSubscribe("vendors", renderTopVendorsByCost)); // S147
-  renderVendors();
-  renderOverdueChip(); // S23.5
-  renderVendorPaymentTimeline(); // C1 Sprint 45
-  renderVendorSpendTimeline(); // S147
-  renderTopVendorsByCost(); // S147
+class VendorsSection extends BaseSection {
+  async onMount() {
+    this.subscribe("vendors", renderVendors);
+    this.subscribe("vendors", renderOverdueChip); // S23.5
+    this.subscribe("vendors", renderVendorPaymentTimeline); // C1 Sprint 45
+    this.subscribe("vendors", renderVendorSpendTimeline); // S147
+    this.subscribe("vendors", renderTopVendorsByCost); // S147
+    renderVendors();
+    renderOverdueChip(); // S23.5
+    renderVendorPaymentTimeline(); // C1 Sprint 45
+    renderVendorSpendTimeline(); // S147
+    renderTopVendorsByCost(); // S147
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new VendorsSection("vendors"));
 
 /**
  * @param {Record<string, unknown>} data

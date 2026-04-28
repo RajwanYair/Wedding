@@ -4,22 +4,19 @@
  * Renders a preview of the invitation card with editable wedding info.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("weddingInfo", renderInvitation));
-  renderInvitation();
+class InvitationSection extends BaseSection {
+  async onMount() {
+    this.subscribe("weddingInfo", renderInvitation);
+    renderInvitation();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new InvitationSection("invitation"));
 
 /**
  * Collect wedding detail form fields and persist them.
