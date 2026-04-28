@@ -1316,5 +1316,8 @@
   "plural_seated": "{count, plural, =0 {0 seated} one {# seated} other {# seated}}",
   "plural_constraints_more": "{count, plural, one {+# more constraint} other {+# more constraints}}",
   "plural_transport_passengers": "{count, plural, one {# passenger} other {# passengers}}",
-  "plural_timeline_alarm": "{count, plural, one {# minute left} other {# minutes left}}"
+  "plural_timeline_alarm": "{count, plural, one {# minute left} other {# minutes left}}",
+  "deploy_title": "Quick Deploy",
+  "deploy_description": "Deploy the app with one click to your preferred hosting provider:",
+  "deploy_to": "Deploy to {provider}"
 }

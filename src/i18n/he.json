@@ -1316,5 +1316,8 @@
   "plural_seated": "{count, plural, =0 {ללא ישיבה} one {יושב #} other {יושבים #}}",
   "plural_constraints_more": "{count, plural, one {+ הגבלה נוספת} other {+ # הגבלות נוספות}}",
   "plural_transport_passengers": "{count, plural, one {נוסע אחד} other {# נוסעים}}",
-  "plural_timeline_alarm": "{count, plural, one {עוד דקה אחת} other {עוד # דקות}}"
+  "plural_timeline_alarm": "{count, plural, one {עוד דקה אחת} other {עוד # דקות}}",
+  "deploy_title": "פריסה מהירה",
+  "deploy_description": "פרוס את האפליקציה בלחיצה אחת לשירות האירוח המועדף:",
+  "deploy_to": "פרוס ל-{provider}"
 }
