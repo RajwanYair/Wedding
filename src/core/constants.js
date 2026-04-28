@@ -39,6 +39,7 @@ export const EXTRA_SECTIONS = /** @type {const} */ ([
   "contact-form",
   "registry",
   "guest-landing",
+  "website-builder",
 ]);
 
 /**

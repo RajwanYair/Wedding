@@ -38,6 +38,7 @@ import {
 } from "../sections/settings.js";
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
+import { saveWebsiteConfig, previewWebsite } from "../sections/website-builder.js";
 
 /**
  * Register `data-action` handlers for the settings section.
@@ -229,4 +230,7 @@ export function register() {
   on("resetThemeVars", () => resetThemeVars());
   on("exportThemeJson", () => exportThemeToJson());
   on("importThemeJson", () => importThemeFromJson());
+  // Sprint 139 — Website builder
+  on("saveWebsiteConfig", () => saveWebsiteConfig());
+  on("previewWebsite", () => previewWebsite());
 }

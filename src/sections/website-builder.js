@@ -1,0 +1,210 @@
+/**
+ * src/sections/website-builder.js — S139 Public wedding website builder UI.
+ *
+ * Consumes src/services/website-builder.js (S134) to let the couple
+ * configure their public wedding website: toggle sections, set
+ * visibility, preview slug, and see a live preview.
+ */
+
+import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { t } from "../core/i18n.js";
+import { showToast } from "../core/ui.js";
+import {
+  buildWebsiteConfig,
+  buildSiteSlug,
+  WEBSITE_SECTIONS,
+} from "../services/website-builder.js";
+import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage.js";
+
+const STORAGE_KEY = "wedding_v1_website_config";
+
+/** @type {(() => void)[]} */
+const _unsubs = [];
+
+export function mount(/** @type {HTMLElement} */ _container) {
+  _unsubs.push(storeSubscribe("weddingInfo", _populateFromWeddingInfo));
+  _populateFromWeddingInfo();
+  _renderSectionToggles();
+  _loadSavedConfig();
+  _wireVisibilityToggle();
+  _wireSlugPreview();
+}
+
+export function unmount() {
+  _unsubs.forEach((fn) => fn());
+  _unsubs.length = 0;
+}
+
+// ── Populate from wedding info ────────────────────────────────────────────
+
+function _populateFromWeddingInfo() {
+  const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+  const coupleAInput = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleA"));
+  const coupleBInput = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleB"));
+  const dateInput = /** @type {HTMLInputElement|null} */ (document.getElementById("wbDate"));
+
+  if (coupleAInput && !coupleAInput.value) coupleAInput.value = info.groom ?? "";
+  if (coupleBInput && !coupleBInput.value) coupleBInput.value = info.bride ?? "";
+  if (dateInput && !dateInput.value) dateInput.value = info.date ?? "";
+
+  _updateSlugPreview();
+}
+
+// ── Section toggles ───────────────────────────────────────────────────────
+
+function _renderSectionToggles() {
+  const container = document.getElementById("wbSectionToggles");
+  if (!container) return;
+  container.textContent = "";
+
+  const saved = _getSavedSections();
+
+  for (const section of WEBSITE_SECTIONS) {
+    const label = document.createElement("label");
+    label.className = "website-section-toggle";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = saved.includes(section);
+    checkbox.dataset.section = section;
+
+    const span = document.createElement("span");
+    span.textContent = t(`website_section_${section}`) || section;
+
+    label.appendChild(checkbox);
+    label.appendChild(span);
+    container.appendChild(label);
+  }
+}
+
+function _getSavedSections() {
+  const config = readBrowserStorageJson(STORAGE_KEY);
+  return config?.sections ?? [...WEBSITE_SECTIONS];
+}
+
+// ── Visibility toggle ─────────────────────────────────────────────────────
+
+function _wireVisibilityToggle() {
+  const select = /** @type {HTMLSelectElement|null} */ (document.getElementById("wbVisibility"));
+  const passGroup = document.getElementById("wbPasswordGroup");
+  if (!select || !passGroup) return;
+
+  const update = () => {
+    passGroup.style.display = select.value === "password" ? "" : "none";
+  };
+  select.addEventListener("change", update);
+  update();
+}
+
+// ── Slug preview ──────────────────────────────────────────────────────────
+
+function _wireSlugPreview() {
+  const coupleA = document.getElementById("wbCoupleA");
+  const coupleB = document.getElementById("wbCoupleB");
+  const dateInput = document.getElementById("wbDate");
+
+  [coupleA, coupleB, dateInput].forEach((el) => {
+    el?.addEventListener("input", _updateSlugPreview);
+  });
+}
+
+function _updateSlugPreview() {
+  const a = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleA"))?.value ?? "";
+  const b = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleB"))?.value ?? "";
+  const d = /** @type {HTMLInputElement|null} */ (document.getElementById("wbDate"))?.value ?? "";
+  const year = d ? new Date(d).getFullYear() : new Date().getFullYear();
+  const slug = buildSiteSlug(a, b, year);
+  const preview = document.getElementById("wbSlugPreview");
+  if (preview) preview.textContent = slug || "—";
+}
+
+// ── Load saved config ─────────────────────────────────────────────────────
+
+function _loadSavedConfig() {
+  const config = readBrowserStorageJson(STORAGE_KEY);
+  if (!config) return;
+
+  const coupleA = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleA"));
+  const coupleB = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleB"));
+  const dateInput = /** @type {HTMLInputElement|null} */ (document.getElementById("wbDate"));
+  const vis = /** @type {HTMLSelectElement|null} */ (document.getElementById("wbVisibility"));
+  const pass = /** @type {HTMLInputElement|null} */ (document.getElementById("wbPassword"));
+
+  if (coupleA) coupleA.value = config.coupleA ?? "";
+  if (coupleB) coupleB.value = config.coupleB ?? "";
+  if (dateInput) dateInput.value = config.weddingDate ?? "";
+  if (vis) vis.value = config.visibility ?? "public";
+  if (pass && config.password) pass.value = config.password;
+
+  _updateSlugPreview();
+}
+
+// ── Save config action ────────────────────────────────────────────────────
+
+export function saveWebsiteConfig() {
+  const coupleA = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleA"))?.value ?? "";
+  const coupleB = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleB"))?.value ?? "";
+  const weddingDate = /** @type {HTMLInputElement|null} */ (document.getElementById("wbDate"))?.value ?? "";
+  const visibility = /** @type {HTMLSelectElement|null} */ (document.getElementById("wbVisibility"))?.value ?? "public";
+  const password = /** @type {HTMLInputElement|null} */ (document.getElementById("wbPassword"))?.value ?? "";
+
+  const container = document.getElementById("wbSectionToggles");
+  const sections = [];
+  if (container) {
+    for (const input of container.querySelectorAll("input[type=checkbox]:checked")) {
+      const sec = /** @type {HTMLInputElement} */ (input).dataset.section;
+      if (sec) sections.push(sec);
+    }
+  }
+
+  const result = buildWebsiteConfig({
+    coupleA,
+    coupleB,
+    weddingDate,
+    visibility,
+    password: visibility === "password" ? password : undefined,
+    sections,
+  });
+
+  if (!result.ok) {
+    showToast(t("website_save_error"), "error");
+    return { ok: false, errors: result.errors };
+  }
+
+  writeBrowserStorageJson(STORAGE_KEY, result.config);
+  showToast(t("website_save_success"), "success");
+  return { ok: true };
+}
+
+// ── Preview ───────────────────────────────────────────────────────────────
+
+export function previewWebsite() {
+  const container = document.getElementById("wbPreviewContainer");
+  const content = document.getElementById("wbPreviewContent");
+  if (!container || !content) return;
+
+  const config = readBrowserStorageJson(STORAGE_KEY);
+  if (!config) {
+    showToast(t("website_save_first"), "warning");
+    return;
+  }
+
+  container.classList.remove("u-hidden");
+  content.textContent = "";
+
+  const heading = document.createElement("h2");
+  heading.textContent = `${config.coupleA} & ${config.coupleB}`;
+  content.appendChild(heading);
+
+  const date = document.createElement("p");
+  date.textContent = config.weddingDate ?? "";
+  content.appendChild(date);
+
+  const sectionsList = document.createElement("ul");
+  for (const s of config.sections ?? []) {
+    const li = document.createElement("li");
+    li.textContent = t(`website_section_${s}`) || s;
+    sectionsList.appendChild(li);
+  }
+  content.appendChild(sectionsList);
+}
