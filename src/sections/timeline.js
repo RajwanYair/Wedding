@@ -4,7 +4,8 @@
  * Wedding day schedule: add/edit/remove timeline items.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
@@ -12,25 +13,24 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getRunOfShow, getNextItem, formatTimeUntil } from "../services/event-schedule.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
+class TimelineSection extends BaseSection {
+  async onMount() {
+    this.subscribe("timeline", renderTimeline);
+    this.subscribe("weddingInfo", renderTimeline);
+    this.subscribe("timelineDone", renderTimeline); // S24.1
+    this.subscribe("timeline", renderRunOfShow); // C1 Sprint 48
+    this.subscribe("weddingInfo", renderRunOfShow); // C1 Sprint 48
+    renderTimeline();
+    startTimelineAlarms();
+    renderRunOfShow(); // C1 Sprint 48
+  }
 
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("timeline", renderTimeline));
-  _unsubs.push(storeSubscribe("weddingInfo", renderTimeline));
-  _unsubs.push(storeSubscribe("timelineDone", renderTimeline)); // S24.1
-  _unsubs.push(storeSubscribe("timeline", renderRunOfShow)); // C1 Sprint 48
-  _unsubs.push(storeSubscribe("weddingInfo", renderRunOfShow)); // C1 Sprint 48
-  renderTimeline();
-  startTimelineAlarms();
-  renderRunOfShow(); // C1 Sprint 48
+  onUnmount() {
+    stopTimelineAlarms();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-  stopTimelineAlarms();
-}
+export const { mount, unmount, capabilities } = fromSection(new TimelineSection("timeline"));
 
 /**
  * @param {Record<string, unknown>} data

@@ -4,22 +4,19 @@
  * Public landing with couple info, registry links, and table finder.
  */
 
-import { storeGet, storeSubscribe } from "../core/store.js";
+import { storeGet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { t } from "../core/i18n.js";
 import { formatDateHebrew } from "../utils/date.js";
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("weddingInfo", renderLanding));
-  _unsubs.push(storeSubscribe("timeline", renderLanding));
-  renderLanding();
+class LandingSection extends BaseSection {
+  async onMount() {
+    this.subscribe("weddingInfo", renderLanding);
+    this.subscribe("timeline", renderLanding);
+    renderLanding();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new LandingSection("landing"));
 
 export function renderLanding() {
   const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});

@@ -5,7 +5,8 @@
  * No window.* dependencies.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { getBackendTypeConfig, getSheetsWebAppUrl, getSpreadsheetId } from "../core/app-config.js";
 import { el } from "../core/dom.js";
 import { t, loadLocale, applyI18n, normalizeUiLanguage } from "../core/i18n.js";
@@ -46,35 +47,28 @@ import {
 import { validatePluginManifest } from "../services/plugin-manifest.js";
 import { addAdminUser, removeAdminUser } from "../services/admin.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
+// ── Lifecycle ──────────────────────────────────────────────────────────
 
-// ── Lifecycle ─────────────────────────────────────────────────────────────
-
-/**
- * @param {HTMLElement} _container
- */
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("weddingInfo", populateSettings));
-  _unsubs.push(storeSubscribe("auditLog", renderAuditLog));
-  populateSettings();
-  renderAuditLog();
-  // Auto-generate QR code when settings section opens
-  generateRsvpQrCode();
-  // Attempt to load remote audit log
-  refreshAuditLog();
-  // Wire push notification UI (S18d)
-  _renderPushCard();
-  // Wire notification channel/event preferences (Sprint 56)
-  _renderNotifPrefsCard();
-  // Wire theme customizer (Sprint 138)
-  _renderThemeVarsEditor();
+class SettingsSection extends BaseSection {
+  async onMount() {
+    this.subscribe("weddingInfo", populateSettings);
+    this.subscribe("auditLog", renderAuditLog);
+    populateSettings();
+    renderAuditLog();
+    // Auto-generate QR code when settings section opens
+    generateRsvpQrCode();
+    // Attempt to load remote audit log
+    refreshAuditLog();
+    // Wire push notification UI (S18d)
+    _renderPushCard();
+    // Wire notification channel/event preferences (Sprint 56)
+    _renderNotifPrefsCard();
+    // Wire theme customizer (Sprint 138)
+    _renderThemeVarsEditor();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new SettingsSection("settings"));
 
 // ── Settings API ──────────────────────────────────────────────────────────
 

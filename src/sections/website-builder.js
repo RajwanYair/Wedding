@@ -6,7 +6,8 @@
  * visibility, preview slug, and see a live preview.
  */
 
-import { storeGet, storeSubscribe } from "../core/store.js";
+import { storeGet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { t } from "../core/i18n.js";
 import { showToast } from "../core/ui.js";
 import {
@@ -18,22 +19,18 @@ import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage
 
 const STORAGE_KEY = "wedding_v1_website_config";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("weddingInfo", _populateFromWeddingInfo));
-  _populateFromWeddingInfo();
-  _renderSectionToggles();
-  _loadSavedConfig();
-  _wireVisibilityToggle();
-  _wireSlugPreview();
+class WebsiteBuilderSection extends BaseSection {
+  async onMount() {
+    this.subscribe("weddingInfo", _populateFromWeddingInfo);
+    _populateFromWeddingInfo();
+    _renderSectionToggles();
+    _loadSavedConfig();
+    _wireVisibilityToggle();
+    _wireSlugPreview();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new WebsiteBuilderSection("website-builder"));
 
 // ── Populate from wedding info ────────────────────────────────────────────
 

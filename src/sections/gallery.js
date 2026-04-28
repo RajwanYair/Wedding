@@ -4,7 +4,8 @@
  * Photo gallery with lazy-loaded images and admin upload controls.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
@@ -13,24 +14,20 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { CDN_IMAGE_HOST } from "../core/config.js";
 import { buildCdnImageUrl, buildSrcset, defaultSizes } from "../utils/cdn-image.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("gallery", renderGallery));
-  // Show admin bar for authenticated users only
-  const adminBar = document.getElementById("galleryAdminBar");
-  if (adminBar) {
-    const user = currentUser();
-    adminBar.classList.toggle("u-hidden", !user || !user.isAdmin);
+class GallerySection extends BaseSection {
+  async onMount() {
+    this.subscribe("gallery", renderGallery);
+    // Show admin bar for authenticated users only
+    const adminBar = document.getElementById("galleryAdminBar");
+    if (adminBar) {
+      const user = currentUser();
+      adminBar.classList.toggle("u-hidden", !user || !user.isAdmin);
+    }
+    renderGallery();
   }
-  renderGallery();
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new GallerySection("gallery"));
 
 /**
  * Handle file input change — upload images from device.
