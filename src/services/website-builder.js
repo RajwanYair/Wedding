@@ -12,7 +12,7 @@
 /** @typedef {"public"|"password"|"private"} WebsiteVisibility */
 
 /**
- * @typedef {Object} WebsiteConfig
+ * @typedef {object} WebsiteConfig
  * @property {string}  id             — unique slug (generated from couple names)
  * @property {string}  coupleA        — first person's first name
  * @property {string}  coupleB        — second person's first name
