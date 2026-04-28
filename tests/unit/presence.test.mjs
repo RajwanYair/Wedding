@@ -22,7 +22,7 @@ import {
   stopPresence,
   getPresence,
   onPresenceChange,
-} from "../../src/services/presence.js";
+} from "../../src/services/presence-service.js";
 import { currentUser } from "../../src/services/auth.js";
 import { load, save } from "../../src/core/state.js";
 
