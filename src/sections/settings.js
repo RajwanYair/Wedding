@@ -14,13 +14,7 @@ import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { readBrowserStorageJson } from "../core/storage.js";
 import { sanitize } from "../utils/sanitize.js";
-import {
-  enqueueWrite,
-  syncStoreKeyToSheets,
-  queueSize,
-  queueKeys,
-  onSyncStatus,
-} from "../core/sync.js";
+import { queueSize, queueKeys, onSyncStatus } from "../core/sync.js";
 import { getActiveTheme, showToast } from "../core/ui.js";
 import {
   isPushSupported,
@@ -73,29 +67,6 @@ export const { mount, unmount, capabilities } = fromSection(new SettingsSection(
 // ── Settings API ──────────────────────────────────────────────────────────
 
 /**
- * Save wedding info fields from a plain object.
- * @param {Record<string, unknown>} data
- * @returns {{ ok: boolean, errors?: string[] }}
- */
-export function saveWeddingInfo(data) {
-  const { value, errors } = sanitize(data, {
-    groom: { type: "string", required: false, maxLength: 80 },
-    bride: { type: "string", required: false, maxLength: 80 },
-    date: { type: "string", required: false, maxLength: 20 },
-    venue: { type: "string", required: false, maxLength: 120 },
-    venueAddress: { type: "string", required: false, maxLength: 200 },
-    venueMapLink: { type: "string", required: false, maxLength: 500 },
-    phone: { type: "string", required: false, maxLength: 30 },
-  });
-  if (errors.length) return { ok: false, errors };
-
-  const current = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
-  storeSet("weddingInfo", { ...current, ...value });
-  enqueueWrite("weddingInfo", () => syncStoreKeyToSheets("weddingInfo"));
-  return { ok: true };
-}
-
-/**
  * Switch the app language.
  * @param {"he"|"en"} lang
  */
@@ -104,19 +75,6 @@ export async function switchLanguage(lang) {
   await loadLocale(nextLang);
   save("lang", nextLang);
   applyI18n();
-}
-
-/**
- * Set a CSS theme on <body>.
- * @param {"rosegold"|"gold"|"emerald"|"royal"|""} theme
- */
-export function setTheme(theme) {
-  const themes = ["rosegold", "gold", "emerald", "royal"];
-  document.body.classList.remove(...themes.map((t) => `theme-${t}`));
-  if (theme && themes.includes(theme)) {
-    document.body.classList.add(`theme-${theme}`);
-  }
-  save("theme", theme);
 }
 
 /**
@@ -1197,7 +1155,7 @@ function _saveInstalledPlugins(plugins) {
 }
 
 /** Render the plugin list into #pluginList. */
-export function renderPluginList() {
+function renderPluginList() {
   const container = document.getElementById("pluginList");
   if (!container) return;
   container.textContent = "";

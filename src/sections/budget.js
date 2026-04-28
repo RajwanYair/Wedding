@@ -81,7 +81,7 @@ export function deleteBudgetEntry(id) {
   enqueueWrite("budget", () => syncStoreKeyToSheets("budget"));
 }
 
-export function renderBudget() {
+function renderBudget() {
   const tbody = el.budgetTableBody;
   if (!tbody) return;
 
@@ -260,7 +260,7 @@ export function renderBudgetProgress() {
  * Render an expense breakdown by category in #expenseCategoryBreakdown.
  * Shows each category with count, total amount, and % of all expenses.
  */
-export function renderExpenseCategoryBreakdown() {
+function renderExpenseCategoryBreakdown() {
   const tbody = document.getElementById("expenseCategoryTbody");
   if (!tbody) return;
   const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
@@ -408,7 +408,7 @@ export function getPaymentUtilization() {
 /**
  * Render a cumulative spend area chart (SVG) in #budgetBurndownChart.
  */
-export function renderBudgetBurndownChart() {
+function renderBudgetBurndownChart() {
   const container = document.getElementById("budgetBurndownChart");
   if (!container) return;
 
@@ -485,7 +485,7 @@ function _escBudget(str) {
  * Render projection stats (daily burn, projected total, overrun warning)
  * in #budgetProjectionPanel using the pure budget-projection.js service.
  */
-export function renderBudgetProjection() {
+function renderBudgetProjection() {
   const panel = document.getElementById("budgetProjectionPanel");
   if (!panel) return;
 

@@ -13,6 +13,7 @@ import {
   exportVendorPaymentsCSV,
   filterVendorsByCategory,
   openVendorForEdit,
+  setVendorPaymentFilter,
 } from "../sections/vendors.js";
 import {
   saveExpense,
@@ -116,6 +117,7 @@ export function register() {
   );
   on("renderBudgetProgress", () => renderBudgetProgress());
   on("renderBudgetChart", () => renderBudgetChart());
+  on("setVendorPaymentFilter", (el) => setVendorPaymentFilter(el.dataset.actionArg ?? "all"));
 
   // ── Analytics exports ──
   on("exportAnalyticsPDF", () => exportAnalyticsPDF());

@@ -21,7 +21,9 @@ import {
   deleteTimelineItem,
   openTimelineForEdit,
   printTimeline,
+  toggleTimelineDone,
 } from "../sections/timeline.js";
+import { setExpenseCategoryFilter } from "../sections/expenses.js";
 import * as invitationSection from "../sections/invitation.js";
 import * as contactSection from "../sections/contact-collector.js";
 import * as landingSection from "../sections/landing.js";
@@ -138,6 +140,8 @@ export function register() {
     openModal("timelineModal");
   });
   on("printTimeline", () => printTimeline());
+  on("toggleTimelineDone", (el) => toggleTimelineDone(el.dataset.actionArg ?? ""));
+  on("setExpenseCategoryFilter", (el) => setExpenseCategoryFilter(el.dataset.actionArg ?? "all"));
 
   // ── Invitation ──
   on("updateWeddingDetails", () => invitationSection.updateWeddingDetails?.());

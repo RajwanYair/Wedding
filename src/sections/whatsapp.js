@@ -30,7 +30,7 @@ export const { mount, unmount, capabilities } = fromSection(new WhatsAppSection(
  * Render clickable variable chips below the WhatsApp textarea.
  * Clicking a chip inserts the placeholder token at the cursor position.
  */
-export function renderVariableChips() {
+function renderVariableChips() {
   const container = document.getElementById("waVariableChips");
   if (!container) return;
   container.textContent = "";
@@ -63,7 +63,7 @@ export function renderVariableChips() {
   }
 }
 
-export function renderWhatsApp() {
+function renderWhatsApp() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
   const template = el.waTemplate ? /** @type {HTMLTextAreaElement} */ (el.waTemplate).value : "";
@@ -387,18 +387,6 @@ export function sendWhatsAppReminder() {
     }
   });
   enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-}
-
-/**
- * Update the reminder count badge shown next to the reminder button.
- */
-export function updateReminderCount() {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const count = guests.filter(
-    (g) => g.phone && g.sent && (g.status === "pending" || g.status === "maybe"),
-  ).length;
-  const el = document.getElementById("waReminderCount");
-  if (el) el.textContent = t("wa_reminder_count").replace("{n}", String(count));
 }
 
 /** @typedef {{ id: string, scheduledAt: string, sentAt?: string, type: 'reminder'|'thankyou', template?: string }} ScheduledMsg */

@@ -123,7 +123,7 @@ export function autoAssignTables() {
 
 // ── Rendering ────────────────────────────────────────────────────────────
 
-export function renderTables() {
+function renderTables() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const floor = el.seatingFloor;
@@ -468,39 +468,6 @@ export function printTableSigns() {
   document.body.classList.add("print-table-signs");
   window.print();
   document.body.classList.remove("print-table-signs");
-}
-
-/**
- * Look up what table a guest is seated at.
- * Shows a result in the find-table output element.
- */
-export function findTable() {
-  const input = /** @type {HTMLInputElement|null} */ (document.getElementById("findTableInput"));
-  const output = document.getElementById("findTableResult");
-  if (!input || !output) return;
-
-  const query = input.value.trim().toLowerCase();
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-
-  const guest = guests.find(
-    (g) =>
-      `${g.firstName} ${g.lastName}`.toLowerCase().includes(query) ||
-      (g.phone || "").includes(query),
-  );
-
-  if (!guest) {
-    output.textContent = t("guest_not_found") || "Guest not found";
-    return;
-  }
-  if (!guest.tableId) {
-    output.textContent = t("no_table_assigned") || "No table assigned";
-    return;
-  }
-  const table = tables.find((tb) => tb.id === guest.tableId);
-  output.textContent = table
-    ? `${t("table")}: ${table.name}`
-    : t("table_not_found") || "Table not found";
 }
 
 /**

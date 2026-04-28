@@ -82,7 +82,7 @@ export function deleteVendor(id) {
   enqueueWrite("vendors", () => syncStoreKeyToSheets("vendors"));
 }
 
-export function renderVendors() {
+function renderVendors() {
   const tbody = document.getElementById("vendorTableBody");
   if (!tbody) return;
 
@@ -304,7 +304,7 @@ export function getVendorStats() {
 /**
  * Show/hide the overdue vendor count chip in the vendors section header.
  */
-export function renderOverdueChip() {
+function renderOverdueChip() {
   const chip = document.getElementById("vendorOverdueChip");
   if (!chip) return;
   const count = getOverdueVendors().length;
@@ -508,7 +508,7 @@ export function getVendorBudgetShare() {
 /**
  * Render per-category payment progress bars in #vendorPaymentTimeline.
  */
-export function renderVendorPaymentTimeline() {
+function renderVendorPaymentTimeline() {
   const container = document.getElementById("vendorPaymentTimeline");
   if (!container) return;
 
@@ -555,7 +555,7 @@ function _escStr(str) {
  * Render a cumulative payment timeline SVG in #vendorSpendTimeline.
  * Uses the pure `buildPaymentTimeline` helper from S122.
  */
-export function renderVendorSpendTimeline() {
+function renderVendorSpendTimeline() {
   const container = document.getElementById("vendorSpendTimeline");
   if (!container) return;
 
@@ -605,7 +605,7 @@ export function renderVendorSpendTimeline() {
 /**
  * Render top vendors by cost as horizontal bars in #vendorTopCost.
  */
-export function renderTopVendorsByCost() {
+function renderTopVendorsByCost() {
   const container = document.getElementById("vendorTopCost");
   if (!container) return;
 

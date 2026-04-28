@@ -53,7 +53,7 @@ export function handleGalleryUpload(input) {
  * Add a photo to the gallery.
  * @param {{ url: string, caption?: string, credit?: string }} photo
  */
-export function addGalleryPhoto(photo) {
+function addGalleryPhoto(photo) {
   const gallery = [.../** @type {any[]} */ (storeGet("gallery") ?? [])];
   gallery.push({ id: uid(), ...photo, addedAt: new Date().toISOString() });
   storeSet("gallery", gallery);
@@ -130,7 +130,7 @@ export function openLightbox(id) {
   document.addEventListener("keydown", keyHandler);
 }
 
-export function renderGallery() {
+function renderGallery() {
   const grid = el.galleryGrid;
   if (!grid) return;
 

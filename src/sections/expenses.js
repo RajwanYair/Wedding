@@ -69,7 +69,7 @@ export function deleteExpense(id) {
   enqueueWrite("expenses", () => syncStoreKeyToSheets("expenses"));
 }
 
-export function renderExpenses() {
+function renderExpenses() {
   const list = el.expenseList;
   if (!list) return;
 

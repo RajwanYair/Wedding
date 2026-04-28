@@ -13,7 +13,7 @@ import { announce } from "../core/ui.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { isNFCSupported, startNFCScan } from "../services/nfc.js";
 import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
-import { buildCheckinUrl, getQrDataUrl, renderQrToCanvas } from "../utils/qr-code.js";
+import { buildCheckinUrl, getQrDataUrl } from "../utils/qr-code.js";
 
 /** @type {string} */
 let _searchQuery = "";
@@ -117,7 +117,7 @@ export function checkInGuest(guestId) {
   }
 }
 
-export function renderCheckin() {
+function renderCheckin() {
   const list = el.checkinList;
   if (!list) return;
 
@@ -437,21 +437,6 @@ export function toggleGiftMode() {
   });
 }
 
-/**
- * Record a gift for a specific guest.
- * @param {string} guestId
- * @param {number} amount
- */
-export function recordGift(guestId, amount) {
-  const guests = [.../** @type {any[]} */ (storeGet("guests") ?? [])];
-  const idx = guests.findIndex((g) => g.id === guestId);
-  if (idx !== -1) {
-    guests[idx] = { ...guests[idx], gift: amount, updatedAt: new Date().toISOString() };
-    storeSet("guests", guests);
-    enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
-  }
-}
-
 // ── S12.3 QR Code Check-in ────────────────────────────────────────────────
 
 /**
@@ -555,28 +540,3 @@ export function stopNFCCheckin() {
   }
 }
 
-/**
- * Generate a QR code URL for a guest check-in deep link.
- * Uses the client-side QR utility (Sprint 9).
- * @param {string} guestId
- * @returns {string} Check-in URL (pass to renderQrToCanvas for QR display)
- */
-export function getGuestQrUrl(guestId) {
-  return buildCheckinUrl(guestId);
-}
-
-/**
- * Render a QR code for a guest into the #guestQrContainer element.
- * Called from check-in guest detail view.
- * @param {string} guestId
- */
-export function showGuestQr(guestId) {
-  const container = document.getElementById("guestQrContainer");
-  if (!container) return;
-  container.textContent = "";
-  const canvas = document.createElement("canvas");
-  canvas.setAttribute("aria-label", t("checkin_qr_label"));
-  canvas.setAttribute("role", "img");
-  container.appendChild(canvas);
-  renderQrToCanvas(getGuestQrUrl(guestId), canvas, 8);
-}

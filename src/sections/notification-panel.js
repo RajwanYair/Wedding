@@ -26,7 +26,7 @@ class NotificationPanelSection extends BaseSection {
 export const { mount, unmount, capabilities } = fromSection(new NotificationPanelSection("notification-panel"));
 
 /** Update the bell badge count. */
-export function updateBellBadge() {
+function updateBellBadge() {
   const badge = document.getElementById("notifBellCount");
   if (!badge) return;
   const count = unreadCount();
@@ -35,7 +35,7 @@ export function updateBellBadge() {
 }
 
 /** Render notification items into the panel list. */
-export function renderNotifList() {
+function renderNotifList() {
   const container = document.getElementById("notifPanelList");
   if (!container) return;
   container.textContent = "";

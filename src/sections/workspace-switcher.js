@@ -26,19 +26,19 @@ const ROLE_BADGE = Object.freeze({
  * Get all workspaces from the store.
  * @returns {{ id: string, name: string, role: import('../services/workspace-roles.js').WorkspaceRole }[]}
  */
-export function getWorkspaces() {
+function getWorkspaces() {
   return getStore(STORAGE_KEY) ?? [
     { id: "default", name: t("workspace_default"), role: "owner" },
   ];
 }
 
 /** Get the active workspace id. */
-export function getActiveWorkspaceId() {
+function getActiveWorkspaceId() {
   return getStore(ACTIVE_KEY) ?? "default";
 }
 
 /** Get the active workspace object. */
-export function getActiveWorkspace() {
+function getActiveWorkspace() {
   const all = getWorkspaces();
   const activeId = getActiveWorkspaceId();
   return all.find((w) => w.id === activeId) ?? all[0];
@@ -48,7 +48,7 @@ export function getActiveWorkspace() {
  * Switch to a different workspace by id.
  * @param {string} id
  */
-export function switchWorkspace(id) {
+function switchWorkspace(id) {
   const all = getWorkspaces();
   if (!all.some((w) => w.id === id)) return;
   updateStore(ACTIVE_KEY, id);
@@ -59,14 +59,14 @@ export function switchWorkspace(id) {
  * Get the role badge emoji for a role.
  * @param {string} role
  */
-export function getRoleBadge(role) {
+function getRoleBadge(role) {
   return ROLE_BADGE[role] ?? "👤";
 }
 
 /**
  * Render the workspace switcher dropdown into #workspaceSwitcher.
  */
-export function renderWorkspaceSwitcher() {
+function renderWorkspaceSwitcher() {
   const container = document.getElementById("workspaceSwitcher");
   if (!container) return;
 

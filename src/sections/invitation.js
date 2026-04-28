@@ -92,7 +92,7 @@ export function handleInvitationUpload(input) {
   reader.readAsDataURL(file);
 }
 
-export function renderInvitation() {
+function renderInvitation() {
   const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
 
   // Populate the editable form fields with persisted values

@@ -67,7 +67,7 @@ export function deleteTimelineItem(id) {
   enqueueWrite("timeline", () => syncStoreKeyToSheets("timeline"));
 }
 
-export function renderTimeline() {
+function renderTimeline() {
   const list = el.timelineList;
   if (!list) return;
 
@@ -171,7 +171,7 @@ let _alarmIntervalId = null;
  * Check timeline items due within the next 24 h.
  * Shows a browser Notification (if granted) or in-app banner.
  */
-export function checkTimelineAlarms() {
+function checkTimelineAlarms() {
   const items = /** @type {any[]} */ (storeGet("timeline") ?? []);
   if (!items.length) return;
 
@@ -203,7 +203,7 @@ export function checkTimelineAlarms() {
 /**
  * Start the periodic alarm check (runs every 5 minutes after mount).
  */
-export function startTimelineAlarms() {
+function startTimelineAlarms() {
   checkTimelineAlarms();
   if (_alarmIntervalId === null) {
     _alarmIntervalId = window.setInterval(checkTimelineAlarms, 5 * 60 * 1000);
@@ -213,7 +213,7 @@ export function startTimelineAlarms() {
 /**
  * Stop the periodic alarm interval.
  */
-export function stopTimelineAlarms() {
+function stopTimelineAlarms() {
   if (_alarmIntervalId !== null) {
     clearInterval(_alarmIntervalId);
     _alarmIntervalId = null;
@@ -401,7 +401,7 @@ export function getUpcomingTimelineItems(limit = 3) {
 /**
  * Render an annotated run-of-show timeline in #timelineRunOfShow.
  */
-export function renderRunOfShow() {
+function renderRunOfShow() {
   const container = document.getElementById("timelineRunOfShow");
   if (!container) return;
 

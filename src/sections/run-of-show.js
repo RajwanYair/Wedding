@@ -38,7 +38,7 @@ class RunOfShowSection extends BaseSection {
 export const { mount, unmount, capabilities } = fromSection(new RunOfShowSection("run-of-show"));
 
 /** Render the timeline list. */
-export function renderTimeline() {
+function renderTimeline() {
   const container = document.getElementById("rosTimeline");
   if (!container) return;
   container.textContent = "";

@@ -18,7 +18,7 @@ class RegistrySection extends BaseSection {
 
 export const { mount, unmount, capabilities } = fromSection(new RegistrySection("registry"));
 
-export function renderRegistry() {
+function renderRegistry() {
   const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
   const container = document.getElementById("registryLinks");
   if (!container) return;
