@@ -93,8 +93,7 @@ export function register() {
   );
   on("openLightbox", (el) => openLightbox(el.dataset.actionArg ?? ""));
   on("closeGalleryLightbox", () => {
-    const lb = document.getElementById("galleryLightbox");
-    if (lb) lb.remove();
+    closeModal("galleryLightbox");
   });
 
   // ── WhatsApp / Green API ──

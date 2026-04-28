@@ -131,6 +131,17 @@ export async function openModal(modalId) {
       /** @type {HTMLDialogElement} */ (
         /** @type {unknown} */ (modal)
       ).showModal();
+      // Click on ::backdrop closes the dialog
+      if (!modal.dataset.noBackdropClose) {
+        const onBdClick = (/** @type {MouseEvent} */ e) => {
+          const r = /** @type {HTMLDialogElement} */ (/** @type {unknown} */ (modal)).getBoundingClientRect();
+          if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
+            modal.removeEventListener("click", onBdClick);
+            closeModal(modalId);
+          }
+        };
+        modal.addEventListener("click", onBdClick);
+      }
       return;
     } catch {
       // fall through to legacy path

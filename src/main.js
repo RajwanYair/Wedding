@@ -619,8 +619,7 @@ function _registerHandlers() {
   // ── Modals ──
   on("closeModal", (el) => closeModal(el.dataset.actionArg ?? ""));
   on("closeGalleryLightbox", () => {
-    const lb = document.getElementById("galleryLightbox");
-    if (lb) lb.remove();
+    closeModal("galleryLightbox");
   });
   on("openAddGuestModal", () => {
     const idEl = /** @type {HTMLInputElement|null} */ (document.getElementById("guestModalId"));

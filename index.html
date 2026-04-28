@@ -479,19 +479,19 @@
 
   <!-- Add/Edit Guest Modal -->
     <!-- S1: guestModal loaded lazily — src/modals/guestModal.html -->
-  <div id="guestModal" class="modal-overlay" data-modal="guestModal" role="dialog" aria-modal="true" hidden></div>
+  <dialog id="guestModal" class="modal-dialog" data-modal="guestModal" aria-labelledby="guestModalTitle"></dialog>
 
   <!-- Add/Edit Table Modal -->
     <!-- S1: tableModal loaded lazily — src/modals/tableModal.html -->
-  <div id="tableModal" class="modal-overlay" data-modal="tableModal" role="dialog" aria-modal="true" hidden></div>
+  <dialog id="tableModal" class="modal-dialog" data-modal="tableModal" aria-labelledby="tableModalTitle"></dialog>
 
   <!-- ── Vendor Modal ── -->
     <!-- S1: vendorModal loaded lazily — src/modals/vendorModal.html -->
-  <div id="vendorModal" class="modal-overlay" data-modal="vendorModal" role="dialog" aria-modal="true" hidden></div>
+  <dialog id="vendorModal" class="modal-dialog" data-modal="vendorModal" aria-labelledby="vendorModalTitle"></dialog>
 
   <!-- Gallery Lightbox -->
     <!-- S1: galleryLightbox loaded lazily — src/modals/galleryLightbox.html -->
-  <div id="galleryLightbox" class="modal-overlay" data-modal="galleryLightbox" role="dialog" aria-modal="true" hidden></div>
+  <dialog id="galleryLightbox" class="modal-dialog" data-modal="galleryLightbox" aria-label="תמונה מוגדלת"></dialog>
 
   <!-- Print grids (hidden on screen, visible in print) -->
   <div id="placeCardsGrid" class="place-cards-grid" aria-hidden="true"></div>
@@ -502,8 +502,8 @@
   <dialog id="expenseModal" class="modal-dialog" data-modal="expenseModal" aria-labelledby="expenseModalTitle"></dialog>
 
   <!-- Timeline Item Modal -->
-    <!-- S1: timelineModal loaded lazily — src/modals/timelineModal.html -->
-  <div id="timelineModal" class="modal-overlay" data-modal="timelineModal" role="dialog" aria-modal="true" hidden></div>
+    <!-- S1: timelineModal loaded lazily — src/modals/timelineModal.html (S179: native <dialog>) -->
+  <dialog id="timelineModal" class="modal-dialog" data-modal="timelineModal" aria-labelledby="timelineModalTitle"></dialog>
 
   <!-- Conflict Resolution Modal (S174: native <dialog>) -->
     <!-- S1: conflictModal loaded lazily — src/modals/conflictModal.html -->
