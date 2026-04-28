@@ -40,6 +40,7 @@ import {
 } from "../services/theme-export.js";
 import { validatePluginManifest } from "../services/plugin-manifest.js";
 import { addAdminUser, removeAdminUser } from "../services/admin.js";
+import { buildAllDeployButtons } from "../utils/deploy-buttons.js";
 
 // ── Lifecycle ──────────────────────────────────────────────────────────
 
@@ -59,6 +60,8 @@ class SettingsSection extends BaseSection {
     _renderNotifPrefsCard();
     // Wire theme customizer (Sprint 138)
     _renderThemeVarsEditor();
+    // Wire one-click deploy buttons (S196)
+    _renderDeployButtons();
   }
 }
 
@@ -1270,4 +1273,31 @@ export function installPlugin() {
     { once: true },
   );
   input.click();
+}
+
+// ── Deploy buttons (S196 / Roadmap S152) ────────────────────────────────────
+
+const _REPO_URL = "https://github.com/RajwanYair/Wedding";
+
+const _DEPLOY_PROVIDERS = [
+  { key: "vercel",     label: "Vercel",      emoji: "▲" },
+  { key: "netlify",    label: "Netlify",     emoji: "🌐" },
+  { key: "cloudflare", label: "Cloudflare",  emoji: "☁️" },
+  { key: "render",     label: "Render",      emoji: "🖥️" },
+];
+
+function _renderDeployButtons() {
+  const container = document.getElementById("deployButtonsContainer");
+  if (!container) return;
+  container.textContent = "";
+  const urls = buildAllDeployButtons({ repoUrl: _REPO_URL });
+  for (const { key, label, emoji } of _DEPLOY_PROVIDERS) {
+    const a = document.createElement("a");
+    a.className = "btn btn-secondary btn-small";
+    a.href = urls[key];
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = `${emoji} ${label}`;
+    container.appendChild(a);
+  }
 }
