@@ -26,6 +26,7 @@ import {
   escSvg as _escSvg,
   escHtml as _escHtml,
 } from "../utils/charts.js";
+import { buildRsvpFunnel, rsvpConversionRate } from "../services/rsvp-funnel.js";
 
 const _SCOPE = "analytics";
 
@@ -69,6 +70,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   storeSubscribeScoped("invitationAnalytics", renderInvitationEngagementFunnel, _SCOPE);
   // C1: RSVP conversion funnel (Sprint 44)
   storeSubscribeScoped("guests", renderRsvpFunnel, _SCOPE);
+  // S146: outreach funnel (rsvp-funnel.js)
+  storeSubscribeScoped("guests", renderOutreachFunnel, _SCOPE);
   renderAnalytics();
   renderBudgetChart();
   _renderVendorTimeline();
@@ -88,6 +91,7 @@ export function mount(/** @type {HTMLElement} */ _container) {
   renderErrorAnalytics(); // Phase 10.3
   renderInvitationEngagementFunnel(); // C1 Sprint 36
   renderRsvpFunnel(); // C1 Sprint 44
+  renderOutreachFunnel(); // S146
 }
 
 export function unmount() {
@@ -615,6 +619,60 @@ function renderRsvpFunnel() {
   const overall = Math.round((rates.overallRate ?? 0) * 100);
   const rateEl = document.getElementById("analyticsRsvpFunnelRate");
   if (rateEl) rateEl.textContent = `${overall}% ${t("rsvp_funnel_overall_rate")} · ${unseated} ${t("rsvp_funnel_unseated")}`;
+}
+
+// ── S146: RSVP Outreach Funnel (rsvp-funnel.js) ─────────────────────────
+
+/**
+ * Render the outreach funnel chart (invited → sent → opened → responded → confirmed)
+ * using the pure `buildRsvpFunnel` helper from S123.
+ */
+function renderOutreachFunnel() {
+  const container = document.getElementById("analyticsOutreachFunnel");
+  if (!container) return;
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const steps = buildRsvpFunnel(guests);
+  if (!steps.length || steps[0].count === 0) {
+    container.textContent = t("analytics_no_guests");
+    return;
+  }
+
+  const barH = 28;
+  const gap = 6;
+  const w = 340;
+  const h = steps.length * (barH + gap);
+  const maxVal = Math.max(steps[0].count, 1);
+  const colors = [
+    "var(--primary)",
+    "var(--info)",
+    "var(--warning, #f0ad4e)",
+    "var(--accent, #8b5cf6)",
+    "var(--success)",
+  ];
+  const title = t("rsvp_outreach_funnel_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escSvg(title)}"><title>${_escSvg(title)}</title>`;
+
+  steps.forEach((s, i) => {
+    const y = i * (barH + gap);
+    const barW = Math.max((s.count / maxVal) * (w - 120), 2);
+    const pct = Math.round(s.pct * 100);
+    const label = t(`rsvp_outreach_${s.key}`) || s.label;
+    svg += `<text x="0" y="${y + 18}" font-size="11" fill="var(--text)">${_escSvg(label)}</text>`;
+    svg += `<rect x="100" y="${y + 2}" width="${barW}" height="${barH - 4}" fill="${colors[i] || colors[0]}" rx="4" opacity="0.85"/>`;
+    svg += `<text x="${100 + barW + 6}" y="${y + 18}" font-size="11" fill="var(--text)">${s.count} (${pct}%)</text>`;
+  });
+
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/CSS vars/escaped strings
+
+  // Conversion rate
+  const rateEl = document.getElementById("analyticsOutreachConversion");
+  if (rateEl) {
+    const rate = Math.round(rsvpConversionRate(guests) * 100);
+    rateEl.textContent = `${rate}% ${t("rsvp_outreach_conversion")}`;
+  }
 }
 
 // ── S8.3 Vendor Payment Timeline ─────────────────────────────────────────

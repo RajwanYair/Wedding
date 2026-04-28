@@ -1281,5 +1281,12 @@
   "ros_timeline_aria": "Wedding day timeline",
   "budget_proj_daily_burn": "Average daily burn",
   "budget_proj_projected_spend": "Projected total spend",
-  "budget_proj_overrun": "Projected overrun"
+  "budget_proj_overrun": "Projected overrun",
+  "rsvp_outreach_funnel_title": "Outreach Funnel",
+  "rsvp_outreach_invited": "Invited",
+  "rsvp_outreach_sent": "Sent",
+  "rsvp_outreach_opened": "Opened",
+  "rsvp_outreach_responded": "Responded",
+  "rsvp_outreach_confirmed": "Confirmed",
+  "rsvp_outreach_conversion": "conversion rate"
 }

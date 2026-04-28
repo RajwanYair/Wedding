@@ -1281,5 +1281,12 @@
   "ros_timeline_aria": "לוח זמנים ליום החתונה",
   "budget_proj_daily_burn": "צריכה יומית ממוצעת",
   "budget_proj_projected_spend": "צפי הוצאות כולל",
-  "budget_proj_overrun": "חריגה צפויה"
+  "budget_proj_overrun": "חריגה צפויה",
+  "rsvp_outreach_funnel_title": "משפך שליחת הזמנות",
+  "rsvp_outreach_invited": "הוזמנו",
+  "rsvp_outreach_sent": "נשלחו",
+  "rsvp_outreach_opened": "נפתחו",
+  "rsvp_outreach_responded": "הגיבו",
+  "rsvp_outreach_confirmed": "אישרו",
+  "rsvp_outreach_conversion": "שיעור המרה"
 }
