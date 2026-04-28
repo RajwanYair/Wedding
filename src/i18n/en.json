@@ -1291,5 +1291,12 @@
   "rsvp_outreach_conversion": "conversion rate",
   "vendor_spend_timeline_title": "Payment Timeline",
   "vendor_spend_no_data": "No payment data yet",
-  "vendor_top_cost_title": "Top Vendors by Cost"
+  "vendor_top_cost_title": "Top Vendors by Cost",
+  "whats_new_run_of_show": "Wedding-day run-of-show editor",
+  "whats_new_budget_projection": "Budget projection — daily burn & overrun forecast",
+  "whats_new_rsvp_funnel": "RSVP outreach funnel in Analytics",
+  "whats_new_vendor_timeline": "Vendor payment timeline & top vendors chart",
+  "whats_new_theme_picker": "Theme picker with live preview",
+  "whats_new_website_builder": "Public wedding website builder",
+  "whats_new_notification_centre": "Notification centre in header"
 }

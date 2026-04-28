@@ -1291,5 +1291,12 @@
   "rsvp_outreach_conversion": "שיעור המרה",
   "vendor_spend_timeline_title": "ציר זמן תשלומים",
   "vendor_spend_no_data": "אין נתוני תשלומים עדיין",
-  "vendor_top_cost_title": "ספקים מובילים לפי עלות"
+  "vendor_top_cost_title": "ספקים מובילים לפי עלות",
+  "whats_new_run_of_show": "עורך לוח זמנים ליום החתונה",
+  "whats_new_budget_projection": "תחזית תקציב — צריכה יומית וחריגה צפויה",
+  "whats_new_rsvp_funnel": "משפך שליחת הזמנות באנליטיקס",
+  "whats_new_vendor_timeline": "ציר זמן תשלומים וספקים מובילים",
+  "whats_new_theme_picker": "בורר ערכות נושא עם תצוגה מקדימה",
+  "whats_new_website_builder": "בונה אתר חתונה ציבורי",
+  "whats_new_notification_centre": "מרכז התראות בסרגל העליון"
 }

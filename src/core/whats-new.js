@@ -1,14 +1,53 @@
 /**
- * src/core/whats-new.js — What's New popup on admin login (S0.11)
+ * src/core/whats-new.js — What's New popup on version bump (S148)
  *
  * Shows a modal overlay listing recent changes when the app version
- * is newer than the user's last-seen version.
+ * is newer than the user's last-seen version. Uses the pure engine
+ * from `whats-new-engine.js` for version comparison and entry filtering.
  */
 
 import { APP_VERSION } from "./config.js";
 import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
 import { readBrowserStorage, writeBrowserStorage } from "./storage.js";
+import {
+  shouldShowWhatsNew,
+  collectNewerEntries,
+  flattenItems,
+} from "../services/whats-new-engine.js";
+
+/**
+ * Release manifest — each version lists user-visible i18n item keys.
+ * Newest first. Only the entries *newer than lastSeen* are shown.
+ * @type {import('../services/whats-new-engine.js').WhatsNewEntry[]}
+ */
+const RELEASE_ENTRIES = [
+  {
+    version: "12.8.0",
+    date: "2026-04-28",
+    items: [
+      "whats_new_run_of_show",
+      "whats_new_budget_projection",
+      "whats_new_rsvp_funnel",
+      "whats_new_vendor_timeline",
+      "whats_new_theme_picker",
+      "whats_new_website_builder",
+      "whats_new_notification_centre",
+    ],
+  },
+  {
+    version: "12.7.0",
+    date: "2026-04-20",
+    items: [
+      "whats_new_item_budget_sync",
+      "whats_new_item_checkin_sync",
+      "whats_new_item_whatsapp_templates",
+      "whats_new_item_status_bar",
+      "whats_new_item_popup",
+      "whats_new_item_changelog",
+    ],
+  },
+];
 
 /**
  * Show What's New dialog if the user hasn't seen the current version.
@@ -16,18 +55,16 @@ import { readBrowserStorage, writeBrowserStorage } from "./storage.js";
  * @param {import('../services/auth.js').AuthUser | null} user
  */
 export function maybeShowWhatsNew(user) {
-  if (!user?.isAdmin) return;
   const lastSeen = readBrowserStorage(STORAGE_KEYS.LAST_SEEN_VERSION, "") ?? "";
-  if (lastSeen === APP_VERSION) return;
+  if (!shouldShowWhatsNew({ currentVersion: APP_VERSION, lastSeenVersion: lastSeen, isAdmin: user?.isAdmin })) return;
 
-  const items = [
-    "whats_new_item_budget_sync",
-    "whats_new_item_checkin_sync",
-    "whats_new_item_whatsapp_templates",
-    "whats_new_item_status_bar",
-    "whats_new_item_popup",
-    "whats_new_item_changelog",
-  ].map((key) => t(key));
+  const newer = collectNewerEntries(RELEASE_ENTRIES, lastSeen);
+  const items = flattenItems(newer).map((key) => t(key) || key);
+
+  if (items.length === 0) {
+    writeBrowserStorage(STORAGE_KEYS.LAST_SEEN_VERSION, APP_VERSION);
+    return;
+  }
 
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
@@ -36,7 +73,6 @@ export function maybeShowWhatsNew(user) {
   const card = document.createElement("div");
   card.className = "card";
   card.style.cssText = "max-width:420px;width:90%;padding:1.5rem;max-height:80vh;overflow-y:auto";
-  card.innerHTML = "";
 
   const title = document.createElement("h3");
   title.style.cssText = "margin:0 0 0.75rem;text-align:center";
