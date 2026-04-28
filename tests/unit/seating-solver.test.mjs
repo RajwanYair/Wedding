@@ -2,7 +2,7 @@
  * tests/unit/seating-solver.test.mjs — S110 greedy seating solver.
  */
 import { describe, it, expect } from "vitest";
-import { solveSeating } from "../../src/services/seating-solver.js";
+import { solveSeating } from "../../src/services/seating.js";
 
 describe("S110 — solveSeating", () => {
   it("seats a single group at the smallest fitting table", () => {

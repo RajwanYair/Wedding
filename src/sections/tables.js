@@ -13,13 +13,13 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { TABLE_SHAPES } from "../core/constants.js";
-import { validateSeating } from "../services/seating-constraints.js";
 import {
+  validateSeating,
   buildSeatRows,
   seatRowsToCsv,
   seatRowsToJson,
   downloadTextFile,
-} from "../services/seating-exporter.js";
+} from "../services/seating.js";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 

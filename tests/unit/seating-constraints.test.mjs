@@ -20,7 +20,7 @@ import {
   listConstraints,
   validateSeating,
   suggestSwaps,
-} from "../../src/services/seating-constraints.js";
+} from "../../src/services/seating.js";
 import { storeSet } from "../../src/core/store.js";
 
 function reset() { storeSet("seatingConstraints", []); }
