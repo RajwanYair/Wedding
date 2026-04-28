@@ -3532,4 +3532,86 @@
     }
   }
 
+  /* ── Workspace Switcher (S140) ── */
+  .workspace-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    position: relative;
+  }
+
+  .ws-current {
+    all: unset;
+    cursor: pointer;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius);
+    background: color-mix(in sRGB, var(--accent) 12%, transparent);
+    font-weight: 600;
+    color: var(--text);
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: color-mix(in sRGB, var(--accent) 22%, transparent);
+    }
+  }
+
+  .ws-role-badge {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in sRGB, var(--gold) 18%, transparent);
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .ws-dropdown {
+    position: absolute;
+    top: 100%;
+    inset-inline-start: 0.5rem;
+    z-index: 50;
+    min-width: 14rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+  }
+
+  .ws-item {
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: color-mix(in sRGB, var(--accent) 10%, transparent);
+    }
+
+    &.ws-item--active {
+      font-weight: 700;
+      color: var(--accent);
+    }
+  }
+
+  .ws-invite-btn {
+    all: unset;
+    cursor: pointer;
+    margin-inline-start: auto;
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--border-radius);
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: color-mix(in sRGB, var(--accent) 10%, transparent);
+    }
+  }
+
 } /* end @layer components */

@@ -1239,5 +1239,13 @@
   "website_section_rsvp": "RSVP",
   "website_section_gallery": "Gallery",
   "website_section_registry": "Gift Registry",
-  "website_section_faq": "FAQ"
+  "website_section_faq": "FAQ",
+  "workspace_switcher_aria": "Workspace switcher",
+  "workspace_default": "My Wedding",
+  "workspace_invite": "Invite team member",
+  "workspace_role_owner": "Owner",
+  "workspace_role_co_planner": "Co-planner",
+  "workspace_role_vendor": "Vendor",
+  "workspace_role_photographer": "Photographer",
+  "workspace_role_guest": "Guest"
 }

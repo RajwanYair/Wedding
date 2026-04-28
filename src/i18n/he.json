@@ -1239,5 +1239,13 @@
   "website_section_rsvp": "אישור הגעה",
   "website_section_gallery": "גלריה",
   "website_section_registry": "רשימת מתנות",
-  "website_section_faq": "שאלות נפוצות"
+  "website_section_faq": "שאלות נפוצות",
+  "workspace_switcher_aria": "מחליף סביבת עבודה",
+  "workspace_default": "החתונה שלי",
+  "workspace_invite": "הזמן חבר צוות",
+  "workspace_role_owner": "בעלים",
+  "workspace_role_co_planner": "מתכנן משותף",
+  "workspace_role_vendor": "ספק",
+  "workspace_role_photographer": "צלם",
+  "workspace_role_guest": "אורח"
 }

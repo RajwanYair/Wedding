@@ -25,6 +25,10 @@ import {
 import * as invitationSection from "../sections/invitation.js";
 import * as contactSection from "../sections/contact-collector.js";
 import * as landingSection from "../sections/landing.js";
+import {
+  toggleWorkspaceDropdown,
+  selectWorkspace,
+} from "../sections/workspace-switcher.js";
 
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).
@@ -157,5 +161,12 @@ export function register() {
       /** @type {HTMLInputElement|null} */ (document.getElementById("tablefinderInput")) ??
       /** @type {HTMLInputElement|null} */ (document.getElementById("findTableInput"));
     landingSection.showTableFinder(input?.value?.trim() ?? "");
+  });
+
+  // ── Workspace switcher (S140) ──
+  on("toggleWorkspaceDropdown", () => toggleWorkspaceDropdown());
+  on("selectWorkspace", (_el) => {
+    const id = _el?.getAttribute?.("data-action-arg") ?? "";
+    selectWorkspace(id);
   });
 }
