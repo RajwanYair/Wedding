@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v12.7.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v12.9.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,7 +20,7 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2026-04-28, v12.7.0):** **2 756 tests passing** across 196 files · 0 lint errors / 0 warnings
+**State (2025-05-26, v12.9.0):** **3 109 tests passing** across 222 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **4 locales** (HE primary · EN · AR · FR · ES scaffold) · 22
@@ -78,7 +78,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v12.7.0 · 2026-04-28
+### Actual state — v12.9.0 · 2025-05-26
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -1108,7 +1108,8 @@ Storage + Realtime for development without an account.
 | **v12.5.5** | Released 2026-04-27 | Roadmap deep rethink | Sprint 77: ROADMAP rewrite — verdict matrix, lessons learned, sprint backlog 77–130, cost profile, hybrid edge runtime decision, JSDoc-strict (revised TS path) |
 | v12.5.6 | Released 2026-04-27 | Backend convergence prep | Sprints 78–87 |
 | **v12.6.0** | Released 2026-04-28 | Cluster V — Locales, charts & polish | Sprints 118–127: ICU MessageFormat, theme-vars editor, print pipeline, notification centre, vendor timeline, RSVP funnel, budget burndown, run-of-show, What's New engine, CDN image builder |
-| **v12.7.0** | **This release** | **Cluster VI — Phase D platform scaffolding** | **Sprints 128–137: DNS CNAME helpers, deploy-button URLs, LHCI per-locale, theme.json export/import, workspace RBAC, plugin manifest validator, public website builder, FR + ES locale bootstrap, Capacitor config builder; new ROADMAP rethink (sections §0/§1/§2 OD-21..OD-30, §5 expanded harvest, §10 Cluster VII)** |
+| **v12.7.0** | Released 2026-04-28 | Cluster VI — Phase D platform scaffolding | Sprints 128–137: DNS CNAME helpers, deploy-button URLs, LHCI per-locale, theme.json export/import, workspace RBAC, plugin manifest validator, public website builder, FR + ES locale bootstrap, Capacitor config builder |
+| **v12.9.0** | **This release** | **Cluster VII — Codebase health & native platform** | **S169–S175: sheets merge, service consolidation #2, TSC baseline cleared, dead export purge, BaseSection adoption (4 sections), native \<dialog\> modals (4), @scope CSS isolation (10/19 sections)** |
 | v12.8.x | Candidate | Cluster VII — Phase D UI wiring | Sprints 138–155: theme picker UI, website builder UI, workspace switcher, plugin install UI, Capacitor CI, notification dropdown, run-of-show + chart sections, ICU sweep |
 | **v13.0.0** | Next major | Backend convergence + P0 security | Sprints 87–96: encryption, IDB queue, pushState router, drop FB/GIS/AppleID, Supabase Auth, **flip BACKEND_TYPE = supabase** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
@@ -1119,5 +1120,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2026-04-28 · v12.7.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2025-05-26 · v12.9.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*

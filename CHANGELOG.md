@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.9.0] — 2025-05-26
+
+> **S169–S175: Codebase health, service consolidation, native dialog, @scope CSS.**
+
+### Changed
+
+- **S169** — Merged `sheets-impl.js` into `sheets.js`; deleted `sheets-impl.js`; updated 8 import references.
+- **S170** — Service consolidation #2: inlined `print-rows.js` → `print-preview.js`,
+  `sync-dashboard.js` → `sync-tracker.js`; deleted 2 files.
+- **S171** — TSC error baseline cleared from 161 → 0; all known type errors resolved in prior sprints.
+- **S172** — Dead export purge: removed 5 unused exports (`_internals`, `_defaults`,
+  `getDomainSyncState`, `renameEvent`, `isLiveSyncActive`).
+- **S173** — BaseSection adoption: migrated `registry.js`, `contact-collector.js`,
+  `notification-panel.js` (4/23 sections using BaseSection).
+- **S174** — Modal → native `<dialog>`: converted `conflictModal`, `shortcutsModal`,
+  `printPreviewModal`, `expenseModal`; added `dialog.modal-dialog` CSS + `::backdrop`.
+- **S175** — `@scope` CSS: added per-section isolation for `#sec-tables`, `#sec-whatsapp`,
+  `#sec-vendors`, `#sec-invitation` (10/19 sections now scoped).
+
+### Tests
+
+- 3109 tests across 222 files — unchanged count through S169–S175.
+
 ## [12.7.0] — 2026-04-28
 
 > **Sprints 128–137: Phase D platform scaffolding (Cluster VI) + ROADMAP deep-rethink.**
