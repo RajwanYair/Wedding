@@ -1258,5 +1258,14 @@
   "plugin_invalid": "Invalid plugin manifest",
   "plugin_warnings": "Plugin warnings",
   "plugin_already_installed": "Plugin already installed",
-  "plugin_installed": "Plugin installed successfully"
+  "plugin_installed": "Plugin installed successfully",
+  "notif_bell_title": "Notifications",
+  "notif_panel_aria": "Notification panel",
+  "notif_panel_title": "Notifications",
+  "notif_mark_all_read": "Mark all read",
+  "notif_empty": "No notifications",
+  "notif_just_now": "just now",
+  "notif_minutes_ago": "m ago",
+  "notif_hours_ago": "h ago",
+  "notif_days_ago": "d ago"
 }

@@ -29,6 +29,10 @@ import {
   toggleWorkspaceDropdown,
   selectWorkspace,
 } from "../sections/workspace-switcher.js";
+import {
+  toggleNotifPanel,
+  markAllNotifRead,
+} from "../sections/notification-panel.js";
 
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).
@@ -169,4 +173,8 @@ export function register() {
     const id = _el?.getAttribute?.("data-action-arg") ?? "";
     selectWorkspace(id);
   });
+
+  // ── Notification centre (S143) ──
+  on("toggleNotifPanel", () => toggleNotifPanel());
+  on("markAllNotifRead", () => markAllNotifRead());
 }

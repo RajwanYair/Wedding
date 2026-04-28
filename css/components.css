@@ -3532,6 +3532,105 @@
     }
   }
 
+  /* ── Notification Bell & Panel (S143) ── */
+  .notif-bell {
+    position: relative;
+  }
+
+  .notif-bell-count {
+    position: absolute;
+    top: -4px;
+    inset-inline-end: -4px;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 999px;
+    background: var(--negative);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    line-height: 1;
+    padding: 0 0.2rem;
+  }
+
+  .notif-panel {
+    position: absolute;
+    top: 100%;
+    inset-inline-end: 0;
+    z-index: 60;
+    width: min(22rem, 90vw);
+    max-height: 24rem;
+    overflow-y: auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+  }
+
+  .notif-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .notif-panel-list {
+    padding: 0.25rem 0;
+  }
+
+  .notif-empty {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .notif-item {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: color-mix(in sRGB, var(--accent) 8%, transparent);
+    }
+
+    &.notif-item--unread {
+      background: color-mix(in sRGB, var(--accent) 5%, transparent);
+      border-inline-start: 3px solid var(--accent);
+    }
+  }
+
+  .notif-item-icon {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+
+  .notif-item-body {
+    flex: 1;
+    min-width: 0;
+
+    & strong {
+      display: block;
+      font-size: 0.85rem;
+    }
+
+    & p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0.15rem 0 0;
+    }
+  }
+
+  .notif-item-time {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+
   /* ── Plugin Manager (S141) ── */
   .plugin-list {
     display: flex;

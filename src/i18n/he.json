@@ -1258,5 +1258,14 @@
   "plugin_invalid": "קובץ תוסף לא תקין",
   "plugin_warnings": "אזהרות תוסף",
   "plugin_already_installed": "תוסף כבר מותקן",
-  "plugin_installed": "תוסף הותקן בהצלחה"
+  "plugin_installed": "תוסף הותקן בהצלחה",
+  "notif_bell_title": "התראות",
+  "notif_panel_aria": "לוח התראות",
+  "notif_panel_title": "התראות",
+  "notif_mark_all_read": "סמן הכל כנקרא",
+  "notif_empty": "אין התראות",
+  "notif_just_now": "עכשיו",
+  "notif_minutes_ago": " דק׳",
+  "notif_hours_ago": " שע׳",
+  "notif_days_ago": " ימים"
 }

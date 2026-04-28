@@ -136,6 +136,18 @@
         <span class="sync-btn-icon">🔄</span>
       </button>
       <span id="presenceBadge" class="presence-badge u-hidden" data-admin-only title="" aria-live="polite"></span>
+      <!-- Notification bell (S143) -->
+      <button class="notif-bell btn-icon" id="notifBellBtn" data-action="toggleNotifPanel" title="התראות" data-i18n-title="notif_bell_title" data-i18n-aria="notif_bell_title" data-admin-only aria-expanded="false" aria-haspopup="true">
+        <span aria-hidden="true">🔔</span>
+        <span class="notif-bell-count u-hidden" id="notifBellCount">0</span>
+      </button>
+      <div class="notif-panel u-hidden" id="notifPanel" role="region" aria-label="התראות" data-i18n-aria="notif_panel_aria">
+        <div class="notif-panel-header">
+          <strong data-i18n="notif_panel_title">התראות</strong>
+          <button class="btn-link btn-small" data-action="markAllNotifRead" data-i18n="notif_mark_all_read">סמן הכל כנקרא</button>
+        </div>
+        <div class="notif-panel-list" id="notifPanelList"></div>
+      </div>
       <span id="offlineBadge" class="offline-badge u-hidden"></span>
     </div>
   </div>
