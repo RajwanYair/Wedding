@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.0.0] — 2025-06-12
+
+> **S183–S185: Dead-export purge, arch-check enforcement, service consolidation.**
+
+### Changed
+
+- **S183** — Dead-export purge: removed ~30 unused exports across 12 section files; deleted 6
+  unused functions (`recordGift`, `showGuestQr`, `getGuestQrUrl`, `saveWeddingInfo`, `setTheme`,
+  `findTable`, `updateReminderCount`); added 3 missing handlers (`toggleTimelineDone`,
+  `setExpenseCategoryFilter`, `setVendorPaymentFilter`).
+- **S184** — Arch-check enforcement: updated `scripts/arch-check.mjs` to skip dynamic imports; 0
+  cross-layer violations remain.
+- **S185** — Service consolidation: merged `rsvp-funnel.js` → `rsvp-analytics.js`,
+  `vendor-timeline.js` → `vendor-analytics.js`, `budget-projection.js` → `budget-burndown.js`;
+  deleted 3 files (86 → 83 services); updated all imports and test files.
+
 ## [12.9.0] — 2025-05-26
 
 > **S169–S175: Codebase health, service consolidation, native dialog, @scope CSS.**
