@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi } from "vitest";
-import { checkSupabaseHealth, getHealthReport } from "../../src/services/supabase-health.js";
+import { checkSupabaseHealth, getHealthReport } from "../../src/services/supabase.js";
 
 function makeOkChain() {
   const chain = {};
