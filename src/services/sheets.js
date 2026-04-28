@@ -362,13 +362,7 @@ export function stopLiveSync() {
   }
 }
 
-/**
- * Check whether live sync is currently active.
- * @returns {boolean}
- */
-export function isLiveSyncActive() {
-  return _pollTimer !== null;
-}
+
 
 // ── S18.1 Queue Monitor ───────────────────────────────────────────────────
 

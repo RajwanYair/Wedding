@@ -77,20 +77,6 @@ export function removeEvent(id) {
 }
 
 /**
- * Rename an event label.
- * @param {string} id
- * @param {string} newLabel
- */
-export function renameEvent(id, newLabel) {
-  const events = listEvents();
-  const evt = events.find((e) => e.id === id);
-  if (evt) {
-    evt.label = newLabel;
-    _saveGlobal("events", events);
-  }
-}
-
-/**
  * Restore the last-used event ID from localStorage.
  * Called during bootstrap before initStore.
  */

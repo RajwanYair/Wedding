@@ -83,5 +83,3 @@ export function buildLighthouseConfig({
     },
   };
 }
-
-export const _defaults = { DEFAULT_BUDGETS, DEFAULT_RESOURCE_SIZES };

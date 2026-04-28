@@ -302,15 +302,7 @@ export function isSyncHealthy() {
   return s.pending === 0 && s.syncing === 0 && s.failed === 0 && s.offline === 0;
 }
 
-/**
- * Get sync state for a single domain key (delegate to sync-tracker).
- *
- * @param {string} key
- * @returns {import('../types').SyncState}
- */
-export function getDomainSyncState(key) {
-  return getSyncState(key);
-}
+
 
 /**
  * List all domains that currently have failures.

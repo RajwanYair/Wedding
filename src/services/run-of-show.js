@@ -124,5 +124,3 @@ export function shiftTimeline(items, fromIndex, deltaMinutes) {
     return { ...it, startTime: _fromMinutes(start + deltaMinutes) };
   });
 }
-
-export const _internals = { _toMinutes, _fromMinutes };
