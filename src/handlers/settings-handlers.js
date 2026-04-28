@@ -35,6 +35,7 @@ import {
   resetThemeVars,
   exportThemeToJson,
   importThemeFromJson,
+  installPlugin,
 } from "../sections/settings.js";
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
@@ -233,4 +234,6 @@ export function register() {
   // Sprint 139 — Website builder
   on("saveWebsiteConfig", () => saveWebsiteConfig());
   on("previewWebsite", () => previewWebsite());
+  // Sprint 141 — Plugin manager
+  on("installPlugin", () => installPlugin());
 }

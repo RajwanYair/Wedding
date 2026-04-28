@@ -1247,5 +1247,16 @@
   "workspace_role_co_planner": "Co-planner",
   "workspace_role_vendor": "Vendor",
   "workspace_role_photographer": "Photographer",
-  "workspace_role_guest": "Guest"
+  "workspace_role_guest": "Guest",
+  "plugin_manager_title": "Plugins",
+  "plugin_manager_desc": "Install, enable, or disable plugins",
+  "plugin_install_btn": "Install plugin",
+  "plugin_none_installed": "No plugins installed",
+  "plugin_enable": "Enable",
+  "plugin_disable": "Disable",
+  "plugin_remove": "Remove",
+  "plugin_invalid": "Invalid plugin manifest",
+  "plugin_warnings": "Plugin warnings",
+  "plugin_already_installed": "Plugin already installed",
+  "plugin_installed": "Plugin installed successfully"
 }

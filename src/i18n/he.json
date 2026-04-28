@@ -1247,5 +1247,16 @@
   "workspace_role_co_planner": "מתכנן משותף",
   "workspace_role_vendor": "ספק",
   "workspace_role_photographer": "צלם",
-  "workspace_role_guest": "אורח"
+  "workspace_role_guest": "אורח",
+  "plugin_manager_title": "תוספים",
+  "plugin_manager_desc": "התקן, הפעל או השבת תוספים",
+  "plugin_install_btn": "התקן תוסף",
+  "plugin_none_installed": "אין תוספים מותקנים",
+  "plugin_enable": "הפעל",
+  "plugin_disable": "השבת",
+  "plugin_remove": "הסר",
+  "plugin_invalid": "קובץ תוסף לא תקין",
+  "plugin_warnings": "אזהרות תוסף",
+  "plugin_already_installed": "תוסף כבר מותקן",
+  "plugin_installed": "תוסף הותקן בהצלחה"
 }

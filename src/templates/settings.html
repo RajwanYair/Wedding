@@ -370,6 +370,19 @@
       <input type="file" id="themeJsonFileInput" accept=".json" class="u-hidden" />
     </div>
 
+    <!-- Plugin Manager (S141) -->
+    <div class="settings-card" data-admin-only>
+      <h3>🔌 <span data-i18n="plugin_manager_title">תוספים</span></h3>
+      <p class="section-desc" data-i18n="plugin_manager_desc">התקן, הפעל או השבת תוספים</p>
+      <div id="pluginList" class="plugin-list"></div>
+      <div class="plugin-install-area u-mt-sm">
+        <label class="btn btn-secondary btn-small" data-i18n="plugin_install_btn">
+          📦 התקן תוסף
+          <input type="file" id="pluginFileInput" accept=".json" class="u-hidden" data-action="installPlugin" />
+        </label>
+      </div>
+    </div>
+
     <!-- App Info -->
     <div class="settings-card">
       <h3>ℹ️ <span>מידע</span></h3>

@@ -44,6 +44,10 @@ import {
   stringifyThemeJson,
   importThemeJson,
 } from "../services/theme-export.js";
+import {
+  validatePluginManifest,
+  manifestSchemaInfo,
+} from "../services/plugin-manifest.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -1159,4 +1163,138 @@ function _renderNotifPrefsCard() {
     evtGrid.appendChild(row);
   }
   container.appendChild(evtGrid);
+}
+
+// ── S141 — Plugin Manager UI ──────────────────────────────────────────────
+
+const PLUGIN_STORAGE_KEY = "wedding_v1_plugins";
+
+/** Get installed plugins from localStorage. */
+function _getInstalledPlugins() {
+  try {
+    return JSON.parse(localStorage.getItem(PLUGIN_STORAGE_KEY) ?? "[]");
+  } catch { return []; }
+}
+
+/** Save installed plugins to localStorage. */
+function _saveInstalledPlugins(plugins) {
+  localStorage.setItem(PLUGIN_STORAGE_KEY, JSON.stringify(plugins));
+}
+
+/** Render the plugin list into #pluginList. */
+export function renderPluginList() {
+  const container = document.getElementById("pluginList");
+  if (!container) return;
+  container.textContent = "";
+
+  const plugins = _getInstalledPlugins();
+  if (plugins.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = t("plugin_none_installed");
+    container.appendChild(empty);
+    return;
+  }
+
+  for (const plugin of plugins) {
+    const row = document.createElement("div");
+    row.className = `plugin-row${plugin.enabled ? "" : " plugin-row--disabled"}`;
+
+    const info = document.createElement("div");
+    info.className = "plugin-info";
+
+    const name = document.createElement("strong");
+    name.textContent = plugin.name;
+    info.appendChild(name);
+
+    const ver = document.createElement("span");
+    ver.className = "plugin-version";
+    ver.textContent = ` v${plugin.version}`;
+    info.appendChild(ver);
+
+    if (plugin.author) {
+      const author = document.createElement("span");
+      author.className = "plugin-author";
+      author.textContent = ` — ${plugin.author}`;
+      info.appendChild(author);
+    }
+
+    row.appendChild(info);
+
+    // Toggle button
+    const toggleBtn = document.createElement("button");
+    toggleBtn.className = "btn btn-small btn-secondary";
+    toggleBtn.textContent = plugin.enabled ? t("plugin_disable") : t("plugin_enable");
+    toggleBtn.addEventListener("click", () => {
+      plugin.enabled = !plugin.enabled;
+      _saveInstalledPlugins(plugins);
+      renderPluginList();
+    });
+    row.appendChild(toggleBtn);
+
+    // Remove button
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn btn-small btn-danger";
+    removeBtn.textContent = t("plugin_remove");
+    removeBtn.addEventListener("click", () => {
+      const filtered = plugins.filter((p) => p.id !== plugin.id);
+      _saveInstalledPlugins(filtered);
+      renderPluginList();
+    });
+    row.appendChild(removeBtn);
+
+    container.appendChild(row);
+  }
+}
+
+/** Install a plugin from a JSON manifest file. */
+export function installPlugin() {
+  const input = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("pluginFileInput")
+  );
+  if (!input) return;
+  input.value = "";
+  input.addEventListener(
+    "change",
+    () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const manifest = JSON.parse(/** @type {string} */ (reader.result));
+          const result = validatePluginManifest(manifest);
+          if (!result.ok) {
+            showToast(`${t("plugin_invalid")}: ${result.errors.join(", ")}`, "error");
+            return;
+          }
+          if (result.warnings.length > 0) {
+            showToast(`${t("plugin_warnings")}: ${result.warnings.join(", ")}`, "warning");
+          }
+          const plugins = _getInstalledPlugins();
+          if (plugins.some((p) => p.id === manifest.id)) {
+            showToast(t("plugin_already_installed"), "error");
+            return;
+          }
+          plugins.push({
+            id: manifest.id,
+            name: manifest.name,
+            version: manifest.version,
+            author: manifest.author ?? "",
+            permissions: manifest.permissions ?? [],
+            hooks: manifest.hooks ?? [],
+            enabled: true,
+          });
+          _saveInstalledPlugins(plugins);
+          renderPluginList();
+          showToast(t("plugin_installed"), "success");
+        } catch {
+          showToast(t("plugin_invalid"), "error");
+        }
+      };
+      reader.readAsText(file);
+    },
+    { once: true },
+  );
+  input.click();
 }

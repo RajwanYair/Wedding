@@ -3532,6 +3532,47 @@
     }
   }
 
+  /* ── Plugin Manager (S141) ── */
+  .plugin-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .plugin-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--border-radius);
+    background: color-mix(in sRGB, var(--accent) 5%, var(--bg-card));
+    border: 1px solid var(--border);
+
+    &.plugin-row--disabled {
+      opacity: 0.5;
+    }
+  }
+
+  .plugin-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .plugin-version {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .plugin-author {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .plugin-install-area {
+    display: flex;
+    gap: 0.5rem;
+  }
+
   /* ── Workspace Switcher (S140) ── */
   .workspace-switcher {
     display: flex;
