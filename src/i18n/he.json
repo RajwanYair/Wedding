@@ -1298,5 +1298,11 @@
   "whats_new_vendor_timeline": "ציר זמן תשלומים וספקים מובילים",
   "whats_new_theme_picker": "בורר ערכות נושא עם תצוגה מקדימה",
   "whats_new_website_builder": "בונה אתר חתונה ציבורי",
-  "whats_new_notification_centre": "מרכז התראות בסרגל העליון"
+  "whats_new_notification_centre": "מרכז התראות בסרגל העליון",
+  "print_preview_title": "תצוגה מקדימה להדפסה",
+  "print_section_label": "בחר מקטע להדפסה:",
+  "print_seating": "סידורי ישיבה",
+  "print_execute": "🖨️ הדפס",
+  "print_no_data": "אין נתונים להדפסה",
+  "print_empty_table": "שולחן ריק"
 }

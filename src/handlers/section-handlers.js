@@ -37,6 +37,7 @@ import {
   addItem as rosAddItem,
   resetDefault as rosResetDefault,
 } from "../sections/run-of-show.js";
+import { buildPreviewHtml, executePrint } from "../services/print-preview.js";
 
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).
@@ -185,4 +186,20 @@ export function register() {
   // ── Run-of-show editor (S144) ──
   on("rosAddItem", () => rosAddItem());
   on("rosResetDefault", () => rosResetDefault());
+
+  // ── Print preview modal (S149) ──
+  on("openPrintPreview", () => openModal("printPreviewModal"));
+  on("previewPrintSection", () => {
+    const sel = /** @type {HTMLSelectElement|null} */ (
+      document.getElementById("printSectionSelect")
+    );
+    const pane = document.getElementById("printPreviewPane");
+    if (sel && pane) pane.innerHTML = buildPreviewHtml(sel.value);
+  });
+  on("executePrint", () => {
+    const sel = /** @type {HTMLSelectElement|null} */ (
+      document.getElementById("printSectionSelect")
+    );
+    if (sel) executePrint(sel.value);
+  });
 }

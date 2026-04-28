@@ -160,6 +160,7 @@ export const MODALS = /** @type {const} */ ({
   AUTH: "authOverlay",
   GALLERY_LB: "galleryLightbox",
   SHORTCUTS: "shortcutsModal",
+  PRINT_PREVIEW: "printPreviewModal",
 });
 
 /**

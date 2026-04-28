@@ -1298,5 +1298,11 @@
   "whats_new_vendor_timeline": "Vendor payment timeline & top vendors chart",
   "whats_new_theme_picker": "Theme picker with live preview",
   "whats_new_website_builder": "Public wedding website builder",
-  "whats_new_notification_centre": "Notification centre in header"
+  "whats_new_notification_centre": "Notification centre in header",
+  "print_preview_title": "Print Preview",
+  "print_section_label": "Select section to print:",
+  "print_seating": "Seating chart",
+  "print_execute": "🖨️ Print",
+  "print_no_data": "No data to print",
+  "print_empty_table": "Empty table"
 }
