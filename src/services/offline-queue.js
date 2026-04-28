@@ -1,14 +1,15 @@
 /**
- * src/services/offline-queue.js — F1.2.4 Offline queue (migrated from js/)
+ * src/services/offline-queue.js — F1.2.4 Offline queue (S203 IDB upgrade)
  *
- * Queues failed RSVP/contact submissions in localStorage when offline.
+ * Queues failed RSVP/contact submissions when offline.
  * Flushes automatically when the connection restores with exponential backoff.
- * Uses shared retry constants from config.js.
+ * Persists to IndexedDB (S203/S158) with localStorage as fallback.
  */
 
 import { storeGet, storeSet } from "../core/store.js";
 import { MAX_RETRIES, BACKOFF_BASE_MS } from "../core/config.js";
 import { t } from "../core/i18n.js";
+import { idbQueueRead, idbQueueWrite } from "../utils/idb-queue.js";
 
 /** @type {{ type: string, payload: unknown, addedAt: string, retries: number }[]} */
 let _queue = [];
@@ -23,13 +24,27 @@ let _webAppUrl = null;
 const _MAX_DELAY_MS = 5 * 60_000;
 
 /**
- * Initialise the offline queue. Loads persisted items and wires online/offline events.
+ * Initialise the offline queue. Loads persisted items (IDB first, store fallback)
+ * and wires online/offline events.
  * @param {{ webAppUrl?: string, postFn?: (payload: unknown) => Promise<unknown> }} [opts]
+ * @returns {Promise<void>}
  */
-export function initOfflineQueue(opts) {
+export async function initOfflineQueue(opts) {
   _webAppUrl = opts?.webAppUrl ?? null;
   _postFn = opts?.postFn ?? _defaultPost;
-  _queue = /** @type {typeof _queue} */ (storeGet("offline_queue")) ?? [];
+
+  // Load from IDB; fall back to store (localStorage) for older sessions.
+  const idbItems = await idbQueueRead();
+  if (idbItems.length > 0) {
+    _queue = /** @type {typeof _queue} */ (idbItems);
+  } else {
+    _queue = /** @type {typeof _queue} */ (storeGet("offline_queue")) ?? [];
+    if (_queue.length > 0) {
+      // Migrate from localStorage to IDB.
+      idbQueueWrite(_queue).catch(() => {});
+      storeSet("offline_queue", []);
+    }
+  }
   _updateBadge();
 
   if (typeof window !== "undefined") {
@@ -192,7 +207,10 @@ export function getQueueStats() {
 // ── Internal ──────────────────────────────────────────────────────────────
 
 function _persist() {
-  storeSet("offline_queue", _queue);
+  idbQueueWrite(_queue).catch(() => {
+    // IDB unavailable — fall back to store.
+    storeSet("offline_queue", _queue);
+  });
 }
 
 function _updateBadge() {
