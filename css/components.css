@@ -2783,6 +2783,27 @@
     view-transition-name: section-content;
   }
 
+  /* ── S161: Per-section named view-transition slots ──
+   * Each section gets its own slot name so the browser can animate
+   * old→new pairs independently. Falls back to section-content above.
+   */
+  #section-landing.active    { view-transition-name: vt-landing; }
+  #section-dashboard.active  { view-transition-name: vt-dashboard; }
+  #section-guests.active     { view-transition-name: vt-guests; }
+  #section-tables.active     { view-transition-name: vt-tables; }
+  #section-invitation.active { view-transition-name: vt-invitation; }
+  #section-whatsapp.active   { view-transition-name: vt-whatsapp; }
+  #section-rsvp.active       { view-transition-name: vt-rsvp; }
+  #section-budget.active     { view-transition-name: vt-budget; }
+  #section-analytics.active  { view-transition-name: vt-analytics; }
+  #section-timeline.active   { view-transition-name: vt-timeline; }
+  #section-gallery.active    { view-transition-name: vt-gallery; }
+  #section-checkin.active    { view-transition-name: vt-checkin; }
+  #section-settings.active   { view-transition-name: vt-settings; }
+  #section-changelog.active  { view-transition-name: vt-changelog; }
+  #section-vendors.active    { view-transition-name: vt-vendors; }
+  #section-expenses.active   { view-transition-name: vt-expenses; }
+
   @keyframes slide-in-from-right {
     from {
       transform: translateX(30px);
