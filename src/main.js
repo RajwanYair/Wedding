@@ -111,6 +111,8 @@ import * as guestLandingSection from "./sections/guest-landing.js";
 import * as changelogSection from "./sections/changelog.js";
 import * as websiteBuilderSection from "./sections/website-builder.js";
 import * as runOfShowSection from "./sections/run-of-show.js";
+import * as notificationPanelSection from "./sections/notification-panel.js";
+import * as workspaceSwitcherSection from "./sections/workspace-switcher.js";
 
 // ── Domain action handlers (extracted) ───────────────────────────────────
 import { register as registerGuestHandlers } from "./handlers/guest-handlers.js";
@@ -300,6 +302,10 @@ let _activeSection = null;
 
   // 6. Event delegation hub
   initEvents();
+
+  // 6a. S206 — Mount header-widget sections (operate on index.html elements, not templates)
+  notificationPanelSection.mount().catch(() => {});
+  workspaceSwitcherSection.mount().catch(() => {});
 
   // 7. Register ALL data-action handlers
   _registerHandlers();
