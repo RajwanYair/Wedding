@@ -88,6 +88,12 @@ export default defineConfig({
       // service wrappers are partially covered here and topped up via E2E.
       // Current floors: any drop fails CI; tests can only push these higher.
       thresholds: {
+        // S163: global floor ratcheted to current actuals (48/42/54/47 from coverage-summary).
+        // Any drop in overall coverage will fail `npm run test:coverage`. Ratchet upward each sprint.
+        lines: 48,
+        branches: 42,
+        functions: 54,
+        statements: 47,
         // Sprint 51 (B6): recalibrated after adding 83 tests for Sprint 44-48 utilities.
         // charts.js / payment-link.js / vcard.js at 0% drag utils below 88; ratchet once tested.
         // Sprint 70: branches floor lowered 78→75 (measured 75.82%; ratchet upward each sprint).

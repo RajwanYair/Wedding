@@ -21,15 +21,15 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
-// Sprint 79 (ROADMAP §13): ratcheted to current global actuals (47.66/41.31/54.63/47.30)
-// after S78 settings.js wiring. Long-term target 80/75/80/80 reached incrementally:
+// S163: ratcheted to current global actuals (48.26/42.11/54.28/47.85 from coverage-summary).
+// Long-term target 80/75/80/80 reached incrementally:
 //   v12.5.x → v12.6.0: 50/45/55/50 (next ratchet)
 //   v13.0.0:           65/55/65/65
 //   v14.0.0:           80/75/80/80
 // Run with --enforce to gate CI; pass --target-lines=N etc. to override one pillar.
 const TARGETS = {
-  lines: 47,
-  branches: 41,
+  lines: 48,
+  branches: 42,
   functions: 54,
   statements: 47,
 };
