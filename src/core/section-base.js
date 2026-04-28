@@ -20,7 +20,7 @@
  *   export const { mount, unmount, capabilities } = fromSection(guestsSection);
  */
 
-import { storeSubscribe } from "./store.js";
+import { storeSubscribeScoped, cleanupScope } from "./store.js";
 
 /**
  * @typedef {() => void} CleanupFn
@@ -95,7 +95,7 @@ export class BaseSection {
    * @returns {() => void}  Manual unsubscriber (already auto-released on unmount).
    */
   subscribe(key, fn) {
-    const unsub = storeSubscribe(key, fn);
+    const unsub = storeSubscribeScoped(key, fn, this.#name);
     this.#unsubscribers.push(unsub);
     return unsub;
   }
@@ -127,13 +127,7 @@ export class BaseSection {
   _unmount() {
     if (!this.#mounted) return;
     this.#mounted = false;
-    for (const fn of this.#unsubscribers) {
-      try {
-        fn();
-      } catch {
-        /* ignore */
-      }
-    }
+    cleanupScope(this.#name);
     this.#unsubscribers.length = 0;
     for (const fn of this.#cleanup) {
       try {

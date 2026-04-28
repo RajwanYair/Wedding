@@ -42,12 +42,18 @@ for (const file of files) {
   const src = await readFile(join(SECTIONS_DIR, file), "utf8");
   const hasScoped = src.includes("storeSubscribeScoped");
   const hasCleanup = src.includes("cleanupScope");
+  const hasBaseSection = src.includes("BaseSection") && src.includes("fromSection");
   const hasLegacy = src.includes("_unsubs");
 
   let icon, status, category;
   if (hasScoped && hasCleanup) {
     icon = "✅";
     status = "fully adopted (storeSubscribeScoped + cleanupScope)";
+    category = "adopted";
+    adoptedCount++;
+  } else if (hasBaseSection) {
+    icon = "✅";
+    status = "fully adopted (BaseSection + fromSection — scoped via section-base.js)";
     category = "adopted";
     adoptedCount++;
   } else if (hasScoped || hasCleanup) {
