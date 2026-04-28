@@ -65,6 +65,7 @@ import {
 import { fetchGasVersion } from "./core/status-bar.js";
 import { injectTemplate } from "./core/template-loader.js";
 import { installTrustedTypesPolicy } from "./core/trusted-types.js";
+import { initDualWrite } from "./services/dual-write.js";
 
 // ── Services ──────────────────────────────────────────────────────────────
 import {
@@ -158,6 +159,8 @@ let _activeSection = null;
   }
 
   // 0. Storage layer — initialise IndexedDB / localStorage / memory adapter
+  // S160: activate dual-write rehearsal harness if feature flag is on
+  initDualWrite();
   await initStorage();  // 0a. One-time migration from localStorage → IndexedDB (S16)
   if (getAdapterType() === "indexeddb" && readBrowserStorage(STORAGE_KEYS.IDB_MIGRATED) !== "1") {
     const migrated = await migrateFromLocalStorage();
