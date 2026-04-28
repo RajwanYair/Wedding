@@ -1,0 +1,84 @@
+# =============================================================================
+# Supabase DB Lint — Wedding Manager v12.7.0
+# Static migration audit (no Docker) + optional live db lint via Supabase CLI
+# when SUPABASE_ACCESS_TOKEN is available.
+# =============================================================================
+
+on:
+  push:
+    paths:
+      - "supabase/migrations/**"
+      - "scripts/audit-supabase-lint.mjs"
+      - "scripts/audit-supabase-migrations.mjs"
+  pull_request:
+    paths:
+      - "supabase/migrations/**"
+      - "scripts/audit-supabase-lint.mjs"
+      - "scripts/audit-supabase-migrations.mjs"
+  workflow_dispatch:
+
+concurrency:
+  group: supabase-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  migration-static-lint:
+    name: Migration static audit (no Docker)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup shared tooling (CI shim)
+        run: node scripts/ensure-shared-tooling.mjs
+
+      - name: Static SQL lint (audit-supabase-lint)
+        run: npm run audit:db
+
+      - name: Migration quality audit (audit-supabase-migrations)
+        run: npm run audit:migrations
+
+  db-lint-supabase-cli:
+    name: Supabase db lint (CLI, requires access token)
+    runs-on: ubuntu-latest
+    # Only run on push to main when the Supabase access token is configured.
+    # Skip silently on PRs from forks (no secret access).
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Supabase CLI
+        run: |
+          curl -fsSL https://supabase.com/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        continue-on-error: true
+
+      - name: Run supabase db lint
+        run: |
+          if command -v supabase &>/dev/null && [ -n "$SUPABASE_ACCESS_TOKEN" ]; then
+            supabase db lint --project-ref "$SUPABASE_PROJECT_REF" \
+              --schema public --level warning 2>&1 \
+              | tee db-lint-output.txt
+            # Fail if any errors (not warnings) are reported
+            if grep -q "ERROR" db-lint-output.txt; then
+              echo "::error ::supabase db lint reported ERRORs — see output above"
+              exit 1
+            fi
+            echo "supabase db lint passed."
+          else
+            echo "::notice ::SUPABASE_ACCESS_TOKEN not set or supabase CLI unavailable — skipping live db lint"
+          fi
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
