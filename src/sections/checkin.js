@@ -4,7 +4,8 @@
  * Search guests and mark them as checked-in (arrived).
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
@@ -13,8 +14,6 @@ import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { isNFCSupported, startNFCScan } from "../services/nfc.js";
 import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
 import { buildCheckinUrl, getQrDataUrl, renderQrToCanvas } from "../utils/qr-code.js";
-/** @type {(() => void)[]} */
-const _unsubs = [];
 
 /** @type {string} */
 let _searchQuery = "";
@@ -31,22 +30,24 @@ let _scanIntervalId = null;
 /** @type {(() => void)|null} */
 let _stopNFCScan = null;
 
-export function mount(_container) {
-  _unsubs.push(storeSubscribe("guests", renderCheckin));
-  renderCheckin();
-}
+class CheckinSection extends BaseSection {
+  async onMount() {
+    this.subscribe("guests", renderCheckin);
+    renderCheckin();
+  }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-  _giftMode = false;
-  stopQrScan();
-  stopNFCCheckin();
-  // S107: leave kiosk mode when navigating away.
-  if (document.body.classList.contains("kiosk-mode")) {
-    setKioskMode(false);
+  onUnmount() {
+    _giftMode = false;
+    stopQrScan();
+    stopNFCCheckin();
+    // S107: leave kiosk mode when navigating away.
+    if (document.body.classList.contains("kiosk-mode")) {
+      setKioskMode(false);
+    }
   }
 }
+
+export const { mount, unmount, capabilities } = fromSection(new CheckinSection("checkin"));
 
 /**
  * S107 — toggle kiosk mode for day-of check-in stations.

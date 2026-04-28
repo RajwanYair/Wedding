@@ -4,7 +4,8 @@
  * Tracks gift contributions vs budget. Aggregates from guests and custom entries.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
@@ -14,37 +15,33 @@ import { getAllSummaries } from "../services/budget-tracker.js";
 import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct } from "../services/budget-burndown.js";
 import { projectOverrun } from "../services/budget-projection.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("budget", renderBudget));
-  _unsubs.push(storeSubscribe("guests", renderBudget));
-  _unsubs.push(storeSubscribe("weddingInfo", renderBudget));
-  _unsubs.push(storeSubscribe("expenses", renderBudgetProgress));
-  _unsubs.push(storeSubscribe("vendors", renderBudgetProgress));
-  _unsubs.push(storeSubscribe("budgetEnvelopes", _renderEnvelopeSummary));
-  // S22.3 expense category breakdown
-  _unsubs.push(storeSubscribe("expenses", renderExpenseCategoryBreakdown));
-  _unsubs.push(storeSubscribe("vendors", renderExpenseCategoryBreakdown));
-  // C1 Sprint 46: budget burn-down
-  _unsubs.push(storeSubscribe("expenses", renderBudgetBurndownChart));
-  _unsubs.push(storeSubscribe("weddingInfo", renderBudgetBurndownChart));
-  // S145: budget projection panel
-  _unsubs.push(storeSubscribe("expenses", renderBudgetProjection));
-  _unsubs.push(storeSubscribe("weddingInfo", renderBudgetProjection));
-  renderBudget();
-  renderBudgetProgress();
-  renderExpenseCategoryBreakdown(); // S22.3
-  _renderEnvelopeSummary(); // Sprint 28 / C1
-  renderBudgetBurndownChart(); // C1 Sprint 46
-  renderBudgetProjection(); // S145
+class BudgetSection extends BaseSection {
+  async onMount() {
+    this.subscribe("budget", renderBudget);
+    this.subscribe("guests", renderBudget);
+    this.subscribe("weddingInfo", renderBudget);
+    this.subscribe("expenses", renderBudgetProgress);
+    this.subscribe("vendors", renderBudgetProgress);
+    this.subscribe("budgetEnvelopes", _renderEnvelopeSummary);
+    // S22.3 expense category breakdown
+    this.subscribe("expenses", renderExpenseCategoryBreakdown);
+    this.subscribe("vendors", renderExpenseCategoryBreakdown);
+    // C1 Sprint 46: budget burn-down
+    this.subscribe("expenses", renderBudgetBurndownChart);
+    this.subscribe("weddingInfo", renderBudgetBurndownChart);
+    // S145: budget projection panel
+    this.subscribe("expenses", renderBudgetProjection);
+    this.subscribe("weddingInfo", renderBudgetProjection);
+    renderBudget();
+    renderBudgetProgress();
+    renderExpenseCategoryBreakdown(); // S22.3
+    _renderEnvelopeSummary(); // Sprint 28 / C1
+    renderBudgetBurndownChart(); // C1 Sprint 46
+    renderBudgetProjection(); // S145
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new BudgetSection("budget"));
 
 /**
  * @param {Record<string, unknown>} data

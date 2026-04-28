@@ -6,6 +6,7 @@
  */
 
 import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { t } from "../core/i18n.js";
 import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
@@ -18,20 +19,24 @@ import { buildGoogleCalendarLink, buildIcsDataUrl } from "../utils/calendar-link
 /** @type {HTMLElement|null} */
 let _container = null;
 
-export function mount(container) {
-  _container = container;
-  // S12.5 — Check RSVP deadline
-  if (_isRsvpDeadlinePassed()) {
-    _showDeadlineMessage();
-    return;
+class RsvpSection extends BaseSection {
+  async onMount(params) {
+    _container = (params instanceof HTMLElement) ? params : null;
+    // S12.5 — Check RSVP deadline
+    if (_isRsvpDeadlinePassed()) {
+      _showDeadlineMessage();
+      return;
+    }
+    // S11.1 — Auto-lookup from URL guestId param
+    _autoLookupFromUrl();
   }
-  // S11.1 — Auto-lookup from URL guestId param
-  _autoLookupFromUrl();
+
+  onUnmount() {
+    _container = null;
+  }
 }
 
-export function unmount() {
-  _container = null;
-}
+export const { mount, unmount, capabilities } = fromSection(new RsvpSection("rsvp"));
 
 // ── S11.1 Auto-lookup from URL ────────────────────────────────────────────
 

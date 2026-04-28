@@ -8,6 +8,7 @@
 import { getStore, updateStore } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { hasPermission } from "../services/workspace-roles.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
 const STORAGE_KEY = "workspaces";
 const ACTIVE_KEY = "activeWorkspace";
@@ -138,13 +139,15 @@ export function selectWorkspace(id) {
   if (dropdown) dropdown.classList.add("u-hidden");
 }
 
-/** Mount — render the switcher on initial load. */
-export function mount() {
-  renderWorkspaceSwitcher();
+class WorkspaceSwitcherSection extends BaseSection {
+  async onMount() {
+    renderWorkspaceSwitcher();
+  }
+
+  onUnmount() {
+    const container = document.getElementById("workspaceSwitcher");
+    if (container) container.textContent = "";
+  }
 }
 
-/** Unmount — clean up. */
-export function unmount() {
-  const container = document.getElementById("workspaceSwitcher");
-  if (container) container.textContent = "";
-}
+export const { mount, unmount, capabilities } = fromSection(new WorkspaceSwitcherSection("workspace-switcher"));

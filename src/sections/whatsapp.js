@@ -6,7 +6,8 @@
  */
 
 import { STORAGE_KEYS } from "../core/constants.js";
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { readBrowserStorageJson, writeBrowserStorage } from "../core/storage.js";
@@ -14,20 +15,16 @@ import { cleanPhone } from "../utils/phone.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { personalizeMessage, getVariableHints } from "../services/message-personalizer.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
-export function mount(_container) {
-  _unsubs.push(storeSubscribe("guests", renderWhatsApp));
-  _unsubs.push(storeSubscribe("weddingInfo", renderWhatsApp));
-  renderVariableChips();
-  renderWhatsApp();
+class WhatsAppSection extends BaseSection {
+  async onMount() {
+    this.subscribe("guests", renderWhatsApp);
+    this.subscribe("weddingInfo", renderWhatsApp);
+    renderVariableChips();
+    renderWhatsApp();
+  }
 }
 
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-}
+export const { mount, unmount, capabilities } = fromSection(new WhatsAppSection("whatsapp"));
 
 /**
  * Render clickable variable chips below the WhatsApp textarea.

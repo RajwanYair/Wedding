@@ -8,18 +8,23 @@
 import { storeGet } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { formatDateHebrew } from "../utils/date.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
 
-export function mount(/** @type {HTMLElement} */ container) {
-  _container = container;
-  _renderFromHash();
+class GuestLandingSection extends BaseSection {
+  async onMount(params) {
+    _container = (params instanceof HTMLElement) ? params : null;
+    _renderFromHash();
+  }
+
+  onUnmount() {
+    _container = null;
+  }
 }
 
-export function unmount() {
-  _container = null;
-}
+export const { mount, unmount, capabilities } = fromSection(new GuestLandingSection("guest-landing"));
 
 function _renderFromHash() {
   const params = new URLSearchParams(window.location.search);

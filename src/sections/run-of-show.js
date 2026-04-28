@@ -15,24 +15,27 @@ import {
   sortTimeline,
   detectOverlaps,
 } from "../services/run-of-show.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 
 /** @type {import('../services/run-of-show.js').TimelineItem[]} */
 let _items = [];
 
-/** Mount the section. */
-export function mount() {
-  _items = loadRunOfShow();
-  if (_items.length === 0) {
-    _items = buildDefaultTimeline("18:00");
-    saveRunOfShow(_items);
+class RunOfShowSection extends BaseSection {
+  async onMount() {
+    _items = loadRunOfShow();
+    if (_items.length === 0) {
+      _items = buildDefaultTimeline("18:00");
+      saveRunOfShow(_items);
+    }
+    renderTimeline();
   }
-  renderTimeline();
+
+  onUnmount() {
+    _items = [];
+  }
 }
 
-/** Unmount the section. */
-export function unmount() {
-  _items = [];
-}
+export const { mount, unmount, capabilities } = fromSection(new RunOfShowSection("run-of-show"));
 
 /** Render the timeline list. */
 export function renderTimeline() {

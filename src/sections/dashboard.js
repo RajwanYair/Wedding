@@ -5,7 +5,8 @@
  * updates propagate automatically. No window.* dependencies.
  */
 
-import { storeGet, storeSubscribe } from "../core/store.js";
+import { storeGet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
 import { daysUntil, formatDateHebrew } from "../utils/date.js";
@@ -15,98 +16,90 @@ import { RSVP_RESPONSE_STATUSES } from "../core/constants.js";
 import { getLatestEntry, getEntriesSince, flattenItems } from "../utils/changelog-parser.js";
 import { STORAGE_KEYS } from "../core/constants.js";
 
-/** @type {(() => void)[]} */
-const _unsubs = [];
-
 /** @type {ReturnType<typeof setInterval> | null} */
 let _countdownTimer = null;
 
 // ── Public API ────────────────────────────────────────────────────────────
 
-/**
- * Mount the dashboard into the given container element.
- * Wires store subscriptions and renders initial state.
- * @param {HTMLElement} _container
- */
-export function mount(/** @type {HTMLElement} */ _container) {
-  _unsubs.push(storeSubscribe("guests", renderDashboard));
-  _unsubs.push(storeSubscribe("tables", renderDashboard));
-  _unsubs.push(storeSubscribe("vendors", renderDashboard)); // S17.5 budget alert
-  _unsubs.push(storeSubscribe("expenses", renderDashboard)); // S17.5 budget alert
-  _unsubs.push(storeSubscribe("vendors", renderExpenseSummary));
-  _unsubs.push(storeSubscribe("expenses", renderExpenseSummary));
-  _unsubs.push(storeSubscribe("guests", () => _logActivity("guests")));
-  _unsubs.push(storeSubscribe("vendors", () => _logActivity("vendors")));
-  // S18.2 arrival forecast
-  _unsubs.push(storeSubscribe("guests", renderArrivalForecast));
-  _unsubs.push(storeSubscribe("tables", renderArrivalForecast));
-  // S19.3 vendor category card
-  _unsubs.push(storeSubscribe("vendors", renderVendorCategories));
-  // S19.4 follow-up pending list
-  _unsubs.push(storeSubscribe("guests", renderFollowUpList));
-  // S20.4 invitation stats
-  _unsubs.push(storeSubscribe("guests", renderInvitationStats));
-  // S22.1 check-in progress bar
-  _unsubs.push(storeSubscribe("guests", renderCheckinProgress));
-  // S22.5 guest target ring
-  _unsubs.push(storeSubscribe("guests", renderGuestTargetRing));
-  // S23.4 suggested actions
-  _unsubs.push(storeSubscribe("guests", renderSuggestedActions));
-  _unsubs.push(storeSubscribe("vendors", renderSuggestedActions));
-  _unsubs.push(storeSubscribe("tables", renderSuggestedActions));
-  // S24.3 gift progress
-  _unsubs.push(storeSubscribe("guests", renderGiftProgress));
-  // S24.5 next timeline event
-  _unsubs.push(storeSubscribe("timeline", renderNextTimelineEvent));
-  // F4.1 budget forecast
-  _unsubs.push(storeSubscribe("guests", renderBudgetForecast));
-  _unsubs.push(storeSubscribe("vendors", renderBudgetForecast));
-  // F4.1.5 vendor payment due reminders
-  _unsubs.push(storeSubscribe("vendors", renderVendorDueReminders));
-  _unsubs.push(
-    storeSubscribe("weddingInfo", () => {
-      updateTopBar();
-      updateCountdown();
-      updateRsvpDeadlineBanner();
-    }),
-  );
-  renderDashboard();
-  renderExpenseSummary();
-  renderActivityFeed();
-  renderArrivalForecast(); // S18.2
-  renderVendorCategories(); // S19.3
-  renderFollowUpList(); // S19.4
-  renderInvitationStats(); // S20.4
-  renderCheckinProgress(); // S22.1
-  renderGuestTargetRing(); // S22.5
-  renderSuggestedActions(); // S23.4
-  renderGiftProgress(); // S24.3
-  renderNextTimelineEvent(); // S24.5
-  renderBudgetForecast(); // F4.1
-  renderVendorDueReminders(); // F4.1.5
-  updateTopBar();
-  updateCountdown();
-  updateRsvpDeadlineBanner();
-  _startCountdownTimer();
-  // C1 Sprint 47: What's New panel (async, non-blocking)
-  renderWhatsNewPanel();
-  // S2.6: wire stat counter observer after first render
-  setTimeout(initStatCounterObserver, 0);
+class DashboardSection extends BaseSection {
+  async onMount() {
+    this.subscribe("guests", renderDashboard);
+    this.subscribe("tables", renderDashboard);
+    this.subscribe("vendors", renderDashboard); // S17.5 budget alert
+    this.subscribe("expenses", renderDashboard); // S17.5 budget alert
+    this.subscribe("vendors", renderExpenseSummary);
+    this.subscribe("expenses", renderExpenseSummary);
+    this.subscribe("guests", () => _logActivity("guests"));
+    this.subscribe("vendors", () => _logActivity("vendors"));
+    // S18.2 arrival forecast
+    this.subscribe("guests", renderArrivalForecast);
+    this.subscribe("tables", renderArrivalForecast);
+    // S19.3 vendor category card
+    this.subscribe("vendors", renderVendorCategories);
+    // S19.4 follow-up pending list
+    this.subscribe("guests", renderFollowUpList);
+    // S20.4 invitation stats
+    this.subscribe("guests", renderInvitationStats);
+    // S22.1 check-in progress bar
+    this.subscribe("guests", renderCheckinProgress);
+    // S22.5 guest target ring
+    this.subscribe("guests", renderGuestTargetRing);
+    // S23.4 suggested actions
+    this.subscribe("guests", renderSuggestedActions);
+    this.subscribe("vendors", renderSuggestedActions);
+    this.subscribe("tables", renderSuggestedActions);
+    // S24.3 gift progress
+    this.subscribe("guests", renderGiftProgress);
+    // S24.5 next timeline event
+    this.subscribe("timeline", renderNextTimelineEvent);
+    // F4.1 budget forecast
+    this.subscribe("guests", renderBudgetForecast);
+    this.subscribe("vendors", renderBudgetForecast);
+    // F4.1.5 vendor payment due reminders
+    this.subscribe("vendors", renderVendorDueReminders);
+    this.subscribe(
+      "weddingInfo",
+      () => {
+        updateTopBar();
+        updateCountdown();
+        updateRsvpDeadlineBanner();
+      },
+    );
+    renderDashboard();
+    renderExpenseSummary();
+    renderActivityFeed();
+    renderArrivalForecast(); // S18.2
+    renderVendorCategories(); // S19.3
+    renderFollowUpList(); // S19.4
+    renderInvitationStats(); // S20.4
+    renderCheckinProgress(); // S22.1
+    renderGuestTargetRing(); // S22.5
+    renderSuggestedActions(); // S23.4
+    renderGiftProgress(); // S24.3
+    renderNextTimelineEvent(); // S24.5
+    renderBudgetForecast(); // F4.1
+    renderVendorDueReminders(); // F4.1.5
+    updateTopBar();
+    updateCountdown();
+    updateRsvpDeadlineBanner();
+    _startCountdownTimer();
+    // C1 Sprint 47: What's New panel (async, non-blocking)
+    renderWhatsNewPanel();
+    // S2.6: wire stat counter observer after first render
+    setTimeout(initStatCounterObserver, 0);
+  }
+
+  onUnmount() {
+    if (_countdownTimer !== null) {
+      clearInterval(_countdownTimer);
+      _countdownTimer = null;
+    }
+    _statObserver?.disconnect();
+    _statObserver = null;
+  }
 }
 
-/**
- * Unmount — unsubscribe from store, stop timers.
- */
-export function unmount() {
-  _unsubs.forEach((fn) => fn());
-  _unsubs.length = 0;
-  if (_countdownTimer !== null) {
-    clearInterval(_countdownTimer);
-    _countdownTimer = null;
-  }
-  _statObserver?.disconnect();
-  _statObserver = null;
-}
+export const { mount, unmount, capabilities } = fromSection(new DashboardSection("dashboard"));
 
 /**
  * Render all dashboard stat elements from the current store state.
