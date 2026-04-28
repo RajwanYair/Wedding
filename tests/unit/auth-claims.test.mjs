@@ -11,7 +11,7 @@ import {
   isEventOwner,
   isTokenExpired,
   getUserId,
-} from "../../src/services/auth-claims.js";
+} from "../../src/services/auth.js";
 
 // Build a minimal JWT with base64url-encoded payload.
 function fakeJwt(payloadObj) {

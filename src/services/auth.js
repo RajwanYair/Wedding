@@ -1,9 +1,10 @@
 /**
- * src/services/auth.js — Authentication service (S0 named-export module)
+ * src/services/auth.js — Unified auth service (S194)
  *
- * Named-export adapter for Google/Facebook/Apple/Anonymous auth.
- * Handles email allowlist validation and session rotation.
- * No window.* side effects.
+ * Merged from:
+ *   - auth.js             (S0)  — session management + email allowlist
+ *   - auth-claims.js      (S81) — JWT claim helpers
+ *   - oauth-providers.js  (S94) — OAuth provider abstraction
  */
 
 import { getApprovedAdminEmails } from "../core/app-config.js";
@@ -168,4 +169,169 @@ export function maybeRotateSession() {
 export function isSessionExpired() {
   if (!_user?.isAdmin) return false;
   return Date.now() - _user.loginAt >= SESSION_ROTATION_MS;
+}
+
+// ── JWT claim helpers (merged from auth-claims.js, S81) ───────────────────
+
+/**
+ * @typedef {{ access_token?: string }} Session
+ * @typedef {Record<string, unknown>} ClaimsMap
+ */
+
+/**
+ * Decode the payload of a JWT without a network call.
+ * @param {string} token
+ * @returns {ClaimsMap}
+ */
+export function decodeJwtPayload(token) {
+  try {
+    const parts = token.split(".");
+    if (parts.length < 2) return {};
+    const b64 = (parts[1] ?? "").replace(/-/g, "+").replace(/_/g, "/");
+    const json = atob(b64);
+    return JSON.parse(json);
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Extract all claims from a Supabase session's access token.
+ * @param {Session | null | undefined} session
+ * @returns {ClaimsMap}
+ */
+export function getClaims(session) {
+  if (!session?.access_token) return {};
+  return decodeJwtPayload(session.access_token);
+}
+
+/**
+ * Read a single claim by name.
+ * @param {Session | null | undefined} session
+ * @param {string} name
+ * @returns {unknown}
+ */
+export function getClaim(session, name) {
+  return getClaims(session)[name];
+}
+
+/**
+ * Check whether the session carries a specific role.
+ * @param {Session | null | undefined} session
+ * @param {string} role
+ * @returns {boolean}
+ */
+export function hasRole(session, role) {
+  const claims = getClaims(session);
+  if (claims.role === role) return true;
+  const roles = claims.app_roles;
+  if (Array.isArray(roles)) return roles.includes(role);
+  return false;
+}
+
+/**
+ * Check whether the authenticated user owns the given event.
+ * @param {Session | null | undefined} session
+ * @param {string} eventId
+ * @returns {boolean}
+ */
+export function isEventOwner(session, eventId) {
+  return getClaims(session).event_id === eventId;
+}
+
+/**
+ * Check whether the JWT is expired.
+ * @param {Session | null | undefined} session
+ * @returns {boolean}
+ */
+export function isTokenExpired(session) {
+  const exp = getClaim(session, "exp");
+  if (typeof exp !== "number") return true;
+  return Date.now() / 1000 > exp;
+}
+
+/**
+ * Read the `sub` (subject / user ID) claim.
+ * @param {Session | null | undefined} session
+ * @returns {string | undefined}
+ */
+export function getUserId(session) {
+  const sub = getClaim(session, "sub");
+  return typeof sub === "string" ? sub : undefined;
+}
+
+// ── OAuth provider abstraction (merged from oauth-providers.js, S94) ──────
+
+/** @typedef {'google' | 'facebook' | 'apple'} OAuthProvider */
+
+/**
+ * @typedef {object} OAuthProfile
+ * @property {string} email
+ * @property {string} name
+ * @property {string} [picture]
+ * @property {OAuthProvider} provider
+ */
+
+/**
+ * Returns the loaded SDK detection result for diagnostics.
+ * @returns {{ google: boolean, apple: boolean, facebook: boolean }}
+ */
+export function detectInstalledSdks() {
+  /** @type {any} */
+  const w = typeof window === "undefined" ? {} : window;
+  return {
+    google: typeof w.google?.accounts?.id?.prompt === "function",
+    apple: typeof w.AppleID?.auth?.signIn === "function",
+    facebook: false,
+  };
+}
+
+/**
+ * Determine which transport will be used for `provider`.
+ * @param {OAuthProvider} provider
+ * @returns {"sdk" | "supabase"}
+ */
+export function preferredTransport(provider) {
+  if (provider === "facebook") return "supabase";
+  const sdks = detectInstalledSdks();
+  if (provider === "google") return sdks.google ? "sdk" : "supabase";
+  if (provider === "apple") return sdks.apple ? "sdk" : "supabase";
+  return "supabase";
+}
+
+/**
+ * Initiate the OAuth flow for `provider`.
+ * @param {OAuthProvider} provider
+ * @returns {Promise<OAuthProfile | null>}
+ */
+export async function signInWith(provider) {
+  const transport = preferredTransport(provider);
+  if (transport === "supabase") {
+    const { signInWithProvider } = await import("./supabase-auth.js");
+    signInWithProvider(provider);
+    return null;
+  }
+  /** @type {any} */
+  const w = window;
+  if (provider === "apple") {
+    const resp = await w.AppleID.auth.signIn();
+    const email = resp?.user?.email ?? "";
+    const name = `${resp?.user?.name?.firstName ?? ""} ${resp?.user?.name?.lastName ?? ""}`.trim();
+    return { email, name, provider };
+  }
+  if (provider === "google") {
+    return new Promise((resolve, reject) => {
+      try {
+        w.google.accounts.id.prompt((/** @type {any} */ notification) => {
+          if (notification?.isNotDisplayed?.() || notification?.isSkippedMoment?.()) {
+            resolve(null);
+          }
+        });
+        resolve(null);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+  return null;
 }

@@ -1,5 +1,5 @@
 /**
- * tests/unit/oauth-providers.test.mjs — Unit tests for src/services/oauth-providers.js (S94)
+ * tests/unit/oauth-providers.test.mjs — Unit tests for src/services/auth.js (S94)
  * @vitest-environment happy-dom
  */
 import { describe, it, expect, afterEach } from "vitest";
@@ -7,7 +7,7 @@ import { describe, it, expect, afterEach } from "vitest";
 import {
   detectInstalledSdks,
   preferredTransport,
-} from "../../src/services/oauth-providers.js";
+} from "../../src/services/auth.js";
 
 describe("oauth-providers (S94)", () => {
   afterEach(() => {
