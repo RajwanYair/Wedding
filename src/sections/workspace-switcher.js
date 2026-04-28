@@ -7,10 +7,7 @@
 
 import { getStore, updateStore } from "../core/store.js";
 import { t } from "../core/i18n.js";
-import {
-  WORKSPACE_ROLES,
-  hasPermission,
-} from "../services/workspace-roles.js";
+import { hasPermission } from "../services/workspace-roles.js";
 
 const STORAGE_KEY = "workspaces";
 const ACTIVE_KEY = "activeWorkspace";

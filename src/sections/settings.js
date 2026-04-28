@@ -20,7 +20,7 @@ import {
   queueKeys,
   onSyncStatus,
 } from "../core/sync.js";
-import { getActiveTheme } from "../core/ui.js";
+import { getActiveTheme, showToast } from "../core/ui.js";
 import {
   isPushSupported,
   requestPushPermission,
@@ -34,7 +34,6 @@ import {
 } from "../services/notification-preferences.js";
 import {
   THEME_VARS,
-  sanitizeThemeVars,
   applyThemeVars,
   serializeThemeVars,
   deserializeThemeVars,
@@ -44,10 +43,7 @@ import {
   stringifyThemeJson,
   importThemeJson,
 } from "../services/theme-export.js";
-import {
-  validatePluginManifest,
-  manifestSchemaInfo,
-} from "../services/plugin-manifest.js";
+import { validatePluginManifest } from "../services/plugin-manifest.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];

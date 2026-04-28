@@ -84,6 +84,7 @@ import {
   onSyncStatus,
   initOnlineSync,
   startLiveSync,
+  recoverOfflineQueue,
 } from "./services/sheets.js";
 
 // ── Section modules (lifecycle) ───────────────────────────────────────────
@@ -354,6 +355,10 @@ let _activeSection = null;
     badge.className = `sync-badge sync-badge--${status}`;
     badge.hidden = status === "idle";
   });
+
+  // 11b2. S158 — Recover any queued write keys that survived a page crash.
+  // Uses the IDB-persisted key list and re-enqueues a re-sync for each.
+  recoverOfflineQueue((key) => () => import("./services/backend.js").then(({ syncStoreKey }) => syncStoreKey(key))).catch(() => {});
 
   // 11c. S3.9 — Resume queued writes when back online
   initOnlineSync();

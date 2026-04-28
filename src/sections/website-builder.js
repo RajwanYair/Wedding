@@ -6,7 +6,7 @@
  * visibility, preview slug, and see a live preview.
  */
 
-import { storeGet, storeSet, storeSubscribe } from "../core/store.js";
+import { storeGet, storeSubscribe } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { showToast } from "../core/ui.js";
 import {
