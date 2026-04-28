@@ -1,11 +1,12 @@
 /**
- * src/services/budget-burndown.js — Budget burn-down analytics (Sprint 46 / C1)
+ * src/services/budget-burndown.js — Unified budget service (S193)
  *
- * Computes cumulative spend over time versus a budget target.
- * Pure functions — no DOM, no network.
+ * Merged from:
+ *   - budget-burndown.js (S46) — burn-down analytics (pure)
+ *   - budget-tracker.js  (S115) — envelope CRUD + variance
  */
 
-import { storeGet } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
 
 /**
  * @typedef {{ date: string, cumulative: number, target: number }} BurndownPoint
@@ -166,4 +167,114 @@ export function categoryBreakdown(expenses) {
   return Array.from(perCat.entries())
     .map(([category, amount]) => ({ category, amount }))
     .sort((a, b) => b.amount - a.amount);
+}
+
+// ── Budget envelope tracker (merged from budget-tracker.js, S115) ─────────
+
+/**
+ * @typedef {{
+ *   category:    string,
+ *   limit:       number,
+ *   spent:       number,
+ *   entries:     { amount: number, note?: string, ts: number }[],
+ *   updatedAt:   number,
+ * }} BudgetEnvelope
+ *
+ * @typedef {{ limit: number, spent: number, remaining: number, isOver: boolean, runRate: number }} EnvelopeSummary
+ */
+
+/** @returns {Record<string, BudgetEnvelope>} */
+function _getEnvelopes() {
+  return /** @type {Record<string, BudgetEnvelope>} */ (storeGet("budgetEnvelopes") ?? {});
+}
+
+/** @param {Record<string, BudgetEnvelope>} all */
+function _saveEnvelopes(all) {
+  storeSet("budgetEnvelopes", all);
+}
+
+/**
+ * Create or overwrite a budget envelope.
+ * @param {{ category: string, limit: number }} opts
+ */
+export function createEnvelope({ category, limit }) {
+  if (!category?.trim()) throw new Error("budget-tracker: category is required");
+  if (limit < 0) throw new Error("budget-tracker: limit must be >= 0");
+  const all = _getEnvelopes();
+  all[category] = {
+    category,
+    limit,
+    spent: all[category]?.spent ?? 0,
+    entries: all[category]?.entries ?? [],
+    updatedAt: Date.now(),
+  };
+  _saveEnvelopes(all);
+}
+
+/**
+ * Record a spend against a category.
+ * @param {string} category
+ * @param {number} amount
+ * @param {string} [note]
+ * @returns {boolean}
+ */
+export function recordSpend(category, amount, note) {
+  const all = _getEnvelopes();
+  const env = all[category];
+  if (!env) return false;
+  if (amount <= 0) throw new Error("budget-tracker: amount must be > 0");
+  env.entries.push({ amount, note, ts: Date.now() });
+  env.spent += amount;
+  env.updatedAt = Date.now();
+  _saveEnvelopes(all);
+  return true;
+}
+
+/**
+ * Get a summary for one envelope.
+ * @param {string} category
+ * @returns {EnvelopeSummary | null}
+ */
+export function getEnvelopeSummary(category) {
+  const env = _getEnvelopes()[category];
+  if (!env) return null;
+  const remaining = env.limit - env.spent;
+  const runRate = env.entries.length > 0 ? env.spent / env.entries.length : 0;
+  return { limit: env.limit, spent: env.spent, remaining, isOver: remaining < 0, runRate };
+}
+
+/**
+ * Get summaries for all envelopes.
+ * @returns {Record<string, EnvelopeSummary>}
+ */
+export function getAllSummaries() {
+  const all = _getEnvelopes();
+  /** @type {Record<string, EnvelopeSummary>} */
+  const out = {};
+  for (const cat of Object.keys(all)) {
+    const summary = getEnvelopeSummary(cat);
+    if (summary) out[cat] = summary;
+  }
+  return out;
+}
+
+/**
+ * Total budget vs total spent across all envelopes.
+ * @returns {{ totalLimit: number, totalSpent: number, totalRemaining: number }}
+ */
+export function getTotalBudget() {
+  const envs = Object.values(_getEnvelopes());
+  const totalLimit = envs.reduce((s, e) => s + e.limit, 0);
+  const totalSpent = envs.reduce((s, e) => s + e.spent, 0);
+  return { totalLimit, totalSpent, totalRemaining: totalLimit - totalSpent };
+}
+
+/**
+ * List categories that are over budget.
+ * @returns {string[]}
+ */
+export function getOverBudgetCategories() {
+  return Object.values(_getEnvelopes())
+    .filter((e) => e.spent > e.limit)
+    .map((e) => e.category);
 }
