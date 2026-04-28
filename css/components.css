@@ -3532,6 +3532,81 @@
     }
   }
 
+  /* ── Run-of-Show Editor (S144) ── */
+  .ros-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .ros-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ros-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    cursor: grab;
+    transition: box-shadow var(--transition-fast);
+
+    &:hover {
+      box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .ros-time {
+    font-family: monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 3.5rem;
+  }
+
+  .ros-title-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font: inherit;
+    color: var(--text);
+    padding: 0.2rem 0.4rem;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .ros-duration-input {
+    width: 3.5rem;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: 0.2rem;
+    font: inherit;
+  }
+
+  .ros-dur-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .ros-overlap-warnings {
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in sRGB, var(--warning) 12%, transparent);
+    border: 1px solid var(--warning);
+    border-radius: var(--border-radius);
+    color: var(--warning);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
   /* ── Notification Bell & Panel (S143) ── */
   .notif-bell {
     position: relative;

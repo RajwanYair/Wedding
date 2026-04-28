@@ -33,6 +33,10 @@ import {
   toggleNotifPanel,
   markAllNotifRead,
 } from "../sections/notification-panel.js";
+import {
+  addItem as rosAddItem,
+  resetDefault as rosResetDefault,
+} from "../sections/run-of-show.js";
 
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).
@@ -177,4 +181,8 @@ export function register() {
   // ── Notification centre (S143) ──
   on("toggleNotifPanel", () => toggleNotifPanel());
   on("markAllNotifRead", () => markAllNotifRead());
+
+  // ── Run-of-show editor (S144) ──
+  on("rosAddItem", () => rosAddItem());
+  on("rosResetDefault", () => rosResetDefault());
 }

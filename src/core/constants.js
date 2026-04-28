@@ -40,6 +40,7 @@ export const EXTRA_SECTIONS = /** @type {const} */ ([
   "registry",
   "guest-landing",
   "website-builder",
+  "run-of-show",
 ]);
 
 /**

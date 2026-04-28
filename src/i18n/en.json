@@ -1267,5 +1267,16 @@
   "notif_just_now": "just now",
   "notif_minutes_ago": "m ago",
   "notif_hours_ago": "h ago",
-  "notif_days_ago": "d ago"
+  "notif_days_ago": "d ago",
+  "ros_title": "Wedding Day Timeline",
+  "ros_desc": "Edit the order of activities on your wedding day, drag to reorder",
+  "ros_add_item": "Add activity",
+  "ros_reset": "Reset to default",
+  "ros_new_item": "New activity",
+  "ros_reset_done": "Timeline reset to defaults",
+  "ros_duration_label": "Duration in minutes",
+  "ros_minutes": "min",
+  "ros_remove_item": "Remove activity",
+  "ros_overlap_warning": "Overlapping activities",
+  "ros_timeline_aria": "Wedding day timeline"
 }

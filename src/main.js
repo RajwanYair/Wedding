@@ -107,6 +107,7 @@ import * as registrySection from "./sections/registry.js";
 import * as guestLandingSection from "./sections/guest-landing.js";
 import * as changelogSection from "./sections/changelog.js";
 import * as websiteBuilderSection from "./sections/website-builder.js";
+import * as runOfShowSection from "./sections/run-of-show.js";
 
 // ── Domain action handlers (extracted) ───────────────────────────────────
 import { register as registerGuestHandlers } from "./handlers/guest-handlers.js";
@@ -139,6 +140,7 @@ const SECTIONS = {
   "guest-landing": guestLandingSection,
   changelog: changelogSection,
   "website-builder": websiteBuilderSection,
+  "run-of-show": runOfShowSection,
 };
 
 /** @type {string|null} currently mounted section name */

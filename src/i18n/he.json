@@ -1267,5 +1267,16 @@
   "notif_just_now": "עכשיו",
   "notif_minutes_ago": " דק׳",
   "notif_hours_ago": " שע׳",
-  "notif_days_ago": " ימים"
+  "notif_days_ago": " ימים",
+  "ros_title": "לוח זמנים ליום החתונה",
+  "ros_desc": "ערוך את סדר הפעילויות ביום החתונה, גרור לסידור מחדש",
+  "ros_add_item": "הוסף פעילות",
+  "ros_reset": "תבנית ברירת מחדל",
+  "ros_new_item": "פעילות חדשה",
+  "ros_reset_done": "לוח הזמנים אופס",
+  "ros_duration_label": "משך בדקות",
+  "ros_minutes": "דק׳",
+  "ros_remove_item": "הסר פעילות",
+  "ros_overlap_warning": "חפיפות בין פעילויות",
+  "ros_timeline_aria": "לוח זמנים ליום החתונה"
 }
