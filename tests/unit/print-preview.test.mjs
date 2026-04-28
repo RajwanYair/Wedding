@@ -21,26 +21,6 @@ vi.mock("../../src/core/store.js", () => ({
 vi.mock("../../src/core/i18n.js", () => ({
   t: (k) => k,
 }));
-vi.mock("../../src/services/print-rows.js", () => ({
-  buildGuestRows: (guests, _tables) =>
-    guests.map((g) => ({ name: g.name, phone: g.phone || "", status: g.status || "", table: "" })),
-  buildSeatingRows: (_guests, tables) =>
-    tables.map((tb) => ({ name: tb.name, capacity: tb.capacity || 0, seated: 0, guests: [] })),
-  buildPrintableHtml: (title, body) =>
-    `<html><head><title>${title}</title></head><body>${body}</body></html>`,
-  escapeHtml: (s) => String(s ?? ""),
-  printHtmlDocument: (html, opener) => {
-    const win = (opener || (() => null))("", "_blank");
-    if (win) {
-      win.document.open();
-      win.document.write(html);
-      win.document.close();
-      win.focus();
-      win.print();
-    }
-    return { ok: true };
-  },
-}));
 
 beforeEach(() => {
   _store.clear();

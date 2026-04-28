@@ -15,7 +15,7 @@ const {
   isSyncHealthy,
   getFailedDomains,
   getPendingDomains,
-} = await import("../../src/services/sync-dashboard.js");
+} = await import("../../src/services/sync-tracker.js");
 
 const TEST_KEYS = ["guests", "tables", "vendors"];
 
