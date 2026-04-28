@@ -1288,5 +1288,8 @@
   "rsvp_outreach_opened": "Opened",
   "rsvp_outreach_responded": "Responded",
   "rsvp_outreach_confirmed": "Confirmed",
-  "rsvp_outreach_conversion": "conversion rate"
+  "rsvp_outreach_conversion": "conversion rate",
+  "vendor_spend_timeline_title": "Payment Timeline",
+  "vendor_spend_no_data": "No payment data yet",
+  "vendor_top_cost_title": "Top Vendors by Cost"
 }

@@ -14,6 +14,7 @@ import { cleanPhone } from "../utils/phone.js";
 import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
 import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
 import { getOverdueVendors } from "../services/vendor-analytics.js";
+import { buildPaymentTimeline, topVendorsByCost } from "../services/vendor-timeline.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -22,9 +23,13 @@ export function mount(/** @type {HTMLElement} */ _container) {
   _unsubs.push(storeSubscribe("vendors", renderVendors));
   _unsubs.push(storeSubscribe("vendors", renderOverdueChip)); // S23.5
   _unsubs.push(storeSubscribe("vendors", renderVendorPaymentTimeline)); // C1 Sprint 45
+  _unsubs.push(storeSubscribe("vendors", renderVendorSpendTimeline)); // S147
+  _unsubs.push(storeSubscribe("vendors", renderTopVendorsByCost)); // S147
   renderVendors();
   renderOverdueChip(); // S23.5
   renderVendorPaymentTimeline(); // C1 Sprint 45
+  renderVendorSpendTimeline(); // S147
+  renderTopVendorsByCost(); // S147
 }
 
 export function unmount() {
@@ -545,4 +550,92 @@ export function renderVendorPaymentTimeline() {
 /** Escape a string for SVG text content. */
 function _escStr(str) {
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// ── S147: Vendor Spend Timeline (vendor-timeline.js) ─────────────────────
+
+/**
+ * Render a cumulative payment timeline SVG in #vendorSpendTimeline.
+ * Uses the pure `buildPaymentTimeline` helper from S122.
+ */
+export function renderVendorSpendTimeline() {
+  const container = document.getElementById("vendorSpendTimeline");
+  if (!container) return;
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  // Build synthetic payments from vendor records
+  const payments = vendors
+    .filter((v) => (Number(v.paid) || 0) > 0 && (v.paidAt || v.dueDate || v.createdAt))
+    .map((v) => ({
+      vendorId: v.id,
+      amount: Number(v.paid) || 0,
+      paidAt: v.paidAt || v.dueDate || v.createdAt || "",
+    }));
+
+  const points = buildPaymentTimeline(payments);
+  if (points.length === 0) {
+    container.textContent = t("vendor_spend_no_data");
+    return;
+  }
+
+  const w = 340;
+  const h = 120;
+  const padL = 45;
+  const padB = 20;
+  const chartW = w - padL - 8;
+  const chartH = h - padB - 14;
+  const maxY = Math.max(points[points.length - 1].cumulative, 1);
+
+  const scaleX = (/** @type {number} */ i) =>
+    padL + (i / Math.max(points.length - 1, 1)) * chartW;
+  const scaleY = (/** @type {number} */ val) =>
+    h - padB - (val / maxY) * chartH;
+
+  const linePts = points.map((p, i) => `${scaleX(i)},${scaleY(p.cumulative)}`).join(" ");
+  const title = t("vendor_spend_timeline_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escStr(title)}"><title>${_escStr(title)}</title>`;
+  if (points.length > 1) {
+    svg += `<polyline points="${linePts}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;
+  }
+  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0].date}</text>`;
+  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1].date}</text>`;
+  svg += `<text x="${w / 2}" y="12" font-size="10" fill="var(--text)" text-anchor="middle">₪${points[points.length - 1].cumulative.toLocaleString()}</text>`;
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/dates/escaped strings
+}
+
+/**
+ * Render top vendors by cost as horizontal bars in #vendorTopCost.
+ */
+export function renderTopVendorsByCost() {
+  const container = document.getElementById("vendorTopCost");
+  if (!container) return;
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const top = topVendorsByCost(vendors, 5);
+  if (top.length === 0) {
+    container.textContent = "";
+    return;
+  }
+
+  const maxCost = Math.max(top[0].cost, 1);
+  const barH = 28;
+  const gap = 6;
+  const labelW = 90;
+  const barMaxW = 160;
+  const w = labelW + barMaxW + 80;
+  const h = top.length * (barH + gap);
+  const title = t("vendor_top_cost_title");
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escStr(title)}"><title>${_escStr(title)}</title>`;
+  top.forEach((v, i) => {
+    const y = i * (barH + gap);
+    const barW = Math.max((v.cost / maxCost) * barMaxW, 2);
+    svg += `<text x="0" y="${y + 18}" font-size="11" fill="var(--text)">${_escStr(v.name)}</text>`;
+    svg += `<rect x="${labelW}" y="${y + 2}" width="${barW}" height="${barH - 4}" fill="var(--accent,#8b5cf6)" rx="4" opacity="0.85"/>`;
+    svg += `<text x="${labelW + barW + 6}" y="${y + 18}" font-size="11" fill="var(--text)">₪${v.cost.toLocaleString()}</text>`;
+  });
+  svg += `</svg>`;
+  container.innerHTML = svg; // safe: numbers/escaped vendor names
 }

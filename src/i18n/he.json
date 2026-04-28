@@ -1288,5 +1288,8 @@
   "rsvp_outreach_opened": "נפתחו",
   "rsvp_outreach_responded": "הגיבו",
   "rsvp_outreach_confirmed": "אישרו",
-  "rsvp_outreach_conversion": "שיעור המרה"
+  "rsvp_outreach_conversion": "שיעור המרה",
+  "vendor_spend_timeline_title": "ציר זמן תשלומים",
+  "vendor_spend_no_data": "אין נתוני תשלומים עדיין",
+  "vendor_top_cost_title": "ספקים מובילים לפי עלות"
 }
