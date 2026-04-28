@@ -190,8 +190,18 @@ export function register() {
   on("rosAddItem", () => rosAddItem());
   on("rosResetDefault", () => rosResetDefault());
 
-  // ── Print preview modal (S149) ──
-  on("openPrintPreview", () => openModal("printPreviewModal"));
+  // ── Print preview modal (S149 / S204) ──
+  on("openPrintPreview", () => {
+    openModal("printPreviewModal");
+    // Auto-render first section after modal DOM is injected.
+    requestAnimationFrame(() => {
+      const sel = /** @type {HTMLSelectElement|null} */ (
+        document.getElementById("printSectionSelect")
+      );
+      const pane = document.getElementById("printPreviewPane");
+      if (sel && pane) pane.innerHTML = buildPreviewHtml(sel.value);
+    });
+  });
   on("previewPrintSection", () => {
     const sel = /** @type {HTMLSelectElement|null} */ (
       document.getElementById("printSectionSelect")
