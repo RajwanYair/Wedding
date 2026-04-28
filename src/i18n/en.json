@@ -1200,5 +1200,19 @@
   "checkin_qr_badge_page_title": "Guest QR Check-in Badges",
   "theme_picker_title": "Color theme",
   "theme_picker_desc": "Choose the app design theme",
-  "theme_applied": "Theme applied"
+  "theme_applied": "Theme applied",
+  "theme_customizer_title": "Customization",
+  "theme_customizer_desc": "Adjust colors, border radius, and glass effects",
+  "theme_vars_reset": "Reset",
+  "theme_vars_export": "Export",
+  "theme_vars_import": "Import",
+  "theme_var_primary": "Primary color",
+  "theme_var_secondary": "Secondary color",
+  "theme_var_accent": "Accent color",
+  "theme_var_background": "Background",
+  "theme_var_radius": "Border radius",
+  "theme_var_blur": "Glass blur",
+  "theme_var_opacity": "Opacity",
+  "theme_import_error": "Failed to import theme file",
+  "theme_import_success": "Theme imported successfully"
 }

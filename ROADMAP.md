@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v12.5.6
+# Wedding Manager — Roadmap v12.7.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -6,20 +6,30 @@
 
 This document is a **deep, first-principles re-evaluation** of every significant decision in this
 project — including the ones previously labelled "clean" or "done". Every layer is audited from
-scratch: frontend stack, backend, language, docs, code methods, architecture, configuration, tools,
-external sources and APIs, database, and infrastructure. The goal is to build, ship, and defend a
-**best-in-class Hebrew-first RTL wedding management application** — open-source, offline-capable,
-WhatsApp-native, privacy-respecting, self-hostable in one click.
+scratch: **frontend, backend, code language, docs, tools, configuration, external APIs, database,
+infrastructure, build, deploy, and observability**. Nothing is sacred. The goal is to build, ship,
+and defend a **best-in-class Hebrew-first RTL wedding management application** — open-source,
+offline-capable, WhatsApp-native, privacy-respecting, AI-optional, self-hostable in one click.
 
+For v12.7.0 we re-opened ten further decisions that prior roadmaps had treated as settled
+(bundler, package manager, CSS preprocessor, hosting, code language, AI runtime, monitoring vendor,
+docs format, search runtime, native shell). The verdict matrix in §2 reflects every reconsideration.
 Nothing is silently dropped. Items still relevant from prior roadmaps are consolidated here.
 
 ---
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2026-04-27, v12.5.6):** 2 512 tests passing · 0 lint errors · ~45 KB gzip bundle ·
-WCAG 2.2 AA · Lighthouse ≥ 95 · 7 GitHub Actions workflows · CodeQL on · OpenSSF Scorecard +
-SBOM + Trivy live · Node 22 LTS in CI + `.nvmrc` · GitHub Pages deploy. Strong foundation.
+**State (2026-04-28, v12.7.0):** **2 756 tests passing** across 196 files · 0 lint errors / 0 warnings
+· ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
+Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
+CI + `.nvmrc` · GitHub Pages deploy · **4 locales** (HE primary · EN · AR · FR · ES scaffold) · 22
+Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
+Sprints 118–137 complete (Cluster V): ICU MessageFormat, theme.json export, print prep, notification
+centre, vendor analytics, RSVP funnel, budget burndown, run-of-show editor, What's New engine, CDN
+image builder, DNS CNAME helpers, deploy-button URLs, Lighthouse-CI config, theme export/import,
+workspace RBAC, plugin manifest validator, public website builder data model, FR locale bootstrap,
+Capacitor config builder, ES locale scaffold.
 
 **The one decision that matters most:** flip `BACKEND_TYPE` from `"sheets"` to `"supabase"`.
 This single line of code unblocks every other capability in this roadmap. Three major versions
@@ -68,30 +78,35 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v12.5.6 · 2026-04-27
+### Actual state — v12.7.0 · 2026-04-28
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **2 512 passing · 155 files · 0 Node warnings** | ✅ |
-| TypeScript errors | **134** (was 157; trending down via JSDoc fixes) | ⚠ |
-| Dead exports | **82** (was 117; 84 pre-S85, -2 via S86) | ⚠ |
+| Tests | **2 756 passing · 196 files · 0 Node warnings** | ✅ |
+| TypeScript errors | trending down via JSDoc-strict | ⚠ ratchet active |
+| Dead exports | tracked via `audit:dead` (baseline ratchet) | ⚠ ratchet active |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
 | Sections | **19** modules · **18** templates · **8** modals | ✅ |
-| Services | **62** files (~3× healthy max) | ⚠ consolidation needed |
-| Repositories | **11** files | ✅ |
-| Handlers | **6** files | ✅ |
-| Utilities | **23** files (~15 wired, ~8 dormant) | ⚠ |
-| i18n keys (HE = primary) | **1 193** keys × 2 locales (HE + EN) | ✅ HE/EN · ⚠ AR/RU stub |
+| Services | **82** files | ⚠ target ≤ 25 (Phase B1) |
+| Repositories | mandatory data path | ✅ |
+| Handlers | clean separation | ✅ |
+| Utilities | wired/built ratio improving each cluster | ⚠ |
+| i18n keys (HE = primary) | **1 201** keys × 5 locales (HE · EN · AR · FR · ES scaffold) | ✅ HE/EN/AR · ⚠ FR/ES translation |
 | DB migrations | **22** Supabase migrations | ✅ |
-| Active backend | `BACKEND_TYPE = "sheets"` · **Supabase wired but not primary** | ❌ P0 |
-| Auth tokens | **Plaintext** in `localStorage` | ❌ P0 |
+| Active backend | `BACKEND_TYPE = "sheets"` · Supabase wired but not primary | ❌ P0 (flip in v13) |
+| Auth tokens | plaintext in `localStorage` | ❌ P0 (encrypt in v13) |
 | Bundle | ~45 KB gzip · hard CI gate ≤ 60 KB | ✅ |
 | Node version | **22 LTS** in CI matrix + `.nvmrc` | ✅ |
-| Supply-chain | OpenSSF Scorecard · CycloneDX SBOM · Trivy weekly · CodeQL · Dependabot | ✅ |
+| Supply-chain | OpenSSF Scorecard · CycloneDX SBOM · Trivy weekly · CodeQL · Dependabot grouped | ✅ |
 | Auth providers | Google · Facebook · Apple OAuth + email allowlist + anonymous | ⚠ 3 SDKs to consolidate |
 | Service Worker | precache + memory write queue | ⚠ in-memory queue lost on crash |
 | Realtime | Supabase Realtime wired but **idle** | ⚠ no UI |
-| Edge functions | partial (push sender) | ⚠ expand |
+| Edge functions | partial (push sender) | ⚠ expand to WABA + AI proxy + GDPR + RSVP webhook |
+| Themes | 5 base + theme.json export/import + live-edit CSS vars (S119/S131) | ✅ |
+| Plugin surface | manifest validator (S133) — runtime not yet wired | ⚠ data model only |
+| Public website builder | data model + slug + sections (S134) — UI not wired | ⚠ data model only |
+| Workspace RBAC | role/permission helpers (S132) — UI not wired | ⚠ data model only |
+| Native shell | Capacitor config builder (S136) — no platform builds | ⚠ config only |
 | Deploy | GitHub Pages · <https://rajwanyair.github.io/Wedding> | ✅ |
 
 ### North Star
@@ -175,6 +190,26 @@ bundle ≤ 60 KB gzip · `npm run audit:security` → 0 findings · i18n parity 
 | 58 | Lighthouse CI | hard gate | active | **Keep + extend to per-locale runs** | RTL Lighthouse parity matters. |
 | 59 | Visual regression | Playwright pixel diff | smoke only | **Extend to per-section screenshot tests** | Catches CSS layer bleeds before review. |
 | 60 | Plugin surface | None | | **Defer to v17 — JSON manifest + dynamic import** | Don't open before core ships. |
+| 61 | Bundler choice | Vite 8 (current) | Rolldown / Bun / Turbopack also reviewed | **Stay Vite 8 → Vite 9 when stable** | Rolldown lands inside Vite; switching disturbs hard CI gates without payoff. |
+| 62 | Package manager | npm 11 + shared `node_modules/` | pnpm/Bun reviewed | **Stay npm + add `package-lock.json` audit gate** | Shared workspace works; Bun runtime is a separate question and currently **rejected** for production. |
+| 63 | CSS preprocessor | None (vanilla `@layer` + nesting) | Sass/PostCSS-preset-env reviewed | **Stay vanilla; add PostCSS only if a polyfill is unavoidable** | Native nesting + `@scope` + `light-dark()` covers everything. |
+| 64 | Hosting canonical | GH Pages | Cloudflare Pages / Vercel / Netlify reviewed | **Stay GH Pages canonical + Cloudflare proxy** | Free, durable, OSS-aligned. Self-hosters get one-click templates (D8). |
+| 65 | Code language | JS + JSDoc-strict + `types.d.ts` | Full TS migration reviewed and rejected | **Reject TS migration — drive `tsc --noEmit` → 0 with JSDoc** | Migration cost dominates benefit; types already enforced. |
+| 66 | Search runtime | None (planned `search-index.js`) | FlexSearch / minisearch / Pagefind reviewed | **Build pure: prefix + word-start + substring scoring** | Cmd-K does not need a 30 KB index lib for ≤ 5 K records. |
+| 67 | Monitoring vendor | none active | Sentry SaaS · Glitchtip self-host · Highlight reviewed | **Glitchtip self-host on Supabase as default; Sentry free tier opt-in** | Privacy-by-default; Glitchtip is Sentry-protocol-compatible. |
+| 68 | AI runtime | none active | OpenAI direct · Anthropic direct · Cloudflare Workers AI · Ollama reviewed | **BYO key via Cloudflare Worker proxy; Ollama opt-in for self-host** | No keys in client; multi-provider; local fallback. |
+| 69 | Docs format | Markdown + Diátaxis target | MkDocs · Astro Starlight · VitePress reviewed | **Stay Markdown; render with Starlight only if `docs/` grows past 60 files** | Markdown survives every renderer. |
+| 70 | Native shell | PWA (current) + Capacitor (planned, Phase D7) | Tauri / Expo / React Native reviewed | **Capacitor only — same code path; native NFC/haptics/share** | Tauri/Expo would force a parallel UI. |
+| 71 | Validator runtime | Valibot (current) | Zod / ArkType / TypeBox reviewed | **Stay Valibot — 1 KB vs Zod 13 KB; ArkType still pre-1.0** | Bundle moat. |
+| 72 | Date/time runtime | native `Intl.DateTimeFormat` + `Asia/Jerusalem` | Day.js / date-fns / Temporal polyfill reviewed | **Stay native; adopt `Temporal` once Stage 4 ships in V8/Spider** | Zero deps; locale-correct. |
+| 73 | Charts runtime | none (DOM-rendered SVG) | Chart.js · ApexCharts · uPlot reviewed | **Stay vanilla SVG — analytics charts are tiny; ≤ 60 KB gate** | We do not need a chart library. |
+| 74 | Markdown engine (in-app) | none (server-rendered docs only) | Marked · MicroMark · markdown-it reviewed | **Stay none; only the docs site needs MD** | Defer until in-app rich text is real. |
+| 75 | Image transforms | none active | Cloudflare Images · imgix · Bunny CDN reviewed | **Cloudflare Images via Worker (URL builder shipped S127)** | Free tier covers single-event; falls back to original URL. |
+| 76 | Auth fallback for self-host | Supabase Auth (planned) + email allowlist | Pocketbase · Authentik · Keycloak reviewed | **Stay Supabase + WebAuthn passkeys (Phase E2)** | Avoid second auth surface. |
+| 77 | Vendor catalogue | CRUD only | Walled directory · CSV/JSON import reviewed | **Open import (CSV/JSON) — no walled garden (Phase E3)** | OSS-aligned; no lock-in. |
+| 78 | Realtime CRDT | none | Yjs · Automerge reviewed | **Reject CRDT — Realtime channels + last-write-wins suffice for couple+planner edit volume** | CRDT cost is not justified at our scale. |
+| 79 | Telemetry-free pledge | implicit | reviewed and **made explicit** | **No analytics in upstream build; opt-in self-host of Umami if user wishes** | Privacy moat. Documented in `docs/principles/no-telemetry.md`. |
+| 80 | Compliance posture | none formal | reviewed and scoped | **Phase F: GDPR + CCPA + LGPD pack — erasure, portability, audit log surfacing** | Required for EU/CA/BR self-host adoption. |
 
 ---
 
@@ -318,6 +353,15 @@ unlocks every capability after.
 | **Riley & Grey** | Premium animated transitions + typography | Lifts perceived quality without framework. |
 | **Bridebook** | Vendor SLA scoring + regional budget benchmarks | Planner-grade analytics. |
 | **OpenAI / Claude / Gemini** | Invitation copy, seating CSP, FAQ bot, RSVP photo extraction | Edge-function proxy; BYO key; opt-in. |
+| **Withjoy 2026** | Co-edit document model — both partners edit any field, conflict surfacing | Realtime channels already wired. |
+| **The Knot 2026** | Vendor inbox + structured replies (templated) | Builds on `notification-centre.js` (S121). |
+| **Eventbrite Day-of** | Offline-first kiosk with badge print + buffer flush on reconnect | `qr-code.js`+`nfc.js` shipped; needs UI. |
+| **Notion 2026 AI** | Inline ⌘K AI commands inside any field | Cmd-K palette (S109) extended with AI actions. |
+| **Linear / Height** | Keyboard-first power user workflow + hash-deep-linkable filters | Adopt after pushState router (Phase A5). |
+| **GitHub Projects** | Saved views + URL-encoded filter state | Matches our store-driven URL params plan. |
+| **Loops.so** | Scheduled message campaigns + `since`/`until` triggers | WABA Cloud API (Phase C2) makes this cheap. |
+| **Cal.com** | Public-page builder with theme tokens + slug + custom domain | Matches `website-builder.js` (S134) + DNS helper (S128). |
+| **Stripe Apps platform** | Plugin manifest + permission scopes + sandboxed runtime | Matches `plugin-manifest.js` (S133) — runtime still pending. |
 
 ### 5.4 Technical stack benchmark
 
@@ -725,6 +769,65 @@ in plaintext. Back button works. Production errors are visible.
 | 129 | One-click Vercel + Cloudflare + Netlify deploy templates | M |
 | 130 | LH-CI per locale + visual regression per section sweep | M |
 
+### Cluster VI — Phase D platform scaffolding (Sprints 118–137 — **complete in v12.6.0 / v12.7.0**)
+
+| # | Sprint | Status |
+| --- | --- | --- |
+| 118 | ICU MessageFormat plurals + gender (`src/utils/icu-format.js`) | ✅ v12.6.0 |
+| 119 | Live theme variable editor (`src/services/theme-vars.js`) | ✅ v12.6.0 |
+| 120 | Print preparation pipeline (`src/services/print-rows.js`) | ✅ v12.6.0 |
+| 121 | Notification centre (`src/services/notification-centre.js`) | ✅ v12.6.0 |
+| 122 | Vendor payment timeline (`src/services/vendor-timeline.js`) | ✅ v12.6.0 |
+| 123 | RSVP funnel (`src/services/rsvp-funnel.js`) | ✅ v12.6.0 |
+| 124 | Budget burndown + projection (`src/services/budget-projection.js`) | ✅ v12.6.0 |
+| 125 | Run-of-show editor (`src/services/run-of-show.js`) | ✅ v12.6.0 |
+| 126 | What's New decision engine (`src/services/whats-new-engine.js`) | ✅ v12.6.0 |
+| 127 | Cloudflare CDN image URL builder (`src/utils/cdn-image.js`) | ✅ v12.6.0 |
+| 128 | DNS CNAME helpers (`src/utils/dns-cname.js`) | ✅ v12.7.0 |
+| 129 | One-click deploy URL builders (`src/utils/deploy-buttons.js`) | ✅ v12.7.0 |
+| 130 | Lighthouse-CI per-locale config builder (`src/utils/lhci-config.js`) | ✅ v12.7.0 |
+| 131 | theme.json export/import (`src/services/theme-export.js`) | ✅ v12.7.0 |
+| 132 | Workspace RBAC helpers (`src/services/workspace-roles.js`) | ✅ v12.7.0 |
+| 133 | Plugin manifest validator (`src/services/plugin-manifest.js`) | ✅ v12.7.0 |
+| 134 | Public wedding website builder data model (`src/services/website-builder.js`) | ✅ v12.7.0 |
+| 135 | FR locale bootstrap + locale-scaffold helpers (`src/utils/locale-bootstrap.js`, `src/i18n/fr.json`) | ✅ v12.7.0 |
+| 136 | Capacitor config builder (`src/utils/capacitor-config.js`) | ✅ v12.7.0 |
+| 137 | ES locale scaffold (`src/i18n/es.json`) | ✅ v12.7.0 |
+
+### Cluster VII — Phase D wiring + Phase E prep (Sprints 138–160, target v12.8 → v13.0)
+
+> Cluster V/VI shipped *data models, builders, and pure helpers*. Cluster VII wires them into UI
+> and closes Phase A's P0 prerequisites in parallel.
+
+| # | Sprint | Effort | Wires |
+| --- | --- | --- | --- |
+| 138 | Theme picker UI consuming `theme-vars` + `theme-export` (Settings → Themes tab) | M | S119 + S131 |
+| 139 | Public website builder section (preview iframe + section toggles) | L | S134 |
+| 140 | Workspace switcher + role badges in nav (consumes `workspace-roles`) | M | S132 |
+| 141 | Plugin install/list UI in Settings (validates manifest + permission prompt) | L | S133 |
+| 142 | Capacitor build job in CI (Android AAB + iOS IPA on tag) | L | S136 |
+| 143 | Notification centre dropdown wired into header bell | S | S121 |
+| 144 | Run-of-show editor section + drag reorder + overlap warnings | M | S125 |
+| 145 | Budget burndown + projection chart on Budget section | S | S124 |
+| 146 | RSVP funnel chart on Analytics section | S | S123 |
+| 147 | Vendor timeline chart on Vendors section | S | S122 |
+| 148 | What's New modal triggered on version bump | XS | S126 + `core/whats-new.js` |
+| 149 | Print preview modal + per-section template picker | M | S120 |
+| 150 | ICU plurals migration sweep — replace ad-hoc `count + ' ' + label` strings | M | S118 |
+| 151 | Cloudflare image URLs adopted for any user-uploaded image | S | S127 |
+| 152 | Deploy-button widget on README + Settings (Vercel + Netlify + Cloudflare + Render) | XS | S129 |
+| 153 | LH-CI workflow per-locale via `buildLighthouseConfig()` | S | S130 |
+| 154 | DNS instructions UI in Public-website builder Settings tab | S | S128 |
+| 155 | FR + ES translation completion pass — community pipeline kickoff doc | M | S135 + S137 |
+| 156 | Glitchtip self-host edge proxy + opt-in DSN env var (Phase A7 prep) | M | new |
+| 157 | `secure-storage.js` activation — AES-GCM PII at rest (Phase A4 prep) | M | new |
+| 158 | Persistent IDB write queue (Phase B5 prep — landing earlier than B because P0) | L | new |
+| 159 | `pushState` router scaffold under feature flag (Phase A5 prep) | M | new |
+| 160 | `BACKEND_TYPE = "supabase"` dual-write rehearsal harness (Phase A1 prep) | L | new |
+
+**Cluster VII OKR:** *Every Phase D builder reachable from a UI · Phase A P0 prerequisites scaffolded
+behind feature flags · Cluster I sprints (78–86) re-validated · 2 950+ tests · zero regressions.*
+
 ---
 
 ## 11. Migration Playbooks
@@ -1003,8 +1106,10 @@ Storage + Realtime for development without an account.
 | v12.5.3 | Released 2026-04-27 | TSC accuracy + dead-export reduction | TSC 157→134; dead exports 117→85; repository JSDoc fixes |
 | v12.5.4 | Released 2026-04-27 | Node LTS + supply chain + theme picker | Sprints 67–76: `.nvmrc` 22 LTS; SBOM + Trivy + Scorecard; rotation runbook; arch enforcement; live theme picker |
 | **v12.5.5** | Released 2026-04-27 | Roadmap deep rethink | Sprint 77: ROADMAP rewrite — verdict matrix, lessons learned, sprint backlog 77–130, cost profile, hybrid edge runtime decision, JSDoc-strict (revised TS path) |
-| **v12.5.6** | **This release** | **Backend convergence prep** | **Sprints 78–87: Sentry telemetry opt-out, coverage gate ratchet, eslint-plugin-jsdoc strict, mermaid-validate CI, supabase-lint CI, admin_users migration, dead-export 86→82, service consolidation (audit-pipeline + share-service merged), secure-storage status API** |
-| v12.6.x | Candidate patches | Monitoring + coverage gate | Sprints 78–86: Sentry, coverage gate, JSDoc-plugin, mermaid-validate, db lint, admin table, service consolidation |
+| v12.5.6 | Released 2026-04-27 | Backend convergence prep | Sprints 78–87 |
+| **v12.6.0** | Released 2026-04-28 | Cluster V — Locales, charts & polish | Sprints 118–127: ICU MessageFormat, theme-vars editor, print pipeline, notification centre, vendor timeline, RSVP funnel, budget burndown, run-of-show, What's New engine, CDN image builder |
+| **v12.7.0** | **This release** | **Cluster VI — Phase D platform scaffolding** | **Sprints 128–137: DNS CNAME helpers, deploy-button URLs, LHCI per-locale, theme.json export/import, workspace RBAC, plugin manifest validator, public website builder, FR + ES locale bootstrap, Capacitor config builder; new ROADMAP rethink (sections §0/§1/§2 OD-21..OD-30, §5 expanded harvest, §10 Cluster VII)** |
+| v12.8.x | Candidate | Cluster VII — Phase D UI wiring | Sprints 138–155: theme picker UI, website builder UI, workspace switcher, plugin install UI, Capacitor CI, notification dropdown, run-of-show + chart sections, ICU sweep |
 | **v13.0.0** | Next major | Backend convergence + P0 security | Sprints 87–96: encryption, IDB queue, pushState router, drop FB/GIS/AppleID, Supabase Auth, **flip BACKEND_TYPE = supabase** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
@@ -1014,5 +1119,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2026-04-27 · v12.5.6 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-04-28 · v12.7.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*

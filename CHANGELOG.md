@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [12.7.0] — 2026-04-28
+
+> **Sprints 128–137: Phase D platform scaffolding (Cluster VI) + ROADMAP deep-rethink.**
+>
+> Pure data-layer builders for one-click deploy, multi-tenant RBAC, plugin
+> manifests, public-website builder, theme export/import, and additional
+> locale scaffolds. ROADMAP.md reopened ten more decisions (OD-21..OD-30 →
+> rows 61–80) and added a Cluster VII wiring backlog (Sprints 138–160).
+
+### Added (12.7.0)
+
+- **S128** — `src/utils/dns-cname.js` `buildCnameInstructions()`, `validateCustomDomain()`,
+  `buildVerificationToken()`: DNS CNAME instructions + apex/subdomain detection +
+  verification-token helpers for vanity domains.
+- **S129** — `src/utils/deploy-buttons.js` `buildDeployButton()` for Vercel / Netlify /
+  Cloudflare Pages / Render one-click deploy URLs with repo + env-var presets.
+- **S130** — `src/utils/lhci-config.js` `buildLighthouseConfig()`: Lighthouse-CI config
+  builder with per-locale URL fan-out and assertion presets.
+- **S131** — `src/services/theme-export.js` `exportThemeJson()` / `importThemeJson()` /
+  `validateThemeJson()`: theme.json import/export with version pinning and CSS-var sanitization.
+- **S132** — `src/services/workspace-roles.js` `WORKSPACE_ROLES`, `hasPermission()`,
+  `assignRole()`, `listMembers()`: workspace RBAC helpers (owner/admin/editor/viewer).
+- **S133** — `src/services/plugin-manifest.js` `validateManifest()`, `permissionScopes()`:
+  Stripe-Apps-style plugin manifest validator with scoped permissions.
+- **S134** — `src/services/website-builder.js` `buildWebsiteModel()`,
+  `validateWebsiteModel()`, `slugify()`, default section catalogue: public wedding-website
+  data model + slug generator.
+- **S135** — `src/utils/locale-bootstrap.js` + `src/i18n/fr.json`: locale-scaffold
+  helpers (`buildLocaleTemplate()`, `mergeLocaleStub()`) and FR locale bootstrap.
+- **S136** — `src/utils/capacitor-config.js` `buildCapacitorConfig()`: Capacitor
+  config-file builder for Android/iOS native shells.
+- **S137** — `src/i18n/es.json`: ES locale scaffold using `mergeLocaleStub()`.
+
+### Changed (12.7.0)
+
+- **ROADMAP.md** rewritten as a best-in-class first-principles rethink:
+  §0 executive summary refreshed for v12.7.0, §1 actual-state metrics table refreshed,
+  §2 decision matrix extended with rows 61–80 (OD-21..OD-30 — bundler, package manager,
+  CSS preprocessor, hosting, code language, search runtime, monitoring vendor, AI
+  runtime, docs format, native shell, validator, date/time, charts, markdown engine,
+  image transforms, self-host auth, vendor catalogue, CRDT, telemetry-free pledge,
+  compliance posture), §5 competitive harvest extended (Withjoy 2026 co-edit, Knot 2026
+  vendor inbox, Eventbrite kiosk, Notion AI ⌘K, Linear keyboard-first, GitHub Projects
+  saved views, Loops.so campaigns, Cal.com page builder, Stripe Apps plugin platform),
+  §10 Cluster VI sprint backlog (118–137) marked ✅, new Cluster VII (138–160) added,
+  §16 release line updated.
+- **`scripts/sync-version.mjs`** propagated version 12.7.0 to `src/core/config.js`,
+  `public/sw.js`, `README.md`, `.github/copilot-instructions.md`,
+  `.github/copilot/config.json`, `.github/instructions/workspace.instructions.md`,
+  `.github/workflows/ci.yml`, `tests/wedding.test.mjs`, `AGENTS.md`,
+  `ARCHITECTURE.md`, `src/types.d.ts`.
+
 ## [12.6.0] — 2026-04-28
 
 > **Sprints 118–127: Locales, charts & polish (Cluster V).**

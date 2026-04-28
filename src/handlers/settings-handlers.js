@@ -32,6 +32,9 @@ import {
   clearAuditLog,
   clearErrorLog,
   generateRsvpQrCode,
+  resetThemeVars,
+  exportThemeToJson,
+  importThemeFromJson,
 } from "../sections/settings.js";
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
@@ -222,4 +225,8 @@ export function register() {
     }
     showToast(t("theme_applied"), "success");
   });
+  // Sprint 138 — Theme vars customizer
+  on("resetThemeVars", () => resetThemeVars());
+  on("exportThemeJson", () => exportThemeToJson());
+  on("importThemeJson", () => importThemeFromJson());
 }

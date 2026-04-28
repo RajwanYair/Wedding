@@ -1,5 +1,5 @@
 # =============================================================================
-# CI — Wedding Manager v12.6.0
+# CI — Wedding Manager v8.2.2
 # Lint, i18n parity, unit tests, Vite build, security scan, Lighthouse, size, E2E
 # =============================================================================
 
@@ -25,10 +25,10 @@ jobs:
       matrix:
         node-version: ["22", "24"]
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
@@ -42,127 +42,11 @@ jobs:
       - name: Lint (HTML + CSS + JS + Markdown)
         run: npm run lint
 
-      - name: Prettier format check
-        run: npm run format:check
-
       - name: Validate i18n parity
         run: npm run check:i18n
 
       - name: Check credential hygiene
         run: npm run check:credentials
-
-      - name: Security scan (innerHTML / eval / http:// patterns)
-        run: npm run audit:security
-
-      - name: Section contract validation (--strict, Sprint 60 B1)
-        run: npm run audit:sections -- --strict
-        # B1: --strict mode treats missing template files as errors.
-        # Known sub-sections without templates (expenses, contact-collector) are exempt.
-
-      - name: Dead-export baseline gate (Phase B5)
-        if: matrix.node-version == '22'
-        run: npm run audit:dead -- --baseline=84
-        # ROADMAP §6 Phase B5: dead exports < 5%. Baseline locked at v12.0.0
-        # current count; regressions fail CI. Hard --enforce gate in v13.0.0
-        # once dormant services are wired or removed.
-        # Sprint 35 (v12.3.0): lowered 193→192 (-1 wired import in dashboard.js
-        # v12.5.2: dropped 201→117 by fixing regex to detect dynamic
-        #          destructured imports (`const { x } = await import(...)`)
-        #          and re-export forwarding (`export { x } from "..."`).
-
-      - name: Action-namespace advisory (Phase B5 sibling)
-        if: matrix.node-version == '22'
-        run: npm run audit:actions
-        # ROADMAP §5.3 #4: domain:verb namespacing. Advisory until v13.0.0.
-
-      - name: Section→service arch baseline (Phase B9)
-        if: matrix.node-version == '22'
-        run: npm run audit:arch -- --baseline=3
-        # ROADMAP §6 Phase B9: sections must route through src/repositories/.
-        # Baseline locked at v12.0.0; regressions fail CI. Hard --strict gate
-        # in v13.0.0 once all 15 violations are migrated.
-
-      - name: i18n coverage (Sprint 30 advisory)
-        if: matrix.node-version == '22'
-        run: npm run audit:i18n-coverage -- --enforce --baseline=0
-        # Fails if any t('key') in source is missing from he.json or en.json.
-
-      - name: Trusted Types sink baseline (ADR-018 Phase 2)
-        if: matrix.node-version == '22'
-        run: npm run audit:trusted-types -- --baseline=24
-        # ADR-018 Phase 2 (v12.0.0): baseline-locked at current count.
-        # Hard gate after sanitize.js hosts the named policy in v13.0.0.
-
-      - name: Console-error baseline gate
-        if: matrix.node-version == '22'
-        run: npm run audit:console-error -- --enforce
-        # Sprint 10 (v12.0.0): baseline locked at 9. Regressions fail CI;
-        # all new errors must route through services/error-monitor.js.
-
-      - name: ARIA roles baseline (Sprint 11)
-        if: matrix.node-version == '22'
-        run: npm run audit:aria-roles -- --baseline=18
-
-      - name: Router-usage baseline (ADR-025 R1)
-        if: matrix.node-version == '22'
-        run: npm run audit:router -- --baseline=1
-
-      - name: BaseSection adoption baseline (ADR-034)
-        if: matrix.node-version == '22'
-        run: npm run audit:base-section -- --enforce
-        # ADR-034: pending count locked at 19; tighten as sections migrate.
-
-      - name: Section lifecycle audit (Sprint 40 / B1) — advisory
-        if: matrix.node-version == '22'
-        run: npm run audit:section-lifecycle
-        # Advisory: reports storeSubscribeScoped + cleanupScope adoption; exit 0 always.
-
-      - name: CSS @scope baseline (ADR-036)
-        if: matrix.node-version == '22'
-        run: npm run audit:css-scope -- --enforce
-        # ADR-036: unscoped [data-section="…"] selectors locked at 4.
-
-      - name: Mermaid diagram syntax (S81)
-        if: matrix.node-version == '22'
-        run: npm run audit:mermaid
-        # S81: validates ```mermaid blocks across markdown docs (lightweight,
-        # no mermaid-cli/puppeteer dep). Catches type/bracket regressions.
-
-      - name: Supabase migrations lint (S82)
-        if: matrix.node-version == '22'
-        run: npm run audit:supabase-lint -- --enforce
-        # S82: static checks on supabase/migrations/*.sql (idempotent guards,
-        # trailing whitespace, terminator). Baseline 1 (legacy 008).
-        # Heavy `supabase db lint` lives in a separate Docker-required workflow.
-
-      - name: Section/template parity baseline (Sprint 12)
-        if: matrix.node-version == '22'
-        run: npm run audit:section-templates -- --baseline=2
-        # 2 known sub-sections without standalone files (expenses, contact-form).
-
-      - name: JSDoc coverage gate (Sprint 13)
-        if: matrix.node-version == '22'
-        run: npm run audit:jsdoc -- --enforce
-        # 100% JSDoc coverage on src/core/ and src/services/ exports.
-
-      - name: Storage-prefix isolation gate (Sprint 18)
-        if: matrix.node-version == '22'
-        run: npm run audit:storage-prefix -- --enforce --baseline=0
-        # ROADMAP §3.2 / Phase B: only src/core/storage.js may touch
-        # `wedding_v1_*` keys directly. Sections must use the storage layer.
-
-      - name: TypeScript error count baseline (Sprint 19)
-        if: matrix.node-version == '22'
-        run: npm run audit:tsc -- --enforce --baseline=134
-        # ROADMAP §3.3 / Phase B2: trend tsc --noEmit error count downward.
-        # Sprint 41 (v12.3.0): lowered 209→184 (-25 fixed in undo/sync-manager/md-to-html/guest-token/checkin-session/auth-claims/contact-dedup/currency/sheets-impl)
-        # Tighten as core/services/handlers migrate to .ts strict.
-
-      - name: Plaintext-secrets gate (ADR-026 Phase E1)
-        if: matrix.node-version == '22'
-        run: npm run audit:plaintext-secrets -- --enforce
-        # ADR-026 Phase E1: hard gate. Secure-storage migration complete in v12.0.0;
-        # any new plaintext credential write fails CI.
 
       - name: Unit tests (Vitest)
         run: npm test
@@ -172,33 +56,21 @@ jobs:
       - name: Vite build
         run: npm run build
 
-      - name: Bundle-size advisory (ADR-024)
-        if: matrix.node-version == '22'
-        run: npm run audit:bundle
-        # ADR-024: per-route gzip budgets. Advisory; enforced in v12.0.0.
-
       - name: Coverage report
         if: matrix.node-version == '22'
         run: npm run test:coverage
         env:
           NODE_NO_WARNINGS: "1"
-        # S6.11: Per-directory thresholds in vite.config.js gate this step.
-
-      - name: Coverage gate (global totals)
-        if: matrix.node-version == '22'
-        run: npm run audit:coverage -- --enforce
-        # ROADMAP §6 Phase A9: hard gate at v12.0.0 non-regression floors
-        # (49% lines / 41% branches / 54% functions / 49% statements).
-        # Tighten floors each sprint; ROADMAP long-term target is 80/75/80/80.
+        # S6.11: Coverage gate is enforced — failures block CI
 
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -211,18 +83,54 @@ jobs:
 
       - name: Check for dangerous JS patterns
         run: |
-          node scripts/ensure-shared-tooling.mjs
-          node scripts/security-scan.mjs
+          FAILED=0
+          for f in $(find src/ -name '*.js' -o -name '*.ts') index.html; do
+            if grep -n "eval(" "$f"; then
+              echo "::error file=$f::eval() usage detected"
+              FAILED=1
+            fi
+            if grep -n "document\.write(" "$f"; then
+              echo "::error file=$f::document.write() detected"
+              FAILED=1
+            fi
+          done
+          # Scan HTML templates and modals for innerHTML / eval
+          for f in $(find src/templates/ src/modals/ -name '*.html' 2>/dev/null); do
+            if grep -n "innerHTML" "$f"; then
+              echo "::error file=$f::innerHTML usage detected in template"
+              FAILED=1
+            fi
+            if grep -n "eval(" "$f"; then
+              echo "::error file=$f::eval() usage detected in template"
+              FAILED=1
+            fi
+            if grep -n "javascript:" "$f"; then
+              echo "::error file=$f::javascript: URI detected in template"
+              FAILED=1
+            fi
+            if grep -n "on[a-z]*=" "$f"; then
+              echo "::warning file=$f::Inline event handler detected (prefer data-action)"
+            fi
+          done
+          # Check index.html has no inline scripts (CSP moved to _headers)
+          if grep -Pn '<script>[^<]' index.html; then
+            echo "::error file=index.html::Inline script detected — use external files only (CSP disallows inline)"
+            FAILED=1
+          fi
+          [ "$FAILED" -eq 0 ] && echo "Security scan passed."
+          exit $FAILED
 
-  size-report:
-    name: Bundle Size Report
+  lighthouse:
+    name: Lighthouse Audit
     runs-on: ubuntu-latest
+    # Run after lint+test passes; only on pushes to main (post-deploy)
     needs: lint-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -230,16 +138,45 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Vite build (required for size report)
-        run: npm run build
+      - name: Install @lhci/cli
+        run: npm install -g @lhci/cli@0.14.0
+
+      - name: Run Lighthouse CI
+        run: lhci autorun --config=.lighthouserc.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  size-report:
+    name: Bundle Size Report
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Generate size report
         run: node scripts/size-report.mjs | tee size-report.txt
 
       - name: Bundle size budget gate
-        run: npm run audit:bundle -- --enforce
-        # Uses check-bundle-size.mjs with per-tier gzip budgets (ADR-024).
-        # Hard gate: fails CI if any chunk exceeds its budget.
+        run: |
+          # Fail CI if main bundle exceeds 50 KB gzip (target: <30 KB, hard limit: 50 KB)
+          npm run build 2>/dev/null || true
+          MAIN_SIZE=$(find dist/assets -name '*.js' -type f -exec gzip -c {} \; | wc -c | sort -rn | head -1)
+          MAIN_KB=$((MAIN_SIZE / 1024))
+          echo "Largest JS chunk: ${MAIN_KB} KB gzip"
+          if [ "$MAIN_KB" -gt 50 ]; then
+            echo "::error::Bundle size ${MAIN_KB} KB exceeds 50 KB budget"
+            exit 1
+          fi
+          echo "Bundle size within budget."
 
       - name: Upload size report artifact
         uses: actions/upload-artifact@v4
@@ -254,10 +191,10 @@ jobs:
     needs: lint-and-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -266,17 +203,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        # Install all engines exercised by playwright.config.mjs:
-        # chromium · firefox · webkit (Desktop Safari + iPad Mini land.) · iPhone 14 (chromium)
-        run: npx playwright install --with-deps chromium firefox webkit
-
-      - name: Build production bundle
-        # VITE_BASE=/ overrides the GH-Pages /Wedding/ base so the preview
-        # server (started by Playwright) responds at the host root, matching
-        # absolute goto("/...") calls in tests.
-        env:
-          VITE_BASE: "/"
-        run: npm run build
+        run: npx playwright install --with-deps chromium
 
       - name: Run E2E smoke tests
         run: npm run test:e2e

@@ -32,6 +32,18 @@ import {
   getPreferences,
   updatePreferences,
 } from "../services/notification-preferences.js";
+import {
+  THEME_VARS,
+  sanitizeThemeVars,
+  applyThemeVars,
+  serializeThemeVars,
+  deserializeThemeVars,
+} from "../services/theme-vars.js";
+import {
+  exportThemeJson,
+  stringifyThemeJson,
+  importThemeJson,
+} from "../services/theme-export.js";
 
 /** @type {(() => void)[]} */
 const _unsubs = [];
@@ -54,6 +66,8 @@ export function mount(/** @type {HTMLElement} */ _container) {
   _renderPushCard();
   // Wire notification channel/event preferences (Sprint 56)
   _renderNotifPrefsCard();
+  // Wire theme customizer (Sprint 138)
+  _renderThemeVarsEditor();
 }
 
 export function unmount() {
@@ -841,6 +855,135 @@ export function getStoreSizes() {
       return { key, bytes };
     })
     .sort((a, b) => b.bytes - a.bytes);
+}
+
+// ── S138 — Theme Vars Customizer UI ───────────────────────────────────────
+
+const THEME_VARS_STORAGE_KEY = "wedding_v1_theme_vars";
+
+/** Load persisted custom vars from localStorage. */
+function _loadPersistedVars() {
+  try {
+    return deserializeThemeVars(localStorage.getItem(THEME_VARS_STORAGE_KEY));
+  } catch {
+    return {};
+  }
+}
+
+/** Persist and apply custom vars. */
+function _persistAndApplyVars(vars) {
+  const serialized = serializeThemeVars(vars);
+  localStorage.setItem(THEME_VARS_STORAGE_KEY, serialized);
+  applyThemeVars(vars);
+}
+
+/** Render the theme variable sliders / color inputs. */
+function _renderThemeVarsEditor() {
+  const container = document.getElementById("themeVarsEditor");
+  if (!container) return;
+  container.textContent = "";
+
+  const current = _loadPersistedVars();
+
+  for (const varDef of THEME_VARS) {
+    const row = document.createElement("div");
+    row.className = "theme-var-row";
+
+    const label = document.createElement("label");
+    label.className = "theme-var-label";
+    label.textContent = t(`theme_var_${varDef.label}`) || varDef.label;
+    label.setAttribute("for", `themeVar_${varDef.key}`);
+    row.appendChild(label);
+
+    if (varDef.type === "color") {
+      const input = document.createElement("input");
+      input.type = "color";
+      input.id = `themeVar_${varDef.key}`;
+      input.className = "theme-var-input";
+      input.value = current[varDef.key] || varDef.default;
+      input.addEventListener("input", () => {
+        const vars = { ..._loadPersistedVars(), [varDef.key]: input.value };
+        _persistAndApplyVars(vars);
+      });
+      row.appendChild(input);
+    } else {
+      const input = document.createElement("input");
+      input.type = "range";
+      input.id = `themeVar_${varDef.key}`;
+      input.className = "theme-var-input";
+      input.min = String(varDef.min ?? 0);
+      input.max = String(varDef.max ?? 100);
+      input.step = varDef.type === "number" ? "0.05" : "1";
+      const rawVal = current[varDef.key] || varDef.default;
+      input.value = String(Number.parseFloat(rawVal) || 0);
+
+      const valDisplay = document.createElement("span");
+      valDisplay.className = "theme-var-value";
+      valDisplay.textContent = input.value + (varDef.unit || "");
+
+      input.addEventListener("input", () => {
+        valDisplay.textContent = input.value + (varDef.unit || "");
+        const vars = { ..._loadPersistedVars(), [varDef.key]: input.value };
+        _persistAndApplyVars(vars);
+      });
+      row.appendChild(input);
+      row.appendChild(valDisplay);
+    }
+    container.appendChild(row);
+  }
+}
+
+/** Reset theme vars to defaults. */
+export function resetThemeVars() {
+  localStorage.removeItem(THEME_VARS_STORAGE_KEY);
+  const defaults = {};
+  for (const v of THEME_VARS) defaults[v.key] = v.default;
+  applyThemeVars(defaults);
+  _renderThemeVarsEditor();
+}
+
+/** Export current theme as downloadable JSON file. */
+export function exportThemeToJson() {
+  const vars = _loadPersistedVars();
+  const envelope = exportThemeJson(vars, { name: "My Wedding Theme" });
+  const json = stringifyThemeJson(envelope);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "theme.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/** Import theme from a JSON file selected by user. */
+export function importThemeFromJson() {
+  const input = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("themeJsonFileInput")
+  );
+  if (!input) return;
+  input.value = "";
+  input.addEventListener(
+    "change",
+    () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = importThemeJson(/** @type {string} */ (reader.result));
+        if (!result.ok) {
+          showToast(t("theme_import_error"), "error");
+          return;
+        }
+        _persistAndApplyVars(result.envelope.vars);
+        _renderThemeVarsEditor();
+        showToast(t("theme_import_success"), "success");
+      };
+      reader.readAsText(file);
+    },
+    { once: true },
+  );
+  input.click();
 }
 
 // ── S18d — Push Notification UI ───────────────────────────────────────────

@@ -351,6 +351,25 @@
       </div>
     </div>
 
+    <!-- Theme Customizer (Sprint 138) -->
+    <div class="settings-card">
+      <h3>🎛️ <span data-i18n="theme_customizer_title">התאמה אישית</span></h3>
+      <p class="section-desc" data-i18n="theme_customizer_desc">כוונן צבעים, רדיוס ואפקטי שקיפות</p>
+      <div id="themeVarsEditor" class="theme-vars-editor"></div>
+      <div class="theme-vars-actions u-mt-sm">
+        <button class="btn btn-secondary btn-small" data-action="resetThemeVars" type="button">
+          ↺ <span data-i18n="theme_vars_reset">איפוס</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="exportThemeJson" type="button">
+          📤 <span data-i18n="theme_vars_export">ייצוא</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="importThemeJson" type="button">
+          📥 <span data-i18n="theme_vars_import">ייבוא</span>
+        </button>
+      </div>
+      <input type="file" id="themeJsonFileInput" accept=".json" class="u-hidden" />
+    </div>
+
     <!-- App Info -->
     <div class="settings-card">
       <h3>ℹ️ <span>מידע</span></h3>

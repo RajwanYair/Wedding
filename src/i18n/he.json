@@ -1200,5 +1200,19 @@
   "checkin_qr_badge_page_title": "תגי QR לציון אורחים",
   "theme_picker_title": "ערכת צבעים",
   "theme_picker_desc": "בחר ערכת עיצוב לאפליקציה",
-  "theme_applied": "ערכת הצבעים שונתה"
+  "theme_applied": "ערכת הצבעים שונתה",
+  "theme_customizer_title": "התאמה אישית",
+  "theme_customizer_desc": "כוונן צבעים, רדיוס ואפקטי שקיפות",
+  "theme_vars_reset": "איפוס",
+  "theme_vars_export": "ייצוא",
+  "theme_vars_import": "ייבוא",
+  "theme_var_primary": "צבע ראשי",
+  "theme_var_secondary": "צבע משני",
+  "theme_var_accent": "צבע הדגשה",
+  "theme_var_background": "רקע",
+  "theme_var_radius": "עיגול פינות",
+  "theme_var_blur": "טשטוש זכוכית",
+  "theme_var_opacity": "שקיפות",
+  "theme_import_error": "שגיאה בייבוא קובץ ערכת נושא",
+  "theme_import_success": "ערכת נושא יובאה בהצלחה"
 }

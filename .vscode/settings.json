@@ -1,151 +1,149 @@
 {
-  // ── Editor ──
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "vscode.html-language-features",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "prettier.requireConfig": true,
-  "editor.tabSize": 2,
-  "editor.linkedEditing": true,
-  "editor.minimap.enabled": false,
-  "editor.wordWrap": "on",
+    // ── Editor ──
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.linkedEditing": true,
+    "editor.minimap.enabled": false,
+    "editor.wordWrap": "on",
 
-  // ── Files ──
-  "files.eol": "\n",
-  "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true,
-  "files.associations": {
-    "*.html": "html"
-  },
+    // ── Files ──
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.associations": {
+        "*.html": "html"
+    },
 
-  // ── HTML ──
-  "html.format.wrapLineLength": 120,
-  "html.format.indentInnerHtml": true,
+    // ── HTML ──
+    "html.format.wrapLineLength": 120,
+    "html.format.indentInnerHtml": true,
 
-  // ── Emmet ──
-  "emmet.includeLanguages": {
-    "html": "html"
-  },
+    // ── Emmet ──
+    "emmet.includeLanguages": {
+        "html": "html"
+    },
 
-  // ── Live Server ──
-  "liveServer.settings.donotShowInfoMsg": true,
-  "liveServer.settings.port": 5502,
-  "liveServer.settings.root": "/",
+    // ── Live Server ──
+    "liveServer.settings.donotShowInfoMsg": true,
+    "liveServer.settings.port": 5502,
+    "liveServer.settings.root": "/",
 
-  // ── Git ──
-  "git.autofetch": "all",
-  "git.autofetchPeriod": 300,
-  "git.enableSmartCommit": true,
-  "git.confirmSync": false,
+    // ── Git ──
+    "git.autofetch": "all",
+    "git.autofetchPeriod": 300,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
 
-  // ── GitHub Copilot ──
-  "github.copilot.enable": {
-    "*": true,
-    "html": true,
-    "javascript": true,
-    "css": true,
-    "markdown": true,
-    "yaml": true,
-    "json": true
-  },
-  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
-  "github.copilot.chat.organizationCustomAgents.enabled": true,
-  "github.copilot.chat.reviewSelection.instructions": [
-    {
-      "file": ".github/instructions/wedding.instructions.md"
-    }
-  ],
-  "chat.agent.enabled": true,
-  "chat.useCustomizationsInParentRepositories": true,
-  "chat.instructionFilesLocations": {
-    ".github/instructions": true,
-    ".github/copilot-instructions.md": true
-  },
-  "chat.promptFilesLocations": {
-    ".github/prompts": true
-  },
-  "chat.promptFilesRecommendations": true,
-  "chat.agentFilesLocations": {
-    ".github/agents": true
-  },
+    // ── GitHub Copilot ──
+    "github.copilot.enable": {
+        "*": true,
+        "html": true,
+        "javascript": true,
+        "css": true,
+        "markdown": true,
+        "yaml": true,
+        "json": true
+    },
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "github.copilot.chat.organizationCustomAgents.enabled": true,
+    "github.copilot.chat.reviewSelection.instructions": [
+        {
+            "file": ".github/instructions/wedding.instructions.md"
+        }
+    ],
+    "chat.agent.enabled": true,
+    "chat.useCustomizationsInParentRepositories": true,
+    "chat.instructionFilesLocations": {
+        ".github/instructions": true,
+        ".github/copilot-instructions.md": true
+    },
+    "chat.promptFilesLocations": {
+        ".github/prompts": true
+    },
+    "chat.promptFilesRecommendations": true,
+    "chat.agentFilesLocations": {
+        ".github/agents": true
+    },
 
-  // ── Spell Check ──
-  "cSpell.words": [
-    "rajwan",
-    "glassmorphism",
-    "whatsapp",
-    "rsvp",
-    "weddingmanager",
-    "skyway",
-    "markdownlint",
-    "htmlhint",
-    "stylelint",
-    "vapid",
-    "webpush",
-    "notificationclick",
-    "serviceworker",
-    "lighthouserc",
-    "playwright",
-    "chromium"
-  ],
-  // ── Search / Explorer ──
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/.git": true
-  },
-  "files.exclude": {
-    "**/node_modules": true
-  },
-  // ── Terminal ──
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
-  // ── ESLint ──
-  "eslint.enable": true,
-  "eslint.run": "onSave",
-  "eslint.validate": ["javascript"],
-  "eslint.options": {
-    "overrideConfigFile": "eslint.config.mjs"
-  },
-  "eslint.lintTask.enable": true,
-  "eslint.onIgnoredFiles": "off",
-  // ── Stylelint ──
-  "stylelint.enable": true,
-  "stylelint.validate": ["css"],
-  "stylelint.snippet": ["css"],
-  "stylelint.configFile": ".stylelintrc.json",
-  // ── markdownlint ──
-  "markdownlint.run": "onSave",
-  "markdownlint.config": {
-    "extends": ".markdownlint.json"
-  },
-  // ── Code actions on save ──
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always",
-    "source.fixAll.stylelint": "always",
-    "source.fixAll.markdownlint": "always"
-  },
-  // ── Test Explorer (Vitest) ──
-  "vitest.enable": true,
-  "vitest.include": ["tests/**/*.mjs"],
-  "vitest.rerunOnSave": true,
-  "nodejs-testing.include": ["tests/**/*.mjs"],
-  "testing.automaticallyOpenPeekView": "never",
-  "testing.coverageBarThresholds": {
-    "red": 0,
-    "yellow": 70,
-    "green": 80
-  },
-  // ── Playwright ──
-  "playwright.reuseBrowser": false,
-  "playwright.showTrace": false
+    // ── Spell Check ──
+    "cSpell.words": [
+        "rajwan",
+        "glassmorphism",
+        "whatsapp",
+        "rsvp",
+        "weddingmanager",
+        "skyway",
+        "markdownlint",
+        "htmlhint",
+        "stylelint",
+        "vapid",
+        "webpush",
+        "notificationclick",
+        "serviceworker",
+        "lighthouserc",
+        "playwright",
+        "chromium"
+    ],
+    // ── Search / Explorer ──
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.git": true
+    },
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    // ── Terminal ──
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    // ── ESLint ──
+    "eslint.enable": true,
+    "eslint.run": "onSave",
+    "eslint.validate": [
+        "javascript"
+    ],
+    "eslint.options": {
+        "overrideConfigFile": "eslint.config.mjs"
+    },
+    "eslint.useFlatConfig": true,
+    "eslint.lintTask.enable": true,
+    "eslint.onIgnoredFiles": "off",
+    // ── Stylelint ──
+    "stylelint.enable": true,
+    "stylelint.validate": [
+        "css"
+    ],
+    "stylelint.snippet": [
+        "css"
+    ],
+    "stylelint.configFile": ".stylelintrc.json",
+    // ── markdownlint ──
+    "markdownlint.run": "onSave",
+    "markdownlint.config": {
+        "extends": ".markdownlint.json"
+    },
+    // ── Code actions on save ──
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always",
+        "source.fixAll.stylelint": "always",
+        "source.fixAll.markdownlint": "always"
+    },
+    // ── Test Explorer (Vitest) ──
+    "vitest.enable": true,
+    "vitest.include": [
+        "tests/**/*.mjs"
+    ],
+    "vitest.rerunOnSave": true,
+    "nodejs-testing.include": [
+        "tests/**/*.mjs"
+    ],
+    "testing.automaticallyOpenPeekView": "never",
+    "testing.coverageBarThresholds": {
+        "red": 0,
+        "yellow": 70,
+        "green": 80
+    },
+    // ── Playwright ──
+    "playwright.reuseBrowser": false,
+    "playwright.showTrace": false
 }
 
