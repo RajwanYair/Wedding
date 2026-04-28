@@ -173,7 +173,12 @@ function formatList(items) {
  * section's container (e.g. expenses renders inside budget's template).
  * They intentionally have NO sec-{name} div in index.html.
  */
-const EMBEDDED_SECTIONS = new Set(["expenses"]);
+const EMBEDDED_SECTIONS = new Set([
+  "expenses",
+  // Sections that render into header/nav widgets, not standalone sec-* containers:
+  "notification-panel",
+  "workspace-switcher",
+]);
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 

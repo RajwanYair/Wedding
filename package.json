@@ -1,6 +1,6 @@
 {
   "name": "wedding-manager",
-  "version": "8.2.2",
+  "version": "12.7.0",
   "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
   "type": "module",
   "private": true,
@@ -18,7 +18,8 @@
     "lint:css": "stylelint --cache --cache-location node_modules/.cache/stylelint/ --config .stylelintrc.json --max-warnings 0 css/*.css",
     "lint:js": "eslint --cache --cache-location node_modules/.cache/eslint/ --max-warnings 0 \"src/**/*.js\" scripts vite.config.js eslint.config.mjs",
     "lint:md": "markdownlint-cli2 README.md CHANGELOG.md ARCHITECTURE.md CONTRIBUTING.md ROADMAP.md SECURITY.md \".github/**/*.md\"",
-    "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md",
+    "validate:mermaid": "node scripts/validate-mermaid.mjs --enforce",
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md && npm run validate:mermaid",
     "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
     "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",
     "check:credentials": "node scripts/check-credentials.mjs",

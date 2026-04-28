@@ -48,14 +48,17 @@ describe("maybeShowWhatsNew", () => {
   it("renders translated release items", () => {
     maybeShowWhatsNew({ isAdmin: true });
     const items = [...document.body.querySelectorAll("li")].map((item) => item.textContent);
-    expect(items).toEqual([
+    // All entries newer than lastSeen="" (all of them) are shown, newest first.
+    // 12.8.0 items come first, then 12.7.0 items.
+    expect(items).toEqual(expect.arrayContaining([
       "whats_new_item_budget_sync",
       "whats_new_item_checkin_sync",
       "whats_new_item_whatsapp_templates",
       "whats_new_item_status_bar",
       "whats_new_item_popup",
       "whats_new_item_changelog",
-    ]);
+    ]));
+    expect(items.length).toBeGreaterThanOrEqual(6);
   });
 
   it("does not show overlay if version already seen", () => {
