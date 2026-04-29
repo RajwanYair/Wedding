@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.11.0] — 2026-05-05
+
+> **S286–S295: Phase B2+B8+A8+B12 complete — TSC baseline 49→0, action namespace ratchet, arch-check strict, Supabase SQL lint CI gate.**
+
+### Changed
+
+- **S286** — TypeScript baseline audit: triage all 49 remaining errors, grouped by category
+- **S287** — TSC baseline 49→42: JSDoc fixes in guest-landing/rsvp/notification-panel/registry (onMount signature, param types)
+- **S288** — TSC baseline 42→29: JSDoc fixes in outreach/analytics/observability/security/guest-service/repositories
+- **S289** — Arch-check enforcement: added `node scripts/arch-check.mjs --strict` step to CI
+- **S290** — Version bump infrastructure check (pre-S291 health check sprint)
+- **S291** — Action namespace ratchet gate: FLAT_BASELINE=116, exits 1 if new flat actions added (CI enforcement)
+- **S292** — TSC baseline 29→10: type casts in analytics/observability/security/outreach/guest-service/sections
+- **S293** — TSC baseline 10→0: `@implements`→plain-doc in repositories.js, config-scopes, compliance default param, supabase-base-repository generic fix
+- **S294** — Supabase SQL lint in CI: `audit-supabase-lint.mjs --enforce` step (static db lint gate, baseline=1 legacy 008 file)
+- **S295** — Version bump to v13.11.0; 3149 tests green; 0 lint errors; TSC baseline 0
+
 ## [13.10.0] — 2026-04-29
 
 > **S276–S284: Phase B1 complete — service reduction 33→25, TSC baseline 54→49, all 23 BaseSection sections adopted.**
