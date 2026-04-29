@@ -34,7 +34,7 @@ const { enqueueWrite, onSyncStatus, syncStatus } =
   await import("../../src/services/sheets.js");
 const { initSyncTracker, getSyncState, markSyncing, markSynced, markSyncError, markAllOffline, markAllOnline,
         getSyncStatus, isSyncHealthy, getFailedDomains, getPendingDomains } =
-  await import("../../src/services/sync-manager.js");
+  await import("../../src/services/sync.js");
 import { syncStoreKey } from "../../src/services/backend.js";
 
 const KEYS = ["guests", "tables", "vendors", "expenses"];

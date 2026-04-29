@@ -5,7 +5,7 @@ import { describe, it, expect, vi } from "vitest";
 import {
   buildCheckoutPayload,
   startCheckout,
-} from "../../src/services/stripe-checkout.js";
+} from "../../src/services/commerce.js";
 
 describe("S114 — stripe-checkout", () => {
   it("buildCheckoutPayload converts amount to cents and sums total", () => {

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.8.0] — 2025-08-12
+
+> **S261–S265: Service consolidation (44→36 files), TSC baseline 75→71, workspace-switcher storeGet fix, sheets.js offline→resilience import, budget-burndown duplicate typedef.**
+
+### Changed
+
+- **S261** — Merged `contact-dedup.js` + `guest-token.js` → `guest-identity.js`
+- **S262** — Merged `state-tracking.js` + `multi-event.js` → `event-manager.js`
+- **S263** — Fixed TSC regressions: `sheets.js` import from `resilience.js`, `workspace-switcher.js` `getStore`→`storeGet`, `budget-burndown.js` duplicate typedef; baseline 75→71
+- **S264** — Merged `commerce-service.js` + `stripe-checkout.js` → `commerce.js`
+- **S265** — Version bump to v13.8.0; all 3149 tests green
+
 ## [13.7.0] — 2025-08-11
 
 > **S248–S254: Service merges (45→44 files), TSC baseline 100→75, View Transitions scoped to `#main-content`, Facebook OAuth removal, coverage ratchet 49/44→50/45, locale parity fixes.**

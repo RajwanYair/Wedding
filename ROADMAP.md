@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.7.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.8.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,7 +20,7 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2025-08-10, v13.7.0):** **3 153 tests passing** across 225 files · 0 lint errors / 0 warnings
+**State (2025-08-12, v13.8.0):** **3 153 tests passing** across 225 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 24
@@ -75,7 +75,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.7.0 · 2025-08-10
+### Actual state — v13.8.0 · 2025-08-12
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -1112,7 +1112,7 @@ Storage + Realtime for development without an account.
 | **v13.3.0** | **Released 2025-07-14** | **S206–S215: Notifications · What's New · AR locale · Trusted Types · CSS @scope · Cmd-K · Popover API** | **S206–S215 complete; 3 153 tests; 5 locales; 7 service merges (70→64 files)** |
 | **v13.4.0** | **Released 2025-07-21** | **S216–S225: Dead export wiring · service consolidation · container queries · action namespace · TSC −33** | **S218–S225; 60 service files; baseline 245→212; audit:actions CI gate; 3 153 tests** |
 | **v13.5.0** | **Released 2025-07-28** | **S231–S234: Dead export wiring ×15 · TSC baseline 212→155 · modal dialog audit CI gate · coverage ratchet** | **S231–S234; TS7006/TS7031 zeroed; 10/10 dialogs enforced; all coverage dirs ratcheted; 3 153 tests** |
-| **v13.7.0** | **Released 2025-08-10** | **S236–S244: CI hardening (Mermaid/JSDoc) · service merges 60→49 · TSC baseline 152→100 · Supabase migrations CI · Trusted Types gates** | **S236–S244; 49 service files; TSC baseline 100; 24 migrations; 3 153 tests** |
+| **v13.8.0** | **Released 2025-08-12** | **S261–S265; 36 service files; TSC baseline 71; 3149 tests** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1121,5 +1121,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2025-08-10 · v13.7.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2025-08-10 · v13.8.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*
