@@ -17,10 +17,6 @@ describe("oauth-providers (S94)", () => {
     delete window.AppleID;
   });
 
-  it("detectInstalledSdks reports facebook=false (S93 SDK removed)", () => {
-    expect(detectInstalledSdks().facebook).toBe(false);
-  });
-
   it("detectInstalledSdks detects Google when window.google.accounts.id.prompt is a function", () => {
     // @ts-ignore — stub
     window.google = { accounts: { id: { prompt: () => {} } } };
@@ -31,10 +27,6 @@ describe("oauth-providers (S94)", () => {
     // @ts-ignore — stub
     window.AppleID = { auth: { signIn: () => {} } };
     expect(detectInstalledSdks().apple).toBe(true);
-  });
-
-  it("preferredTransport always returns 'supabase' for Facebook", () => {
-    expect(preferredTransport("facebook")).toBe("supabase");
   });
 
   it("preferredTransport returns 'sdk' for Google when GIS is loaded", () => {

@@ -28,7 +28,6 @@ test.describe("Accessibility — axe-core WCAG AA", () => {
       .withTags(["wcag2a", "wcag2aa", "best-practice"])
       // Known exemptions in static test environment (no real OAuth SDKs loaded)
       .exclude("#google-signin-btn")
-      .exclude("#facebook-signin-btn")
       .exclude("#apple-signin-btn")
       .analyze();
 

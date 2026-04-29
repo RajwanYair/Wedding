@@ -32,13 +32,6 @@ export const BACKEND_TYPE = "sheets";
 
 // ── Auth ─────────────────────────────────────────────────────────────────
 export const GOOGLE_CLIENT_ID = "";
-/**
- * @deprecated S93 — Facebook JS SDK removed. Facebook OAuth now flows through
- * Supabase Auth's `/auth/v1/authorize?provider=facebook` redirect. This export
- * is kept (empty) so any third-party config-injection scripts that look for it
- * still resolve. It is no longer read by the app.
- */
-export const FB_APP_ID = "";
 export const APPLE_SERVICE_ID = "";
 
 /** @type {string[]} */

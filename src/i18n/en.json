@@ -346,7 +346,6 @@
   "auth_login_locked": "Too many failed sign-in attempts. Please try again in 5 minutes.",
   "auth_or_social": "── or sign in with ──",
   "auth_continue_google": "🔵 Continue with Google",
-  "auth_continue_fb": "📘 Continue with Facebook",
   "auth_continue_apple": "🍎 Continue with Apple",
   "auth_oauth_no_email": "Could not get an email from the identity provider",
   "auth_oauth_not_configured": "Identity provider not yet configured",

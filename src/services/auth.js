@@ -264,7 +264,7 @@ export function getUserId(session) {
 
 // ── OAuth provider abstraction (merged from oauth-providers.js, S94) ──────
 
-/** @typedef {'google' | 'facebook' | 'apple'} OAuthProvider */
+/** @typedef {'google' | 'apple'} OAuthProvider */
 
 /**
  * @typedef {object} OAuthProfile
@@ -276,7 +276,7 @@ export function getUserId(session) {
 
 /**
  * Returns the loaded SDK detection result for diagnostics.
- * @returns {{ google: boolean, apple: boolean, facebook: boolean }}
+ * @returns {{ google: boolean, apple: boolean }}
  */
 export function detectInstalledSdks() {
   /** @type {any} */
@@ -284,7 +284,6 @@ export function detectInstalledSdks() {
   return {
     google: typeof w.google?.accounts?.id?.prompt === "function",
     apple: typeof w.AppleID?.auth?.signIn === "function",
-    facebook: false,
   };
 }
 
@@ -294,7 +293,6 @@ export function detectInstalledSdks() {
  * @returns {"sdk" | "supabase"}
  */
 export function preferredTransport(provider) {
-  if (provider === "facebook") return "supabase";
   const sdks = detectInstalledSdks();
   if (provider === "google") return sdks.google ? "sdk" : "supabase";
   if (provider === "apple") return sdks.apple ? "sdk" : "supabase";

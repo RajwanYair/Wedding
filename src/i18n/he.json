@@ -346,7 +346,6 @@
   "auth_login_locked": "יותר מדי ניסיונות כניסה. נסה שוב בעוד 5 דקות.",
   "auth_or_social": "── או התחבר עם ──",
   "auth_continue_google": "🔵 המשך עם Google",
-  "auth_continue_fb": "📘 המשך עם Facebook",
   "auth_continue_apple": "🍎 המשך עם Apple",
   "auth_oauth_no_email": "לא הצלחנו לקבל אימייל מספק הזהות",
   "auth_oauth_not_configured": "ספק הזהות לא הוגדר עדיין",

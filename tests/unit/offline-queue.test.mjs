@@ -23,7 +23,6 @@ vi.mock("../../src/core/config.js", () => ({
   APP_VERSION: "6.0.0",
   SHEETS_WEBAPP_URL: "",
   GOOGLE_CLIENT_ID: "",
-  FB_APP_ID: "",
   APPLE_SERVICE_ID: "",
   ADMIN_EMAILS: [],
 }));
@@ -151,3 +150,4 @@ describe("offline-queue — Background Sync tag registration", () => {
     expect(() => enqueueOffline("rsvp", {})).not.toThrow();
   });
 });
+

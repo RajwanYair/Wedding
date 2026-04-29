@@ -11,7 +11,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("../../src/core/config.js", () => ({
   STORAGE_PREFIX: "wedding_v1_",
   GOOGLE_CLIENT_ID: "",
-  FB_APP_ID: "",
   APPLE_SERVICE_ID: "",
   ADMIN_EMAILS: [],
   PUBLIC_SECTIONS: ["landing", "rsvp"],
@@ -132,3 +131,4 @@ describe("S16b — loadAsync / saveAsync / removeAsync", () => {
     await expect(removeAsync("guests")).resolves.toBeUndefined();
   });
 });
+

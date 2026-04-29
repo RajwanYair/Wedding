@@ -16,7 +16,6 @@ vi.mock("../../src/core/config.js", () => ({
   SUPABASE_ANON_KEY: "test-key",
   GAS_URL: "",
   GOOGLE_CLIENT_ID: "",
-  FB_APP_ID: "",
   APPLE_SERVICE_ID: "",
   ADMIN_EMAILS: [],
 }));
@@ -101,3 +100,4 @@ describe("getBackendType", () => {
     expect(getBackendType()).toBe("supabase");
   });
 });
+

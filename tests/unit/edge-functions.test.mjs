@@ -16,7 +16,6 @@ vi.mock("../../src/core/config.js", () => ({
   SUPABASE_ANON_KEY: "test-anon-key",
   GAS_URL: "",
   GOOGLE_CLIENT_ID: "",
-  FB_APP_ID: "",
   APPLE_SERVICE_ID: "",
   ADMIN_EMAILS: [],
 }));
@@ -388,3 +387,4 @@ describe("send-email via callEdgeFunction", () => {
     expect(result.error).toContain("Invalid");
   });
 });
+

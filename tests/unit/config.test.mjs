@@ -17,7 +17,6 @@ import {
   SHEETS_EXPENSES_TAB,
   SHEETS_RSVP_LOG_TAB,
   GOOGLE_CLIENT_ID,
-  FB_APP_ID,
   APPLE_SERVICE_ID,
   ADMIN_EMAILS,
   AUTH_SESSION_DURATION_MS,
@@ -82,10 +81,6 @@ describe("Sheets tab names", () => {
 describe("Auth credentials", () => {
   it("GOOGLE_CLIENT_ID is a string", () => {
     expect(typeof GOOGLE_CLIENT_ID).toBe("string");
-  });
-
-  it("FB_APP_ID is a string", () => {
-    expect(typeof FB_APP_ID).toBe("string");
   });
 
   it("APPLE_SERVICE_ID is a string", () => {
