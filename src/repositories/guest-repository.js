@@ -17,6 +17,9 @@ import { BaseRepository } from "./base-repository.js";
  * @typedef {import("../types.d.ts").Guest} Guest
  */
 
+/**
+ * @extends {BaseRepository<Guest>}
+ */
 export class GuestRepository extends BaseRepository {
   /**
    * @param {(key: string) => Guest[]} storeGet

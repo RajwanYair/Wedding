@@ -110,7 +110,7 @@ export function updateWebsiteConfig(existing, patch) {
   const IMMUTABLE = new Set(["id", "coupleA", "coupleB", "weddingDate", "createdAt"]);
   const next = { ...existing };
   for (const [k, v] of Object.entries(patch ?? {})) {
-    if (!IMMUTABLE.has(k)) next[k] = v;
+    if (!IMMUTABLE.has(k)) next[/** @type {keyof typeof next} */ (k)] = v;
   }
   return next;
 }

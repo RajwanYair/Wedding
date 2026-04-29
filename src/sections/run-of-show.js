@@ -149,8 +149,8 @@ function _renderOverlapWarnings() {
 }
 
 function _parseHmm(/** @type {string} */ hhmm) {
-  const [h, m] = hhmm.split(":").map(Number);
-  return h * 60 + m;
+  const parts = hhmm.split(":").map(Number);
+  return (parts[0] ?? 0) * 60 + (parts[1] ?? 0);
 }
 
 function _fromMinutes(/** @type {number} */ n) {

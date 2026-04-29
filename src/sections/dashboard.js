@@ -943,10 +943,11 @@ function renderNextTimelineEvent() {
   const upcoming = items
     .filter((item) => {
       if (!item.time) return false;
-      const [hh, mm] = String(item.time).split(":").map(Number);
-      if (isNaN(hh) || isNaN(mm)) return false;
+      const parts = String(item.time).split(":").map(Number);
+      const hh = parts[0], mm = parts[1];
+      if (isNaN(hh ?? NaN) || isNaN(mm ?? NaN)) return false;
       const ts = new Date(baseDate);
-      ts.setHours(hh, mm, 0, 0);
+      ts.setHours(hh ?? 0, mm ?? 0, 0, 0);
       return ts.getTime() >= now.getTime();
     })
     .sort((a, b) => String(a.time || "").localeCompare(String(b.time || "")));
@@ -963,7 +964,7 @@ function renderNextTimelineEvent() {
   /** @type {HTMLElement} */ (card).hidden = false;
   const [hh, mm] = String(next.time).split(":").map(Number);
   const eventTs = new Date(baseDate);
-  eventTs.setHours(hh, mm, 0, 0);
+  eventTs.setHours(hh ?? 0, mm ?? 0, 0, 0);
   const diffMins = Math.max(0, Math.round((eventTs.getTime() - now.getTime()) / 60000));
   const isToday = now.toDateString() === baseDate.toDateString();
 

@@ -221,7 +221,7 @@ export async function getGuestStats() {
   };
 
   for (const g of guests) {
-    stats[g.status] = (stats[g.status] ?? 0) + 1;
+    stats[/** @type {keyof typeof stats} */ (g.status)] = (stats[/** @type {keyof typeof stats} */ (g.status)] ?? 0) + 1;
     if (g.tableId) stats.seated++;
     if (g.checkedIn) stats.checkedIn++;
     if (g.status === "confirmed") stats.confirmedGuests += g.count ?? 1;

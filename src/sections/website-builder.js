@@ -224,13 +224,13 @@ function _wireDnsInstructions() {
     if (!validation.ok) {
       const msg = document.createElement("p");
       msg.className = "error-text";
-      msg.textContent = t(`dns_error_${validation.error}`) || validation.error;
+      msg.textContent = t(`dns_error_${validation.error}`) || (validation.error ?? null);
       panel.appendChild(msg);
       return;
     }
 
-    const result = buildDnsInstructions(validation.domain);
-    if (!result.ok) return;
+    const result = buildDnsInstructions(validation.domain ?? "");
+    if (!result.ok || !result.records) return;
 
     const table = document.createElement("table");
     table.className = "dns-table";

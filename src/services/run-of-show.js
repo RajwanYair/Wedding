@@ -30,8 +30,8 @@ const _isHmm = (/** @type {any} */ s) => typeof s === "string" && /^\d{1,2}:\d{2
 
 const _toMinutes = (/** @type {string} */ hhmm) => {
   if (!_isHmm(hhmm)) return null;
-  const [h, m] = hhmm.split(":").map(Number);
-  return h * 60 + m;
+  const parts = hhmm.split(":").map(Number);
+  return (parts[0] ?? 0) * 60 + (parts[1] ?? 0);
 };
 
 const _fromMinutes = (/** @type {number} */ n) => {
@@ -100,8 +100,8 @@ export function detectOverlaps(items) {
   /** @type {[string,string][]} */
   const conflicts = [];
   for (let i = 0; i < sorted.length - 1; i++) {
-    const a = sorted[i];
-    const b = sorted[i + 1];
+    const a = /** @type {NonNullable<(typeof sorted)[number]>} */ (sorted[i]);
+    const b = /** @type {NonNullable<(typeof sorted)[number]>} */ (sorted[i + 1]);
     const aEnd = (_toMinutes(a.startTime) ?? 0) + a.durationMinutes;
     const bStart = _toMinutes(b.startTime) ?? 0;
     if (aEnd > bStart) conflicts.push([a.id, b.id]);

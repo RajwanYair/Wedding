@@ -39,7 +39,7 @@ const _GF_LOG = new Uint8Array(256);
  */
 function _gfMul(a, b) {
   if (a === 0 || b === 0) return 0;
-  return _GF_EXP[((_GF_LOG[a] ?? 0) + (_GF_LOG[b] ?? 0)) % 255];
+  return _GF_EXP[((_GF_LOG[a] ?? 0) + (_GF_LOG[b] ?? 0)) % 255] ?? 0;
 }
 
 /**
@@ -55,7 +55,7 @@ function _rsEcc(data, poly) {
     result.push(0);
     if (top !== 0) {
       for (let i = 0; i < result.length; i++) {
-        result[i] = (result[i] ?? 0) ^ _gfMul(top, /** @type {number} */ (poly[i + 1] ?? 0));
+        result[i] = (result[i] ?? 0) ^ _gfMul(top, /** @type {number} */ (poly[i + 1]) ?? 0);
       }
     }
   }

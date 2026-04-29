@@ -516,7 +516,7 @@ export function getGuestsByGroup() {
   const groups = { family: [], friends: [], work: [], neighbors: [], other: [] };
   for (const guest of guests) {
     const key = groups[guest.group] ? guest.group : "other";
-    groups[key].push(guest);
+    (groups[key] ??= []).push(guest);
   }
   return groups;
 }

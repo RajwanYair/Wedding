@@ -65,8 +65,8 @@ export function getProjectedEndDate(budgetTarget) {
   const { points, totalBudget } = getBurndownData(budgetTarget);
   if (points.length < 2 || totalBudget <= 0) return null;
 
-  const first = points[0];
-  const last = points[points.length - 1];
+  const first = /** @type {NonNullable<(typeof points)[number]>} */ (points[0]);
+  const last = /** @type {NonNullable<(typeof points)[number]>} */ (points[points.length - 1]);
   if (last.cumulative >= totalBudget) return last.date;
 
   const msDiff = new Date(last.date).getTime() - new Date(first.date).getTime();
@@ -87,7 +87,8 @@ export function getProjectedEndDate(budgetTarget) {
 export function getBudgetConsumptionPct(budgetTarget) {
   const { points, totalBudget } = getBurndownData(budgetTarget);
   if (totalBudget <= 0 || points.length === 0) return 0;
-  return Math.min(100, Math.round((points[points.length - 1].cumulative / totalBudget) * 100));
+  const lastPt = points[points.length - 1];
+  return Math.min(100, Math.round(((lastPt?.cumulative ?? 0) / totalBudget) * 100));
 }
 
 // ── Projection helpers (merged from budget-projection.js, S124) ──────────
@@ -141,7 +142,7 @@ export function projectOverrun(budgetTotal, expenses, eventDate, now = new Date(
     return { projectedSpend: 0, projectedOverrun: -total, dailyBurn: 0 };
   }
   const sortedMs = list.map((e) => Date.parse(e.paidAt)).sort((a, b) => a - b);
-  const first = sortedMs[0];
+  const first = sortedMs[0] ?? Date.now();
   const todayMs = now.getTime();
   const eventMs = Date.parse(eventDate);
   const daysSoFar = Math.max(1, Math.ceil((todayMs - first) / 86_400_000));

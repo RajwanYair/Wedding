@@ -89,10 +89,10 @@ export function isBackendFlipReady() {
 async function _loadSheetsModule() {
   if (_sheetSync) return;
   const m = await import("./sheets.js");
-  _sheetSync = m.syncStoreKeyToSheetsImpl;
-  _sheetLog = m.appendToRsvpLogImpl;
-  _sheetCheck = m.sheetsCheckConnectionImpl;
-  _sheetCreate = m.createMissingSheetTabsImpl;
+  _sheetSync = m.syncStoreKeyToSheets;
+  _sheetLog = m.appendToRsvpLog;
+  _sheetCheck = m.sheetsCheckConnection;
+  _sheetCreate = m.createMissingSheetTabs;
   _sheetPull = m.pullAllFromSheetsImpl;
   _sheetPushAll = m.pushAllToSheetsImpl;
 }
@@ -361,6 +361,7 @@ export async function sendWhatsAppBulk(recipients, msg, onProgress, sender) {
   const total = recipients.length;
   for (let i = 0; i < total; i += 1) {
     const to = recipients[i];
+    if (!to) continue;
     try {
       const res = await send(to, msg);
       if (res?.ok) {

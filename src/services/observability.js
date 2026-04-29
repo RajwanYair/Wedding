@@ -173,7 +173,8 @@ export function captureError(err, context = {}) {
 export function getErrors(filter = {}) {
   let errors = getAll().sort((a, b) => b.ts - a.ts);
   if (filter.type) errors = errors.filter((e) => e.type === filter.type);
-  if (filter.since) errors = errors.filter((e) => e.ts >= filter.since);
+  const since = filter.since;
+  if (since !== undefined) errors = errors.filter((e) => e.ts >= since);
   return errors;
 }
 
@@ -544,7 +545,7 @@ export function initWebVitals() {
     }
   };
 
-  /** @type {Record<string, number>} */
+  /** @type {{ lcp: number, inp: number, cls: number }} */
   const metrics = { lcp: 0, inp: 0, cls: 0 };
 
   // LCP — keep updating; final value at hidden/pagehide.

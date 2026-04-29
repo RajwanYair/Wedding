@@ -27,12 +27,12 @@ export function buildCdnImageUrl(source, opts = {}, cdnHost = "") {
   if (typeof source !== "string" || source.length === 0) return "";
   if (!cdnHost) return source;
   const parts = [];
-  if (Number.isFinite(opts.width)  && opts.width  > 0) parts.push(`w=${Math.round(opts.width)}`);
-  if (Number.isFinite(opts.height) && opts.height > 0) parts.push(`h=${Math.round(opts.height)}`);
+  if (Number.isFinite(opts.width)  && (opts.width ?? 0)  > 0) parts.push(`w=${Math.round(opts.width ?? 0)}`);
+  if (Number.isFinite(opts.height) && (opts.height ?? 0) > 0) parts.push(`h=${Math.round(opts.height ?? 0)}`);
   if (opts.fit && ALLOWED_FITS.has(opts.fit)) parts.push(`fit=${opts.fit}`);
   if (opts.format && ALLOWED_FORMATS.has(opts.format)) parts.push(`f=${opts.format}`);
-  if (Number.isFinite(opts.quality) && opts.quality > 0 && opts.quality <= 100) {
-    parts.push(`q=${Math.round(opts.quality)}`);
+  if (Number.isFinite(opts.quality) && (opts.quality ?? 0) > 0 && (opts.quality ?? 0) <= 100) {
+    parts.push(`q=${Math.round(opts.quality ?? 0)}`);
   }
   if (opts.gravity && ALLOWED_GRAVITY.has(opts.gravity)) parts.push(`gravity=${opts.gravity}`);
   const segment = parts.length > 0 ? parts.join(",") : "f=auto";

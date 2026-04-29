@@ -11,8 +11,8 @@ export function compareSemver(/** @type {string|number} */ a, /** @type {string|
   const pa = String(a ?? "").split(/[.+-]/).slice(0, 3).map((n) => Number.parseInt(n, 10));
   const pb = String(b ?? "").split(/[.+-]/).slice(0, 3).map((n) => Number.parseInt(n, 10));
   for (let i = 0; i < 3; i++) {
-    const ai = Number.isFinite(pa[i]) ? pa[i] : 0;
-    const bi = Number.isFinite(pb[i]) ? pb[i] : 0;
+    const ai = Number.isFinite(pa[i]) ? (pa[i] ?? 0) : 0;
+    const bi = Number.isFinite(pb[i]) ? (pb[i] ?? 0) : 0;
     if (ai > bi) return 1;
     if (ai < bi) return -1;
   }

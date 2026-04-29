@@ -636,7 +636,7 @@ function renderOutreachFunnel() {
 
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const steps = buildRsvpFunnel(guests);
-  if (!steps.length || steps[0].count === 0) {
+  if (!steps.length || (steps[0]?.count ?? 0) === 0) {
     container.textContent = t("analytics_no_guests");
     return;
   }
@@ -645,7 +645,7 @@ function renderOutreachFunnel() {
   const gap = 6;
   const w = 340;
   const h = steps.length * (barH + gap);
-  const maxVal = Math.max(steps[0].count, 1);
+  const maxVal = Math.max(steps[0]?.count ?? 0, 1);
   const colors = [
     "var(--primary)",
     "var(--info)",

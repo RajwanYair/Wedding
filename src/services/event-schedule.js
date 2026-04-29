@@ -31,10 +31,11 @@ import { storeGet } from "../core/store.js";
  * @returns {Date | null}
  */
 function _parseTime(time, base) {
-  const [hh, mm] = String(time).split(":").map(Number);
-  if (Number.isNaN(hh) || Number.isNaN(mm)) return null;
+  const parts = String(time).split(":").map(Number);
+  const hh = parts[0], mm = parts[1];
+  if (Number.isNaN(hh ?? NaN) || Number.isNaN(mm ?? NaN)) return null;
   const d = new Date(base);
-  d.setHours(hh, mm, 0, 0);
+  d.setHours(hh ?? 0, mm ?? 0, 0, 0);
   return d;
 }
 
@@ -74,7 +75,7 @@ export function getRunOfShow(now = new Date()) {
 
   // Mark the first upcoming event as "next"
   const nextIdx = events.findIndex((e) => !e.isPast);
-  if (nextIdx !== -1) events[nextIdx].isNext = true;
+  if (nextIdx !== -1 && events[nextIdx]) events[nextIdx].isNext = true;
 
   return events;
 }

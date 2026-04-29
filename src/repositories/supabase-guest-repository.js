@@ -10,6 +10,9 @@ import { SupabaseBaseRepository } from "./supabase-base-repository.js";
  * @typedef {import("@supabase/supabase-js").SupabaseClient} SupabaseClient
  */
 
+/**
+ * @extends {SupabaseBaseRepository<Record<string, unknown> & { id: string }>}
+ */
 export class SupabaseGuestRepository extends SupabaseBaseRepository {
   /**
    * @param {SupabaseClient} supabase

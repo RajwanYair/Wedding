@@ -35,7 +35,7 @@ export function buildGuestRows(guests, tables = []) {
     .map((g) => ({
       name: g.name,
       phone: g.phone ?? "",
-      status: _statusLabel[g.status ?? "pending"] ?? "·",
+      status: _statusLabel[/** @type {keyof typeof _statusLabel} */ (g.status ?? "pending")] ?? "·",
       side: g.side ?? "",
       table: g.tableId ? tableNameById.get(String(g.tableId)) ?? `#${g.tableId}` : "—",
       count: g.count ?? 1,

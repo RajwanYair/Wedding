@@ -60,7 +60,7 @@ function switchWorkspace(id) {
  * @param {string} role
  */
 function getRoleBadge(role) {
-  return ROLE_BADGE[role] ?? "👤";
+  return ROLE_BADGE[/** @type {keyof typeof ROLE_BADGE} */ (role)] ?? "👤";
 }
 
 /**
@@ -71,6 +71,7 @@ function renderWorkspaceSwitcher() {
   if (!container) return;
 
   const workspace = getActiveWorkspace();
+  if (!workspace) return;
   const all = getWorkspaces();
   const badge = getRoleBadge(workspace.role);
   const canInvite = hasPermission(workspace.role, "invite");

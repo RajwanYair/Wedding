@@ -453,8 +453,8 @@ function renderBudgetBurndownChart() {
   }
 
   // Axes labels
-  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0].date}</text>`;
-  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1].date}</text>`;
+  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0]?.date ?? ""}</text>`;
+  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1]?.date ?? ""}</text>`;
 
   // Summary badge
   svg += `<text x="${w / 2}" y="14" font-size="10" fill="var(--text)" text-anchor="middle">${totalSpent.toLocaleString()} ₪ (${pct}%)</text>`;
@@ -542,7 +542,7 @@ export function getBudgetForecast() {
   const dated = expenses.filter((e) => e.date || e.createdAt);
   if (dated.length < 2) return { monthlyRate: 0, monthsLeft: null, remaining };
   const dates = dated.map((e) => new Date(e.date || e.createdAt).getTime()).sort((a, b) => a - b);
-  const spanMs = dates[dates.length - 1] - dates[0];
+  const spanMs = (dates[dates.length - 1] ?? 0) - (dates[0] ?? 0);
   const spanMonths = spanMs / (1000 * 60 * 60 * 24 * 30) || 1;
   const monthlyRate = Math.round(totalSpent / spanMonths);
   return {

@@ -103,7 +103,7 @@ export function resolveConflict(conflict, strategy) {
  * @returns {Record<string, unknown>}
  */
 export function resolveAllForId(conflicts, id, strategy) {
-  const patch = {};
+  const patch = /** @type {Record<string, unknown>} */ ({});
   for (const c of conflicts) {
     if (c.id !== id) continue;
     const { field, value } = resolveConflict(c, strategy);
@@ -131,7 +131,7 @@ export function groupConflictById(conflicts) {
   const groups = {};
   for (const c of conflicts) {
     if (!groups[c.id]) groups[c.id] = [];
-    groups[c.id].push(c);
+    (groups[c.id] ??= []).push(c);
   }
   return groups;
 }

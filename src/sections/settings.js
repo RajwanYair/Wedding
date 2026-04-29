@@ -858,7 +858,7 @@ const THEME_VARS_STORAGE_KEY = "wedding_v1_theme_vars";
 /** Load persisted custom vars from localStorage. */
 function _loadPersistedVars() {
   try {
-    return deserializeThemeVars(localStorage.getItem(THEME_VARS_STORAGE_KEY));
+    return deserializeThemeVars(localStorage.getItem(THEME_VARS_STORAGE_KEY) ?? "");
   } catch {
     return {};
   }
@@ -930,7 +930,7 @@ function _renderThemeVarsEditor() {
 /** Reset theme vars to defaults. */
 export function resetThemeVars() {
   localStorage.removeItem(THEME_VARS_STORAGE_KEY);
-  const defaults = {};
+  const defaults = /** @type {Record<string, string>} */ ({});
   for (const v of THEME_VARS) defaults[v.key] = v.default;
   applyThemeVars(defaults);
   _renderThemeVarsEditor();
@@ -969,7 +969,7 @@ export function importThemeFromJson() {
           showToast(t("theme_import_error"), "error");
           return;
         }
-        _persistAndApplyVars(result.envelope.vars);
+        _persistAndApplyVars(result.envelope?.vars ?? {});
         _renderThemeVarsEditor();
         showToast(t("theme_import_success"), "success");
       };
@@ -1308,7 +1308,7 @@ function _renderDeployButtons() {
   for (const { key, label, emoji } of _DEPLOY_PROVIDERS) {
     const a = document.createElement("a");
     a.className = "btn btn-secondary btn-small";
-    a.href = urls[key];
+    a.href = urls[/** @type {keyof typeof urls} */ (key)] ?? "#";
     a.target = "_blank";
     a.rel = "noopener noreferrer";
     a.textContent = `${emoji} ${label}`;

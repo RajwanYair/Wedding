@@ -4,6 +4,9 @@
 
 import { SupabaseBaseRepository } from "./supabase-base-repository.js";
 
+/**
+ * @extends {SupabaseBaseRepository<Record<string, unknown> & { id: string }>}
+ */
 export class SupabaseTableRepository extends SupabaseBaseRepository {
   /**
    * @param {import("@supabase/supabase-js").SupabaseClient} supabase

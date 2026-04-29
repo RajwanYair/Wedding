@@ -335,7 +335,7 @@ function _renderTransportManifest(guests) {
   withTransport.forEach((g) => {
     const route = g.transport;
     if (!routes.has(route)) routes.set(route, []);
-    routes.get(route).push(g);
+    routes.get(route)?.push(g);
   });
 
   routes.forEach((passengers, route) => {

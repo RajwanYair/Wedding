@@ -591,7 +591,7 @@ function renderVendorSpendTimeline() {
   const padB = 20;
   const chartW = w - padL - 8;
   const chartH = h - padB - 14;
-  const maxY = Math.max(points[points.length - 1].cumulative, 1);
+  const maxY = Math.max(points[points.length - 1]?.cumulative ?? 0, 1);
 
   const scaleX = (/** @type {number} */ i) =>
     padL + (i / Math.max(points.length - 1, 1)) * chartW;
@@ -605,9 +605,9 @@ function renderVendorSpendTimeline() {
   if (points.length > 1) {
     svg += `<polyline points="${linePts}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;
   }
-  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0].date}</text>`;
-  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1].date}</text>`;
-  svg += `<text x="${w / 2}" y="12" font-size="10" fill="var(--text)" text-anchor="middle">₪${points[points.length - 1].cumulative.toLocaleString()}</text>`;
+  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0]?.date ?? ""}</text>`;
+  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1]?.date ?? ""}</text>`;
+  svg += `<text x="${w / 2}" y="12" font-size="10" fill="var(--text)" text-anchor="middle">₪${(points[points.length - 1]?.cumulative ?? 0).toLocaleString()}</text>`;
   svg += `</svg>`;
   container.innerHTML = svg; // safe: numbers/dates/escaped strings
 }
@@ -626,7 +626,7 @@ function renderTopVendorsByCost() {
     return;
   }
 
-  const maxCost = Math.max(top[0].cost, 1);
+  const maxCost = Math.max(top[0]?.cost ?? 0, 1);
   const barH = 28;
   const gap = 6;
   const labelW = 90;
