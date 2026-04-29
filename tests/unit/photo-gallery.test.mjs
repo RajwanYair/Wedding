@@ -7,7 +7,7 @@ import {
   buildPhotoKey,
   uploadPhoto,
   MAX_UPLOAD_BYTES,
-} from "../../src/services/media-plugins.js";
+} from "../../src/services/export.js";
 
 describe("S115 — photo-gallery", () => {
   it("validatePhoto accepts jpg/png/webp/heic/avif", () => {

@@ -38,7 +38,7 @@ import {
   stringifyThemeJson,
   importThemeJson,
 } from "../services/theme.js";
-import { validatePluginManifest } from "../services/media-plugins.js";
+import { validatePluginManifest } from "../services/export.js";
 import {
   addAdminUser,
   removeAdminUser,

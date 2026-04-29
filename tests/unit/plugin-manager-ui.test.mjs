@@ -6,7 +6,7 @@ import { describe, it, expect } from "vitest";
 import {
   validatePluginManifest,
   manifestSchemaInfo,
-} from "../../src/services/media-plugins.js";
+} from "../../src/services/export.js";
 
 describe("PluginManagerUI (Sprint 141)", () => {
   const validManifest = {
