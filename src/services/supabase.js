@@ -10,6 +10,7 @@
 import { getApprovedAdminEmails, getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { storeGet } from "../core/store.js";
 import { getSupabaseClient } from "../core/supabase-client.js";
+import { reportError } from "./observability.js";
 
 // ── Runtime-overridable credentials ──────────────────────────────────────
 
@@ -360,7 +361,7 @@ export async function signInWithMagicLink(email) {
     await _authRest("/magiclink", { method: "POST", body: JSON.stringify({ email }) });
     return true;
   } catch (err) {
-    console.error("[supabase-auth] Magic link error:", err);
+    reportError(err, { source: "supabase", op: "magic-link" });
     return false;
   }
 }

@@ -18,6 +18,7 @@ import { currentUser } from "./auth.js";
 import { load, save } from "../core/state.js";
 import { getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { storeGet, storeSet } from "../core/store.js";
+import { reportError } from "./observability.js";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // § 1 — Heartbeat presence (from presence-service.js, S187)
@@ -472,7 +473,7 @@ function _handleMessage(msg) {
     try {
       cb(payload);
     } catch (err) {
-      console.error("[realtime] Listener error:", err);
+      reportError(err, { source: "realtime", op: "listener" });
     }
   });
 }
@@ -567,7 +568,7 @@ function _dispatch(table, payload) {
     try {
       cb(payload);
     } catch (err) {
-      console.error("[realtime] Listener error:", err);
+      reportError(err, { source: "realtime", op: "dispatch-listener" });
     }
   });
 }

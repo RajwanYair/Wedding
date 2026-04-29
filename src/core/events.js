@@ -6,6 +6,8 @@
  * single document-level click listener.
  */
 
+import { reportError } from "../services/observability.js";
+
 /** @type {Map<string, (el: HTMLElement, e: Event) => void>} */
 const _handlers = new Map();
 
@@ -46,7 +48,7 @@ function _dispatch(e) {
     try {
       fn(/** @type {HTMLElement} */ (el), e);
     } catch (err) {
-      console.error(`[events] Handler "${action}" threw:`, err);
+      reportError(err, { source: "events", action });
     }
   }
 }
@@ -72,7 +74,7 @@ export function initEvents() {
       try {
         fn(target, e);
       } catch (err) {
-        console.error(`[events] Input handler "${action}" threw:`, err);
+        reportError(err, { source: "events", action });
       }
     }
   });
@@ -88,7 +90,7 @@ export function initEvents() {
         try {
           fn(target, e);
         } catch (err) {
-          console.error(`[events] Change handler "${onChangeAction}" threw:`, err);
+          reportError(err, { source: "events", action: onChangeAction });
         }
         return;
       }
@@ -109,7 +111,7 @@ export function initEvents() {
       try {
         fn(target, e);
       } catch (err) {
-        console.error(`[events] Enter handler "${action}" threw:`, err);
+        reportError(err, { source: "events", action });
       }
     }
   });

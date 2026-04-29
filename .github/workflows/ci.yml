@@ -60,6 +60,9 @@ jobs:
       - name: Audit CSS @scope — no bare [data-section] selectors (enforce BASELINE=0 — S297)
         run: node scripts/audit-css-scope.mjs --enforce
 
+      - name: Audit console.error usage — enforce BASELINE=0 (ADR-032 — S298)
+        run: node scripts/audit-console-error.mjs --enforce
+
       - name: Validate Mermaid diagrams (enforce — S236)
         run: node scripts/validate-mermaid.mjs --enforce
 

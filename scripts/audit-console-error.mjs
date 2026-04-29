@@ -22,8 +22,8 @@ const ALLOWLIST = new Set([
   "src/services/health.js",
 ]);
 
-// Baseline — bumped down each migration phase. Locked at v12.0.0 (Sprint 10).
-const BASELINE = 9;
+// Baseline — all 9 sites migrated to reportError() in S298 (v13.12.0).
+const BASELINE = 0;
 
 const { enforce: ENFORCE } = parseAuditArgs();
 

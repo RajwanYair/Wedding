@@ -20,6 +20,7 @@ import { setSecure, getSecure } from "./security.js";
 import { APP_VERSION } from "../core/config.js";
 import { getBackendTypeConfig, getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { STORAGE_KEYS } from "../core/constants.js";
+import { reportError } from "./observability.js";
 import {
   readBrowserStorageJson,
   readSessionStorage,
@@ -402,7 +403,7 @@ export function audit(action, entity, entityId, diff = null) {
     },
     body: JSON.stringify(entry),
   }).catch((err) => {
-    console.error("[audit] Write failed:", err);
+    reportError(err, { source: "compliance", op: "audit-write" });
   });
 }
 

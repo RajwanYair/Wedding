@@ -11,8 +11,11 @@ vi.mock("../../src/core/constants.js", () => ({
 }));
 
 // ── config mock (hash mode by default) ──────────────────────────────────
-const configMock = { FEATURE_PUSHSTATE_ROUTER: false };
+const configMock = { FEATURE_PUSHSTATE_ROUTER: false, STORAGE_PREFIX: "wedding_v1_", APP_VERSION: "0.0.0-test" };
 vi.mock("../../src/core/config.js", () => configMock);
+
+// ── observability stub (breaks transitive dep chain for router) ──────────
+vi.mock("../../src/services/observability.js", () => ({ reportError: vi.fn() }));
 
 const {
   navigate,

@@ -153,7 +153,7 @@ export function _resetRouterForTests() {
   _initialized = false;
 }
 
-// ── private ─────────────────────────────────────────────────────────────
+import { reportError } from "../services/observability.js";
 
 /**
  * @param {Route} route
@@ -163,7 +163,7 @@ function _emit(route) {
     try {
       h(route);
     } catch (e) {
-      console.error("[router] subscriber threw:", e);
+      reportError(e, { source: "router", op: "subscriber" });
     }
   }
 }
