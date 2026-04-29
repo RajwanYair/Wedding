@@ -1,6 +1,5 @@
 /**
  * src/repositories/vendor-repository.js — Store-backed VendorRepository (Sprint 54)
- * @extends {BaseRepository<import("../types.d.ts").Vendor>}
  */
 
 import { BaseRepository } from "./base-repository.js";

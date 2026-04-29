@@ -59,7 +59,7 @@ function _now() {
 
 // ── Guest Repository ──────────────────────────────────────────────────────
 
-/** @implements {import('../types').GuestRepository} */
+/** implements {import('../types').GuestRepository} */
 export const guestRepo = {
   /** @returns {Promise<import('../types').Guest[]>} */
   async getAll() {
@@ -183,7 +183,7 @@ export const guestRepo = {
     const idx = guests.findIndex((g) => g.id === id);
     if (idx === -1) throw new Error(`Guest not found: ${id}`);
     const next = [...guests];
-    next[idx] = { ...guests[idx], deleted_at: _now(), updatedAt: _now() };
+    next[idx] = /** @type {any} */ ({ ...guests[idx], deleted_at: _now(), updatedAt: _now() });
     storeSet("guests", next);
     enqueueWrite("guests", async () => {});
   },
@@ -197,7 +197,7 @@ export const guestRepo = {
     const idx = guests.findIndex((g) => g.id === id);
     if (idx === -1) throw new Error(`Guest not found: ${id}`);
     const next = [...guests];
-    next[idx] = { ...guests[idx], deleted_at: null, updatedAt: _now() };
+    next[idx] = /** @type {any} */ ({ ...guests[idx], deleted_at: null, updatedAt: _now() });
     storeSet("guests", next);
     enqueueWrite("guests", async () => {});
   },
@@ -214,7 +214,7 @@ export const guestRepo = {
 
 // ── Table Repository ──────────────────────────────────────────────────────
 
-/** @implements {import('../types').TableRepository} */
+/** implements {import('../types').TableRepository} */
 export const tableRepo = {
   /** @returns {Promise<import('../types').Table[]>} */
   async getAll() {
@@ -278,7 +278,7 @@ export const tableRepo = {
 
 // ── Vendor Repository ─────────────────────────────────────────────────────
 
-/** @implements {import('../types').VendorRepository} */
+/** implements {import('../types').VendorRepository} */
 export const vendorRepo = {
   /** @returns {Promise<import('../types').Vendor[]>} */
   async getAll() {
@@ -364,7 +364,7 @@ export const vendorRepo = {
     const idx = vendors.findIndex((v) => v.id === id);
     if (idx === -1) throw new Error(`Vendor not found: ${id}`);
     const next = [...vendors];
-    next[idx] = { ...vendors[idx], deleted_at: _now(), updatedAt: _now() };
+    next[idx] = /** @type {any} */ ({ ...vendors[idx], deleted_at: _now(), updatedAt: _now() });
     storeSet("vendors", next);
     enqueueWrite("vendors", async () => {});
   },
@@ -378,7 +378,7 @@ export const vendorRepo = {
     const idx = vendors.findIndex((v) => v.id === id);
     if (idx === -1) throw new Error(`Vendor not found: ${id}`);
     const next = [...vendors];
-    next[idx] = { ...vendors[idx], deleted_at: null, updatedAt: _now() };
+    next[idx] = /** @type {any} */ ({ ...vendors[idx], deleted_at: null, updatedAt: _now() });
     storeSet("vendors", next);
     enqueueWrite("vendors", async () => {});
   },
@@ -395,7 +395,7 @@ export const vendorRepo = {
 
 // ── Expense Repository ────────────────────────────────────────────────────
 
-/** @implements {import('../types').ExpenseRepository} */
+/** implements {import('../types').ExpenseRepository} */
 export const expenseRepo = {
   /** @returns {Promise<import('../types').Expense[]>} */
   async getAll() {
@@ -465,7 +465,7 @@ export const expenseRepo = {
 
 // ── Timeline Repository ───────────────────────────────────────────────────
 
-/** @implements {import('../types').TimelineRepository} */
+/** implements {import('../types').TimelineRepository} */
 export const timelineRepo = {
   /** @returns {Promise<import('../types').TimelineItem[]>} */
   async getAll() {
@@ -539,7 +539,7 @@ export const timelineRepo = {
 
 // ── RSVP Log Repository (append-only) ────────────────────────────────────
 
-/** @implements {import('../types').RsvpLogRepository} */
+/** implements {import('../types').RsvpLogRepository} */
 export const rsvpLogRepo = {
   /** @returns {Promise<import('../types').RsvpLogEntry[]>} */
   async getAll() {
@@ -568,3 +568,4 @@ export const rsvpLogRepo = {
       .sort((a, b) => b.timestamp.localeCompare(a.timestamp));
   },
 };
+

@@ -28,7 +28,7 @@ export class SupabaseBaseRepository {
     this._eventId = eventId ?? null;
   }
 
-  /** @returns {import("@supabase/supabase-js").PostgrestFilterBuilder<any, any, any>} */
+  /** @returns {import("@supabase/supabase-js").PostgrestFilterBuilder<any, any, any, any>} */
   _query() {
     /** @type {any} */
     let q = this._supabase.from(this._table).select("*").is("deleted_at", null);

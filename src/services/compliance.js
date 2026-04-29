@@ -251,10 +251,10 @@ export async function loadPii(storageKey, fallback) {
 
 /**
  * Migrate all PII keys from plaintext to encrypted storage in one pass.
- * @param {Map<string, string>} persistMap  state-key → storageKey map
+ * @param {Map<string, string>} [persistMap]  state-key → storageKey map (defaults to empty)
  * @returns {Promise<number>} Number of keys migrated
  */
-export async function migratePlaintextPii(persistMap) {
+export async function migratePlaintextPii(persistMap = new Map()) {
   let migrated = 0;
   for (const [stateKey, storageKey] of persistMap) {
     if (!isPiiKey(stateKey)) continue;

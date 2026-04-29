@@ -108,7 +108,7 @@ export async function bulkSetStatus(ids, status) {
  * @param {string[]} ids
  */
 export async function markInvitationSent(ids) {
-  return guestRepo.bulkSetStatus(ids, /** @type {any} */ (undefined)); // use update instead
+  return (/** @type {any} */ (guestRepo)).bulkSetStatus(ids, /** @type {any} */ (undefined)); // use update instead
 }
 
 /**

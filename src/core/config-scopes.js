@@ -50,7 +50,7 @@ const DEFAULTS = {
  * @returns {Record<string, unknown>}
  */
 function readRuntime() {
-  return readBrowserStorageJson(RUNTIME_KEY, {});
+  return /** @type {Record<string, unknown>} */ (readBrowserStorageJson(RUNTIME_KEY, {}) ?? {});
 }
 
 /**

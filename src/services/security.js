@@ -417,7 +417,7 @@ export function isNFCSupported() {
  */
 export async function startNFCScan(onRecord, { recordType = "text" } = {}) {
   if (!isNFCSupported()) throw new Error("Web NFC not supported on this device");
-  const NDEFReader = /** @type {any} */ (globalThis.NDEFReader);
+  const NDEFReader = /** @type {any} */ ((/** @type {any} */ (globalThis)).NDEFReader);
   const reader = new NDEFReader();
   const controller = new AbortController();
   reader.addEventListener("reading", (/** @type {any} */ event) => {
@@ -446,7 +446,7 @@ export async function startNFCScan(onRecord, { recordType = "text" } = {}) {
  */
 export async function writeNFCTag(guestId) {
   if (!isNFCSupported()) throw new Error("Web NFC not supported on this device");
-  const NDEFReader = /** @type {any} */ (globalThis.NDEFReader);
+  const NDEFReader = /** @type {any} */ ((/** @type {any} */ (globalThis)).NDEFReader);
   const writer = new NDEFReader();
   const payload = JSON.stringify({ guestId, event: "wedding_checkin" });
   const encoder = new TextEncoder();
