@@ -3734,6 +3734,84 @@
     }
   }
 
+  /* S213: extend @scope to remaining sections (run-of-show, contact-form, guest-landing, changelog). */
+
+  @scope (#sec-run-of-show) {
+    .ros-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ros-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-card);
+      border-radius: 8px;
+    }
+
+    .ros-time-badge {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.82em;
+      min-width: 3.5rem;
+      color: var(--color-text-muted, #888);
+    }
+  }
+
+  @scope (#sec-contact-form) {
+    .contact-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-submitted-msg {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--positive, #34d399);
+    }
+  }
+
+  @scope (#sec-guest-landing) {
+    .guest-landing-hero {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .guest-landing-details {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  @scope (#sec-changelog) {
+    .changelog-entry {
+      border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .changelog-version {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.05em;
+    }
+
+    .changelog-date {
+      font-size: 0.82em;
+      color: var(--color-text-muted, #888);
+      margin-inline-start: 0.5rem;
+    }
+  }
 
   .print-picker-row {
     display: flex;
