@@ -80,7 +80,7 @@ import {
   currentUser,
 } from "./services/auth.js";
 import { startPresence, onPresenceChange } from "./services/presence.js";
-import { initMonitoring, initWebVitals, captureException } from "./services/monitoring.js";
+import { initMonitoring, initWebVitals, captureException } from "./services/observability.js";
 import { migratePlaintextPii } from "./services/pii-storage.js";
 import {
   syncSheetsNow,

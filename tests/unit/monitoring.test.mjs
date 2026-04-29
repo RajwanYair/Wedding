@@ -12,7 +12,7 @@ import {
   addBreadcrumb,
   getBreadcrumbs,
   _resetForTests,
-} from "../../src/services/monitoring.js";
+} from "../../src/services/observability.js";
 
 function seedStore() {
   initStore({

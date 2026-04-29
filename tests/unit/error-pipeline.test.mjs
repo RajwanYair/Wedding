@@ -19,13 +19,8 @@ vi.mock("../../src/core/config.js", () => ({
 }));
 
 import { initStore } from "../../src/core/store.js";
-const {
-  captureError,
-  getErrors,
-  clearErrors,
-  getErrorSummary,
-  getRecentErrorCount,
-} = await import("../../src/services/error-service.js");
+const { captureError, getErrors, clearErrors, getErrorSummary, getRecentErrorCount } =
+  await import("../../src/services/observability.js");
 
 function seedStore() {
   initStore({

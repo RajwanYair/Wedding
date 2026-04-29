@@ -9,7 +9,7 @@ import {
   captureProxyError as captureError,
   installErrorProxy,
   isErrorProxyActive,
-} from "../../src/services/error-service.js";
+} from "../../src/services/observability.js";
 
 // Polyfill globalThis event methods for Node
 if (!globalThis.addEventListener) {

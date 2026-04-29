@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { copyFileSync, readFileSync } from "node:fs";
 
@@ -65,6 +65,10 @@ export default defineConfig({
     // Vitest 4: poolOptions moved to top-level per-pool options
     vmThreads: { execArgv: ["--no-warnings"] },
     cacheDir: join(TEMP_BASE, "vitest-cache"),
+    // Stub optional peer deps that are not installed in the test environment.
+    // @sentry/browser is lazy-imported in observability.js; the .catch(() => null)
+    // handles the runtime case, but vite:import-analysis needs a resolvable path.
+    alias: [{ find: "@sentry/browser", replacement: resolve("tests/stubs/sentry-browser.mjs") }],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov", "html", "json-summary"],
