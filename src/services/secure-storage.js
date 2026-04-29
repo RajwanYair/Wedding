@@ -20,7 +20,7 @@
  */
 
 import { STORAGE_PREFIX } from "../core/config.js";
-import { importRawKey, encryptField, decryptField } from "./crypto.js";
+import { importRawKey, encryptField, decryptField } from "./crypto-security.js";
 
 const KEY_NAME = `${STORAGE_PREFIX}device_key`;
 const KEY_LEN = 32;
