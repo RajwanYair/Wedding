@@ -5,7 +5,7 @@ import { describe, it, expect } from "vitest";
 import {
   validatePluginManifest,
   manifestSchemaInfo,
-} from "../../src/services/plugin-manifest.js";
+} from "../../src/services/media-plugins.js";
 
 const VALID = {
   id: "rsvp-extras",
