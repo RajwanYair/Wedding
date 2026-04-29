@@ -1,10 +1,11 @@
 /**
- * src/services/analytics.js — Unified analytics service (S238 + S279)
+ * src/services/analytics.js — Unified analytics + search service (S238 + S279 + S281)
  *
  * Merged from:
  *   - financial-analytics.js (S216) — expense + vendor analytics (pure functions)
  *   - guest-analytics.js     (S216) — guest RSVP + invitation analytics (pure functions)
  *   - budget-burndown.js     (S193) — budget burn-down + envelope tracker
+ *   - search-index.js        (S109) — Cmd-K command palette index
  *
  * Pure functions — no DOM, no network.
  *
@@ -17,10 +18,13 @@
  *               buildRsvpFunnel · rsvpConversionRate
  *   Invitations: recordEvent · getGuestEvents · getEventsByType · uniqueOpens
  *                uniqueClicks · uniqueRsvps · getAnalyticsSummary · clearAnalytics
+ *   Search:     buildSearchIndex · searchIndex
  */
 
 import { storeGet, storeSet } from "../core/store.js";
 import { enqueueWrite } from "./sheets.js";
+import { t as _t } from "../core/i18n.js";
+import { SECTION_LIST } from "../core/constants.js";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // § 1 — Expense Analytics (from financial-analytics.js)
@@ -790,3 +794,92 @@ export function getOverBudgetCategories() {
     .map((e) => e.category);
 }
 
+
+// ══════════════════════════════════════════════════════════════════════════════════════════════════
+// §5 — Search index: Cmd-K command palette (from search-index.js, S109)
+// ══════════════════════════════════════════════════════════════════════════════════════════════════
+
+/** @typedef {{ id: string, type: "guest"|"table"|"vendor"|"section", label: string, hint?: string }} SearchEntry */
+
+/**
+ * Build the command-palette index from current store state.
+ * @returns {SearchEntry[]}
+ */
+export function buildSearchIndex() {
+  /** @type {SearchEntry[]} */
+  const out = [];
+
+  for (const sectionId of SECTION_LIST) {
+    const key = `nav_${sectionId}`;
+    const label = (_t(key) || sectionId);
+    out.push({ id: `section:${sectionId}`, type: "section", label, hint: sectionId });
+  }
+
+  const guests = /** @type {Array<{id:string, name?:string, phone?:string}>} */ (
+    storeGet("guests") ?? []
+  );
+  for (const g of guests) {
+    if (!g?.id) continue;
+    out.push({ id: `guest:${g.id}`, type: "guest", label: g.name ?? g.id, hint: g.phone ?? "" });
+  }
+
+  const tables = /** @type {Array<{id:string, name?:string, capacity?:number}>} */ (
+    storeGet("tables") ?? []
+  );
+  for (const tbl of tables) {
+    if (!tbl?.id) continue;
+    out.push({
+      id: `table:${tbl.id}`,
+      type: "table",
+      label: tbl.name ?? `#${tbl.id}`,
+      hint: tbl.capacity != null ? String(tbl.capacity) : "",
+    });
+  }
+
+  const vendors = /** @type {Array<{id:string, name?:string, category?:string}>} */ (
+    storeGet("vendors") ?? []
+  );
+  for (const v of vendors) {
+    if (!v?.id) continue;
+    out.push({ id: `vendor:${v.id}`, type: "vendor", label: v.name ?? v.id, hint: v.category ?? "" });
+  }
+
+  return out;
+}
+
+/**
+ * Score an entry against a query. Higher is better; 0 means no match.
+ * @param {SearchEntry} entry
+ * @param {string} query lowercase trimmed
+ * @returns {number}
+ */
+function _scoreEntry(entry, query) {
+  if (!query) return 1;
+  const label = entry.label.toLowerCase();
+  if (label === query) return 100;
+  if (label.startsWith(query)) return 80;
+  if (label.includes(` ${query}`)) return 60;
+  if (label.includes(query)) return 40;
+  const hint = (entry.hint ?? "").toLowerCase();
+  if (hint.includes(query)) return 20;
+  return 0;
+}
+
+/**
+ * Search the index. Returns top-N matches by descending score.
+ * @param {SearchEntry[]} index
+ * @param {string} query
+ * @param {number} [limit=20]
+ * @returns {SearchEntry[]}
+ */
+export function searchIndex(index, query, limit = 20) {
+  const q = (query ?? "").trim().toLowerCase();
+  if (!q) return index.slice(0, limit);
+  const scored = /** @type {Array<{e: SearchEntry, s: number}>} */ ([]);
+  for (const e of index) {
+    const s = _scoreEntry(e, q);
+    if (s > 0) scored.push({ e, s });
+  }
+  scored.sort((a, b) => b.s - a.s);
+  return scored.slice(0, limit).map((x) => x.e);
+}

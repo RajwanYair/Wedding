@@ -35,7 +35,7 @@ vi.mock("../../src/core/constants.js", () => ({
 
 describe("S109 — search-index", () => {
   it("buildSearchIndex includes sections, guests, tables, vendors", async () => {
-    const { buildSearchIndex } = await import("../../src/services/search-index.js");
+    const { buildSearchIndex } = await import("../../src/services/analytics.js");
     const idx = buildSearchIndex();
     expect(idx.length).toBe(3 + 2 + 1 + 1); // 3 sections + 2g + 1t + 1v
     expect(idx.find((e) => e.id === "section:dashboard")?.type).toBe("section");
@@ -44,7 +44,7 @@ describe("S109 — search-index", () => {
 
   it("searchIndex ranks prefix matches above substring matches", async () => {
     const { buildSearchIndex, searchIndex } = await import(
-      "../../src/services/search-index.js"
+      "../../src/services/analytics.js"
     );
     const idx = buildSearchIndex();
     const res = searchIndex(idx, "Dana");
@@ -53,7 +53,7 @@ describe("S109 — search-index", () => {
 
   it("searchIndex returns full list when query empty", async () => {
     const { buildSearchIndex, searchIndex } = await import(
-      "../../src/services/search-index.js"
+      "../../src/services/analytics.js"
     );
     const idx = buildSearchIndex();
     expect(searchIndex(idx, "").length).toBe(idx.length);
@@ -61,7 +61,7 @@ describe("S109 — search-index", () => {
 
   it("searchIndex matches via hint (phone/category)", async () => {
     const { buildSearchIndex, searchIndex } = await import(
-      "../../src/services/search-index.js"
+      "../../src/services/analytics.js"
     );
     const idx = buildSearchIndex();
     const res = searchIndex(idx, "972500000002");
@@ -70,7 +70,7 @@ describe("S109 — search-index", () => {
 
   it("searchIndex respects limit", async () => {
     const { buildSearchIndex, searchIndex } = await import(
-      "../../src/services/search-index.js"
+      "../../src/services/analytics.js"
     );
     const idx = buildSearchIndex();
     expect(searchIndex(idx, "", 2).length).toBe(2);

@@ -6,12 +6,12 @@
  * Exported for deferred setup from main.js.
  */
 
-import { buildSearchIndex, searchIndex } from "../services/search-index.js";
+import { buildSearchIndex, searchIndex } from "../services/analytics.js";
 import { closeModal } from "../core/ui.js";
 import { navigateTo } from "../core/nav.js";
 import { t } from "../core/i18n.js";
 
-/** @typedef {import("../services/search-index.js").SearchEntry} SearchEntry */
+/** @typedef {import("../services/analytics.js").SearchEntry} SearchEntry */
 
 /** Cached index — rebuilt each time the modal opens. */
 let _index = /** @type {SearchEntry[]} */ ([]);
