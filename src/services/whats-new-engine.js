@@ -7,7 +7,7 @@
  */
 
 /** Compare two semver-ish versions. Returns -1 / 0 / 1. */
-export function compareSemver(a, b) {
+export function compareSemver(/** @type {string|number} */ a, /** @type {string|number} */ b) {
   const pa = String(a ?? "").split(/[.+-]/).slice(0, 3).map((n) => Number.parseInt(n, 10));
   const pb = String(b ?? "").split(/[.+-]/).slice(0, 3).map((n) => Number.parseInt(n, 10));
   for (let i = 0; i < 3; i++) {

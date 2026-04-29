@@ -187,7 +187,7 @@ export function getPaymentsByMonth() {
 /** @typedef {{ vendorId: string, amount: number, paidAt: string, note?: string }} PaymentInput */
 /** @typedef {{ date: string, paid: number, cumulative: number }} TimelinePoint */
 
-const _ymd = (s) => {
+const _ymd = (/** @type {string} */ s) => {
   const t = Date.parse(s);
   if (Number.isNaN(t)) return null;
   return new Date(t).toISOString().slice(0, 10);

@@ -9,7 +9,7 @@
 
 /** @typedef {{ repoUrl: string, branch?: string, envVars?: string[], projectName?: string }} DeployInput */
 
-function _assertRepo(repoUrl) {
+function _assertRepo(/** @type {string} */ repoUrl) {
   if (typeof repoUrl !== "string" || repoUrl.length === 0) {
     throw new Error("repoUrl_required");
   }
@@ -19,7 +19,7 @@ function _assertRepo(repoUrl) {
 }
 
 /** Vercel: https://vercel.com/new/clone?repository-url=...&env=KEY1,KEY2 */
-export function buildVercelDeployUrl({ repoUrl, envVars = [], projectName }) {
+export function buildVercelDeployUrl({ repoUrl, envVars = /** @type {string[]} */ ([]), projectName = /** @type {string|undefined} */ (undefined) } = /** @type {DeployInput} */ ({})) {
   _assertRepo(repoUrl);
   const params = new URLSearchParams();
   params.set("repository-url", repoUrl);
@@ -29,7 +29,7 @@ export function buildVercelDeployUrl({ repoUrl, envVars = [], projectName }) {
 }
 
 /** Netlify: https://app.netlify.com/start/deploy?repository=... */
-export function buildNetlifyDeployUrl({ repoUrl }) {
+export function buildNetlifyDeployUrl({ repoUrl = /** @type {string} */ ("") } = /** @type {DeployInput} */ ({})) {
   _assertRepo(repoUrl);
   const params = new URLSearchParams();
   params.set("repository", repoUrl);
@@ -37,7 +37,7 @@ export function buildNetlifyDeployUrl({ repoUrl }) {
 }
 
 /** Cloudflare Pages: https://deploy.workers.cloudflare.com/?url=... */
-export function buildCloudflarePagesUrl({ repoUrl }) {
+export function buildCloudflarePagesUrl({ repoUrl = /** @type {string} */ ("") } = /** @type {DeployInput} */ ({})) {
   _assertRepo(repoUrl);
   const params = new URLSearchParams();
   params.set("url", repoUrl);
@@ -45,7 +45,7 @@ export function buildCloudflarePagesUrl({ repoUrl }) {
 }
 
 /** Render: https://render.com/deploy?repo=... */
-export function buildRenderDeployUrl({ repoUrl, branch }) {
+export function buildRenderDeployUrl({ repoUrl = /** @type {string} */ (""), branch = /** @type {string|undefined} */ (undefined) } = /** @type {DeployInput} */ ({})) {
   _assertRepo(repoUrl);
   const u = branch ? `${repoUrl}/tree/${encodeURIComponent(branch)}` : repoUrl;
   const params = new URLSearchParams();

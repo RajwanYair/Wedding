@@ -29,7 +29,7 @@ export function createRateLimiter({ limit, windowMs }) {
    * @param {string} key
    */
   /** @returns {{ tokens: number, windowStart: number }} */
-  function ensureBucket(key) {
+  function ensureBucket(/** @type {string} */ key) {
     if (!buckets.has(key)) {
       buckets.set(key, { tokens: limit, windowStart: Date.now() });
     }

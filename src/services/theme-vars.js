@@ -81,12 +81,12 @@ export function applyThemeVars(vars, target) {
 }
 
 /** Serialize for `localStorage` / sync. */
-export function serializeThemeVars(vars) {
+export function serializeThemeVars(/** @type {Record<string,unknown>} */ vars) {
   return JSON.stringify(sanitizeThemeVars(vars));
 }
 
 /** Deserialize, returning {} on any error. */
-export function deserializeThemeVars(json) {
+export function deserializeThemeVars(/** @type {string} */ json) {
   try {
     const parsed = JSON.parse(json ?? "{}");
     if (!parsed || typeof parsed !== "object") return {};

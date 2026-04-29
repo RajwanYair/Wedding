@@ -36,7 +36,7 @@ function _load() {
   return Array.isArray(v) ? v : [];
 }
 
-function _save(list) {
+function _save(/** @type {any[]} */ list) {
   writeBrowserStorageJson(STORAGE_KEY, list.slice(0, MAX_ITEMS));
 }
 

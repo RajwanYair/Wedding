@@ -34,8 +34,8 @@ const ALL_SECTIONS = /** @type {WebsiteSection[]} */ ([
 ]);
 
 /** Build a URL-safe slug from two first names + year. */
-export function buildSiteSlug(coupleA, coupleB, year) {
-  const clean = (s) =>
+export function buildSiteSlug(/** @type {string} */ coupleA, /** @type {string} */ coupleB, /** @type {string|number} */ year) {
+  const clean = (/** @type {string|number} */ s) =>
     String(s ?? "").trim().toLowerCase()
       .replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").slice(0, 20);
   const a = clean(coupleA) || "name";

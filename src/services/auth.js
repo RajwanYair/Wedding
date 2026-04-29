@@ -354,7 +354,7 @@ export async function sendMagicLink(email) {
 
 /**
  * Create an anonymous Supabase session for guest access.
- * @returns {Promise<import("../types.d.ts").SupabaseSession | null>}
+ * @returns {Promise<any>}
  */
 export async function loginSupabaseAnonymous() {
   const { signInAnonymous } = await import("./supabase.js");

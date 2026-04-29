@@ -12,7 +12,7 @@ import { THEME_VARS, sanitizeThemeVars } from "./theme-vars.js";
 const SCHEMA_VERSION = 1;
 
 /** Build a `theme.json` envelope from a vars object. */
-export function exportThemeJson(vars, meta = {}) {
+export function exportThemeJson(/** @type {Record<string,unknown>} */ vars, /** @type {Record<string,unknown>} */ meta = {}) {
   const sanitized = sanitizeThemeVars(vars);
   return {
     schemaVersion: SCHEMA_VERSION,
@@ -24,7 +24,7 @@ export function exportThemeJson(vars, meta = {}) {
 }
 
 /** Stringify with stable ordering and 2-space indent. */
-export function stringifyThemeJson(envelope) {
+export function stringifyThemeJson(/** @type {Record<string,unknown>} */ envelope) {
   const ordered = {
     schemaVersion: envelope.schemaVersion,
     name: envelope.name,
@@ -39,7 +39,7 @@ export function stringifyThemeJson(envelope) {
  * Parse + validate a theme.json blob. Returns `{ ok, envelope?, error? }`.
  * Unknown vars are dropped silently (forward-compat with newer presets).
  */
-export function importThemeJson(input) {
+export function importThemeJson(/** @type {string|Record<string,unknown>} */ input) {
   let raw;
   try {
     raw = typeof input === "string" ? JSON.parse(input) : input;

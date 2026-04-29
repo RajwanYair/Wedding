@@ -122,7 +122,7 @@ export function register() {
     import("../utils/pdf-export.js").then(({ printGuestList }) => printGuestList()),
   );
   on("batchMarkInvitationSent", (_el, e) => {
-    const ids = /** @type {string[]} */ (e?.detail?.ids ?? []);
+    const ids = /** @type {string[]} */ (/** @type {CustomEvent} */ (e)?.detail?.ids ?? []);
     batchMarkInvitationSent(ids).catch(() => {});
   });
 }

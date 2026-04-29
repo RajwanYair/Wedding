@@ -474,7 +474,7 @@ function renderBudgetBurndownChart() {
 }
 
 /** Escape string for SVG attribute/text content. */
-function _escBudget(str) {
+function _escBudget(/** @type {string|number} */ str) {
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 

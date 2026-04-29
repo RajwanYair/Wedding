@@ -597,7 +597,7 @@ function _registerHandlers() {
     // Supabase Auth's `/auth/v1/authorize?provider=facebook` redirect. The
     // legacy SDK is no longer loaded; the action now ends in a server-side
     // OAuth round-trip. No-op when Supabase Auth is not configured.
-    import("./services/supabase-auth.js")
+    import("./services/supabase.js")
       .then(({ signInWithProvider }) => signInWithProvider("facebook"))
       .catch(() => {
         showToast(t("auth_provider_unavailable") ?? "Provider unavailable", "error");

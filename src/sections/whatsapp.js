@@ -158,13 +158,13 @@ export function buildWhatsAppMessage(guestId, template) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
-function _interpolate(template, guest, info) {
+function _interpolate(/** @type {string} */ template, /** @type {any} */ guest, /** @type {Record<string,string>} */ info) {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const tableName = tables.find((t) => t.id === guest.tableId)?.name ?? "";
   return personalizeMessage(template, guest, info, tableName);
 }
 
-function _defaultTemplate(info) {
+function _defaultTemplate(/** @type {Record<string,string>} */ info) {
   return t("wa_default_template")
     .replace(/\{date\}/g, info.date || "")
     .replace(/\{venue\}/g, info.venue || "")
@@ -420,7 +420,7 @@ export function generateICS() {
   const eventDate = new Date(info.date);
   if (Number.isNaN(eventDate.getTime())) return null;
   const endDate = new Date(eventDate.getTime() + 3 * 60 * 60 * 1000);
-  const format = (date) =>
+  const format = (/** @type {Date} */ date) =>
     date
       .toISOString()
       .replace(/[-:]/g, "")

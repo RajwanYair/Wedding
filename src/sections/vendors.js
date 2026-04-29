@@ -555,7 +555,7 @@ function renderVendorPaymentTimeline() {
 }
 
 /** Escape a string for SVG text content. */
-function _escStr(str) {
+function _escStr(/** @type {string|number} */ str) {
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 

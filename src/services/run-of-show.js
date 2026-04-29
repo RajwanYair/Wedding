@@ -26,15 +26,15 @@ const DEFAULT_TEMPLATE = Object.freeze([
 
 const _id = () => `t_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
 
-const _isHmm = (s) => typeof s === "string" && /^\d{1,2}:\d{2}$/.test(s);
+const _isHmm = (/** @type {any} */ s) => typeof s === "string" && /^\d{1,2}:\d{2}$/.test(s);
 
-const _toMinutes = (hhmm) => {
+const _toMinutes = (/** @type {string} */ hhmm) => {
   if (!_isHmm(hhmm)) return null;
   const [h, m] = hhmm.split(":").map(Number);
   return h * 60 + m;
 };
 
-const _fromMinutes = (n) => {
+const _fromMinutes = (/** @type {number} */ n) => {
   const wrapped = ((n % (24 * 60)) + 24 * 60) % (24 * 60);
   const h = Math.floor(wrapped / 60);
   const m = wrapped % 60;
@@ -53,7 +53,7 @@ export function saveRunOfShow(items) {
   writeBrowserStorageJson(STORAGE_KEY, items.filter(_isValid));
 }
 
-function _isValid(it) {
+function _isValid(/** @type {any} */ it) {
   return (
     it &&
     typeof it.id === "string" &&

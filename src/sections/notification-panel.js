@@ -122,7 +122,7 @@ export function markAllNotifRead() {
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
-function _levelIcon(level) {
+function _levelIcon(/** @type {string} */ level) {
   switch (level) {
     case "success": return "✅";
     case "warning": return "⚠️";
@@ -131,7 +131,7 @@ function _levelIcon(level) {
   }
 }
 
-function _relativeTime(iso) {
+function _relativeTime(/** @type {string} */ iso) {
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60_000);
   if (mins < 1) return t("notif_just_now");

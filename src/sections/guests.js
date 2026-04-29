@@ -270,7 +270,7 @@ function _exportGuestsCsvUrl() {
 }
 
 /** @returns {boolean} */
-function _isValidGuestPhone(phone) {
+function _isValidGuestPhone(/** @type {string} */ phone) {
   return isValidPhone(phone);
 }
 
@@ -353,7 +353,7 @@ export function importGuestsCSV(fileInput) {
         if (!header) return;
 
         const cols = header.split(",").map((c) => c.trim().toLowerCase());
-        const colIdx = (name) => cols.indexOf(name);
+        const colIdx = (/** @type {string} */ name) => cols.indexOf(name);
 
         const existing = /** @type {any[]} */ (storeGet("guests") ?? []);
         let added = 0;
@@ -361,7 +361,7 @@ export function importGuestsCSV(fileInput) {
 
         rows.forEach((line) => {
           const parts = line.split(",");
-          const get = (name) => parts[colIdx(name)]?.trim() ?? "";
+          const get = (/** @type {string} */ name) => parts[colIdx(name)]?.trim() ?? "";
           const phone = cleanPhone(get("phone") || get("טלפון") || "");
           if (!phone) return; // phone is required
 
@@ -424,7 +424,7 @@ export function openGuestForEdit(id) {
   const g = guests.find((guest) => guest.id === id);
   if (!g) return;
 
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {string|number|boolean} */ val) => {
     const input = /** @type {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement|null} */ (
       document.getElementById(elId)
     );

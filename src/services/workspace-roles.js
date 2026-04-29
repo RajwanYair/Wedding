@@ -31,14 +31,14 @@ const ROLE_RANK = Object.freeze({
 export const WORKSPACE_ROLES = Object.freeze(Object.keys(ROLE_PERMS));
 
 /** Returns true iff the role grants the permission. */
-export function hasPermission(role, perm) {
+export function hasPermission(/** @type {WorkspaceRole} */ role, /** @type {Permission} */ perm) {
   const list = ROLE_PERMS[role];
   if (!list) return false;
   return list.includes(perm);
 }
 
 /** Compare two roles. Returns -1 / 0 / 1 by rank. */
-export function compareRoles(a, b) {
+export function compareRoles(/** @type {WorkspaceRole} */ a, /** @type {WorkspaceRole} */ b) {
   const ra = ROLE_RANK[a] ?? 0;
   const rb = ROLE_RANK[b] ?? 0;
   if (ra > rb) return 1;
@@ -47,7 +47,7 @@ export function compareRoles(a, b) {
 }
 
 /** Returns true iff `actor` may change `target`'s role to `nextRole`. */
-export function canAssignRole(actorRole, targetRole, nextRole) {
+export function canAssignRole(/** @type {WorkspaceRole} */ actorRole, /** @type {WorkspaceRole} */ targetRole, /** @type {WorkspaceRole} */ nextRole) {
   if (!hasPermission(actorRole, "invite")) return false;
   // Cannot promote anyone to a higher rank than yourself.
   if (compareRoles(nextRole, actorRole) > 0) return false;
@@ -60,12 +60,12 @@ export function canAssignRole(actorRole, targetRole, nextRole) {
 }
 
 /** Filter a permission list to only those granted by the role. */
-export function filterByRole(role, perms) {
-  return (perms ?? []).filter((p) => hasPermission(role, p));
+export function filterByRole(/** @type {WorkspaceRole} */ role, /** @type {Permission[]} */ perms) {
+  return (perms ?? []).filter((/** @type {Permission} */ p) => hasPermission(role, p));
 }
 
 /** Default member entry shape for new invites. */
-export function newMember({ email, role = "guest", invitedBy = "" }) {
+export function newMember({ email = /** @type {string} */ (""), role = /** @type {WorkspaceRole} */ ("guest"), invitedBy = "" }) {
   if (typeof email !== "string" || !email.includes("@")) {
     throw new Error("invalid_email");
   }

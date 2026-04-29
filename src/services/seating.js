@@ -45,7 +45,7 @@ export function addConstraint({ guestId, type, targetGuestId }) {
  * @param {string} id
  */
 export function removeConstraint(id) {
-  const constraints = (storeGet("seatingConstraints") ?? []).filter((c) => c.id !== id);
+  const constraints = (storeGet("seatingConstraints") ?? []).filter((/** @type {any} */ c) => c.id !== id);
   storeSet("seatingConstraints", constraints);
 }
 

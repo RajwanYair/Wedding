@@ -478,7 +478,7 @@ export function openTableForEdit(id) {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   const tb = tables.find((t) => t.id === id);
   if (!tb) return;
-  const setVal = (elId, val) => {
+  const setVal = (/** @type {string} */ elId, /** @type {string|number} */ val) => {
     const input = /** @type {HTMLInputElement|HTMLSelectElement|null} */ (
       document.getElementById(elId)
     );

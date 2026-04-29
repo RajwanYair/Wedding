@@ -148,12 +148,12 @@ function _renderOverlapWarnings() {
   container.textContent = `⚠️ ${t("ros_overlap_warning")}: ${overlaps.length}`;
 }
 
-function _parseHmm(hhmm) {
+function _parseHmm(/** @type {string} */ hhmm) {
   const [h, m] = hhmm.split(":").map(Number);
   return h * 60 + m;
 }
 
-function _fromMinutes(n) {
+function _fromMinutes(/** @type {number} */ n) {
   const wrapped = ((n % (24 * 60)) + 24 * 60) % (24 * 60);
   const h = Math.floor(wrapped / 60);
   const m = wrapped % 60;

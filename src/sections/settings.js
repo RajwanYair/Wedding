@@ -865,7 +865,7 @@ function _loadPersistedVars() {
 }
 
 /** Persist and apply custom vars. */
-function _persistAndApplyVars(vars) {
+function _persistAndApplyVars(/** @type {Record<string,string>} */ vars) {
   const serialized = serializeThemeVars(vars);
   localStorage.setItem(THEME_VARS_STORAGE_KEY, serialized);
   applyThemeVars(vars);
@@ -1169,7 +1169,7 @@ function _getInstalledPlugins() {
 }
 
 /** Save installed plugins to localStorage. */
-function _saveInstalledPlugins(plugins) {
+function _saveInstalledPlugins(/** @type {any[]} */ plugins) {
   localStorage.setItem(PLUGIN_STORAGE_KEY, JSON.stringify(plugins));
 }
 
@@ -1229,7 +1229,7 @@ function renderPluginList() {
     removeBtn.className = "btn btn-small btn-danger";
     removeBtn.textContent = t("plugin_remove");
     removeBtn.addEventListener("click", () => {
-      const filtered = plugins.filter((p) => p.id !== plugin.id);
+      const filtered = plugins.filter((/** @type {any} */ p) => p.id !== plugin.id);
       _saveInstalledPlugins(filtered);
       renderPluginList();
     });
@@ -1262,7 +1262,7 @@ export function installPlugin() {
             showToast(`${t("plugin_warnings")}: ${result.warnings.join(", ")}`, "warning");
           }
           const plugins = _getInstalledPlugins();
-          if (plugins.some((p) => p.id === manifest.id)) {
+          if (plugins.some((/** @type {any} */ p) => p.id === manifest.id)) {
             showToast(t("plugin_already_installed"), "error");
             return;
           }
@@ -1378,5 +1378,5 @@ export async function checkIsApprovedAdmin(email) {
  * Reset the onboarding wizard to the first step.
  */
 export function resetOnboarding() {
-  setOnboardingState({ step: ONBOARDING_STEPS[0], completed: false });
+  setOnboardingState({ step: ONBOARDING_STEPS[0] ?? "welcome", completed: false });
 }

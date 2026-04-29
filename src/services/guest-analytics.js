@@ -142,7 +142,7 @@ const _INVITE_KEY = "invitationAnalytics";
 function _allEvents() {
   return storeGet(_INVITE_KEY) ?? [];
 }
-function _saveEvents(list) {
+function _saveEvents(/** @type {any[]} */ list) {
   storeSet(_INVITE_KEY, list);
   enqueueWrite(_INVITE_KEY, () => Promise.resolve());
 }

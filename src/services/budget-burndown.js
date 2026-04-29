@@ -95,7 +95,7 @@ export function getBudgetConsumptionPct(budgetTarget) {
 /** @typedef {{ amount: number, paidAt: string, category?: string }} ExpenseInput */
 /** @typedef {{ date: string, spent: number, remaining: number }} BurndownPoint */
 
-const _ymd = (s) => {
+const _ymd = (/** @type {string} */ s) => {
   const t = Date.parse(s);
   if (Number.isNaN(t)) return null;
   return new Date(t).toISOString().slice(0, 10);

@@ -20,7 +20,7 @@ import { buildGoogleCalendarLink, buildIcsDataUrl } from "../utils/calendar-link
 let _container = null;
 
 class RsvpSection extends BaseSection {
-  async onMount(params) {
+  async onMount(/** @type {HTMLElement} */ params) {
     _container = (params instanceof HTMLElement) ? params : null;
     // S12.5 — Check RSVP deadline
     if (_isRsvpDeadlinePassed()) {
@@ -198,7 +198,7 @@ export function submitRsvp(data) {
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 /** Pre-fill RSVP form fields from an existing guest record. */
-function _prefillForm(guest) {
+function _prefillForm(/** @type {any} */ guest) {
   /** @type {Record<string,string>} */
   const fieldMap = {
     phone: "rsvpPhone",
@@ -226,7 +226,7 @@ function _prefillForm(guest) {
 }
 
 /** Show RSVP success message. */
-function _showConfirmation(status) {
+function _showConfirmation(/** @type {string} */ status) {
   const confirmEl = document.getElementById("rsvpConfirm");
   if (!confirmEl) return;
   if (status === "confirmed") {

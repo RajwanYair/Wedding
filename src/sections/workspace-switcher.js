@@ -133,7 +133,7 @@ export function toggleWorkspaceDropdown() {
 }
 
 /** Select a workspace from the dropdown. */
-export function selectWorkspace(id) {
+export function selectWorkspace(/** @type {string} */ id) {
   switchWorkspace(id);
   const dropdown = document.getElementById("wsDropdown");
   if (dropdown) dropdown.classList.add("u-hidden");
