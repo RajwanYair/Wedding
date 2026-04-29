@@ -48,6 +48,9 @@ jobs:
       - name: Check credential hygiene
         run: npm run check:credentials
 
+      - name: Audit action namespace (advisory — S224)
+        run: npm run audit:actions
+
       - name: Unit tests (Vitest)
         run: npm test
         env:

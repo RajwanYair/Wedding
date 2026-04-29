@@ -21,6 +21,7 @@
     "validate:mermaid": "node scripts/validate-mermaid.mjs --enforce",
     "audit:db": "node scripts/audit-supabase-lint.mjs --enforce",
     "audit:migrations": "node scripts/audit-supabase-migrations.mjs --enforce",
+    "audit:actions": "node scripts/check-action-namespace.mjs",
     "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md && npm run validate:mermaid",
     "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
     "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",

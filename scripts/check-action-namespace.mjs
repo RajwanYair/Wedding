@@ -62,10 +62,25 @@ const namespacePct = actions.length
   ? Math.round((namespaced.length / (actions.length - report.exempt)) * 100)
   : 0;
 
-console.log(JSON.stringify(report, null, 2));
+// Duplicate detection (S224)
+const seen = new Map();
+const duplicates = [];
+for (const a of actions) {
+  seen.set(a, (seen.get(a) ?? 0) + 1);
+}
+for (const [a, count] of seen) {
+  if (count > 1) duplicates.push({ action: a, count });
+}
+if (duplicates.length) {
+  console.error(`audit:action-namespace — DUPLICATE actions found:`);
+  for (const d of duplicates) console.error(`  "${d.action}" × ${d.count}`);
+  process.exit(1);
+}
+
+console.log(JSON.stringify({ ...report, duplicates: [] }, null, 2));
 console.log(
-  `audit:action-namespace — ${namespaced.length}/${actions.length - report.exempt} actions namespaced (${namespacePct}%); ${flat.length} pending migration.`,
+  `audit:action-namespace — ${namespaced.length}/${actions.length - report.exempt} actions namespaced (${namespacePct}%); ${flat.length} pending migration. No duplicates found.`,
 );
 
-// Advisory: never exit non-zero on namespacing alone. Hard gate flips in v13.0.0.
+// Advisory: never exit non-zero on namespacing alone. Hard gate flips in v14.0.0.
 process.exit(0);
