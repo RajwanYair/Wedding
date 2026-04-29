@@ -1001,6 +1001,8 @@
   "no_expenses": "אין הוצאות",
   "batch_set_meal": "שנה ארוחה",
   "checkin_table_all": "כניסת כולם בשולחן",
+  "checkin_bulk_done": "צויין כהגיע {n} אורחים",
+  "checkin_bulk_done": "צוין כהגיע {n} אורחים",
   "timeline_alarm_title": "תזכורת אירוע",
   "timeline_alarm_minutes": "דקות",
   "wa_unsent_filter": "הצג לא נשלחו",

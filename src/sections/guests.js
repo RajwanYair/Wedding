@@ -108,7 +108,7 @@ export function saveGuest(data, existingId = null) {
   }
 
   storeSet("guests", guests);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  enqueueWrite("guests", async () => { await syncStoreKeyToSheets("guests"); clearGuestPendingSync(); });
   return { ok: true };
 }
 
@@ -120,13 +120,13 @@ export function deleteGuest(id) {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter((g) => g.id !== id);
   storeSet("guests", guests);
   _pendingSync.delete(id);
-  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  enqueueWrite("guests", async () => { await syncStoreKeyToSheets("guests"); clearGuestPendingSync(); });
 }
 
 /**
- * Mark all pending syncs as resolved (called by sheets service on success).
+ * Mark all pending syncs as resolved (called after a successful guests write).
  */
-export function clearGuestPendingSync() {
+function clearGuestPendingSync() {
   _pendingSync.clear();
   // Remove data-sync-pending attribute from all rows
   document.querySelectorAll("tr[data-sync-pending]").forEach((tr) => {
@@ -256,7 +256,7 @@ export function renderGuests() {
  * Export guest list as CSV blob URL.
  * @returns {string} object URL
  */
-export function exportGuestsCsv() {
+function _exportGuestsCsvUrl() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const header = "ID,First,Last,Phone,Status,Count,Children,Side,Group,Meal";
   const rows = guests.map(
@@ -270,7 +270,7 @@ export function exportGuestsCsv() {
 }
 
 /** @returns {boolean} */
-export function isValidGuestPhone(phone) {
+function _isValidGuestPhone(phone) {
   return isValidPhone(phone);
 }
 
@@ -278,7 +278,7 @@ export function isValidGuestPhone(phone) {
  * Export guest list as CSV file download.
  */
 export function exportGuestsCSV() {
-  const url = exportGuestsCsv();
+  const url = _exportGuestsCsvUrl();
   const a = document.createElement("a");
   a.href = url;
   a.download = "guests.csv";

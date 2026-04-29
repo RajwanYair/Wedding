@@ -1001,6 +1001,7 @@
   "no_expenses": "No expenses",
   "batch_set_meal": "Set meal",
   "checkin_table_all": "Check in all at table",
+  "checkin_bulk_done": "{n} guests checked in",
   "timeline_alarm_title": "Event Reminder",
   "timeline_alarm_minutes": "minutes",
   "wa_unsent_filter": "Show unsent",

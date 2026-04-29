@@ -28,6 +28,8 @@ import {
   exportAnalyticsCSV,
   exportMealPerTableCSV,
   printMealPerTable,
+  exportEventSummary,
+  printDietaryCards,
 } from "../sections/analytics.js";
 
 /**
@@ -124,4 +126,6 @@ export function register() {
   on("exportAnalyticsCSV", () => exportAnalyticsCSV());
   on("exportMealPerTableCSV", () => exportMealPerTableCSV());
   on("printMealPerTable", () => printMealPerTable());
+  on("exportEventSummary", () => exportEventSummary());
+  on("printDietaryCards", () => printDietaryCards());
 }

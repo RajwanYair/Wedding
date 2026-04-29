@@ -166,6 +166,7 @@ export function register() {
     if (!result.ok) showToast(result.errors?.join(", ") ?? t("error_save"), "error");
     else showToast(t("contact_sent"), "success");
   });
+  on("exportContactsCSV", () => contactSection.exportContactsCSV());
 
   // ── Landing table finder ──
   on("findTable", () => {

@@ -4,7 +4,7 @@
 
 import { on } from "../core/events.js";
 import { t } from "../core/i18n.js";
-import { showConfirmDialog } from "../core/ui.js";
+import { showConfirmDialog, showToast } from "../core/ui.js";
 import {
   checkInGuest,
   setCheckinSearch,
@@ -17,6 +17,7 @@ import {
   stopNFCCheckin,
   printGuestQrBadges,
 } from "../sections/checkin.js";
+import { bulkCheckIn } from "../services/guest-service.js";
 
 /**
  * Register `data-action` handlers for the check-in section.
@@ -45,4 +46,10 @@ export function register() {
       writeNFCTag(el.dataset.actionArg ?? "").catch(() => {}),
     ),
   );
+  on("bulkCheckIn", async (el) => {
+    const ids = (el.dataset.actionArg ?? "").split(",").filter(Boolean);
+    if (ids.length === 0) return;
+    await bulkCheckIn(ids);
+    showToast(t("checkin_bulk_done").replace("{n}", String(ids.length)), "success");
+  });
 }

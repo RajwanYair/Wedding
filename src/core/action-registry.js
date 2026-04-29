@@ -93,6 +93,7 @@ export const ACTIONS = /** @type {const} */ ({
   PRINT_GUESTS: "printGuests",
   PRINT_GUESTS_BY_TABLE: "printGuestsByTable",
   EXPORT_CHECKIN_REPORT: "exportCheckinReport",
+  BULK_CHECK_IN: "bulkCheckIn",
 
   // ── Vendors / Expenses ─────────────────────────────────────────────────
   SAVE_VENDOR: "saveVendor",
@@ -110,6 +111,7 @@ export const ACTIONS = /** @type {const} */ ({
   // ── RSVP ───────────────────────────────────────────────────────────────
   SUBMIT_RSVP: "submitRSVP",
   SUBMIT_CONTACT_FORM: "submitContactForm",
+  EXPORT_CONTACTS_CSV: "exportContactsCSV",
   COPY_CONTACT_LINK: "copyContactLink",
   ADD_REGISTRY_LINK: "addRegistryLink",
 
