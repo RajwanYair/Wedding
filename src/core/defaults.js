@@ -26,6 +26,8 @@ export const defaultWeddingInfo = {
   venueAddress: "",
   venueWaze: "",
   venueMapLink: "",
+  venueLat: "",
+  venueLon: "",
   budgetTarget: "",
   registryLinks: "[]",
 };

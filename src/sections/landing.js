@@ -8,6 +8,7 @@ import { storeGet } from "../core/store.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 import { t } from "../core/i18n.js";
 import { formatDateHebrew } from "../utils/date.js";
+import { buildWazeUrl, buildGoogleMapsUrl } from "../utils/venue-links.js";
 class LandingSection extends BaseSection {
   async onMount() {
     this.subscribe("weddingInfo", renderLanding);
@@ -45,16 +46,38 @@ export function renderLanding() {
   const addressEl = document.getElementById("landingAddress");
   if (addressEl) addressEl.textContent = info.venueAddress || "";
 
+  // Navigation links — use lat/lon via venue-links.js when available,
+  // fall back to the legacy venueWaze URL stored in weddingInfo.
+  const lat = parseFloat(info.venueLat ?? "");
+  const lon = parseFloat(info.venueLon ?? "");
+  const hasLatLon = !Number.isNaN(lat) && !Number.isNaN(lon);
+
   // Waze link
   const wazeLink = /** @type {HTMLAnchorElement|null} */ (
     document.getElementById("landingWazeLink")
   );
   if (wazeLink) {
-    if (info.venueWaze && info.venueWaze.startsWith("https://")) {
+    if (hasLatLon) {
+      wazeLink.href = buildWazeUrl(lat, lon);
+      wazeLink.classList.remove("u-hidden");
+    } else if (info.venueWaze && info.venueWaze.startsWith("https://")) {
       wazeLink.href = info.venueWaze;
       wazeLink.classList.remove("u-hidden");
     } else {
       wazeLink.classList.add("u-hidden");
+    }
+  }
+
+  // Google Maps link (lat/lon only)
+  const gmapsLink = /** @type {HTMLAnchorElement|null} */ (
+    document.getElementById("landingGoogleMapsLink")
+  );
+  if (gmapsLink) {
+    if (hasLatLon) {
+      gmapsLink.href = buildGoogleMapsUrl(lat, lon);
+      gmapsLink.classList.remove("u-hidden");
+    } else {
+      gmapsLink.classList.add("u-hidden");
     }
   }
 

@@ -84,6 +84,16 @@
           <label data-i18n="label_waze">קישור Waze</label>
           <input type="url" id="venueWaze" data-i18n-placeholder="ph_waze" placeholder="https://waze.com/ul/..." dir="ltr" data-on-input="updateWeddingDetails">
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="label_venue_lat">קו רוחב (Lat)</label>
+            <input type="number" id="venueLat" step="any" dir="ltr" placeholder="32.0853" data-on-input="updateWeddingDetails">
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_venue_lon">קו אורך (Lon)</label>
+            <input type="number" id="venueLon" step="any" dir="ltr" placeholder="34.7818" data-on-input="updateWeddingDetails">
+          </div>
+        </div>
       </div>
 
       <!-- Venue Map (auto-generated from address via OpenStreetMap) -->

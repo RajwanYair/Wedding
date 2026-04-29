@@ -37,6 +37,8 @@ export function updateWeddingDetails() {
     { id: "venueName", key: "venue" },
     { id: "venueAddress", key: "venueAddress" },
     { id: "venueWaze", key: "venueWaze" },
+    { id: "venueLat", key: "venueLat" },
+    { id: "venueLon", key: "venueLon" },
   ];
   const delta = /** @type {Record<string,string>} */ ({});
   fieldMap.forEach(({ id, key }) => {
