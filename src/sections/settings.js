@@ -783,8 +783,7 @@ export function checkDataIntegrity() {
  * Sprint 9 — DX: debug report for admin troubleshooting.
  */
 export function exportDebugReport() {
-  /** @type {any[]} */
-  const errors = STORAGE_KEYS.ERRORS ? readBrowserStorageJson(STORAGE_KEYS.ERRORS, []) : [];
+  const errors = /** @type {any[]} */ (STORAGE_KEYS.ERRORS ? (readBrowserStorageJson(STORAGE_KEYS.ERRORS, []) ?? []) : []);
 
   const report = {
     timestamp: new Date().toISOString(),

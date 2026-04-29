@@ -250,7 +250,7 @@ export function verifyToken(token) {
  * @returns {string[]}
  */
 function _getRevokedSet() {
-  return readBrowserStorageJson(REVOKED_STORE_KEY, []);
+  return /** @type {string[]} */ (readBrowserStorageJson(REVOKED_STORE_KEY, []) ?? []);
 }
 
 /**
@@ -331,7 +331,7 @@ export function issueGuestToken(guestId, opts = {}) {
  * @param {string} token
  */
 export function recordIssuedToken(guestId, token) {
-  const existing = storeGet("issuedTokens") ?? [];
+  const existing = /** @type {Array<{guestId:string,token:string,issuedAt:number}>} */ (storeGet("issuedTokens") ?? []);
   const entry = { guestId, token, issuedAt: Date.now() };
   storeSet("issuedTokens", [...existing, entry]);
 }

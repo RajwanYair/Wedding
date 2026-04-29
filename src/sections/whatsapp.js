@@ -398,7 +398,7 @@ const _QUEUE_KEY = STORAGE_KEYS.REMINDER_QUEUE;
  * @returns {ScheduledMsg[]}
  */
 export function getScheduledQueue() {
-  return readBrowserStorageJson(_QUEUE_KEY, []);
+  return /** @type {ScheduledMsg[]} */ (readBrowserStorageJson(_QUEUE_KEY, []) ?? []);
 }
 
 /**

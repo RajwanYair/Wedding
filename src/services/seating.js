@@ -35,7 +35,7 @@ export function addConstraint({ guestId, type, targetGuestId }) {
   if (type !== "near" && type !== "far") throw new Error(`Invalid constraint type: ${type}`);
   const id = `sc_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   const constraint = { id, guestId, type, targetGuestId, createdAt: new Date().toISOString() };
-  const existing = storeGet("seatingConstraints") ?? [];
+  const existing = /** @type {SeatingConstraint[]} */ (storeGet("seatingConstraints") ?? []);
   storeSet("seatingConstraints", [...existing, constraint]);
   return id;
 }
@@ -45,7 +45,7 @@ export function addConstraint({ guestId, type, targetGuestId }) {
  * @param {string} id
  */
 export function removeConstraint(id) {
-  const constraints = (storeGet("seatingConstraints") ?? []).filter((/** @type {any} */ c) => c.id !== id);
+  const constraints = /** @type {SeatingConstraint[]} */ (storeGet("seatingConstraints") ?? []).filter((/** @type {any} */ c) => c.id !== id);
   storeSet("seatingConstraints", constraints);
 }
 
@@ -54,7 +54,7 @@ export function removeConstraint(id) {
  * @returns {SeatingConstraint[]}
  */
 export function listConstraints() {
-  return storeGet("seatingConstraints") ?? [];
+  return /** @type {SeatingConstraint[]} */ (storeGet("seatingConstraints") ?? []);
 }
 
 /**
@@ -63,7 +63,7 @@ export function listConstraints() {
  * @returns {ConstraintViolation[]}
  */
 export function validateSeating(tables) {
-  const constraints = storeGet("seatingConstraints") ?? [];
+  const constraints = /** @type {SeatingConstraint[]} */ (storeGet("seatingConstraints") ?? []);
   /** @type {Map<string, string>} guestId → tableId */
   const guestTable = new Map();
   for (const table of tables) {

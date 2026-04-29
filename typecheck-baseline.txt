@@ -12,16 +12,12 @@ src/sections/rsvp.js::TS2345::Argument of type 'RsvpSection' is not assignable t
 src/sections/rsvp.js::TS2345::Argument of type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/calen
 src/sections/rsvp.js::TS2353::Object literal may only specify known properties, and 'title' does not exist in type 'typeof import("C:/Users/ryair/OneD
 src/sections/rsvp.js::TS2416::Property 'onMount' in type 'RsvpSection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/settings.js::TS2322::Type 'never[] | undefined' is not assignable to type 'any[]'.
-src/sections/whatsapp.js::TS2322::Type 'never[] | undefined' is not assignable to type 'ScheduledMsg[]'.
 src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
 src/services/compliance.js::TS2339::Property 'access_token' does not exist on type 'never'.
 src/services/compliance.js::TS2339::Property 'user' does not exist on type 'never'.
 src/services/compliance.js::TS2862::Type 'T' is generic and can only be indexed for reading.
 src/services/event-manager.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/event-manager.js::TS2577::Return type annotation circularly references itself.
-src/services/guest-identity.js::TS2322::Type 'never[] | undefined' is not assignable to type 'string[]'.
-src/services/guest-identity.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
 src/services/guest-service.js::TS2339::Property 'bulkSetStatus' does not exist on type '{ getAll(): Promise<Guest[]>; getById(id: string): Promise<Guest | null
 src/services/guest-service.js::TS2345::Argument of type '{ firstName: string; lastName: string; phone: string; email: string; count: number; children: number; 
 src/services/notifications.js::TS2322::Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
@@ -41,9 +37,6 @@ src/services/repositories.js::TS1005::'}' expected.
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Guest'. Did you mean to write
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Vendor'. Did you mean to writ
 src/services/repositories.js::TS8022::JSDoc '@implements' is not attached to a class.
-src/services/seating.js::TS2339::Property 'filter' does not exist on type '{}'.
-src/services/seating.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
-src/services/seating.js::TS2740::Type '{}' is missing the following properties from type 'SeatingConstraint[]': length, pop, push, concat, and 35 more.
 src/services/security.js::TS2769::No overload matches this call.
 src/services/security.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/sync.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.
