@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.2.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.4.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,14 +20,13 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2025-07-10, v13.2.0):** **3 109 tests passing** across 222 files · 0 lint errors / 0 warnings
+**State (2025-07-21, v13.4.0):** **3 153 tests passing** across 225 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 22
 Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
-Sprints 118–137 complete (Cluster V); S196–S205 complete (Cluster VI): deploy buttons, DNS CNAME UI,
-PII bootstrap, ICU plurals sweep, FR/ES critical translation, IDB write queue, print preview picker,
-GlitchTip/Sentry monitoring activation.
+Sprints S216–S225 complete: dead export wiring, service consolidation (60 files, was 70), CSS container
+queries, action namespace enforcement (audit:actions CI gate), TSC baseline 245→212 (33 errors fixed).
 
 **The one decision that matters most:** flip `BACKEND_TYPE` from `"sheets"` to `"supabase"`.
 This single line of code unblocks every other capability in this roadmap. Three major versions
@@ -76,20 +75,20 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.2.0 · 2025-07-10
+### Actual state — v13.4.0 · 2025-07-21
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **3 109 passing · 222 files · 0 Node warnings** | ✅ |
-| TypeScript errors | trending down via JSDoc-strict | ⚠ ratchet active |
-| Dead exports | purged in S183 (0 unused exports) | ✅ |
+| Tests | **3 153 passing · 225 files · 0 Node warnings** | ✅ |
+| TypeScript errors | baseline 212 (was 245 at v13.3) — 33 fixed in S225 | ⚠ ratchet active |
+| Dead exports | wired in S218 (exportContactsCSV, bulkCheckIn, exportEventSummary, printDietaryCards) | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
 | Sections | **23** modules · **18** templates · **8** modals | ✅ |
-| Services | **70** files (was 83 at v13.0) | ⚠ target ≤ 25 (Phase B1) |
+| Services | **60** files (was 70 at v13.2, -2 merges S219+S220) | ⚠ target ≤ 25 (Phase B1) |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
-| i18n keys (HE = primary) | **1 208** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ HE/EN/AR/FR/ES |
+| i18n keys (HE = primary) | **1 209** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ HE/EN/AR/FR/ES |
 | DB migrations | **22** Supabase migrations | ✅ |
 | Active backend | `BACKEND_TYPE = "sheets"` · Supabase wired but not primary | ❌ P0 (flip in v13) |
 | Auth tokens | plaintext in `localStorage` | ❌ P0 (encrypt in v13) |
@@ -1109,7 +1108,9 @@ Storage + Realtime for development without an account.
 | **v12.7.0** | Released 2026-04-28 | Cluster VI — Phase D platform scaffolding | Sprints 128–137: DNS CNAME helpers, deploy-button URLs, LHCI per-locale, theme.json export/import, workspace RBAC, plugin manifest validator, public website builder, FR + ES locale bootstrap, Capacitor config builder |
 | **v12.9.0** | Released 2025-05-26 | **Cluster VII — Codebase health & native platform** | S169–S175: sheets merge, service consolidation #2, TSC baseline cleared, dead export purge, BaseSection adoption (4 sections), native \<dialog\> modals (4), @scope CSS isolation (10/19 sections) |
 | v12.8.x | Released | Cluster VII — Phase D UI wiring | Sprints 138–155: theme picker UI, website builder UI, workspace switcher, plugin install UI, Capacitor CI, notification dropdown, run-of-show + chart sections, ICU sweep |
-| **v13.0.0** | **This release** | **Codebase hardening — dead exports · arch-check · service merge** | **S183: dead-export purge (~30 exports removed, 6 functions deleted, 3 handlers added); S184: arch-check enforcement (0 violations); S185: service consolidation (86→83, 3 merges)** |
+| **v13.0.0** | **Released 2025-07** | **Codebase hardening — dead exports · arch-check · service merge** | **S183: dead-export purge (~30 exports removed, 6 functions deleted, 3 handlers added); S184: arch-check enforcement (0 violations); S185: service consolidation (86→83, 3 merges)** |
+| **v13.3.0** | **Released 2025-07-14** | **S206–S215: Notifications · What's New · AR locale · Trusted Types · CSS @scope · Cmd-K · Popover API** | **S206–S215 complete; 3 153 tests; 5 locales; 7 service merges (70→64 files)** |
+| **v13.4.0** | **Released 2025-07-21** | **S216–S225: Dead export wiring · service consolidation · container queries · action namespace · TSC −33** | **S218–S225; 60 service files; baseline 245→212; audit:actions CI gate; 3 153 tests** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1118,5 +1119,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2025-06-12 · v13.0.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2025-07-21 · v13.4.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*

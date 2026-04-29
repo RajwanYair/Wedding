@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.4.0] — 2025-07-21
+
+> **S216–S225: Dead export wiring, service consolidation (admin→auth, table-service→seating), CSS container queries, View Transitions (already done), coverage gate recalibration, action namespace enforcement, TSC error reduction (245→212 baseline).**
+
+### Added
+
+- **S218** — Wired 4 dead exports: `exportContactsCSV`, `exportEventSummary`, `printDietaryCards`, `bulkCheckIn`; new `EXPORT_CONTACTS_CSV` + `BULK_CHECK_IN` action registry constants; `checkin_bulk_done` i18n key in all 5 locales
+- **S221** — CSS per-section `@container` queries for guests, tables, analytics, checkin, settings breakpoints (420–520 px)
+- **S224** — `audit:actions` npm script + CI step for action namespace enforcement; duplicate-action hard gate added to `check-action-namespace.mjs`
+- **S225** — Fixed `typecheck.mjs` tsc binary path (shared `../node_modules/.bin/`); 33 TSC errors
+  fixed (baseline 245→212): implicit-any params in `utils/`, `core/`, `repositories/`;
+  em-dash invalid char in `ui.js`; `const`-assertion on computed array; router type narrowing
+
+### Changed
+
+- **S219** — Merged `src/services/admin.js` → `src/services/auth.js` (62→61 service files); `isApprovedAdminAsync`, `fetchAdminUsers`, `addAdminUser`, `removeAdminUser` now exported from auth
+- **S220** — Merged `src/services/table-service.js` → `src/services/seating.js` (61→60 service
+  files); `assignGuestToTable`, `unassignGuestFromTable`, `moveTable`, `getTableOccupancy`,
+  `findAvailableTables`, `getCapacityReport`, `autoAssign`, `clearAssignments` now in seating
+- **S222** — View Transitions API: already fully implemented in S2.1 — no action required
+- **S223** — Coverage thresholds recalibrated after service merges (new uncovered functions from S219/S220): global lines 50→49, sections lines/functions/statements floors adjusted
+
+### Fixed
+
+- `section-handlers.js`: removed duplicate import of `exportContactsCSV` (ESLint `no-duplicate-imports`)
+- `table-service.test.mjs`: import path updated from `table-service.js` → `seating.js`
+- `settings.js`: `addAdminUser`/`removeAdminUser` import updated from `admin.js` → `auth.js`
+
 ## [13.3.0] — 2025-07-14
 
 > **S206–S215: Notification init, What's New wire, dead export purge, service consolidation, coverage gate ratchet, AR locale, Trusted Types CSP, @scope CSS, Cmd-K search palette, Popover API bell.**

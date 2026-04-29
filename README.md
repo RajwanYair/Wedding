@@ -1,6 +1,6 @@
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v13.3.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v13.4.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
 [![Tests](https://img.shields.io/badge/tests-3153_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
