@@ -68,7 +68,7 @@ export async function tentativeGuest(id, notes) {
  * @returns {Promise<import('../types').Guest>}
  */
 export async function resetGuestStatus(id) {
-  return guestRepo.update(id, { status: "pending", rsvpDate: null });
+  return guestRepo.update(id, { status: "pending", rsvpDate: /** @type {any} */ (null) });
 }
 
 // ── Seating ────────────────────────────────────────────────────────────────
@@ -167,12 +167,12 @@ export async function importGuests(rows) {
         meal: /** @type {any} */ (meal),
         mealNotes: String(row.mealNotes ?? "").trim(),
         accessibility: String(row.accessibility ?? "").trim(),
-        tableId: null,
+        tableId: /** @type {any} */ (null),
         gift: "",
         notes: String(row.notes ?? "").trim(),
         sent: false,
         checkedIn: false,
-        rsvpDate: null,
+        rsvpDate: /** @type {any} */ (null),
       });
       created++;
     } catch (err) {
@@ -221,7 +221,8 @@ export async function getGuestStats() {
   };
 
   for (const g of guests) {
-    stats[/** @type {keyof typeof stats} */ (g.status)] = (stats[/** @type {keyof typeof stats} */ (g.status)] ?? 0) + 1;
+    const _sk = /** @type {"confirmed"|"declined"|"pending"|"maybe"} */ (g.status);
+    if (_sk in stats) stats[_sk] = (stats[_sk] ?? 0) + 1;
     if (g.tableId) stats.seated++;
     if (g.checkedIn) stats.checkedIn++;
     if (g.status === "confirmed") stats.confirmedGuests += g.count ?? 1;

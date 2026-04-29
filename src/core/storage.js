@@ -254,8 +254,8 @@ export function removeBrowserStorage(key) {
  * Read and parse JSON from localStorage.
  * @template T
  * @param {string} key
- * @param {T} fallback
- * @returns {T}
+ * @param {T} [fallback]
+ * @returns {T | undefined}
  */
 export function readBrowserStorageJson(key, fallback) {
   return _parseJson(readBrowserStorage(key), fallback);

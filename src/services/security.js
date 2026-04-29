@@ -500,6 +500,9 @@ export function getSession(sessionId) {
 
 /**
  * Record a guest check-in.
+ * @param {string} sessionId
+ * @param {string} guestId
+ * @param {number} [partySize]
  * @returns {"ok" | "already_checked_in" | "session_not_found" | "session_ended"}
  */
 export function checkIn(sessionId, guestId, partySize = 1) {
@@ -523,6 +526,7 @@ export function isCheckedIn(sessionId, guestId) {
 
 /**
  * Get check-in stats for a session.
+ * @param {string} sessionId
  * @returns {{ guestCount: number, partySize: number, isActive: boolean, startedAt: number } | null}
  */
 export function getSessionStats(sessionId) {

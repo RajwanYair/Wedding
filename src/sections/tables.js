@@ -224,7 +224,7 @@ function renderTables() {
  * Render a seating-constraint violations banner above the floor.
  * Clears any previous banner first.
  *
- * @param {import('../services/seating-constraints.js').ConstraintViolation[]} violations
+ * @param {import('../services/seating.js').ConstraintViolation[]} violations
  * @param {any[]} guests
  * @param {HTMLElement} floor
  */

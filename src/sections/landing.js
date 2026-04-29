@@ -131,7 +131,7 @@ function _getRegistryLinks(info) {
         }
         return null;
       })
-      .filter((item) => item && item.url.startsWith("https://"));
+      .filter(/** @param {any} item @returns {item is {url:string,name:string}} */ (item) => item != null && item.url.startsWith("https://"));
   } catch {
     return [];
   }

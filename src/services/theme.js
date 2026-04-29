@@ -34,7 +34,7 @@ const _byKey = new Map(THEME_VARS.map((v) => [v.key, v]));
 
 /**
  * Validate + coerce a user-supplied draft. Unknown keys are dropped silently.
- * @param {Record<string,string>} draft
+ * @param {Record<string,unknown>} draft
  * @returns {Record<string,string>}
  */
 export function sanitizeThemeVars(draft) {

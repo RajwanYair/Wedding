@@ -1,9 +1,9 @@
+src/core/config-scopes.js::TS2322::Type '{} | undefined' is not assignable to type 'Record<string, unknown>'.
 src/main.js::TS2554::Expected 1 arguments, but got 0.
 src/repositories/supabase-base-repository.js::TS2707::Generic type 'PostgrestFilterBuilder<ClientOptions, Schema, Row, Result$1, RelationName, Relationships, Method>' require
 src/repositories/vendor-repository.js::TS8022::JSDoc '@extends' is not attached to a class.
 src/sections/guest-landing.js::TS2345::Argument of type 'GuestLandingSection' is not assignable to parameter of type 'BaseSection'.
 src/sections/guest-landing.js::TS2416::Property 'onMount' in type 'GuestLandingSection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/landing.js::TS2322::Type '({ url: any; name: any; } | null)[]' is not assignable to type '{ url: string; name: string; }[]'.
 src/sections/notification-panel.js::TS2345::Argument of type 'NotificationPanelSection' is not assignable to parameter of type 'BaseSection'.
 src/sections/notification-panel.js::TS2416::Property 'onMount' in type 'NotificationPanelSection' is not assignable to the same property in base type 'BaseSection'.
 src/sections/registry.js::TS2345::Argument of type 'RegistrySection' is not assignable to parameter of type 'BaseSection'.
@@ -12,23 +12,22 @@ src/sections/rsvp.js::TS2345::Argument of type 'RsvpSection' is not assignable t
 src/sections/rsvp.js::TS2345::Argument of type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/calen
 src/sections/rsvp.js::TS2353::Object literal may only specify known properties, and 'title' does not exist in type 'typeof import("C:/Users/ryair/OneD
 src/sections/rsvp.js::TS2416::Property 'onMount' in type 'RsvpSection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/tables.js::TS2307::Cannot find module '../services/seating-constraints.js' or its corresponding type declarations.
-src/sections/website-builder.js::TS2554::Expected 2 arguments, but got 1.
+src/sections/settings.js::TS2322::Type 'never[] | undefined' is not assignable to type 'any[]'.
+src/sections/whatsapp.js::TS2322::Type 'never[] | undefined' is not assignable to type 'ScheduledMsg[]'.
 src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
 src/services/compliance.js::TS2339::Property 'access_token' does not exist on type 'never'.
 src/services/compliance.js::TS2339::Property 'user' does not exist on type 'never'.
+src/services/compliance.js::TS2862::Type 'T' is generic and can only be indexed for reading.
 src/services/event-manager.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/event-manager.js::TS2577::Return type annotation circularly references itself.
+src/services/guest-identity.js::TS2322::Type 'never[] | undefined' is not assignable to type 'string[]'.
 src/services/guest-identity.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
-src/services/guest-service.js::TS2322::Type 'null' is not assignable to type 'string | undefined'.
-src/services/guest-service.js::TS2322::Type 'null' is not assignable to type 'string'.
 src/services/guest-service.js::TS2339::Property 'bulkSetStatus' does not exist on type '{ getAll(): Promise<Guest[]>; getById(id: string): Promise<Guest | null
-src/services/guest-service.js::TS2365::Operator '+' cannot be applied to types 'number | Record<string, number>' and 'number'.
-src/services/nfc-session.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
+src/services/guest-service.js::TS2345::Argument of type '{ firstName: string; lastName: string; phone: string; email: string; count: number; children: number; 
 src/services/notifications.js::TS2322::Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
+src/services/notifications.js::TS2322::Type 'null | undefined' is not assignable to type 'PushSubscriptionData | null'.
 src/services/notifications.js::TS2339::Property 'failed' does not exist on type '{ ok: boolean; data?: unknown; error?: string | undefined; }'.
 src/services/notifications.js::TS2339::Property 'sent' does not exist on type '{ ok: boolean; data?: unknown; error?: string | undefined; }'.
-src/services/notifications.js::TS2554::Expected 2 arguments, but got 1.
 src/services/notifications.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/core/store"' has no exported mem
 src/services/observability.js::TS2307::Cannot find module '@sentry/browser' or its corresponding type declarations.
 src/services/observability.js::TS2322::Type '({ function: string | undefined; filename: string | undefined; lineno: number; colno: number; } | { filename: stri
@@ -36,19 +35,15 @@ src/services/observability.js::TS2353::Object literal may only specify known pro
 src/services/observability.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/outreach.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
 src/services/outreach.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
-src/services/compliance.js::TS2862::Type 'T' is generic and can only be indexed for reading.
 src/services/realtime.js::TS2554::Expected 1 arguments, but got 2.
 src/services/realtime.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/misc"' has no exported mem
 src/services/repositories.js::TS1005::'}' expected.
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Guest'. Did you mean to write
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Vendor'. Did you mean to writ
 src/services/repositories.js::TS8022::JSDoc '@implements' is not attached to a class.
-src/services/schedule.js::TS2554::Expected 2 arguments, but got 1.
 src/services/seating.js::TS2339::Property 'filter' does not exist on type '{}'.
 src/services/seating.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
 src/services/seating.js::TS2740::Type '{}' is missing the following properties from type 'SeatingConstraint[]': length, pop, push, concat, and 35 more.
 src/services/security.js::TS2769::No overload matches this call.
+src/services/security.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/sync.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.
-src/services/theme.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
-src/utils/capacitor-config.js::TS2339::Property 'test' does not exist on type 'readonly string[]'.
-src/utils/capacitor-config.js::TS2740::Type 'RegExp' is missing the following properties from type 'readonly string[]': length, concat, join, slice, and 26 mor

@@ -24,7 +24,7 @@ const ROLE_BADGE = Object.freeze({
 
 /**
  * Get all workspaces from the store.
- * @returns {{ id: string, name: string, role: import('../services/workspace-roles.js').WorkspaceRole }[]}
+ * @returns {{ id: string, name: string, role: import('../services/workspace.js').WorkspaceRole }[]}
  */
 function getWorkspaces() {
   return /** @type {any} */ (storeGet(STORAGE_KEY)) ?? [

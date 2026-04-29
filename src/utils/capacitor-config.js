@@ -6,7 +6,7 @@
  * result with `JSON.stringify`. Designed for the Phase-D7 native-app path.
  */
 
-/** @type {readonly string[]} */
+/** @type {RegExp} */
 const VALID_APP_ID_RE = /^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*){2,}$/i;
 
 /** @type {readonly string[]} */
