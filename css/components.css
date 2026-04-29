@@ -4068,6 +4068,17 @@
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
+
+    /* S215: Popover API — hide by default via popover attribute; show on :popover-open */
+    &:popover-open {
+      display: block;
+      /* Popover is in top layer; position relative to viewport */
+      position: fixed;
+      inset: auto;
+      inset-block-start: var(--notif-panel-top, 3.5rem);
+      inset-inline-end: var(--notif-panel-end, 1rem);
+      margin: 0;
+    }
   }
 
   .notif-panel-header {

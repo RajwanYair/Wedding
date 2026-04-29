@@ -91,11 +91,22 @@ function renderNotifList() {
   }
 }
 
-/** Toggle the notification panel visibility. */
+/** Toggle the notification panel visibility.
+ * S215: prefers native Popover API (togglePopover) with fallback to classList.
+ */
 export function toggleNotifPanel() {
   const panel = document.getElementById("notifPanel");
   const btn = document.getElementById("notifBellBtn");
   if (!panel) return;
+  // Native Popover API path (Chrome 114+, Firefox 125+, Safari 17+)
+  if (typeof (/** @type {any} */ (panel)).togglePopover === "function") {
+    /** @type {any} */ (panel).togglePopover();
+    const isOpen = /** @type {any} */ (panel).matches(":popover-open");
+    if (btn) btn.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) renderNotifList();
+    return;
+  }
+  // Legacy fallback
   const isHidden = panel.classList.contains("u-hidden");
   panel.classList.toggle("u-hidden", !isHidden);
   if (btn) btn.setAttribute("aria-expanded", String(isHidden));
