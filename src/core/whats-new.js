@@ -14,12 +14,12 @@ import {
   shouldShowWhatsNew,
   collectNewerEntries,
   flattenItems,
-} from "../services/whats-new-engine.js";
+} from "../services/onboarding.js";
 
 /**
  * Release manifest — each version lists user-visible i18n item keys.
  * Newest first. Only the entries *newer than lastSeen* are shown.
- * @type {import('../services/whats-new-engine.js').WhatsNewEntry[]}
+ * @type {import('../services/onboarding.js').WhatsNewEntry[]}
  */
 const RELEASE_ENTRIES = [
   {

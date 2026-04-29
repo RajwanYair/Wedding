@@ -19,7 +19,7 @@ const {
   shouldShowWhatsNew,
   collectNewerEntries,
   flattenItems,
-} = await import("../../src/services/whats-new-engine.js");
+} = await import("../../src/services/onboarding.js");
 
 describe("WhatsNewModal (Sprint 148)", () => {
   describe("compareSemver", () => {
