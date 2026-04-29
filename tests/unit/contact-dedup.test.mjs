@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { jaroSimilarity, findDuplicates, mergeContacts } from "../../src/services/contact-dedup.js";
+import { jaroSimilarity, findDuplicates, mergeContacts } from "../../src/services/guest-identity.js";
 
 describe("jaroSimilarity", () => {
   it("identical strings = 1", () => {

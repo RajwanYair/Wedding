@@ -142,7 +142,7 @@ export function initRouter() {
 
   const deepToken = params.get("token");
   if (deepToken) {
-    import("../services/guest-token.js").then(({ getGuestByToken, recordIssuedToken }) => {
+    import("../services/guest-identity.js").then(({ getGuestByToken, recordIssuedToken }) => {
       const guest = getGuestByToken(deepToken);
       if (guest) {
         recordIssuedToken(guest.id, deepToken);

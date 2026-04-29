@@ -27,7 +27,7 @@ const {
   getGuestByToken,
   issueGuestToken,
   setTokenSecret,
-} = await import("../../src/services/guest-token.js");
+} = await import("../../src/services/guest-identity.js");
 
 import { makeGuest } from "./helpers.js";
 

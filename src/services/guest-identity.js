@@ -1,22 +1,127 @@
 /**
- * src/services/guest-token.js — Guest token service (Sprint 36)
+ * src/services/guest-identity.js — S261 merged guest identity service
  *
- * Provides short-lived, base64url-encoded tokens for email/link-based RSVP
- * guest identification.  Tokens are stateless JWS-like strings:
+ * Merged from:
+ *   - contact-dedup.js (Sprint 136) — contact deduplication + merge
+ *   - guest-token.js   (Sprint 36)  — RSVP token issuance + validation
  *
- *   <base64url(header)>.<base64url(payload)>.<base64url(signature)>
+ * §1 Contact dedup: jaroSimilarity, findDuplicates, mergeContacts
+ * §2 Guest tokens: issueGuestToken, getGuestByToken, revokeToken,
+ *    isValidToken, recordIssuedToken, STORAGE_KEYS.REVOKED_TOKENS
  *
- * The "signature" is a simple HMAC-SHA256 produced via SubtleCrypto when
- * available.  In environments without SubtleCrypto (test / server) a
- * deterministic SHA-256-less fallback is used (for token structure testing).
- *
- * NOTE: This is NOT a full-strength JWT implementation — it is intended for
- * convenience tokens on a private wedding app.  Tokens are intentionally
- * short-lived (24 h default) and stored revocations live in localStorage.
- *
- * Key:   The signing key defaults to `window.__WEDDING_TOKEN_SECRET__ ?? "wedding-secret"`.
- *        Override via `setTokenSecret(secret)` before use.
+ * Named exports only — no window.* side effects.
  */
+/**
+ * @typedef {{ id: string, firstName: string, lastName: string,
+ *   phone?: string, email?: string }} ContactRecord
+ * @typedef {{ a: string, b: string, reason: string, score: number }} DuplicatePair
+ */
+
+/**
+ * Normalise a phone for comparison: digits only.
+ * @param {string | undefined} phone
+ * @returns {string}
+ */
+function _normalisePhone(phone) {
+  if (!phone) return "";
+  return String(phone).replace(/\D/g, "").replace(/^0/, "972");
+}
+
+/**
+ * Compute Jaro-Winkler similarity (simplified: Jaro only) between two strings.
+ * Returns 0–1 where 1 = identical.
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
+export function jaroSimilarity(a, b) {
+  if (a === b) return 1;
+  if (!a || !b) return 0;
+
+  const matchWindow = Math.floor(Math.max(a.length, b.length) / 2) - 1;
+  if (matchWindow < 0) return 0;
+
+  const aMatches = Array(a.length).fill(false);
+  const bMatches = Array(b.length).fill(false);
+  let matches = 0;
+  let transpositions = 0;
+
+  for (let i = 0; i < a.length; i++) {
+    const lo = Math.max(0, i - matchWindow);
+    const hi = Math.min(b.length - 1, i + matchWindow);
+    for (let j = lo; j <= hi; j++) {
+      if (bMatches[j] || a[i] !== b[j]) continue;
+      aMatches[i] = bMatches[j] = true;
+      matches++;
+      break;
+    }
+  }
+
+  if (matches === 0) return 0;
+
+  let k = 0;
+  for (let i = 0; i < a.length; i++) {
+    if (!aMatches[i]) continue;
+    while (!bMatches[k]) k++;
+    if (a[i] !== b[k]) transpositions++;
+    k++;
+  }
+
+  return (matches / a.length + matches / b.length + (matches - transpositions / 2) / matches) / 3;
+}
+
+/**
+ * Find potential duplicate contacts.
+ * @param {ContactRecord[]} contacts
+ * @param {{ phoneThreshold?: number, nameThreshold?: number }} [opts]
+ * @returns {DuplicatePair[]}
+ */
+export function findDuplicates(contacts, { phoneThreshold = 1, nameThreshold = 0.92 } = {}) {
+  /** @type {DuplicatePair[]} */
+  const pairs = [];
+  for (let i = 0; i < contacts.length; i++) {
+    for (let j = i + 1; j < contacts.length; j++) {
+      const a = contacts[i];
+      const b = contacts[j];
+      if (!a || !b) continue;
+
+      // Phone match
+      const pa = _normalisePhone(a.phone);
+      const pb = _normalisePhone(b.phone);
+      if (pa && pb && pa === pb) {
+        pairs.push({ a: a.id, b: b.id, reason: "phone", score: phoneThreshold });
+        continue;
+      }
+
+      // Name similarity
+      const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+      const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+      const score = jaroSimilarity(nameA, nameB);
+      if (score >= nameThreshold) {
+        pairs.push({ a: a.id, b: b.id, reason: "name", score });
+      }
+    }
+  }
+  return pairs;
+}
+
+/**
+ * Merge contact B into contact A (A wins for non-empty fields).
+ * @param {ContactRecord} primary
+ * @param {ContactRecord} secondary
+ * @returns {ContactRecord}
+ */
+export function mergeContacts(primary, secondary) {
+  return {
+    ...secondary,
+    ...primary,
+    phone: primary.phone || secondary.phone,
+    email: primary.email || secondary.email,
+  };
+}
+
+
+// ── §2 — Guest token service ───────────────────────────────────────────
 
 import { STORAGE_KEYS } from "../core/constants.js";
 import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage.js";
@@ -230,3 +335,4 @@ export function recordIssuedToken(guestId, token) {
   const entry = { guestId, token, issuedAt: Date.now() };
   storeSet("issuedTokens", [...existing, entry]);
 }
+
