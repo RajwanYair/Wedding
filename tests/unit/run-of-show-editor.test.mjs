@@ -23,7 +23,7 @@ const {
   sortTimeline,
   detectOverlaps,
   shiftTimeline,
-} = await import("../../src/services/run-of-show.js");
+} = await import("../../src/services/schedule.js");
 
 describe("RunOfShowEditor (Sprint 144)", () => {
   describe("buildDefaultTimeline", () => {

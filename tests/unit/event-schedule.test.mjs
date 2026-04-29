@@ -1,6 +1,6 @@
 /**
  * tests/unit/event-schedule.test.mjs — Sprint 51 / B6
- * Unit tests for src/services/event-schedule.js
+ * Unit tests for src/services/schedule.js (§2 live event schedule)
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -9,7 +9,7 @@ import { initStore } from "../../src/core/store.js";
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 
 const { getRunOfShow, getNextItem, formatTimeUntil } =
-  await import("../../src/services/event-schedule.js");
+  await import("../../src/services/schedule.js");
 
 // Use a fixed "today" so tests are deterministic
 const TODAY = "2026-06-15";

@@ -14,10 +14,10 @@ import {
   buildDefaultTimeline,
   sortTimeline,
   detectOverlaps,
-} from "../services/run-of-show.js";
+} from "../services/schedule.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 
-/** @type {import('../services/run-of-show.js').TimelineItem[]} */
+/** @type {import('../services/schedule.js').TimelineItem[]} */
 let _items = [];
 
 class RunOfShowSection extends BaseSection {

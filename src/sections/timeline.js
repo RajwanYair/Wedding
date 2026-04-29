@@ -11,7 +11,7 @@ import { t } from "../core/i18n.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
-import { getRunOfShow, getNextItem, formatTimeUntil } from "../services/event-schedule.js";
+import { getRunOfShow, getNextItem, formatTimeUntil } from "../services/schedule.js";
 
 class TimelineSection extends BaseSection {
   async onMount() {

@@ -1,11 +1,13 @@
 /**
- * src/services/run-of-show.js — S125 wedding-day timeline editor.
+ * src/services/schedule.js — Wedding-day schedule: run-of-show editor + live event tracker (S253)
  *
- * Pure data layer for the run-of-show editor: ordered itinerary items
- * (welcome → ceremony → cocktail → dinner → dancing → exit). Each item has
- * a fixed startTime + durationMinutes. Helpers normalise the timeline,
- * detect overlaps, and serialise to / from JSON.
+ * §1 Run-of-show editor (S125) — ordered itinerary items with overlap detection and timeline shifting.
+ * §2 Live event schedule (S48/C1) — transforms timeline store items into an annotated event schedule.
+ *
+ * Pure functions — no DOM, no network.
  */
+
+// ── §1 — Run-of-show editor ───────────────────────────────────────────────
 
 /** @typedef {{ id: string, title: string, startTime: string, durationMinutes: number, owner?: string, notes?: string }} TimelineItem */
 
@@ -13,6 +15,7 @@ import {
   readBrowserStorageJson,
   writeBrowserStorageJson,
 } from "../core/storage.js";
+import { storeGet } from "../core/store.js";
 
 const STORAGE_KEY = "wedding_v1_run_of_show";
 
@@ -123,4 +126,107 @@ export function shiftTimeline(items, fromIndex, deltaMinutes) {
     const start = _toMinutes(it.startTime) ?? 0;
     return { ...it, startTime: _fromMinutes(start + deltaMinutes) };
   });
+}
+
+// ── §2 — Live event schedule ──────────────────────────────────────────────
+
+/**
+ * @typedef {{ id: string, time?: string, title?: string, note?: string, icon?: string }} StoreTimelineItem
+ *
+ * @typedef {{
+ *   id:           string,
+ *   time:         string,
+ *   title:        string,
+ *   icon:         string,
+ *   note:         string,
+ *   minutesDelta: number,
+ *   isNext:       boolean,
+ *   isPast:       boolean,
+ * }} ScheduleEvent
+ */
+
+/**
+ * Parse a "HH:MM" time string for the given base date.
+ * Returns null if time is invalid.
+ *
+ * @param {string} time   e.g. "18:30"
+ * @param {Date}   base   wedding date
+ * @returns {Date | null}
+ */
+function _parseTime(time, base) {
+  const parts = String(time).split(":").map(Number);
+  const hh = parts[0], mm = parts[1];
+  if (Number.isNaN(hh ?? NaN) || Number.isNaN(mm ?? NaN)) return null;
+  const d = new Date(base);
+  d.setHours(hh ?? 0, mm ?? 0, 0, 0);
+  return d;
+}
+
+/**
+ * Build a sorted, annotated run-of-show from store data.
+ *
+ * @param {Date} [now]   override "current time" (useful for tests)
+ * @returns {ScheduleEvent[]}
+ */
+export function getRunOfShow(now = new Date()) {
+  const items = /** @type {StoreTimelineItem[]} */ (storeGet("timeline") ?? []);
+  const info = /** @type {Record<string,unknown>} */ (storeGet("weddingInfo") ?? {});
+  const dateStr = /** @type {string} */ (info.date ?? "");
+
+  if (!dateStr || items.length === 0) return [];
+
+  const base = new Date(new Date(dateStr).toDateString());
+
+  /** @type {ScheduleEvent[]} */
+  const events = items
+    .filter((item) => item.time)
+    .map((item) => {
+      const dt = _parseTime(/** @type {string} */ (item.time), base);
+      const minutesDelta = dt ? Math.round((dt.getTime() - now.getTime()) / 60_000) : 0;
+      return {
+        id: item.id,
+        time: item.time ?? "",
+        title: item.title ?? "",
+        icon: item.icon ?? "📅",
+        note: item.note ?? "",
+        minutesDelta,
+        isNext: false,
+        isPast: dt ? dt < now : false,
+      };
+    })
+    .sort((a, b) => a.time.localeCompare(b.time));
+
+  // Mark the first upcoming event as "next"
+  const nextIdx = events.findIndex((e) => !e.isPast);
+  if (nextIdx !== -1 && events[nextIdx]) events[nextIdx].isNext = true;
+
+  return events;
+}
+
+/**
+ * Return the single next upcoming event, or null.
+ *
+ * @param {Date} [now]
+ * @returns {ScheduleEvent | null}
+ */
+export function getNextItem(now = new Date()) {
+  return getRunOfShow(now).find((e) => e.isNext) ?? null;
+}
+
+/**
+ * Format remaining time until an event as a human-readable string.
+ * Positive = future; negative = past.
+ *
+ * @param {number} minutesDelta
+ * @returns {string}   e.g. "בעוד 30 דק׳" or "לפני 10 דק׳"
+ */
+export function formatTimeUntil(minutesDelta) {
+  const abs = Math.abs(minutesDelta);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  const parts = [];
+  if (h > 0) parts.push(`${h}ש׳`);
+  if (m > 0 || h === 0) parts.push(`${m}ד׳`);
+  const durStr = parts.join(" ");
+  return minutesDelta >= 0 ? `בעוד ${durStr}` : `לפני ${durStr}`;
 }
