@@ -9,12 +9,12 @@ import {
   applyThemeVars,
   serializeThemeVars,
   deserializeThemeVars,
-} from "../../src/services/theme-vars.js";
+} from "../../src/services/theme.js";
 import {
   exportThemeJson,
   stringifyThemeJson,
   importThemeJson,
-} from "../../src/services/theme-export.js";
+} from "../../src/services/theme.js";
 
 describe("ThemeCustomizer (Sprint 138)", () => {
   describe("sanitizeThemeVars", () => {

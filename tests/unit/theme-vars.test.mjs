@@ -8,7 +8,7 @@ import {
   applyThemeVars,
   serializeThemeVars,
   deserializeThemeVars,
-} from "../../src/services/theme-vars.js";
+} from "../../src/services/theme.js";
 
 function fakeEl() {
   /** @type {Map<string,string>} */

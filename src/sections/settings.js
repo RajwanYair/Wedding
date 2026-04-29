@@ -32,12 +32,12 @@ import {
   applyThemeVars,
   serializeThemeVars,
   deserializeThemeVars,
-} from "../services/theme-vars.js";
+} from "../services/theme.js";
 import {
   exportThemeJson,
   stringifyThemeJson,
   importThemeJson,
-} from "../services/theme-export.js";
+} from "../services/theme.js";
 import { validatePluginManifest } from "../services/plugin-manifest.js";
 import {
   addAdminUser,

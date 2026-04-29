@@ -6,7 +6,7 @@ import {
   exportThemeJson,
   stringifyThemeJson,
   importThemeJson,
-} from "../../src/services/theme-export.js";
+} from "../../src/services/theme.js";
 
 const VALID_DRAFT = {
   "--color-primary": "#abcdef",

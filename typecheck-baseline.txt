@@ -129,8 +129,7 @@ src/services/seating.js::TS2740::Type '{}' is missing the following properties f
 src/services/state-tracking.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/state-tracking.js::TS2577::Return type annotation circularly references itself.
 src/services/sync-manager.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.
-src/services/theme-export.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
-src/services/theme-vars.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
+src/services/theme.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
 src/services/website-builder.js::TS1127::Invalid character.
 src/services/website-builder.js::TS2322::Type 'string' is not assignable to type 'WebsiteVisibility'.
 src/services/website-builder.js::TS2339::Property 'coupleA' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
