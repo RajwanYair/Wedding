@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.6.0] — 2025-08-10
+
+> **S236–S244: CI hardening (Mermaid/JSDoc enforcement), service merges (60→49 files), TSC baseline 152→100 (null-safety), Supabase migrations CI step, Trusted Types CSP gates.**
+
+### Added
+
+- **S236** — `validate:mermaid --enforce` + JSDoc coverage baseline enforced in CI
+- **S243** — Supabase migrations CI step (`audit-supabase-migrations --enforce`); new migration 024 adds `gallery.updated_at` + `events` table RLS
+- **S244** — Trusted Types advisory audit CI step + CSP `require-trusted-types-for 'script'` directive enforcement gate
+
+### Changed
+
+- **S237** — Merged `presence-service.js` + `supabase-realtime.js` → `realtime.js`
+- **S238** — Merged `financial-analytics.js` + `guest-analytics.js` → `analytics.js`
+- **S239** — Merged `theme-vars.js` + `theme-export.js` → `theme.js`
+- **S240** — TSC null-safety baseline 152→100: `noUncheckedIndexedAccess` · TS2345 · TS7053 · TS2551 · TS8026 · TS2532 resolved
+- **S241** — Merged `expense-service.js` + `vendor-service.js` → `commerce-service.js` (49 service files, was 60 at v13.2)
+
+### Fixed
+
+- **S240** — `backend.js` used wrong `*Impl` export names from `sheets.js` (TS2551)
+- **S243** — `audit-supabase-migrations.mjs` Check 6 now cross-file aware (ALTER TABLE ADD COLUMN)
+
 ## [13.5.0] — 2025-07-28
 
 > **S231–S234: Dead export wiring × 15, TSC baseline 212→155 (TS7006/TS7031 zeroed across 20 files), modal native-`<dialog>` audit fixed + CI baseline enforced, coverage gate ratcheted to measured actuals.**
