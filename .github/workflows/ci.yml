@@ -51,6 +51,9 @@ jobs:
       - name: Audit action namespace (advisory — S224)
         run: npm run audit:actions
 
+      - name: Audit modal native-dialog adoption (enforce baseline=10 — S233)
+        run: node scripts/audit-modals.mjs --baseline=10
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
