@@ -39,7 +39,7 @@ import {
   importThemeJson,
 } from "../services/theme-export.js";
 import { validatePluginManifest } from "../services/plugin-manifest.js";
-import { addAdminUser, removeAdminUser } from "../services/admin.js";
+import { addAdminUser, removeAdminUser } from "../services/auth.js";
 import { buildAllDeployButtons } from "../utils/deploy-buttons.js";
 
 // ── Lifecycle ──────────────────────────────────────────────────────────

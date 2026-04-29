@@ -1,16 +1,18 @@
 /**
- * src/services/auth.js — Unified auth service (S194)
+ * src/services/auth.js — Unified auth service (S194, S219)
  *
  * Merged from:
  *   - auth.js             (S0)  — session management + email allowlist
  *   - auth-claims.js      (S81) — JWT claim helpers
  *   - oauth-providers.js  (S94) — OAuth provider abstraction
+ *   - admin.js           (S219) — async admin allowlist + Supabase admin CRUD
  */
 
 import { getApprovedAdminEmails } from "../core/app-config.js";
-import { load, remove } from "../core/state.js";
+import { load, remove, save } from "../core/state.js";
 import { storeGet } from "../core/store.js";
 import { setSecure, getSecure, removeSecure } from "./secure-storage.js";
+import { BACKEND_TYPE } from "../core/config.js";
 
 const SESSION_KEY = "auth_user";
 const SESSION_ROTATION_MS = 2 * 60 * 60 * 1000; // 2 hours
@@ -334,4 +336,109 @@ export async function signInWith(provider) {
     });
   }
   return null;
+}
+
+// ── Admin CRUD (merged from admin.js, S219) ───────────────────────────────
+
+/**
+ * Async admin check. Server-truth when on Supabase; sync fallback otherwise.
+ * @param {string} email
+ * @returns {Promise<boolean>}
+ */
+export async function isApprovedAdminAsync(email) {
+  if (!email) return false;
+  const sync = isApprovedAdmin(email);
+  if (BACKEND_TYPE !== "supabase") return sync;
+  try {
+    const { getSupabase } = await import("./supabase.js");
+    const supabase = getSupabase?.();
+    if (!supabase) return sync;
+    const { data, error } = await supabase
+      .from("admin_users")
+      .select("email")
+      .ilike("email", email.trim())
+      .limit(1)
+      .maybeSingle();
+    if (error) return sync;
+    return Boolean(data) || sync;
+  } catch {
+    return sync;
+  }
+}
+
+/**
+ * List all admin emails (Supabase table + localStorage merged, deduplicated).
+ * @returns {Promise<string[]>}
+ */
+export async function fetchAdminUsers() {
+  const local = /** @type {string[]} */ (load("approvedEmails", []));
+  const localNorm = local.map((e) => e.trim().toLowerCase()).filter(Boolean);
+  if (BACKEND_TYPE !== "supabase") return localNorm;
+  try {
+    const { getSupabase } = await import("./supabase.js");
+    const supabase = getSupabase?.();
+    if (!supabase) return localNorm;
+    const { data, error } = await supabase
+      .from("admin_users")
+      .select("email")
+      .order("created_at", { ascending: true });
+    if (error || !Array.isArray(data)) return localNorm;
+    const remote = data.map((r) => String(r.email).trim().toLowerCase()).filter(Boolean);
+    return [...new Set([...remote, ...localNorm])];
+  } catch {
+    return localNorm;
+  }
+}
+
+/**
+ * Add an email to the admin allowlist (localStorage + Supabase when available).
+ * @param {string} email
+ * @param {string} [addedBy]
+ * @returns {Promise<boolean>}
+ */
+export async function addAdminUser(email, addedBy = "") {
+  const norm = email.trim().toLowerCase();
+  if (!norm || !norm.includes("@")) return false;
+  const list = /** @type {string[]} */ (load("approvedEmails", []));
+  if (!list.map((e) => e.trim().toLowerCase()).includes(norm)) {
+    list.push(norm);
+    save("approvedEmails", list);
+  }
+  if (BACKEND_TYPE !== "supabase") return true;
+  try {
+    const { getSupabase } = await import("./supabase.js");
+    const supabase = getSupabase?.();
+    if (!supabase) return true;
+    const { error } = await supabase
+      .from("admin_users")
+      .upsert({ email: norm, added_by: addedBy }, { onConflict: "email" });
+    return !error;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Remove an email from the admin allowlist (localStorage + Supabase when available).
+ * @param {string} email
+ * @returns {Promise<boolean>}
+ */
+export async function removeAdminUser(email) {
+  const norm = email.trim().toLowerCase();
+  if (!norm) return false;
+  const list = /** @type {string[]} */ (load("approvedEmails", []));
+  save("approvedEmails", list.filter((e) => e.trim().toLowerCase() !== norm));
+  if (BACKEND_TYPE !== "supabase") return true;
+  try {
+    const { getSupabase } = await import("./supabase.js");
+    const supabase = getSupabase?.();
+    if (!supabase) return true;
+    const { error } = await supabase
+      .from("admin_users")
+      .delete()
+      .ilike("email", norm);
+    return !error;
+  } catch {
+    return true;
+  }
 }
