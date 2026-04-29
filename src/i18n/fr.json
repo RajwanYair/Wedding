@@ -341,7 +341,6 @@
   "auth_login_locked": "",
   "auth_or_social": "",
   "auth_continue_google": "",
-  "auth_continue_fb": "",
   "auth_continue_apple": "",
   "auth_oauth_no_email": "",
   "auth_oauth_not_configured": "",

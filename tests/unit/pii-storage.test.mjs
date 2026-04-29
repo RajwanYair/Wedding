@@ -7,7 +7,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock secure-storage — use a Map to simulate encrypted store
 const _secureStore = new Map();
-vi.mock("../../src/services/secure-storage.js", () => ({
+vi.mock("../../src/services/security.js", () => ({
   setSecure: vi.fn(async (key, value) => {
     _secureStore.set(key, structuredClone(value));
   }),
