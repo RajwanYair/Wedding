@@ -1353,5 +1353,9 @@
   "whats_new_print_preview": "Print preview modal with per-section template picker",
   "whats_new_glitchtip": "Optional error reporting via GlitchTip self-hosted monitoring",
   "whats_new_notif_panel": "Notification bell and workspace switcher fully wired",
-  "whats_new_service_worker": "Service Worker IDB queue persists writes across sessions"
+  "whats_new_service_worker": "Service Worker IDB queue persists writes across sessions",
+  "cmd_palette_title": "Quick Search",
+  "cmd_palette_placeholder": "Search guest, table, vendor, section…",
+  "cmd_palette_empty": "Type to search…",
+  "cmd_palette_no_results": "No results found"
 }

@@ -1353,5 +1353,9 @@
   "whats_new_print_preview": "תצוגה מקדימה להדפסה עם בחירת תבנית לכל קטע",
   "whats_new_glitchtip": "דיווח שגיאות אופציונלי דרך GlitchTip",
   "whats_new_notif_panel": "פעמון התראות ומחליף סביבת עבודה מחוברים במלואם",
-  "whats_new_service_worker": "Service Worker שומר כתיבות בין סשנים דרך IndexedDB"
+  "whats_new_service_worker": "Service Worker שומר כתיבות בין סשנים דרך IndexedDB",
+  "cmd_palette_title": "חיפוש מהיר",
+  "cmd_palette_placeholder": "חפש אורח, שולחן, ספק, מקטע…",
+  "cmd_palette_empty": "הקלד לחיפוש…",
+  "cmd_palette_no_results": "לא נמצאו תוצאות"
 }

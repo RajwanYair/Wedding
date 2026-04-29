@@ -3736,6 +3736,108 @@
 
   /* S213: extend @scope to remaining sections (run-of-show, contact-form, guest-landing, changelog). */
 
+  /* ── S214: Cmd-K Command Palette / Search Modal ─────────────────────── */
+
+  .modal-dialog--search {
+    width: min(520px, 92vw);
+    border-radius: 16px;
+    padding: 0;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    background: var(--bg-card);
+  }
+
+  .search-modal {
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+  }
+
+  .search-input-wrap {
+    padding: 1rem 1.2rem 0.5rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    font-size: 1.05rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--bg-base);
+    color: var(--text);
+    outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px color-mix(in sRGB, var(--accent) 20%, transparent);
+    }
+  }
+
+  .cmd-palette-results {
+    list-style: none;
+    padding: 0.4rem 0 0.6rem;
+    margin: 0;
+    overflow-y: auto;
+    max-height: calc(70vh - 100px);
+  }
+
+  .cmd-palette-empty {
+    padding: 0.75rem 1.4rem;
+    color: var(--color-text-muted, #888);
+    font-size: 0.9rem;
+  }
+
+  .cmd-palette-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 0 0.4rem;
+    transition: background var(--transition-fast);
+
+    &:hover,
+    &:focus {
+      background: color-mix(in sRGB, var(--accent) 12%, transparent);
+      outline: none;
+    }
+  }
+
+  .cmd-palette-icon {
+    font-size: 1em;
+    flex-shrink: 0;
+    width: 1.4em;
+    text-align: center;
+  }
+
+  .cmd-palette-label {
+    flex: 1;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cmd-palette-hint {
+    font-size: 0.78rem;
+    color: var(--color-text-muted, #888);
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    max-width: 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @scope (#searchModal) {
+    .search-modal {
+      gap: 0;
+    }
+  }
+
+  /* S213: extend @scope to remaining sections (run-of-show, contact-form, guest-landing, changelog). */
+
   @scope (#sec-run-of-show) {
     .ros-list {
       list-style: none;

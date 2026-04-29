@@ -1353,5 +1353,9 @@
   "dns_note_replace_project": "استبدل بمعرّف مشروعك في Vercel",
   "dns_note_replace_service": "استبدل بمعرّف خدمتك في Render",
   "dns_note_netlify_lb": "أو استخدم موازن التحميل لـ Netlify إذا كنت على خطة مدفوعة",
-  "dns_note_cf_root_cname": "يدعم Cloudflare CNAME في المستوى الجذر عبر CNAME Flattening"
+  "dns_note_cf_root_cname": "يدعم Cloudflare CNAME في المستوى الجذر عبر CNAME Flattening",
+  "cmd_palette_title": "بحث سريع",
+  "cmd_palette_placeholder": "ابحث عن ضيف، طاولة، مورد، قسم…",
+  "cmd_palette_empty": "اكتب للبحث…",
+  "cmd_palette_no_results": "لا توجد نتائج"
 }

@@ -356,7 +356,12 @@ let _activeSection = null;
   initKeyboardShortcuts();
   initShortcutsHelp();
   // Sprint 15: Ctrl+K / Cmd+K opens the search/command palette modal
-  initCommandPaletteTrigger(() => openModal("searchModal"));
+  initCommandPaletteTrigger(async () => {
+    await openModal("searchModal");
+    // S214: wire search-index to the modal on first open
+    const { initSearchModalHandlers } = await import("./handlers/search-handler.js");
+    initSearchModalHandlers();
+  });
 
   // 11b. Wire sync status indicator (S3.6)
   onSyncStatus((status) => {

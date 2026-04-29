@@ -1353,5 +1353,9 @@
   "whats_new_print_preview": "Aperçu d'impression avec sélecteur de modèle",
   "whats_new_glitchtip": "Rapport d'erreurs optionnel via GlitchTip",
   "whats_new_notif_panel": "Cloche de notification et sélecteur d'espace de travail connectés",
-  "whats_new_service_worker": "Service Worker sauvegarde les écritures entre les sessions"
+  "whats_new_service_worker": "Service Worker sauvegarde les écritures entre les sessions",
+  "cmd_palette_title": "Recherche rapide",
+  "cmd_palette_placeholder": "Rechercher invité, table, fournisseur, section…",
+  "cmd_palette_empty": "Tapez pour rechercher…",
+  "cmd_palette_no_results": "Aucun résultat"
 }
