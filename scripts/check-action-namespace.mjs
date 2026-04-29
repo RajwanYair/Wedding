@@ -82,5 +82,13 @@ console.log(
   `audit:action-namespace — ${namespaced.length}/${actions.length - report.exempt} actions namespaced (${namespacePct}%); ${flat.length} pending migration. No duplicates found.`,
 );
 
-// Advisory: never exit non-zero on namespacing alone. Hard gate flips in v14.0.0.
+// S291: ratchet gate — fail if un-namespaced count exceeds baseline of 116.
+// This prevents new flat actions from being added while migration is in progress.
+const FLAT_BASELINE = 116;
+if (flat.length > FLAT_BASELINE) {
+  console.error(
+    `audit:action-namespace — RATCHET EXCEEDED: ${flat.length} un-namespaced actions (baseline: ${FLAT_BASELINE}). Do not add new flat actions.`,
+  );
+  process.exit(1);
+}
 process.exit(0);

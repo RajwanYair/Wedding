@@ -48,7 +48,7 @@ jobs:
       - name: Check credential hygiene
         run: npm run check:credentials
 
-      - name: Audit action namespace (advisory — S224)
+      - name: Audit action namespace — ratchet gate (baseline=116 flat, 0 duplicates — S291)
         run: npm run audit:actions
 
       - name: Audit modal native-dialog adoption (enforce baseline=10 — S233)
