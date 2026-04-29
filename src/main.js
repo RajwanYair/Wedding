@@ -65,7 +65,7 @@ import {
 import { fetchGasVersion } from "./core/status-bar.js";
 import { injectTemplate } from "./core/template-loader.js";
 import { installTrustedTypesPolicy } from "./core/trusted-types.js";
-import { initDualWrite } from "./services/dual-write.js";
+import { initDualWrite } from "./services/sync-engine.js";
 import { maybeShowWhatsNew } from "./core/whats-new.js";
 
 // ── Services ──────────────────────────────────────────────────────────────

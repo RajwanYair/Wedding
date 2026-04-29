@@ -1,21 +1,101 @@
 /**
- * src/services/conflict-detector.js — Field-level conflict detection (Sprint 64)
+ * src/services/sync-engine.js — Dual-write rehearsal harness + conflict detection (S247)
  *
- * Pure logic — no DOM, no store, no side-effects.
- * Compares a local array of records against a remote array and returns
- * a list of field-level conflicts for records that both sides have modified.
+ * Merged from:
+ *   - dual-write.js (S160)     — parallel backend writes with divergence logging
+ *   - conflict-detector.js (Sprint 64) — field-level conflict detection + resolution
  *
- * A conflict exists when:
- *  - Both local and remote have a record with the same id
- *  - At least one field has different values
- *  - The record has an `updatedAt` timestamp (used for tie-breaking)
+ * §1 Dual-write harness: when FEATURE_DUAL_WRITE is true, wraps backend writes
+ *    so that both sheets and supabase backends receive the write. Divergences
+ *    between backend results are logged to the console (never thrown).
  *
- * Designed to feed conflict-resolver.js's `showConflictModal()`.
+ * §2 Conflict detection: pure logic for comparing local vs remote record arrays
+ *    and resolving field-level conflicts (feeds conflict-resolver.js).
  *
- * Usage:
- *   const conflicts = detectConflicts(localGuests, remoteGuests, { skip: ["updatedAt"] });
- *   const resolved  = resolveConflict(conflicts[0], "remote");
+ * Named exports only — no window.* side effects, no DOM, no store.
  */
+
+import { FEATURE_DUAL_WRITE } from "../core/config.js";
+
+// ── §1 — Dual-write rehearsal harness ────────────────────────────────────
+
+/** @type {boolean} */
+let _active = false;
+
+/**
+ * Activate the dual-write rehearsal harness if FEATURE_DUAL_WRITE is set.
+ * Idempotent — safe to call multiple times.
+ * @returns {boolean} Whether the harness is now active.
+ */
+export function initDualWrite() {
+  if (!FEATURE_DUAL_WRITE) return false;
+  _active = true;
+  return true;
+}
+
+/**
+ * Whether the dual-write harness is currently active.
+ * @returns {boolean}
+ */
+export function isDualWriteHarnessActive() {
+  return _active;
+}
+
+/**
+ * Run a single operation against two backends in parallel and log any
+ * divergence. Never throws — both errors and successes are captured.
+ *
+ * @template T
+ * @param {string} label   — human-readable operation name for log output
+ * @param {() => Promise<T>} primaryFn   — primary backend operation
+ * @param {() => Promise<T>} secondaryFn — secondary backend operation
+ * @returns {Promise<T>} Resolves with the primary result (or rejects if
+ *   primary failed, regardless of secondary outcome).
+ */
+export async function dualWrite(label, primaryFn, secondaryFn) {
+  /** @type {[PromiseSettledResult<T>, PromiseSettledResult<T>]} */
+  const [primary, secondary] = await Promise.allSettled([
+    primaryFn(),
+    secondaryFn(),
+  ]);
+
+  const pOk = primary.status === "fulfilled";
+  const sOk = secondary.status === "fulfilled";
+
+  if (!pOk && !sOk) {
+    console.warn(`[dual-write] "${label}" — both backends failed`, {
+      primary: primary.reason,
+      secondary: secondary.reason,
+    });
+    throw primary.reason;
+  }
+
+  if (pOk && !sOk) {
+    console.warn(`[dual-write] "${label}" — secondary failed (primary OK)`, {
+      secondary: secondary.reason,
+    });
+  } else if (!pOk && sOk) {
+    console.warn(`[dual-write] "${label}" — primary failed (secondary OK)`, {
+      primary: primary.reason,
+    });
+    throw primary.reason;
+  }
+  if (pOk && sOk) {
+    const pVal = JSON.stringify(primary.value ?? null);
+    const sVal = JSON.stringify(secondary.value ?? null);
+    if (pVal !== sVal) {
+      console.warn(`[dual-write] "${label}" — result divergence`, {
+        primary: primary.value,
+        secondary: secondary.value,
+      });
+    }
+  }
+
+  if (!pOk) throw primary.reason;
+  return primary.value;
+}
+
+// ── §2 — Field-level conflict detection + resolution ─────────────────────
 
 /**
  * @typedef {Record<string, unknown> & { id: string | number, updatedAt?: string }} DataRecord
@@ -152,7 +232,7 @@ function _equal(a, b) {
 }
 
 /**
- * Pick a default strategy by comparing `updatedAt` timestamps.
+ * Default resolution strategy: newer `updatedAt` wins; local wins on tie.
  * @param {DataRecord} local
  * @param {DataRecord} remote
  * @returns {ResolutionStrategy}

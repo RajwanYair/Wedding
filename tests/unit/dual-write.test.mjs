@@ -9,7 +9,7 @@ const configMock = { FEATURE_DUAL_WRITE: false };
 vi.mock("../../src/core/config.js", () => configMock);
 
 const { initDualWrite, isDualWriteHarnessActive, dualWrite } =
-  await import("../../src/services/dual-write.js");
+  await import("../../src/services/sync-engine.js");
 
 beforeEach(() => {
   // Reset module-level _active flag between tests via fresh imports is tricky;
