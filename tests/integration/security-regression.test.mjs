@@ -12,7 +12,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { decodeJwtPayload, hasRole, isTokenExpired } from "../../src/services/auth.js";
-import { createRateLimiter } from "../../src/services/rate-limiter.js";
+import { createRateLimiter } from "../../src/services/resilience.js";
 import { PII_COLUMNS } from "../../src/services/privacy.js";
 import { createAuditPipeline } from "../../src/services/audit.js";
 import { generateKey, encryptField, decryptField, createSessionGuard } from "../../src/services/security.js";

@@ -1,10 +1,105 @@
 /**
- * src/services/offline.js — Offline-first service (S227)
+ * src/services/resilience.js — S258 merged resilience service
  *
  * Merged from:
- *   - background-sync.js  (S89)  — Background Sync API wrapper
- *   - offline-queue.js    (S203) — IDB-persisted offline write queue
+ *   - rate-limiter.js (Sprint 85) — token-bucket rate limiter
+ *   - offline.js      (S227)     — background sync + offline write queue
+ *
+ * §1 Rate limiter: createRateLimiter()
+ * §2 Background Sync: isBackgroundSyncSupported, registerBackgroundSync, ensureBackgroundFlush
+ * §3 Offline queue: initOfflineQueue, enqueueOffline, flushOfflineQueue, getOfflineQueueCount, getQueueStats
+ *
+ * Named exports only — no window.* side effects beyond queue badge.
  */
+/**
+ * @typedef {{ limit: number, windowMs: number }} RateLimiterOptions
+ * @typedef {{ allowed: boolean, remaining: number, resetAt: number }} ConsumeResult
+ */
+
+/**
+ * Create a rate limiter using a sliding window token bucket.
+ *
+ * @param {RateLimiterOptions} opts
+ * @returns {{ consume(key?: string): ConsumeResult, reset(key?: string): void, status(key?: string): ConsumeResult, clear(): void }}
+ */
+export function createRateLimiter({ limit, windowMs }) {
+  if (limit < 1) throw new RangeError("limit must be >= 1");
+  if (windowMs < 1) throw new RangeError("windowMs must be >= 1");
+
+  /** @type {Map<string, { tokens: number, windowStart: number }>} */
+  const buckets = new Map();
+  const DEFAULT_KEY = "__default__";
+
+  /**
+   * @param {string} key
+   */
+  /** @returns {{ tokens: number, windowStart: number }} */
+  function ensureBucket(/** @type {string} */ key) {
+    if (!buckets.has(key)) {
+      buckets.set(key, { tokens: limit, windowStart: Date.now() });
+    }
+    return /** @type {{ tokens: number, windowStart: number }} */ (buckets.get(key));
+  }
+
+  /**
+   * @param {string} key
+   */
+  function tickBucket(key) {
+    const b = ensureBucket(key);
+    const now = Date.now();
+    const elapsed = now - b.windowStart;
+    if (elapsed >= windowMs) {
+      // Full window elapsed — refill
+      const windowsPassed = Math.floor(elapsed / windowMs);
+      b.tokens = Math.min(limit, b.tokens + windowsPassed * limit);
+      b.windowStart = now - (elapsed % windowMs);
+    }
+    return b;
+  }
+
+  return {
+    /**
+     * Try to consume one token. Returns { allowed, remaining, resetAt }.
+     * @param {string} [key]
+     */
+    consume(key = DEFAULT_KEY) {
+      const b = tickBucket(key);
+      const resetAt = b.windowStart + windowMs;
+      if (b.tokens > 0) {
+        b.tokens--;
+        return { allowed: true, remaining: b.tokens, resetAt };
+      }
+      return { allowed: false, remaining: 0, resetAt };
+    },
+
+    /**
+     * Manually reset a bucket back to full.
+     * @param {string} [key]
+     */
+    reset(key = DEFAULT_KEY) {
+      buckets.set(key, { tokens: limit, windowStart: Date.now() });
+    },
+
+    /**
+     * Current status without consuming a token.
+     * @param {string} [key]
+     * @returns {ConsumeResult}
+     */
+    status(key = DEFAULT_KEY) {
+      const b = tickBucket(key);
+      const resetAt = b.windowStart + windowMs;
+      return { allowed: b.tokens > 0, remaining: b.tokens, resetAt };
+    },
+
+    /** Remove all buckets. */
+    clear() {
+      buckets.clear();
+    },
+  };
+}
+
+
+// ── §2–§3 — Background Sync + Offline Queue ─────────────────────────────
 
 import { storeGet, storeSet } from "../core/store.js";
 import { MAX_RETRIES, BACKOFF_BASE_MS } from "../core/config.js";
@@ -294,3 +389,4 @@ function _updateBadge() {
     badge.textContent = `⏳ ${t("offline_badge_queued", { n: String(qCount) })}`;
   }
 }
+

@@ -13,7 +13,7 @@
  * Named exports only — no window.* side effects, no DOM, no store.
  */
 
-import { getQueueStats } from "./offline.js";
+import { getQueueStats } from "./resilience.js";
 
 // ── §1 — One-click deploy targets ─────────────────────────────────────────
 

@@ -1,7 +1,7 @@
 /**
  * tests/unit/offline-queue.test.mjs
  *
- * Unit tests for src/services/offline-queue.js
+ * Unit tests for src/services/resilience-queue.js
  * Tests: enqueueOffline, getOfflineQueueCount, getQueueStats,
  *        exhausted item tracking, queue persistence.
  */
@@ -39,7 +39,7 @@ beforeEach(async () => {
   vi.resetModules();
   Object.keys(_store).forEach((k) => delete _store[k]);
   ({ enqueueOffline, getOfflineQueueCount, getQueueStats, flushOfflineQueue, initOfflineQueue } =
-    await import("../../src/services/offline.js"));
+    await import("../../src/services/resilience.js"));
 });
 
 // ── Tests ─────────────────────────────────────────────────────────────────
