@@ -10,7 +10,7 @@
 import { STORE_DATA_CLASS, DATA_CLASS } from "../core/constants.js";
 import { STORAGE_PREFIX } from "../core/config.js";
 import { getActiveEventId } from "../core/state.js";
-import { setSecure, getSecure } from "./secure-storage.js";
+import { setSecure, getSecure } from "./security.js";
 
 // ══════════════════════════════════════════════════════════════════════════
 // §1 — Data classification (merged from data-classification.js, S62)

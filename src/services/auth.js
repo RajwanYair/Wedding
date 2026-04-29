@@ -11,7 +11,7 @@
 import { getApprovedAdminEmails } from "../core/app-config.js";
 import { load, remove, save } from "../core/state.js";
 import { storeGet } from "../core/store.js";
-import { setSecure, getSecure, removeSecure } from "./secure-storage.js";
+import { setSecure, getSecure, removeSecure } from "./security.js";
 import { BACKEND_TYPE } from "../core/config.js";
 
 const SESSION_KEY = "auth_user";

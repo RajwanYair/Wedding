@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { createSessionGuard } from "../../src/services/crypto-security.js";
+import { createSessionGuard } from "../../src/services/security.js";
 
 describe("createSessionGuard", () => {
   it("throws for timeoutMs < 1", () => {

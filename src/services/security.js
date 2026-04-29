@@ -1,5 +1,9 @@
 /**
- * src/services/secure-storage.js — Encrypted localStorage for tokens & PII (P0)
+ * src/services/security.js — Encryption, session guard, and secure storage (S246)
+ *
+ * Merged from:
+ *   - crypto-security.js (Sprint 83/87) — AES-GCM primitives + session inactivity guard
+ *   - secure-storage.js (Phase A4 P0)   — Encrypted localStorage for tokens & PII
  *
  * ROADMAP §5 Phase A — Auth tokens in plaintext localStorage are a top P0 risk
  * (OWASP A02:2021 Cryptographic Failures). This module wraps `localStorage`
@@ -20,7 +24,157 @@
  */
 
 import { STORAGE_PREFIX } from "../core/config.js";
-import { importRawKey, encryptField, decryptField } from "./crypto-security.js";
+
+// ── §1 — AES-GCM primitives ──────────────────────────────────────────────
+
+const ALGO = "AES-GCM";
+const IV_LEN = 12; // bytes
+
+/**
+ * Generate a fresh AES-256-GCM key.
+ * @returns {Promise<CryptoKey>}
+ */
+export async function generateKey() {
+  return crypto.subtle.generateKey(
+    { name: ALGO, length: 256 },
+    false, // non-extractable
+    ["encrypt", "decrypt"],
+  );
+}
+
+/**
+ * Import a raw 32-byte key (Uint8Array or ArrayBuffer) as AES-256-GCM.
+ * @param {Uint8Array | ArrayBuffer} rawKey  32 bytes
+ * @returns {Promise<CryptoKey>}
+ */
+export async function importRawKey(rawKey) {
+  return crypto.subtle.importKey("raw", rawKey, { name: ALGO, length: 256 }, false, [
+    "encrypt",
+    "decrypt",
+  ]);
+}
+
+/**
+ * Encrypt a plaintext string with AES-256-GCM.
+ * @param {CryptoKey} key
+ * @param {string} plaintext
+ * @returns {Promise<string>}  base64-encoded IV+ciphertext
+ */
+export async function encryptField(key, plaintext) {
+  const iv = crypto.getRandomValues(new Uint8Array(IV_LEN));
+  const encoded = new TextEncoder().encode(plaintext);
+  const cipherbuf = await crypto.subtle.encrypt({ name: ALGO, iv }, key, encoded);
+  const combined = new Uint8Array(IV_LEN + cipherbuf.byteLength);
+  combined.set(iv, 0);
+  combined.set(new Uint8Array(cipherbuf), IV_LEN);
+  return btoa(String.fromCharCode(...combined));
+}
+
+/**
+ * Decrypt a base64-encoded IV+ciphertext produced by `encryptField`.
+ * @param {CryptoKey} key
+ * @param {string} ciphertext  base64-encoded IV+ciphertext
+ * @returns {Promise<string>}  plaintext
+ */
+export async function decryptField(key, ciphertext) {
+  const combined = Uint8Array.from(atob(ciphertext), (c) => c.charCodeAt(0));
+  const iv = combined.slice(0, IV_LEN);
+  const encrypted = combined.slice(IV_LEN);
+  const plainbuf = await crypto.subtle.decrypt({ name: ALGO, iv }, key, encrypted);
+  return new TextDecoder().decode(plainbuf);
+}
+
+// ── §2 — Session inactivity guard ────────────────────────────────────────
+
+/**
+ * @typedef {{
+ *   timeoutMs: number,
+ *   warningMs?: number,
+ *   onTimeout: () => void,
+ *   onWarning?: () => void
+ * }} SessionGuardOptions
+ *
+ * @typedef {{
+ *   recordActivity(): void,
+ *   destroy(): void,
+ *   remainingMs(): number,
+ *   reset(): void
+ * }} SessionGuard
+ */
+
+/**
+ * Create a session inactivity guard.
+ *
+ * @param {SessionGuardOptions} opts
+ * @returns {SessionGuard}
+ */
+export function createSessionGuard(opts) {
+  const { timeoutMs, warningMs, onTimeout, onWarning } = opts;
+  if (timeoutMs < 1) throw new RangeError("timeoutMs must be >= 1");
+
+  let lastActivity = Date.now();
+  /** @type {ReturnType<typeof setTimeout> | null} */
+  let timeoutHandle = null;
+  /** @type {ReturnType<typeof setTimeout> | null} */
+  let warningHandle = null;
+  let destroyed = false;
+
+  function clearTimers() {
+    if (timeoutHandle !== null) {
+      clearTimeout(timeoutHandle);
+      timeoutHandle = null;
+    }
+    if (warningHandle !== null) {
+      clearTimeout(warningHandle);
+      warningHandle = null;
+    }
+  }
+
+  function scheduleTimers() {
+    if (destroyed) return;
+    clearTimers();
+    timeoutHandle = setTimeout(() => {
+      if (!destroyed) onTimeout();
+    }, timeoutMs);
+
+    if (typeof warningMs === "number" && warningMs < timeoutMs && onWarning) {
+      warningHandle = setTimeout(() => {
+        if (!destroyed) onWarning();
+      }, timeoutMs - warningMs);
+    }
+  }
+
+  scheduleTimers();
+
+  return {
+    /** Call whenever the user performs an action. */
+    recordActivity() {
+      if (destroyed) return;
+      lastActivity = Date.now();
+      scheduleTimers();
+    },
+
+    /** Tear down all timers. */
+    destroy() {
+      destroyed = true;
+      clearTimers();
+    },
+
+    /** Milliseconds until timeout fires (0 if already fired or destroyed). */
+    remainingMs() {
+      return Math.max(0, lastActivity + timeoutMs - Date.now());
+    },
+
+    /** Reset the timer without recording a user gesture. */
+    reset() {
+      if (destroyed) return;
+      lastActivity = Date.now();
+      scheduleTimers();
+    },
+  };
+}
+
+// ── §3 — Encrypted localStorage (secure-storage) ────────────────────────
 
 const KEY_NAME = `${STORAGE_PREFIX}device_key`;
 const KEY_LEN = 32;
@@ -118,7 +272,6 @@ export async function setSecure(key, value) {
   const ls = _ls();
   if (!ls) return;
   const cryptoKey = await _getKey();
-  // encryptField() returns base64(iv[12] ++ ciphertext) from crypto.js
   const sealed = await encryptField(cryptoKey, JSON.stringify(value));
   const envelope = JSON.stringify({ v: ENVELOPE_VERSION, d: sealed });
   ls.setItem(STORAGE_PREFIX + key, envelope);
@@ -159,7 +312,7 @@ export async function getSecure(key) {
   try {
     const cryptoKey = await _getKey();
 
-    // New format (Sprint 62): { v, d } — d is encryptField() output
+    // New format: { v, d } — d is encryptField() output
     if (env.d) {
       const plain = await decryptField(cryptoKey, env.d);
       return /** @type {T} */ (JSON.parse(plain));
@@ -173,7 +326,6 @@ export async function getSecure(key) {
       const combined = new Uint8Array(IV_LEN_LEGACY + ct.byteLength);
       combined.set(iv, 0);
       combined.set(ct, IV_LEN_LEGACY);
-      // Re-encode as the format expected by decryptField (base64 iv+ct)
       const b64 = btoa(String.fromCharCode(...combined));
       const plain = await decryptField(cryptoKey, b64);
       return /** @type {T} */ (JSON.parse(plain));
@@ -223,11 +375,7 @@ export function _resetKeyForTests() {
  */
 export function getSecureStorageStatus(sampleKey = "auth_session") {
   const ls = _ls();
-  const subtle =
-    typeof globalThis.crypto !== "undefined" && typeof globalThis.crypto.subtle !== "undefined";
-  if (!ls || !subtle) {
-    return { available: false, deviceKeyPresent: false, sealed: false };
-  }
+  if (!ls) return { available: false, deviceKeyPresent: false, sealed: false };
   let deviceKeyPresent = false;
   let sealed = false;
   try {

@@ -1,9 +1,9 @@
 /**
  * @file secure-storage-crypto-wiring.test.mjs
- * Sprint 62 — A3: secure-storage.js wired to crypto.js
+ * Sprint 62 — A3 / S246 — Merged into security.js
  *
  * Verifies that:
- *  1. secure-storage.js imports from crypto.js (static analysis).
+ *  1. security.js (merged from crypto-security.js + secure-storage.js) exports all required functions.
  *  2. setSecure/getSecure round-trip works in a mocked environment.
  *  3. Legacy { v, iv, ct } envelopes are handled gracefully.
  */
@@ -15,25 +15,21 @@ import path from "path";
 import { createLocalStorageMock } from "./helpers.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ssPath = path.resolve(__dirname, "../../src/services/secure-storage.js");
+const ssPath = path.resolve(__dirname, "../../src/services/security.js");
 const SS_SRC = readFileSync(ssPath, "utf8");
 
 // ── Static analysis tests ────────────────────────────────────────────────────
 
-describe("secure-storage.js → crypto-security.js wiring (static)", () => {
-  it("imports from ./crypto-security.js", () => {
-    expect(SS_SRC).toContain('from "./crypto-security.js"');
-  });
-
-  it("imports encryptField from crypto.js", () => {
+describe("security.js — merged crypto + secure-storage (static)", () => {
+  it("exports encryptField", () => {
     expect(SS_SRC).toContain("encryptField");
   });
 
-  it("imports decryptField from crypto.js", () => {
+  it("exports decryptField", () => {
     expect(SS_SRC).toContain("decryptField");
   });
 
-  it("imports importRawKey from crypto.js", () => {
+  it("exports importRawKey", () => {
     expect(SS_SRC).toContain("importRawKey");
   });
 
@@ -134,7 +130,7 @@ describe("secure-storage.js → crypto.js round-trip (runtime)", () => {
 
   it("setSecure + getSecure round-trips a string value", async () => {
     const { setSecure, getSecure, _resetKeyForTests } = await import(
-      "../../src/services/secure-storage.js"
+      "../../src/services/security.js"
     );
     _resetKeyForTests();
     await setSecure("test_key", "hello world");
@@ -144,7 +140,7 @@ describe("secure-storage.js → crypto.js round-trip (runtime)", () => {
 
   it("setSecure + getSecure round-trips an object value", async () => {
     const { setSecure, getSecure, _resetKeyForTests } = await import(
-      "../../src/services/secure-storage.js"
+      "../../src/services/security.js"
     );
     _resetKeyForTests();
     const obj = { name: "Yair", phone: "0541234567" };
@@ -155,7 +151,7 @@ describe("secure-storage.js → crypto.js round-trip (runtime)", () => {
 
   it("getSecure returns null for missing key", async () => {
     const { getSecure, _resetKeyForTests } = await import(
-      "../../src/services/secure-storage.js"
+      "../../src/services/security.js"
     );
     _resetKeyForTests();
     const result = await getSecure("nonexistent_key");
@@ -164,7 +160,7 @@ describe("secure-storage.js → crypto.js round-trip (runtime)", () => {
 
   it("removeSecure deletes the entry", async () => {
     const { setSecure, getSecure, removeSecure, _resetKeyForTests } = await import(
-      "../../src/services/secure-storage.js"
+      "../../src/services/security.js"
     );
     _resetKeyForTests();
     await setSecure("to_remove", 42);
@@ -175,7 +171,7 @@ describe("secure-storage.js → crypto.js round-trip (runtime)", () => {
 
   it("getSecure returns null for legacy plaintext (non-JSON envelope)", async () => {
     const { getSecure, _resetKeyForTests } = await import(
-      "../../src/services/secure-storage.js"
+      "../../src/services/security.js"
     );
     _resetKeyForTests();
     store["wedding_v1_legacy"] = "plaintext-value";

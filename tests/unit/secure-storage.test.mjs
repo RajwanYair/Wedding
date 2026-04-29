@@ -11,7 +11,7 @@ import {
   rotateDeviceKey,
   getSecureStorageStatus,
   _resetKeyForTests,
-} from "../../src/services/secure-storage.js";
+} from "../../src/services/security.js";
 
 beforeEach(() => {
   // happy-dom's Storage doesn't implement clear(); remove keys manually.
