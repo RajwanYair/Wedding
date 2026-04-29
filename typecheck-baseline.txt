@@ -19,8 +19,8 @@ src/sections/whatsapp.js::TS1127::Invalid character.
 src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
 src/services/audit.js::TS2339::Property 'access_token' does not exist on type 'never'.
 src/services/audit.js::TS2339::Property 'user' does not exist on type 'never'.
-src/services/campaign.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
-src/services/delivery.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
+src/services/outreach.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
+src/services/outreach.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
 src/services/event-manager.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/event-manager.js::TS2577::Return type annotation circularly references itself.
 src/services/guest-identity.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
@@ -56,16 +56,16 @@ src/services/seating.js::TS2740::Type '{}' is missing the following properties f
 src/services/security.js::TS2769::No overload matches this call.
 src/services/sync.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.
 src/services/theme.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
-src/services/website-builder.js::TS1127::Invalid character.
-src/services/website-builder.js::TS2322::Type 'string | WebsiteSection[]' is not assignable to type 'string & (WebsiteSection[] & ("public" | "password" | "priva
-src/services/website-builder.js::TS2322::Type 'string' is not assignable to type 'WebsiteVisibility'.
-src/services/website-builder.js::TS2339::Property 'coupleA' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
-src/services/website-builder.js::TS2339::Property 'coupleB' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
-src/services/website-builder.js::TS2339::Property 'coverImageUrl' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefi
-src/services/website-builder.js::TS2339::Property 'customDomain' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefin
-src/services/website-builder.js::TS2339::Property 'password' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; 
-src/services/website-builder.js::TS2339::Property 'themePreset' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefine
-src/services/website-builder.js::TS2339::Property 'weddingDate' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefine
+src/services/web-presence.js::TS1127::Invalid character.
+src/services/web-presence.js::TS2322::Type 'string | WebsiteSection[]' is not assignable to type 'string & (WebsiteSection[] & ("public" | "password" | "priva
+src/services/web-presence.js::TS2322::Type 'string' is not assignable to type 'WebsiteVisibility'.
+src/services/web-presence.js::TS2339::Property 'coupleA' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
+src/services/web-presence.js::TS2339::Property 'coupleB' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
+src/services/web-presence.js::TS2339::Property 'coverImageUrl' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefi
+src/services/web-presence.js::TS2339::Property 'customDomain' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefin
+src/services/web-presence.js::TS2339::Property 'password' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; 
+src/services/web-presence.js::TS2339::Property 'themePreset' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefine
+src/services/web-presence.js::TS2339::Property 'weddingDate' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefine
 src/utils/capacitor-config.js::TS2339::Property 'test' does not exist on type 'readonly string[]'.
 src/utils/capacitor-config.js::TS2740::Type 'RegExp' is missing the following properties from type 'readonly string[]': length, concat, join, slice, and 26 mor
 src/utils/cdn-image.js::TS1127::Invalid character.

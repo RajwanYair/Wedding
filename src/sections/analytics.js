@@ -14,14 +14,12 @@ import {
   getBudgetUtilization,
 } from "../services/analytics.js";
 import {
-  uniqueOpens,
-  uniqueClicks,
-  uniqueRsvps,
   getRsvpFunnel,
   getRsvpConversionRates,
   unseatedConfirmedCount,
   buildRsvpFunnel,
   rsvpConversionRate,
+  getAnalyticsSummary,
 } from "../services/analytics.js";
 import {
   renderDonut as _renderDonut,
@@ -531,9 +529,7 @@ function renderInvitationEngagementFunnel() {
 
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const total = guests.length;
-  const opens = uniqueOpens();
-  const clicks = uniqueClicks();
-  const rsvps = uniqueRsvps();
+  const { opens, clicks, rsvps } = getAnalyticsSummary();
 
   if (total === 0) {
     container.textContent = t("analytics_no_guests");
