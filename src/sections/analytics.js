@@ -12,7 +12,7 @@ import {
   getTopCategories,
   getMonthlyTotals,
   getBudgetUtilization,
-} from "../services/financial-analytics.js";
+} from "../services/analytics.js";
 import {
   uniqueOpens,
   uniqueClicks,
@@ -22,7 +22,7 @@ import {
   unseatedConfirmedCount,
   buildRsvpFunnel,
   rsvpConversionRate,
-} from "../services/guest-analytics.js";
+} from "../services/analytics.js";
 import {
   renderDonut as _renderDonut,
   renderBar as _renderBar,

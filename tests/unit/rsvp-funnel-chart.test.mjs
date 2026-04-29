@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 const { buildRsvpFunnel, rsvpConversionRate } = await import(
-  "../../src/services/guest-analytics.js"
+  "../../src/services/analytics.js"
 );
 
 describe("RsvpFunnelChart (Sprint 146)", () => {

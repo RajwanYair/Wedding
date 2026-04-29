@@ -1,6 +1,6 @@
 /**
  * tests/unit/vendor-analytics.test.mjs — Sprint 51 / B6
- * Unit tests for src/services/financial-analytics.js
+ * Unit tests for src/services/analytics.js
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -9,7 +9,7 @@ import { initStore } from "../../src/core/store.js";
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 
 const { getVendorPaymentSummary, getVendorsByCategory, getOverdueVendors, getPaymentsByMonth } =
-  await import("../../src/services/financial-analytics.js");
+  await import("../../src/services/analytics.js");
 
 const NOW = new Date("2026-04-27T12:00:00Z");
 const PAST = "2026-03-01";

@@ -2,7 +2,7 @@
  * tests/unit/rsvp-funnel.test.mjs — S123 RSVP funnel.
  */
 import { describe, it, expect } from "vitest";
-import { buildRsvpFunnel, rsvpConversionRate } from "../../src/services/guest-analytics.js";
+import { buildRsvpFunnel, rsvpConversionRate } from "../../src/services/analytics.js";
 
 const sample = [
   { id: "1", invited: true, sent: true, opened: true, status: "confirmed", respondedAt: "2026-04-01" },

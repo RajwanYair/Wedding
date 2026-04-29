@@ -6,7 +6,7 @@ import {
   buildPaymentTimeline,
   buildOutstandingByVendor,
   topVendorsByCost,
-} from "../../src/services/financial-analytics.js";
+} from "../../src/services/analytics.js";
 
 describe("S122 — vendor-timeline", () => {
   it("buildPaymentTimeline aggregates per day and accumulates", () => {

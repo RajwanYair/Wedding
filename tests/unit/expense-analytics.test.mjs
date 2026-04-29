@@ -10,7 +10,7 @@ vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 const {
   getTotalExpenses, groupByCategory, getTopCategories,
   getMonthlyTotals, getBudgetUtilization,
-} = await import("../../src/services/financial-analytics.js");
+} = await import("../../src/services/analytics.js");
 
 const EXPENSES = [
   { id: "e1", category: "venue",      description: "Hall", amount: 20000, date: "2025-07-01", createdAt: "" },
