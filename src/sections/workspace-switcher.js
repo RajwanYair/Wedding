@@ -5,7 +5,7 @@
  * name and user role badge. Consumes workspace-roles.js (S132) for RBAC.
  */
 
-import { getStore, updateStore } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { hasPermission } from "../services/workspace-roles.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
@@ -27,14 +27,14 @@ const ROLE_BADGE = Object.freeze({
  * @returns {{ id: string, name: string, role: import('../services/workspace-roles.js').WorkspaceRole }[]}
  */
 function getWorkspaces() {
-  return getStore(STORAGE_KEY) ?? [
+  return /** @type {any} */ (storeGet(STORAGE_KEY)) ?? [
     { id: "default", name: t("workspace_default"), role: "owner" },
   ];
 }
 
 /** Get the active workspace id. */
 function getActiveWorkspaceId() {
-  return getStore(ACTIVE_KEY) ?? "default";
+  return storeGet(ACTIVE_KEY) ?? "default";
 }
 
 /** Get the active workspace object. */
@@ -51,7 +51,7 @@ function getActiveWorkspace() {
 function switchWorkspace(id) {
   const all = getWorkspaces();
   if (!all.some((w) => w.id === id)) return;
-  updateStore(ACTIVE_KEY, id);
+  storeSet(ACTIVE_KEY, id);
   renderWorkspaceSwitcher();
 }
 

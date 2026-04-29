@@ -94,7 +94,7 @@ export function getBudgetConsumptionPct(budgetTarget) {
 // ── Projection helpers (merged from budget-projection.js, S124) ──────────
 
 /** @typedef {{ amount: number, paidAt: string, category?: string }} ExpenseInput */
-/** @typedef {{ date: string, spent: number, remaining: number }} BurndownPoint */
+/** @typedef {{ date: string, spent: number, remaining: number }} SpendingPoint */
 
 const _ymd = (/** @type {string} */ s) => {
   const t = Date.parse(s);
@@ -106,7 +106,7 @@ const _ymd = (/** @type {string} */ s) => {
  * Build a per-day burn-down series.
  * @param {number} budgetTotal
  * @param {ExpenseInput[]} expenses
- * @returns {BurndownPoint[]}
+ * @returns {SpendingPoint[]}
  */
 export function buildBurndownSeries(budgetTotal, expenses) {
   const total = Math.max(0, Number(budgetTotal) || 0);
