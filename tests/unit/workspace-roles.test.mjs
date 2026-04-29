@@ -9,7 +9,7 @@ import {
   canAssignRole,
   filterByRole,
   newMember,
-} from "../../src/services/workspace-roles.js";
+} from "../../src/services/workspace.js";
 
 describe("S132 — workspace-roles", () => {
   it("WORKSPACE_ROLES contains 5 known roles", () => {

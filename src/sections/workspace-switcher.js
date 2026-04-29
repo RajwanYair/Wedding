@@ -7,7 +7,7 @@
 
 import { storeGet, storeSet } from "../core/store.js";
 import { t } from "../core/i18n.js";
-import { hasPermission } from "../services/workspace-roles.js";
+import { hasPermission } from "../services/workspace.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 
 const STORAGE_KEY = "workspaces";

@@ -1,19 +1,98 @@
 /**
- * src/services/onboarding.js — First-run onboarding + What's New engine (S249)
+ * src/services/workspace.js — Workspace roles + onboarding + What's New engine (S277)
  *
  * Merged from:
- *   - onboarding.js (S113)         — first-run wizard state + step progression
- *   - whats-new-engine.js (S126)   — version comparison + "What's New" decision logic
+ *   - workspace-roles.js (S132) — RBAC org/team/planner roles
+ *   - onboarding.js      (S249) — first-run wizard + What's New decision engine
  *
- * §1 Onboarding — ONBOARDING_STEPS, getOnboardingState, setOnboardingState,
+ * §1 Workspace RBAC — WORKSPACE_ROLES, hasPermission, compareRoles, canAssignRole,
+ *    filterByRole, newMember.
+ * §2 Onboarding — ONBOARDING_STEPS, getOnboardingState, setOnboardingState,
  *    advanceOnboarding, dismissOnboarding, isOnboardingNeeded.
- * §2 What's New engine — compareSemver, shouldShowWhatsNew,
+ * §3 What's New engine — compareSemver, shouldShowWhatsNew,
  *    collectNewerEntries, flattenItems.
  *
- * Storage-backed where needed; pure helpers are DOM-free and unit-testable.
+ * Pure helpers — no DOM. Storage-backed for §2 state only.
  */
 
 import { readBrowserStorage, writeBrowserStorage } from "../core/storage.js";
+
+// ── §1 — Workspace RBAC ───────────────────────────────────────────────────
+
+/** @typedef {"owner"|"co_planner"|"vendor"|"photographer"|"guest"} WorkspaceRole */
+
+/** @typedef {"read"|"write"|"approve"|"invite"|"billing"} Permission */
+
+/** Static role → permission map. */
+const ROLE_PERMS = Object.freeze({
+  owner:        ["read", "write", "approve", "invite", "billing"],
+  co_planner:   ["read", "write", "approve", "invite"],
+  vendor:       ["read", "write"],
+  photographer: ["read"],
+  guest:        ["read"],
+});
+
+const ROLE_RANK = Object.freeze({
+  owner: 5,
+  co_planner: 4,
+  vendor: 3,
+  photographer: 2,
+  guest: 1,
+});
+
+/** All known roles (frozen array). */
+export const WORKSPACE_ROLES = Object.freeze(Object.keys(ROLE_PERMS));
+
+/** Returns true iff the role grants the permission. */
+export function hasPermission(/** @type {WorkspaceRole} */ role, /** @type {Permission} */ perm) {
+  const list = ROLE_PERMS[role];
+  if (!list) return false;
+  return list.includes(perm);
+}
+
+/** Compare two roles. Returns -1 / 0 / 1 by rank. */
+export function compareRoles(/** @type {WorkspaceRole} */ a, /** @type {WorkspaceRole} */ b) {
+  const ra = ROLE_RANK[a] ?? 0;
+  const rb = ROLE_RANK[b] ?? 0;
+  if (ra > rb) return 1;
+  if (ra < rb) return -1;
+  return 0;
+}
+
+/** Returns true iff `actor` may change `target`'s role to `nextRole`. */
+export function canAssignRole(/** @type {WorkspaceRole} */ actorRole, /** @type {WorkspaceRole} */ targetRole, /** @type {WorkspaceRole} */ nextRole) {
+  if (!hasPermission(actorRole, "invite")) return false;
+  // Cannot promote anyone to a higher rank than yourself.
+  if (compareRoles(nextRole, actorRole) > 0) return false;
+  // Cannot demote/replace someone of equal-or-higher rank than yourself
+  // unless you are the owner.
+  if (actorRole !== "owner" && compareRoles(targetRole, actorRole) >= 0) {
+    return false;
+  }
+  return true;
+}
+
+/** Filter a permission list to only those granted by the role. */
+export function filterByRole(/** @type {WorkspaceRole} */ role, /** @type {Permission[]} */ perms) {
+  return (perms ?? []).filter((/** @type {Permission} */ p) => hasPermission(role, p));
+}
+
+/** Default member entry shape for new invites. */
+export function newMember({ email = /** @type {string} */ (""), role = /** @type {WorkspaceRole} */ ("guest"), invitedBy = "" }) {
+  if (typeof email !== "string" || !email.includes("@")) {
+    throw new Error("invalid_email");
+  }
+  if (!ROLE_PERMS[role]) throw new Error("invalid_role");
+  return {
+    email: email.trim().toLowerCase(),
+    role,
+    invitedBy,
+    invitedAt: new Date().toISOString(),
+    status: "pending",
+  };
+}
+
+// ── §2 — First-run onboarding ─────────────────────────────────────────────
 
 const STORAGE_KEY = "wedding_v1_onboarding_state";
 
@@ -97,7 +176,7 @@ export function isOnboardingNeeded() {
   return !getOnboardingState().completed;
 }
 
-// ── §2 — What's New decision engine ──────────────────────────────────────
+// ── §3 — What's New decision engine ──────────────────────────────────────
 
 /** Compare two semver-ish versions. Returns -1 / 0 / 1. */
 export function compareSemver(/** @type {string|number} */ a, /** @type {string|number} */ b) {

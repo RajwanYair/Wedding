@@ -7,7 +7,7 @@ import {
   shouldShowWhatsNew,
   collectNewerEntries,
   flattenItems,
-} from "../../src/services/onboarding.js";
+} from "../../src/services/workspace.js";
 
 describe("S126 — whats-new-engine", () => {
   it("compareSemver basic ordering", () => {

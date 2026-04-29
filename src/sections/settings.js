@@ -46,7 +46,7 @@ import {
   isApprovedAdminAsync,
   fetchAdminUsers,
 } from "../services/auth.js";
-import { ONBOARDING_STEPS, setOnboardingState } from "../services/onboarding.js";
+import { ONBOARDING_STEPS, setOnboardingState } from "../services/workspace.js";
 import { buildAllDeployButtons } from "../utils/deploy-buttons.js";
 
 // ── Lifecycle ──────────────────────────────────────────────────────────

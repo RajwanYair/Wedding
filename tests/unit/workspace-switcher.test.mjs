@@ -10,7 +10,7 @@ import {
   canAssignRole,
   newMember,
   filterByRole,
-} from "../../src/services/workspace-roles.js";
+} from "../../src/services/workspace.js";
 
 describe("WorkspaceSwitcher (Sprint 140)", () => {
   describe("role badges & permissions", () => {
