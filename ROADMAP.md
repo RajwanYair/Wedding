@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.8.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.9.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,13 +20,13 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2025-08-12, v13.8.0):** **3 153 tests passing** across 225 files · 0 lint errors / 0 warnings
+**State (2025-09-01, v13.9.0):** **3 149 tests passing** across 225 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 24
 Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
-Sprints S236–S244 complete: CI hardening (Mermaid/JSDoc enforce), service merges (49 files, was 60),
-TSC baseline 152→100 (null-safety fixes), Supabase migrations CI step, Trusted Types CSP gates.
+Sprints S270–S274 complete: service merges (36→31 files), TSC baseline 71→54, em-dash JSDoc fixes,
+platform-ops/wa-messaging/print-preview/run-of-show services restructured.
 
 **The one decision that matters most:** flip `BACKEND_TYPE` from `"sheets"` to `"supabase"`.
 This single line of code unblocks every other capability in this roadmap. Three major versions
@@ -75,16 +75,16 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.8.0 · 2025-08-12
+### Actual state — v13.9.0 · 2025-09-01
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **3 153 passing · 225 files · 0 Node warnings** | ✅ |
-| TypeScript errors | baseline 100 (was 212 at v13.5) — S240 null-safety fixes | ⚠ ratchet active |
-| Dead exports | wired in S218 (exportContactsCSV, bulkCheckIn, exportEventSummary, printDietaryCards) | ✅ |
+| Tests | **3 149 passing · 225 files · 0 Node warnings** | ✅ |
+| TypeScript errors | baseline 54 (was 71 at v13.8) — S274 JSDoc + typedef fixes | ⚠ ratchet active |
+| Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
 | Sections | **23** modules · **18** templates · **8** modals | ✅ |
-| Services | **49** files (was 60 at v13.5, S237–S241 merges) | ⚠ target ≤ 25 (Phase B1) |
+| Services | **31** files (was 36 at v13.8, S270–S273 merges) | ⚠ target ≤ 25 (Phase B1) |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
@@ -1113,6 +1113,7 @@ Storage + Realtime for development without an account.
 | **v13.4.0** | **Released 2025-07-21** | **S216–S225: Dead export wiring · service consolidation · container queries · action namespace · TSC −33** | **S218–S225; 60 service files; baseline 245→212; audit:actions CI gate; 3 153 tests** |
 | **v13.5.0** | **Released 2025-07-28** | **S231–S234: Dead export wiring ×15 · TSC baseline 212→155 · modal dialog audit CI gate · coverage ratchet** | **S231–S234; TS7006/TS7031 zeroed; 10/10 dialogs enforced; all coverage dirs ratcheted; 3 153 tests** |
 | **v13.8.0** | **Released 2025-08-12** | **S261–S265; 36 service files; TSC baseline 71; 3149 tests** |
+| **v13.9.0** | **Released 2025-09-01** | **S270–S274; 31 service files; TSC baseline 54; 3149 tests** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1121,5 +1122,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2025-08-10 · v13.8.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2025-09-01 · v13.9.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*

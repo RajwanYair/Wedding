@@ -4,7 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [13.8.0] — 2025-08-12
+## [13.9.0] — 2025-09-01
+
+> **S270–S274: Service merges (36→31 files), TSC baseline 71→54 (17 errors fixed), em-dash JSDoc fixes, platform-ops/wa-messaging restructure.**
+
+### Changed
+
+- **S270** — Merged `whatsapp-business.js` + `message-tools.js` → `wa-messaging.js`
+- **S273** — Merged `diagnostics.js` + `resilience.js` → `platform-ops.js`
+- **S274** — TSC baseline 71→54: em-dash (U+2014) JSDoc fixes (4 files), `WebsiteConfig` typedef rewrite, `SyncManager` cast, `TS7030` return path, `onboarding.js` null-coalesce, `getHealthReport` JSDoc
+- **S275** — Version bump to v13.9.0; all 3149 tests green
+
 
 > **S261–S265: Service consolidation (44→36 files), TSC baseline 75→71, workspace-switcher storeGet fix, sheets.js offline→resilience import, budget-burndown duplicate typedef.**
 
