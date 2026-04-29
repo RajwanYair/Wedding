@@ -8,7 +8,7 @@
 
 import { storeGet, storeUpsert, storeSet } from "../core/store.js";
 import { APP_VERSION } from "../core/config.js";
-import { logError } from "./audit.js";
+import { logError } from "./compliance.js";
 
 // ══════════════════════════════════════════════════════════════════════════
 // §1 — Error monitor (merged from error-monitor.js, ADR-028 M1)

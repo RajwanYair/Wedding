@@ -7,7 +7,7 @@
  */
 
 import { load } from "./state.js";
-import { isPiiKey, loadPii } from "../services/privacy.js";
+import { isPiiKey, loadPii } from "../services/compliance.js";
 
 // ── Default data ──────────────────────────────────────────────────────────
 

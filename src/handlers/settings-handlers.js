@@ -11,7 +11,7 @@ import {
   showConflictModal,
 } from "../core/conflict-resolver.js";
 import { awaitDialogClose } from "../core/dialog.js";
-import { logAdminAction } from "../services/audit.js";
+import { logAdminAction } from "../services/compliance.js";
 import { save } from "../core/state.js";
 import {
   syncSheetsNow,

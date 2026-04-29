@@ -15,8 +15,8 @@ src/sections/rsvp.js::TS2416::Property 'onMount' in type 'RsvpSection' is not as
 src/sections/tables.js::TS2307::Cannot find module '../services/seating-constraints.js' or its corresponding type declarations.
 src/sections/website-builder.js::TS2554::Expected 2 arguments, but got 1.
 src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
-src/services/audit.js::TS2339::Property 'access_token' does not exist on type 'never'.
-src/services/audit.js::TS2339::Property 'user' does not exist on type 'never'.
+src/services/compliance.js::TS2339::Property 'access_token' does not exist on type 'never'.
+src/services/compliance.js::TS2339::Property 'user' does not exist on type 'never'.
 src/services/event-manager.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/event-manager.js::TS2577::Return type annotation circularly references itself.
 src/services/guest-identity.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
@@ -36,7 +36,7 @@ src/services/observability.js::TS2353::Object literal may only specify known pro
 src/services/observability.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/outreach.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
 src/services/outreach.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
-src/services/privacy.js::TS2862::Type 'T' is generic and can only be indexed for reading.
+src/services/compliance.js::TS2862::Type 'T' is generic and can only be indexed for reading.
 src/services/realtime.js::TS2554::Expected 1 arguments, but got 2.
 src/services/realtime.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/misc"' has no exported mem
 src/services/repositories.js::TS1005::'}' expected.

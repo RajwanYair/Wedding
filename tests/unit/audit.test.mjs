@@ -11,6 +11,7 @@ vi.mock("../../src/core/config.js", () => ({
   SUPABASE_URL: "https://test.supabase.co",
   SUPABASE_ANON_KEY: "anon-key",
   APP_VERSION: "7.5.0",
+  STORAGE_PREFIX: "wedding_v1_",
 }));
 
 vi.mock("../../src/core/state.js", () => ({
@@ -21,7 +22,7 @@ vi.mock("../../src/core/state.js", () => ({
 const { mock: _lsMock, store: _store } = createLocalStorageMock();
 vi.stubGlobal("localStorage", _lsMock);
 
-import { audit } from "../../src/services/audit.js";
+import { audit } from "../../src/services/compliance.js";
 
 const SESSION_KEY = STORAGE_KEYS.SUPABASE_SESSION;
 

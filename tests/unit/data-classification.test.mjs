@@ -11,7 +11,7 @@ import {
   getSensitiveFields,
   listDomains,
   redactPII,
-} from "../../src/services/privacy.js";
+} from "../../src/services/compliance.js";
 
 describe("getFieldClassification", () => {
   it("returns correct level for guest.phone", () => {

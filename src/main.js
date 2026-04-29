@@ -81,7 +81,7 @@ import {
 } from "./services/auth.js";
 import { startPresence, onPresenceChange } from "./services/realtime.js";
 import { initMonitoring, initWebVitals, captureException } from "./services/observability.js";
-import { migratePlaintextPii } from "./services/privacy.js";
+import { migratePlaintextPii } from "./services/compliance.js";
 import {
   syncSheetsNow,
   onSyncStatus,
