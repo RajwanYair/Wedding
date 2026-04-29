@@ -1,5 +1,6 @@
 /**
  * tests/unit/storage.test.mjs — Unit tests for src/core/storage.js (F2.3)
+ * @vitest-environment happy-dom
  */
 import { describe, it, expect, beforeEach } from "vitest";
 import {
@@ -11,6 +12,14 @@ import {
   storageClear,
   auditLocalStorageRemnants,
   cleanupLocalStorageRemnants,
+  readBrowserStorage,
+  writeBrowserStorage,
+  removeBrowserStorage,
+  readBrowserStorageJson,
+  writeBrowserStorageJson,
+  readSessionStorage,
+  writeSessionStorage,
+  migrateFromLocalStorage,
 } from "../../src/core/storage.js";
 
 describe("storage abstraction (F2.3)", () => {
@@ -104,5 +113,133 @@ describe("storage abstraction (F2.3)", () => {
         /* ignore */
       }
     });
+  });
+});
+
+// ── Browser storage helpers (S336) ────────────────────────────────────────
+
+describe("readBrowserStorage / writeBrowserStorage / removeBrowserStorage", () => {
+  const KEY = "test_browser_storage_key";
+
+  beforeEach(() => {
+    try { localStorage.removeItem(KEY); } catch { /* ignore */ }
+  });
+
+  it("writeBrowserStorage stores a string value", () => {
+    writeBrowserStorage(KEY, "hello");
+    expect(localStorage.getItem(KEY)).toBe("hello");
+  });
+
+  it("readBrowserStorage retrieves a stored value", () => {
+    localStorage.setItem(KEY, "world");
+    expect(readBrowserStorage(KEY)).toBe("world");
+  });
+
+  it("readBrowserStorage returns fallback for missing key", () => {
+    expect(readBrowserStorage("__nonexistent__", "default")).toBe("default");
+  });
+
+  it("readBrowserStorage returns null by default for missing key", () => {
+    expect(readBrowserStorage("__nonexistent__")).toBeNull();
+  });
+
+  it("removeBrowserStorage deletes a key", () => {
+    localStorage.setItem(KEY, "to_delete");
+    removeBrowserStorage(KEY);
+    expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
+  it("removeBrowserStorage is a no-op for missing key", () => {
+    expect(() => removeBrowserStorage("__nonexistent__")).not.toThrow();
+  });
+});
+
+describe("readBrowserStorageJson / writeBrowserStorageJson", () => {
+  const KEY = "test_json_storage_key";
+
+  beforeEach(() => {
+    try { localStorage.removeItem(KEY); } catch { /* ignore */ }
+  });
+
+  it("writeBrowserStorageJson persists an object", () => {
+    writeBrowserStorageJson(KEY, { a: 1, b: "two" });
+    const raw = localStorage.getItem(KEY);
+    expect(JSON.parse(raw)).toEqual({ a: 1, b: "two" });
+  });
+
+  it("readBrowserStorageJson parses a stored object", () => {
+    localStorage.setItem(KEY, JSON.stringify({ x: 42 }));
+    expect(readBrowserStorageJson(KEY, null)).toEqual({ x: 42 });
+  });
+
+  it("readBrowserStorageJson returns fallback for missing key", () => {
+    expect(readBrowserStorageJson("__missing__", [])).toEqual([]);
+  });
+
+  it("readBrowserStorageJson returns fallback for invalid JSON", () => {
+    localStorage.setItem(KEY, "not-valid-json{");
+    expect(readBrowserStorageJson(KEY, "fallback")).toBe("fallback");
+  });
+
+  it("writeBrowserStorageJson handles arrays", () => {
+    writeBrowserStorageJson(KEY, [1, 2, 3]);
+    expect(readBrowserStorageJson(KEY, [])).toEqual([1, 2, 3]);
+  });
+});
+
+describe("readSessionStorage / writeSessionStorage", () => {
+  const KEY = "test_session_storage_key";
+
+  beforeEach(() => {
+    try { sessionStorage.removeItem(KEY); } catch { /* ignore */ }
+  });
+
+  it("writeSessionStorage stores a string value", () => {
+    writeSessionStorage(KEY, "session_value");
+    expect(sessionStorage.getItem(KEY)).toBe("session_value");
+  });
+
+  it("readSessionStorage retrieves a stored value", () => {
+    sessionStorage.setItem(KEY, "retrieved");
+    expect(readSessionStorage(KEY)).toBe("retrieved");
+  });
+
+  it("readSessionStorage returns fallback for missing key", () => {
+    expect(readSessionStorage("__nonexistent__", "fb")).toBe("fb");
+  });
+
+  it("readSessionStorage returns null by default for missing key", () => {
+    expect(readSessionStorage("__nonexistent__")).toBeNull();
+  });
+
+  it("writeSessionStorage overwrites an existing value", () => {
+    writeSessionStorage(KEY, "first");
+    writeSessionStorage(KEY, "second");
+    expect(readSessionStorage(KEY)).toBe("second");
+  });
+});
+
+describe("migrateFromLocalStorage", () => {
+  it("returns 0 when adapter is not indexeddb", async () => {
+    await initStorage();
+    if (getAdapterType() !== "indexeddb") {
+      const count = await migrateFromLocalStorage("wedding_v1_");
+      expect(count).toBe(0);
+    }
+  });
+
+  it("migrates prefixed keys to IDB", async () => {
+    await initStorage();
+    if (getAdapterType() !== "indexeddb") return;
+    try {
+      localStorage.setItem("wedding_v1_migrate_probe", "migval");
+    } catch {
+      return;
+    }
+    const count = await migrateFromLocalStorage("wedding_v1_");
+    expect(count).toBeGreaterThanOrEqual(1);
+    const val = await storageGet("wedding_v1_migrate_probe");
+    expect(val).toBe("migval");
+    try { localStorage.removeItem("wedding_v1_migrate_probe"); } catch { /* ignore */ }
   });
 });
