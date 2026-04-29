@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.5.0] — 2025-07-28
+
+> **S231–S234: Dead export wiring × 15, TSC baseline 212→155 (TS7006/TS7031 zeroed across 20 files), modal native-`<dialog>` audit fixed + CI baseline enforced, coverage gate ratcheted to measured actuals.**
+
+### Added
+
+- **S233** — `scripts/audit-modals.mjs` updated to track shell-level `<dialog>` adoption in `index.html`; CI step added enforcing `--baseline=10` (all 10 modals confirmed adopted)
+
+### Changed
+
+- **S231** — Wired 15 dead exports: `getVendorsByCategory`, `setExpenseCategoryFilter`,
+  `batchMarkInvitationSent`, `startAdminSignIn`, `refreshAdminList`, `checkIsApprovedAdmin`,
+  `resetOnboarding`, `resolveConflicts`, `sendMagicLink`, `loginAnonymousSupabase`,
+  `logAdminAction`, `recordIssuedToken`, `captureError`+`logError`, 2 nav improvements
+- **S232** — TSC implicit-any baseline 212→155: fixed TS7006/TS7031 in 20+ files including
+  `workspace-roles.js`, `guests.js`, `rsvp.js`, `run-of-show.js`, `settings.js`,
+  `whatsapp.js`, `deploy-buttons.js`, `theme-export.js`, `theme-vars.js`, `whats-new-engine.js`,
+  `notification-panel.js`, `tables.js`, `budget.js`, `vendors.js`, `guest-landing.js`,
+  `budget-burndown.js`, `financial-analytics.js`, `guest-analytics.js`,
+  `notification-centre.js`, `rate-limiter.js`, `seating.js` — all TS7006/TS7031 eliminated
+- **S234** — Coverage thresholds ratcheted to measured actuals: global branches 43→44;
+  `utils` lines 84→90, branches 75→81, functions 84→86, stmts 83→88;
+  `services` all metrics raised 65→73–75; `core` all metrics raised 45–60→58–69;
+  `repositories` all metrics raised to actuals; 3 pre-existing violations fixed
+
 ## [13.4.0] — 2025-07-21
 
 > **S216–S225: Dead export wiring, service consolidation (admin→auth, table-service→seating), CSS container queries, View Transitions (already done), coverage gate recalibration, action namespace enforcement, TSC error reduction (245→212 baseline).**
