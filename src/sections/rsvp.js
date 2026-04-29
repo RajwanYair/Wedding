@@ -184,7 +184,7 @@ export function submitRsvp(data) {
   // Register Background Sync so offline submissions flush automatically once online (S18b)
   if (!navigator.onLine && "serviceWorker" in navigator && "SyncManager" in window) {
     navigator.serviceWorker.ready
-      .then((reg) => reg.sync.register("rsvp-sync"))
+      .then((reg) => /** @type {any} */ (reg).sync.register("rsvp-sync"))
       .catch(() => {
         /* Background Sync not available */
       });

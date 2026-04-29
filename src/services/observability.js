@@ -354,7 +354,7 @@ const SAMPLE_WINDOW_MS = 1000;
 /** Max breadcrumbs retained for context on the next exception. */
 const MAX_BREADCRUMBS = 50;
 
-/** @type {{ init: Function, captureException: Function, addBreadcrumb: Function } | null} */
+/** @type {{ init: Function, captureException: Function, addBreadcrumb: Function, captureMessage?: Function } | null} */
 let _transport = null;
 
 /** @type {boolean} */

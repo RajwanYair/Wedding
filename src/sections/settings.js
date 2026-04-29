@@ -413,7 +413,7 @@ export function addApprovedEmail() {
  * @param {HTMLElement} triggerEl  The remove button (carries data-email attribute)
  */
 export function removeApprovedEmail(triggerEl) {
-  const email = triggerEl.dataset.email ?? triggerEl.closest("[data-email]")?.dataset.email ?? "";
+  const email = triggerEl.dataset.email ?? /** @type {HTMLElement|null} */ (triggerEl.closest("[data-email]"))?.dataset.email ?? "";
   if (!email) return;
   const list = /** @type {string[]} */ (storeGet("approvedEmails") ?? []);
   const updated = list.filter((e) => e.trim().toLowerCase() !== email.trim().toLowerCase());

@@ -1,23 +1,3 @@
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/budget")' is n
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/changelog")' i
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/checkin")' is 
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/contact-collec
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/dashboard")' i
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/expenses")' is
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/gallery")' is 
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/guest-landing"
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/guests")' is n
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/invitation")' 
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/landing")' is 
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/registry")' is
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/rsvp")' is not
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/run-of-show")'
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/settings")' is
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/tables")' is n
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/timeline")' is
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/vendors")' is 
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/website-builde
-src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/whatsapp")' is
 src/main.js::TS2554::Expected 1 arguments, but got 0.
 src/repositories/supabase-base-repository.js::TS2707::Generic type 'PostgrestFilterBuilder<ClientOptions, Schema, Row, Result$1, RelationName, Relationships, Method>' require
 src/repositories/vendor-repository.js::TS8022::JSDoc '@extends' is not attached to a class.
@@ -28,12 +8,10 @@ src/sections/notification-panel.js::TS2345::Argument of type 'NotificationPanelS
 src/sections/notification-panel.js::TS2416::Property 'onMount' in type 'NotificationPanelSection' is not assignable to the same property in base type 'BaseSection'.
 src/sections/registry.js::TS2345::Argument of type 'RegistrySection' is not assignable to parameter of type 'BaseSection'.
 src/sections/registry.js::TS2416::Property 'onMount' in type 'RegistrySection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/rsvp.js::TS2339::Property 'sync' does not exist on type 'ServiceWorkerRegistration'.
 src/sections/rsvp.js::TS2345::Argument of type 'RsvpSection' is not assignable to parameter of type 'BaseSection'.
 src/sections/rsvp.js::TS2345::Argument of type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/calen
 src/sections/rsvp.js::TS2353::Object literal may only specify known properties, and 'title' does not exist in type 'typeof import("C:/Users/ryair/OneD
 src/sections/rsvp.js::TS2416::Property 'onMount' in type 'RsvpSection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/settings.js::TS2339::Property 'dataset' does not exist on type 'Element'.
 src/sections/tables.js::TS2307::Cannot find module '../services/seating-constraints.js' or its corresponding type declarations.
 src/sections/website-builder.js::TS2322::Type 'string[]' is not assignable to type 'WebsiteSection[]'.
 src/sections/website-builder.js::TS2554::Expected 2 arguments, but got 1.
@@ -43,24 +21,20 @@ src/sections/workspace-switcher.js::TS2305::Module '"../core/store.js"' has no e
 src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
 src/services/audit.js::TS2339::Property 'access_token' does not exist on type 'never'.
 src/services/audit.js::TS2339::Property 'user' does not exist on type 'never'.
-src/services/auth.js::TS2339::Property 'getSupabase' does not exist on type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MySc
 src/services/budget-burndown.js::TS2300::Duplicate identifier 'BurndownPoint'.
 src/services/budget-burndown.js::TS2322::Type '{ date: string; spent: number; remaining: number; }[]' is not assignable to type 'BurndownPoint[]'.
 src/services/campaign.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
-src/services/crypto-security.js::TS2769::No overload matches this call.
 src/services/delivery.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
 src/services/guest-service.js::TS2322::Type 'null' is not assignable to type 'string | undefined'.
 src/services/guest-service.js::TS2322::Type 'null' is not assignable to type 'string'.
 src/services/guest-service.js::TS2339::Property 'bulkSetStatus' does not exist on type '{ getAll(): Promise<Guest[]>; getById(id: string): Promise<Guest | null
 src/services/guest-service.js::TS2365::Operator '+' cannot be applied to types 'number | Record<string, number>' and 'number'.
-src/services/guest-token.js::TS2339::Property 'find' does not exist on type '{}'.
 src/services/guest-token.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
 src/services/message-tools.js::TS1127::Invalid character.
 src/services/nfc.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/notification-centre.js::TS2554::Expected 2 arguments, but got 1.
 src/services/observability.js::TS2307::Cannot find module '@sentry/browser' or its corresponding type declarations.
 src/services/observability.js::TS2322::Type '({ function: string | undefined; filename: string | undefined; lineno: number; colno: number; } | { filename: stri
-src/services/observability.js::TS2339::Property 'captureMessage' does not exist on type '{ init: Function; captureException: Function; addBreadcrumb: Function;
 src/services/observability.js::TS2353::Object literal may only specify known properties, and 'durationThreshold' does not exist in type 'PerformanceObserverIni
 src/services/observability.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/offline.js::TS2339::Property 'SyncManager' does not exist on type 'Window & typeof globalThis'.
@@ -81,6 +55,7 @@ src/services/run-of-show.js::TS2554::Expected 2 arguments, but got 1.
 src/services/seating.js::TS2339::Property 'filter' does not exist on type '{}'.
 src/services/seating.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
 src/services/seating.js::TS2740::Type '{}' is missing the following properties from type 'SeatingConstraint[]': length, pop, push, concat, and 35 more.
+src/services/security.js::TS2769::No overload matches this call.
 src/services/state-tracking.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/state-tracking.js::TS2577::Return type annotation circularly references itself.
 src/services/sync-manager.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.

@@ -124,7 +124,7 @@ import { register as registerSectionHandlers } from "./handlers/section-handlers
 import { register as registerSettingsHandlers } from "./handlers/settings-handlers.js";
 
 /** Map of section name → module (provides mount/unmount lifecycle). */
-/** @type {Record<string, { mount?: (el: HTMLElement) => void | Promise<void>, unmount?: () => void }>} */
+/** @type {Record<string, any>} */
 const SECTIONS = {
   dashboard: dashboardSection,
   guests: guestsSection,

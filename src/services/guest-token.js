@@ -197,7 +197,7 @@ export function getGuestByToken(token) {
   const payload = parseToken(token);
   if (!payload) return null;
 
-  const guests = storeGet("guests") ?? [];
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   return guests.find((/** @type {any} */ g) => g.id === payload.guestId) ?? null;
 }
 
@@ -210,7 +210,7 @@ export function getGuestByToken(token) {
  * @returns {string | null}  null if guest not found
  */
 export function issueGuestToken(guestId, opts = {}) {
-  const guests = storeGet("guests") ?? [];
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const guest = guests.find((/** @type {any} */ g) => g.id === guestId);
   if (!guest) return null;
   return generateToken(guestId, opts);

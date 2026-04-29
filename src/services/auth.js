@@ -13,6 +13,7 @@ import { load, remove, save } from "../core/state.js";
 import { storeGet } from "../core/store.js";
 import { setSecure, getSecure, removeSecure } from "./security.js";
 import { BACKEND_TYPE } from "../core/config.js";
+import { getSupabaseClient } from "../core/supabase-client.js";
 
 const SESSION_KEY = "auth_user";
 const SESSION_ROTATION_MS = 2 * 60 * 60 * 1000; // 2 hours
@@ -369,8 +370,7 @@ export async function isApprovedAdminAsync(email) {
   const sync = isApprovedAdmin(email);
   if (BACKEND_TYPE !== "supabase") return sync;
   try {
-    const { getSupabase } = await import("./supabase.js");
-    const supabase = getSupabase?.();
+    const supabase = getSupabaseClient();
     if (!supabase) return sync;
     const { data, error } = await supabase
       .from("admin_users")
@@ -394,8 +394,7 @@ export async function fetchAdminUsers() {
   const localNorm = local.map((e) => e.trim().toLowerCase()).filter(Boolean);
   if (BACKEND_TYPE !== "supabase") return localNorm;
   try {
-    const { getSupabase } = await import("./supabase.js");
-    const supabase = getSupabase?.();
+    const supabase = getSupabaseClient();
     if (!supabase) return localNorm;
     const { data, error } = await supabase
       .from("admin_users")
@@ -425,8 +424,7 @@ export async function addAdminUser(email, addedBy = "") {
   }
   if (BACKEND_TYPE !== "supabase") return true;
   try {
-    const { getSupabase } = await import("./supabase.js");
-    const supabase = getSupabase?.();
+    const supabase = getSupabaseClient();
     if (!supabase) return true;
     const { error } = await supabase
       .from("admin_users")
@@ -449,8 +447,7 @@ export async function removeAdminUser(email) {
   save("approvedEmails", list.filter((e) => e.trim().toLowerCase() !== norm));
   if (BACKEND_TYPE !== "supabase") return true;
   try {
-    const { getSupabase } = await import("./supabase.js");
-    const supabase = getSupabase?.();
+    const supabase = getSupabaseClient();
     if (!supabase) return true;
     const { error } = await supabase
       .from("admin_users")
