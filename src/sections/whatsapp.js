@@ -13,7 +13,7 @@ import { t } from "../core/i18n.js";
 import { readBrowserStorageJson, writeBrowserStorage } from "../core/storage.js";
 import { cleanPhone } from "../utils/phone.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
-import { personalizeMessage, getVariableHints } from "../services/message-tools.js";
+import { personalizeMessage, getVariableHints } from "../services/wa-messaging.js";
 
 class WhatsAppSection extends BaseSection {
   async onMount() {

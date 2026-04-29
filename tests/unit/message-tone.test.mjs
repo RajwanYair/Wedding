@@ -6,7 +6,7 @@ import {
   applyTone,
   generateToneVariants,
   MESSAGE_TONES,
-} from "../../src/services/message-tools.js";
+} from "../../src/services/wa-messaging.js";
 
 describe("S111 — message-tone", () => {
   it("MESSAGE_TONES exposes 4 stable tones", () => {

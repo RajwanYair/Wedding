@@ -13,7 +13,7 @@ import {
   buildTemplatePayload,
   buildTextPayload,
   sendTemplateMessage,
-} from "../../src/services/whatsapp-business.js";
+} from "../../src/services/wa-messaging.js";
 
 const VALID_CONFIG = {
   phoneNumberId: "123456789",
