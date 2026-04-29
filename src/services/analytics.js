@@ -403,7 +403,7 @@ const _INVITE_KEY = "invitationAnalytics";
 
 /** @returns {AnalyticsEvent[]} */
 function _allEvents() {
-  return storeGet(_INVITE_KEY) ?? [];
+  return /** @type {AnalyticsEvent[]} */ (storeGet(_INVITE_KEY) ?? []);
 }
 function _saveEvents(/** @type {any[]} */ list) {
   storeSet(_INVITE_KEY, list);

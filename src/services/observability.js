@@ -435,7 +435,7 @@ export async function initMonitoring(opts = {}) {
   }
 
   const _env = (typeof import.meta !== "undefined" && /** @type {any} */ (import.meta).env) ?? {};
-  const _proc = (typeof globalThis !== "undefined" && globalThis.process?.env) ?? {};
+  const _proc = (typeof globalThis !== "undefined" && (/** @type {any} */ (globalThis)).process?.env) ?? {};
   const dsn =
     opts.dsn ??
     _env.VITE_GLITCHTIP_DSN ??
@@ -447,7 +447,8 @@ export async function initMonitoring(opts = {}) {
 
   try {
     // Lazy import — keeps the dep optional at install time.
-    const sentry = await import(/* @vite-ignore */ "@sentry/browser").catch(() => null);
+    // @ts-ignore — @sentry/browser is an optional peer dep not installed in dev
+    const sentry = /** @type {any} */ (await import(/* @vite-ignore */ "@sentry/browser").catch(() => null));
     if (!sentry || typeof sentry.init !== "function") return false;
     sentry.init({
       dsn,
@@ -556,7 +557,7 @@ export function initWebVitals() {
   });
 
   // INP — best approximation: track the slowest event-timing duration.
-  safeObserve({ type: "event", buffered: true, durationThreshold: 16 }, (list) => {
+  safeObserve(/** @type {any} */ ({ type: "event", buffered: true, durationThreshold: 16 }), (list) => {
     for (const entry of list.getEntries()) {
       const d = /** @type {PerformanceEventTiming} */ (entry).duration;
       if (d > metrics.inp) metrics.inp = Math.round(d);
@@ -629,7 +630,7 @@ function _uuid4() {
  * @returns {Array<{ filename: string, lineno?: number, colno?: number, function?: string }>}
  */
 function _parseStack(stack) {
-  return stack
+  return /** @type {any[]} */ (stack
     .split("\n")
     .slice(1)
     .map((line) => {
@@ -652,9 +653,8 @@ function _parseStack(stack) {
       }
       return { filename: line.trim() };
     })
-    .reverse(); // Sentry expects innermost frame first
+    .reverse()); // Sentry expects innermost frame first
 }
-
 // ══════════════════════════════════════════════════════════════════════════
 // §6 — Test reset (combines both _resetForTests)
 // ══════════════════════════════════════════════════════════════════════════

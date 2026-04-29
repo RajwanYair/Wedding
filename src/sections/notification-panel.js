@@ -17,7 +17,7 @@ import {
 import { BaseSection, fromSection } from "../core/section-base.js";
 
 class NotificationPanelSection extends BaseSection {
-  onMount() {
+  async onMount() {
     updateBellBadge();
     this.addCleanup(subscribe(() => updateBellBadge()));
   }

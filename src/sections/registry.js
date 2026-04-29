@@ -10,7 +10,7 @@ import { t } from "../core/i18n.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 
 class RegistrySection extends BaseSection {
-  onMount() {
+  async onMount() {
     this.subscribe("weddingInfo", renderRegistry);
     renderRegistry();
   }

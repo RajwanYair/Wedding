@@ -50,7 +50,7 @@ export async function generateKey() {
  * @returns {Promise<CryptoKey>}
  */
 export async function importRawKey(rawKey) {
-  return crypto.subtle.importKey("raw", rawKey, { name: ALGO, length: 256 }, false, [
+  return crypto.subtle.importKey("raw", /** @type {BufferSource} */ (rawKey), { name: ALGO, length: 256 }, false, [
     "encrypt",
     "decrypt",
   ]);
@@ -404,7 +404,7 @@ export function getSecureStorageStatus(sampleKey = "auth_session") {
  * @returns {boolean}
  */
 export function isNFCSupported() {
-  return typeof globalThis !== "undefined" && typeof globalThis.NDEFReader === "function";
+  return typeof globalThis !== "undefined" && typeof (/** @type {any} */ (globalThis)).NDEFReader === "function";
 }
 
 /**

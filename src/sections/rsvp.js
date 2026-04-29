@@ -20,7 +20,7 @@ import { buildGoogleCalendarLink, buildIcsDataUrl } from "../utils/calendar-link
 let _container = null;
 
 class RsvpSection extends BaseSection {
-  async onMount(/** @type {HTMLElement} */ params) {
+  async onMount(/** @type {Record<string, unknown>} */ params) {
     _container = (params instanceof HTMLElement) ? params : null;
     // S12.5 — Check RSVP deadline
     if (_isRsvpDeadlinePassed()) {
@@ -257,7 +257,7 @@ function _renderCalendarLinks(parent) {
   const start = new Date(`${date}T${time}:00`);
   if (Number.isNaN(start.getTime())) return;
   const title = `${info.groom || ""} & ${info.bride || ""}`.trim() || t("rsvp_add_to_calendar");
-  /** @type {import("../utils/calendar-link.js")} */
+  /** @type {import("../utils/calendar-link.js").CalendarEvent} */
   const ev = {
     title,
     location: info.venue || "",

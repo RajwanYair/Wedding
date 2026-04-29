@@ -14,7 +14,7 @@ import { BaseSection, fromSection } from "../core/section-base.js";
 let _container = null;
 
 class GuestLandingSection extends BaseSection {
-  async onMount(/** @type {HTMLElement} */ params) {
+  async onMount(/** @type {Record<string, unknown>} */ params) {
     _container = (params instanceof HTMLElement) ? params : null;
     _renderFromHash();
   }

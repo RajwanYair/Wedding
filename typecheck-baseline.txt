@@ -2,28 +2,9 @@ src/core/config-scopes.js::TS2322::Type '{} | undefined' is not assignable to ty
 src/main.js::TS2554::Expected 1 arguments, but got 0.
 src/repositories/supabase-base-repository.js::TS2707::Generic type 'PostgrestFilterBuilder<ClientOptions, Schema, Row, Result$1, RelationName, Relationships, Method>' require
 src/repositories/vendor-repository.js::TS8022::JSDoc '@extends' is not attached to a class.
-src/sections/guest-landing.js::TS2345::Argument of type 'GuestLandingSection' is not assignable to parameter of type 'BaseSection'.
-src/sections/guest-landing.js::TS2416::Property 'onMount' in type 'GuestLandingSection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/notification-panel.js::TS2345::Argument of type 'NotificationPanelSection' is not assignable to parameter of type 'BaseSection'.
-src/sections/notification-panel.js::TS2416::Property 'onMount' in type 'NotificationPanelSection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/registry.js::TS2345::Argument of type 'RegistrySection' is not assignable to parameter of type 'BaseSection'.
-src/sections/registry.js::TS2416::Property 'onMount' in type 'RegistrySection' is not assignable to the same property in base type 'BaseSection'.
-src/sections/rsvp.js::TS2345::Argument of type 'RsvpSection' is not assignable to parameter of type 'BaseSection'.
-src/sections/rsvp.js::TS2345::Argument of type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/calen
-src/sections/rsvp.js::TS2353::Object literal may only specify known properties, and 'title' does not exist in type 'typeof import("C:/Users/ryair/OneD
-src/sections/rsvp.js::TS2416::Property 'onMount' in type 'RsvpSection' is not assignable to the same property in base type 'BaseSection'.
-src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
 src/services/guest-service.js::TS2339::Property 'bulkSetStatus' does not exist on type '{ getAll(): Promise<Guest[]>; getById(id: string): Promise<Guest | null
-src/services/guest-service.js::TS2345::Argument of type '{ firstName: string; lastName: string; phone: string; email: string; count: number; children: number; 
-src/services/observability.js::TS2307::Cannot find module '@sentry/browser' or its corresponding type declarations.
-src/services/observability.js::TS2322::Type '({ function: string | undefined; filename: string | undefined; lineno: number; colno: number; } | { filename: stri
-src/services/observability.js::TS2353::Object literal may only specify known properties, and 'durationThreshold' does not exist in type 'PerformanceObserverIni
-src/services/observability.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
-src/services/outreach.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
-src/services/outreach.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
 src/services/repositories.js::TS1005::'}' expected.
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Guest'. Did you mean to write
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Vendor'. Did you mean to writ
 src/services/repositories.js::TS8022::JSDoc '@implements' is not attached to a class.
-src/services/security.js::TS2769::No overload matches this call.
 src/services/security.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.

@@ -66,9 +66,9 @@ function _update(id, patch) {
   if (idx === -1) return null;
   const updated = { ...all[idx], ...patch };
   const next = [...all];
-  next[idx] = updated;
+  next[idx] = /** @type {Campaign} */ (updated);
   _save(next);
-  return updated;
+  return /** @type {Campaign} */ (updated);
 }
 
 /** @returns {string} */
@@ -717,7 +717,7 @@ export async function sendEmail(msg) {
     return { ok: false, error: "Either html or text body is required" };
   }
   const replyTo = msg.replyTo
-    ? (sanitize(msg.replyTo, { type: "email", required: false }).value ?? undefined)
+    ? (sanitize(/** @type {any} */ (msg.replyTo), /** @type {any} */ ({ type: "email", required: false })).value ?? undefined)
     : undefined;
   return callEdgeFunction("send-email", {
     to: msg.to.trim(),

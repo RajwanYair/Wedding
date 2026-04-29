@@ -154,7 +154,7 @@ export async function importGuests(rows) {
       const group = GUEST_GROUPS.includes(/** @type {any} */ (row.group)) ? row.group : "other";
       const meal = MEAL_TYPES.includes(/** @type {any} */ (row.meal)) ? row.meal : "regular";
 
-      await guestRepo.create({
+      await guestRepo.create(/** @type {any} */ ({
         firstName,
         lastName,
         phone: String(row.phone ?? "").trim(),
@@ -173,7 +173,7 @@ export async function importGuests(rows) {
         sent: false,
         checkedIn: false,
         rsvpDate: /** @type {any} */ (null),
-      });
+      }));
       created++;
     } catch (err) {
       errors.push(
