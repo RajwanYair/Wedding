@@ -17,7 +17,7 @@ const {
   getCapacityReport,
   autoAssign,
   clearAssignments,
-} = await import("../../src/services/table-service.js");
+} = await import("../../src/services/seating.js");
 
 function seed(guests = [], tables = []) {
   initStore({
