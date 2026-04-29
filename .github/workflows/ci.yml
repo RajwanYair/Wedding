@@ -63,6 +63,21 @@ jobs:
       - name: Audit Supabase migrations (enforce — S243)
         run: node scripts/audit-supabase-migrations.mjs --enforce
 
+      - name: Audit Trusted Types sinks (advisory — S244)
+        run: node scripts/audit-trusted-types.mjs
+
+      - name: Validate Trusted Types + CSP directives present (enforce — S244)
+        run: |
+          if ! grep -q "require-trusted-types-for 'script'" public/_headers; then
+            echo "::error file=public/_headers::Missing require-trusted-types-for 'script' CSP directive"
+            exit 1
+          fi
+          if ! grep -q "trusted-types wedding-html" public/_headers; then
+            echo "::error file=public/_headers::Missing trusted-types policy name in CSP"
+            exit 1
+          fi
+          echo "Trusted Types CSP directives verified."
+
       - name: Unit tests (Vitest)
         run: npm test
         env:
