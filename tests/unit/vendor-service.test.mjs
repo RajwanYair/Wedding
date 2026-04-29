@@ -15,7 +15,7 @@ const {
   getVendorsByPaymentStatus,
   getBudgetSummary,
   getUnpaidVendors,
-} = await import("../../src/services/commerce-service.js");
+} = await import("../../src/services/commerce.js");
 
 function seed(vendors = []) {
   initStore({

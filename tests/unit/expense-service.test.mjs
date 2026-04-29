@@ -18,7 +18,7 @@ const {
   getOverBudget,
   getExpenseSummary,
   getExpensesByDateRange,
-} = await import("../../src/services/commerce-service.js");
+} = await import("../../src/services/commerce.js");
 
 function seed(expenses = [], budget = 0) {
   initStore({
