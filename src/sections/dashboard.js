@@ -422,11 +422,12 @@ function renderBudgetForecast() {
     const cls = diff >= 0 ? "u-text-success" : "u-text-danger";
     items.push({
       label: t("forecast_vs_budget") || "מול תקציב",
-      val: `<span class="${cls}">${diff >= 0 ? "+" : ""}₪${diff.toLocaleString()}</span>`,
+      _diff: diff,
+      _cls: cls,
     });
   }
 
-  items.forEach(({ label, val }) => {
+  items.forEach(({ label, val, _diff, _cls }) => {
     const row = document.createElement("div");
     row.className = "forecast-row";
     const lbl = document.createElement("span");
@@ -434,7 +435,15 @@ function renderBudgetForecast() {
     lbl.textContent = label;
     const v = document.createElement("span");
     v.className = "forecast-value";
-    v.innerHTML = val; // nosec: values are computed numbers / CSS class name strings
+    if (_cls !== undefined && _diff !== undefined) {
+      // budget diff — render as colored span child
+      const span = document.createElement("span");
+      span.className = _cls;
+      span.textContent = `${_diff >= 0 ? "+" : ""}₪${_diff.toLocaleString()}`;
+      v.appendChild(span);
+    } else {
+      v.textContent = val ?? "";
+    }
     row.appendChild(lbl);
     row.appendChild(v);
     container.appendChild(row);
@@ -614,12 +623,30 @@ function renderVendorCategories() {
     const row = document.createElement("div");
     row.className = "vendor-cat-row";
     const outstanding = entry.cost - entry.paid;
-    const overdueTag =
-      entry.overdue > 0
-        ? ` <span class="badge badge--danger">${entry.overdue} ${t("overdue")}</span>`
-        : "";
-    row.innerHTML = `<span class="vendor-cat-name">${_escDash(cat)}</span>
-      <span class="vendor-cat-stat">₪${entry.paid.toLocaleString()} / ₪${entry.cost.toLocaleString()} ${outstanding > 0 ? `(<span class="u-text-danger">-₪${outstanding.toLocaleString()}</span>)` : "✅"}${overdueTag}</span>`;
+
+    const name = document.createElement("span");
+    name.className = "vendor-cat-name";
+    name.textContent = cat;
+    row.appendChild(name);
+
+    const stat = document.createElement("span");
+    stat.className = "vendor-cat-stat";
+    stat.textContent = `₪${entry.paid.toLocaleString()} / ₪${entry.cost.toLocaleString()} `;
+    if (outstanding > 0) {
+      const neg = document.createElement("span");
+      neg.className = "u-text-danger";
+      neg.textContent = `(-₪${outstanding.toLocaleString()})`;
+      stat.appendChild(neg);
+    } else {
+      stat.append("✅");
+    }
+    if (entry.overdue > 0) {
+      const badge = document.createElement("span");
+      badge.className = "badge badge--danger";
+      badge.textContent = `${entry.overdue} ${t("overdue")}`;
+      stat.appendChild(badge);
+    }
+    row.appendChild(stat);
     el.appendChild(row);
   });
 }
@@ -715,7 +742,23 @@ function renderInvitationStats() {
   items.forEach(({ label, val, sub }) => {
     const item = document.createElement("div");
     item.className = "invite-stat-item";
-    item.innerHTML = `<div class="invite-stat-val">${val}</div><div class="invite-stat-label">${_escDash(label)}${sub ? ` <span class="u-text-muted">(${sub})</span>` : ""}</div>`; // nosec: label via _escDash, val and sub are computed numeric strings
+
+    const valDiv = document.createElement("div");
+    valDiv.className = "invite-stat-val";
+    valDiv.textContent = val;
+
+    const lblDiv = document.createElement("div");
+    lblDiv.className = "invite-stat-label";
+    lblDiv.textContent = label;
+    if (sub) {
+      const muted = document.createElement("span");
+      muted.className = "u-text-muted";
+      muted.textContent = ` (${sub})`;
+      lblDiv.appendChild(muted);
+    }
+
+    item.appendChild(valDiv);
+    item.appendChild(lblDiv);
     el.appendChild(item);
   });
 }
