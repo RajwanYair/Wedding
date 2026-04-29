@@ -94,6 +94,18 @@ class AnalyticsSection extends BaseSection {
 
 export const { mount, unmount } = fromSection(new AnalyticsSection("analytics"));
 
+/**
+ * Safely replace `target` content with a parsed SVG string via DOMParser.
+ * Replaces all innerHTML = svg assignments for Trusted Types compliance (S326).
+ * @param {Element} target
+ * @param {string} svgStr - complete <svg>…</svg> markup
+ */
+function _setSvg(target, svgStr) {
+  const doc = new DOMParser().parseFromString(svgStr, "image/svg+xml");
+  target.textContent = "";
+  target.appendChild(document.importNode(doc.documentElement, true));
+}
+
 // ── Chart rendering ───────────────────────────────────────────────────────
 
 /**
@@ -257,13 +269,35 @@ function _renderMealSummary(guests) {
     return;
   }
 
-  let html = `<div class="card-header"><span class="icon">🍽️</span> <span data-i18n="analytics_meal_summary_title">${t("analytics_meal_summary_title")}</span></div>`;
-  html += `<ul class="analytics-meal-list">`;
+  const header = document.createElement("div");
+  header.className = "card-header";
+  const icon = document.createElement("span");
+  icon.className = "icon";
+  icon.textContent = "🍽️";
+  const title = document.createElement("span");
+  title.dataset.i18n = "analytics_meal_summary_title";
+  title.textContent = t("analytics_meal_summary_title");
+  header.appendChild(icon);
+  header.appendChild(document.createTextNode(" "));
+  header.appendChild(title);
+
+  const ul = document.createElement("ul");
+  ul.className = "analytics-meal-list";
   rows.forEach((r) => {
-    html += `<li><span class="meal-label">${r.label}</span><span class="meal-count">${r.count}</span></li>`;
+    const li = document.createElement("li");
+    const lbl = document.createElement("span");
+    lbl.className = "meal-label";
+    lbl.textContent = r.label;
+    const cnt = document.createElement("span");
+    cnt.className = "meal-count";
+    cnt.textContent = String(r.count);
+    li.appendChild(lbl);
+    li.appendChild(cnt);
+    ul.appendChild(li);
   });
-  html += `</ul>`;
-  container.innerHTML = html; // safe: all values are i18n strings and integers
+  container.textContent = "";
+  container.appendChild(header);
+  container.appendChild(ul);
 }
 
 // ── S11.3 Meal Per Table Report ───────────────────────────────────────────
@@ -461,7 +495,7 @@ function _renderHeatmap() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: all values are store data/numbers/CSS vars
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── S8.2 RSVP Funnel Report ──────────────────────────────────────────────
@@ -508,7 +542,7 @@ function _renderFunnel() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/CSS vars/i18n strings
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── C1 Sprint 36: Invitation Engagement Funnel ───────────────────────────
@@ -557,7 +591,7 @@ function renderInvitationEngagementFunnel() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/CSS vars/escaped i18n strings
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── C1: RSVP Conversion Funnel (rsvp-analytics.js, Sprint 44) ────────────
@@ -604,8 +638,7 @@ function renderRsvpFunnel() {
     svg += `<text x="${90 + barW + 6}" y="${y + 20}" font-size="11" fill="var(--text)">${s.value} (${pct}%)</text>`;
   });
 
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/CSS vars/escaped i18n strings
+  _setSvg(container, `${svg}</svg>`); // S326: TT compliance
 
   // Overall conversion rate badge (unseated risk)
   const rates = getRsvpConversionRates();
@@ -659,7 +692,7 @@ function renderOutreachFunnel() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/CSS vars/escaped strings
+  _setSvg(container, svg); // S326: TT compliance
 
   // Conversion rate
   const rateEl = document.getElementById("analyticsOutreachConversion");
@@ -706,7 +739,7 @@ function _renderVendorTimeline() {  const container = document.getElementById("a
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/store data/CSS vars
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── S8.5 WhatsApp Delivery Rate ──────────────────────────────────────────
@@ -792,7 +825,7 @@ function _renderTableFill() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/store data/CSS vars
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── Recent Activity Feed ─────────────────────────────────────────────────
@@ -1046,7 +1079,7 @@ function renderSeatingMap() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/store data/CSS vars
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── S14.4 Export Event Summary PDF ────────────────────────────────────────
@@ -1131,7 +1164,16 @@ function renderPaymentSchedule() {
   const table = document.createElement("table");
   table.className = "data-table payment-schedule-table";
   const thead = document.createElement("thead");
-  thead.innerHTML = `<tr><th data-i18n="col_vendor">${t("col_vendor")}</th><th data-i18n="label_vendor_due_date">${t("label_vendor_due_date")}</th><th data-i18n="vendor_paid">${t("vendor_paid")}</th><th data-i18n="label_status">${t("label_status")}</th></tr>`;
+  const headRow = document.createElement("tr");
+  [["col_vendor"], ["label_vendor_due_date"], ["vendor_paid"], ["label_status"]].forEach(
+    ([key]) => {
+      const th = document.createElement("th");
+      th.dataset.i18n = key;
+      th.textContent = t(key);
+      headRow.appendChild(th);
+    },
+  );
+  thead.appendChild(headRow);
   table.appendChild(thead);
 
   const tbody = document.createElement("tbody");
@@ -1149,7 +1191,18 @@ function renderPaymentSchedule() {
         ? t("vendor_overdue")
         : t("vendor_status_upcoming");
 
-    tr.innerHTML = `<td>${_escSvg(v.name || v.category)}</td><td>${v.dueDate}</td><td>₪${(v.paid || 0).toLocaleString()} / ₪${(v.price || 0).toLocaleString()}</td><td>${statusText}</td>`; // nosec: name via _escSvg, statusText via t(), numbers
+    const td1 = document.createElement("td");
+    td1.textContent = v.name || v.category || "";
+    const td2 = document.createElement("td");
+    td2.textContent = v.dueDate;
+    const td3 = document.createElement("td");
+    td3.textContent = `₪${(v.paid || 0).toLocaleString()} / ₪${(v.price || 0).toLocaleString()}`;
+    const td4 = document.createElement("td");
+    td4.textContent = statusText;
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    tr.appendChild(td4);
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
@@ -1205,7 +1258,7 @@ function renderRsvpTimeline() {
   });
 
   svg += `</svg>`;
-  container.innerHTML = svg; // safe: computed from store data + CSS vars
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── S16.5 Printable Dietary Cards ────────────────────────────────────────
@@ -1325,7 +1378,13 @@ function renderExpenseDonut() {
   slices.forEach((sl) => {
     const item = document.createElement("div");
     item.className = "donut-legend-item";
-    item.innerHTML = `<span class="donut-legend-dot" style="background:${sl.color}"></span><span>${_escSvg(sl.label)}: ₪${sl.value.toLocaleString()}</span>`; // nosec: label via _escSvg, color is hex from const array, value is number
+    const dot = document.createElement("span");
+    dot.className = "donut-legend-dot";
+    dot.style.background = sl.color;
+    const lbl = document.createElement("span");
+    lbl.textContent = `${sl.label}: ₪${sl.value.toLocaleString()}`;
+    item.appendChild(dot);
+    item.appendChild(lbl);
     legend.appendChild(item);
   });
   container.appendChild(legend);
@@ -1749,7 +1808,7 @@ function renderBudgetBurndown() {
   svg += `<text x="${pad}" y="${h - 2}" font-size="7" fill="var(--text-muted)">${_escSvg(sorted[0].date.slice(0, 7))}</text>`;
   svg += `<text x="${w - pad}" y="${h - 2}" text-anchor="end" font-size="7" fill="var(--text-muted)">${_escSvg(sorted.at(-1).date.slice(0, 7))}</text>`;
   svg += `</svg>`;
-  container.innerHTML = svg;
+  _setSvg(container, svg); // S326: TT compliance
 }
 
 // ── F4.3.4 Seating Quality Score ──────────────────────────────────────────
