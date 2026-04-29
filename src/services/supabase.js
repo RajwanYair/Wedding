@@ -305,6 +305,7 @@ function _saveSession(sess) {
   writeBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, sess);
 }
 
+/** Remove the persisted Supabase session from browser storage. */
 export function clearSession() {
   removeBrowserStorage(STORAGE_KEYS.SUPABASE_SESSION);
 }
