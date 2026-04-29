@@ -291,16 +291,16 @@ let _activeSection = null;
 
   // 5b. S10.3 — Presence indicator for admins
   if (currentUser()?.isAdmin) startPresence();
-  onPresenceChange((users) => {
+  onPresenceChange((/** @type {Array<{email:string,name:string}>} */ users) => {
     const badge = document.getElementById("presenceBadge");
     if (!badge) return;
-    const others = users.filter((u) => u.email !== currentUser()?.email);
+    const others = users.filter((/** @type {{email:string}} */ u) => u.email !== currentUser()?.email);
     if (others.length === 0) {
       badge.classList.add("u-hidden");
     } else {
       badge.classList.remove("u-hidden");
       badge.textContent = `👥 ${others.length}`;
-      badge.title = others.map((u) => u.name).join(", ");
+      badge.title = others.map((/** @type {{name:string}} */ u) => u.name).join(", ");
     }
   });
 

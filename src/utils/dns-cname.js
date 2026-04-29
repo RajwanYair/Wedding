@@ -16,7 +16,7 @@ const RESERVED = new Set([
 ]);
 
 /** Normalise to lowercase and strip protocol / path / trailing dot. */
-export function normalizeDomain(input) {
+export function normalizeDomain(/** @type {string} */ input) {
   if (typeof input !== "string") return "";
   let d = input.trim().toLowerCase();
   d = d.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/\.$/, "");
@@ -24,7 +24,7 @@ export function normalizeDomain(input) {
 }
 
 /** Validate a fully-qualified domain. Returns `{ ok, error? }`. */
-export function validateDomain(input) {
+export function validateDomain(/** @type {string} */ input) {
   const d = normalizeDomain(input);
   if (!d) return { ok: false, error: "empty" };
   if (d.length > 253) return { ok: false, error: "too_long" };
@@ -34,7 +34,7 @@ export function validateDomain(input) {
 }
 
 /** Detect apex (`example.com`) vs sub-domain (`rsvp.example.com`). */
-export function isApex(domain) {
+export function isApex(/** @type {string} */ domain) {
   const d = normalizeDomain(domain);
   if (!d) return false;
   return d.split(".").length === 2;
@@ -51,10 +51,10 @@ export function isApex(domain) {
 export function buildDnsInstructions(domain, target = "rajwanyair.github.io") {
   const v = validateDomain(domain);
   if (!v.ok) return { ok: false, error: v.error };
-  if (isApex(v.domain)) {
+  if (isApex(v.domain ?? "")) {
     return {
       ok: true,
-      domain: v.domain,
+      domain: v.domain ?? "",
       records: [
         { type: "ALIAS", host: "@", value: target, ttl: 3600 },
         { type: "A", host: "@", value: "185.199.108.153", ttl: 3600 },
@@ -64,10 +64,10 @@ export function buildDnsInstructions(domain, target = "rajwanyair.github.io") {
       ],
     };
   }
-  const host = v.domain.split(".").slice(0, -2).join(".");
+  const host = (v.domain ?? "").split(".").slice(0, -2).join(".");
   return {
     ok: true,
-    domain: v.domain,
+    domain: v.domain ?? "",
     records: [{ type: "CNAME", host, value: target, ttl: 3600 }],
   };
 }

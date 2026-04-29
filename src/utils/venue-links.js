@@ -11,11 +11,11 @@
 /** Approx. ±0.005° box (~500 m) around the marker for the OSM iframe. */
 const OSM_BBOX_DELTA = 0.005;
 
-function clampLat(lat) {
+function clampLat(/** @type {number} */ lat) {
   if (typeof lat !== "number" || Number.isNaN(lat)) throw new Error("invalid lat");
   return Math.max(-90, Math.min(90, lat));
 }
-function wrapLon(lon) {
+function wrapLon(/** @type {number} */ lon) {
   if (typeof lon !== "number" || Number.isNaN(lon)) throw new Error("invalid lon");
   let v = ((lon + 180) % 360 + 360) % 360 - 180;
   if (v === -180) v = 180;
@@ -58,7 +58,10 @@ export function buildWazeUrl(lat, lon, opts = {}) {
   return `https://waze.com/ul?${params.toString()}`;
 }
 
-/** Google Maps directions URL using the public, key-free /maps endpoint. */
+/** Google Maps directions URL using the public, key-free /maps endpoint.
+ * @param {number} lat
+ * @param {number} lon
+ */
 export function buildGoogleMapsUrl(lat, lon) {
   const la = clampLat(lat);
   const lo = wrapLon(lon);
@@ -67,7 +70,7 @@ export function buildGoogleMapsUrl(lat, lon) {
 
 /* ── Google Calendar ─────────────────────────────────────────────────── */
 
-function toGCalDate(d) {
+function toGCalDate(/** @type {Date} */ d) {
   // YYYYMMDDTHHMMSSZ
   return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 }
@@ -104,7 +107,7 @@ export function buildIcsContent(ev) {
   if (!ev?.title) throw new Error("title required");
   const fmt = toGCalDate;
   const uid = ev.uid ?? `${fmt(ev.start)}-${ev.title.replace(/\s+/g, "_")}@wedding`;
-  const esc = (s) =>
+  const esc = (/** @type {string | number} */ s) =>
     String(s).replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
   return [
     "BEGIN:VCALENDAR",

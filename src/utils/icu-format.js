@@ -12,7 +12,7 @@
  */
 
 const _pluralCache = new Map();
-function pluralCategory(locale, n) {
+function pluralCategory(/** @type {string} */ locale, /** @type {number} */ n) {
   const key = locale || "en";
   let pr = _pluralCache.get(key);
   if (!pr) {
@@ -35,7 +35,7 @@ export function formatMessage(pattern, vars = {}, locale = "en") {
   let i = 0;
   let out = "";
   while (i < pattern.length) {
-    const ch = pattern[i];
+    const ch = pattern[i] ?? "";
     if (ch !== "{") {
       out += ch;
       i++;
@@ -53,7 +53,7 @@ export function formatMessage(pattern, vars = {}, locale = "en") {
   return out;
 }
 
-function findMatchingBrace(s, start) {
+function findMatchingBrace(/** @type {string} */ s, /** @type {number} */ start) {
   let depth = 0;
   for (let i = start; i < s.length; i++) {
     if (s[i] === "{") depth++;
@@ -65,7 +65,7 @@ function findMatchingBrace(s, start) {
   return -1;
 }
 
-function renderPlaceholder(inside, vars, locale) {
+function renderPlaceholder(/** @type {string} */ inside, /** @type {Record<string,unknown>} */ vars, /** @type {string} */ locale) {
   // Three forms:
   //   "name"
   //   "n, plural, =0{...} one{...} other{...}"
@@ -98,7 +98,7 @@ function renderPlaceholder(inside, vars, locale) {
   return `{${inside}}`;
 }
 
-function indexOfTopLevelComma(s) {
+function indexOfTopLevelComma(/** @type {string} */ s) {
   let depth = 0;
   for (let i = 0; i < s.length; i++) {
     if (s[i] === "{") depth++;
@@ -108,17 +108,17 @@ function indexOfTopLevelComma(s) {
   return -1;
 }
 
-function parseCases(s) {
+function parseCases(/** @type {string} */ s) {
   /** @type {Map<string, string>} */
   const map = new Map();
   let i = 0;
   while (i < s.length) {
-    while (i < s.length && /\s/.test(s[i])) i++;
+    while (i < s.length && /\s/.test(s[i] ?? "")) i++;
     let nameEnd = i;
-    while (nameEnd < s.length && s[nameEnd] !== "{" && !/\s/.test(s[nameEnd])) nameEnd++;
+    while (nameEnd < s.length && s[nameEnd] !== "{" && !/\s/.test(s[nameEnd] ?? "")) nameEnd++;
     const name = s.slice(i, nameEnd);
     i = nameEnd;
-    while (i < s.length && /\s/.test(s[i])) i++;
+    while (i < s.length && /\s/.test(s[i] ?? "")) i++;
     if (s[i] !== "{") break;
     const close = findMatchingBrace(s, i);
     if (close === -1) break;

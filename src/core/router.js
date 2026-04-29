@@ -49,7 +49,7 @@ function _buildUrl(name, params = {}) {
   }
   const qs = search.toString();
   if (FEATURE_PUSHSTATE_ROUTER) {
-    const base = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) ?? "/";
+    const base = String((typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/");
     const path = `${base.replace(/\/$/, "")}/${name}`;
     return qs ? `${path}?${qs}` : path;
   }
@@ -64,7 +64,7 @@ function _buildUrl(name, params = {}) {
  */
 export function currentRoute() {
   if (FEATURE_PUSHSTATE_ROUTER) {
-    const base = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) ?? "/";
+    const base = String((typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/");
     // Strip base prefix, e.g. "/Wedding/guests?id=1" → section="guests"
     const pathname = location.pathname;
     const stripped = pathname.slice(base.replace(/\/$/, "").length).replace(/^\//, "");
@@ -76,7 +76,8 @@ export function currentRoute() {
   }
   const raw = (location.hash || "").slice(1);
   if (!raw) return { section: "dashboard", params: {} };
-  const [section, qs = ""] = raw.split("?");
+  const [sectionRaw, qs = ""] = raw.split("?");
+  const section = sectionRaw ?? "";
   /** @type {Record<string, string>} */
   const params = {};
   for (const [k, v] of new URLSearchParams(qs)) params[k] = v;

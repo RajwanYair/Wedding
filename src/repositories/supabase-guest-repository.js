@@ -56,7 +56,7 @@ export class SupabaseGuestRepository extends SupabaseBaseRepository {
   /**
    * @returns {Promise<Record<string, unknown>[]>}
    */
-  async findBySide(side) {
+  async findBySide(/** @type {string} */ side) {
     const { data, error } = await this._query().eq("side", side);
     if (error) throw error;
     return data ?? [];

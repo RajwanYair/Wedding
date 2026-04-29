@@ -196,7 +196,7 @@ export const ACTION_VALUES = new Set(Object.values(ACTIONS));
  * @returns {boolean}
  */
 export function validateAction(value) {
-  return typeof value === "string" && ACTION_VALUES.has(value);
+  return typeof value === "string" && ACTION_VALUES.has(/** @type {any} */ (value));
 }
 
 /**

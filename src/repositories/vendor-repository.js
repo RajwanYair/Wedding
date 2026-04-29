@@ -17,7 +17,7 @@ export class VendorRepository extends BaseRepository {
   }
 
   /** @returns {import("../types.d.ts").Vendor[]} */
-  findByCategory(category) {
+  findByCategory(/** @type {string} */ category) {
     return this.findAll().filter((v) => v.category === category);
   }
 

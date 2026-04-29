@@ -74,7 +74,7 @@ export const GUEST_STATUSES = /** @type {const} */ (["pending", "confirmed", "de
  * Equals GUEST_STATUSES minus "pending".
  * @type {readonly string[]}
  */
-export const RSVP_RESPONSE_STATUSES = /** @type {const} */ (
+export const RSVP_RESPONSE_STATUSES = /** @type {string[]} */ (
   GUEST_STATUSES.filter((s) => s !== "pending")
 );
 

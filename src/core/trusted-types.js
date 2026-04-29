@@ -133,7 +133,7 @@ export function trustedScript(url) {
   if (tt && typeof tt.createPolicy === "function") {
     try {
       const policy = tt.createPolicy("wedding-script", {
-        createScriptURL(u) { return u; },
+        createScriptURL(/** @type {string} */ u) { return u; },
       });
       return /** @type {string} */ (policy.createScriptURL(url));
     } catch {

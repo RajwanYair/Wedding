@@ -34,12 +34,13 @@ const baselinePath = resolve(projectRoot, "typecheck-baseline.txt");
 const UPDATE = process.argv.includes("--update");
 
 // ── Run tsc ───────────────────────────────────────────────────────────────
-const tscBin = resolve(
-  projectRoot,
-  "node_modules",
-  ".bin",
-  process.platform === "win32" ? "tsc.cmd" : "tsc",
-);
+const tscExt = process.platform === "win32" ? "tsc.cmd" : "tsc";
+const tscBin =
+  [
+    resolve(projectRoot, "node_modules", ".bin", tscExt),
+    resolve(projectRoot, "..", "node_modules", ".bin", tscExt),
+  ].find((p) => existsSync(p)) ??
+  resolve(projectRoot, "node_modules", ".bin", tscExt);
 let raw = "";
 try {
   const result = spawnSync(`"${tscBin}" --noEmit --pretty false`, {

@@ -32,7 +32,7 @@ export class SupabaseVendorRepository extends SupabaseBaseRepository {
     if (error) throw error;
     // If the DB doesn't support column comparison in lt, filter in-memory
     const all = data ?? [];
-    return all.filter((v) => Number(v.paid ?? 0) < Number(v.price ?? 0));
+    return all.filter((/** @type {Record<string,unknown>} */ v) => Number(v.paid ?? 0) < Number(v.price ?? 0));
   }
 
   /**

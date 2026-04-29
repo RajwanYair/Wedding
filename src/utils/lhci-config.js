@@ -24,12 +24,12 @@ const DEFAULT_RESOURCE_SIZES = Object.freeze([
 ]);
 
 /** Build the per-locale URL list. */
-export function buildLocaleUrls(baseUrl, locales) {
+export function buildLocaleUrls(/** @type {string} */ baseUrl, /** @type {string[]} */ locales) {
   if (typeof baseUrl !== "string" || baseUrl.length === 0) return [];
   const clean = baseUrl.replace(/\/+$/, "");
   return (locales ?? [])
-    .filter((l) => typeof l === "string" && l.length > 0)
-    .map((l) => `${clean}/?lang=${encodeURIComponent(l)}`);
+    .filter((/** @type {string} */ l) => typeof l === "string" && l.length > 0)
+    .map((/** @type {string} */ l) => `${clean}/?lang=${encodeURIComponent(l)}`);
 }
 
 /**
@@ -46,7 +46,9 @@ export function buildAssertions(scoreOverrides = {}) {
   return out;
 }
 
-/** Build a complete lighthouserc config object. */
+/** Build a complete lighthouserc config object.
+ * @param {{ baseUrl: string, locales: string[], scoreOverrides?: Record<string,number>, resourceBudgets?: readonly { resourceType: string, budget: number }[], numberOfRuns?: number }} opts
+ */
 export function buildLighthouseConfig({
   baseUrl,
   locales,

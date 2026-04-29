@@ -84,7 +84,7 @@ const _modalLoaders = new Map();
 for (const [path, loader] of Object.entries(_modalGlob)) {
   // path => "../modals/guestModal.html" → "guestModal"
   const match = path.match(/\/([^/]+)\.html$/);
-  if (match) _modalLoaders.set(match[1], /** @type {any} */ (loader));
+  if (match) _modalLoaders.set(/** @type {string} */ (match[1]), /** @type {any} */ (loader));
 }
 
 /**
@@ -190,7 +190,7 @@ export function closeModal(modalId) {
  * Show a confirmation dialog and optionally invoke a callback if confirmed.
  * Passes the resolved i18n message to the native confirm dialog.
  * @param {string} message  — already-translated string (or i18n key fallback)
- * @param {() => void} [onConfirm]  — optional callback invoked when user confirms
+ * @param {() => void} [onConfirm]  - optional callback invoked when user confirms
  * @returns {boolean}  true if confirmed
  */
 export function showConfirmDialog(message, onConfirm) {
@@ -209,7 +209,7 @@ let _themeIdx = 0;
  */
 export function cycleTheme() {
   _themeIdx = (_themeIdx + 1) % THEMES.length;
-  const theme = THEMES[_themeIdx];
+  const theme = THEMES[_themeIdx] ?? "default";
   document.body.className = document.body.className.replace(/\btheme-\S+/g, "").trim();
   if (theme !== "default") document.body.classList.add(`theme-${theme}`);
   writeBrowserStorage(STORAGE_KEYS.THEME, theme);

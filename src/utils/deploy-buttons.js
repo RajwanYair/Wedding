@@ -54,7 +54,10 @@ export function buildRenderDeployUrl({ repoUrl, branch }) {
 }
 
 /** Returns all four buttons keyed by provider. */
-export function buildAllDeployButtons(input) {
+/** Returns all four buttons keyed by provider.
+ * @param {DeployInput} input
+ */
+export function buildAllDeployButtons(/** @type {any} */ input) {
   return {
     vercel: buildVercelDeployUrl(input),
     netlify: buildNetlifyDeployUrl(input),
