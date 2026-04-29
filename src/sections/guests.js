@@ -14,6 +14,7 @@ import { cleanPhone, isValidPhone } from "../utils/phone.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { guestMatchesQuery } from "../utils/guest-search.js";
+import { pushUndo } from "../utils/undo.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
@@ -117,7 +118,16 @@ export function saveGuest(data, existingId = null) {
  * @param {string} id
  */
 export function deleteGuest(id) {
-  const guests = /** @type {any[]} */ (storeGet("guests") ?? []).filter((g) => g.id !== id);
+  const all = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const victim = all.find((g) => g.id === id);
+  if (victim) {
+    pushUndo(
+      `${t("undo_delete_guest")} ${victim.firstName || ""} ${victim.lastName || ""}`.trim(),
+      "guests",
+      JSON.parse(JSON.stringify(all)),
+    );
+  }
+  const guests = all.filter((g) => g.id !== id);
   storeSet("guests", guests);
   _pendingSync.delete(id);
   enqueueWrite("guests", async () => { await syncStoreKeyToSheets("guests"); clearGuestPendingSync(); });
