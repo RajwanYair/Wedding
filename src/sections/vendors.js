@@ -537,21 +537,52 @@ function renderVendorPaymentTimeline() {
   const h = categories.length * (rowH + gap);
   const title = t("vendor_payment_timeline_title");
 
-  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escStr(title)}"><title>${_escStr(title)}</title>`;
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  /** @param {string} tag @returns {SVGElement} */
+  const _svgEl = (tag) => /** @type {SVGElement} */ (document.createElementNS(SVG_NS, tag));
+
+  const svgEl = _svgEl("svg");
+  svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svgEl.setAttribute("role", "img");
+  svgEl.setAttribute("aria-label", title);
+  const titleEl = _svgEl("title");
+  titleEl.textContent = title;
+  svgEl.appendChild(titleEl);
 
   categories.forEach((cat, i) => {
     const y = i * (rowH + gap);
     const paidW = Math.max((cat.totalPaid / maxTotal) * barMaxW, 2);
     const totalW = Math.max((cat.totalCost / maxTotal) * barMaxW, 2);
     const pct = cat.totalCost > 0 ? Math.round((cat.totalPaid / cat.totalCost) * 100) : 0;
-    svg += `<text x="0" y="${y + 21}" font-size="11" fill="var(--text)">${_escStr(cat.category)}</text>`;
-    svg += `<rect x="${labelW}" y="${y + 4}" width="${totalW}" height="${rowH - 8}" fill="var(--surface-2,#e2e8f0)" rx="4"/>`;
-    svg += `<rect x="${labelW}" y="${y + 4}" width="${paidW}" height="${rowH - 8}" fill="var(--success)" rx="4" opacity="0.85"/>`;
-    svg += `<text x="${labelW + totalW + 6}" y="${y + 21}" font-size="11" fill="var(--text)">${pct}%</text>`;
+
+    const lbl = _svgEl("text");
+    lbl.setAttribute("x", "0"); lbl.setAttribute("y", String(y + 21));
+    lbl.setAttribute("font-size", "11"); lbl.setAttribute("fill", "var(--text)");
+    lbl.textContent = String(cat.category);
+    svgEl.appendChild(lbl);
+
+    const bgRect = _svgEl("rect");
+    bgRect.setAttribute("x", String(labelW)); bgRect.setAttribute("y", String(y + 4));
+    bgRect.setAttribute("width", String(totalW)); bgRect.setAttribute("height", String(rowH - 8));
+    bgRect.setAttribute("fill", "var(--surface-2,#e2e8f0)"); bgRect.setAttribute("rx", "4");
+    svgEl.appendChild(bgRect);
+
+    const paidRect = _svgEl("rect");
+    paidRect.setAttribute("x", String(labelW)); paidRect.setAttribute("y", String(y + 4));
+    paidRect.setAttribute("width", String(paidW)); paidRect.setAttribute("height", String(rowH - 8));
+    paidRect.setAttribute("fill", "var(--success)"); paidRect.setAttribute("rx", "4");
+    paidRect.setAttribute("opacity", "0.85");
+    svgEl.appendChild(paidRect);
+
+    const pctLbl = _svgEl("text");
+    pctLbl.setAttribute("x", String(labelW + totalW + 6)); pctLbl.setAttribute("y", String(y + 21));
+    pctLbl.setAttribute("font-size", "11"); pctLbl.setAttribute("fill", "var(--text)");
+    pctLbl.textContent = `${pct}%`;
+    svgEl.appendChild(pctLbl);
   });
 
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/CSS vars/escaped category strings
+  container.textContent = "";
+  container.appendChild(svgEl);
 }
 
 /** Escape a string for SVG text content. */
@@ -601,15 +632,50 @@ function renderVendorSpendTimeline() {
   const linePts = points.map((p, i) => `${scaleX(i)},${scaleY(p.cumulative)}`).join(" ");
   const title = t("vendor_spend_timeline_title");
 
-  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escStr(title)}"><title>${_escStr(title)}</title>`;
+  const SVG_NS2 = "http://www.w3.org/2000/svg";
+  /** @param {string} tag @returns {SVGElement} */
+  const _svgEl2 = (tag) => /** @type {SVGElement} */ (document.createElementNS(SVG_NS2, tag));
+
+  const svgEl2 = _svgEl2("svg");
+  svgEl2.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svgEl2.setAttribute("role", "img");
+  svgEl2.setAttribute("aria-label", title);
+  const titleEl2 = _svgEl2("title");
+  titleEl2.textContent = title;
+  svgEl2.appendChild(titleEl2);
+
   if (points.length > 1) {
-    svg += `<polyline points="${linePts}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;
+    const poly = _svgEl2("polyline");
+    poly.setAttribute("points", linePts);
+    poly.setAttribute("fill", "none");
+    poly.setAttribute("stroke", "var(--primary)");
+    poly.setAttribute("stroke-width", "2");
+    poly.setAttribute("stroke-linejoin", "round");
+    svgEl2.appendChild(poly);
   }
-  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0]?.date ?? ""}</text>`;
-  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1]?.date ?? ""}</text>`;
-  svg += `<text x="${w / 2}" y="12" font-size="10" fill="var(--text)" text-anchor="middle">₪${(points[points.length - 1]?.cumulative ?? 0).toLocaleString()}</text>`;
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/dates/escaped strings
+
+  const startLbl = _svgEl2("text");
+  startLbl.setAttribute("x", String(padL)); startLbl.setAttribute("y", String(h - 4));
+  startLbl.setAttribute("font-size", "9"); startLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
+  startLbl.textContent = points[0]?.date ?? "";
+  svgEl2.appendChild(startLbl);
+
+  const endLbl = _svgEl2("text");
+  endLbl.setAttribute("x", String(w - 8)); endLbl.setAttribute("y", String(h - 4));
+  endLbl.setAttribute("font-size", "9"); endLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
+  endLbl.setAttribute("text-anchor", "end");
+  endLbl.textContent = points[points.length - 1]?.date ?? "";
+  svgEl2.appendChild(endLbl);
+
+  const totalLbl = _svgEl2("text");
+  totalLbl.setAttribute("x", String(w / 2)); totalLbl.setAttribute("y", "12");
+  totalLbl.setAttribute("font-size", "10"); totalLbl.setAttribute("fill", "var(--text)");
+  totalLbl.setAttribute("text-anchor", "middle");
+  totalLbl.textContent = `₪${(points[points.length - 1]?.cumulative ?? 0).toLocaleString()}`;
+  svgEl2.appendChild(totalLbl);
+
+  container.textContent = "";
+  container.appendChild(svgEl2);
 }
 
 /**
@@ -635,14 +701,42 @@ function renderTopVendorsByCost() {
   const h = top.length * (barH + gap);
   const title = t("vendor_top_cost_title");
 
-  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escStr(title)}"><title>${_escStr(title)}</title>`;
+  const SVG_NS3 = "http://www.w3.org/2000/svg";
+  /** @param {string} tag @returns {SVGElement} */
+  const _svgEl3 = (tag) => /** @type {SVGElement} */ (document.createElementNS(SVG_NS3, tag));
+
+  const svgEl3 = _svgEl3("svg");
+  svgEl3.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svgEl3.setAttribute("role", "img");
+  svgEl3.setAttribute("aria-label", title);
+  const titleEl3 = _svgEl3("title");
+  titleEl3.textContent = title;
+  svgEl3.appendChild(titleEl3);
+
   top.forEach((v, i) => {
     const y = i * (barH + gap);
     const barW = Math.max((v.cost / maxCost) * barMaxW, 2);
-    svg += `<text x="0" y="${y + 18}" font-size="11" fill="var(--text)">${_escStr(v.name)}</text>`;
-    svg += `<rect x="${labelW}" y="${y + 2}" width="${barW}" height="${barH - 4}" fill="var(--accent,#8b5cf6)" rx="4" opacity="0.85"/>`;
-    svg += `<text x="${labelW + barW + 6}" y="${y + 18}" font-size="11" fill="var(--text)">₪${v.cost.toLocaleString()}</text>`;
+
+    const nameLbl = _svgEl3("text");
+    nameLbl.setAttribute("x", "0"); nameLbl.setAttribute("y", String(y + 18));
+    nameLbl.setAttribute("font-size", "11"); nameLbl.setAttribute("fill", "var(--text)");
+    nameLbl.textContent = String(v.name);
+    svgEl3.appendChild(nameLbl);
+
+    const bar = _svgEl3("rect");
+    bar.setAttribute("x", String(labelW)); bar.setAttribute("y", String(y + 2));
+    bar.setAttribute("width", String(barW)); bar.setAttribute("height", String(barH - 4));
+    bar.setAttribute("fill", "var(--accent,#8b5cf6)"); bar.setAttribute("rx", "4");
+    bar.setAttribute("opacity", "0.85");
+    svgEl3.appendChild(bar);
+
+    const costLbl = _svgEl3("text");
+    costLbl.setAttribute("x", String(labelW + barW + 6)); costLbl.setAttribute("y", String(y + 18));
+    costLbl.setAttribute("font-size", "11"); costLbl.setAttribute("fill", "var(--text)");
+    costLbl.textContent = `₪${v.cost.toLocaleString()}`;
+    svgEl3.appendChild(costLbl);
   });
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/escaped vendor names
+
+  container.textContent = "";
+  container.appendChild(svgEl3);
 }
