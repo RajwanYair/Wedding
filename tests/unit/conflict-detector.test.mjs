@@ -9,7 +9,7 @@ import {
   resolveAllForId,
   getConflictingIds,
   groupConflictById,
-} from "../../src/services/sync-engine.js";
+} from "../../src/services/sync.js";
 
 describe("detectConflicts", () => {
   it("returns empty array when all records match", () => {

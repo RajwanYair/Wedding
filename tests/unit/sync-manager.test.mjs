@@ -12,7 +12,7 @@ import {
   clearFailure,
   onSyncStatusChange,
   _resetForTesting,
-} from "../../src/services/sync-manager.js";
+} from "../../src/services/sync.js";
 
 beforeEach(() => {
   vi.restoreAllMocks();

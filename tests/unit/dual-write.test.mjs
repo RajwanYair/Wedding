@@ -5,11 +5,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ── config mock (flag off by default) ────────────────────────────────────
-const configMock = { FEATURE_DUAL_WRITE: false };
+const configMock = { FEATURE_DUAL_WRITE: false, STORAGE_PREFIX: "wedding_v1_" };
 vi.mock("../../src/core/config.js", () => configMock);
 
 const { initDualWrite, isDualWriteHarnessActive, dualWrite } =
-  await import("../../src/services/sync-engine.js");
+  await import("../../src/services/sync.js");
 
 beforeEach(() => {
   // Reset module-level _active flag between tests via fresh imports is tricky;

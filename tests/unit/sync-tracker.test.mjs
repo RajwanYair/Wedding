@@ -1,7 +1,7 @@
 /**
  * tests/unit/sync-tracker.test.mjs
  *
- * Unit tests for src/services/sync-manager.js
+ * Unit tests for src/services/sync.js
  * Tests: initSyncTracker, getSyncState, setSyncState, watchSyncState,
  *        markSyncing, markSynced, markSyncError, markAllOffline, markAllOnline,
  *        getDataClass, pending counter increments.
@@ -47,7 +47,7 @@ beforeEach(async () => {
   ({
     initSyncTracker, getSyncState, getAllSyncStates, watchSyncState, setSyncState,
     markSyncing, markSynced, markSyncError, markAllOffline, markAllOnline, getDataClass,
-  } = await import("../../src/services/sync-manager.js"));
+  } = await import("../../src/services/sync.js"));
 });
 
 // ── Tests ─────────────────────────────────────────────────────────────────
