@@ -439,28 +439,70 @@ function renderBudgetBurndownChart() {
   const pct = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
   const title = t("budget_burndown_title");
 
-  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${_escBudget(title)}"><title>${_escBudget(title)}</title>`;
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  /** @param {string} tag @returns {SVGElement} */
+  const _svgEl = (tag) => /** @type {SVGElement} */ (document.createElementNS(SVG_NS, tag));
+
+  const svgEl = _svgEl("svg");
+  svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svgEl.setAttribute("role", "img");
+  svgEl.setAttribute("aria-label", title);
+  const titleEl = _svgEl("title");
+  titleEl.textContent = title;
+  svgEl.appendChild(titleEl);
 
   // Budget target dashed line
   if (totalBudget > 0) {
-    svg += `<line x1="${padL}" y1="${targetY}" x2="${w - 8}" y2="${targetY}" stroke="var(--danger,#ef4444)" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>`;
-    svg += `<text x="${w - 6}" y="${targetY + 4}" font-size="9" fill="var(--danger,#ef4444)" text-anchor="end">${_escBudget(t("budget_burndown_target"))}</text>`;
+    const targetLine = _svgEl("line");
+    targetLine.setAttribute("x1", String(padL)); targetLine.setAttribute("y1", String(targetY));
+    targetLine.setAttribute("x2", String(w - 8)); targetLine.setAttribute("y2", String(targetY));
+    targetLine.setAttribute("stroke", "var(--danger,#ef4444)"); targetLine.setAttribute("stroke-width", "1");
+    targetLine.setAttribute("stroke-dasharray", "4 3"); targetLine.setAttribute("opacity", "0.7");
+    svgEl.appendChild(targetLine);
+
+    const targetLbl = _svgEl("text");
+    targetLbl.setAttribute("x", String(w - 6)); targetLbl.setAttribute("y", String(targetY + 4));
+    targetLbl.setAttribute("font-size", "9"); targetLbl.setAttribute("fill", "var(--danger,#ef4444)");
+    targetLbl.setAttribute("text-anchor", "end");
+    targetLbl.textContent = t("budget_burndown_target");
+    svgEl.appendChild(targetLbl);
   }
 
   // Spend polyline
   if (points.length > 1) {
-    svg += `<polyline points="${linePts}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;
+    const poly = _svgEl("polyline");
+    poly.setAttribute("points", linePts);
+    poly.setAttribute("fill", "none");
+    poly.setAttribute("stroke", "var(--primary)");
+    poly.setAttribute("stroke-width", "2");
+    poly.setAttribute("stroke-linejoin", "round");
+    svgEl.appendChild(poly);
   }
 
   // Axes labels
-  svg += `<text x="${padL}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)">${points[0]?.date ?? ""}</text>`;
-  svg += `<text x="${w - 8}" y="${h - 4}" font-size="9" fill="var(--text-muted,#6b7280)" text-anchor="end">${points[points.length - 1]?.date ?? ""}</text>`;
+  const startLbl = _svgEl("text");
+  startLbl.setAttribute("x", String(padL)); startLbl.setAttribute("y", String(h - 4));
+  startLbl.setAttribute("font-size", "9"); startLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
+  startLbl.textContent = points[0]?.date ?? "";
+  svgEl.appendChild(startLbl);
+
+  const endLbl = _svgEl("text");
+  endLbl.setAttribute("x", String(w - 8)); endLbl.setAttribute("y", String(h - 4));
+  endLbl.setAttribute("font-size", "9"); endLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
+  endLbl.setAttribute("text-anchor", "end");
+  endLbl.textContent = points[points.length - 1]?.date ?? "";
+  svgEl.appendChild(endLbl);
 
   // Summary badge
-  svg += `<text x="${w / 2}" y="14" font-size="10" fill="var(--text)" text-anchor="middle">${totalSpent.toLocaleString()} ₪ (${pct}%)</text>`;
+  const summaryLbl = _svgEl("text");
+  summaryLbl.setAttribute("x", String(w / 2)); summaryLbl.setAttribute("y", "14");
+  summaryLbl.setAttribute("font-size", "10"); summaryLbl.setAttribute("fill", "var(--text)");
+  summaryLbl.setAttribute("text-anchor", "middle");
+  summaryLbl.textContent = `${totalSpent.toLocaleString()} ₪ (${pct}%)`;
+  svgEl.appendChild(summaryLbl);
 
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: numbers/dates/escaped i18n strings
+  container.textContent = "";
+  container.appendChild(svgEl);
 
   // Consumption % and projected date below chart
   const pctEl = document.getElementById("budgetBurndownPct");

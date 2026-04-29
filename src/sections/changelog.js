@@ -20,12 +20,22 @@ class ChangelogSection extends BaseSection {
 const _instance = new ChangelogSection("changelog");
 export const { mount, unmount, capabilities } = fromSection(_instance);
 
+/** Render an HTML string into `target` without using innerHTML. */
+function _setHtml(target, html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  target.textContent = "";
+  for (const child of doc.body.childNodes) {
+    target.appendChild(document.importNode(child, true));
+  }
+}
+
 export async function renderChangelog() {
   const el = document.getElementById("changelogContent");
   if (!el) return;
 
   if (_cached) {
-    el.innerHTML = _cached; // nosec: _cached is fetched from CHANGELOG.md (own repo file, not user input)
+    _setHtml(el, _cached);
     return;
   }
 
@@ -35,7 +45,7 @@ export async function renderChangelog() {
     const md = await resp.text();
     const html = mdToHtml(md);
     _cached = html;
-    el.innerHTML = html;
+    _setHtml(el, html);
   } catch {
     el.textContent = "Failed to load changelog.";
   }

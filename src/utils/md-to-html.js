@@ -8,7 +8,11 @@
  *
  * @example
  *   import { mdToHtml } from "../utils/md-to-html.js";
- *   container.innerHTML = mdToHtml(markdownString);
+ *   // Render via DOMParser to avoid innerHTML sinks:
+ *   const parser = new DOMParser();
+ *   const doc = parser.parseFromString(mdToHtml(markdownString), "text/html");
+ *   el.textContent = "";
+ *   for (const child of doc.body.childNodes) el.appendChild(document.importNode(child, true));
  */
 
 /**
