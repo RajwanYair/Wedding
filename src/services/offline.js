@@ -1,15 +1,83 @@
 /**
- * src/services/offline-queue.js — F1.2.4 Offline queue (S203 IDB upgrade)
+ * src/services/offline.js — Offline-first service (S227)
  *
- * Queues failed RSVP/contact submissions when offline.
- * Flushes automatically when the connection restores with exponential backoff.
- * Persists to IndexedDB (S203/S158) with localStorage as fallback.
+ * Merged from:
+ *   - background-sync.js  (S89)  — Background Sync API wrapper
+ *   - offline-queue.js    (S203) — IDB-persisted offline write queue
  */
 
 import { storeGet, storeSet } from "../core/store.js";
 import { MAX_RETRIES, BACKOFF_BASE_MS } from "../core/config.js";
 import { t } from "../core/i18n.js";
 import { idbQueueRead, idbQueueWrite } from "../utils/idb-queue.js";
+
+// ══════════════════════════════════════════════════════════════════════════
+// §1 — Background Sync API wrapper (merged from background-sync.js, S89)
+// ══════════════════════════════════════════════════════════════════════════
+
+/** Default tag used by the SW to trigger a queue flush. */
+export const BACKGROUND_SYNC_TAG = "write-sync";
+
+/**
+ * Returns true when the SyncManager API is available in the current browser.
+ * @returns {boolean}
+ */
+export function isBackgroundSyncSupported() {
+  if (typeof navigator === "undefined") return false;
+  if (typeof window === "undefined") return false;
+  return (
+    "serviceWorker" in navigator &&
+    typeof window.SyncManager !== "undefined" &&
+    typeof navigator.serviceWorker.ready?.then === "function"
+  );
+}
+
+/**
+ * Register a Background Sync tag with the active Service Worker registration.
+ * No-op when the API is unavailable; resolves to `false` instead of throwing.
+ * @param {string} [tag=BACKGROUND_SYNC_TAG]
+ * @returns {Promise<boolean>} `true` when registration succeeded
+ */
+export async function registerBackgroundSync(tag = BACKGROUND_SYNC_TAG) {
+  if (!isBackgroundSyncSupported()) return false;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    /** @type {{ sync?: { register: (tag: string) => Promise<void> } }} */
+    const swr = /** @type {any} */ (reg);
+    if (!swr.sync || typeof swr.sync.register !== "function") return false;
+    await swr.sync.register(tag);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Convenience helper: register Background Sync if supported, otherwise wire a
+ * one-shot `online` listener that calls the supplied callback once.
+ * @param {() => void} onTrigger
+ * @param {string} [tag=BACKGROUND_SYNC_TAG]
+ * @returns {Promise<"registered" | "fallback" | "noop">}
+ */
+export async function ensureBackgroundFlush(onTrigger, tag = BACKGROUND_SYNC_TAG) {
+  const ok = await registerBackgroundSync(tag);
+  if (ok) return "registered";
+  if (typeof window === "undefined") return "noop";
+  const handler = () => {
+    window.removeEventListener("online", handler);
+    try {
+      onTrigger();
+    } catch {
+      /* never bubble */
+    }
+  };
+  window.addEventListener("online", handler, { once: true });
+  return "fallback";
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// §2 — Offline write queue (merged from offline-queue.js, S203)
+// ══════════════════════════════════════════════════════════════════════════
 
 /** @type {{ type: string, payload: unknown, addedAt: string, retries: number }[]} */
 let _queue = [];
@@ -37,15 +105,17 @@ export function initOfflineQueue(opts) {
   _queue = /** @type {typeof _queue} */ (storeGet("offline_queue")) ?? [];
 
   // Async upgrade: attempt to load from IDB and prefer it if available.
-  idbQueueRead().then((idbItems) => {
-    if (idbItems.length > 0) {
-      _queue = /** @type {typeof _queue} */ (idbItems);
-      _updateBadge();
-    } else if (_queue.length > 0) {
-      // Migrate existing localStorage items to IDB.
-      idbQueueWrite(_queue).catch(() => {});
-    }
-  }).catch(() => {});
+  idbQueueRead()
+    .then((idbItems) => {
+      if (idbItems.length > 0) {
+        _queue = /** @type {typeof _queue} */ (idbItems);
+        _updateBadge();
+      } else if (_queue.length > 0) {
+        // Migrate existing localStorage items to IDB.
+        idbQueueWrite(_queue).catch(() => {});
+      }
+    })
+    .catch(() => {});
 
   _updateBadge();
 
@@ -58,7 +128,6 @@ export function initOfflineQueue(opts) {
   }
 
   // Listen for RSVP_SYNC_READY from the Service Worker (Background Sync API).
-  // The SW sends this when the "rsvp-sync" sync event fires.
   try {
     const sw = typeof navigator !== "undefined" ? navigator.serviceWorker : undefined;
     if (sw && typeof sw.addEventListener === "function") {
@@ -111,7 +180,6 @@ export function enqueueOffline(type, payload) {
 
 /**
  * Register the Background Sync tag with the active Service Worker.
- * No-op when the Background Sync API is unavailable.
  * @returns {void}
  */
 function _registerSyncTag() {
@@ -121,7 +189,9 @@ function _registerSyncTag() {
     sw.ready
       .then((reg) => {
         if (reg && "sync" in reg) {
-          return /** @type {{ register: (tag: string) => Promise<void> }} */ (reg.sync).register("rsvp-sync");
+          return /** @type {{ register: (tag: string) => Promise<void> }} */ (reg.sync).register(
+            "rsvp-sync",
+          );
         }
       })
       .catch(() => {
@@ -149,7 +219,6 @@ export function flushOfflineQueue() {
 
   function next() {
     if (pending.length === 0) {
-      // Re-queue failed items up to MAX_RETRIES; drop and count exhausted ones
       const requeue = failed.filter((item) => (item.retries ?? 0) < MAX_RETRIES);
       const exhausted = failed.filter((item) => (item.retries ?? 0) >= MAX_RETRIES);
       _exhaustedCount += exhausted.length;
@@ -160,7 +229,6 @@ export function flushOfflineQueue() {
       if (requeue.length > 0) {
         _queue = [...requeue, ..._queue];
         _persist();
-        // Schedule next flush with exponential backoff
         const maxR = Math.max(...requeue.map((i) => i.retries));
         const delay = Math.min(BACKOFF_BASE_MS * 2 ** (maxR - 1), _MAX_DELAY_MS);
         setTimeout(flushOfflineQueue, delay);
@@ -209,9 +277,7 @@ export function getQueueStats() {
 // ── Internal ──────────────────────────────────────────────────────────────
 
 function _persist() {
-  // Always write to store (localStorage) for immediate sync backup.
   storeSet("offline_queue", _queue);
-  // Also write to IDB for crash-resilient persistence (S203).
   idbQueueWrite(_queue).catch(() => {});
 }
 

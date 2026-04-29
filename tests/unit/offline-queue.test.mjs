@@ -40,7 +40,7 @@ beforeEach(async () => {
   vi.resetModules();
   Object.keys(_store).forEach((k) => delete _store[k]);
   ({ enqueueOffline, getOfflineQueueCount, getQueueStats, flushOfflineQueue, initOfflineQueue } =
-    await import("../../src/services/offline-queue.js"));
+    await import("../../src/services/offline.js"));
 });
 
 // ── Tests ─────────────────────────────────────────────────────────────────

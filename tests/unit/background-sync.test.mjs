@@ -9,7 +9,7 @@ import {
   isBackgroundSyncSupported,
   registerBackgroundSync,
   ensureBackgroundFlush,
-} from "../../src/services/background-sync.js";
+} from "../../src/services/offline.js";
 
 describe("background-sync (S89)", () => {
   afterEach(() => {

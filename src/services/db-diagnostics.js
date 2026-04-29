@@ -96,7 +96,7 @@ export async function verifySelectPolicies(supabase) {
  *   // → { errors: 2, recentErrors: [{ msg, ts }], queueDepth: 1, warnings: [] }
  */
 
-import { getQueueStats } from "./offline-queue.js";
+import { getQueueStats } from "./offline.js";
 
 // ── In-memory session state ───────────────────────────────────────────────
 

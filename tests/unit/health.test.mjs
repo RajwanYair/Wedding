@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // ── Mock offline-queue ────────────────────────────────────────────────────
-vi.mock("../../src/services/offline-queue.js", () => ({
+vi.mock("../../src/services/offline.js", () => ({
   getQueueStats: vi.fn(() => ({ total: 0, exhausted: 0, oldestAddedAt: null })),
 }));
 
@@ -76,7 +76,7 @@ describe("health — status transitions", () => {
   });
 
   it("adds warning for exhausted offline items", async () => {
-    const { getQueueStats } = await import("../../src/services/offline-queue.js");
+    const { getQueueStats } = await import("../../src/services/offline.js");
     getQueueStats.mockReturnValue({ total: 0, exhausted: 2, oldestAddedAt: null });
     const report = getHealthReport();
     expect(report.warnings).toContain("2 offline items exhausted (dropped)");
@@ -84,7 +84,7 @@ describe("health — status transitions", () => {
   });
 
   it("adds warning for large offline queue", async () => {
-    const { getQueueStats } = await import("../../src/services/offline-queue.js");
+    const { getQueueStats } = await import("../../src/services/offline.js");
     getQueueStats.mockReturnValue({ total: 11, exhausted: 0, oldestAddedAt: null });
     const report = getHealthReport();
     expect(report.warnings.some((w) => w.includes("pending"))).toBe(true);
