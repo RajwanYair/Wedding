@@ -96,16 +96,17 @@ export default defineConfig({
         // Measured: stmts 49.84%, branches 45.46%, functions 55.98%, lines 50.27%.
         // S314 uplift (v13.13.0): stmts ~50.8%, branches ~45.6%, functions ~56.6%, lines ~51.3%.
         // S324 uplift (v13.14.0): stmts ~52.62%, branches ~46.76%, functions ~59.31%, lines ~53.17%.
-        lines: 53,
-        branches: 46,
-        functions: 58,
-        statements: 52,
+        // S333 uplift (v13.15.0): stmts ~55.8%, branches ~49.04%, functions ~64.03%, lines ~56.27%.
+        lines: 56,
+        branches: 49,
+        functions: 64,
+        statements: 55,
         // S234 + S289: per-directory ratchet to measured floors (floor(actual)).
-        "src/utils/**": { lines: 90, branches: 80, functions: 86, statements: 88 },
+        "src/utils/**": { lines: 95, branches: 82, functions: 91, statements: 93 },
         "src/repositories/**": { lines: 95, branches: 54, functions: 97, statements: 83 },
-        "src/services/**": { lines: 75, branches: 64, functions: 74, statements: 73 },
-        "src/core/**": { lines: 69, branches: 58, functions: 58, statements: 65 },
-        "src/sections/**": { lines: 20, branches: 20, functions: 32, statements: 20 },
+        "src/services/**": { lines: 77, branches: 65, functions: 76, statements: 75 },
+        "src/core/**": { lines: 70, branches: 60, functions: 61, statements: 67 },
+        "src/sections/**": { lines: 26, branches: 24, functions: 39, statements: 27 },
       },
     },
   },
