@@ -1,26 +1,267 @@
 /**
- * src/services/supabase-realtime.js — Supabase Realtime channel management (S17)
+ * src/services/realtime.js — Unified realtime & presence service (S237)
  *
- * Subscribes to Supabase Realtime WebSocket channels for live collaborative editing.
- * Replaces 30s polling with push-based updates when Supabase is configured.
+ * Merged from:
+ *   - presence-service.js  (S187) — heartbeat presence + badge helpers + Supabase presence channel
+ *   - supabase-realtime.js (S17)  — Supabase Realtime WebSocket + SDK subscription management
  *
- * Two strategies:
- *   - SDK path  (`activateSDKRealtime`)   — uses @supabase/supabase-js RealtimeChannel
- *   - Raw path  (`subscribeRealtime`)     — uses native WebSocket + Phoenix protocol
- *
- * SDK path is preferred when Supabase client is available.
- *
- * Channels:
- *   - `guests`   — INSERT/UPDATE/DELETE triggers `onGuestsChange(payload)`
- *   - `config`   — UPDATE triggers `onConfigChange(payload)` (wedding info sync)
- *
- * Offline handling:
- *   - On disconnect, queues local writes to offline-queue.js
- *   - On reconnect, reconciles remote state vs local (last-write-wins by updated_at)
+ * Public API:
+ *   Presence:  startPresence · stopPresence · getPresence · onPresenceChange
+ *   Badges:    isFresh · groupByViewing · badgeFor · countOnline
+ *   Channel:   createPresenceChannel
+ *   Realtime:  subscribeRealtime · subscribeGuestChanges · isRealtimeConnected
+ *              disconnectRealtime · activateRealtimeSync
  */
 
+import { sheetsPost } from "./sheets.js";
+import { currentUser } from "./auth.js";
+import { load, save } from "../core/state.js";
 import { getSupabaseAnonKey, getSupabaseUrl } from "../core/app-config.js";
 import { storeGet, storeSet } from "../core/store.js";
+
+// ═══════════════════════════════════════════════════════════════════════════
+// § 1 — Heartbeat presence (from presence-service.js, S187)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Heartbeat interval: 60 seconds */
+const _HEARTBEAT_MS = 60_000;
+
+/** Presence is considered stale after 2 minutes */
+const _STALE_MS = 120_000;
+
+/** @type {ReturnType<typeof setInterval> | null} */
+let _heartbeatTimer = null;
+
+/** @type {Array<{ email: string, name: string, lastSeen: string }>} */
+let _presenceList = [];
+
+/** @type {Set<Function>} */
+const _presenceListeners = new Set();
+
+/**
+ * Subscribe to presence updates.
+ * @param {(users: Array<{ email: string, name: string, lastSeen: string }>) => void} fn
+ * @returns {() => void} Unsubscribe
+ */
+export function onPresenceChange(fn) {
+  _presenceListeners.add(fn);
+  return () => _presenceListeners.delete(fn);
+}
+
+/**
+ * Get the current list of active users.
+ * @returns {Array<{ email: string, name: string, lastSeen: string }>}
+ */
+export function getPresence() {
+  return _presenceList;
+}
+
+/**
+ * Start sending heartbeats and polling for other users' presence.
+ */
+export function startPresence() {
+  stopPresence();
+  _sendHeartbeat();
+  _heartbeatTimer = setInterval(_sendHeartbeat, _HEARTBEAT_MS);
+}
+
+/**
+ * Stop presence tracking.
+ */
+export function stopPresence() {
+  if (_heartbeatTimer !== null) {
+    clearInterval(_heartbeatTimer);
+    _heartbeatTimer = null;
+  }
+}
+
+/**
+ * Send a heartbeat to indicate this user is active.
+ */
+async function _sendHeartbeat() {
+  const user = currentUser();
+  if (!user?.isAdmin) return;
+
+  const entry = {
+    email: user.email || "unknown",
+    name: /** @type {any} */ (user).displayName || user.email || "Admin",
+    lastSeen: new Date().toISOString(),
+  };
+
+  const presence = /** @type {any[]} */ (load("presence", []) ?? []);
+  const idx = presence.findIndex((p) => p.email === entry.email);
+  if (idx >= 0) presence[idx] = entry;
+  else presence.push(entry);
+  save("presence", presence);
+
+  const now = Date.now();
+  _presenceList = presence.filter((p) => now - new Date(p.lastSeen).getTime() < _STALE_MS);
+
+  _presenceListeners.forEach((fn) => {
+    try {
+      fn(_presenceList);
+    } catch {
+      // Presence is best-effort; do not block on errors
+    }
+  });
+
+  try {
+    await sheetsPost("presence", entry);
+  } catch {
+    // Best-effort
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// § 2 — Badge helpers (from presence-service.js, S112)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** @typedef {{ email: string, name: string, lastSeen: string, viewing?: string }} PresenceUser */
+
+/**
+ * Returns true if a presence entry is fresh (last-seen within `maxAgeMs`).
+ * @param {PresenceUser} u
+ * @param {number} [maxAgeMs=60000]
+ * @param {number} [now=Date.now()]
+ */
+export function isFresh(u, maxAgeMs = 60_000, now = Date.now()) {
+  const t = Date.parse(u.lastSeen);
+  if (Number.isNaN(t)) return false;
+  return now - t <= maxAgeMs;
+}
+
+/**
+ * Group fresh presence entries by the record they are viewing.
+ * @param {PresenceUser[]} users
+ * @param {number} [maxAgeMs]
+ * @param {number} [now]
+ * @returns {Map<string, PresenceUser[]>}
+ */
+export function groupByViewing(users, maxAgeMs, now) {
+  /** @type {Map<string, PresenceUser[]>} */
+  const out = new Map();
+  for (const u of users) {
+    if (!u?.viewing) continue;
+    if (!isFresh(u, maxAgeMs, now)) continue;
+    const list = out.get(u.viewing) ?? [];
+    list.push(u);
+    out.set(u.viewing, list);
+  }
+  return out;
+}
+
+/**
+ * Compose a short badge label for one record.
+ * @param {PresenceUser[]} viewers
+ * @param {number} [maxIcons=3]
+ * @returns {{ initials: string[], overflow: number, total: number }}
+ */
+export function badgeFor(viewers, maxIcons = 3) {
+  const sorted = [...viewers].sort((a, b) =>
+    (a.name || a.email).localeCompare(b.name || b.email),
+  );
+  const total = sorted.length;
+  const head = sorted.slice(0, maxIcons);
+  const initials = head.map((u) => {
+    const src = u.name?.trim() || u.email || "?";
+    return src.charAt(0).toUpperCase();
+  });
+  return { initials, overflow: Math.max(0, total - maxIcons), total };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// § 3 — Supabase Presence channel (from presence-service.js, S91)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * @typedef {{ userId: string, displayName?: string, joinedAt: string }} PresencePayload
+ * @typedef {Record<string, PresencePayload[]>} PresenceState
+ * @typedef {(state: PresenceState) => void} PresenceListener
+ * @typedef {{
+ *   join(payload: PresencePayload): Promise<void>,
+ *   leave(): Promise<void>,
+ *   onPresenceChange(fn: PresenceListener): () => void,
+ *   getState(): PresenceState,
+ *   destroy(): void
+ * }} PresenceChannel
+ */
+
+/**
+ * Create a presence channel for admin coordination.
+ * @param {import("@supabase/supabase-js").SupabaseClient} supabase
+ * @param {string} [channelName]
+ * @returns {PresenceChannel}
+ */
+export function createPresenceChannel(supabase, channelName = "admin-presence") {
+  /** @type {PresenceListener[]} */
+  const listeners = [];
+
+  /** @type {PresenceState} */
+  let state = {};
+
+  const channel = supabase.channel(channelName, {
+    config: { presence: { key: channelName } },
+  });
+
+  channel
+    .on("presence", { event: "sync" }, () => {
+      state = channel.presenceState();
+      for (const fn of listeners) fn(state);
+    })
+    .on("presence", { event: "join" }, () => {
+      state = channel.presenceState();
+      for (const fn of listeners) fn(state);
+    })
+    .on("presence", { event: "leave" }, () => {
+      state = channel.presenceState();
+      for (const fn of listeners) fn(state);
+    })
+    .subscribe();
+
+  return {
+    async join(payload) {
+      await channel.track({ ...payload, joinedAt: new Date().toISOString() });
+    },
+    async leave() {
+      await channel.untrack();
+    },
+    onPresenceChange(fn) {
+      listeners.push(fn);
+      return () => {
+        const i = listeners.indexOf(fn);
+        if (i !== -1) listeners.splice(i, 1);
+      };
+    },
+    getState() {
+      return state;
+    },
+    destroy() {
+      supabase.removeChannel(channel);
+    },
+  };
+}
+
+/**
+ * Count total online users across all presence slots.
+ * @param {PresenceState} state
+ * @returns {number}
+ */
+export function countOnline(state) {
+  return Object.values(state).reduce((acc, arr) => acc + arr.length, 0);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// § 4 — Supabase Realtime WebSocket (from supabase-realtime.js, S17)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * @typedef {{
+ *   type: 'INSERT'|'UPDATE'|'DELETE',
+ *   table: string,
+ *   record: Record<string, unknown>,
+ *   old_record: Record<string, unknown> | null
+ * }} RealtimePayload
+ */
 
 // ── Runtime credential resolution ────────────────────────────────────────
 
@@ -38,28 +279,19 @@ function _key() {
 let _ws = null;
 
 /** @type {Map<string, Set<(payload: RealtimePayload) => void>>} */
-const _listeners = new Map();
+const _realtimeListeners = new Map();
 
 /** @type {boolean} */
 let _connected = false;
 
 /** @type {ReturnType<typeof setInterval> | null} */
-let _heartbeatTimer = null;
+let _wsHeartbeatTimer = null;
 
 /** @type {ReturnType<typeof setTimeout> | null} */
 let _reconnectTimer = null;
 
 let _reconnectAttempts = 0;
 const _MAX_RECONNECT_ATTEMPTS = 5;
-
-/**
- * @typedef {{
- *   type: 'INSERT'|'UPDATE'|'DELETE',
- *   table: string,
- *   record: Record<string, unknown>,
- *   old_record: Record<string, unknown> | null
- * }} RealtimePayload
- */
 
 // ── Public API ─────────────────────────────────────────────────────────
 
@@ -70,15 +302,15 @@ const _MAX_RECONNECT_ATTEMPTS = 5;
  * @returns {() => void}  Unsubscribe function
  */
 export function subscribeRealtime(table, callback) {
-  if (!_listeners.has(table)) _listeners.set(table, new Set());
-  /** @type {Set<(payload: RealtimePayload) => void>} */ (_listeners.get(table)).add(callback);
+  if (!_realtimeListeners.has(table)) _realtimeListeners.set(table, new Set());
+  /** @type {Set<(payload: RealtimePayload) => void>} */ (_realtimeListeners.get(table)).add(callback);
 
   // Auto-connect on first subscription
   if (!_ws || _ws.readyState > 1) _connect();
 
   return () => {
-    _listeners.get(table)?.delete(callback);
-    if ([..._listeners.values()].every((s) => s.size === 0)) _disconnect();
+    _realtimeListeners.get(table)?.delete(callback);
+    if ([..._realtimeListeners.values()].every((s) => s.size === 0)) _disconnect();
   };
 }
 
@@ -119,7 +351,7 @@ function _connect() {
     _connected = true;
     _reconnectAttempts = 0;
     console.warn("[realtime] Connected");
-    _startHeartbeat();
+    _startWsHeartbeat();
     _joinChannels();
   });
 
@@ -132,18 +364,18 @@ function _connect() {
 
   _ws.addEventListener("close", () => {
     _connected = false;
-    _stopHeartbeat();
+    _stopWsHeartbeat();
     _scheduleReconnect();
   });
 
   _ws.addEventListener("error", () => {
     _connected = false;
-    _stopHeartbeat();
+    _stopWsHeartbeat();
   });
 }
 
 function _disconnect() {
-  _stopHeartbeat();
+  _stopWsHeartbeat();
   if (_reconnectTimer) {
     clearTimeout(_reconnectTimer);
     _reconnectTimer = null;
@@ -155,20 +387,20 @@ function _disconnect() {
   _connected = false;
 }
 
-// ── Heartbeat ─────────────────────────────────────────────────────────────
+// ── WS Heartbeat ─────────────────────────────────────────────────────────
 
-function _startHeartbeat() {
-  _heartbeatTimer = setInterval(() => {
+function _startWsHeartbeat() {
+  _wsHeartbeatTimer = setInterval(() => {
     if (_ws?.readyState === WebSocket.OPEN) {
       _ws.send(JSON.stringify({ topic: "phoenix", event: "heartbeat", payload: {}, ref: null }));
     }
   }, 30_000);
 }
 
-function _stopHeartbeat() {
-  if (_heartbeatTimer) {
-    clearInterval(_heartbeatTimer);
-    _heartbeatTimer = null;
+function _stopWsHeartbeat() {
+  if (_wsHeartbeatTimer) {
+    clearInterval(_wsHeartbeatTimer);
+    _wsHeartbeatTimer = null;
   }
 }
 
@@ -188,7 +420,7 @@ function _scheduleReconnect() {
 // ── Channel join / message handling ──────────────────────────────────────
 
 function _joinChannels() {
-  for (const table of _listeners.keys()) {
+  for (const table of _realtimeListeners.keys()) {
     _subscribeTable(table);
   }
 }
@@ -233,7 +465,7 @@ function _handleMessage(msg) {
     old_record: /** @type {Record<string, unknown> | null} */ (data.old_record ?? null),
   });
 
-  const callbacks = _listeners.get(payload.table);
+  const callbacks = _realtimeListeners.get(payload.table);
   if (!callbacks) return;
 
   callbacks.forEach((cb) => {
@@ -329,7 +561,7 @@ const _sdkChannels = new Map();
  * @param {RealtimePayload} payload
  */
 function _dispatch(table, payload) {
-  const callbacks = _listeners.get(table);
+  const callbacks = _realtimeListeners.get(table);
   if (!callbacks) return;
   callbacks.forEach((cb) => {
     try {
@@ -342,16 +574,11 @@ function _dispatch(table, payload) {
 
 /**
  * Activate Supabase Realtime using the SDK client's `RealtimeChannel` API.
- * Preferred over the raw WebSocket path — handles auth, reconnect, and
- * presence automatically.
- *
- * Call this once after the Supabase client is initialised.
- *
+ * Preferred over the raw WebSocket path.
  * @param {import("@supabase/supabase-js").SupabaseClient} client
- * @param {string[]} [tables] — which tables to subscribe to (default: guests + config)
+ * @param {string[]} [tables]
  */
 function activateSDKRealtime(client, tables = ["guests", "tables", "config"]) {
-  // Tear down any existing SDK channels before creating new ones
   deactivateSDKRealtime(client);
 
   for (const table of tables) {

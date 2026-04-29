@@ -16,6 +16,9 @@ vi.mock("../../src/core/config.js", () => ({
   SUPABASE_URL: "",
   SUPABASE_ANON_KEY: "",
   APP_VERSION: "test",
+  STORAGE_PREFIX: "wedding_v1_",
+  getSupabaseUrl: vi.fn(() => ""),
+  getSupabaseAnonKey: vi.fn(() => ""),
 }));
 
 vi.mock("../../src/core/state.js", () => ({
@@ -36,7 +39,7 @@ const {
   isRealtimeConnected,
   disconnectRealtime,
   subscribeGuestChanges,
-} = await import("../../src/services/supabase-realtime.js");
+} = await import("../../src/services/realtime.js");
 
 const { storeGet, storeSet } = await import("../../src/core/store.js");
 

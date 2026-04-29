@@ -79,7 +79,7 @@ import {
   onAuthChange,
   currentUser,
 } from "./services/auth.js";
-import { startPresence, onPresenceChange } from "./services/presence-service.js";
+import { startPresence, onPresenceChange } from "./services/realtime.js";
 import { initMonitoring, initWebVitals, captureException } from "./services/observability.js";
 import { migratePlaintextPii } from "./services/privacy.js";
 import {
@@ -412,7 +412,7 @@ let _activeSection = null;
   });
 
   // 11h. S17 — Activate Supabase Realtime when backend is configured
-  import("./services/supabase-realtime.js").then(({ activateRealtimeSync }) => {
+  import("./services/realtime.js").then(({ activateRealtimeSync }) => {
     activateRealtimeSync(["guests", "tables", "config"]).catch(() => {});
   });
 

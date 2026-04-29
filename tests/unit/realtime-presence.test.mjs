@@ -6,7 +6,7 @@ import { describe, it, expect, vi } from "vitest";
 import {
   createPresenceChannel,
   countOnline,
-} from "../../src/services/presence-service.js";
+} from "../../src/services/realtime.js";
 
 // Minimal Supabase Realtime channel mock
 function makeSupabase(overrideState = {}) {

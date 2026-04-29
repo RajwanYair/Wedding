@@ -106,13 +106,14 @@ src/services/observability.js::TS7017::Element implicitly has an 'any' type beca
 src/services/offline.js::TS2339::Property 'SyncManager' does not exist on type 'Window & typeof globalThis'.
 src/services/offline.js::TS7030::Not all code paths return a value.
 src/services/onboarding.js::TS2322::Type 'string | undefined' is not assignable to type 'string'.
-src/services/presence-service.js::TS2554::Expected 1 arguments, but got 2.
 src/services/print-preview.js::TS7053::Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ confirmed: strin
 src/services/privacy.js::TS2862::Type 'T' is generic and can only be indexed for reading.
 src/services/push-notifications.js::TS2322::Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
 src/services/push-notifications.js::TS2339::Property 'failed' does not exist on type '{ ok: boolean; data?: unknown; error?: string | undefined; }'.
 src/services/push-notifications.js::TS2339::Property 'sent' does not exist on type '{ ok: boolean; data?: unknown; error?: string | undefined; }'.
 src/services/push-notifications.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/core/store"' has no exported mem
+src/services/realtime.js::TS2554::Expected 1 arguments, but got 2.
+src/services/realtime.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/misc"' has no exported mem
 src/services/repositories.js::TS1005::'}' expected.
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Guest'. Did you mean to write
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Vendor'. Did you mean to writ
@@ -127,8 +128,6 @@ src/services/seating.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' met
 src/services/seating.js::TS2740::Type '{}' is missing the following properties from type 'SeatingConstraint[]': length, pop, push, concat, and 35 more.
 src/services/state-tracking.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/state-tracking.js::TS2577::Return type annotation circularly references itself.
-src/services/supabase-realtime.js::TS1127::Invalid character.
-src/services/supabase-realtime.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/misc"' has no exported mem
 src/services/sync-manager.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.
 src/services/theme-export.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
 src/services/theme-vars.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.

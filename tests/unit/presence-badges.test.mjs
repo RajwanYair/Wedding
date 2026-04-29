@@ -6,7 +6,7 @@ import {
   isFresh,
   groupByViewing,
   badgeFor,
-} from "../../src/services/presence-service.js";
+} from "../../src/services/realtime.js";
 
 const NOW = Date.parse("2026-04-27T12:00:00Z");
 
