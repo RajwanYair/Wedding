@@ -19,7 +19,7 @@ beforeEach(async () => {
   vi.resetAllMocks();
   vi.resetModules();
   ({ captureHealthError, getHealthReport, resetHealthState } =
-    await import("../../src/services/db-diagnostics.js"));
+    await import("../../src/services/diagnostics.js"));
   resetHealthState();
 });
 

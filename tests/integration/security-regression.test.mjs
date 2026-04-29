@@ -16,7 +16,7 @@ import { createRateLimiter } from "../../src/services/rate-limiter.js";
 import { PII_COLUMNS } from "../../src/services/privacy.js";
 import { createAuditPipeline } from "../../src/services/audit.js";
 import { generateKey, encryptField, decryptField, createSessionGuard } from "../../src/services/security.js";
-import { REQUIRED_RLS_TABLES } from "../../src/services/db-diagnostics.js";
+import { REQUIRED_RLS_TABLES } from "../../src/services/diagnostics.js";
 
 // ── Build a fake JWT ──────────────────────────────────────────────────────
 
