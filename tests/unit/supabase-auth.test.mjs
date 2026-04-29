@@ -11,10 +11,12 @@ vi.mock("../../src/core/config.js", () => ({
   ADMIN_EMAILS: ["admin@example.com", "boss@example.com"],
   BACKEND_TYPE: "supabase",
   APP_VERSION: "7.5.0",
+  STORAGE_PREFIX: "wedding_v1_",
 }));
 
 vi.mock("../../src/core/state.js", () => ({
   load: vi.fn(() => ""),
+  getActiveEventId: vi.fn(() => "default"),
 }));
 
 import {
@@ -23,7 +25,7 @@ import {
   clearSession,
   isAdmin,
   handleOAuthRedirect,
-} from "../../src/services/supabase-auth.js";
+} from "../../src/services/supabase.js";
 
 const SESSION_KEY = STORAGE_KEYS.SUPABASE_SESSION;
 

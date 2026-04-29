@@ -159,7 +159,7 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes('IDB_MIGRATED: "wedding_v1_idb_migrated"'));
     assert.ok(read("src/services/push-notifications.js").includes("STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE"));
     assert.ok(read("src/services/guest-token.js").includes("STORAGE_KEYS.REVOKED_TOKENS"));
-    assert.ok(read("src/services/supabase-auth.js").includes("STORAGE_KEYS.SUPABASE_SESSION"));
+    assert.ok(read("src/services/supabase.js").includes("STORAGE_KEYS.SUPABASE_SESSION"));
     assert.ok(read("src/services/backend.js").includes("STORAGE_KEYS.SHEETS_MIRROR"));
     assert.ok(read("src/core/supabase-client.js").includes("STORAGE_KEYS.SUPABASE_AUTH"));
     assert.ok(read("src/main.js").includes("STORAGE_KEYS.IDB_MIGRATED"));

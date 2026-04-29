@@ -309,7 +309,7 @@ export function preferredTransport(provider) {
 export async function signInWith(provider) {
   const transport = preferredTransport(provider);
   if (transport === "supabase") {
-    const { signInWithProvider } = await import("./supabase-auth.js");
+    const { signInWithProvider } = await import("./supabase.js");
     signInWithProvider(provider);
     return null;
   }
