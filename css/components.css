@@ -3334,6 +3334,67 @@
     }
   }
 
+  /* ── S221: Per-section container queries ── */
+
+  /* Guest cards — stack controls vertically when card is narrow */
+  @container section-pane (max-width: 420px) {
+    .guest-card {
+      grid-template-columns: 1fr;
+    }
+    .guest-card-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .table-assign-row {
+      flex-direction: column;
+    }
+  }
+
+  /* Tables section — single-column layout for narrow panes */
+  @container section-pane (max-width: 460px) {
+    .tables-grid {
+      grid-template-columns: 1fr;
+    }
+    .table-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+
+  /* Analytics — stack chart + legend vertically on narrow panes */
+  @container section-pane (max-width: 520px) {
+    .chart-legend-row {
+      flex-direction: column;
+    }
+    .analytics-kpi-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Checkin list — compact row layout on narrow panes */
+  @container section-pane (max-width: 400px) {
+    .checkin-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+    .checkin-row-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+
+  /* Settings cards — single column on narrow panes */
+  @container section-pane (max-width: 480px) {
+    .settings-card {
+      padding: 1rem;
+    }
+    .settings-card .btn-group {
+      flex-direction: column;
+    }
+  }
+
   /* ── S19b: @starting-style — modal entrance without JS animation class ── */
   /* Animate the backdrop overlay open */
   .modal-overlay {
