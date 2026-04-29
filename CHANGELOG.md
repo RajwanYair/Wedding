@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - **S274** — TSC baseline 71→54: em-dash (U+2014) JSDoc fixes (4 files), `WebsiteConfig` typedef rewrite, `SyncManager` cast, `TS7030` return path, `onboarding.js` null-coalesce, `getHealthReport` JSDoc
 - **S275** — Version bump to v13.9.0; all 3149 tests green
 
+## [13.8.0] — 2025-08-12
 
 > **S261–S265: Service consolidation (44→36 files), TSC baseline 75→71, workspace-switcher storeGet fix, sheets.js offline→resilience import, budget-burndown duplicate typedef.**
 

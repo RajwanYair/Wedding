@@ -1113,9 +1113,9 @@ Storage + Realtime for development without an account.
 | **v13.3.0** | **Released 2025-07-14** | **S206–S215: Notifications · What's New · AR locale · Trusted Types · CSS @scope · Cmd-K · Popover API** | **S206–S215 complete; 3 153 tests; 5 locales; 7 service merges (70→64 files)** |
 | **v13.4.0** | **Released 2025-07-21** | **S216–S225: Dead export wiring · service consolidation · container queries · action namespace · TSC −33** | **S218–S225; 60 service files; baseline 245→212; audit:actions CI gate; 3 153 tests** |
 | **v13.5.0** | **Released 2025-07-28** | **S231–S234: Dead export wiring ×15 · TSC baseline 212→155 · modal dialog audit CI gate · coverage ratchet** | **S231–S234; TS7006/TS7031 zeroed; 10/10 dialogs enforced; all coverage dirs ratcheted; 3 153 tests** |
-| **v13.8.0** | **Released 2025-08-12** | **S261–S265; 36 service files; TSC baseline 71; 3149 tests** |
-| **v13.9.0** | **Released 2025-09-01** | **S270–S274; 31 service files; TSC baseline 54; 3149 tests** |
-| **v13.10.0** | **Released 2026-04-29** | **S276–S284; Phase B1 complete: 33→25 services; TSC baseline 49; 3149 tests; all BaseSection adopted** |
+| **v13.8.0** | **Released 2025-08-12** | **Service consolidation + TSC** | **S261–S265; 36 service files; TSC baseline 71; 3149 tests** |
+| **v13.9.0** | **Released 2025-09-01** | **Service merges + TSC baseline** | **S270–S274; 31 service files; TSC baseline 54; 3149 tests** |
+| **v13.10.0** | **Released 2026-04-29** | **Phase B1 — service reduction complete** | **S276–S284; 33→25 services; TSC 49; 3149 tests; all BaseSection adopted** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
