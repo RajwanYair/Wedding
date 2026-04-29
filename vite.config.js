@@ -92,11 +92,10 @@ export default defineConfig({
       // service wrappers are partially covered here and topped up via E2E.
       // Current floors: any drop fails CI; tests can only push these higher.
       thresholds: {
-        // S289: ratcheted to floor(actual). Stmts | Branch | Funcs | Lines column order.
-        // Measured: stmts 49.2%, branches 44.54%, functions 56.12%, lines 49.48%.
-        // (Slight drop from S254 due to new code in S280–S288 without new tests.)
-        lines: 49,
-        branches: 44,
+        // S303: ratcheted to floor(actual). Stmts | Branch | Funcs | Lines column order.
+        // Measured: stmts 49.84%, branches 45.46%, functions 55.98%, lines 50.27%.
+        lines: 50,
+        branches: 45,
         functions: 55,
         statements: 49,
         // S234 + S289: per-directory ratchet to measured floors (floor(actual)).
