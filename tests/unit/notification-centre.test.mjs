@@ -18,7 +18,7 @@ beforeEach(() => {
 
 describe("S121 — notification-centre", () => {
   it("pushNotification stores newest-first and unreadCount increments", async () => {
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     m.pushNotification({ title: "A" });
     m.pushNotification({ title: "B", level: "warning" });
     const list = m.listNotifications();
@@ -28,7 +28,7 @@ describe("S121 — notification-centre", () => {
   });
 
   it("markRead flips readAt for one item only", async () => {
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     const a = m.pushNotification({ title: "A" });
     m.pushNotification({ title: "B" });
     expect(m.markRead(a.id)).toBe(true);
@@ -36,7 +36,7 @@ describe("S121 — notification-centre", () => {
   });
 
   it("markAllRead marks every item", async () => {
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     m.pushNotification({ title: "A" });
     m.pushNotification({ title: "B" });
     expect(m.markAllRead()).toBe(true);
@@ -45,7 +45,7 @@ describe("S121 — notification-centre", () => {
   });
 
   it("clearRead removes read items only", async () => {
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     const a = m.pushNotification({ title: "A" });
     m.pushNotification({ title: "B" });
     m.markRead(a.id);
@@ -54,7 +54,7 @@ describe("S121 — notification-centre", () => {
   });
 
   it("subscribe fires on push and unsubscribe stops it", async () => {
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     const spy = vi.fn();
     const off = m.subscribe(spy);
     m.pushNotification({ title: "A" });
@@ -65,13 +65,13 @@ describe("S121 — notification-centre", () => {
   });
 
   it("pushNotification throws without title", async () => {
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     expect(() => m.pushNotification(/** @type {any} */ ({}))).toThrow();
   });
 
   it("tolerates corrupt storage payload", async () => {
     _store.set("wedding_v1_notifications", "not-an-array");
-    const m = await import("../../src/services/notification-centre.js");
+    const m = await import("../../src/services/notifications.js");
     expect(m.listNotifications()).toEqual([]);
   });
 });

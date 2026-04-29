@@ -24,7 +24,7 @@ const {
   markAllRead,
   clearRead,
   subscribe,
-} = await import("../../src/services/notification-centre.js");
+} = await import("../../src/services/notifications.js");
 
 describe("NotificationPanel (Sprint 143)", () => {
 

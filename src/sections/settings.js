@@ -22,11 +22,11 @@ import {
   subscribePush,
   unsubscribePush,
   getCachedSubscription,
-} from "../services/push-notifications.js";
+} from "../services/notifications.js";
 import {
   getPreferences,
   updatePreferences,
-} from "../services/notification-centre.js";
+} from "../services/notifications.js";
 import {
   THEME_VARS,
   applyThemeVars,

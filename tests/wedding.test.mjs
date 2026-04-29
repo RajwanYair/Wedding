@@ -157,7 +157,7 @@ describe("Current architecture", function () {
     assert.ok(constantsSource.includes('REVOKED_TOKENS: "wedding_v1_revoked_tokens"'));
     assert.ok(constantsSource.includes('SUPABASE_AUTH: "wedding_v1_supabase_auth"'));
     assert.ok(constantsSource.includes('IDB_MIGRATED: "wedding_v1_idb_migrated"'));
-    assert.ok(read("src/services/push-notifications.js").includes("STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE"));
+    assert.ok(read("src/services/notifications.js").includes("STORAGE_KEYS.PUSH_SUBSCRIPTION_CACHE"));
     assert.ok(read("src/services/guest-token.js").includes("STORAGE_KEYS.REVOKED_TOKENS"));
     assert.ok(read("src/services/supabase.js").includes("STORAGE_KEYS.SUPABASE_SESSION"));
     assert.ok(read("src/services/backend.js").includes("STORAGE_KEYS.SHEETS_MIRROR"));

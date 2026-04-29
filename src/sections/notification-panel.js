@@ -13,7 +13,7 @@ import {
   markRead,
   markAllRead,
   subscribe,
-} from "../services/notification-centre.js";
+} from "../services/notifications.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 
 class NotificationPanelSection extends BaseSection {

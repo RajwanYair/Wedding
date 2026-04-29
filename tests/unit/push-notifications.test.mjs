@@ -10,7 +10,7 @@ import {
   getCachedSubscription,
   dispatchPush,
   sendPushToAdmins,
-} from "../../src/services/push-notifications.js";
+} from "../../src/services/notifications.js";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

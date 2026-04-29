@@ -11,7 +11,7 @@ vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 const {
   getPreferences, updatePreferences, isChannelEnabled,
   isEventEnabled, optOutAll, resetPreferences,
-} = await import("../../src/services/notification-centre.js");
+} = await import("../../src/services/notifications.js");
 
 function seed() {
   initStore({
