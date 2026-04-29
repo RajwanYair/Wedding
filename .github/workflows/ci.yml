@@ -57,6 +57,9 @@ jobs:
       - name: Audit BaseSection adoption — all 23 sections enforced (S296)
         run: node scripts/audit-base-section.mjs --enforce
 
+      - name: Audit CSS @scope — no bare [data-section] selectors (enforce BASELINE=0 — S297)
+        run: node scripts/audit-css-scope.mjs --enforce
+
       - name: Validate Mermaid diagrams (enforce — S236)
         run: node scripts/validate-mermaid.mjs --enforce
 

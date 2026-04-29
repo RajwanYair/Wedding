@@ -172,26 +172,31 @@
     }
   }
 
-  /* ── Analytics Print (S8.4) ── */
-  @media print {
-    .section[data-section="analytics"] .card {
-      break-inside: avoid;
-      box-shadow: none;
-      backdrop-filter: none;
-      border: 1px solid #ccc;
-      background: #fff;
-    }
-    .section[data-section="analytics"] svg {
-      max-width: 100%;
-      print-color-adjust: exact;
-      -webkit-print-color-adjust: exact;
-    }
-    .section[data-section="analytics"] .analytics-activity-list li {
-      border-color: #ccc;
-      color: #000;
-    }
-    .section[data-section="analytics"] .btn {
-      display: none;
+  /* ── Analytics Print (S8.4 / S297 @scope) ── */
+  @scope ([data-section="analytics"]) {
+    @media print {
+      .card {
+        break-inside: avoid;
+        box-shadow: none;
+        backdrop-filter: none;
+        border: 1px solid #ccc;
+        background: #fff;
+      }
+
+      svg {
+        max-width: 100%;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .analytics-activity-list li {
+        border-color: #ccc;
+        color: #000;
+      }
+
+      .btn {
+        display: none;
+      }
     }
   }
 } /* end @layer print */

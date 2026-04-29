@@ -16,7 +16,7 @@ const ROOT = process.cwd();
 const CSS_DIR = join(ROOT, "css");
 
 const { enforce: ENFORCE } = parseAuditArgs();
-const BASELINE = 4;
+const BASELINE = 0;
 
 const files = readdirSync(CSS_DIR).filter((n) => n.endsWith(".css"));
 
@@ -37,7 +37,12 @@ for (const name of files) {
     const closes = (stripped.match(/\}/g) || []).length;
     const inScope = scopeDepths.length > 0 && depth >= scopeDepths[scopeDepths.length - 1];
 
-    if (/\[data-section\s*=/.test(stripped) && /\{/.test(stripped) && !inScope) {
+    if (
+      /\[data-section\s*=/.test(stripped) &&
+      /\{/.test(stripped) &&
+      !inScope &&
+      !/@scope\s*\(/.test(stripped)
+    ) {
       violations.push({ file: rel, line: lineNo, text: stripped.trim() });
     }
     depth += opens - closes;
