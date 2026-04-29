@@ -1,5 +1,5 @@
 /**
- * tests/unit/data-classification.test.mjs — Tests for data-classification.js (Sprint 62)
+ * tests/unit/data-classification.test.mjs — Tests for privacy.js (Sprint 62)
  */
 
 import { describe, it, expect } from "vitest";
@@ -11,7 +11,7 @@ import {
   getSensitiveFields,
   listDomains,
   redactPII,
-} from "../../src/services/data-classification.js";
+} from "../../src/services/privacy.js";
 
 describe("getFieldClassification", () => {
   it("returns correct level for guest.phone", () => {

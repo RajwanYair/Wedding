@@ -13,7 +13,7 @@
 
 import { STORAGE_PREFIX } from "./config.js";
 import { getActiveEventId } from "./state.js";
-import { isPiiKey, savePii } from "../services/pii-storage.js";
+import { isPiiKey, savePii } from "../services/privacy.js";
 
 /** @type {Map<string, Set<Function>>} */
 const _subs = new Map();

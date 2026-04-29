@@ -43,7 +43,7 @@ vi.mock("../../src/core/config.js", () => ({
 }));
 
 const { isPiiKey, savePii, loadPii, migratePlaintextPii } = await import(
-  "../../src/services/pii-storage.js"
+  "../../src/services/privacy.js"
 );
 
 beforeEach(() => {

@@ -7,7 +7,7 @@ import {
   eraseGuest,
   isErased,
   PII_COLUMNS,
-} from "../../src/services/gdpr-erasure.js";
+} from "../../src/services/privacy.js";
 
 function makeChain(resolveWith = { data: null, error: null }) {
   const chain = {};
