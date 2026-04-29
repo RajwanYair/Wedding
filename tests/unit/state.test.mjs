@@ -9,7 +9,11 @@
  */
 
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from "vitest";
-import { save, load, remove, clearAll } from "../../src/core/state.js";
+import {
+  save, load, remove, clearAll,
+  listEvents, getActiveEventId, setActiveEvent, addEvent, removeEvent,
+  restoreActiveEvent, saveGlobal, loadGlobal, clearEventData,
+} from "../../src/core/state.js";
 
 const _PREFIX = "wedding_v1_";
 
@@ -146,5 +150,130 @@ describe("clearAll", () => {
     expect(load("app_key")).toBeUndefined();
     expect(_data["other_app_key"]).toBe("keep");
     delete _data["other_app_key"];
+  });
+});
+
+// ── Event management (S9.1) ───────────────────────────────────────────────
+
+describe("listEvents", () => {
+  it("returns default event when no events stored", () => {
+    const events = listEvents();
+    expect(events.length).toBeGreaterThanOrEqual(1);
+    expect(events[0].id).toBe("default");
+  });
+});
+
+describe("getActiveEventId", () => {
+  it("returns a string event id", () => {
+    const id = getActiveEventId();
+    expect(typeof id).toBe("string");
+  });
+});
+
+describe("setActiveEvent + getActiveEventId", () => {
+  it("updates the active event id", () => {
+    setActiveEvent("wedding2025");
+    expect(getActiveEventId()).toBe("wedding2025");
+    // Reset to default
+    setActiveEvent("default");
+  });
+
+  it("persists to localStorage via saveGlobal", () => {
+    setActiveEvent("test-evt");
+    const stored = loadGlobal("activeEventId");
+    expect(stored).toBe("test-evt");
+    setActiveEvent("default");
+  });
+});
+
+describe("addEvent + listEvents + removeEvent", () => {
+  it("adds a new event to the registry", () => {
+    addEvent("evt-new", "New Event");
+    const events = listEvents();
+    const found = events.find((e) => e.id === "evt-new");
+    expect(found).toBeTruthy();
+    expect(found?.label).toBe("New Event");
+  });
+
+  it("does not add duplicate events", () => {
+    addEvent("evt-dup", "Dup");
+    addEvent("evt-dup", "Dup Again");
+    const events = listEvents();
+    const dups = events.filter((e) => e.id === "evt-dup");
+    expect(dups.length).toBe(1);
+  });
+
+  it("removeEvent removes a non-default event", () => {
+    addEvent("evt-remove", "Remove Me");
+    removeEvent("evt-remove");
+    const events = listEvents();
+    expect(events.find((e) => e.id === "evt-remove")).toBeUndefined();
+  });
+
+  it("removeEvent is a no-op for 'default'", () => {
+    removeEvent("default");
+    const events = listEvents();
+    expect(events.find((e) => e.id === "default")).toBeTruthy();
+  });
+});
+
+describe("restoreActiveEvent", () => {
+  it("reads activeEventId from localStorage", () => {
+    saveGlobal("activeEventId", "restored-evt");
+    restoreActiveEvent();
+    expect(getActiveEventId()).toBe("restored-evt");
+    // Reset
+    setActiveEvent("default");
+  });
+
+  it("defaults to 'default' when nothing stored", () => {
+    // Remove the key
+    mockLS.removeItem(_PREFIX + "activeEventId");
+    restoreActiveEvent();
+    expect(getActiveEventId()).toBe("default");
+  });
+});
+
+// ── saveGlobal + loadGlobal ───────────────────────────────────────────────
+
+describe("saveGlobal + loadGlobal", () => {
+  it("round-trips a value without event scoping", () => {
+    saveGlobal("globalKey", { x: 42 });
+    const val = loadGlobal("globalKey");
+    expect(val).toEqual({ x: 42 });
+  });
+
+  it("returns fallback when key not present", () => {
+    const val = loadGlobal("missing_global_key", "fallback");
+    expect(val).toBe("fallback");
+  });
+
+  it("global key is NOT affected by setActiveEvent", () => {
+    saveGlobal("stable", "yes");
+    setActiveEvent("other-evt");
+    expect(loadGlobal("stable")).toBe("yes");
+    setActiveEvent("default");
+  });
+});
+
+// ── clearEventData ────────────────────────────────────────────────────────
+
+describe("clearEventData", () => {
+  it("removes event-scoped keys for a non-default event", () => {
+    setActiveEvent("clear-test");
+    save("myKey", "value");
+    setActiveEvent("default");
+    clearEventData("clear-test");
+    // After clearing, the event-scoped key should be gone
+    setActiveEvent("clear-test");
+    expect(load("myKey")).toBeUndefined();
+    setActiveEvent("default");
+  });
+
+  it("does not remove global registry keys for default event clear", () => {
+    saveGlobal("events", [{ id: "default", label: "" }]);
+    clearEventData("default");
+    // Global events key should still be present
+    expect(loadGlobal("events")).toBeTruthy();
   });
 });
