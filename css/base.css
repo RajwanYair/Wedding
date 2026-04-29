@@ -115,6 +115,25 @@
 /* S92 — View Transitions API: smooth crossfade between sections.
    Pseudo-elements live outside @layer scope so they cascade above all rules.
    `prefers-reduced-motion` users bypass the animation entirely. */
+
+/* S252 — Scope transitions to the main content area only (not the header/nav) */
+#main-content {
+  view-transition-name: main-content;
+}
+
+::view-transition-old(main-content),
+::view-transition-new(main-content) {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+::view-transition-old(main-content) {
+  animation-name: wm-fade-out;
+}
+::view-transition-new(main-content) {
+  animation-name: wm-fade-in;
+}
+
+/* Legacy root transition — kept for any callers that use withViewTransition() outside nav */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 240ms;

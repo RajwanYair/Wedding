@@ -2,6 +2,7 @@
  * src/core/nav.js — Tab navigation, hash router, swipe, pull-to-refresh
  *
  * S2.1  View Transitions API (graceful fallback)
+ * S252  View Transitions scoped to #main-content (header/nav stay stable)
  * S2.7  Swipe-left / swipe-right between sections
  * S2.8  Pull-to-refresh gesture -> triggers sync callback
  * Router: hash-based section routing with pushState (back/forward button supported)
