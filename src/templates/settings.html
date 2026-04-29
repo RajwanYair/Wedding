@@ -226,6 +226,34 @@
       </label>
     </div>
 
+    <!-- Auto-backup Scheduler (S217) -->
+    <div class="settings-card">
+      <h3>⏱️ <span data-i18n="autobackup_title">גיבוי אוטומטי</span></h3>
+      <p data-i18n="autobackup_desc">גיבוי אוטומטי שומר תמונת מצב כל 30 דקות.</p>
+      <div class="form-row">
+        <label for="autoBackupInterval" data-i18n="autobackup_interval">מרווח (דקות)</label>
+        <input type="number" id="autoBackupInterval" class="input-sm" value="30" min="5" max="120" />
+      </div>
+      <p class="u-text-muted u-text-sm">
+        <span data-i18n="autobackup_never">טרם בוצע</span>:
+        <span id="lastBackupTime">—</span>
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary btn-small" data-action="startAutoBackup" type="button">
+          ▶ <span data-i18n="autobackup_start">הפעל גיבוי</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="stopAutoBackup" type="button">
+          ■ <span data-i18n="autobackup_stop">עצור גיבוי</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="downloadAutoBackup" type="button">
+          ⬇ <span data-i18n="autobackup_download">הורד גיבוי</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="restoreAutoBackup" type="button">
+          ↩ <span data-i18n="autobackup_restore">שחזר מגיבוי</span>
+        </button>
+      </div>
+    </div>
+
     <!-- CSV Import/Export -->
     <div class="settings-card">
       <h3>📊 <span data-i18n="import_csv_title">ייבוא / ייצוא CSV</span></h3>
@@ -258,6 +286,22 @@
       >
         📤 <span data-i18n="action_export">ייצוא CSV</span>
       </button>
+    </div>
+
+    <!-- Data Tools (S217) -->
+    <div class="settings-card">
+      <h3>🔧 <span data-i18n="data_tools_title">כלי נתונים</span></h3>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-small" data-action="exportAllCSV" type="button">
+          📦 <span data-i18n="export_all_csv">ייצוא הכל ל-CSV</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="checkDataIntegrity" type="button">
+          🔍 <span data-i18n="check_data_integrity">בדיקת תקינות נתונים</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="exportDebugReport" type="button">
+          🐛 <span data-i18n="export_debug_report">ייצוא דוח ניפוי שגיאות</span>
+        </button>
+      </div>
     </div>
 
     <!-- QR Code for RSVP -->

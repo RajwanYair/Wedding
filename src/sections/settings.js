@@ -64,6 +64,8 @@ class SettingsSection extends BaseSection {
     _renderDeployButtons();
     // Wire monitoring opt-in toggle (S205)
     _renderMonitoringToggle();
+    // Wire sync queue monitor badge (S217)
+    initQueueMonitor();
   }
 }
 
@@ -568,7 +570,7 @@ export function startAutoBackup(intervalMin = 30) {
 /**
  * Stop automatic backups.
  */
-function stopAutoBackup() {
+export function stopAutoBackup() {
   if (_autoBackupInterval !== null) {
     clearInterval(_autoBackupInterval);
     _autoBackupInterval = null;
@@ -631,7 +633,7 @@ let _peakQueueSize = 0;
  * Start monitoring the sync queue and update the badge in settings.
  * Registers an onSyncStatus listener that refreshes the queue badge.
  */
-export function initQueueMonitor() {
+function initQueueMonitor() {
   _peakQueueSize = 0;
   _renderQueueBadge();
   // Register status listener (replaces previous)

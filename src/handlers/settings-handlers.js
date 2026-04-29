@@ -38,6 +38,13 @@ import {
   importThemeFromJson,
   installPlugin,
   toggleMonitoring,
+  startAutoBackup,
+  stopAutoBackup,
+  downloadAutoBackup,
+  restoreAutoBackup,
+  exportAllCSV,
+  checkDataIntegrity,
+  exportDebugReport,
 } from "../sections/settings.js";
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
@@ -241,4 +248,37 @@ export function register() {
   on("installPlugin", () => installPlugin());
   // S205 — Monitoring opt-in toggle
   on("toggleMonitoring", () => toggleMonitoring());
+  // S217 — Auto-backup
+  on("startAutoBackup", () => {
+    const intervalMin = parseInt(
+      /** @type {HTMLInputElement|null} */ (document.getElementById("autoBackupInterval"))?.value ?? "30",
+      10,
+    );
+    startAutoBackup(isNaN(intervalMin) || intervalMin < 1 ? 30 : intervalMin);
+    showToast(t("autobackup_started"), "success");
+  });
+  on("stopAutoBackup", () => {
+    stopAutoBackup();
+    showToast(t("autobackup_stopped"), "info");
+  });
+  on("downloadAutoBackup", () => downloadAutoBackup());
+  on("restoreAutoBackup", () => {
+    if (!confirm(t("autobackup_restore_confirm"))) return;
+    restoreAutoBackup();
+    showToast(t("autobackup_restored"), "success");
+  });
+  // S217 — Data tools
+  on("exportAllCSV", async () => {
+    showToast(t("export_all_csv"), "info");
+    await exportAllCSV();
+  });
+  on("checkDataIntegrity", () => {
+    const { ok, issues } = checkDataIntegrity();
+    if (ok) {
+      showToast(t("data_integrity_ok"), "success");
+    } else {
+      showToast(t("data_integrity_issues").replace("{n}", String(issues.length)), "error");
+    }
+  });
+  on("exportDebugReport", () => exportDebugReport());
 }

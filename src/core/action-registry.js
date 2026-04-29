@@ -169,6 +169,11 @@ export const ACTIONS = /** @type {const} */ ({
   STOP_AUTO_BACKUP: "stopAutoBackup",
   DOWNLOAD_AUTO_BACKUP: "downloadAutoBackup",
   RESTORE_AUTO_BACKUP: "restoreAutoBackup",
+
+  // ── Data tools ─────────────────────────────────────────────────────────
+  EXPORT_ALL_CSV: "exportAllCSV",
+  CHECK_DATA_INTEGRITY: "checkDataIntegrity",
+  EXPORT_DEBUG_REPORT: "exportDebugReport",
 });
 
 /** @typedef {typeof ACTIONS[keyof typeof ACTIONS]} Action */
