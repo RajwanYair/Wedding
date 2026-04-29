@@ -79,7 +79,7 @@ import {
   onAuthChange,
   currentUser,
 } from "./services/auth.js";
-import { startPresence, onPresenceChange } from "./services/presence.js";
+import { startPresence, onPresenceChange } from "./services/presence-service.js";
 import { initMonitoring, initWebVitals, captureException } from "./services/observability.js";
 import { migratePlaintextPii } from "./services/privacy.js";
 import {

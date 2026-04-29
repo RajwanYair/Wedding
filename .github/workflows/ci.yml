@@ -54,6 +54,12 @@ jobs:
       - name: Audit modal native-dialog adoption (enforce baseline=10 — S233)
         run: node scripts/audit-modals.mjs --baseline=10
 
+      - name: Validate Mermaid diagrams (enforce — S236)
+        run: node scripts/validate-mermaid.mjs --enforce
+
+      - name: Audit JSDoc coverage (enforce 100% — S236)
+        run: node scripts/audit-jsdoc.mjs --enforce
+
       - name: Unit tests (Vitest)
         run: npm test
         env:

@@ -1,4 +1,3 @@
-src/main.js::TS2307::Cannot find module './services/presence.js' or its corresponding type declarations.
 src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/budget")' is n
 src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/changelog")' i
 src/main.js::TS2322::Type 'typeof import("C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/sections/checkin")' is 
