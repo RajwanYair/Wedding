@@ -20,9 +20,9 @@ const SS_SRC = readFileSync(ssPath, "utf8");
 
 // ── Static analysis tests ────────────────────────────────────────────────────
 
-describe("secure-storage.js → crypto.js wiring (static)", () => {
-  it("imports from ./crypto.js", () => {
-    expect(SS_SRC).toContain('from "./crypto.js"');
+describe("secure-storage.js → crypto-security.js wiring (static)", () => {
+  it("imports from ./crypto-security.js", () => {
+    expect(SS_SRC).toContain('from "./crypto-security.js"');
   });
 
   it("imports encryptField from crypto.js", () => {

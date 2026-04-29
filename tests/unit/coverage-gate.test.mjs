@@ -28,17 +28,15 @@ describe("S163: coverage gate — vite.config.js global thresholds", () => {
   });
 
   it("lines threshold is >= 48 (S163 ratchet floor)", () => {
-    const m = viteCfg.match(/\/\/ S163.*\n.*lines:\s*(\d+)/);
-    if (m) {
-      expect(Number(m[1])).toBeGreaterThanOrEqual(48);
-    } else {
-      // fallback: check that thresholds block includes lines: NNN
-      expect(viteCfg).toContain("lines: 48");
-    }
+    const m = viteCfg.match(/lines:\s*(\d+)/);
+    expect(m).not.toBeNull();
+    expect(Number(m?.[1])).toBeGreaterThanOrEqual(48);
   });
 
   it("branches threshold is >= 42 (S163 ratchet floor)", () => {
-    expect(viteCfg).toContain("branches: 42");
+    const m = viteCfg.match(/branches:\s*(\d+)/);
+    expect(m).not.toBeNull();
+    expect(Number(m?.[1])).toBeGreaterThanOrEqual(42);
   });
 
   it("per-directory src/utils/** threshold is present", () => {

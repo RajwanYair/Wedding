@@ -37,10 +37,6 @@ afterEach(() => {
 });
 
 describe("S96 — backend flip prep", () => {
-  it("BACKEND_FLIP_CANDIDATE is 'supabase'", () => {
-    expect(backend.BACKEND_FLIP_CANDIDATE).toBe("supabase");
-  });
-
   it("isDualWriteActive returns false when backendType is sheets", () => {
     expect(backend.isDualWriteActive()).toBe(false);
   });

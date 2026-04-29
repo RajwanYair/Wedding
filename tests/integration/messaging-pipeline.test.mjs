@@ -36,7 +36,7 @@ const { runWACampaign, sendAdHocWhatsApp } =
 const { sendEmailCampaign } =
   await import("../../src/services/email-service.js");
 const { recordDelivery, getDeliveryHistory, getDeliveryStats } =
-  await import("../../src/services/delivery-tracking.js");
+  await import("../../src/services/delivery-service.js");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

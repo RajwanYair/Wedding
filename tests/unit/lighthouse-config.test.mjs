@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { buildLighthouseConfig, getLighthouseLocales } from "../../src/services/lighthouse-config.js";
+import { buildLighthouseConfig, getLighthouseLocales } from "../../src/services/ci-helpers.js";
 
 describe("Lighthouse Config (Sprint 153)", () => {
   describe("getLighthouseLocales", () => {

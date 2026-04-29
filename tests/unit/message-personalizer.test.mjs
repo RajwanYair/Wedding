@@ -8,7 +8,7 @@ import {
   personalizeMessage,
   getVariableHints,
   WEDDING_TEMPLATES,
-} from "../../src/services/message-personalizer.js";
+} from "../../src/services/message-tools.js";
 
 // ── personalizeMessage ─────────────────────────────────────────────────────
 

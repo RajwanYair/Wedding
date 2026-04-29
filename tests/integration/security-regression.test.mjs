@@ -15,9 +15,9 @@ import { decodeJwtPayload, hasRole, isTokenExpired } from "../../src/services/au
 import { createRateLimiter } from "../../src/services/rate-limiter.js";
 import { PII_COLUMNS } from "../../src/services/gdpr-erasure.js";
 import { createAuditPipeline } from "../../src/services/audit.js";
-import { generateKey, encryptField, decryptField } from "../../src/services/crypto.js";
-import { createSessionGuard } from "../../src/services/session-security.js";
-import { REQUIRED_RLS_TABLES } from "../../src/services/rls-audit.js";
+import { generateKey, encryptField, decryptField } from "../../src/services/crypto-security.js";
+import { createSessionGuard } from "../../src/services/crypto-security.js";
+import { REQUIRED_RLS_TABLES } from "../../src/services/db-diagnostics.js";
 
 // ── Build a fake JWT ──────────────────────────────────────────────────────
 

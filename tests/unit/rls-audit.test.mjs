@@ -8,7 +8,7 @@ import {
   listPolicies,
   verifySelectPolicies,
   REQUIRED_RLS_TABLES,
-} from "../../src/services/rls-audit.js";
+} from "../../src/services/db-diagnostics.js";
 
 function makeRpcSupabase(returnData, returnError = null) {
   return {

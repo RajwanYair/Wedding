@@ -11,7 +11,7 @@ import {
   importRawKey,
   encryptField,
   decryptField,
-} from "../../src/services/crypto.js";
+} from "../../src/services/crypto-security.js";
 
 describe("generateKey", () => {
   it("returns a CryptoKey", async () => {

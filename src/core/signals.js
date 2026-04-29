@@ -119,3 +119,6 @@ function _computed(project, sources) {
     },
   });
 }
+
+// S208: re-export as public API (used by tests and external consumers)
+export { _signal as signal, _computed as computed };

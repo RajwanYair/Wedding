@@ -14,7 +14,7 @@ const {
   getLatestDelivery,
   getDeliveryStats,
   clearGuestDeliveries,
-} = await import("../../src/services/delivery-tracking.js");
+} = await import("../../src/services/delivery-service.js");
 
 function seedStore() {
   initStore({

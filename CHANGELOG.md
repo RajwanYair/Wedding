@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.3.0] — 2025-07-14
+
+> **S206–S215: Notification init, What's New wire, dead export purge, service consolidation, coverage gate ratchet, AR locale, Trusted Types CSP, @scope CSS, Cmd-K search palette, Popover API bell.**
+
+### Added
+
+- **S206** — `notification-panel` + `workspace-switcher` sections mounted in `main.js` bootstrap
+- **S207** — `maybeShowWhatsNew()` wired after auth load; v13.2.0 + v13.1.0 release entries in `src/core/whats-new.js`; 10 `whats_new_*` i18n keys in all 5 locales
+- **S209** — 7 service file pairs merged (70 → 64 files): `dns-helpers.js`, `message-tools.js`, `state-tracking.js`, `ci-helpers.js`, `crypto-security.js`, `db-diagnostics.js`, `delivery-service.js`
+- **S210** — 45 new unit tests: `vcard.test.mjs` (13), `payment-link.test.mjs` (11), `dns-helpers.test.mjs` (21); coverage gate ratcheted lines 48→50, branches 42→43
+- **S211** — AR locale: 143 missing keys filled; i18n parity now 100% across ar/en/es/fr/he
+- **S212** — CSP Trusted Types: added `require-trusted-types-for 'script'` + `trusted-types wedding-html default dompurify` to both `index.html` meta and `public/_headers`
+- **S213** — CSS `@scope` per-section: 4 new blocks (run-of-show, contact-form, guest-landing, changelog) completing 23-section coverage
+- **S214** — Cmd-K command palette: `src/modals/searchModal.html` + `src/handlers/search-handler.js` wire `buildSearchIndex` + `searchIndex` with keyboard navigation; 4 i18n keys + CSS
+- **S215** — Popover API adoption: notification bell `#notifPanel` uses `popover="auto"` + `togglePopover()` with `u-hidden` class fallback
+
+### Changed
+
+- **S208** — Dead export purge: 21 functions unexported/prefixed with `_`; export count 50→29
+- **S215** — Notification panel CSS: added `:popover-open` state styles with `position: fixed` for top-layer placement
+
+### Fixed
+
+- Test import paths updated for all 14 merged service files (S209 fallout)
+- `coverage-gate.test.mjs` ratchet floor checks use `>=` regex instead of exact string match
+- `signals.js` re-exports `signal` and `computed` as named public API aliases
+
 ## [13.2.0] — 2025-07-10
 
 > **S196–S205: Deploy buttons, DNS UI, PII bootstrap, ICU plurals, FR/ES translation, IDB queue, print preview, GlitchTip monitoring.**

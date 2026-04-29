@@ -8,7 +8,7 @@ import {
   validateTable,
   validateVendor,
   validateExpense,
-} from "../../src/services/domain-validator.js";
+} from "../../src/services/dns-helpers.js";
 
 // ── validateGuest ─────────────────────────────────────────────────────────
 
