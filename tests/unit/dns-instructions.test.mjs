@@ -8,7 +8,7 @@ import {
   getDnsInstructions,
   formatDnsRecord,
   getProviderKeys,
-} from "../../src/services/dns-helpers.js";
+} from "../../src/services/web-presence.js";
 
 describe("DNS Instructions (Sprint 154)", () => {
   describe("DNS_PROVIDERS", () => {

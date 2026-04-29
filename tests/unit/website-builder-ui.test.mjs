@@ -8,7 +8,7 @@ import {
   buildSiteSlug,
   WEBSITE_SECTIONS,
   validateSlug,
-} from "../../src/services/website-builder.js";
+} from "../../src/services/web-presence.js";
 
 describe("WebsiteBuilderUI (Sprint 139)", () => {
   describe("buildSiteSlug", () => {

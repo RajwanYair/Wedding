@@ -14,7 +14,7 @@ import {
   buildWebsiteConfig,
   buildSiteSlug,
   WEBSITE_SECTIONS,
-} from "../services/website-builder.js";
+} from "../services/web-presence.js";
 import { readBrowserStorageJson, writeBrowserStorageJson } from "../core/storage.js";
 import { validateDomain, buildDnsInstructions } from "../utils/dns-cname.js";
 

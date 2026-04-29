@@ -8,7 +8,7 @@ import {
   updateWebsiteConfig,
   WEBSITE_SECTIONS,
   validateSlug,
-} from "../../src/services/website-builder.js";
+} from "../../src/services/web-presence.js";
 
 describe("S134 — website-builder", () => {
   it("buildSiteSlug produces URL-safe slug", () => {

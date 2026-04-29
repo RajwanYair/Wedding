@@ -11,7 +11,7 @@ import {
   validateVendor,
   validateTable,
   validateExpense,
-} from "../../src/services/dns-helpers.js";
+} from "../../src/services/web-presence.js";
 
 describe("dns-helpers — DNS_PROVIDERS", () => {
   it("is a non-empty frozen array", () => {
