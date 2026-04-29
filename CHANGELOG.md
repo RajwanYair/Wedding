@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.7.0] — 2025-08-11
+
+> **S248–S254: Service merges (45→44 files), TSC baseline 100→75, View Transitions scoped to `#main-content`, Facebook OAuth removal, coverage ratchet 49/44→50/45, locale parity fixes.**
+
+### Added
+
+- **S252** — View Transitions API scoped to `#main-content`: `::view-transition-name: main-content` in CSS so header/nav stay stable during section switches; graceful `prefers-reduced-motion` bypass
+
+### Changed
+
+- **S248** — Merged `print-preview.js` + `share.js` → `export.js` (46→45 service files)
+- **S249** — Merged `whats-new-engine.js` → `onboarding.js` (45→44); `src/core/whats-new.js` updated import
+- **S250** — Removed Facebook OAuth: dropped `FB_APP_ID`, `loginFacebook` handler, `btn-facebook` button + CSS, `auth_continue_fb` i18n key from he/en; `OAuthProvider` type updated
+- **S251** — TSC baseline 100→75: `getSupabaseClient` static import replaces 4× dynamic `getSupabase` in `auth.js`; `SECTIONS` type → `Record<string, any>` (−20 TS2322); `captureMessage?` optional in observability type
+- **S253** — Merged `event-schedule.js` + `run-of-show.js` → `schedule.js` (45→44 service files)
+- **S254** — Coverage ratchet: global floors raised (lines 49→50, branches 44→45)
+
+### Fixed
+
+- **S254** — `pii-storage.test.mjs` mock pointed at old `secure-storage.js`; updated to `security.js` (S246 merge); 5 previously failing tests now pass
+- **S254** — Removed `auth_continue_fb` key from `ar.json`, `fr.json`, `es.json` (parity with he/en after S250)
+
 ## [13.6.0] — 2025-08-10
 
 > **S236–S244: CI hardening (Mermaid/JSDoc enforcement), service merges (60→49 files), TSC baseline 152→100 (null-safety), Supabase migrations CI step, Trusted Types CSP gates.**
