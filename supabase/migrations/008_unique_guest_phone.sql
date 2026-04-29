@@ -14,9 +14,18 @@
 
 DROP INDEX IF EXISTS idx_guests_phone_unique;
 
-CREATE UNIQUE INDEX idx_guests_phone_unique
-  ON guests (phone)
-  WHERE phone <> '';
-
-COMMENT ON INDEX idx_guests_phone_unique IS
-  'Enforces unique phone numbers; empty-string phones are excluded (multiple allowed).';
+-- Postgres does not support CREATE UNIQUE INDEX IF NOT EXISTS directly;
+-- the DO block below achieves the same idempotency guard (S304 — ADR-043).
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE schemaname = 'public'
+      AND tablename  = 'guests'
+      AND indexname  = 'idx_guests_phone_unique'
+  ) THEN
+    CREATE UNIQUE INDEX idx_guests_phone_unique
+      ON public.guests (phone)
+      WHERE phone <> '';
+  END IF;
+END $$;

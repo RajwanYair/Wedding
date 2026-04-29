@@ -72,7 +72,7 @@ jobs:
       - name: Audit Supabase migrations (enforce — S243)
         run: node scripts/audit-supabase-migrations.mjs --enforce
 
-      - name: Supabase SQL lint — static db lint gate (baseline=1 legacy, enforce — S294)
+      - name: Supabase SQL lint — BASELINE=0 (S304: 008 fixed with DO block guard)
         run: node scripts/audit-supabase-lint.mjs --enforce
 
       - name: Architecture check — no section→service direct imports (enforce — S290)

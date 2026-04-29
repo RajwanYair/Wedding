@@ -26,7 +26,7 @@ import { parseAuditArgs } from "./lib/audit-utils.mjs";
 const ROOT = process.cwd();
 const DIR = join(ROOT, "supabase", "migrations");
 const { enforce: ENFORCE, baseline: BASELINE_ARG } = parseAuditArgs();
-const BASELINE_DEFAULT = 1; // 008_unique_guest_phone — legacy, immutable.
+const BASELINE_DEFAULT = 0; // S304 (v13.12.0): migration 025 adds idempotent DO $$ guard for 008.
 const BASELINE = BASELINE_ARG > 0 ? BASELINE_ARG : BASELINE_DEFAULT;
 
 /**
@@ -95,10 +95,17 @@ for (const f of files) {
   // Postgres `CREATE TRIGGER` does NOT support IF NOT EXISTS; the
   // canonical idempotent pattern is `DROP TRIGGER IF EXISTS … CREATE
   // TRIGGER`. We accept either form.
+  // Also skip CREATE statements inside DO $$ ... END $$ blocks — these are
+  // guarded by PL/pgSQL IF NOT EXISTS checks in the surrounding block.
   const createRe = /\bcreate\s+(table|index|unique\s+index|trigger)\b/gi;
   for (const m of sql.matchAll(createRe)) {
     const slice = sql.slice(m.index ?? 0, (m.index ?? 0) + 200);
     if (/if\s+not\s+exists/i.test(slice)) continue;
+    // Skip if inside a DO $$ ... END $$ block (PL/pgSQL guard pattern).
+    const before = sql.slice(0, m.index ?? 0);
+    const doCount = (before.match(/\bDO\s+\$\$/gi) ?? []).length;
+    const endCount = (before.match(/\bEND\s+\$\$/gi) ?? []).length;
+    if (doCount > endCount) continue; // inside a DO block
     if (/^trigger$/i.test(m[1])) {
       // Look back for a matching `DROP TRIGGER IF EXISTS <same name>`.
       const before = sql.slice(0, m.index ?? 0);
