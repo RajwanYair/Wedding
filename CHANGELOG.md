@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.15.0] — 2026-05-09
+
+> **S326–S335: Phase C2 — Trusted Types 19→5, handler+render tests +177, state multi-event tests, idb-queue tests, coverage ratchet +3%.**
+
+### Fixed
+
+- **S326+S327** — Trusted Types: `analytics.js` 14 sinks → `_setSvg`/DOM API (19→5 TT sinks); CI baseline updated to `--baseline=5`
+
+### Added
+
+- **S328** — Unit tests for `guest-handlers.js`: 27 new tests (save, filter, sort, import/export CSV, batch ops, WhatsApp)
+- **S329** — Unit tests for `settings-handlers.js`: 67 new tests (Sheets sync, auth, allowlist, theme, data integrity, backup)
+- **S330** — Unit tests for `section-handlers.js`: 43 new tests (RSVP, gallery, WhatsApp, timeline, expenses, contact form)
+- **S331** — Unit tests for `analytics.js` renders: 16 new tests (budget chart, arrival forecast, CSV export, print functions)
+- **S332** — Unit tests for `state.js` event management: 19 new tests (setActiveEvent, addEvent, removeEvent, restoreActiveEvent, saveGlobal, loadGlobal, clearEventData)
+- **S334** — Unit tests for `idb-queue.js`: 9 new tests (fallback + mock IDB happy paths — write/read round-trip, overwrite, non-array guard)
+
+### Changed
+
+- **S333** — Coverage ratchet uplift: global `lines:56 branches:49 functions:64 statements:55`; per-dir thresholds raised to floor(actual) for core/utils/services/sections
+- **S335** — Version bump to v13.15.0; 3494 tests green; 0 lint errors
+
 ## [13.14.0] — 2026-05-08
 
 > **S316–S325: Phase C1 — Trusted Types ratchet 32→19, test coverage uplift +122 tests (S316–S323), coverage ratchet bump.**

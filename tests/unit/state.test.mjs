@@ -228,7 +228,7 @@ describe("restoreActiveEvent", () => {
 
   it("defaults to 'default' when nothing stored", () => {
     // Remove the key
-    mockLS.removeItem(_PREFIX + "activeEventId");
+    mockLS.removeItem(`${_PREFIX}activeEventId`);
     restoreActiveEvent();
     expect(getActiveEventId()).toBe("default");
   });
