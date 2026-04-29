@@ -4,6 +4,14 @@
 
 import { t } from "../core/i18n.js";
 
+/** SVG namespace constant. */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+/** Shorthand: create an SVG element in the SVG namespace. */
+function _svg(tag) {
+  return document.createElementNS(SVG_NS, tag);
+}
+
 /**
  * Render a donut SVG chart into the given container.
  * @param {string} containerId
@@ -24,7 +32,16 @@ export function renderDonut(containerId, slices) {
     r = 45,
     strokeW = 18;
   const circ = 2 * Math.PI * r;
-  let svg = `<svg viewBox="0 0 120 120" role="img" aria-label="${t("chart")}"><title>${t("chart")}</title>`;
+
+  const svgEl = _svg("svg");
+  svgEl.setAttribute("viewBox", "0 0 120 120");
+  svgEl.setAttribute("role", "img");
+  svgEl.setAttribute("aria-label", t("chart"));
+
+  const titleEl = _svg("title");
+  titleEl.textContent = t("chart");
+  svgEl.appendChild(titleEl);
+
   let offset = -Math.PI / 2;
 
   slices.forEach((sl) => {
@@ -32,15 +49,32 @@ export function renderDonut(containerId, slices) {
     const angle = (sl.value / total) * 2 * Math.PI;
     const dashLen = (sl.value / total) * circ;
     const rotate = (offset * 180) / Math.PI;
-    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sl.color}"
-      stroke-width="${strokeW}" stroke-dasharray="${dashLen} ${circ - dashLen}"
-      transform="rotate(${rotate} ${cx} ${cy})" />`;
+
+    const circle = _svg("circle");
+    circle.setAttribute("cx", String(cx));
+    circle.setAttribute("cy", String(cy));
+    circle.setAttribute("r", String(r));
+    circle.setAttribute("fill", "none");
+    circle.setAttribute("stroke", sl.color);
+    circle.setAttribute("stroke-width", String(strokeW));
+    circle.setAttribute("stroke-dasharray", `${dashLen} ${circ - dashLen}`);
+    circle.setAttribute("transform", `rotate(${rotate} ${cx} ${cy})`);
+    svgEl.appendChild(circle);
+
     offset += angle;
   });
 
-  svg += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="14" fill="var(--text)">${total}</text>`;
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: all values are numbers/CSS vars/i18n strings
+  const textEl = _svg("text");
+  textEl.setAttribute("x", String(cx));
+  textEl.setAttribute("y", String(cy + 5));
+  textEl.setAttribute("text-anchor", "middle");
+  textEl.setAttribute("font-size", "14");
+  textEl.setAttribute("fill", "var(--text)");
+  textEl.textContent = String(total);
+  svgEl.appendChild(textEl);
+
+  container.textContent = "";
+  container.appendChild(svgEl);
 }
 
 /**
@@ -58,18 +92,48 @@ export function renderBar(containerId, bars) {
     labelW = 80,
     barMaxW = 120;
   const h = bars.length * rowH + 4;
-  let svg = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${t("chart")}"><title>${t("chart")}</title>`;
+
+  const svgEl = _svg("svg");
+  svgEl.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svgEl.setAttribute("role", "img");
+  svgEl.setAttribute("aria-label", t("chart"));
+
+  const titleEl = _svg("title");
+  titleEl.textContent = t("chart");
+  svgEl.appendChild(titleEl);
 
   bars.forEach((b, i) => {
     const y = i * rowH;
     const barW = (b.value / maxVal) * barMaxW;
-    svg += `<text x="0" y="${y + 14}" font-size="10" fill="var(--text)">${b.label}</text>`;
-    svg += `<rect x="${labelW}" y="${y + 4}" width="${barW}" height="${rowH - 6}" fill="${b.color}" rx="3"/>`;
-    svg += `<text x="${labelW + barW + 4}" y="${y + 14}" font-size="10" fill="var(--text)">${b.value}</text>`;
+
+    const labelText = _svg("text");
+    labelText.setAttribute("x", "0");
+    labelText.setAttribute("y", String(y + 14));
+    labelText.setAttribute("font-size", "10");
+    labelText.setAttribute("fill", "var(--text)");
+    labelText.textContent = b.label;
+    svgEl.appendChild(labelText);
+
+    const rect = _svg("rect");
+    rect.setAttribute("x", String(labelW));
+    rect.setAttribute("y", String(y + 4));
+    rect.setAttribute("width", String(barW));
+    rect.setAttribute("height", String(rowH - 6));
+    rect.setAttribute("fill", b.color);
+    rect.setAttribute("rx", "3");
+    svgEl.appendChild(rect);
+
+    const valueText = _svg("text");
+    valueText.setAttribute("x", String(labelW + barW + 4));
+    valueText.setAttribute("y", String(y + 14));
+    valueText.setAttribute("font-size", "10");
+    valueText.setAttribute("fill", "var(--text)");
+    valueText.textContent = String(b.value);
+    svgEl.appendChild(valueText);
   });
 
-  svg += `</svg>`;
-  container.innerHTML = svg; // safe: all values are numbers/CSS vars/i18n strings
+  container.textContent = "";
+  container.appendChild(svgEl);
 }
 
 /**
