@@ -14,7 +14,7 @@ vi.mock("../../src/core/sync.js", () => ({
   queueSize: vi.fn(() => 0),
   queueKeys: vi.fn(() => []),
 }));
-vi.mock("../../src/services/nfc-session.js", () => ({
+vi.mock("../../src/services/security.js", () => ({
   isNFCSupported: vi.fn(() => false),
   startNFCScan: vi.fn(),
 }));

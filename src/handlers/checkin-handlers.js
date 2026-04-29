@@ -42,7 +42,7 @@ export function register() {
   on("stopNFCCheckin", () => stopNFCCheckin());
   on("printGuestQrBadges", () => printGuestQrBadges());
   on("writeNFCForGuest", (el) =>
-    import("../services/nfc-session.js").then(({ writeNFCTag }) =>
+    import("../services/security.js").then(({ writeNFCTag }) =>
       writeNFCTag(el.dataset.actionArg ?? "").catch(() => {}),
     ),
   );

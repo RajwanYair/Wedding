@@ -1,9 +1,10 @@
 /**
- * src/services/security.js — Encryption, session guard, and secure storage (S246)
+ * src/services/security.js — Encryption, session guard, secure storage, NFC + check-in (S246 + S282)
  *
  * Merged from:
- *   - crypto-security.js (Sprint 83/87) — AES-GCM primitives + session inactivity guard
- *   - secure-storage.js (Phase A4 P0)   — Encrypted localStorage for tokens & PII
+ *   - crypto-security.js  (S83/S87) — AES-GCM primitives + session inactivity guard
+ *   - secure-storage.js   (Phase A4) — Encrypted localStorage for tokens & PII
+ *   - nfc-session.js      (S259)     — Web NFC API + day-of check-in session manager
  *
  * ROADMAP §5 Phase A — Auth tokens in plaintext localStorage are a top P0 risk
  * (OWASP A02:2021 Cryptographic Failures). This module wraps `localStorage`
@@ -24,6 +25,7 @@
  */
 
 import { STORAGE_PREFIX } from "../core/config.js";
+import { storeGet, storeSet } from "../core/store.js";
 
 // ── §1 — AES-GCM primitives ──────────────────────────────────────────────
 
@@ -389,4 +391,144 @@ export function getSecureStorageStatus(sampleKey = "auth_session") {
     /* ignore — corrupt or missing entries fall back to false */
   }
   return { available: true, deviceKeyPresent, sealed };
+}
+
+// ══════════════════════════════════════════════════════════════════════════════════════════════════
+// §4 — NFC: Web NFC API wrapper (from nfc-session.js §1, S259/S23)
+// ══════════════════════════════════════════════════════════════════════════════════════════════════
+
+/** @typedef {{ guestId: string, event: string }} NFCCheckinPayload */
+
+/**
+ * True when the Web NFC API (NDEFReader) is available.
+ * @returns {boolean}
+ */
+export function isNFCSupported() {
+  return typeof globalThis !== "undefined" && typeof globalThis.NDEFReader === "function";
+}
+
+/**
+ * Start listening for NDEF records. Calls `onRecord(payload)` for each
+ * matching wedding check-in record.
+ * @param {(payload: NFCCheckinPayload) => void} onRecord
+ * @param {object} [options]
+ * @param {string} [options.recordType]
+ * @returns {Promise<() => void>}
+ */
+export async function startNFCScan(onRecord, { recordType = "text" } = {}) {
+  if (!isNFCSupported()) throw new Error("Web NFC not supported on this device");
+  const NDEFReader = /** @type {any} */ (globalThis.NDEFReader);
+  const reader = new NDEFReader();
+  const controller = new AbortController();
+  reader.addEventListener("reading", (/** @type {any} */ event) => {
+    for (const record of event.message.records) {
+      if (record.recordType === recordType) {
+        try {
+          const decoder = new TextDecoder();
+          const text = decoder.decode(record.data);
+          const payload = /** @type {NFCCheckinPayload} */ (JSON.parse(text));
+          if (payload?.guestId && payload?.event === "wedding_checkin") onRecord(payload);
+        } catch { /* Unreadable record — ignore */ }
+      }
+    }
+  });
+  reader.addEventListener("readingerror", () => {
+    console.warn("[NFC] Reading error — scanner still active");
+  });
+  await reader.scan({ signal: controller.signal });
+  return function stopNFCScan() { controller.abort(); };
+}
+
+/**
+ * Write a wedding check-in record to the NFC tag currently in range.
+ * @param {string} guestId
+ * @returns {Promise<void>}
+ */
+export async function writeNFCTag(guestId) {
+  if (!isNFCSupported()) throw new Error("Web NFC not supported on this device");
+  const NDEFReader = /** @type {any} */ (globalThis.NDEFReader);
+  const writer = new NDEFReader();
+  const payload = JSON.stringify({ guestId, event: "wedding_checkin" });
+  const encoder = new TextEncoder();
+  await writer.write({ records: [{ recordType: "text", data: encoder.encode(payload) }] });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════════════════════════
+// §5 — Check-in session manager (from nfc-session.js §2, S259/S116)
+// ══════════════════════════════════════════════════════════════════════════════════════════════════
+
+/**
+ * @typedef {{
+ *   id: string, eventId: string, startedAt: number, endedAt?: number | null,
+ *   checkIns: Record<string, { ts: number, partySize: number }>, active: boolean,
+ * }} CheckinSession
+ */
+
+/** @returns {CheckinSession[]} */
+function _getSessions() {
+  return /** @type {CheckinSession[]} */ (storeGet("checkinSessions") ?? []);
+}
+/** @param {CheckinSession[]} sessions */
+function _saveSessions(sessions) { storeSet("checkinSessions", sessions); }
+function _sessionId() { return `ci_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; }
+
+/** Start a new check-in session. @param {{ eventId?: string }} [opts] @returns {string} */
+export function startSession(opts = {}) {
+  const session = /** @type {CheckinSession} */ ({
+    id: _sessionId(), eventId: opts.eventId ?? "_default",
+    startedAt: Date.now(), endedAt: null, checkIns: {}, active: true,
+  });
+  _saveSessions([..._getSessions(), session]);
+  return session.id;
+}
+
+/** End an active check-in session. @param {string} sessionId @returns {boolean} */
+export function endSession(sessionId) {
+  const sessions = _getSessions();
+  const idx = sessions.findIndex((s) => s.id === sessionId);
+  const _sess = sessions[idx];
+  if (idx === -1 || !_sess || !_sess.active) return false;
+  sessions[idx] = { ..._sess, active: false, endedAt: Date.now() };
+  _saveSessions(sessions);
+  return true;
+}
+
+/** Get a session by id. @param {string} sessionId @returns {CheckinSession | null} */
+export function getSession(sessionId) {
+  return _getSessions().find((s) => s.id === sessionId) ?? null;
+}
+
+/**
+ * Record a guest check-in.
+ * @returns {"ok" | "already_checked_in" | "session_not_found" | "session_ended"}
+ */
+export function checkIn(sessionId, guestId, partySize = 1) {
+  const sessions = _getSessions();
+  const idx = sessions.findIndex((s) => s.id === sessionId);
+  if (idx === -1) return "session_not_found";
+  const session = sessions[idx];
+  if (!session) return "session_not_found";
+  if (!session.active) return "session_ended";
+  if (session.checkIns[guestId]) return "already_checked_in";
+  session.checkIns[guestId] = { ts: Date.now(), partySize };
+  sessions[idx] = { ...session };
+  _saveSessions(sessions);
+  return "ok";
+}
+
+/** @param {string} sessionId @param {string} guestId @returns {boolean} */
+export function isCheckedIn(sessionId, guestId) {
+  return Boolean(getSession(sessionId)?.checkIns[guestId]);
+}
+
+/**
+ * Get check-in stats for a session.
+ * @returns {{ guestCount: number, partySize: number, isActive: boolean, startedAt: number } | null}
+ */
+export function getSessionStats(sessionId) {
+  const session = getSession(sessionId);
+  if (!session) return null;
+  const entries = Object.values(session.checkIns);
+  const partySize = entries.reduce((s, e) => s + e.partySize, 0);
+  return { guestCount: entries.length, partySize, isActive: session.active, startedAt: session.startedAt };
 }

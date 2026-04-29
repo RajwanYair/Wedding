@@ -10,7 +10,7 @@ vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 const {
   startSession, endSession, getSession,
   checkIn, isCheckedIn, getSessionStats,
-} = await import("../../src/services/nfc-session.js");
+} = await import("../../src/services/security.js");
 
 function seed() {
   initStore({

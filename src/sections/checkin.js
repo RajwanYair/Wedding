@@ -11,7 +11,7 @@ import { t } from "../core/i18n.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { announce } from "../core/ui.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
-import { isNFCSupported, startNFCScan } from "../services/nfc-session.js";
+import { isNFCSupported, startNFCScan } from "../services/security.js";
 import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
 import { buildCheckinUrl, getQrDataUrl } from "../utils/qr-code.js";
 
