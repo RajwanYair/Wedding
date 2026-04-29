@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.10.0] — 2026-04-29
+
+> **S276–S284: Phase B1 complete — service reduction 33→25, TSC baseline 54→49, all 23 BaseSection sections adopted.**
+
+### Changed
+
+- **S276** — Deleted orphaned `src/services/run-of-show.js` (33→32 service files)
+- **S277** — Merged `workspace-roles.js` + `onboarding.js` → `workspace.js` (32→31)
+- **S278** — Merged `privacy.js` + `audit.js` → `compliance.js` (31→30)
+- **S279** — Absorbed `budget-burndown.js` into `analytics.js` (30→29)
+- **S280** — Absorbed `media-plugins.js` into `export.js`; deleted dead `print-preview.js` (29→27)
+- **S281** — Absorbed `search-index.js` into `analytics.js` (27→26)
+- **S282** — Absorbed `nfc-session.js` into `security.js` (26→25 — **Phase B1 target reached**)
+- **S283** — TypeScript baseline reduced 54→49: JSDoc type fixes in theme/capacitor-config/landing/guest-service/storage/tables/workspace-switcher
+- **S284** — BaseSection audit complete: all 23 sections confirmed fully adopted (no migration needed)
+- **S285** — Version bump to v13.10.0; 3149 tests green; 0 lint errors
+
 ## [13.9.0] — 2025-09-01
 
 > **S270–S274: Service merges (36→31 files), TSC baseline 71→54 (17 errors fixed), em-dash JSDoc fixes, platform-ops/wa-messaging restructure.**

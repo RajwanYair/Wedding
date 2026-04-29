@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.9.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.10.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,11 +20,12 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2025-09-01, v13.9.0):** **3 149 tests passing** across 225 files · 0 lint errors / 0 warnings
+**State (2026-04-29, v13.10.0):** **3 149 tests passing** across 225 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 24
 Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
+**Phase B1 reached**: services 33→25 files · TSC baseline 54→49 · all 23 BaseSection sections adopted.
 Sprints S270–S274 complete: service merges (36→31 files), TSC baseline 71→54, em-dash JSDoc fixes,
 platform-ops/wa-messaging/print-preview/run-of-show services restructured.
 
@@ -75,16 +76,16 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.9.0 · 2025-09-01
+### Actual state — v13.10.0 · 2026-04-29
 
 | Metric | Value | Health |
 | --- | --- | --- |
 | Tests | **3 149 passing · 225 files · 0 Node warnings** | ✅ |
-| TypeScript errors | baseline 54 (was 71 at v13.8) — S274 JSDoc + typedef fixes | ⚠ ratchet active |
+| TypeScript errors | baseline 49 (was 54 at v13.9) — S283 JSDoc + typedef fixes | ⚠ ratchet active |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
 | Sections | **23** modules · **18** templates · **8** modals | ✅ |
-| Services | **31** files (was 36 at v13.8, S270–S273 merges) | ⚠ target ≤ 25 (Phase B1) |
+| Services | **25** files (was 33 at v13.9, S276–S282 merges — **Phase B1 reached**) | ✅ target ≤ 25 |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
@@ -1114,6 +1115,7 @@ Storage + Realtime for development without an account.
 | **v13.5.0** | **Released 2025-07-28** | **S231–S234: Dead export wiring ×15 · TSC baseline 212→155 · modal dialog audit CI gate · coverage ratchet** | **S231–S234; TS7006/TS7031 zeroed; 10/10 dialogs enforced; all coverage dirs ratcheted; 3 153 tests** |
 | **v13.8.0** | **Released 2025-08-12** | **S261–S265; 36 service files; TSC baseline 71; 3149 tests** |
 | **v13.9.0** | **Released 2025-09-01** | **S270–S274; 31 service files; TSC baseline 54; 3149 tests** |
+| **v13.10.0** | **Released 2026-04-29** | **S276–S284; Phase B1 complete: 33→25 services; TSC baseline 49; 3149 tests; all BaseSection adopted** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1122,5 +1124,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2025-09-01 · v13.9.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-04-29 · v13.10.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*
