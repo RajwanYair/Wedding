@@ -8,7 +8,7 @@ import {
   isDirty, hasUnsavedChanges, getDirtyKeys, dirtyCount,
   snapshotBaseline, checkDirty, clearBaselines,
   getDirtyStateSummary,
-} from "../../src/services/state-tracking.js";
+} from "../../src/services/event-manager.js";
 
 beforeEach(() => {
   markAllClean();

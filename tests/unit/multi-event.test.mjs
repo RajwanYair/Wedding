@@ -22,7 +22,7 @@ vi.mock("../../src/core/state.js", () => ({
 const {
   createEvent, getEvent, listEvents, updateEvent,
   deleteEvent, setActiveEvent, getActiveEvent, clearActiveEvent,
-} = await import("../../src/services/multi-event.js");
+} = await import("../../src/services/event-manager.js");
 
 function seed() {
   globalState.events = [];

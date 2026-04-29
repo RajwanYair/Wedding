@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { createOptimisticManager } from "../../src/services/state-tracking.js";
+import { createOptimisticManager } from "../../src/services/event-manager.js";
 
 function makeStore(initial = {}) {
   const db = { ...initial };

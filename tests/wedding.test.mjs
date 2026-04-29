@@ -224,7 +224,7 @@ describe("Current architecture", function () {
   });
 
   it("multi-event state relies on the global state layer instead of event-scoped store keys", function () {
-    const multiEvent = read("src/services/multi-event.js");
+    const multiEvent = read("src/services/event-manager.js");
     const stateSource = read("src/core/state.js");
     assert.ok(multiEvent.includes('from "../core/state.js"'));
     assert.ok(multiEvent.includes("loadGlobal"));
