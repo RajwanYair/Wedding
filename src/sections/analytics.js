@@ -5,7 +5,8 @@
  * No canvas, no third-party charts — pure SVG.
  */
 
-import { storeGet, storeSubscribeScoped, cleanupScope } from "../core/store.js";
+import { storeGet } from "../core/store.js";
+import { BaseSection, fromSection } from "../core/section-base.js";
 import { t, currentLang } from "../core/i18n.js";
 import { MEAL_TYPES, GUEST_GROUPS } from "../core/constants.js";
 import {
@@ -29,75 +30,69 @@ import {
   escHtml as _escHtml,
 } from "../utils/charts.js";
 
-const _SCOPE = "analytics";
-
-export function mount(/** @type {HTMLElement} */ _container) {
-  storeSubscribeScoped("guests", renderAnalytics, _SCOPE);
-  storeSubscribeScoped("guests", renderSeatingMap, _SCOPE);
-  storeSubscribeScoped("expenses", renderBudgetChart, _SCOPE);
-  storeSubscribeScoped("vendors", _renderVendorTimeline, _SCOPE);
-  storeSubscribeScoped("vendors", renderBudgetChart, _SCOPE);
-  storeSubscribeScoped("tables", _renderTableFill, _SCOPE);
-  storeSubscribeScoped("tables", renderSeatingMap, _SCOPE);
-  storeSubscribeScoped("vendors", renderPaymentSchedule, _SCOPE);
-  storeSubscribeScoped("guests", renderRsvpTimeline, _SCOPE);
-  storeSubscribeScoped("expenses", renderExpenseDonut, _SCOPE);
-  storeSubscribeScoped(
-    "vendors",
-    () => {
+class AnalyticsSection extends BaseSection {
+  async onMount() {
+    this.subscribe("guests", renderAnalytics);
+    this.subscribe("guests", renderSeatingMap);
+    this.subscribe("expenses", renderBudgetChart);
+    this.subscribe("vendors", _renderVendorTimeline);
+    this.subscribe("vendors", renderBudgetChart);
+    this.subscribe("tables", _renderTableFill);
+    this.subscribe("tables", renderSeatingMap);
+    this.subscribe("vendors", renderPaymentSchedule);
+    this.subscribe("guests", renderRsvpTimeline);
+    this.subscribe("expenses", renderExpenseDonut);
+    this.subscribe("vendors", () => {
       checkBudgetOvershoot();
       renderArrivalForecast();
-    },
-    _SCOPE,
-  );
-  storeSubscribeScoped("guests", renderArrivalForecast, _SCOPE);
-  storeSubscribeScoped("tables", renderArrivalForecast, _SCOPE);
-  // S22.2 expense trend chart
-  storeSubscribeScoped("expenses", renderExpenseTrend, _SCOPE);
-  // S24.4 tag breakdown
-  storeSubscribeScoped("guests", renderTagBreakdown, _SCOPE);
-  // F4.1.2 no-show prediction
-  storeSubscribeScoped("guests", renderNoShowPrediction, _SCOPE);
-  // F4.3.2 response histogram
-  storeSubscribeScoped("guests", renderResponseHistogram, _SCOPE);
-  // F4.3.3 budget burn-down
-  storeSubscribeScoped("expenses", renderBudgetBurndown, _SCOPE);
-  // F4.3.4 seating score
-  storeSubscribeScoped("guests", renderSeatingScore, _SCOPE);
-  storeSubscribeScoped("tables", renderSeatingScore, _SCOPE);
-  // Phase 10.3 error analytics
-  storeSubscribeScoped("appErrors", renderErrorAnalytics, _SCOPE);
-  // C1: invitation engagement funnel (Sprint 36)
-  storeSubscribeScoped("invitationAnalytics", renderInvitationEngagementFunnel, _SCOPE);
-  // C1: RSVP conversion funnel (Sprint 44)
-  storeSubscribeScoped("guests", renderRsvpFunnel, _SCOPE);
-  // S146: outreach funnel (rsvp-funnel.js)
-  storeSubscribeScoped("guests", renderOutreachFunnel, _SCOPE);
-  renderAnalytics();
-  renderBudgetChart();
-  _renderVendorTimeline();
-  _renderTableFill();
-  _renderActivityFeed();
-  renderSeatingMap();
-  renderPaymentSchedule();
-  renderRsvpTimeline();
-  renderExpenseDonut();
-  renderArrivalForecast();
-  renderExpenseTrend(); // S22.2
-  renderTagBreakdown(); // S24.4
-  renderNoShowPrediction(); // F4.1.2
-  renderResponseHistogram(); // F4.3.2
-  renderBudgetBurndown(); // F4.3.3
-  renderSeatingScore(); // F4.3.4
-  renderErrorAnalytics(); // Phase 10.3
-  renderInvitationEngagementFunnel(); // C1 Sprint 36
-  renderRsvpFunnel(); // C1 Sprint 44
-  renderOutreachFunnel(); // S146
+    });
+    this.subscribe("guests", renderArrivalForecast);
+    this.subscribe("tables", renderArrivalForecast);
+    // S22.2 expense trend chart
+    this.subscribe("expenses", renderExpenseTrend);
+    // S24.4 tag breakdown
+    this.subscribe("guests", renderTagBreakdown);
+    // F4.1.2 no-show prediction
+    this.subscribe("guests", renderNoShowPrediction);
+    // F4.3.2 response histogram
+    this.subscribe("guests", renderResponseHistogram);
+    // F4.3.3 budget burn-down
+    this.subscribe("expenses", renderBudgetBurndown);
+    // F4.3.4 seating score
+    this.subscribe("guests", renderSeatingScore);
+    this.subscribe("tables", renderSeatingScore);
+    // Phase 10.3 error analytics
+    this.subscribe("appErrors", renderErrorAnalytics);
+    // C1: invitation engagement funnel (Sprint 36)
+    this.subscribe("invitationAnalytics", renderInvitationEngagementFunnel);
+    // C1: RSVP conversion funnel (Sprint 44)
+    this.subscribe("guests", renderRsvpFunnel);
+    // S146: outreach funnel (rsvp-funnel.js)
+    this.subscribe("guests", renderOutreachFunnel);
+    renderAnalytics();
+    renderBudgetChart();
+    _renderVendorTimeline();
+    _renderTableFill();
+    _renderActivityFeed();
+    renderSeatingMap();
+    renderPaymentSchedule();
+    renderRsvpTimeline();
+    renderExpenseDonut();
+    renderArrivalForecast();
+    renderExpenseTrend(); // S22.2
+    renderTagBreakdown(); // S24.4
+    renderNoShowPrediction(); // F4.1.2
+    renderResponseHistogram(); // F4.3.2
+    renderBudgetBurndown(); // F4.3.3
+    renderSeatingScore(); // F4.3.4
+    renderErrorAnalytics(); // Phase 10.3
+    renderInvitationEngagementFunnel(); // C1 Sprint 36
+    renderRsvpFunnel(); // C1 Sprint 44
+    renderOutreachFunnel(); // S146
+  }
 }
 
-export function unmount() {
-  cleanupScope(_SCOPE);
-}
+export const { mount, unmount } = fromSection(new AnalyticsSection("analytics"));
 
 // ── Chart rendering ───────────────────────────────────────────────────────
 

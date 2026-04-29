@@ -54,6 +54,9 @@ jobs:
       - name: Audit modal native-dialog adoption (enforce baseline=10 — S233)
         run: node scripts/audit-modals.mjs --baseline=10
 
+      - name: Audit BaseSection adoption — all 23 sections enforced (S296)
+        run: node scripts/audit-base-section.mjs --enforce
+
       - name: Validate Mermaid diagrams (enforce — S236)
         run: node scripts/validate-mermaid.mjs --enforce
 

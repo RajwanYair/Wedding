@@ -15,7 +15,7 @@ const ROOT = process.cwd();
 const SECTIONS = join(ROOT, "src/sections");
 
 const { enforce: ENFORCE } = parseAuditArgs();
-const BASELINE = 19;
+const BASELINE = 0;
 
 const files = readdirSync(SECTIONS).filter((n) => n.endsWith(".js"));
 
