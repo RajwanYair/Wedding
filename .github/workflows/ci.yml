@@ -60,6 +60,9 @@ jobs:
       - name: Audit JSDoc coverage (enforce 100% — S236)
         run: node scripts/audit-jsdoc.mjs --enforce
 
+      - name: Audit Supabase migrations (enforce — S243)
+        run: node scripts/audit-supabase-migrations.mjs --enforce
+
       - name: Unit tests (Vitest)
         run: npm test
         env:

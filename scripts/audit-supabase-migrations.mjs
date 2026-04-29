@@ -90,6 +90,10 @@ for (let i = 1; i < numbers.length; i++) {
 const createdTables = new Set();
 const rlsEnabledTables = new Set();
 const indexedColumns = new Set(); // "table.column"
+/** Tables that get updated_at via ALTER TABLE ADD COLUMN in any migration */
+const updatedAtAddedTables = new Set();
+/** Tables that get created_at via ALTER TABLE ADD COLUMN in any migration */
+const createdAtAddedTables = new Set();
 
 // First pass: collect table names and RLS enables from combined SQL
 for (const { sql } of allContent) {
@@ -113,6 +117,17 @@ for (const { sql } of allContent) {
     // extract first column name from index expression
     const firstCol = m[2].trim().split(/[\s,(]/)[0].replace(/['"]/g, "").toLowerCase();
     indexedColumns.add(`${table}.${firstCol}`);
+  }
+  // Collect tables that get updated_at or created_at added via ALTER TABLE ADD COLUMN
+  for (const m of sql.matchAll(
+    /ALTER\s+TABLE\s+(?:IF\s+EXISTS\s+)?(?:\w+\.)?["']?(\w+)["']?\s+ADD\s+COLUMN\s+(?:IF\s+NOT\s+EXISTS\s+)?\s*updated_at\b/gi,
+  )) {
+    updatedAtAddedTables.add(m[1].toLowerCase());
+  }
+  for (const m of sql.matchAll(
+    /ALTER\s+TABLE\s+(?:IF\s+EXISTS\s+)?(?:\w+\.)?["']?(\w+)["']?\s+ADD\s+COLUMN\s+(?:IF\s+NOT\s+EXISTS\s+)?\s*created_at\b/gi,
+  )) {
+    createdAtAddedTables.add(m[1].toLowerCase());
   }
 }
 
@@ -159,13 +174,15 @@ for (const { file, sql } of allContent) {
     }
   }
 
-  // Check 6: created_at without updated_at (and vice versa) in same CREATE TABLE
+  // Check 6: created_at without updated_at (and vice versa) — cross-file aware
+  // A table added via ALTER TABLE ADD COLUMN in any migration is treated as having the column.
   for (const m of sql.matchAll(
     /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:\w+\.)?["']?(\w+)["']?\s*\(([^;]+?)\)/gis,
   )) {
+    const tblName = m[1].toLowerCase();
     const body = m[2];
-    const hasCreatedAt = /\bcreated_at\b/i.test(body);
-    const hasUpdatedAt = /\bupdated_at\b/i.test(body);
+    const hasCreatedAt = /\bcreated_at\b/i.test(body) || createdAtAddedTables.has(tblName);
+    const hasUpdatedAt = /\bupdated_at\b/i.test(body) || updatedAtAddedTables.has(tblName);
     if (hasCreatedAt && !hasUpdatedAt) {
       issue(file, `Table "${m[1]}" has created_at but no updated_at`);
     }
