@@ -187,6 +187,15 @@ export function register() {
   on("toggleNotifPanel", () => toggleNotifPanel());
   on("markAllNotifRead", () => markAllNotifRead());
 
+/** Render a safe HTML string into `target` via DOMParser (no innerHTML). */
+function _setPreviewHtml(target, html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  target.textContent = "";
+  for (const child of doc.body.childNodes) {
+    target.appendChild(document.importNode(child, true));
+  }
+}
+
   // ── Run-of-show editor (S144) ──
   on("rosAddItem", () => rosAddItem());
   on("rosResetDefault", () => rosResetDefault());
@@ -200,7 +209,7 @@ export function register() {
         document.getElementById("printSectionSelect")
       );
       const pane = document.getElementById("printPreviewPane");
-      if (sel && pane) pane.innerHTML = buildPreviewHtml(sel.value);
+      if (sel && pane) _setPreviewHtml(pane, buildPreviewHtml(sel.value));
     });
   });
   on("previewPrintSection", () => {
@@ -208,7 +217,7 @@ export function register() {
       document.getElementById("printSectionSelect")
     );
     const pane = document.getElementById("printPreviewPane");
-    if (sel && pane) pane.innerHTML = buildPreviewHtml(sel.value);
+    if (sel && pane) _setPreviewHtml(pane, buildPreviewHtml(sel.value));
   });
   on("executePrint", () => {
     const sel = /** @type {HTMLSelectElement|null} */ (

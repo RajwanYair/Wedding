@@ -78,8 +78,8 @@ jobs:
       - name: Architecture check — no section→service direct imports (enforce — S290)
         run: node scripts/arch-check.mjs --strict
 
-      - name: Audit Trusted Types sinks — enforce baseline=32 ratchet (S311)
-        run: node scripts/audit-trusted-types.mjs --baseline=32
+      - name: Audit Trusted Types sinks — enforce baseline=19 ratchet (S318-S321)
+        run: node scripts/audit-trusted-types.mjs --baseline=19
 
       - name: Validate Trusted Types + CSP directives present (enforce — S244)
         run: |

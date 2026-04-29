@@ -33,7 +33,7 @@ const TYPE_ICONS = {
  * @param {HTMLElement} list
  */
 function _renderResults(results, list) {
-  list.innerHTML = "";
+  list.textContent = "";
   if (!results.length) {
     const li = document.createElement("li");
     li.className = "cmd-palette-empty";
