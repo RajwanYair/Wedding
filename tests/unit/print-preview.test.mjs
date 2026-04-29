@@ -27,7 +27,7 @@ beforeEach(() => {
 });
 
 const { buildPreviewHtml, executePrint, PRINT_TEMPLATES } =
-  await import("../../src/services/print-preview.js");
+  await import("../../src/services/export.js");
 
 describe("PrintPreview (Sprint 149)", () => {
   describe("PRINT_TEMPLATES", () => {

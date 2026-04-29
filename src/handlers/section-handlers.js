@@ -39,7 +39,7 @@ import {
   addItem as rosAddItem,
   resetDefault as rosResetDefault,
 } from "../sections/run-of-show.js";
-import { buildPreviewHtml, executePrint } from "../services/print-preview.js";
+import { buildPreviewHtml, executePrint } from "../services/export.js";
 
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).

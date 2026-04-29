@@ -7,7 +7,7 @@ import {
   isNativeShareSupported,
   shareWithFallback as share,
   buildShareUrl,
-} from "../../src/services/share.js";
+} from "../../src/services/export.js";
 
 describe("isNativeShareSupported", () => {
   it("returns boolean", () => {

@@ -2,7 +2,7 @@
  * tests/unit/share.test.mjs — Web Share API service (S23f)
  */
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { isShareSupported, canShareFiles, share, shareGuestRsvpLink } from "../../src/services/share.js";
+import { isShareSupported, canShareFiles, share, shareGuestRsvpLink } from "../../src/services/export.js";
 
 function installShare(impl) {
   Object.defineProperty(navigator, "share", { configurable: true, writable: true, value: impl });

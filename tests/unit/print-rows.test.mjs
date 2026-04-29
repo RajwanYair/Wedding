@@ -8,7 +8,7 @@ import {
   buildPrintableHtml,
   escapeHtml,
   printHtmlDocument,
-} from "../../src/services/print-preview.js";
+} from "../../src/services/export.js";
 
 const tables = [
   { name: "ראשונה", capacity: 8 },
