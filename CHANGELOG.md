@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.16.0] — 2026-05-10
+
+> **S336–S345: Phase C3 — coverage sprints: sync/storage, vendors/timeline/budget/expenses/whatsapp/tables/checkin section helpers, coverage ratchet +3%, 3697 tests.**
+
+### Added
+
+- **S336** — Unit tests for `sync.js` re-export bridge (7) + `storage.js` browser/session fns (+18): 25 new tests
+- **S337** — Unit tests for `vendors.js` data helpers: 32 new tests (stats, payment summary, timeline, category, contract, ratings, budget share, CRUD)
+- **S338** — Unit tests for `timeline.js` data helpers: 23 new tests (save, delete, toggle-done, stats, duration, upcoming, CSV export)
+- **S339** — Unit tests for `budget.js` data helpers: 27 new tests (save, delete, summary, vs-actual, monthly, utilization, forecast, top expenses)
+- **S340** — Unit tests for `expenses.js` data helpers: 23 new tests (save, delete, summary, monthly trend, largest, category filter, CSV export)
+- **S341** — Unit tests for `whatsapp.js` data helpers: 27 new tests (link gen, message build, mark sent, unsent count, thank-you, send rate, stats by group, ICS)
+- **S342** — Unit tests for `tables.js` data helpers: 22 new tests (save, delete, auto-assign, stats, mixed diets, utilization, side balance, over-capacity, unseated breakdown)
+- **S343** — Unit tests for `checkin.js` data helpers: 24 new tests (kiosk mode, check-in, stats, rate by side/table, VIP/accessibility, timeline, reset, gift mode)
+
+### Changed
+
+- **S344** — Coverage ratchet uplift: global `lines:57 branches:50 functions:65 statements:57`; per-dir thresholds raised to floor(actual) for sections/core/utils
+- **S345** — Version bump to v13.16.0; 3697 tests green; 0 lint errors
+
 ## [13.15.0] — 2026-05-09
 
 > **S326–S335: Phase C2 — Trusted Types 19→5, handler+render tests +177, state multi-event tests, idb-queue tests, coverage ratchet +3%.**

@@ -74,11 +74,11 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.15.0 · 2026-05-09
+### Actual state — v13.16.0 · 2026-05-10
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **3 494 passing · 241 files · 0 Node warnings** | ✅ |
+| Tests | **3 697 passing · 249 files · 0 Node warnings** | ✅ |
 | TypeScript errors | **0** — baseline cleared in S293 (was 49 at v13.10) | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
@@ -88,7 +88,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 | CSS @scope | 0 bare [data-section] selectors (S297) | ✅ |
 | Trusted Types | 5 structural sinks (ratchet enforced, S327) | ✅ |
 | SQL lint | 0 violations (S304) | ✅ |
-| Coverage | lines 53% · branches 46% (floor ratchet, S324) | ✅ |
+| Coverage | lines 57% · branches 50% (floor ratchet, S344) | ✅ |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
