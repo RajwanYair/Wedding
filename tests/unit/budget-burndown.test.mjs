@@ -1,6 +1,6 @@
 /**
  * tests/unit/budget-burndown.test.mjs — Sprint 51 / B6
- * Unit tests for src/services/budget-burndown.js
+ * Unit tests for src/services/analytics.js
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -9,7 +9,7 @@ import { initStore } from "../../src/core/store.js";
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 
 const { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct } =
-  await import("../../src/services/budget-burndown.js");
+  await import("../../src/services/analytics.js");
 
 const EXPENSES = [
   { id: "e1", amount: 5000, createdAt: "2026-01-10T00:00:00Z" },

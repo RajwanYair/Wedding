@@ -10,7 +10,7 @@ vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 const {
   createEnvelope, recordSpend, getEnvelopeSummary,
   getAllSummaries, getTotalBudget, getOverBudgetCategories,
-} = await import("../../src/services/budget-burndown.js");
+} = await import("../../src/services/analytics.js");
 
 function seed() {
   initStore({
