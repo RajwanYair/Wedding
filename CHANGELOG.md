@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.13.0] — 2026-05-07
+
+> **S306–S315: Phase C0 coverage uplift, venue links, Trusted Types ratchet, undo on delete.**
+
+### Added
+
+- **S306** — Unit tests for `charts.js` (`escSvg`, `escHtml`, `renderDonut`, `renderBar`, `setStatText`): 25 new tests
+- **S307** — Unit tests for `run-of-show.js` section module (lifecycle, addItem, resetDefault, overlap)
+- **S308** — Unit tests for `invitation.js` section module (`updateWeddingDetails`, `batchMarkInvitationSent`)
+- **S309** — Wire `venue-links.js` to landing: `buildWazeUrl`/`buildGoogleMapsUrl` with lat/lon coordinates; Google Maps button in landing template; `venueLat`/`venueLon` fields in invitation form + store defaults
+- **S313** — `pushUndo` on `deleteGuest()` in guests section — undo stack on single guest delete; `undo_delete_guest` i18n key (5 locales)
+
+### Fixed
+
+- **S311** — Trusted Types: converted `charts.js` from `innerHTML` string injection to `createElementNS` DOM SVG API (34→32 TT sinks); CI baseline updated to `--baseline=32`
+
+### Changed
+
+- **S314** — Coverage ratchet uplift: `functions 55→56`, `statements 49→50` (actuals ~56.47%/~50.35%)
+- **S315** — Version bump to v13.13.0; 3195 tests green; 0 lint errors
+
 ## [13.12.0] — 2026-05-05
 
 > **S296–S305: Phase B CI hardening — BaseSection 100%, CSS @scope 0, console.error ADR-032, Trusted Types ratchet, SQL lint 0, coverage uplift.**
