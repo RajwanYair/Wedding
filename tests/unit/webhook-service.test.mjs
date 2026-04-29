@@ -12,7 +12,7 @@ const {
   updateWebhook, removeWebhook,
   dispatchWebhookEvent, getWebhookDeliveries,
   verifyWebhookSignature,
-} = await import("../../src/services/delivery.js");
+} = await import("../../src/services/outreach.js");
 
 function seed() {
   initStore({

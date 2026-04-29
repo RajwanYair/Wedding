@@ -14,8 +14,8 @@ vi.mock("../../src/services/backend.js", () => ({
 }));
 
 import { initStore, storeSet } from "../../src/core/store.js";
-const { createCampaign, queueCampaign } = await import("../../src/services/campaign.js");
-const { runWACampaign, sendAdHocWhatsApp } = await import("../../src/services/campaign.js");
+const { createCampaign, queueCampaign } = await import("../../src/services/outreach.js");
+const { runWACampaign, sendAdHocWhatsApp } = await import("../../src/services/outreach.js");
 import { makeGuest } from "./helpers.js";
 
 function seedStore(guests = []) {

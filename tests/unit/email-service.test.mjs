@@ -13,13 +13,13 @@ vi.mock("../../src/services/backend.js", () => ({
 }));
 
 import { initStore } from "../../src/core/store.js";
-const { createCampaign, queueCampaign } = await import("../../src/services/campaign.js");
+const { createCampaign, queueCampaign } = await import("../../src/services/outreach.js");
 const {
   isValidEmail,
   sendEmail,
   sendEmailBatch,
   sendEmailCampaign,
-} = await import("../../src/services/delivery.js");
+} = await import("../../src/services/outreach.js");
 import { makeGuest } from "./helpers.js";
 
 function seedStore(guests = []) {

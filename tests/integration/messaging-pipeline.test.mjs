@@ -30,13 +30,13 @@ vi.mock("../../src/services/backend.js", () => ({
 
 import { initStore } from "../../src/core/store.js";
 const { createCampaign, queueCampaign, getCampaign, getCampaignStats } =
-  await import("../../src/services/campaign.js");
+  await import("../../src/services/outreach.js");
 const { runWACampaign, sendAdHocWhatsApp } =
-  await import("../../src/services/campaign.js");
+  await import("../../src/services/outreach.js");
 const { sendEmailCampaign } =
-  await import("../../src/services/delivery.js");
+  await import("../../src/services/outreach.js");
 const { recordDelivery, getDeliveryHistory, getDeliveryStats } =
-  await import("../../src/services/delivery.js");
+  await import("../../src/services/outreach.js");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

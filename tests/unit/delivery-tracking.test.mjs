@@ -14,7 +14,7 @@ const {
   getLatestDelivery,
   getDeliveryStats,
   clearGuestDeliveries,
-} = await import("../../src/services/delivery.js");
+} = await import("../../src/services/outreach.js");
 
 function seedStore() {
   initStore({

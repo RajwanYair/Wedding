@@ -17,7 +17,7 @@ const {
   cancelCampaign,
   recordSent,
   getCampaignStats,
-} = await import("../../src/services/campaign.js");
+} = await import("../../src/services/outreach.js");
 
 function seedStore() {
   initStore({
