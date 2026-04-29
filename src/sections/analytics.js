@@ -12,13 +12,17 @@ import {
   getTopCategories,
   getMonthlyTotals,
   getBudgetUtilization,
-} from "../services/expense-analytics.js";
+} from "../services/financial-analytics.js";
 import {
   uniqueOpens,
   uniqueClicks,
   uniqueRsvps,
-} from "../services/invitation-analytics.js";
-import { getRsvpFunnel, getRsvpConversionRates, unseatedConfirmedCount, buildRsvpFunnel, rsvpConversionRate } from "../services/rsvp-analytics.js";
+  getRsvpFunnel,
+  getRsvpConversionRates,
+  unseatedConfirmedCount,
+  buildRsvpFunnel,
+  rsvpConversionRate,
+} from "../services/guest-analytics.js";
 import {
   renderDonut as _renderDonut,
   renderBar as _renderBar,

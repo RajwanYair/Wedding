@@ -11,7 +11,7 @@ const {
   recordEvent, getGuestEvents, getEventsByType,
   uniqueOpens, uniqueClicks, uniqueRsvps,
   getFunnelStats, clearAnalytics,
-} = await import("../../src/services/invitation-analytics.js");
+} = await import("../../src/services/guest-analytics.js");
 
 function seed() {
   initStore({

@@ -1,6 +1,6 @@
 /**
  * tests/unit/rsvp-analytics.test.mjs — Sprint 51 / B6
- * Unit tests for src/services/rsvp-analytics.js
+ * Unit tests for src/services/guest-analytics.js
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -9,7 +9,7 @@ import { initStore } from "../../src/core/store.js";
 vi.mock("../../src/services/sheets.js", () => ({ enqueueWrite: vi.fn() }));
 
 const { getRsvpFunnel, getRsvpConversionRates, unseatedConfirmedCount } =
-  await import("../../src/services/rsvp-analytics.js");
+  await import("../../src/services/guest-analytics.js");
 
 const GUESTS = [
   { id: "g1", status: "confirmed", phone: "054-100-0001", tableId: "t1", count: 2 },

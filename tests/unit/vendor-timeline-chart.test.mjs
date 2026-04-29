@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 const { buildPaymentTimeline, buildOutstandingByVendor, topVendorsByCost } =
-  await import("../../src/services/vendor-analytics.js");
+  await import("../../src/services/financial-analytics.js");
 
 describe("VendorTimelineChart (Sprint 147)", () => {
   describe("buildPaymentTimeline", () => {

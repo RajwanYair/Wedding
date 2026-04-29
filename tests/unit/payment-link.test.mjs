@@ -30,7 +30,7 @@ describe("payment-link — buildBitLink", () => {
   it("includes description truncated to 100 chars", () => {
     const desc = "A".repeat(150);
     const link = buildBitLink({ description: desc });
-    expect(link).toContain("message=" + "A".repeat(100));
+    expect(link).toContain(`message=${"A".repeat(100)}`);
   });
 
   it("builds full URL with all params", () => {

@@ -1,14 +1,17 @@
 /**
- * src/services/rsvp-analytics.js — RSVP funnel analytics (Sprint 44 / C1)
+ * src/services/guest-analytics.js — Guest RSVP + invitation analytics (S216)
  *
- * Computes a 6-stage RSVP conversion funnel from the guests store.
+ * Merged from:
+ *   - rsvp-analytics.js (Sprint 44 / C1) — RSVP funnel, conversion rates
+ *   - invitation-analytics.js (Sprint 122)  — invitation open/click/RSVP events
+ *
  * Pure functions — no DOM, no network.
- *
- * Funnel stages:
- *   Invited → Reachable → Responded → Confirmed → Attending → Seated
  */
 
-import { storeGet } from "../core/store.js";
+import { storeGet, storeSet } from "../core/store.js";
+import { enqueueWrite } from "./sheets.js";
+
+// ── RSVP Funnel Analytics ────────────────────────────────────────────────────
 
 /**
  * @typedef {{ id: string, firstName?: string, status?: string,
@@ -25,7 +28,7 @@ import { storeGet } from "../core/store.js";
  */
 
 /** @returns {GuestRecord[]} */
-function _all() {
+function _allGuests() {
   const raw = storeGet("guests");
   if (!raw) return [];
   return Array.isArray(raw) ? raw : Object.values(raw);
@@ -36,7 +39,7 @@ function _all() {
  * @returns {RsvpFunnelStages}
  */
 export function getRsvpFunnel() {
-  const guests = _all();
+  const guests = _allGuests();
   const invited = guests.length;
   const reachable = guests.filter((g) => g.phone && String(g.phone).trim() !== "").length;
   const responded = guests.filter((g) => g.status && g.status !== "pending").length;
@@ -70,17 +73,16 @@ export function getRsvpConversionRates() {
  * @returns {number}
  */
 export function unseatedConfirmedCount() {
-  return _all().filter((g) => g.status === "confirmed" && !g.tableId).length;
+  return _allGuests().filter((g) => g.status === "confirmed" && !g.tableId).length;
 }
 
-// ── Funnel chart helpers (merged from rsvp-funnel.js, S123) ───────────────
+// ── Funnel chart helpers ─────────────────────────────────────────────────────
 
 /** @typedef {{ id: string, status?: "confirmed"|"pending"|"declined"|"maybe", invited?: boolean, sent?: boolean, opened?: boolean, respondedAt?: string|null }} GuestRsvp */
 /** @typedef {{ key: string, label: string, count: number, pct: number, dropoff: number }} FunnelStep */
 
 /**
  * Build a 5-stage RSVP funnel for chart consumption.
- * Inputs are guest rows; outputs are step+count+percentage tuples.
  * @param {GuestRsvp[]} guests
  * @returns {FunnelStep[]}
  */
@@ -125,4 +127,109 @@ export function rsvpConversionRate(guests) {
   if (responded === 0) return 0;
   const confirmed = list.filter((g) => g.status === "confirmed").length;
   return confirmed / responded;
+}
+
+// ── Invitation Event Analytics ───────────────────────────────────────────────
+
+const _INVITE_KEY = "invitationAnalytics";
+
+/**
+ * @typedef {{ guestId: string, type: "open"|"click"|"rsvp",
+ *   timestamp: string, meta?: Record<string, unknown> }} AnalyticsEvent
+ */
+
+/** @returns {AnalyticsEvent[]} */
+function _allEvents() {
+  return storeGet(_INVITE_KEY) ?? [];
+}
+function _saveEvents(list) {
+  storeSet(_INVITE_KEY, list);
+  enqueueWrite(_INVITE_KEY, () => Promise.resolve());
+}
+
+/**
+ * Record an analytics event for a guest invitation.
+ * @param {string} guestId
+ * @param {"open"|"click"|"rsvp"} type
+ * @param {Record<string, unknown>} [meta]
+ */
+export function recordEvent(guestId, type, meta = {}) {
+  if (!guestId) throw new Error("guestId required");
+  if (!["open", "click", "rsvp"].includes(type)) throw new Error(`Unknown event type: ${type}`);
+  _saveEvents([..._allEvents(), { guestId, type, timestamp: new Date().toISOString(), meta }]);
+}
+
+/**
+ * Get all events for a guest.
+ * @param {string} guestId
+ * @returns {AnalyticsEvent[]}
+ */
+export function getGuestEvents(guestId) {
+  return _allEvents().filter((e) => e.guestId === guestId);
+}
+
+/**
+ * Get events of a specific type.
+ * @param {"open"|"click"|"rsvp"} type
+ * @returns {AnalyticsEvent[]}
+ */
+export function getEventsByType(type) {
+  return _allEvents().filter((e) => e.type === type);
+}
+
+/**
+ * Count of unique guests who opened the invitation.
+ * @returns {number}
+ */
+export function uniqueOpens() {
+  return new Set(
+    _allEvents()
+      .filter((e) => e.type === "open")
+      .map((e) => e.guestId),
+  ).size;
+}
+
+/**
+ * Count of unique guests who clicked a link.
+ * @returns {number}
+ */
+export function uniqueClicks() {
+  return new Set(
+    _allEvents()
+      .filter((e) => e.type === "click")
+      .map((e) => e.guestId),
+  ).size;
+}
+
+/**
+ * Count of unique guests who completed RSVP.
+ * @returns {number}
+ */
+export function uniqueRsvps() {
+  return new Set(
+    _allEvents()
+      .filter((e) => e.type === "rsvp")
+      .map((e) => e.guestId),
+  ).size;
+}
+
+/**
+ * Compute open → click → RSVP funnel rates.
+ * @param {number} totalInvited  Total guest count invited
+ * @returns {{ openRate: number, clickRate: number, conversionRate: number }}
+ */
+export function getFunnelStats(totalInvited) {
+  if (!totalInvited || totalInvited <= 0) return { openRate: 0, clickRate: 0, conversionRate: 0 };
+  return {
+    openRate: uniqueOpens() / totalInvited,
+    clickRate: uniqueClicks() / totalInvited,
+    conversionRate: uniqueRsvps() / totalInvited,
+  };
+}
+
+/**
+ * Clear all invitation analytics data.
+ */
+export function clearAnalytics() {
+  storeSet(_INVITE_KEY, []);
 }
