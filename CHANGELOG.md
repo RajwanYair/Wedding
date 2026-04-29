@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.12.0] — 2026-05-05
+
+> **S296–S305: Phase B CI hardening — BaseSection 100%, CSS @scope 0, console.error ADR-032, Trusted Types ratchet, SQL lint 0, coverage uplift.**
+
+### Added
+
+- **S296** — `analytics.js` BaseSection migration; all 23/23 sections on BaseSection; `audit-base-section BASELINE=0` CI enforce
+- **S299** — Trusted Types CI baseline ratchet `--baseline=34` (no new innerHTML sinks allowed)
+- **S304** — Migration 025: idempotent DO $$ guard for idx_guests_phone_unique; `audit-supabase-lint BASELINE=0` CI enforce
+
+### Fixed
+
+- **S297** — `print.css` bare `[data-section]` selectors wrapped in `@scope`; `audit-css-scope BASELINE=0` CI enforce
+- **S298** — All 9 `console.error` call sites in events/router/compliance/realtime/supabase migrated to `reportError()` per ADR-032; `audit-console-error BASELINE=0` CI enforce
+- **S304** — `audit-supabase-lint.mjs` now ignores `CREATE` statements inside `DO $$...END $$` blocks
+
+### Changed
+
+- **S303** — Coverage ratchet: lines 49→50, branches 44→45 (floor of 50.27%/45.46% actual)
+- **S305** — Version bump to v13.12.0; 3149 tests green; 0 lint errors
+
 ## [13.11.0] — 2026-05-05
 
 > **S286–S295: Phase B2+B8+A8+B12 complete — TSC baseline 49→0, action namespace ratchet, arch-check strict, Supabase SQL lint CI gate.**

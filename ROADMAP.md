@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.11.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.12.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,13 +20,12 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2026-05-05, v13.11.0):** **3 149 tests passing** across 225 files · 0 lint errors / 0 warnings
+**State (2026-05-05, v13.12.0):** **3 149 tests passing** across 225 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
-CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 24
+CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 25
 Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
-**Phase B2+B8+A8+B12 reached**: TSC baseline 49→0 · action namespace ratchet (FLAT_BASELINE=116) · arch-check strict CI gate · Supabase SQL lint CI gate (baseline=1 legacy).
-Services remain at 25 files (Phase B1 target held).
+**Phase B2+B8+A8+B12+CI-hardening reached**: all 23 sections on BaseSection · CSS @scope BASELINE=0 · console.error ADR-032 BASELINE=0 · Trusted Types ratchet 34 · SQL lint BASELINE=0 · coverage ratchet lines 50%/branches 45%.
 
 **The one decision that matters most:** flip `BACKEND_TYPE` from `"sheets"` to `"supabase"`.
 This single line of code unblocks every other capability in this roadmap. Three major versions
@@ -75,7 +74,7 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.11.0 · 2026-05-05
+### Actual state — v13.12.0 · 2026-05-05
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -83,20 +82,25 @@ self-hosted; $0–$2/month with custom domain (§12).
 | TypeScript errors | **0** — baseline cleared in S293 (was 49 at v13.10) | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
-| Sections | **23** modules · **18** templates · **8** modals | ✅ |
-| Services | **25** files (was 33 at v13.9, S276–S282 merges — **Phase B1 reached**) | ✅ target ≤ 25 |
+| Sections | **23** modules · **18** templates · **8** modals · all on BaseSection | ✅ |
+| Services | **25** files (Phase B1 held) | ✅ target ≤ 25 |
+| console.error | 0 outside allowlist (ADR-032, S298) | ✅ |
+| CSS @scope | 0 bare [data-section] selectors (S297) | ✅ |
+| Trusted Types | 34 innerHTML sinks (ratchet enforced, S299) | ⚠ |
+| SQL lint | 0 violations (S304) | ✅ |
+| Coverage | lines 50% · branches 45% (floor ratchet, S303) | ✅ |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
 | i18n keys (HE = primary) | **1 209** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ HE/EN/AR/FR/ES |
-| DB migrations | **24** Supabase migrations | ✅ |
+| DB migrations | **25** Supabase migrations | ✅ |
 | Active backend | `BACKEND_TYPE = "sheets"` · Supabase wired but not primary | ❌ P0 (flip in v13) |
-| Auth tokens | plaintext in `localStorage` | ❌ P0 (encrypt in v13) |
+| Auth tokens | encrypted via AES-GCM (setSecure/getSecure active) | ✅ |
 | Bundle | ~45 KB gzip · hard CI gate ≤ 60 KB | ✅ |
 | Node version | **22 LTS** in CI matrix + `.nvmrc` | ✅ |
 | Supply-chain | OpenSSF Scorecard · CycloneDX SBOM · Trivy weekly · CodeQL · Dependabot grouped | ✅ |
 | Auth providers | Google · Facebook · Apple OAuth + email allowlist + anonymous | ⚠ 3 SDKs to consolidate |
-| Service Worker | precache + memory write queue | ⚠ in-memory queue lost on crash |
+| Service Worker | precache + IDB-persisted write queue + Background Sync | ✅ |
 | Realtime | Supabase Realtime wired but **idle** | ⚠ no UI |
 | Edge functions | partial (push sender) | ⚠ expand to WABA + AI proxy + GDPR + RSVP webhook |
 | Themes | 5 base + theme.json export/import + live-edit CSS vars (S119/S131) | ✅ |
@@ -1116,6 +1120,7 @@ Storage + Realtime for development without an account.
 | **v13.9.0** | **Released 2025-09-01** | **Service merges + TSC baseline** | **S270–S274; 31 service files; TSC baseline 54; 3149 tests** |
 | **v13.10.0** | **Released 2026-04-29** | **Phase B1 — service reduction complete** | **S276–S284; 33→25 services; TSC 49; 3149 tests; all BaseSection adopted** |
 | **v13.11.0** | **Released 2026-05-05** | **Phase B2+B8+A8+B12 — TSC baseline 0, CI gates** | **S286–S295; TSC 49→0; action namespace ratchet; arch-check strict; Supabase SQL lint gate; 3149 tests** |
+| **v13.12.0** | **Released 2026-05-05** | **Phase CI hardening — BaseSection 100%, @scope 0, ADR-032 0, Trusted Types ratchet, SQL lint 0** | **S296–S305; all 23 sections BaseSection; coverage lines 50%; 3149 tests** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1124,5 +1129,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2026-05-05 · v13.11.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-05-05 · v13.12.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*
