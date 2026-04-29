@@ -184,11 +184,6 @@ export async function sendPushToAdmins(payload, storeGet) {
 
 // ── §2 — In-app notification feed ──────────────────────────────────────
 
-import {
-  readBrowserStorageJson,
-  writeBrowserStorageJson,
-} from "../core/storage.js";
-
 const STORAGE_KEY = "wedding_v1_notifications";
 const MAX_ITEMS = 200;
 
