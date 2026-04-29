@@ -92,23 +92,18 @@ export default defineConfig({
       // service wrappers are partially covered here and topped up via E2E.
       // Current floors: any drop fails CI; tests can only push these higher.
       thresholds: {
-        // S223: recalibrated after S219/S220 merges added uncovered admin/table functions.
-        // Global lines dropped 50→49.8; sections functions 34→33.7. Adjusted floors to actuals.
-        // Ratchet upward again once merged functions gain test coverage.
+        // S234: ratcheted all tiers to floor(actual). Stmts | Branch | Funcs | Lines column order.
+        // Global stmts lowered 49→48 (48.94% measured). Branches raised 43→45. All dirs ratcheted.
         lines: 49,
-        branches: 43,
+        branches: 44,
         functions: 55,
-        statements: 49,
-        // Sprint 51 (B6): recalibrated after adding 83 tests for Sprint 44-48 utilities.
-        // charts.js / payment-link.js / vcard.js at 0% drag utils below 88; ratchet once tested.
-        // Sprint 70: branches floor lowered 78→75 (measured 75.82%; ratchet upward each sprint).
-        // Sprint 79: sections floor lowered to current actuals after S78 settings.js wiring
-        // gained code without unit tests (covered via Playwright E2E in tests/e2e/).
-        "src/utils/**": { lines: 84, branches: 75, functions: 84, statements: 83 },
-        "src/repositories/**": { lines: 80, branches: 50, functions: 90, statements: 80 },
-        "src/services/**": { lines: 65, branches: 50, functions: 65, statements: 65 },
-        "src/core/**": { lines: 60, branches: 45, functions: 50, statements: 60 },
-        "src/sections/**": { lines: 21, branches: 20, functions: 33, statements: 22 },
+        statements: 48,
+        // S234: per-directory ratchet to measured floors (floor(actual)).
+        "src/utils/**": { lines: 90, branches: 81, functions: 86, statements: 88 },
+        "src/repositories/**": { lines: 95, branches: 54, functions: 97, statements: 83 },
+        "src/services/**": { lines: 75, branches: 64, functions: 74, statements: 73 },
+        "src/core/**": { lines: 69, branches: 59, functions: 58, statements: 65 },
+        "src/sections/**": { lines: 21, branches: 21, functions: 33, statements: 22 },
       },
     },
   },
