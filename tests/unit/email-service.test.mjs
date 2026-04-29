@@ -19,7 +19,7 @@ const {
   sendEmail,
   sendEmailBatch,
   sendEmailCampaign,
-} = await import("../../src/services/email-service.js");
+} = await import("../../src/services/delivery.js");
 import { makeGuest } from "./helpers.js";
 
 function seedStore(guests = []) {

@@ -34,9 +34,9 @@ const { createCampaign, queueCampaign, getCampaign, getCampaignStats } =
 const { runWACampaign, sendAdHocWhatsApp } =
   await import("../../src/services/campaign.js");
 const { sendEmailCampaign } =
-  await import("../../src/services/email-service.js");
+  await import("../../src/services/delivery.js");
 const { recordDelivery, getDeliveryHistory, getDeliveryStats } =
-  await import("../../src/services/delivery-service.js");
+  await import("../../src/services/delivery.js");
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 

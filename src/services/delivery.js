@@ -1,16 +1,21 @@
 /**
- * src/services/delivery-tracking.js — Delivery tracking service (Sprint 46)
+ * src/services/delivery.js — Unified delivery service (S228)
  *
- * Records and queries message delivery outcomes (WhatsApp, email, SMS) for
- * each guest.  Backed by the `deliveries` store key.
- *
- * Usage:
- *   import { recordDelivery, getDeliveryHistory } from "../services/delivery-tracking.js";
+ * Merged from:
+ *   - delivery-service.js  (S46)  — delivery tracking + webhook service
+ *   - email-service.js     (S44)  — email send + campaign dispatch
  */
 
 import { storeGet, storeSet, storeUpsert } from "../core/store.js";
+import { callEdgeFunction } from "./backend.js";
+import { getCampaign, startCampaign, recordSent, queueCampaign } from "./campaign.js";
+import { getTemplate, renderTemplate } from "../utils/message-templates.js";
+import { sanitize } from "../utils/sanitize.js";
 
-// ── Types ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+// §1 — Delivery tracking (merged from delivery-service.js, S46)
+// ══════════════════════════════════════════════════════════════════════════
+
 /**
  * @typedef {'sent'|'delivered'|'read'|'failed'|'bounced'} DeliveryStatus
  * @typedef {'whatsapp'|'email'|'sms'} DeliveryChannel
@@ -26,18 +31,13 @@ import { storeGet, storeSet, storeUpsert } from "../core/store.js";
  * }} DeliveryRecord
  */
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-
 /** @returns {DeliveryRecord[]} */
 function getAllRecords() {
   return /** @type {DeliveryRecord[]} */ (storeGet("deliveries") ?? []);
 }
 
-// ── Public API ─────────────────────────────────────────────────────────────
-
 /**
  * Record a delivery event for a guest.
- *
  * @param {string} guestId
  * @param {DeliveryChannel} channel
  * @param {DeliveryStatus} status
@@ -54,14 +54,12 @@ export function recordDelivery(guestId, channel, status, meta = {}) {
     campaignId: meta.campaignId,
     ts: Date.now(),
   });
-
   storeUpsert("deliveries", record);
   return record;
 }
 
 /**
  * Get all delivery records for a specific guest, sorted newest-first.
- *
  * @param {string} guestId
  * @returns {DeliveryRecord[]}
  */
@@ -73,21 +71,17 @@ export function getDeliveryHistory(guestId) {
 
 /**
  * Get all records that have a `failed` or `bounced` status.
- *
  * @param {{ channel?: DeliveryChannel }} [filter]
  * @returns {DeliveryRecord[]}
  */
 export function getUndelivered(filter = {}) {
   let records = getAllRecords().filter((r) => r.status === "failed" || r.status === "bounced");
-  if (filter.channel) {
-    records = records.filter((r) => r.channel === filter.channel);
-  }
+  if (filter.channel) records = records.filter((r) => r.channel === filter.channel);
   return records.sort((a, b) => b.ts - a.ts);
 }
 
 /**
  * Get the most recent delivery record for a guest on a given channel.
- *
  * @param {string} guestId
  * @param {DeliveryChannel} channel
  * @returns {DeliveryRecord|undefined}
@@ -100,7 +94,6 @@ export function getLatestDelivery(guestId, channel) {
 
 /**
  * Get aggregated delivery stats across all records.
- *
  * @param {{ campaignId?: string, channel?: DeliveryChannel }} [filter]
  * @returns {{ total: number, sent: number, delivered: number, read: number, failed: number, bounced: number }}
  */
@@ -108,7 +101,6 @@ export function getDeliveryStats(filter = {}) {
   let records = getAllRecords();
   if (filter.campaignId) records = records.filter((r) => r.campaignId === filter.campaignId);
   if (filter.channel) records = records.filter((r) => r.channel === filter.channel);
-
   const stats = { total: records.length, sent: 0, delivered: 0, read: 0, failed: 0, bounced: 0 };
   for (const r of records) {
     if (r.status in stats) stats[r.status]++;
@@ -118,7 +110,6 @@ export function getDeliveryStats(filter = {}) {
 
 /**
  * Clear all delivery records for a specific guest (e.g. on guest deletion).
- *
  * @param {string} guestId
  */
 export function clearGuestDeliveries(guestId) {
@@ -126,30 +117,9 @@ export function clearGuestDeliveries(guestId) {
   storeSet("deliveries", remaining);
 }
 
-
-// ────────────────────────────────────────────────────────────
-// Merged from: webhook-service.js
-// ────────────────────────────────────────────────────────────
-
-/**
- * src/services/webhook-service.js — Generic webhook management (Sprint 111)
- *
- * Register outbound webhooks, verify inbound HMAC signatures, and dispatch
- * event payloads to registered endpoints.
- *
- * All registered webhooks are persisted to the `webhooks` store key.
- * The HMAC verification helper uses Web Crypto (SubtleCrypto) so it works
- * in both browser and Node/Deno environments.
- *
- * Usage:
- *   import { registerWebhook, dispatchWebhookEvent, verifyWebhookSignature } from "./webhook-service.js";
- *
- *   const id = registerWebhook({ url: "https://example.com/hook", events: ["guest.rsvp"] });
- *   await dispatchWebhookEvent("guest.rsvp", { guestId: "g1" });
- */
-
-
-// ── Types ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+// §2 — Webhook service (merged from webhook-service.js via delivery-service.js)
+// ══════════════════════════════════════════════════════════════════════════
 
 /**
  * @typedef {{
@@ -173,8 +143,6 @@ export function clearGuestDeliveries(guestId) {
  *   ts:         number,
  * }} WebhookDelivery
  */
-
-// ── Helpers ────────────────────────────────────────────────────────────────
 
 /** @returns {Webhook[]} */
 function _getWebhooks() {
@@ -200,12 +168,10 @@ function _id() {
   return `wh_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 }
 
-// ── Registration ──────────────────────────────────────────────────────────
-
 /**
  * Register a new webhook.
  * @param {{ url: string, events: string[], secret?: string }} opts
- * @returns {string}  registered webhook id
+ * @returns {string}
  */
 export function registerWebhook({ url, events, secret }) {
   if (!url || !Array.isArray(events) || events.length === 0) {
@@ -274,12 +240,8 @@ export function removeWebhook(id) {
   return true;
 }
 
-// ── Dispatch ──────────────────────────────────────────────────────────────
-
 /**
  * Dispatch an event to all active webhooks subscribed to that event.
- * Returns a summary of deliveries.
- *
  * @param {string}  event
  * @param {unknown} payload
  * @param {{ fetcher?: typeof fetch }} [opts]
@@ -306,15 +268,11 @@ export async function dispatchWebhookEvent(event, payload, opts = {}) {
 
     try {
       const body = JSON.stringify({ event, payload, ts: delivery.ts });
-      const headers = /** @type {Record<string,string>} */ ({
-        "Content-Type": "application/json",
-      });
-
+      const headers = /** @type {Record<string,string>} */ ({ "Content-Type": "application/json" });
       if (hook.secret) {
         const sig = await _hmacHex(hook.secret, body);
         headers["x-webhook-signature"] = `sha256=${sig}`;
       }
-
       const res = await fetcher(hook.url, { method: "POST", headers, body });
       delivery.status = res.ok ? "delivered" : "failed";
       delivery.statusCode = res.status;
@@ -345,32 +303,24 @@ export function getWebhookDeliveries(webhookId) {
   return _getDeliveries().filter((d) => d.webhookId === webhookId);
 }
 
-// ── Signature verification ────────────────────────────────────────────────
-
 /**
  * Verify an HMAC-SHA256 "sha256=..." signature against a raw body string.
- * Returns true when signature is valid.
- *
  * @param {string} secret
  * @param {string} body
- * @param {string} signature   e.g. "sha256=abcdef..."
+ * @param {string} signature
  * @returns {Promise<boolean>}
  */
 export async function verifyWebhookSignature(secret, body, signature) {
   if (!signature.startsWith("sha256=")) return false;
   const expected = signature.slice(7);
   const actual = await _hmacHex(secret, body);
-  // Constant-time comparison not available in pure JS across all envs:
-  // compare as lowercase hex strings (good enough for server-side verification)
   return actual === expected;
 }
-
-// ── HMAC helper ────────────────────────────────────────────────────────────
 
 /**
  * @param {string} secret
  * @param {string} message
- * @returns {Promise<string>}  hex-encoded HMAC-SHA256
+ * @returns {Promise<string>}
  */
 async function _hmacHex(secret, message) {
   const enc = new TextEncoder();
@@ -383,4 +333,146 @@ async function _hmacHex(secret, message) {
   );
   const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
   return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// §3 — Email service (merged from email-service.js, S44)
+// ══════════════════════════════════════════════════════════════════════════
+
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,253}$/;
+
+/**
+ * @param {unknown} raw
+ * @returns {boolean}
+ */
+export function isValidEmail(raw) {
+  if (typeof raw !== "string") return false;
+  return EMAIL_RE.test(raw.trim());
+}
+
+/**
+ * @typedef {{
+ *   to: string,
+ *   subject: string,
+ *   html?: string,
+ *   text?: string,
+ *   replyTo?: string,
+ * }} EmailMessage
+ *
+ * @typedef {{ ok: boolean, messageId?: string, error?: string }} SendResult
+ */
+
+/**
+ * Send a single email via the `send-email` Edge Function.
+ * @param {EmailMessage} msg
+ * @returns {Promise<SendResult>}
+ */
+export async function sendEmail(msg) {
+  if (!isValidEmail(msg.to)) {
+    return { ok: false, error: `Invalid recipient address: ${msg.to}` };
+  }
+  if (!msg.subject?.trim()) {
+    return { ok: false, error: "Subject is required" };
+  }
+  if (!msg.html && !msg.text) {
+    return { ok: false, error: "Either html or text body is required" };
+  }
+  const replyTo = msg.replyTo
+    ? (sanitize(msg.replyTo, { type: "email", required: false }).value ?? undefined)
+    : undefined;
+  return callEdgeFunction("send-email", {
+    to: msg.to.trim(),
+    subject: msg.subject.trim(),
+    html: msg.html,
+    text: msg.text,
+    replyTo,
+  });
+}
+
+/**
+ * Send a batch of emails, returning an array of results in order.
+ * @param {EmailMessage[]} messages
+ * @returns {Promise<SendResult[]>}
+ */
+export async function sendEmailBatch(messages) {
+  const results = [];
+  for (const msg of messages) {
+    results.push(await sendEmail(msg));
+  }
+  return results;
+}
+
+/**
+ * @typedef {{
+ *   sent: string[],
+ *   failed: string[],
+ *   skipped: string[],
+ *   errors: Record<string, string>,
+ * }} EmailCampaignResult
+ */
+
+/**
+ * Run an email campaign.
+ * @param {string} campaignId
+ * @param {{ dryRun?: boolean, subjectTemplate?: string }} [opts]
+ * @returns {Promise<EmailCampaignResult>}
+ */
+export async function sendEmailCampaign(campaignId, opts = {}) {
+  const campaign = getCampaign(campaignId);
+  if (!campaign) throw new Error(`email-service: campaign "${campaignId}" not found`);
+  if (campaign.type !== "email") throw new Error("email-service: campaign type must be email");
+
+  if (campaign.status === "draft") queueCampaign(campaignId);
+  const refreshed = getCampaign(campaignId);
+  if (refreshed?.status === "queued") startCampaign(campaignId);
+  else if (refreshed?.status !== "sending") {
+    throw new Error(`email-service: campaign status "${refreshed?.status}" cannot start`);
+  }
+
+  const guests = /** @type {import('../types').Guest[]} */ (storeGet("guests") ?? []);
+  const guestMap = new Map(guests.map((g) => [g.id, g]));
+  const tmpl = getTemplate(campaign.templateName) ?? "{{firstName}}";
+  const subjectTmpl = opts.subjectTemplate ?? "הזמנה לחתונה — {{firstName}}";
+
+  /** @type {EmailCampaignResult} */
+  const result = { sent: [], failed: [], skipped: [], errors: {} };
+
+  for (const guestId of campaign.guestIds) {
+    const latest = getCampaign(campaignId);
+    if (!latest || latest.results[guestId] !== "pending") {
+      result.skipped.push(guestId);
+      continue;
+    }
+    const guest = guestMap.get(guestId);
+    if (!guest?.email || !isValidEmail(guest.email)) {
+      result.skipped.push(guestId);
+      recordSent(campaignId, guestId, "failed");
+      result.errors[guestId] = "no valid email";
+      continue;
+    }
+    const html = renderTemplate(tmpl, { ...guest });
+    const subject = renderTemplate(subjectTmpl, { ...guest });
+    if (opts.dryRun) {
+      recordSent(campaignId, guestId, "sent");
+      result.sent.push(guestId);
+      continue;
+    }
+    try {
+      const res = await sendEmail({ to: guest.email, subject, html });
+      if (res.ok) {
+        recordSent(campaignId, guestId, "sent");
+        result.sent.push(guestId);
+      } else {
+        recordSent(campaignId, guestId, "failed");
+        result.failed.push(guestId);
+        result.errors[guestId] = res.error ?? "unknown error";
+      }
+    } catch (err) {
+      recordSent(campaignId, guestId, "failed");
+      result.failed.push(guestId);
+      result.errors[guestId] = err instanceof Error ? err.message : String(err);
+    }
+  }
+
+  return result;
 }
