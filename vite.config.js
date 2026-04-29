@@ -94,10 +94,11 @@ export default defineConfig({
       thresholds: {
         // S303: ratcheted to floor(actual). Stmts | Branch | Funcs | Lines column order.
         // Measured: stmts 49.84%, branches 45.46%, functions 55.98%, lines 50.27%.
+        // S314 uplift (v13.13.0): stmts ~50.8%, branches ~45.6%, functions ~56.6%, lines ~51.3%.
         lines: 50,
         branches: 45,
-        functions: 55,
-        statements: 49,
+        functions: 56,
+        statements: 50,
         // S234 + S289: per-directory ratchet to measured floors (floor(actual)).
         "src/utils/**": { lines: 90, branches: 80, functions: 86, statements: 88 },
         "src/repositories/**": { lines: 95, branches: 54, functions: 97, statements: 83 },
