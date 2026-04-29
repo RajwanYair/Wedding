@@ -1,4 +1,4 @@
-﻿/**
+/**
  * src/services/platform-ops.js — Platform operations: resilience + diagnostics (S273)
  *
  * Merged from:
