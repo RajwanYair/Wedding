@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v13.13.0 (Best-in-Class Rethink)
+# Wedding Manager — Roadmap v13.14.0 (Best-in-Class Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,12 +20,12 @@ Nothing is silently dropped. Items still relevant from prior roadmaps are consol
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2026-05-07, v13.13.0):** **3 195 tests passing** across 228 files · 0 lint errors / 0 warnings
+**State (2026-05-08, v13.14.0):** **3 317 tests passing** across 236 files · 0 lint errors / 0 warnings
 · ~45 KB gzip bundle (hard CI gate ≤ 60 KB) · WCAG 2.2 AA + axe-zero · Lighthouse ≥ 95 · 7 GitHub
 Actions workflows · CodeQL on · OpenSSF Scorecard + CycloneDX SBOM + Trivy weekly · Node 22 LTS in
 CI + `.nvmrc` · GitHub Pages deploy · **5 locales** (HE primary · EN · AR · FR · ES) · 25
 Supabase migrations · 12 ADRs · live theme picker · realtime helpers wired but idle.
-**Phase C0 coverage + TT ratchet reached**: 3 new test files (charts/run-of-show/invitation); Trusted Types 34→32 sinks; venue-links wired to landing; undo on guest delete; coverage functions 56% / statements 50%.
+**Phase C1 TT ratchet + test coverage reached**: 10 new test files (+122 tests); Trusted Types 32→19 sinks; coverage lines 53% / functions 58% / statements 52% / branches 46%.
 
 **The one decision that matters most:** flip `BACKEND_TYPE` from `"sheets"` to `"supabase"`.
 This single line of code unblocks every other capability in this roadmap. Three major versions
@@ -74,11 +74,11 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.13.0 · 2026-05-07
+### Actual state — v13.14.0 · 2026-05-08
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **3 149 passing · 225 files · 0 Node warnings** | ✅ |
+| Tests | **3 317 passing · 236 files · 0 Node warnings** | ✅ |
 | TypeScript errors | **0** — baseline cleared in S293 (was 49 at v13.10) | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
@@ -86,9 +86,9 @@ self-hosted; $0–$2/month with custom domain (§12).
 | Services | **25** files (Phase B1 held) | ✅ target ≤ 25 |
 | console.error | 0 outside allowlist (ADR-032, S298) | ✅ |
 | CSS @scope | 0 bare [data-section] selectors (S297) | ✅ |
-| Trusted Types | 34 innerHTML sinks (ratchet enforced, S299) | ⚠ |
+| Trusted Types | 19 innerHTML sinks (ratchet enforced, S321) | ⚠ |
 | SQL lint | 0 violations (S304) | ✅ |
-| Coverage | lines 50% · branches 45% (floor ratchet, S303) | ✅ |
+| Coverage | lines 53% · branches 46% (floor ratchet, S324) | ✅ |
 | Repositories | mandatory data path | ✅ |
 | Handlers | clean separation | ✅ |
 | Utilities | wired/built ratio improving each cluster | ⚠ |
@@ -1122,6 +1122,7 @@ Storage + Realtime for development without an account.
 | **v13.11.0** | **Released 2026-05-05** | **Phase B2+B8+A8+B12 — TSC baseline 0, CI gates** | **S286–S295; TSC 49→0; action namespace ratchet; arch-check strict; Supabase SQL lint gate; 3149 tests** |
 | **v13.12.0** | **Released 2026-05-05** | **Phase CI hardening — BaseSection 100%, @scope 0, ADR-032 0, Trusted Types ratchet, SQL lint 0** | **S296–S305; all 23 sections BaseSection; coverage lines 50%; 3149 tests** |
 | **v13.13.0** | **Released 2026-05-07** | **Phase C0 — coverage uplift, venue links, TT 34→32, undo on delete** | **S306–S315; 3 new test files; TT sinks 32; functions 56%/stmts 50%; 3195 tests** |
+| **v13.14.0** | **Released 2026-05-08** | **Phase C1 — TT ratchet 32→19, handler+section tests +122, coverage ratchet bump** | **S316–S325; 10 new test files; TT sinks 19; lines 53%/functions 58%; 3317 tests** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1130,5 +1131,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2026-05-07 · v13.13.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-05-08 · v13.14.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*

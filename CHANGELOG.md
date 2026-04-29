@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.14.0] — 2026-05-08
+
+> **S316–S325: Phase C1 — Trusted Types ratchet 32→19, test coverage uplift +122 tests (S316–S323), coverage ratchet bump.**
+
+### Added
+
+- **S316** — Unit tests for `sync.js` (sync-bridge) + `search-handler.js`: +22 tests
+- **S317** — Unit tests for `notification-panel.js` + `workspace-switcher.js` section modules: +41 tests
+- **S322** — Unit tests for `table-handlers.js` (16 tests) + `checkin-handlers.js` (15 tests): +31 tests
+- **S323** — Unit tests for `vendor-handlers.js` (17 tests) + `website-builder` section (11 tests): +28 tests
+
+### Fixed
+
+- **S318** — Trusted Types: `dashboard.js` 3 innerHTML sinks → DOM API (32→29 TT sinks)
+- **S319** — Trusted Types: `vendors.js` 3 SVG innerHTML sinks → `createElementNS` (29→26 TT sinks)
+- **S320** — Trusted Types: `budget.js` SVG + `changelog.js` DOMParser + `md-to-html.js` example (26→22 TT sinks)
+- **S321** — Trusted Types: `search-handler.js` textContent + `section-handlers.js` DOMParser (22→19 TT sinks); CI baseline updated to `--baseline=19`
+
+### Changed
+
+- **S324** — Coverage ratchet uplift: `lines:53 branches:46 functions:58 statements:52`
+- **S325** — Version bump to v13.14.0; 3317 tests green; 0 lint errors
+
 ## [13.13.0] — 2026-05-07
 
 > **S306–S315: Phase C0 coverage uplift, venue links, Trusted Types ratchet, undo on delete.**
