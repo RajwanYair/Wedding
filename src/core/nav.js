@@ -141,9 +141,10 @@ export function initRouter() {
 
   const deepToken = params.get("token");
   if (deepToken) {
-    import("../services/guest-token.js").then(({ getGuestByToken }) => {
+    import("../services/guest-token.js").then(({ getGuestByToken, recordIssuedToken }) => {
       const guest = getGuestByToken(deepToken);
       if (guest) {
+        recordIssuedToken(guest.id, deepToken);
         // Store token context for rsvp section to pre-fill form
         sessionStorage.setItem(
           "rsvp_token_guest",

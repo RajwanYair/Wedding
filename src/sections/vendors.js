@@ -15,6 +15,7 @@ import { cleanPhone } from "../utils/phone.js";
 import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
 import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
 import { getOverdueVendors, buildPaymentTimeline, topVendorsByCost } from "../services/financial-analytics.js";
+import { VENDOR_CATEGORIES } from "../core/constants.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -203,7 +204,8 @@ function renderVendors() {
   if (bannerEl) {
     const { totalCost, totalPaid, outstanding } = getVendorPaymentSummary();
     bannerEl.textContent =
-      t("vendor_total", { total: totalCost, paid: totalPaid, remaining: outstanding }) || `₪${totalPaid} / ₪${totalCost}`;
+      t("vendor_total", { total: totalCost, paid: totalPaid, remaining: outstanding }) ||
+      `₪${totalPaid} / ₪${totalCost}`;
   }
   const emptyEl = document.getElementById("vendorsEmpty");
   if (emptyEl) emptyEl.hidden = vendors.length > 0;
@@ -455,7 +457,16 @@ export function getVendorsByCategory() {
   }
   return [...map.entries()]
     .map(([category, d]) => ({ category, ...d }))
-    .sort((a, b) => b.totalCost - a.totalCost);
+    .sort((a, b) => {
+      const ai = VENDOR_CATEGORIES.indexOf(/** @type {any} */ (a.category));
+      const bi = VENDOR_CATEGORIES.indexOf(/** @type {any} */ (b.category));
+      const aKnown = ai >= 0;
+      const bKnown = bi >= 0;
+      if (aKnown && bKnown) return b.totalCost - a.totalCost;
+      if (aKnown) return -1;
+      if (bKnown) return 1;
+      return b.totalCost - a.totalCost;
+    });
 }
 
 /**

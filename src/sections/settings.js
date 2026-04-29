@@ -39,7 +39,14 @@ import {
   importThemeJson,
 } from "../services/theme-export.js";
 import { validatePluginManifest } from "../services/plugin-manifest.js";
-import { addAdminUser, removeAdminUser } from "../services/auth.js";
+import {
+  addAdminUser,
+  removeAdminUser,
+  signInWith,
+  isApprovedAdminAsync,
+  fetchAdminUsers,
+} from "../services/auth.js";
+import { ONBOARDING_STEPS, setOnboardingState } from "../services/onboarding.js";
 import { buildAllDeployButtons } from "../utils/deploy-buttons.js";
 
 // ── Lifecycle ──────────────────────────────────────────────────────────
@@ -164,7 +171,10 @@ function updateDataSummary() {
   if (!el.dataSummary) return;
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  el.dataSummary.textContent = t("plural_data_summary", { guests: guests.length, tables: tables.length });
+  el.dataSummary.textContent = t("plural_data_summary", {
+    guests: guests.length,
+    tables: tables.length,
+  });
 }
 
 // ── Data management ───────────────────────────────────────────────────────
@@ -1153,7 +1163,9 @@ const PLUGIN_STORAGE_KEY = "wedding_v1_plugins";
 function _getInstalledPlugins() {
   try {
     return JSON.parse(localStorage.getItem(PLUGIN_STORAGE_KEY) ?? "[]");
-  } catch { return []; }
+  } catch {
+    return [];
+  }
 }
 
 /** Save installed plugins to localStorage. */
@@ -1229,9 +1241,7 @@ function renderPluginList() {
 
 /** Install a plugin from a JSON manifest file. */
 export function installPlugin() {
-  const input = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("pluginFileInput")
-  );
+  const input = /** @type {HTMLInputElement|null} */ (document.getElementById("pluginFileInput"));
   if (!input) return;
   input.value = "";
   input.addEventListener(
@@ -1284,10 +1294,10 @@ export function installPlugin() {
 const _REPO_URL = "https://github.com/RajwanYair/Wedding";
 
 const _DEPLOY_PROVIDERS = [
-  { key: "vercel",     label: "Vercel",      emoji: "▲" },
-  { key: "netlify",    label: "Netlify",     emoji: "🌐" },
-  { key: "cloudflare", label: "Cloudflare",  emoji: "☁️" },
-  { key: "render",     label: "Render",      emoji: "🖥️" },
+  { key: "vercel", label: "Vercel", emoji: "▲" },
+  { key: "netlify", label: "Netlify", emoji: "🌐" },
+  { key: "cloudflare", label: "Cloudflare", emoji: "☁️" },
+  { key: "render", label: "Render", emoji: "🖥️" },
 ];
 
 function _renderDeployButtons() {
@@ -1310,14 +1320,18 @@ function _renderDeployButtons() {
 const _TELEMETRY_KEY = "wedding_v1_telemetry_opt_out";
 
 function _renderMonitoringToggle() {
-  const checkbox = /** @type {HTMLInputElement|null} */ (document.getElementById("monitoringOptIn"));
+  const checkbox = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("monitoringOptIn")
+  );
   if (!checkbox) return;
   const optedOut = localStorage.getItem(_TELEMETRY_KEY) === "1";
   checkbox.checked = !optedOut;
 }
 
 export function toggleMonitoring() {
-  const checkbox = /** @type {HTMLInputElement|null} */ (document.getElementById("monitoringOptIn"));
+  const checkbox = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("monitoringOptIn")
+  );
   if (!checkbox) return;
   if (checkbox.checked) {
     localStorage.removeItem(_TELEMETRY_KEY);
@@ -1326,4 +1340,43 @@ export function toggleMonitoring() {
     localStorage.setItem(_TELEMETRY_KEY, "1");
     showToast(t("monitoring_disabled_toast"), "info");
   }
+}
+
+// ── Auth helpers (S231) ─────────────────────────────────────────────────────
+
+/**
+ * Initiate OAuth sign-in via the named provider.
+ * @param {string} provider
+ * @returns {Promise<import('../services/auth.js').OAuthProfile | null>}
+ */
+export async function startAdminSignIn(provider) {
+  return signInWith(/** @type {any} */ (provider));
+}
+
+/**
+ * Fetch all known admin emails (local + remote) and re-render the list.
+ * @returns {Promise<string[]>}
+ */
+export async function refreshAdminList() {
+  const emails = await fetchAdminUsers();
+  _renderApprovedEmails();
+  return emails;
+}
+
+/**
+ * Validate that an email is approved, checking remote when available.
+ * @param {string} email
+ * @returns {Promise<boolean>}
+ */
+export async function checkIsApprovedAdmin(email) {
+  return isApprovedAdminAsync(email);
+}
+
+// ── Onboarding helpers (S231) ───────────────────────────────────────────────
+
+/**
+ * Reset the onboarding wizard to the first step.
+ */
+export function resetOnboarding() {
+  setOnboardingState({ step: ONBOARDING_STEPS[0], completed: false });
 }

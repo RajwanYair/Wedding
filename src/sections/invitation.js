@@ -8,6 +8,7 @@ import { storeGet, storeSet } from "../core/store.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { t } from "../core/i18n.js";
+import { markInvitationSent } from "../services/guest-service.js";
 
 class InvitationSection extends BaseSection {
   async onMount() {
@@ -144,4 +145,13 @@ function renderInvitation() {
       img.src = info.invitationUrl;
     }
   }
+}
+
+/**
+ * Mark a batch of guests as having received their invitation.
+ * @param {string[]} ids  Guest IDs to mark as invitation-sent
+ * @returns {Promise<void>}
+ */
+export async function batchMarkInvitationSent(ids) {
+  await markInvitationSent(ids);
 }

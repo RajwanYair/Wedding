@@ -12,6 +12,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getTopCategories } from "../services/financial-analytics.js";
+import { EXPENSE_CATEGORIES } from "../core/constants.js";
 
 /** @type {string} active expense category filter; "all" means no filter */
 let _expenseCatFilter = "all";
@@ -212,7 +213,8 @@ export function exportExpensesCSV() {
  * @param {string} category — pass "all" to clear
  */
 export function setExpenseCategoryFilter(category) {
-  _expenseCatFilter = category || "all";
+  const isKnown = category === "all" || EXPENSE_CATEGORIES.includes(/** @type {any} */ (category));
+  _expenseCatFilter = isKnown ? category : "all";
   // Update category filter chip label if present
   const chip = document.getElementById("expCatFilterChip");
   if (chip) {

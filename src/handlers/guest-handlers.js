@@ -23,6 +23,7 @@ import {
   renderDuplicates,
   mergeGuests,
 } from "../sections/guests.js";
+import { batchMarkInvitationSent } from "../sections/invitation.js";
 
 /**
  * Register `data-action` handlers for the guests section.
@@ -120,4 +121,8 @@ export function register() {
   on("printGuestList", () =>
     import("../utils/pdf-export.js").then(({ printGuestList }) => printGuestList()),
   );
+  on("batchMarkInvitationSent", (_el, e) => {
+    const ids = /** @type {string[]} */ (e?.detail?.ids ?? []);
+    batchMarkInvitationSent(ids).catch(() => {});
+  });
 }

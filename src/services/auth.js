@@ -340,6 +340,27 @@ export async function signInWith(provider) {
 
 // ── Admin CRUD (merged from admin.js, S219) ───────────────────────────────
 
+// ── Supabase auth delegates (S231) ────────────────────────────────────────
+
+/**
+ * Send a magic-link email for passwordless Supabase sign-in.
+ * @param {string} email
+ * @returns {Promise<boolean>}
+ */
+export async function sendMagicLink(email) {
+  const { signInWithMagicLink } = await import("./supabase.js");
+  return signInWithMagicLink(email);
+}
+
+/**
+ * Create an anonymous Supabase session for guest access.
+ * @returns {Promise<import("../types.d.ts").SupabaseSession | null>}
+ */
+export async function loginSupabaseAnonymous() {
+  const { signInAnonymous } = await import("./supabase.js");
+  return signInAnonymous();
+}
+
 /**
  * Async admin check. Server-truth when on Supabase; sync fallback otherwise.
  * @param {string} email

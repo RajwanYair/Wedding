@@ -5,7 +5,13 @@
 import { on } from "../core/events.js";
 import { t, normalizeUiLanguage, nextUiLanguage } from "../core/i18n.js";
 import { showToast, closeModal, applyTheme } from "../core/ui.js";
-import { applyConflictResolutions, getPendingConflicts } from "../core/conflict-resolver.js";
+import {
+  applyConflictResolutions,
+  getPendingConflicts,
+  showConflictModal,
+} from "../core/conflict-resolver.js";
+import { awaitDialogClose } from "../core/dialog.js";
+import { logAdminAction } from "../services/audit.js";
 import { save } from "../core/state.js";
 import {
   syncSheetsNow,
@@ -45,7 +51,12 @@ import {
   exportAllCSV,
   checkDataIntegrity,
   exportDebugReport,
+  startAdminSignIn,
+  refreshAdminList,
+  checkIsApprovedAdmin,
+  resetOnboarding,
 } from "../sections/settings.js";
+import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
 import * as registrySection from "../sections/registry.js";
 import { saveWebsiteConfig, previewWebsite } from "../sections/website-builder.js";
@@ -165,9 +176,7 @@ export function register() {
     showToast(t("settings_saved"), "success");
   });
   on("saveTelemetryOptOut", () => {
-    const cb = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("telemetryOptOut")
-    );
+    const cb = /** @type {HTMLInputElement|null} */ (document.getElementById("telemetryOptOut"));
     try {
       if (cb?.checked) localStorage.setItem("wedding_v1_telemetry_opt_out", "1");
       else localStorage.removeItem("wedding_v1_telemetry_opt_out");
@@ -193,7 +202,10 @@ export function register() {
     if (urlInput) urlInput.value = "";
     if (nameInput) nameInput.value = "";
   });
-  on("addApprovedEmail", () => addApprovedEmail());
+  on("addApprovedEmail", () => {
+    addApprovedEmail();
+    logAdminAction("email:add", "");
+  });
   on("removeApprovedEmail", (el) => removeApprovedEmail(el));
   on("clearAllData", () => clearAllData());
   on("switchLanguage", async () => {
@@ -251,7 +263,8 @@ export function register() {
   // S217 — Auto-backup
   on("startAutoBackup", () => {
     const intervalMin = parseInt(
-      /** @type {HTMLInputElement|null} */ (document.getElementById("autoBackupInterval"))?.value ?? "30",
+      /** @type {HTMLInputElement|null} */ (document.getElementById("autoBackupInterval"))?.value ??
+        "30",
       10,
     );
     startAutoBackup(isNaN(intervalMin) || intervalMin < 1 ? 30 : intervalMin);
@@ -281,4 +294,30 @@ export function register() {
     }
   });
   on("exportDebugReport", () => exportDebugReport());
+  // S231 — Show conflict resolution modal
+  on("resolveConflicts", async () => {
+    const conflicts = getPendingConflicts();
+    if (!conflicts.length) return;
+    await showConflictModal(conflicts);
+    await awaitDialogClose("conflictModal");
+  });
+  // S231 — Auth / admin helpers
+  on("startAdminSignIn", (el) =>
+    startAdminSignIn(el.dataset.actionArg ?? "google").catch(() => {}),
+  );
+  on("refreshAdminList", () => refreshAdminList().catch(() => {}));
+  on("checkIsApprovedAdmin", async () => {
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("newApproveEmail"));
+    const email = input?.value?.trim() ?? "";
+    if (email) await checkIsApprovedAdmin(email);
+  });
+  on("resetOnboarding", () => resetOnboarding());
+  on("sendMagicLink", async () => {
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("magicLinkEmail"));
+    const email = input?.value?.trim() ?? "";
+    if (email) await sendMagicLink(email);
+  });
+  on("loginAnonymousSupabase", async () => {
+    await loginSupabaseAnonymous();
+  });
 }

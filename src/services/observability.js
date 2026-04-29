@@ -8,6 +8,7 @@
 
 import { storeGet, storeUpsert, storeSet } from "../core/store.js";
 import { APP_VERSION } from "../core/config.js";
+import { logError } from "./audit.js";
 
 // ══════════════════════════════════════════════════════════════════════════
 // §1 — Error monitor (merged from error-monitor.js, ADR-028 M1)
@@ -157,6 +158,9 @@ export function captureError(err, context = {}) {
     const trimmed = all.sort((a, b) => b.ts - a.ts).slice(0, MAX_STORED_ERRORS);
     storeSet("appErrors", trimmed);
   }
+
+  // Forward to Supabase error_log when backend is configured (S231)
+  logError(err, { context: JSON.stringify(context) });
 
   return record;
 }
