@@ -1,11 +1,11 @@
-/**
- * src/utils/cdn-image.js — S127 Cloudflare CDN image URL helpers.
+﻿/**
+ * src/utils/cdn-image.js - S127 Cloudflare CDN image URL helpers.
  *
  * Builds Cloudflare Images / Image Resizing URLs and srcset strings:
  *
  *   /cdn-cgi/image/<options>/<source>
  *
- * Pure functions — no fetch, no DOM. All inputs are validated and the
+ * Pure functions - no fetch, no DOM. All inputs are validated and the
  * helpers fall back to the original URL when no CDN host is configured.
  */
 
@@ -18,9 +18,9 @@ const ALLOWED_GRAVITY = new Set(["auto", "left", "right", "top", "bottom", "cent
 /**
  * Build a CDN-rewritten URL. When `cdnHost` is empty, returns `source`.
  *
- * @param {string} source — absolute or root-relative URL of the source image
+ * @param {string} source - absolute or root-relative URL of the source image
  * @param {ImageOpts} opts
- * @param {string} [cdnHost] — e.g. "https://cdn.example.com"
+ * @param {string} [cdnHost] - e.g. "https://cdn.example.com"
  * @returns {string}
  */
 export function buildCdnImageUrl(source, opts = {}, cdnHost = "") {

@@ -1,5 +1,5 @@
-/**
- * src/sections/whatsapp.js — WhatsApp bulk-send section ESM module (S0.8)
+﻿/**
+ * src/sections/whatsapp.js - WhatsApp bulk-send section ESM module (S0.8)
  *
  * Template previewer and per-guest WhatsApp link builder.
  * Phone numbers normalised via cleanPhone() → wa.me ready.
@@ -140,8 +140,8 @@ export function getWhatsAppLink(guestId) {
  *
  * Placeholder tokens: {name}, {date}, {venue}, {groom}, {bride}
  *
- * @param {string} guestId  — id of the guest
- * @param {string} [template]  — optional custom template; defaults to wa_default_template
+ * @param {string} guestId  - id of the guest
+ * @param {string} [template]  - optional custom template; defaults to wa_default_template
  * @returns {{ message: string, link: string } | null}
  */
 export function buildWhatsAppMessage(guestId, template) {
@@ -221,7 +221,7 @@ export function updateWaPreview(templateText, guest) {
 
 /**
  * Open all WhatsApp chat links (filter: 'pending' | 'all').
- * Uses window.open — browsers may block multiple popups; user must allow them.
+ * Uses window.open - browsers may block multiple popups; user must allow them.
  * @param {string} [filter]  'pending' to send only to pending guests, 'all' for everyone
  */
 export function sendWhatsAppAll(filter = "all") {
@@ -426,7 +426,7 @@ export function generateICS() {
       .replace(/[-:]/g, "")
       .replace(/\.\d{3}/, "");
   const summary =
-    `${info.groom || ""} & ${info.bride || ""} — ${t("ics_wedding_title") || "Wedding"}`.trim();
+    `${info.groom || ""} & ${info.bride || ""} - ${t("ics_wedding_title") || "Wedding"}`.trim();
   const location = [info.venue, info.venueAddress].filter(Boolean).join(", ");
   return [
     "BEGIN:VCALENDAR",

@@ -1,16 +1,16 @@
-/**
- * src/services/wa-messaging.js — WhatsApp Business API + message personalization (S270)
+﻿/**
+ * src/services/wa-messaging.js - WhatsApp Business API + message personalization (S270)
  *
  * Merged from:
- *   - whatsapp-business.js (Sprint 38) — WA Cloud API payload builders + config helpers
- *   - message-tools.js     (Sprint 55) — Message personalization bridge + tone picker
+ *   - whatsapp-business.js (Sprint 38) - WA Cloud API payload builders + config helpers
+ *   - message-tools.js     (Sprint 55) - Message personalization bridge + tone picker
  *
- * §1 WA Business API  — isBusinessAPIConfigured, buildApiEndpoint,
+ * §1 WA Business API  - isBusinessAPIConfigured, buildApiEndpoint,
  *                        buildTemplatePayload, buildTextPayload, sendTemplateMessage
- * §2 Personalization  — getVariableHints, WEDDING_TEMPLATES, personalizeMessage
- * §3 Tone picker      — MESSAGE_TONES, applyTone, generateToneVariants
+ * §2 Personalization  - getVariableHints, WEDDING_TEMPLATES, personalizeMessage
+ * §3 Tone picker      - MESSAGE_TONES, applyTone, generateToneVariants
  *
- * Named exports only — no window.* side effects, no DOM mutation.
+ * Named exports only - no window.* side effects, no DOM mutation.
  *
  * @typedef {{
  *   phoneNumberId: string,
@@ -184,8 +184,8 @@ export const WEDDING_TEMPLATES = /** @type {const} */ ({
  *
  * @param {string} template
  * @param {{ id?: string; firstName?: string; lastName?: string; phone?: string; tableId?: string }} guest
- * @param {Record<string, string>} info  — weddingInfo store slice
- * @param {string} [tableName]           — resolved table name for the guest
+ * @param {Record<string, string>} info  - weddingInfo store slice
+ * @param {string} [tableName]           - resolved table name for the guest
  * @returns {string}
  */
 export function personalizeMessage(template, guest, info, tableName = "") {
@@ -242,7 +242,7 @@ export const MESSAGE_TONES = Object.freeze([
 
 /**
  * Transform a base message string per tone. The base is expected to end in
- * a period or newline; transformer adds prefix/suffix only — never alters
+ * a period or newline; transformer adds prefix/suffix only - never alters
  * substituted variables (e.g. `{guest.name}`).
  *
  * @param {string} base

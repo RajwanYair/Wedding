@@ -65,7 +65,7 @@ export function advanceOnboarding() {
   if (cur.completed) return cur;
   const i = ONBOARDING_STEPS.indexOf(cur.step);
   const nextIdx = Math.min(i + 1, ONBOARDING_STEPS.length - 1);
-  const nextStep = ONBOARDING_STEPS[nextIdx];
+  const nextStep = ONBOARDING_STEPS[nextIdx] ?? "done";
   /** @type {OnboardingState} */
   const next = {
     step: nextStep,

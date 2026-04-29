@@ -1,11 +1,11 @@
-/**
- * src/services/web-presence.js — S266 merged: DNS instructions + website builder.
+﻿/**
+ * src/services/web-presence.js - S266 merged: DNS instructions + website builder.
  *
  * Merged from:
- *   - dns-helpers.js     (S154 + S210) — DNS record guidance for custom domains
- *   - website-builder.js (S134)        — Pure data-model helpers for wedding website
+ *   - dns-helpers.js     (S154 + S210) - DNS record guidance for custom domains
+ *   - website-builder.js (S134)        - Pure data-model helpers for wedding website
  *
- * Pure functions — no DOM, no side effects.
+ * Pure functions - no DOM, no side effects.
  */
 
 // ────────────────────────────────────────────────────────────
@@ -271,18 +271,19 @@ export function validateExpense(expense) {
 /** @typedef {"public"|"password"|"private"} WebsiteVisibility */
 
 /**
- * @typedef {object} WebsiteConfig
- * @property {string}  id             — unique slug (generated from couple names)
- * @property {string}  coupleA        — first person's first name
- * @property {string}  coupleB        — second person's first name
- * @property {string}  weddingDate    — ISO date "YYYY-MM-DD"
- * @property {WebsiteVisibility} visibility
- * @property {string}  [password]     — bcrypt-ready raw string, max 72 chars
- * @property {WebsiteSection[]} sections
- * @property {string}  [themePreset]  — theme-vars preset name
- * @property {string}  [coverImageUrl]
- * @property {string}  [customDomain] — validated FQDN
- * @property {string}  createdAt
+ * @typedef {{
+ *   id: string,
+ *   coupleA: string,
+ *   coupleB: string,
+ *   weddingDate: string,
+ *   visibility: WebsiteVisibility,
+ *   password?: string,
+ *   sections: WebsiteSection[],
+ *   themePreset?: string,
+ *   coverImageUrl?: string,
+ *   customDomain?: string,
+ *   createdAt: string
+ * }} WebsiteConfig
  */
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -305,6 +306,7 @@ export function buildSiteSlug(/** @type {string} */ coupleA, /** @type {string} 
 
 /**
  * Validate and construct a new `WebsiteConfig`.
+ * @param {Record<string, any>} [opts]
  * @returns {{ ok: boolean, config?: WebsiteConfig, errors?: string[] }}
  */
 export function buildWebsiteConfig({
@@ -332,8 +334,8 @@ export function buildWebsiteConfig({
   }
   if (!Array.isArray(sections) || sections.length === 0) errors.push("sections_empty");
 
-  const validSections = (sections ?? []).filter((s) => ALL_SECTIONS.includes(s));
-  const invalidSections = (sections ?? []).filter((s) => !ALL_SECTIONS.includes(s));
+  const validSections = (sections ?? []).filter((/** @type {string} */ s) => ALL_SECTIONS.includes(/** @type {WebsiteSection} */ (s)));
+  const invalidSections = (sections ?? []).filter((/** @type {string} */ s) => !ALL_SECTIONS.includes(/** @type {WebsiteSection} */ (s)));
   if (invalidSections.length > 0) errors.push(`unknown_sections:${invalidSections.join(",")}`);
 
   if (errors.length > 0) return { ok: false, errors };
@@ -369,7 +371,7 @@ export function updateWebsiteConfig(existing, patch) {
   const IMMUTABLE = new Set(["id", "coupleA", "coupleB", "weddingDate", "createdAt"]);
   const next = { ...existing };
   for (const [k, v] of Object.entries(patch ?? {})) {
-    if (!IMMUTABLE.has(k)) next[/** @type {keyof typeof next} */ (k)] = v;
+    if (!IMMUTABLE.has(k)) next[/** @type {keyof typeof next} */ (k)] = /** @type {any} */ (v);
   }
   return next;
 }

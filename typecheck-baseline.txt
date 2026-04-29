@@ -13,14 +13,10 @@ src/sections/rsvp.js::TS2345::Argument of type 'typeof import("C:/Users/ryair/On
 src/sections/rsvp.js::TS2353::Object literal may only specify known properties, and 'title' does not exist in type 'typeof import("C:/Users/ryair/OneD
 src/sections/rsvp.js::TS2416::Property 'onMount' in type 'RsvpSection' is not assignable to the same property in base type 'BaseSection'.
 src/sections/tables.js::TS2307::Cannot find module '../services/seating-constraints.js' or its corresponding type declarations.
-src/sections/website-builder.js::TS2322::Type 'string[]' is not assignable to type 'WebsiteSection[]'.
 src/sections/website-builder.js::TS2554::Expected 2 arguments, but got 1.
-src/sections/whatsapp.js::TS1127::Invalid character.
 src/services/analytics.js::TS2740::Type '{}' is missing the following properties from type 'AnalyticsEvent[]': length, pop, push, concat, and 35 more.
 src/services/audit.js::TS2339::Property 'access_token' does not exist on type 'never'.
 src/services/audit.js::TS2339::Property 'user' does not exist on type 'never'.
-src/services/outreach.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
-src/services/outreach.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
 src/services/event-manager.js::TS2456::Type alias 'OptimisticManager' circularly references itself.
 src/services/event-manager.js::TS2577::Return type annotation circularly references itself.
 src/services/guest-identity.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
@@ -28,7 +24,6 @@ src/services/guest-service.js::TS2322::Type 'null' is not assignable to type 'st
 src/services/guest-service.js::TS2322::Type 'null' is not assignable to type 'string'.
 src/services/guest-service.js::TS2339::Property 'bulkSetStatus' does not exist on type '{ getAll(): Promise<Guest[]>; getById(id: string): Promise<Guest | null
 src/services/guest-service.js::TS2365::Operator '+' cannot be applied to types 'number | Record<string, number>' and 'number'.
-src/services/wa-messaging.js::TS1127::Invalid character.
 src/services/nfc-session.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 src/services/notifications.js::TS2322::Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'string | BufferSource | null | undefined'.
 src/services/notifications.js::TS2339::Property 'failed' does not exist on type '{ ok: boolean; data?: unknown; error?: string | undefined; }'.
@@ -39,7 +34,8 @@ src/services/observability.js::TS2307::Cannot find module '@sentry/browser' or i
 src/services/observability.js::TS2322::Type '({ function: string | undefined; filename: string | undefined; lineno: number; colno: number; } | { filename: stri
 src/services/observability.js::TS2353::Object literal may only specify known properties, and 'durationThreshold' does not exist in type 'PerformanceObserverIni
 src/services/observability.js::TS7017::Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
-src/services/onboarding.js::TS2322::Type 'string | undefined' is not assignable to type 'string'.
+src/services/outreach.js::TS2322::Type '{ id?: string | undefined; name?: string | undefined; type?: CampaignType | undefined; templateName?: string | und
+src/services/outreach.js::TS2345::Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
 src/services/privacy.js::TS2862::Type 'T' is generic and can only be indexed for reading.
 src/services/realtime.js::TS2554::Expected 1 arguments, but got 2.
 src/services/realtime.js::TS2694::Namespace '"C:/Users/ryair/OneDrive - Intel Corporation/Documents/MyScripts/Wedding/src/utils/misc"' has no exported mem
@@ -47,8 +43,6 @@ src/services/repositories.js::TS1005::'}' expected.
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Guest'. Did you mean to write
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Vendor'. Did you mean to writ
 src/services/repositories.js::TS8022::JSDoc '@implements' is not attached to a class.
-src/services/platform-ops.js::TS2339::Property 'SyncManager' does not exist on type 'Window & typeof globalThis'.
-src/services/platform-ops.js::TS7030::Not all code paths return a value.
 src/services/schedule.js::TS2554::Expected 2 arguments, but got 1.
 src/services/seating.js::TS2339::Property 'filter' does not exist on type '{}'.
 src/services/seating.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
@@ -56,16 +50,5 @@ src/services/seating.js::TS2740::Type '{}' is missing the following properties f
 src/services/security.js::TS2769::No overload matches this call.
 src/services/sync.js::TS2345::Argument of type 'SyncStatusSummary' is not assignable to parameter of type 'SyncStatus'.
 src/services/theme.js::TS2345::Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'Record<string, string>'.
-src/services/web-presence.js::TS1127::Invalid character.
-src/services/web-presence.js::TS2322::Type 'string | WebsiteSection[]' is not assignable to type 'string & (WebsiteSection[] & ("public" | "password" | "priva
-src/services/web-presence.js::TS2322::Type 'string' is not assignable to type 'WebsiteVisibility'.
-src/services/web-presence.js::TS2339::Property 'coupleA' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
-src/services/web-presence.js::TS2339::Property 'coupleB' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; }
-src/services/web-presence.js::TS2339::Property 'coverImageUrl' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefi
-src/services/web-presence.js::TS2339::Property 'customDomain' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefin
-src/services/web-presence.js::TS2339::Property 'password' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefined; 
-src/services/web-presence.js::TS2339::Property 'themePreset' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefine
-src/services/web-presence.js::TS2339::Property 'weddingDate' does not exist on type '{ visibility?: string | undefined; sections?: WebsiteSection[] | undefine
 src/utils/capacitor-config.js::TS2339::Property 'test' does not exist on type 'readonly string[]'.
 src/utils/capacitor-config.js::TS2740::Type 'RegExp' is missing the following properties from type 'readonly string[]': length, concat, join, slice, and 26 mor
-src/utils/cdn-image.js::TS1127::Invalid character.

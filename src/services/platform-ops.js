@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/services/platform-ops.js — Platform operations: resilience + diagnostics (S273)
  *
  * Merged from:
@@ -126,7 +126,7 @@ export function isBackgroundSyncSupported() {
   if (typeof window === "undefined") return false;
   return (
     "serviceWorker" in navigator &&
-    typeof window.SyncManager !== "undefined" &&
+    typeof (/** @type {any} */ (window)).SyncManager !== "undefined" &&
     typeof navigator.serviceWorker.ready?.then === "function"
   );
 }
@@ -292,6 +292,7 @@ function _registerSyncTag() {
             "rsvp-sync",
           );
         }
+        return undefined;
       })
       .catch(() => {
         // Background Sync not supported or permission denied — ignore
@@ -645,6 +646,7 @@ export function _setQueueStatsFnForTests(fn) {
   _queueStatsFn = fn;
 }
 
+/** Returns a health report including error counts, offline queue stats, and warnings. */
 export function getHealthReport() {
   const queue = _queueStatsFn();
   const warnings = /** @type {string[]} */ ([]);
