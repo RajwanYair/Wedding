@@ -188,7 +188,7 @@ export function getDirtyStateSummary() {
  * Create an optimistic update manager bound to the provided store accessors.
  * @param {GetFn} getFn    e.g. storeGet
  * @param {SetFn} setFn    e.g. storeSet
- * @returns {OptimisticManager}
+ * @returns {object}
  */
 export function createOptimisticManager(getFn, setFn) {
   /** @type {Map<string, OptimisticSnapshot>} */
@@ -302,7 +302,14 @@ export function createOptimisticManager(getFn, setFn) {
 }
 
 /**
- * @typedef {ReturnType<typeof createOptimisticManager>} OptimisticManager
+ * @typedef {{
+ *   applyOptimistic: (storeKey: string, recordId: string, patch: AnyRecord) => ApplyResult,
+ *   rollbackOptimistic: (snapshotId: string) => boolean,
+ *   commitOptimistic: (snapshotId: string) => boolean,
+ *   pendingSnapshots: () => OptimisticSnapshot[],
+ *   rollbackAll: () => number,
+ *   commitAll: () => number,
+ * }} OptimisticManager
  */
 
 

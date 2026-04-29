@@ -94,7 +94,7 @@ export async function subscribePush(vapidPublicKey) {
   const reg = await navigator.serviceWorker.ready;
   const sub = await reg.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+    applicationServerKey: /** @type {BufferSource} */ (urlBase64ToUint8Array(vapidPublicKey)),
   });
 
   const data = serializeSubscription(sub);
@@ -121,7 +121,7 @@ export async function unsubscribePush() {
  * @returns {PushSubscriptionData | null}
  */
 export function getCachedSubscription() {
-  return readBrowserStorageJson(_CACHE_KEY, null);
+  return /** @type {import('../types.d.ts').PushSubscriptionData | null} */ (readBrowserStorageJson(_CACHE_KEY, null) ?? null);
 }
 
 // ── Serialization ──────────────────────────────────────────────────────────
@@ -155,10 +155,10 @@ export function serializeSubscription(sub) {
 export async function dispatchPush(subscriptions, payload) {
   if (subscriptions.length === 0) return { sent: 0, failed: 0 };
 
-  const result = await callEdgeFunction("push-dispatcher", {
+  const result = /** @type {any} */ (await callEdgeFunction("push-dispatcher", {
     subscriptions,
     payload,
-  });
+  }));
 
   return {
     sent: result?.sent ?? 0,
@@ -171,7 +171,7 @@ export async function dispatchPush(subscriptions, payload) {
  * `push_subscriptions` store key.
  *
  * @param {PushPayload} payload
- * @param {import("../core/store.js").StoreGetFn} [storeGet]
+ * @param {((key: string) => unknown) | undefined} [storeGet]
  * @returns {Promise<{ sent: number, failed: number }>}
  */
 export async function sendPushToAdmins(payload, storeGet) {

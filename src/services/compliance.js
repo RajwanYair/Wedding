@@ -173,7 +173,7 @@ export function redactPII(domain, obj) {
   const copy = /** @type {T} */ ({ ...obj });
   for (const field of piiFields) {
     if (Object.hasOwn(copy, field)) {
-      copy[field] = null;
+      (/** @type {any} */ (copy))[field] = null;
     }
   }
   return copy;
@@ -352,14 +352,14 @@ function _key() {
 }
 
 function _getAdminEmail() {
-  const sess = readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null);
+  const sess = /** @type {any} */ (readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null));
   return sess?.user?.email ?? null;
 }
 
 // ── Session token for RLS ──────────────────────────────────────────────
 
 function _getAccessToken() {
-  const sess = readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null);
+  const sess = /** @type {any} */ (readBrowserStorageJson(STORAGE_KEYS.SUPABASE_SESSION, null));
   return sess?.access_token ?? null;
 }
 

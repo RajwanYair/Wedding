@@ -272,7 +272,7 @@ let _processing = false;
 
 // ── Listeners ─────────────────────────────────────────────────────────────
 
-/** @type {Set<(status: SyncStatus) => void>} */
+/** @type {Set<(status: SyncStatusSummary) => void>} */
 const _listeners = new Set();
 
 /**
@@ -295,7 +295,7 @@ export function getQueueStatus() {
 }
 
 /**
- * @param {(status: SyncStatus) => void} fn
+ * @param {(status: SyncStatusSummary) => void} fn
  * @returns {() => void} unsubscribe
  */
 export function onSyncStatusChange(fn) {

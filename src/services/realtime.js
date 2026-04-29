@@ -106,7 +106,7 @@ async function _sendHeartbeat() {
   });
 
   try {
-    await sheetsPost("presence", entry);
+    await sheetsPost(entry);
   } catch {
     // Best-effort
   }
@@ -486,7 +486,7 @@ function _handleMessage(msg) {
  */
 export function subscribeGuestChanges() {
   return subscribeRealtime("guests", (payload) => {
-    const guests = /** @type {import('../utils/misc.js').Guest[]} */ ([
+    const guests = /** @type {any[]} */ ([
       .../** @type {any[]} */ (storeGet("guests") ?? []),
     ]);
 
