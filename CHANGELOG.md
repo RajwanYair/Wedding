@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.17.0] — 2025-07-14
+
+> **S347–S354: Phase C4 — coverage uplift: 7 new test suites (guests/ui/settings/app-config/schedule/outreach/observability) + coverage ratchet, 3878 tests.**
+
+### Added
+
+- **S347** — Unit tests for `sections/guests.js` data helpers: 29 new tests (stats, filter, sort, seating gaps, response timeline, duplicate detection)
+- **S348** — Unit tests for `core/ui.js` helpers: 26 new tests (announce, toast, theme cycle/restore, SW banner, confirm dialog)
+- **S349** — Unit tests for `sections/settings.js` helpers: 15 new tests (data integrity, audit/error log clear, transport settings)
+- **S350** — Unit tests for `core/app-config.js` helpers: 19 new tests (URL overrides, spreadsheet IDs, backend type, admin email dedup)
+- **S351** — Unit tests for `services/schedule.js` helpers: 28 new tests (default timeline, sort, overlap detection, shift, run-of-show, formatTimeUntil)
+- **S352** — Unit tests for `services/outreach.js` campaign + delivery helpers: 29 new tests (create/queue/start/cancel, state machine, recordSent, delivery tracking)
+- **S353** — Unit tests for `services/observability.js` error capture + PII scrubbing: 35 new tests (captureError, getErrors, clearErrors, scrubPii, parseDsn, breadcrumbs)
+
+### Changed
+
+- **S354** — Coverage ratchet uplift: global `functions:64→65`; `repos` stmts 71→82, lines 83→94; `services` stmts 73→74, lines 75→76; `core` lines 67→74, branches 60→64, functions 62→64, stmts 67→70
+- **S355** — Version bump to v13.17.0; 3878 tests green; 0 lint errors
+
 ## [13.16.0] — 2026-05-10
 
 > **S336–S345: Phase C3 — coverage sprints: sync/storage, vendors/timeline/budget/expenses/whatsapp/tables/checkin section helpers, coverage ratchet +3%, 3697 tests.**
