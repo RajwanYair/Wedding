@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { createRateLimiter } from "../../src/services/resilience.js";
+import { createRateLimiter } from "../../src/services/platform-ops.js";
 
 describe("createRateLimiter", () => {
   it("throws for limit < 1", () => {

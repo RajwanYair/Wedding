@@ -12,11 +12,11 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { decodeJwtPayload, hasRole, isTokenExpired } from "../../src/services/auth.js";
-import { createRateLimiter } from "../../src/services/resilience.js";
+import { createRateLimiter } from "../../src/services/platform-ops.js";
 import { PII_COLUMNS } from "../../src/services/privacy.js";
 import { createAuditPipeline } from "../../src/services/audit.js";
 import { generateKey, encryptField, decryptField, createSessionGuard } from "../../src/services/security.js";
-import { REQUIRED_RLS_TABLES } from "../../src/services/diagnostics.js";
+import { REQUIRED_RLS_TABLES } from "../../src/services/platform-ops.js";
 
 // ── Build a fake JWT ──────────────────────────────────────────────────────
 

@@ -39,7 +39,7 @@ beforeEach(async () => {
   vi.resetModules();
   Object.keys(_store).forEach((k) => delete _store[k]);
   ({ enqueueOffline, getOfflineQueueCount, getQueueStats, flushOfflineQueue, initOfflineQueue } =
-    await import("../../src/services/resilience.js"));
+    await import("../../src/services/platform-ops.js"));
 });
 
 // ── Tests ─────────────────────────────────────────────────────────────────

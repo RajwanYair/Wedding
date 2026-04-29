@@ -47,8 +47,8 @@ src/services/repositories.js::TS1005::'}' expected.
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Guest'. Did you mean to write
 src/services/repositories.js::TS2561::Object literal may only specify known properties, but 'deleted_at' does not exist in type 'Vendor'. Did you mean to writ
 src/services/repositories.js::TS8022::JSDoc '@implements' is not attached to a class.
-src/services/resilience.js::TS2339::Property 'SyncManager' does not exist on type 'Window & typeof globalThis'.
-src/services/resilience.js::TS7030::Not all code paths return a value.
+src/services/platform-ops.js::TS2339::Property 'SyncManager' does not exist on type 'Window & typeof globalThis'.
+src/services/platform-ops.js::TS7030::Not all code paths return a value.
 src/services/schedule.js::TS2554::Expected 2 arguments, but got 1.
 src/services/seating.js::TS2339::Property 'filter' does not exist on type '{}'.
 src/services/seating.js::TS2488::Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.

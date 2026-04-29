@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { DEPLOY_TARGETS, getDeployButtons } from "../../src/services/diagnostics.js";
+import { DEPLOY_TARGETS, getDeployButtons } from "../../src/services/platform-ops.js";
 
 const REPO = "https://github.com/RajwanYair/Wedding";
 

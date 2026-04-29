@@ -13,7 +13,7 @@ import { DEBOUNCE_MS, MAX_RETRIES, BACKOFF_BASE_MS } from "../core/config.js";
 import { storageGet, storageSet, storageRemove } from "../core/storage.js";
 import { getSheetsWebAppUrl, getSpreadsheetId } from "../core/app-config.js";
 import { storeGet, storeSet } from "../core/store.js";
-import { registerBackgroundSync } from "./resilience.js";
+import { registerBackgroundSync } from "./platform-ops.js";
 import {
   syncStoreKey,
   appendRsvpLog,

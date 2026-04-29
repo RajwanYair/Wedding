@@ -8,18 +8,12 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-// ── Mock offline-queue ────────────────────────────────────────────────────
-vi.mock("../../src/services/resilience.js", () => ({
-  getQueueStats: vi.fn(() => ({ total: 0, exhausted: 0, oldestAddedAt: null })),
-}));
-
-let captureHealthError, getHealthReport, resetHealthState;
+let captureHealthError, getHealthReport, resetHealthState, _setQueueStatsFnForTests;
 
 beforeEach(async () => {
-  vi.resetAllMocks();
   vi.resetModules();
-  ({ captureHealthError, getHealthReport, resetHealthState } =
-    await import("../../src/services/diagnostics.js"));
+  ({ captureHealthError, getHealthReport, resetHealthState, _setQueueStatsFnForTests } =
+    await import("../../src/services/platform-ops.js"));
   resetHealthState();
 });
 
@@ -75,17 +69,15 @@ describe("health — status transitions", () => {
     expect(getHealthReport().status).toBe("critical");
   });
 
-  it("adds warning for exhausted offline items", async () => {
-    const { getQueueStats } = await import("../../src/services/resilience.js");
-    getQueueStats.mockReturnValue({ total: 0, exhausted: 2, oldestAddedAt: null });
+  it("adds warning for exhausted offline items", () => {
+    _setQueueStatsFnForTests(() => ({ total: 0, exhausted: 2, oldestAddedAt: null }));
     const report = getHealthReport();
     expect(report.warnings).toContain("2 offline items exhausted (dropped)");
     expect(report.status).toBe("degraded");
   });
 
-  it("adds warning for large offline queue", async () => {
-    const { getQueueStats } = await import("../../src/services/resilience.js");
-    getQueueStats.mockReturnValue({ total: 11, exhausted: 0, oldestAddedAt: null });
+  it("adds warning for large offline queue", () => {
+    _setQueueStatsFnForTests(() => ({ total: 11, exhausted: 0, oldestAddedAt: null }));
     const report = getHealthReport();
     expect(report.warnings.some((w) => w.includes("pending"))).toBe(true);
   });
