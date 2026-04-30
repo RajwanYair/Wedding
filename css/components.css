@@ -1934,6 +1934,33 @@
     color: var(--negative, #fca5a5);
   }
 
+  /* ── S410 Presence Avatar Badges ── */
+  .presence-badge-cell {
+    display: inline-flex;
+    gap: 2px;
+    vertical-align: middle;
+    margin-inline-start: 0.4rem;
+  }
+
+  .presence-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--accent, #a78bfa);
+    color: var(--bg, #0f0f1a);
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.1));
+
+    &.presence-avatar--overflow {
+      background: var(--text-muted, #9ca3af);
+      color: var(--bg, #0f0f1a);
+    }
+  }
+
   /* ── S409 Realtime Live Badge ── */
   .realtime-badge {
     display: inline-block;

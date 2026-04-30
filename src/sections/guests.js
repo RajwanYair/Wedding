@@ -17,6 +17,7 @@ import { guestMatchesQuery } from "../utils/guest-search.js";
 import { pushUndo } from "../utils/undo.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
 import { getUrlParam, setUrlParams } from "../utils/url-state.js";
+import { onPresenceChange, groupByViewing, badgeFor } from "../services/realtime.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -40,10 +41,65 @@ class GuestsSection extends BaseSection {
     _searchQuery = getUrlParam("q", "");
     this.subscribe("guests", renderGuests);
     renderGuests();
+    // S410: Wire presence badges — update on each presence change
+    const unsubPresence = onPresenceChange((users) => _updatePresenceBadges(users));
+    this.addCleanup(unsubPresence);
   }
 }
 
 export const { mount, unmount, capabilities } = fromSection(new GuestsSection("guests"));
+
+// ── S410: Presence badges ─────────────────────────────────────────────────
+
+/**
+ * Update presence initials badges on guest rows.
+ * Called whenever the presence list changes.
+ * @param {Array<{ email: string, name: string, lastSeen: string, viewing?: string }>} users
+ */
+function _updatePresenceBadges(users) {
+  const byGuest = groupByViewing(/** @type {any[]} */ (users));
+  const tbody = el.guestTableBody;
+  if (!tbody) return;
+  const rows = /** @type {NodeListOf<HTMLTableRowElement>} */ (
+    tbody.querySelectorAll("tr[data-id]")
+  );
+  rows.forEach((tr) => {
+    const guestId = tr.dataset.id ?? "";
+    const viewers = byGuest.get(guestId) ?? [];
+    // Find or create the presence badge cell
+    let badgeCell = /** @type {HTMLElement|null} */ (tr.querySelector(".presence-badge-cell"));
+    if (!badgeCell) {
+      badgeCell = document.createElement("span");
+      badgeCell.className = "presence-badge-cell";
+      const nameCell = tr.cells[1]; // first cell after checkbox
+      if (nameCell) nameCell.appendChild(badgeCell);
+    }
+    if (viewers.length === 0) {
+      badgeCell.textContent = "";
+      badgeCell.hidden = true;
+      return;
+    }
+    const { initials, overflow } = badgeFor(viewers);
+    badgeCell.textContent = "";
+    // Build DOM safely — no innerHTML with user data
+    const tempFrag = document.createDocumentFragment();
+    initials.forEach((initial, idx) => {
+      const span = document.createElement("span");
+      span.className = "presence-avatar";
+      span.textContent = initial;
+      span.title = viewers[idx]?.name ?? viewers[idx]?.email ?? "";
+      tempFrag.appendChild(span);
+    });
+    if (overflow > 0) {
+      const ovSpan = document.createElement("span");
+      ovSpan.className = "presence-avatar presence-avatar--overflow";
+      ovSpan.textContent = `+${overflow}`;
+      tempFrag.appendChild(ovSpan);
+    }
+    badgeCell.appendChild(tempFrag);
+    badgeCell.hidden = false;
+  });
+}
 
 // ── Guest CRUD ────────────────────────────────────────────────────────────
 
