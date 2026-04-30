@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.20.0] — 2026-04-30
+
+> **S376–S378: Scope-lock cleanup — remove orphaned native-mobile scaffolding; modernize tooling/docs/VS Code integration.**
+
+### Removed
+
+- **S376** — `.github/workflows/capacitor.yml` orphan workflow (referenced non-existent `android/` and `ios/` source dirs; violated SCOPE LOCK "web project only")
+- **S376** — `src/utils/capacitor-config.js` dead Capacitor config builder (data-model only, never imported by app runtime; only its own test imported it)
+- **S376** — `tests/unit/capacitor-config.test.mjs` (orphaned with the above)
+
+### Changed
+
+- **S377** — README test-count badge `2385+ Vitest unit tests` → `4187+`; coverage badge `50% lines · 42% branches` → `58% lines · 51% branches` to match v13.19.0 ratchet
+- **S378** — `.github` overhaul: 6 prompts, 5 skills, PR template, CODEOWNERS now reflect repositories+handlers layers, valibot, `@scope` CSS, 4187-test baseline
+- **S378** — `.vscode` modernized: NES (next-edit suggestions), `generateTests` codeLens, `renameSuggestions`,
+  commit-message instructions, `skillFilesLocations` for `.github/skills/`; Vitest debug configs in
+  `launch.json`; Build/Audit/Sync/Security tasks added; missing `GitHub.copilot` base extension added
+- **S378** — Locale set corrected: docs/code referenced `ru` but actual `src/i18n/` has `es`+`fr`; updated copilot-instructions, workspace instructions, lighthouse.yml matrix, bundle.budget.json, `i18n.js` JSDoc + locale map (`es-ES`, `fr-FR`)
+- **S378** — `supabase-db-lint.yml` upgraded `actions/checkout@v4` + `setup-node@v4` → `@v6`
+- **S378** — `package.json` scripts: added `format` / `format:check` (Prettier — configs already existed) and `audit:arch` (`arch-check.mjs --strict` shortcut)
+
+### Notes
+
+- Pre-existing tooling already covers prompt's 20 tasks 1–19 (CI, Release with artifacts+checksums,
+  Dependabot, issue/PR templates, CODEOWNERS, CONTRIBUTING, SECURITY, Prettier+ESLint+Stylelint,
+  Mermaid validation, ADRs, single deployable `dist/`, single npm lockfile, no Python build steps).
+  This release closes the residual scope-lock gap (#1, #20) and refreshes documentation/tooling currency.
+
 ## [13.19.0] — 2026-05-01
 
 > **S366–S375: Phase C6 — coverage uplift: 5 new section/service test suites + coverage ratchet, 4187 tests.**

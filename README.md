@@ -1,10 +1,10 @@
 # 💍 Wedding Manager
 
-[![Version](https://img.shields.io/badge/version-v13.19.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
+[![Version](https://img.shields.io/badge/version-v13.20.0-d4a574?style=flat-square)](https://github.com/RajwanYair/Wedding/releases)
 [![CI](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/ci.yml)
 [![Deploy](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/deploy.yml)
 [![Tests](https://img.shields.io/badge/tests-4187_passing-brightgreen?style=flat-square)](https://github.com/RajwanYair/Wedding/actions)
-[![Coverage](https://img.shields.io/badge/coverage-50%25_lines_%C2%B7_42%25_branches-1abc9c?style=flat-square)](.github/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-58%25_lines_%C2%B7_51%25_branches-1abc9c?style=flat-square)](.github/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Modular](https://img.shields.io/badge/Modular-50%2B_JS_%2B_7_CSS-E34F26?style=flat-square&logo=html5&logoColor=white)](docs/README.md)
 [![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
@@ -56,7 +56,7 @@ npm run dev
 ```bash
 npm run lint          # HTML + CSS + JS + Markdown — 0 errors, 0 warnings
 npm run format:check  # Prettier formatting check (add to pre-commit hook)
-npm test              # 2385+ Vitest unit tests
+npm test              # 4187+ Vitest unit tests
 npm run build         # Vite production bundle → dist/
 ```
 

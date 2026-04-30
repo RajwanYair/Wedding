@@ -1128,6 +1128,7 @@ Storage + Realtime for development without an account.
 | **v13.17.0** | **Released 2025-07-14** | **Phase C4 — test expansion + coverage ratchet** | **S347–S354; 7 new test suites (guests/ui/settings/app-config/schedule/outreach/observability); repos stmts 71→82, lines 83→94; core lines 67→74; 3878 tests** |
 | **v13.19.0** | **Released 2026-05-01** | **Phase C6 — section/service test expansion + coverage ratchet** | **S366–S375; 5 new test suites (settings/seating-export/gallery/nav/guests-batch); lines 58%/branches 51%; 4187 tests** |
 | **v13.18.0** | **Released 2026-04-30** | **Phase C5 — service/core test expansion + coverage ratchet** | **S356–S365; 8 new test suites (guest-identity/event-manager/platform-ops/wa-messaging/compliance/web-presence/commerce/ui); lines 57%/functions 66%; 4108 tests** |
+| **v13.20.0** | **Released 2026-04-30** | **Scope-lock cleanup + tooling/docs/VS Code modernization** | **S376–S378; removed orphan `capacitor.yml` workflow + dead `capacitor-config.js` util + test (no `android/`/`ios/` source in repo); locale set ru→es+fr corrected across 11 files; `supabase-db-lint.yml` actions v4→v6; .vscode NES/codeLens/skillFiles/Vitest debug/Build+Audit+Sync+Security tasks; `.github` overhaul (6 prompts, 5 skills, PR template, CODEOWNERS); README test-count + coverage badge refresh** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1136,5 +1137,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2026-05-01 · v13.19.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-04-30 · v13.20.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*
