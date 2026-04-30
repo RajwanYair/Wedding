@@ -12,6 +12,7 @@ import {
   printSeatingChart,
   printPlaceCards,
   printTableSigns,
+  printQrTableCards,
   openTableForEdit,
   exportTransportCSV,
   printTransportManifest,
@@ -46,6 +47,8 @@ export function register() {
   on("printSeatingChart", () => printSeatingChart());
   on("printPlaceCards", () => printPlaceCards());
   on("printTableSigns", () => printTableSigns());
+  // S422: QR table cards
+  on("printQrTableCards", () => printQrTableCards());
   on("exportTransportCSV", () => exportTransportCSV());
   on("printTransportManifest", () => printTransportManifest());
   on("exportSeatMapCsv", () => exportSeatMapCsv());

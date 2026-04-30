@@ -479,6 +479,59 @@ export function printTableSigns() {
 }
 
 /**
+ * S422: Open a print window with QR table cards (one per table).
+ * Each card shows the table name, capacity, and a QR code linking to the
+ * table check-in URL. Uses `qr-code.js` (zero deps) for client-side QR.
+ */
+export async function printQrTableCards() {
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  if (!tables.length) return;
+
+  const { getQrDataUrl, buildCheckinUrl } = await import("../utils/qr-code.js");
+  const cards = await Promise.all(
+    tables.map(async (tb) => {
+      const url = buildCheckinUrl(tb.id);
+      const dataUrl = await getQrDataUrl(url, 180);
+      return { name: tb.name || tb.id, capacity: tb.capacity ?? 10, dataUrl, url };
+    }),
+  );
+
+  const cardHtml = cards
+    .map(
+      (c) =>
+        `<div class="qr-card">
+          <h2>${c.name.replace(/[<>&"]/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[ch] ?? ch)}</h2>
+          <img src="${c.dataUrl}" alt="QR ${c.name}" width="180" height="180" />
+          <p>${c.capacity} מקומות</p>
+        </div>`,
+    )
+    .join("");
+
+  const win = window.open("", "_blank", "width=800,height=600");
+  if (!win) return;
+  win.document.write(`<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<title>כרטיסי QR לשולחנות</title>
+<style>
+  body{font-family:Arial,sans-serif;margin:0;padding:16px;background:#fff}
+  .qr-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+  .qr-card{border:2px solid #ccc;border-radius:8px;padding:16px;text-align:center;width:220px;break-inside:avoid}
+  .qr-card h2{margin:0 0 8px;font-size:1.1rem}
+  .qr-card p{margin:8px 0 0;font-size:0.85rem;color:#666}
+  @media print{body{padding:0}.qr-grid{gap:8px}}
+</style>
+</head>
+<body>
+<div class="qr-grid">${cardHtml}</div>
+</body>
+</html>`);
+  win.document.close();
+  win.onload = () => win.print();
+}
+
+/**
  * Pre-fill the table modal with an existing table and open it.
  * @param {string} id
  */
