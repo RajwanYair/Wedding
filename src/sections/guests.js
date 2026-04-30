@@ -16,6 +16,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { guestMatchesQuery } from "../utils/guest-search.js";
 import { pushUndo } from "../utils/undo.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
+import { getUrlParam, setUrlParams } from "../utils/url-state.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -33,6 +34,10 @@ let _searchQuery = "";
 
 class GuestsSection extends BaseSection {
   async onMount() {
+    // S392: Restore filter/sort state from URL params on every mount
+    _filter = getUrlParam("filter", "all");
+    _sortField = getUrlParam("sort", "lastName");
+    _searchQuery = getUrlParam("q", "");
     this.subscribe("guests", renderGuests);
     renderGuests();
   }
@@ -152,6 +157,7 @@ function clearGuestPendingSync() {
  */
 export function setFilter(filter) {
   _filter = filter;
+  setUrlParams({ filter }, { filter: "all" });
   renderGuests();
 }
 
@@ -161,6 +167,7 @@ export function setFilter(filter) {
  */
 export function setSortField(field) {
   _sortField = field;
+  setUrlParams({ sort: field }, { sort: "lastName" });
   renderGuests();
 }
 
@@ -170,6 +177,7 @@ export function setSortField(field) {
  */
 export function setSearchQuery(query) {
   _searchQuery = query;
+  setUrlParams({ q: query });
   renderGuests();
 }
 
