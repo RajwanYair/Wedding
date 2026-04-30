@@ -114,6 +114,32 @@ export function requestGdprErasure() {
   showToast(t("gdpr_erased"), "success");
 }
 
+/**
+ * S443: GDPR data portability — export all wedding_v1_* localStorage data as JSON.
+ */
+export function exportPersonalData() {
+  const data = {};
+  try {
+    for (const k of Object.keys(localStorage)) {
+      if (k.startsWith("wedding_v1_")) {
+        try { data[k] = JSON.parse(localStorage.getItem(k) ?? "null"); }
+        catch { data[k] = localStorage.getItem(k); }
+      }
+    }
+  } catch { /* storage disabled */ }
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `wedding-data-export-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(t("gdpr_exported"), "success");
+}
+
 export const { mount, unmount, capabilities } = fromSection(new SettingsSection("settings"));
 
 // ── Settings API ──────────────────────────────────────────────────────────

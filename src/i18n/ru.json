@@ -1486,5 +1486,7 @@
   "webhook_none": "Нет зарегистрированных webhooks.",
   "webhook_url_required": "URL обязателен",
   "webhook_url_invalid": "Некорректный URL",
-  "webhook_events_required": "Выберите хотя бы одно событие"
+  "webhook_events_required": "Выберите хотя бы одно событие",
+  "gdpr_export_btn": "Экспорт личных данных (GDPR)",
+  "gdpr_exported": "Личные данные успешно экспортированы."
 }

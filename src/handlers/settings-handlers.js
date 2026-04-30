@@ -62,6 +62,7 @@ import {
   copyApiKey,
   revokeApiKey,
   requestGdprErasure,
+  exportPersonalData,
   addWebhook,
   removeWebhook,
   pingWebhookById,
@@ -367,6 +368,7 @@ export function register() {
   on("copyApiKey", async () => { await copyApiKey(); });
   on("revokeApiKey", () => { revokeApiKey(); });
   on("requestGdprErasure", () => { requestGdprErasure(); });
+  on("exportPersonalData", () => { exportPersonalData(); });
   on("addWebhook", async () => { await addWebhook(); });
   on("removeWebhook", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await removeWebhook(id); });
   on("pingWebhookById", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await pingWebhookById(id); });

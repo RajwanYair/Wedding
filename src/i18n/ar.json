@@ -1486,5 +1486,7 @@
   "webhook_none": "لا توجد webhooks مسجلة.",
   "webhook_url_required": "عنوان URL مطلوب",
   "webhook_url_invalid": "عنوان URL غير صالح",
-  "webhook_events_required": "اختر حدثاً واحداً على الأقل"
+  "webhook_events_required": "اختر حدثاً واحداً على الأقل",
+  "gdpr_export_btn": "تصدير البيانات الشخصية (GDPR)",
+  "gdpr_exported": "تم تصدير البيانات الشخصية بنجاح."
 }

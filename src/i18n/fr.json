@@ -1486,5 +1486,7 @@
   "webhook_none": "Aucun webhook enregistré.",
   "webhook_url_required": "URL requise",
   "webhook_url_invalid": "URL invalide",
-  "webhook_events_required": "Sélectionnez au moins un événement"
+  "webhook_events_required": "Sélectionnez au moins un événement",
+  "gdpr_export_btn": "Exporter les données personnelles (RGPD)",
+  "gdpr_exported": "Données personnelles exportées avec succès."
 }

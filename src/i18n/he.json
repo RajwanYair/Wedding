@@ -1486,5 +1486,7 @@
   "webhook_none": "אין Webhooks רשומים.",
   "webhook_url_required": "יש להזין כתובת URL",
   "webhook_url_invalid": "כתובת URL אינה תקינה",
-  "webhook_events_required": "יש לבחור לפחות אירוע אחד"
+  "webhook_events_required": "יש לבחור לפחות אירוע אחד",
+  "gdpr_export_btn": "ייצא נתונים אישיים (GDPR)",
+  "gdpr_exported": "הנתונים האישיים יוצאו בהצלחה."
 }

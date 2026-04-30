@@ -145,6 +145,7 @@ vi.mock("../../src/sections/settings.js", () => ({
   copyApiKey: () => _copyApiKeyMock(),
   revokeApiKey: () => _revokeApiKeyMock(),
   requestGdprErasure: () => _requestGdprErasureMock(),
+  exportPersonalData: () => _exportPersonalDataMock(),
   addWebhook: () => _addWebhookMock(),
   removeWebhook: () => _removeWebhookMock(),
   pingWebhookById: () => _pingWebhookByIdMock(),
@@ -158,6 +159,7 @@ const _generateApiKeyMock = vi.fn();
 const _copyApiKeyMock = vi.fn(() => Promise.resolve());
 const _revokeApiKeyMock = vi.fn();
 const _requestGdprErasureMock = vi.fn();
+const _exportPersonalDataMock = vi.fn();
 const _addWebhookMock = vi.fn(() => Promise.resolve());
 const _removeWebhookMock = vi.fn(() => Promise.resolve());
 const _pingWebhookByIdMock = vi.fn(() => Promise.resolve());
@@ -248,6 +250,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "registerPasskey", "authenticatePasskey", "clearPasskeys",
       "generateApiKey", "copyApiKey", "revokeApiKey",
       "requestGdprErasure",
+      "exportPersonalData",
       "testErrorReport",
       "addWebhook", "removeWebhook", "pingWebhookById", "refreshWebhooks",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
