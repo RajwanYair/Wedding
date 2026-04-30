@@ -2057,12 +2057,6 @@
     max-width: 280px;
     justify-content: center;
   }
-  [id="googleSignInBtn"] {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    max-width: 280px;
-  }
 
   /* ── Dashboard Stat-Card Color Modifiers (CSP) ── */
   .stat-card--blue {

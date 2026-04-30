@@ -592,6 +592,10 @@ function _registerHandlers() {
       showToast(t("auth_welcome", { name: result.name }), "success");
     }
   });
+  on("loginGoogle", async () => {
+    const { signInWith } = await import("./services/auth.js");
+    signInWith("google");
+  });
   on("loginApple", () => {
     const AppleID = /** @type {any} */ (window).AppleID;
     if (!AppleID) return;

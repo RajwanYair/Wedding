@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- ── Security: CSP meta fallback (authoritative CSP is in public/_headers with frame-ancestors) ── -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com https://appleid.cdn-apple.com; style-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org https://*.supabase.co wss://*.supabase.co; font-src 'self'; worker-src 'self'; frame-src https://accounts.google.com https://appleid.apple.com https://www.openstreetmap.org; base-uri 'self'; form-action 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types wedding-html default dompurify">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://appleid.cdn-apple.com; style-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://oauth2.googleapis.com https://www.googleapis.com https://accounts.google.com https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org https://*.supabase.co wss://*.supabase.co; font-src 'self'; worker-src 'self'; frame-src https://accounts.google.com https://appleid.apple.com https://www.openstreetmap.org; base-uri 'self'; form-action 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types wedding-html default dompurify">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="חתונת אליאור וטובה — כ׳ באייר התשפ״ו | ניהול אורחים, אישורי הגעה, סידורי שולחנות">
@@ -34,7 +34,6 @@
   <meta name="apple-mobile-web-app-title" content="Wedding">
   <link rel="manifest" href="./manifest.json">
   <!-- Preconnect to external origins used at startup -->
-  <link rel="preconnect" href="https://accounts.google.com" crossorigin>
   <link rel="dns-prefetch" href="//api.qrserver.com">
   <link rel="dns-prefetch" href="//script.google.com">
   <link rel="stylesheet" href="./css/variables.css" fetchpriority="high">
@@ -45,11 +44,7 @@
   <link rel="stylesheet" href="./css/auth.css">
   <link rel="stylesheet" href="./css/print.css" media="print" fetchpriority="low">
   <!-- Google Identity Services — Sign In with Google -->
-  <!-- Setup: https://console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0 Client ID (Web application) -->
-  <!-- NOTE: No `crossorigin` attr: Google's GSI endpoint does not serve CORS
-       headers; with `crossorigin="anonymous"` the browser sends a CORS request
-       and blocks execution, breaking sign-in and producing console errors. -->
-  <script src="https://accounts.google.com/gsi/client" async defer fetchpriority="low"></script>
+  <!-- Google OAuth handled via Supabase Auth redirect (S388) -->
   <!-- Structured Data: Event (JSON-LD) -->
   <script type="application/ld+json">
   {
@@ -95,7 +90,7 @@
           🔑 <span data-i18n="auth_sign_in_btn">כניסה כמנהל</span>
         </button>
         <div class="auth-divider-line"><span data-i18n="auth_or_social">── או התחבר עם ──</span></div>
-        <div id="googleSignInBtn"></div>
+        <button class="auth-social-btn btn-google" data-action="loginGoogle" data-i18n="auth_continue_google">G המשך עם Google</button>
         <button class="auth-social-btn btn-apple" data-action="loginApple" data-i18n="auth_continue_apple">🍎 המשך עם Apple</button>
         <div class="auth-divider-line"><span data-i18n="auth_or">או</span></div>
         <button class="auth-social-btn btn-guest" data-action="hideAuthOverlay">

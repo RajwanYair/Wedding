@@ -283,7 +283,7 @@ export function detectInstalledSdks() {
   /** @type {any} */
   const w = typeof window === "undefined" ? {} : window;
   return {
-    google: typeof w.google?.accounts?.id?.prompt === "function",
+    google: false, // S388: Google OAuth migrated to Supabase Auth redirect
     apple: typeof w.AppleID?.auth?.signIn === "function",
   };
 }
@@ -319,20 +319,6 @@ export async function signInWith(provider) {
     const email = resp?.user?.email ?? "";
     const name = `${resp?.user?.name?.firstName ?? ""} ${resp?.user?.name?.lastName ?? ""}`.trim();
     return { email, name, provider };
-  }
-  if (provider === "google") {
-    return new Promise((resolve, reject) => {
-      try {
-        w.google.accounts.id.prompt((/** @type {any} */ notification) => {
-          if (notification?.isNotDisplayed?.() || notification?.isSkippedMoment?.()) {
-            resolve(null);
-          }
-        });
-        resolve(null);
-      } catch (err) {
-        reject(err);
-      }
-    });
   }
   return null;
 }

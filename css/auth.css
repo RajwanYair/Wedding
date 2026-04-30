@@ -84,6 +84,13 @@
   .auth-social-btn.btn-apple:hover {
     background: rgba(255, 255, 255, 0.08);
   }
+  .auth-social-btn.btn-google {
+    color: #4285f4;
+    border-color: rgba(66, 133, 244, 0.3);
+  }
+  .auth-social-btn.btn-google:hover {
+    background: rgba(66, 133, 244, 0.1);
+  }
   .auth-social-btn.btn-guest {
     color: var(--text-muted);
     font-size: 0.85rem;

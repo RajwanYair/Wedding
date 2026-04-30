@@ -1,5 +1,5 @@
 /**
- * tests/unit/oauth-providers.test.mjs — Unit tests for src/services/auth.js (S94)
+ * tests/unit/oauth-providers.test.mjs — Unit tests for src/services/auth.js (S94, updated S388)
  * @vitest-environment happy-dom
  */
 import { describe, it, expect, afterEach } from "vitest";
@@ -17,10 +17,11 @@ describe("oauth-providers (S94)", () => {
     delete window.AppleID;
   });
 
-  it("detectInstalledSdks detects Google when window.google.accounts.id.prompt is a function", () => {
+  it("detectInstalledSdks always returns google:false (S388 — Supabase Auth only)", () => {
+    // Even if window.google is present, S388 migration always returns false
     // @ts-ignore — stub
     window.google = { accounts: { id: { prompt: () => {} } } };
-    expect(detectInstalledSdks().google).toBe(true);
+    expect(detectInstalledSdks().google).toBe(false);
   });
 
   it("detectInstalledSdks detects Apple when window.AppleID.auth.signIn is a function", () => {
@@ -29,10 +30,10 @@ describe("oauth-providers (S94)", () => {
     expect(detectInstalledSdks().apple).toBe(true);
   });
 
-  it("preferredTransport returns 'sdk' for Google when GIS is loaded", () => {
-    // @ts-ignore — stub
+  it("preferredTransport always returns 'supabase' for Google (S388 — GIS SDK removed)", () => {
+    // @ts-ignore — stub (SDK presence must not change the transport)
     window.google = { accounts: { id: { prompt: () => {} } } };
-    expect(preferredTransport("google")).toBe("sdk");
+    expect(preferredTransport("google")).toBe("supabase");
   });
 
   it("preferredTransport falls back to 'supabase' when SDK is missing", () => {
