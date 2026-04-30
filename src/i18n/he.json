@@ -1496,5 +1496,7 @@
   "theme_marketplace_desc": "התקן ערכת נושא מהקהילה בלחיצה אחת.",
   "theme_install": "התקן",
   "theme_installed": "מותקן",
-  "theme_installed_msg": "ערכת נושא הותקנה."
+  "theme_installed_msg": "ערכת נושא הותקנה.",
+  "audit_log_export_btn": "ייצא יומן ביקורת",
+  "audit_log_exported": "יומן הביקורת יוצא בהצלחה."
 }

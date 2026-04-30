@@ -1496,5 +1496,7 @@
   "theme_marketplace_desc": "ثبّت ثيمًا من المجتمع بنقرة واحدة.",
   "theme_install": "تثبيت",
   "theme_installed": "مثبّت",
-  "theme_installed_msg": "تم تثبيت الثيم."
+  "theme_installed_msg": "تم تثبيت الثيم.",
+  "audit_log_export_btn": "تصدير سجل التدقيق",
+  "audit_log_exported": "تم تصدير سجل التدقيق بنجاح."
 }

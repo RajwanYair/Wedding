@@ -511,6 +511,24 @@ export function clearAuditLog() {
 }
 
 /**
+ * S446: SOC2 audit log export — download all audit log entries as JSON.
+ */
+export function exportAuditLog() {
+  const entries = storeGet("auditLog") ?? [];
+  const json = JSON.stringify({ exportedAt: new Date().toISOString(), entries }, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(t("audit_log_exported"), "success");
+}
+
+/**
  * Render local audit log entries into the #auditLogBody table.
  * Fetches from Supabase `audit_log` table when backend is "supabase".
  * Falls back to localStorage store when offline or not configured.

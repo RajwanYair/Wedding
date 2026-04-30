@@ -1496,5 +1496,7 @@
   "theme_marketplace_desc": "Установите тему от сообщества одним кликом.",
   "theme_install": "Установить",
   "theme_installed": "Установлено",
-  "theme_installed_msg": "Тема установлена."
+  "theme_installed_msg": "Тема установлена.",
+  "audit_log_export_btn": "Экспорт журнала аудита",
+  "audit_log_exported": "Журнал аудита успешно экспортирован."
 }

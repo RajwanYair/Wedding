@@ -1496,5 +1496,7 @@
   "theme_marketplace_desc": "Install a community theme with one click.",
   "theme_install": "Install",
   "theme_installed": "Installed",
-  "theme_installed_msg": "Theme installed."
+  "theme_installed_msg": "Theme installed.",
+  "audit_log_export_btn": "Export Audit Log",
+  "audit_log_exported": "Audit log exported successfully."
 }

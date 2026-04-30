@@ -1496,5 +1496,7 @@
   "theme_marketplace_desc": "Installez un thème de la communauté en un clic.",
   "theme_install": "Installer",
   "theme_installed": "Installé",
-  "theme_installed_msg": "Thème installé."
+  "theme_installed_msg": "Thème installé.",
+  "audit_log_export_btn": "Exporter le journal d'audit",
+  "audit_log_exported": "Journal d'audit exporté avec succès."
 }
