@@ -166,6 +166,13 @@ function populateSettings() {
 
   // Populate approved emails list
   _renderApprovedEmails();
+
+  // S432: Populate observability DSN if stored
+  try {
+    const dsn = localStorage.getItem("wedding_v1_monitoring_dsn") ?? "";
+    const dsnInput = /** @type {HTMLInputElement|null} */ (document.getElementById("observabilityDsn"));
+    if (dsnInput && dsn && !dsnInput.value) dsnInput.value = dsn;
+  } catch { /* storage disabled */ }
 }
 
 /**

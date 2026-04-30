@@ -1429,5 +1429,11 @@
   "label_virtual_link": "Ссылка для онлайн-участия (Zoom / Teams)",
   "ph_virtual_link": "https://zoom.us/j/...",
   "rsvp_virtual_label": "Вы также можете присоединиться онлайн!",
-  "rsvp_join_online": "Присоединиться онлайн"
+  "rsvp_join_online": "Присоединиться онлайн",
+  "observability_dsn_label": "DSN для мониторинга ошибок (Sentry / GlitchTip)",
+  "ph_observability_dsn": "https://key@sentry.io/project-id",
+  "observability_dsn_save": "Сохранить DSN",
+  "observability_dsn_saved": "DSN сохранён",
+  "observability_dsn_cleared": "DSN удалён",
+  "observability_dsn_invalid": "Неверный DSN — проверьте формат"
 }

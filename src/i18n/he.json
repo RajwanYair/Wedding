@@ -1429,5 +1429,11 @@
   "label_virtual_link": "קישור השתתפות מרחוק (Zoom / Teams)",
   "ph_virtual_link": "https://zoom.us/j/...",
   "rsvp_virtual_label": "אפשר להשתתף גם מרחוק!",
-  "rsvp_join_online": "הצטרף לאירוע מרחוק"
+  "rsvp_join_online": "הצטרף לאירוע מרחוק",
+  "observability_dsn_label": "DSN לניטור שגיאות (Sentry / GlitchTip)",
+  "ph_observability_dsn": "https://key@sentry.io/project-id",
+  "observability_dsn_save": "שמור DSN",
+  "observability_dsn_saved": "DSN נשמר",
+  "observability_dsn_cleared": "DSN נמחק",
+  "observability_dsn_invalid": "DSN לא תקין — בדוק את הפורמט"
 }

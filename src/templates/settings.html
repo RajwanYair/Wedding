@@ -801,6 +801,21 @@
         <input type="checkbox" id="monitoringOptIn" data-action="toggleMonitoring" />
         <span data-i18n="monitoring_opt_in">אפשר דיווח שגיאות</span>
       </label>
+      <!-- S432: Observability DSN (Sentry-compatible) -->
+      <div class="form-group" style="margin-top:0.75rem">
+        <label for="observabilityDsn" data-i18n="observability_dsn_label">DSN לניטור שגיאות (Sentry / GlitchTip)</label>
+        <input
+          type="url"
+          id="observabilityDsn"
+          dir="ltr"
+          data-i18n-placeholder="ph_observability_dsn"
+          placeholder="https://key@sentry.io/project-id"
+        />
+        <button class="btn btn-secondary btn-small" style="margin-top:0.4rem" data-action="saveObservabilityDsn">
+          <span data-i18n="observability_dsn_save">שמור DSN</span>
+        </button>
+        <p id="observabilityDsnStatus" class="section-desc" aria-live="polite"></p>
+      </div>
     </div>
 
     <!-- Danger Zone -->

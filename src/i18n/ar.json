@@ -1429,5 +1429,11 @@
   "label_virtual_link": "رابط المشاركة عن بُعد (Zoom / Teams)",
   "ph_virtual_link": "https://zoom.us/j/...",
   "rsvp_virtual_label": "يمكنكم المشاركة عبر الإنترنت!",
-  "rsvp_join_online": "انضم عبر الإنترنت"
+  "rsvp_join_online": "انضم عبر الإنترنت",
+  "observability_dsn_label": "DSN لمراقبة الأخطاء",
+  "ph_observability_dsn": "https://key@sentry.io/project-id",
+  "observability_dsn_save": "حفظ DSN",
+  "observability_dsn_saved": "تم حفظ DSN",
+  "observability_dsn_cleared": "تم مسح DSN",
+  "observability_dsn_invalid": "DSN غير صالح — تحقق من الصيغة"
 }

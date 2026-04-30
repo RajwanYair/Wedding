@@ -222,6 +222,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "saveWebAppUrl", "saveSupabaseConfig", "saveBackendType", "supabaseCheckConnection",
       "conflictAcceptAllLocal", "conflictAcceptAllRemote", "conflictApplySelected",
       "saveTransportSettings", "saveTelemetryOptOut", "addRegistryLink", "addRegistryPreset",
+      "saveObservabilityDsn",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
       "switchLanguage", "toggleLanguage", "clearAuditLog", "clearErrorLog",
       "exportJSON", "importJSON", "copyRsvpLink", "copyContactLink",

@@ -1429,5 +1429,11 @@
   "label_virtual_link": "Lien virtuel (Zoom / Teams)",
   "ph_virtual_link": "https://zoom.us/j/...",
   "rsvp_virtual_label": "Vous pouvez aussi rejoindre en ligne !",
-  "rsvp_join_online": "Rejoindre en ligne"
+  "rsvp_join_online": "Rejoindre en ligne",
+  "observability_dsn_label": "DSN de surveillance des erreurs",
+  "ph_observability_dsn": "https://key@sentry.io/project-id",
+  "observability_dsn_save": "Enregistrer DSN",
+  "observability_dsn_saved": "DSN enregistré",
+  "observability_dsn_cleared": "DSN effacé",
+  "observability_dsn_invalid": "DSN invalide — vérifiez le format"
 }

@@ -253,6 +253,31 @@ export function register() {
   on("installPlugin", () => installPlugin());
   // S205 — Monitoring opt-in toggle
   on("toggleMonitoring", () => toggleMonitoring());
+  // S432 — Observability DSN
+  on("saveObservabilityDsn", () => {
+    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("observabilityDsn"));
+    const statusEl = document.getElementById("observabilityDsnStatus");
+    const dsn = input?.value?.trim() ?? "";
+    if (!dsn) {
+      try { localStorage.removeItem("wedding_v1_monitoring_dsn"); } catch { /* storage disabled */ }
+      if (statusEl) statusEl.textContent = t("observability_dsn_cleared");
+      return;
+    }
+    // Validate DSN format before saving
+    try {
+      const url = new URL(dsn);
+      if (!url.username || !url.host || !url.pathname.replace(/^\/+/, "")) {
+        if (statusEl) statusEl.textContent = t("observability_dsn_invalid");
+        return;
+      }
+    } catch {
+      if (statusEl) statusEl.textContent = t("observability_dsn_invalid");
+      return;
+    }
+    try { localStorage.setItem("wedding_v1_monitoring_dsn", dsn); } catch { /* storage disabled */ }
+    if (statusEl) statusEl.textContent = t("observability_dsn_saved");
+    showToast(t("observability_dsn_saved"), "success");
+  });
   // S217 — Auto-backup
   on("startAutoBackup", () => {
     const intervalMin = parseInt(
