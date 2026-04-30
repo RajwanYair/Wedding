@@ -21,17 +21,16 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
-// S163: ratcheted to current global actuals (48.26/42.11/54.28/47.85 from coverage-summary).
+// S379: ratcheted to current global actuals (58/51/66/58).
 // Long-term target 80/75/80/80 reached incrementally:
-//   v12.5.x → v12.6.0: 50/45/55/50 (next ratchet)
-//   v13.0.0:           65/55/65/65
+//   v13.21.x:          58/51/66/58 (current)
 //   v14.0.0:           80/75/80/80
 // Run with --enforce to gate CI; pass --target-lines=N etc. to override one pillar.
 const TARGETS = {
-  lines: 48,
-  branches: 42,
-  functions: 54,
-  statements: 47,
+  lines: 58,
+  branches: 51,
+  functions: 66,
+  statements: 58,
 };
 
 function readSummary() {

@@ -108,6 +108,11 @@ jobs:
           NODE_NO_WARNINGS: "1"
         # S6.11: Coverage gate is enforced — failures block CI
 
+      - name: Coverage gate (check-coverage-gate)
+        if: matrix.node-version == '22'
+        run: npm run check:coverage
+        # S379: Advisory gate ratcheted to 58/51/66/58; exits 1 on violation
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest

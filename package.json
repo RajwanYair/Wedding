@@ -36,6 +36,7 @@
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
     "audit:arch": "node scripts/arch-check.mjs --strict",
+    "check:coverage": "node scripts/check-coverage-gate.mjs --enforce",
     "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm test && npm run build"
   },
   "engines": {
