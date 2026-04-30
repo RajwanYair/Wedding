@@ -1538,5 +1538,11 @@
   "geocode_ok": "Dirección ubicada correctamente",
   "geocode_not_found": "Dirección no encontrada",
   "geocode_no_address": "Por favor ingrese una dirección primero",
-  "geocode_error": "Error de geocodificación"
+  "geocode_error": "Error de geocodificación",
+  "dedup_title": "Detección de invitados duplicados",
+  "dedup_desc": "Busca invitados duplicados por teléfono o nombre y fúndelos.",
+  "dedup_find_btn": "Buscar duplicados",
+  "dedup_none_found": "No se encontraron duplicados",
+  "dedup_merge_btn": "Fusionar",
+  "dedup_merged": "Invitados fusionados exitosamente"
 }

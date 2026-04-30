@@ -226,6 +226,61 @@ export function importGuestsCsvFile(input) {
 // ── Settings API ──────────────────────────────────────────────────────────
 
 /**
+ * Find duplicate guests and render them in #dedupResults for review.
+ * Bound to data-action="findGuestDuplicates".
+ */
+export function findGuestDuplicates() {
+  import("../utils/guest-dedup.js").then(({ findDuplicates }) => {
+    const guests = /** @type {import("../types.d.ts").Guest[]} */ (storeGet("guests") ?? []);
+    const pairs = findDuplicates(guests);
+    const container = document.getElementById("dedupResults");
+    if (!container) return;
+    container.textContent = "";
+    if (!pairs.length) {
+      const p = document.createElement("p");
+      p.textContent = t("dedup_none_found");
+      container.appendChild(p);
+      return;
+    }
+    for (const pair of pairs) {
+      const row = document.createElement("div");
+      row.className = "dedup-pair";
+      const label = document.createElement("span");
+      label.textContent = `${pair.a.name ?? "?"} ↔ ${pair.b.name ?? "?"} (${pair.reason})`;
+      const mergeBtn = document.createElement("button");
+      mergeBtn.type = "button";
+      mergeBtn.className = "btn btn-secondary btn-small";
+      mergeBtn.dataset.action = "mergeGuestDuplicate";
+      mergeBtn.dataset.primaryId = pair.a.id;
+      mergeBtn.dataset.dupId = pair.b.id;
+      mergeBtn.textContent = t("dedup_merge_btn");
+      row.appendChild(label);
+      row.appendChild(mergeBtn);
+      container.appendChild(row);
+    }
+  }).catch(() => {});
+}
+
+/**
+ * Merge two duplicate guests, keeping the primary and enriching from the dup.
+ * Bound to data-action="mergeGuestDuplicate".
+ * @param {HTMLElement} triggerEl
+ */
+export function mergeGuestDuplicate(triggerEl) {
+  const primaryId = triggerEl.dataset.primaryId ?? "";
+  const dupId = triggerEl.dataset.dupId ?? "";
+  if (!primaryId || !dupId) return;
+  import("../utils/guest-dedup.js").then(({ mergeGuests }) => {
+    const guests = /** @type {import("../types.d.ts").Guest[]} */ (storeGet("guests") ?? []);
+    const updated = mergeGuests(primaryId, dupId, guests);
+    storeSet("guests", updated);
+    showToast(t("dedup_merged"), "success");
+    // Re-run search to refresh the list
+    findGuestDuplicates();
+  }).catch(() => {});
+}
+
+/**
  * Switch the app language.
  * @param {string} lang
  */

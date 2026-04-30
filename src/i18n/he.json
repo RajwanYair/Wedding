@@ -1538,5 +1538,11 @@
   "geocode_ok": "כתובת אותרה בהצלחה",
   "geocode_not_found": "כתובת לא נמצאה",
   "geocode_no_address": "נא להזין כתובת תחילה",
-  "geocode_error": "שגיאה באיתור הכתובת"
+  "geocode_error": "שגיאה באיתור הכתובת",
+  "dedup_title": "זיהוי כפילויות באורחים",
+  "dedup_desc": "חפש אורחים כפולים לפי טלפון או שם ומזג אותם.",
+  "dedup_find_btn": "מצא כפילויות",
+  "dedup_none_found": "לא נמצאו כפילויות",
+  "dedup_merge_btn": "מזג",
+  "dedup_merged": "אורחים מוזגו בהצלחה"
 }

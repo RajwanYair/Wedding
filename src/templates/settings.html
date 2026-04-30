@@ -304,6 +304,18 @@
       </div>
     </div>
 
+    <!-- S455: Guest Duplicate Detection -->
+    <div class="settings-card" id="cardGuestDedup">
+      <h3>👥 <span data-i18n="dedup_title">זיהוי כפילויות באורחים</span></h3>
+      <p data-i18n="dedup_desc">חפש אורחים כפולים לפי טלפון או שם ומזג אותם.</p>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-small" data-action="findGuestDuplicates" type="button">
+          🔍 <span data-i18n="dedup_find_btn">מצא כפילויות</span>
+        </button>
+      </div>
+      <div id="dedupResults" class="u-mt-sm"></div>
+    </div>
+
     <!-- QR Code for RSVP -->
     <div class="settings-card">
       <h3>📲 <span data-i18n="qr_title">QR Code לאישור הגעה</span></h3>

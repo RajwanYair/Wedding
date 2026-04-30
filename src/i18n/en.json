@@ -1538,5 +1538,11 @@
   "geocode_ok": "Address geocoded successfully",
   "geocode_not_found": "Address not found",
   "geocode_no_address": "Please enter an address first",
-  "geocode_error": "Geocoding error"
+  "geocode_error": "Geocoding error",
+  "dedup_title": "Guest Duplicate Detection",
+  "dedup_desc": "Find duplicate guests by phone or name and merge them.",
+  "dedup_find_btn": "Find Duplicates",
+  "dedup_none_found": "No duplicates found",
+  "dedup_merge_btn": "Merge",
+  "dedup_merged": "Guests merged successfully"
 }

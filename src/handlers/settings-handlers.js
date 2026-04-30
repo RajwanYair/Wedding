@@ -72,6 +72,8 @@ import {
   saveAiSettings,
   testAiConnection,
   importGuestsCsvFile,
+  findGuestDuplicates,
+  mergeGuestDuplicate,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -272,11 +274,17 @@ export function register() {
   on("toggleMonitoring", () => toggleMonitoring());
   // S432 — Observability DSN
   on("saveObservabilityDsn", () => {
-    const input = /** @type {HTMLInputElement|null} */ (document.getElementById("observabilityDsn"));
+    const input = /** @type {HTMLInputElement|null} */ (
+      document.getElementById("observabilityDsn")
+    );
     const statusEl = document.getElementById("observabilityDsnStatus");
     const dsn = input?.value?.trim() ?? "";
     if (!dsn) {
-      try { localStorage.removeItem("wedding_v1_monitoring_dsn"); } catch { /* storage disabled */ }
+      try {
+        localStorage.removeItem("wedding_v1_monitoring_dsn");
+      } catch {
+        /* storage disabled */
+      }
       if (statusEl) statusEl.textContent = t("observability_dsn_cleared");
       return;
     }
@@ -291,21 +299,31 @@ export function register() {
       if (statusEl) statusEl.textContent = t("observability_dsn_invalid");
       return;
     }
-    try { localStorage.setItem("wedding_v1_monitoring_dsn", dsn); } catch { /* storage disabled */ }
+    try {
+      localStorage.setItem("wedding_v1_monitoring_dsn", dsn);
+    } catch {
+      /* storage disabled */
+    }
     if (statusEl) statusEl.textContent = t("observability_dsn_saved");
     showToast(t("observability_dsn_saved"), "success");
     // S439: reset monitoring init so next boot (or test) uses the new DSN
-    import("../services/observability.js").then(({ resetMonitoringInit }) => {
-      resetMonitoringInit();
-    }).catch(() => {});
+    import("../services/observability.js")
+      .then(({ resetMonitoringInit }) => {
+        resetMonitoringInit();
+      })
+      .catch(() => {});
   });
   on("testErrorReport", async () => {
     const { testErrorReport: _test, initMonitoring } = await import("../services/observability.js");
     await initMonitoring();
     const ok = await _test();
     const statusEl = document.getElementById("observabilityDsnStatus");
-    if (statusEl) statusEl.textContent = ok ? t("observability_test_sent") : t("observability_test_no_dsn");
-    showToast(ok ? t("observability_test_sent") : t("observability_test_no_dsn"), ok ? "success" : "error");
+    if (statusEl)
+      statusEl.textContent = ok ? t("observability_test_sent") : t("observability_test_no_dsn");
+    showToast(
+      ok ? t("observability_test_sent") : t("observability_test_no_dsn"),
+      ok ? "success" : "error",
+    );
   });
   // S217 — Auto-backup
   on("startAutoBackup", () => {
@@ -369,17 +387,42 @@ export function register() {
   on("clearPasskeys", () => {
     clearPasskeys();
   });
-  on("generateApiKey", () => { generateApiKey(); });
-  on("copyApiKey", async () => { await copyApiKey(); });
-  on("revokeApiKey", () => { revokeApiKey(); });
-  on("requestGdprErasure", () => { requestGdprErasure(); });
-  on("exportPersonalData", () => { exportPersonalData(); });
-  on("addWebhook", async () => { await addWebhook(); });
-  on("removeWebhook", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await removeWebhook(id); });
-  on("pingWebhookById", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await pingWebhookById(id); });
-  on("refreshWebhooks", async () => { await refreshWebhooks(); });
-  on("installThemeById", (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) installThemeById(id); });
-  on("exportAuditLog", () => { exportAuditLog(); });
+  on("generateApiKey", () => {
+    generateApiKey();
+  });
+  on("copyApiKey", async () => {
+    await copyApiKey();
+  });
+  on("revokeApiKey", () => {
+    revokeApiKey();
+  });
+  on("requestGdprErasure", () => {
+    requestGdprErasure();
+  });
+  on("exportPersonalData", () => {
+    exportPersonalData();
+  });
+  on("addWebhook", async () => {
+    await addWebhook();
+  });
+  on("removeWebhook", async (evt) => {
+    const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
+    if (id) await removeWebhook(id);
+  });
+  on("pingWebhookById", async (evt) => {
+    const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
+    if (id) await pingWebhookById(id);
+  });
+  on("refreshWebhooks", async () => {
+    await refreshWebhooks();
+  });
+  on("installThemeById", (evt) => {
+    const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
+    if (id) installThemeById(id);
+  });
+  on("exportAuditLog", () => {
+    exportAuditLog();
+  });
   on("sendMagicLink", async () => {
     const input = /** @type {HTMLInputElement|null} */ (document.getElementById("magicLinkEmail"));
     const email = input?.value?.trim() ?? "";
@@ -415,4 +458,8 @@ export function register() {
 
   // S452 — Guest CSV import
   on("importGuestsCSV", (el) => importGuestsCsvFile(/** @type {HTMLInputElement} */ (el)));
+
+  // S455 — Guest duplicate detection
+  on("findGuestDuplicates", () => findGuestDuplicates());
+  on("mergeGuestDuplicate", (el) => mergeGuestDuplicate(el));
 }

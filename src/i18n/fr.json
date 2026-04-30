@@ -1538,5 +1538,11 @@
   "geocode_ok": "Adresse géocodée avec succès",
   "geocode_not_found": "Adresse introuvable",
   "geocode_no_address": "Veuillez d'abord entrer une adresse",
-  "geocode_error": "Erreur de géocodage"
+  "geocode_error": "Erreur de géocodage",
+  "dedup_title": "Détection de doublons d'invités",
+  "dedup_desc": "Trouvez les invités en double par téléphone ou nom et fusionnez-les.",
+  "dedup_find_btn": "Trouver les doublons",
+  "dedup_none_found": "Aucun doublon trouvé",
+  "dedup_merge_btn": "Fusionner",
+  "dedup_merged": "Invités fusionnés avec succès"
 }

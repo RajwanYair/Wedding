@@ -1538,5 +1538,11 @@
   "geocode_ok": "تم تحديد العنوان بنجاح",
   "geocode_not_found": "العنوان غير موجود",
   "geocode_no_address": "يرجى إدخال العنوان أولاً",
-  "geocode_error": "خطأ في تحديد الموقع"
+  "geocode_error": "خطأ في تحديد الموقع",
+  "dedup_title": "اكتشاف الضيوف المكررين",
+  "dedup_desc": "ابحث عن الضيوف المكررين حسب الهاتف أو الاسم وقم بدمجهم.",
+  "dedup_find_btn": "البحث عن المكررين",
+  "dedup_none_found": "لا توجد مكررات",
+  "dedup_merge_btn": "دمج",
+  "dedup_merged": "تم دمج الضيوف بنجاح"
 }
