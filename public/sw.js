@@ -1,10 +1,17 @@
 // =============================================================================
 // Service Worker — Wedding Manager v14.0.0
-// Stale-while-revalidate · offline fallback · Background Sync · update detection
+// S401 — Strategy cache patterns:
+//   · Cache-first     — fonts/icons (immutable CDN assets)
+//   · Network-first   — Supabase API (data freshness; cache as offline fallback)
+//   · Stale-while-revalidate — app shell (HTML/manifest/offline page)
+//   · Cache-first     — Vite-hashed JS/CSS/assets (content-addressed, never change)
+//   · Background Sync · update detection
 // =============================================================================
 "use strict";
 
 const CACHE_NAME = "wedding-v14.0.0";
+const FONT_CACHE  = "wedding-fonts-v1";   // immutable; cleared only on SW uninstall
+const API_CACHE   = "wedding-api-v1";     // network-first; stale data served offline
 // Static assets to pre-cache. Vite-built JS/CSS have hashed filenames and are
 // cached on first fetch by the non-shell handler (cache-first with network fallback).
 const APP_SHELL = [
@@ -73,7 +80,8 @@ self.addEventListener("activate", function (e) {
         return Promise.all(
           keys
             .filter(function (k) {
-              return k !== CACHE_NAME;
+              // Keep the current app-shell cache, font cache, and API cache
+              return k !== CACHE_NAME && k !== FONT_CACHE && k !== API_CACHE;
             })
             .map(function (k) {
               return caches.delete(k);
@@ -86,19 +94,65 @@ self.addEventListener("activate", function (e) {
   );
 });
 
-// ── Fetch: stale-while-revalidate for app shell ───────────────────────────────
+// ── Fetch: strategy routing ──────────────────────────────────────────────────
 self.addEventListener("fetch", function (e) {
   const url = new URL(e.request.url);
 
-  // Only handle same-origin GETs
+  // Only handle GET requests
   if (e.request.method !== "GET") return;
+
+  // ── Strategy 1: Cache-first — fonts and icon CDN assets ───────────────────
+  // Google Fonts, gstatic, or icon CDN: immutable, never expire.
+  if (
+    url.hostname === "fonts.googleapis.com" ||
+    url.hostname === "fonts.gstatic.com" ||
+    url.hostname === "cdnjs.cloudflare.com" ||
+    url.hostname === "cdn.jsdelivr.net"
+  ) {
+    e.respondWith(
+      caches.open(FONT_CACHE).then(function (cache) {
+        return cache.match(e.request).then(function (cached) {
+          if (cached) return cached;
+          return fetch(e.request).then(function (response) {
+            if (response.status === 200) cache.put(e.request, response.clone());
+            return response;
+          });
+        });
+      }),
+    );
+    return;
+  }
+
+  // ── Strategy 2: Network-first — Supabase REST / realtime API ──────────────
+  // Try network; serve stale on offline so dashboards still render.
+  if (url.hostname.endsWith(".supabase.co") || url.hostname.endsWith(".supabase.io")) {
+    e.respondWith(
+      fetch(e.request)
+        .then(function (response) {
+          if (response.status === 200) {
+            const clone = response.clone();
+            caches.open(API_CACHE).then(function (cache) { cache.put(e.request, clone); });
+          }
+          return response;
+        })
+        .catch(function () {
+          return caches.match(e.request, { cacheName: API_CACHE });
+        }),
+    );
+    return;
+  }
+
+  // ── Same-origin only below ─────────────────────────────────────────────────
   if (url.origin !== self.location.origin) return;
 
   const isShell = getShellUrls().has(url.href);
+  // Vite-hashed assets: filenames contain a hex digest (e.g., index-BcXyz123.js)
+  const isHashedAsset = /\.[0-9a-f]{8,}\.(js|css|woff2?|png|svg|webp)$/i.test(url.pathname);
 
   if (isShell) {
-    // Stale-while-revalidate: respond from cache instantly; refresh cache in background.
-    // If the server signals new content (ETag/Last-Modified changed), notify all clients.
+    // ── Strategy 3: Stale-while-revalidate — app shell ──────────────────────
+    // Respond from cache instantly; refresh cache in background.
+    // Notify clients when ETag/Last-Modified changes (new deployment).
     e.respondWith(
       caches.open(CACHE_NAME).then(function (cache) {
         return cache.match(e.request).then(function (cached) {
@@ -107,9 +161,6 @@ self.addEventListener("fetch", function (e) {
               if (response.status === 200) {
                 const newV = freshnessToken(response);
                 const oldV = cached ? freshnessToken(cached) : "";
-                // Notify when: no previous cache (first fetch), or freshness token changed.
-                // 'Date' always differs on each response so we only use it as a fallback
-                // when ETag and Last-Modified are both absent, meaning we signal once.
                 if (!cached || (newV && newV !== oldV)) notifyClients();
                 cache.put(e.request, response.clone());
               }
@@ -118,13 +169,30 @@ self.addEventListener("fetch", function (e) {
             .catch(function () {
               return cached || caches.match("./index.html");
             });
-          // Serve stale cache immediately; background revalidation runs regardless
           return cached || networkUpdate;
         });
       }),
     );
+  } else if (isHashedAsset) {
+    // ── Strategy 4: Cache-first — Vite-hashed JS/CSS (content-addressed) ────
+    // These filenames never repeat across builds; safe to cache forever.
+    e.respondWith(
+      caches.match(e.request).then(function (cached) {
+        if (cached) return cached;
+        return fetch(e.request).then(function (response) {
+          if (response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(function (cache) { cache.put(e.request, clone); });
+          }
+          return response;
+        });
+      }).catch(function () {
+        if (e.request.mode === "navigate") return caches.match("./offline.html");
+        return caches.match("./index.html");
+      }),
+    );
   } else {
-    // Non-shell resources: cache-first, fetch on miss
+    // ── Strategy 5: Cache-first — other same-origin assets ───────────────────
     e.respondWith(
       caches
         .match(e.request)
@@ -141,10 +209,7 @@ self.addEventListener("fetch", function (e) {
           });
         })
         .catch(function () {
-          // For navigation requests, serve branded offline page
-          if (e.request.mode === "navigate") {
-            return caches.match("./offline.html");
-          }
+          if (e.request.mode === "navigate") return caches.match("./offline.html");
           return caches.match("./index.html");
         }),
     );
