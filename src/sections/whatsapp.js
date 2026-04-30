@@ -14,6 +14,7 @@ import { readBrowserStorageJson, writeBrowserStorage } from "../core/storage.js"
 import { cleanPhone } from "../utils/phone.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { personalizeMessage, getVariableHints } from "../services/wa-messaging.js";
+import { showToast } from "../core/ui.js";
 
 class WhatsAppSection extends BaseSection {
   async onMount() {
@@ -499,4 +500,32 @@ export function getMessageStatsByGroup() {
       pending: values.total - values.sent,
     }))
     .sort((a, b) => b.pending - a.pending);
+}
+
+// ── WABA Bulk Send (S425) ──────────────────────────────────────────────────
+
+/**
+ * Send a WABA template message to all confirmed guests via the
+ * `waba-bulk-send` Supabase Edge Function.
+ *
+ * @param {string} [template] Pre-registered WABA template name (default: "wedding_invite")
+ * @returns {Promise<void>}
+ */
+export async function sendWabaBlast(template = "wedding_invite") {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmed = guests.filter((g) => g.status === "confirmed" && g.phone);
+  if (confirmed.length === 0) {
+    showToast(t("waba_blast_no_recipients"), "warning");
+    return;
+  }
+  showToast(t("waba_bulk_send_progress"), "info");
+  const recipients = confirmed.map((g) => ({ to: cleanPhone(g.phone) }));
+  const { callEdgeFunction } = await import("../services/backend.js");
+  const result = await callEdgeFunction("waba-bulk-send", { recipients, template });
+  if (!result.ok) {
+    showToast(`${t("waba_bulk_send_error")}: ${result.error ?? ""}`, "error");
+    return;
+  }
+  const data = /** @type {{ sent: number, failed: number }} */ (result.data ?? {});
+  showToast(t("waba_bulk_sent", { sent: data.sent ?? 0, failed: data.failed ?? 0 }), "success");
 }

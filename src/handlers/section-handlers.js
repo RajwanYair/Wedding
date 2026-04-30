@@ -15,6 +15,7 @@ import {
   saveGreenApiConfig,
   updateWaPreview,
   sendWhatsAppReminder,
+  sendWabaBlast,
 } from "../sections/whatsapp.js";
 import {
   saveTimelineItem,
@@ -107,6 +108,7 @@ export function register() {
   });
   on("checkGreenApiConnection", () => checkGreenApiConnection());
   on("sendWhatsAppReminder", () => sendWhatsAppReminder());
+  on("sendWabaBlast", () => sendWabaBlast());
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")
