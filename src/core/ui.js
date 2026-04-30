@@ -131,6 +131,15 @@ export async function openModal(modalId) {
       /** @type {HTMLDialogElement} */ (
         /** @type {unknown} */ (modal)
       ).showModal();
+      // Cancel event fires when the user presses ESC — restore opener focus.
+      modal.addEventListener(
+        "cancel",
+        () => {
+          _modalOpener?.focus();
+          _modalOpener = null;
+        },
+        { once: true },
+      );
       // Click on ::backdrop closes the dialog
       if (!modal.dataset.noBackdropClose) {
         const onBdClick = (/** @type {MouseEvent} */ e) => {
