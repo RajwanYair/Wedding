@@ -74,11 +74,11 @@ self-hosted; $0–$2/month with custom domain (§12).
 
 ## 1. North Star & Current State
 
-### Actual state — v13.17.0 · 2025-07-14
+### Actual state — v13.18.0 · 2026-04-30
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **3 878 passing · 256 files · 0 Node warnings** | ✅ |
+| Tests | **4 108 passing · 264 files · 0 Node warnings** | ✅ |
 | TypeScript errors | **0** — baseline cleared in S293 (was 49 at v13.10) | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
@@ -1126,6 +1126,7 @@ Storage + Realtime for development without an account.
 | **v13.15.0** | **Released 2026-05-09** | **Phase C2 — TT ratchet 19→5, handler+render+state+idb tests +177, coverage ratchet +3%** | **S326–S335; 5 new test files; TT sinks 5; lines 56%/functions 64%; 3494 tests** |
 | **v13.16.0** | **Released 2026-05-10** | **Phase C3 — section data helpers + coverage ratchet** | **S336–S345; 8 new test suites; sync/vendors/timeline/budget/expenses/whatsapp/tables/checkin; lines 57%/functions 65%; 3697 tests** |
 | **v13.17.0** | **Released 2025-07-14** | **Phase C4 — test expansion + coverage ratchet** | **S347–S354; 7 new test suites (guests/ui/settings/app-config/schedule/outreach/observability); repos stmts 71→82, lines 83→94; core lines 67→74; 3878 tests** |
+| **v13.18.0** | **Released 2026-04-30** | **Phase C5 — service/core test expansion + coverage ratchet** | **S356–S365; 8 new test suites (guest-identity/event-manager/platform-ops/wa-messaging/compliance/web-presence/commerce/ui); lines 57%/functions 66%; 4108 tests** |
 | **v14.0.0** | Later | Architecture cleanup | Sprints 97–106: services ≤ 25, BaseSection, Signals, native `<dialog>`, `@scope`, TSC → 0 |
 | **v15.0.0** | Later | Smart + native-class | Sprints 107–116: WhatsApp Cloud API, AI edge, Realtime, Stripe, Storage, kiosk, AR locale |
 | **v16.0.0** | Candidate | Platform & scale | Sprints 117–130: live theme builder, public site builder, org/team, CDN, Capacitor |
@@ -1134,5 +1135,5 @@ Storage + Realtime for development without an account.
 
 ---
 
-*Last updated: 2025-07-14 · v13.17.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
+*Last updated: 2026-04-30 · v13.18.0 · See [CHANGELOG.md](CHANGELOG.md) for detailed history. ·
 For decisions, see [docs/adr/](docs/adr/). · For runbooks, see [docs/operations/](docs/operations/).*

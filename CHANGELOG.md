@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.18.0] — 2026-04-30
+
+> **S356–S365: Phase C5 — coverage uplift: 8 new service/core test suites + coverage ratchet, 4108 tests.**
+
+### Added
+
+- **S356** — Unit tests for `services/guest-identity.js`: 32 new tests (jaro similarity, findDuplicates, mergeContacts, token lifecycle)
+- **S357** — Unit tests for `services/event-manager.js`: 30 new tests (dirty tracking, optimistic updates, event CRUD)
+- **S358** — Unit tests for `services/platform-ops.js`: 26 new tests (rate-limiter, deploy buttons, Lighthouse config, health monitor)
+- **S359** — Unit tests for `services/wa-messaging.js`: 29 new tests (API builders, personalization, tone picker)
+- **S360** — Unit tests for `services/compliance.js`: 30 new tests (data classification, PII redaction, audit early-exit)
+- **S361** — Unit tests for `services/web-presence.js`: 40 new tests (DNS helpers, domain validators, website config builder)
+- **S362** — Unit tests for `services/commerce.js`: 20 new tests (budget helpers, expense summary, checkout payload builder)
+- **S363** — Unit tests for `core/ui.js`: 23 new tests (toast, theme cycle, light-mode, announce ARIA)
+
+### Changed
+
+- **S364** — Coverage ratchet uplift: global `lines:56→57`, `branches:49→50`, `functions:65→66`, `statements:56→57`; `utils` lines 96→97, stmts 93→94; `repos` lines 94→95, stmts 82→83; `services` lines 76→77, stmts 74→75; `core` lines 74→75, functions 64→65, stmts 70→71; `sections` stmts 27→28
+- **S365** — Version bump to v13.18.0; 4108 tests green; 0 lint errors
+
 ## [13.17.0] — 2025-07-14
 
 > **S347–S354: Phase C4 — coverage uplift: 7 new test suites (guests/ui/settings/app-config/schedule/outreach/observability) + coverage ratchet, 3878 tests.**
