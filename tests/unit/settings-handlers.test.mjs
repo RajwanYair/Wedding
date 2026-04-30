@@ -150,6 +150,8 @@ vi.mock("../../src/sections/settings.js", () => ({
   removeWebhook: () => _removeWebhookMock(),
   pingWebhookById: () => _pingWebhookByIdMock(),
   refreshWebhooks: () => _refreshWebhooksMock(),
+  installThemeById: (_id) => _installThemeByIdMock(_id),
+  renderThemeMarketplace: () => {},
 }));
 
 const _registerPasskeyMock = vi.fn(() => Promise.resolve());
@@ -164,6 +166,7 @@ const _addWebhookMock = vi.fn(() => Promise.resolve());
 const _removeWebhookMock = vi.fn(() => Promise.resolve());
 const _pingWebhookByIdMock = vi.fn(() => Promise.resolve());
 const _refreshWebhooksMock = vi.fn(() => Promise.resolve());
+const _installThemeByIdMock = vi.fn();
 const _addLinkMock = vi.fn();
 const _addRegistryLinkMock = vi.fn();
 const _addRegistryPresetMock = vi.fn();
@@ -253,6 +256,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "exportPersonalData",
       "testErrorReport",
       "addWebhook", "removeWebhook", "pingWebhookById", "refreshWebhooks",
+      "installThemeById",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
       "switchLanguage", "toggleLanguage", "clearAuditLog", "clearErrorLog",
       "exportJSON", "importJSON", "copyRsvpLink", "copyContactLink",

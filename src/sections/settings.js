@@ -38,6 +38,11 @@ import {
   stringifyThemeJson,
   importThemeJson,
 } from "../services/theme.js";
+import {
+  COMMUNITY_THEMES,
+  installTheme as _installTheme,
+  listInstalledThemes,
+} from "../utils/theme-registry.js";
 import { validatePluginManifest } from "../services/export.js";
 import {
   addAdminUser,
@@ -90,6 +95,8 @@ class SettingsSection extends BaseSection {
     import("../utils/api-key.js").then(({ getApiKey }) => {
       _refreshApiKeyUI(getApiKey());
     }).catch(() => {});
+    // Wire theme marketplace (S445)
+    renderThemeMarketplace();
   }
 }
 
@@ -1727,3 +1734,51 @@ export async function refreshWebhooks() {
   _renderWebhooks(listWebhooks());
 }
 
+// ── S445: Theme Marketplace ───────────────────────────────────────────────
+
+/**
+ * Render community theme cards into #themeMarketplaceList.
+ */
+export function renderThemeMarketplace() {
+  const container = document.getElementById("themeMarketplaceList");
+  if (!container) return;
+  const installed = listInstalledThemes();
+  container.textContent = "";
+  for (const theme of COMMUNITY_THEMES) {
+    const card = document.createElement("div");
+    card.style.cssText = "border:1px solid rgba(255,255,255,0.15);border-radius:0.5rem;padding:0.75rem;min-width:160px;text-align:center";
+    const swatches = document.createElement("div");
+    swatches.style.cssText = "display:flex;gap:3px;justify-content:center;margin-bottom:0.4rem";
+    for (const color of theme.swatches) {
+      const dot = document.createElement("span");
+      dot.style.cssText = `width:18px;height:18px;border-radius:50%;background:${color};display:inline-block;border:1px solid rgba(255,255,255,0.2)`;
+      swatches.appendChild(dot);
+    }
+    const label = document.createElement("div");
+    label.textContent = theme.name;
+    label.style.cssText = "font-size:0.8rem;margin-bottom:0.4rem;font-weight:600";
+    const btn = document.createElement("button");
+    btn.className = installed.includes(theme.id) ? "btn btn-secondary btn-small" : "btn btn-primary btn-small";
+    btn.dataset.action = "installThemeById";
+    btn.dataset.id = theme.id;
+    const span = document.createElement("span");
+    span.textContent = installed.includes(theme.id) ? t("theme_installed") : t("theme_install");
+    btn.appendChild(span);
+    card.appendChild(swatches);
+    card.appendChild(label);
+    card.appendChild(btn);
+    container.appendChild(card);
+  }
+}
+
+/**
+ * Install a community theme by id.
+ * @param {string} id
+ */
+export function installThemeById(id) {
+  const ok = _installTheme(id);
+  if (ok) {
+    showToast(t("theme_installed_msg"), "success");
+    renderThemeMarketplace();
+  }
+}

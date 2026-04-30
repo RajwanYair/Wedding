@@ -1491,5 +1491,10 @@
   "gdpr_exported": "הנתונים האישיים יוצאו בהצלחה.",
   "noshow_predicted": "מגיעים צפויים",
   "noshow_based_on": "מבוסס על נתוני צ'ק-אין",
-  "noshow_default": "ברירת מחדל"
+  "noshow_default": "ברירת מחדל",
+  "theme_marketplace_title": "מרקטפלייס ערכות נושא",
+  "theme_marketplace_desc": "התקן ערכת נושא מהקהילה בלחיצה אחת.",
+  "theme_install": "התקן",
+  "theme_installed": "מותקן",
+  "theme_installed_msg": "ערכת נושא הותקנה."
 }

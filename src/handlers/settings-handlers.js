@@ -67,6 +67,7 @@ import {
   removeWebhook,
   pingWebhookById,
   refreshWebhooks,
+  installThemeById,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -373,6 +374,7 @@ export function register() {
   on("removeWebhook", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await removeWebhook(id); });
   on("pingWebhookById", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await pingWebhookById(id); });
   on("refreshWebhooks", async () => { await refreshWebhooks(); });
+  on("installThemeById", (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) installThemeById(id); });
   on("sendMagicLink", async () => {
     const input = /** @type {HTMLInputElement|null} */ (document.getElementById("magicLinkEmail"));
     const email = input?.value?.trim() ?? "";

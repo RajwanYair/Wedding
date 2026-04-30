@@ -1491,5 +1491,10 @@
   "gdpr_exported": "Личные данные успешно экспортированы.",
   "noshow_predicted": "Ожидаемые гости",
   "noshow_based_on": "На основе данных регистрации",
-  "noshow_default": "по умолчанию"
+  "noshow_default": "по умолчанию",
+  "theme_marketplace_title": "Магазин тем",
+  "theme_marketplace_desc": "Установите тему от сообщества одним кликом.",
+  "theme_install": "Установить",
+  "theme_installed": "Установлено",
+  "theme_installed_msg": "Тема установлена."
 }

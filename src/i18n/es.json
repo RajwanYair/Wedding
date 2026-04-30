@@ -1491,5 +1491,10 @@
   "gdpr_exported": "Datos personales exportados correctamente.",
   "noshow_predicted": "Asistentes esperados",
   "noshow_based_on": "Basado en datos de entrada",
-  "noshow_default": "predeterminado"
+  "noshow_default": "predeterminado",
+  "theme_marketplace_title": "Mercado de temas",
+  "theme_marketplace_desc": "Instala un tema de la comunidad con un clic.",
+  "theme_install": "Instalar",
+  "theme_installed": "Instalado",
+  "theme_installed_msg": "Tema instalado."
 }

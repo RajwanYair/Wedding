@@ -1491,5 +1491,10 @@
   "gdpr_exported": "تم تصدير البيانات الشخصية بنجاح.",
   "noshow_predicted": "الحضور المتوقع",
   "noshow_based_on": "بناءً على بيانات تسجيل الدخول",
-  "noshow_default": "افتراضي"
+  "noshow_default": "افتراضي",
+  "theme_marketplace_title": "سوق الثيمات",
+  "theme_marketplace_desc": "ثبّت ثيمًا من المجتمع بنقرة واحدة.",
+  "theme_install": "تثبيت",
+  "theme_installed": "مثبّت",
+  "theme_installed_msg": "تم تثبيت الثيم."
 }
