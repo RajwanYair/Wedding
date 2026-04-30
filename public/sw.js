@@ -1,5 +1,5 @@
 // =============================================================================
-// Service Worker — Wedding Manager v18.0.0
+// Service Worker — Wedding Manager v19.0.0
 // S401 — Strategy cache patterns:
 //   · Cache-first     — fonts/icons (immutable CDN assets)
 //   · Network-first   — Supabase API (data freshness; cache as offline fallback)
@@ -9,7 +9,7 @@
 // =============================================================================
 "use strict";
 
-const CACHE_NAME = "wedding-v18.0.0";
+const CACHE_NAME = "wedding-v19.0.0";
 const FONT_CACHE  = "wedding-fonts-v1";   // immutable; cleared only on SW uninstall
 const API_CACHE   = "wedding-api-v1";     // network-first; stale data served offline
 // Static assets to pre-cache. Vite-built JS/CSS have hashed filenames and are

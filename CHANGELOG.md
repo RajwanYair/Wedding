@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [19.0.0] — 2026-07-04
+
+> **S441–S447: Webhook subscriptions, coverage uplift, GDPR export, no-show prediction,
+> theme marketplace, SOC2 audit log export, smart command palette.**
+
+### Added
+
+- **S441** — Webhook subscriptions UI: add/remove/ping endpoints per event type (`rsvp.confirmed`,
+  `rsvp.declined`, `guest.added`); `src/utils/webhooks.js` with UUID-based storage; Settings card
+  with live list rendering; 18 i18n keys × 6 locales
+- **S442** — Coverage uplift: `tests/unit/webauthn.test.mjs` (21 tests — register, authenticate,
+  clear, list, support check) + `tests/unit/api-key.test.mjs` (7 tests — generate, get, revoke)
+- **S443** — GDPR data portability export: "Export Personal Data" button in Settings Danger Zone;
+  downloads all `wedding_v1_*` localStorage keys as JSON; `gdpr_export_btn` + `gdpr_exported` × 6 locales
+- **S444** — No-show prediction widget in Dashboard: formula `confirmedHeads × checkinRate`
+  (defaults to 85% when no check-in data); updates reactively on guest store changes; 5 i18n keys × 6 locales
+- **S445** — Theme marketplace: `src/utils/theme-registry.js` with 4 community themes
+  (Midnight Blue, Forest Green, Crimson Love, Ocean Breeze); color swatch previews; install
+  persists to localStorage; `installThemeById` handler + Settings card
+- **S446** — SOC2 audit log export: "Export Audit Log" button downloads `audit-log-{date}.json`
+  with all entries + `exportedAt` timestamp; 2 i18n keys × 6 locales
+- **S447** — Smart guest command palette: `src/utils/command-palette.js`; Ctrl+Shift+K opens
+  `<dialog>` overlay with fuzzy search, section navigation, add guest, find by phone, export CSV;
+  7 i18n keys × 6 locales; `initCommandPalette()` wired in `src/main.js`
+
 ## [18.0.0] — 2026-06-22
 
 > **S428–S437: Russian locale, gift registry deep-links, hybrid RSVP, observability DSN,

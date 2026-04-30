@@ -68,11 +68,11 @@ coverage lines 58% / branches 51%.
 
 ## 1. North Star & Current State
 
-### Actual state — v18.0.0 · 2026-06-22
+### Actual state — v19.0.0 · 2026-07-04
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **4 189 passing · 269 files · 0 Node warnings** | ✅ |
+| Tests | **4 210 passing · 271 files · 0 Node warnings** | ✅ |
 | TypeScript errors | **0** — baseline cleared S293 | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
@@ -85,7 +85,7 @@ coverage lines 58% / branches 51%.
 | Coverage | lines 58% · branches 51% (floor ratchet) | ✅ |
 | Repositories | mandatory data path; ESLint enforced | ✅ |
 | Handlers | clean separation; 7 files | ✅ |
-| i18n keys | **1 430+** keys × 6 locales (HE · EN · AR · FR · ES · RU) | ✅ |
+| i18n keys | **1 470+** keys × 6 locales (HE · EN · AR · FR · ES · RU) | ✅ |
 | DB migrations | **25** Supabase migrations | ✅ |
 | Active backend | `BACKEND_TYPE = "supabase"` · Supabase is primary backend | ✅ |
 | Auth tokens | AES-GCM encrypted (`secure-storage.js`) | ✅ |
@@ -1066,7 +1066,7 @@ SBOM (`sbom.cdx.json`) documents every dependency; no proprietary service is req
 | **v16.0.0** | ✅ 2026-06-01 | Phase C — smart + native-class | S409–S418: Realtime live indicator; presence avatars; Ctrl+Z undo; Supabase Storage gallery upload |
 | **v17.0.0** | ✅ 2026-06-01 | Phase D — platform & scale | S419–S427: Vendor CSV; ICU AR plurals; venue links; QR cards; budget alerts; haptics; WABA bulk; onboarding wizard; Web Push test |
 | **v18.0.0** | ✅ 2026-06-22 | Phase E — open platform | S428–S437: Russian locale; registry deep-links; hybrid RSVP; observability DSN; WebAuthn passkeys; REST API key UI; GDPR erasure; multi-event quick actions |
-| **v19.0.0** | Candidate 2027-Q1 | Phase F — AI-native + compliance | AI in every section; photo AI; no-show model; SOC 2 logging |
+| **v19.0.0** | Released 2026-07-04 | Phase F — webhooks, GDPR portability, no-show prediction, theme marketplace, SOC2 audit export, command palette | S441–S447: webhook UI; webauthn/api-key tests; GDPR export; no-show widget; theme marketplace; audit log export; command palette |
 
 ---
 
