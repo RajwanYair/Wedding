@@ -1358,6 +1358,7 @@ export async function startAdminSignIn(provider) {
  */
 export async function refreshAdminList() {
   const emails = await fetchAdminUsers();
+  storeSet("approvedEmails", emails);
   _renderApprovedEmails();
   return emails;
 }
