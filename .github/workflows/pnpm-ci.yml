@@ -1,0 +1,86 @@
+# =============================================================================
+# pnpm CI pilot — Wedding Manager v15.0.0 (S407)
+# Informational / non-blocking parallel to the primary npm workflow.
+# Runs the same lint + test pipeline using pnpm for install-time benchmarking.
+# See docs/adr/043-pnpm-evaluation.md for decision context.
+# =============================================================================
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pnpm-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pnpm-lint-and-test:
+    name: pnpm pilot — Lint + Test (Node 22)
+    runs-on: ubuntu-latest
+    # Non-blocking during pilot: failures are visible but don't block merge
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          run_install: false
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Record install start time
+        id: timer-start
+        run: echo "start=$(date +%s%3N)" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies (pnpm — no-frozen for pilot)
+        # During the pilot we do not commit pnpm-lock.yaml; CI generates it fresh each run.
+        # This will change to --frozen-lockfile once we commit a generated lock file.
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Record install end time + print duration
+        id: timer-end
+        run: |
+          end=$(date +%s%3N)
+          start=${{ steps.timer-start.outputs.start }}
+          echo "duration=$((end - start))" >> "$GITHUB_OUTPUT"
+          echo "pnpm install duration: $((end - start)) ms"
+
+      - name: Setup shared tooling (CI shim)
+        run: node scripts/ensure-shared-tooling.mjs
+
+      - name: Lint (HTML + CSS + JS + Markdown)
+        run: pnpm run lint
+
+      - name: Validate i18n parity
+        run: pnpm run check:i18n
+
+      - name: Check credential hygiene
+        run: pnpm run check:credentials
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build (Vite)
+        run: pnpm run build
+
+      - name: Upload install timing artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-install-timing
+          # Timing info is in the step output; upload a summary file
+          path: |
+            package.json
+          retention-days: 7
+          if-no-files-found: ignore
