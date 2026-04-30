@@ -1456,5 +1456,9 @@
   "api_key_generated": "מפתח API נוצר",
   "api_key_copied": "מפתח הועתק",
   "api_key_copy_error": "שגיאה בהעתקה",
-  "api_key_revoked": "מפתח API בוטל"
+  "api_key_revoked": "מפתח API בוטל",
+  "gdpr_erasure_desc": "בקש מחיקת כל הנתונים האישיים (PII) בהתאם לתקנות GDPR.",
+  "gdpr_erasure_btn": "בקש מחיקת נתונים אישיים (GDPR)",
+  "gdpr_erasure_confirm": "האם אתה בטוח? פעולה זו מוחקת את כל הנתונים האישיים מהמכשיר שלך ואינה הפיכה.",
+  "gdpr_erased": "כל הנתונים האישיים נמחקו"
 }

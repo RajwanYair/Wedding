@@ -874,6 +874,19 @@
       >
         🗑️ <span data-i18n="clear_data_btn">מחק את כל הנתונים</span>
       </button>
+      <!-- GDPR Erasure (S435) -->
+      <hr style="margin:1rem 0;opacity:0.3">
+      <p class="section-desc" data-i18n="gdpr_erasure_desc">
+        בקש מחיקת כל הנתונים האישיים (PII) בהתאם לתקנות GDPR.
+      </p>
+      <button
+        class="btn btn-danger"
+        data-action="requestGdprErasure"
+        id="gdprErasureBtn"
+      >
+        🛡️ <span data-i18n="gdpr_erasure_btn">בקש מחיקת נתונים אישיים (GDPR)</span>
+      </button>
+      <p id="gdprErasureStatus" aria-live="polite"></p>
     </div>
   </div>
 </div>

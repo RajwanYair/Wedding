@@ -1456,5 +1456,9 @@
   "api_key_generated": "Clave API generada",
   "api_key_copied": "Clave copiada",
   "api_key_copy_error": "Error al copiar",
-  "api_key_revoked": "Clave API revocada"
+  "api_key_revoked": "Clave API revocada",
+  "gdpr_erasure_desc": "Solicita la eliminación de todos los datos personales (PII) conforme al GDPR.",
+  "gdpr_erasure_btn": "Solicitar borrado de datos personales (GDPR)",
+  "gdpr_erasure_confirm": "¿Estás seguro? Esto eliminará permanentemente todos los datos personales y no se puede deshacer.",
+  "gdpr_erased": "Todos los datos personales borrados"
 }

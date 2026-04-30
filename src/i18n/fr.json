@@ -1456,5 +1456,9 @@
   "api_key_generated": "Clé API générée",
   "api_key_copied": "Clé copiée",
   "api_key_copy_error": "Échec de la copie",
-  "api_key_revoked": "Clé API révoquée"
+  "api_key_revoked": "Clé API révoquée",
+  "gdpr_erasure_desc": "Demandez la suppression de toutes les données personnelles (PII) conformément au RGPD.",
+  "gdpr_erasure_btn": "Demander l'effacement des données personnelles (RGPD)",
+  "gdpr_erasure_confirm": "Êtes-vous sûr ? Cela effacera définitivement toutes les données personnelles et ne peut pas être annulé.",
+  "gdpr_erased": "Toutes les données personnelles effacées"
 }

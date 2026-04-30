@@ -93,6 +93,27 @@ class SettingsSection extends BaseSection {
   }
 }
 
+// ── S435: GDPR erasure request ───────────────────────────────────────────────
+
+/**
+ * Clear all PII from localStorage (wedding_v1_* keys) and show confirmation.
+ * This erases local data; Supabase-side PII erasure requires calling eraseGuest() per guest.
+ */
+export function requestGdprErasure() {
+  if (!window.confirm(t("gdpr_erasure_confirm"))) return;
+  try {
+    const keysToRemove = Object.keys(localStorage).filter((k) => k.startsWith("wedding_v1_"));
+    for (const k of keysToRemove) localStorage.removeItem(k);
+  } catch {
+    // storage disabled — ignore
+  }
+  const status = document.getElementById("gdprErasureStatus");
+  if (status) status.textContent = t("gdpr_erased");
+  const btn = document.getElementById("gdprErasureBtn");
+  if (btn) btn.setAttribute("disabled", "");
+  showToast(t("gdpr_erased"), "success");
+}
+
 export const { mount, unmount, capabilities } = fromSection(new SettingsSection("settings"));
 
 // ── Settings API ──────────────────────────────────────────────────────────

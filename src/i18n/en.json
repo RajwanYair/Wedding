@@ -1456,5 +1456,9 @@
   "api_key_generated": "API key generated",
   "api_key_copied": "Key copied",
   "api_key_copy_error": "Copy failed",
-  "api_key_revoked": "API key revoked"
+  "api_key_revoked": "API key revoked",
+  "gdpr_erasure_desc": "Request deletion of all personal data (PII) in compliance with GDPR.",
+  "gdpr_erasure_btn": "Request Personal Data Erasure (GDPR)",
+  "gdpr_erasure_confirm": "Are you sure? This will permanently erase all personal data on this device and cannot be undone.",
+  "gdpr_erased": "All personal data erased"
 }
