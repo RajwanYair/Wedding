@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [18.0.0] — 2026-06-22
+
+> **S428–S437: Russian locale, gift registry deep-links, hybrid RSVP, observability DSN,
+> WebAuthn passkeys, REST API key UI, GDPR erasure request, multi-event quick actions.**
+
+### Added
+
+- **S428** — Reserved (see S429)
+- **S429** — Russian locale (`ru.json`): full `he`-parity translation for all 280+ keys;
+  multi-locale selector in Settings with flag emoji; added `ru` to `SUPPORTED_LOCALES`
+- **S430** — Gift registry deep-links: `REGISTRY_PLATFORMS` map (Amazon IL/COM, Giftly, BuyMe,
+  Wishlisted, MyRegistry); `detectPlatform(url)` auto-detects platform; platform preset buttons in
+  registry admin; styled `.registry-platform-card` with icon + arrow
+- **S431** — Hybrid / virtual RSVP: `virtualLink` field added to invitation section; "Join Online"
+  button rendered on RSVP confirmation when guest status is confirmed and a valid HTTPS link is set
+- **S432** — Observability DSN input: URL field in Settings monitoring card stores Sentry DSN
+  under `wedding_v1_monitoring_dsn`; shows saved/cleared feedback
+- **S433** — WebAuthn passkey scaffold: `src/utils/webauthn.js` with `registerPasskey()`,
+  `authenticatePasskey()`, `clearPasskeys()`, `listPasskeys()`, `isPasskeySupported()`; passkey
+  card in Settings with register/authenticate/clear buttons; credential stubs in localStorage
+- **S434** — REST API key management UI: `src/utils/api-key.js` — `generateApiKey()` (crypto UUID),
+  `getApiKey()`, `revokeApiKey()`; API key card in Settings with generate/copy/revoke; key stored
+  under `wedding_v1_api_key`
+- **S435** — GDPR erasure request: "Request Personal Data Erasure" button in Settings Danger Zone;
+  clears all `wedding_v1_*` localStorage keys on confirmation; status feedback
+- **S436** — Multi-event quick actions: "New Event" + "Switch Event" buttons on dashboard quick
+  actions bar; `createNewEvent()` prompts for name and adds to workspace store; navigates to
+  workspace-switcher section
+- **S437** — Changelog What's New: this entry documents S428–S437
+
+### Changed
+
+- `src/core/i18n.js` / `src/i18n/*.json`: 60+ new keys added across S429–S436 in all 6 locales
+  (he, en, ar, es, fr, ru)
+- `src/sections/settings.js`: `registerPasskey`, `authenticatePasskey`, `clearPasskeys`,
+  `generateApiKey`, `copyApiKey`, `revokeApiKey`, `requestGdprErasure` added as exports
+- `src/handlers/settings-handlers.js`: all S433–S435 actions wired
+- `src/handlers/section-handlers.js`: `createNewEvent` wired (S436)
+- `src/sections/workspace-switcher.js`: `createNewEvent()` added
+
 ## [17.0.0] — 2026-06-01
 
 > **S419–S427: Vendor CSV import, ICU Arabic plurals, RSVP venue links, QR table cards,
