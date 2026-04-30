@@ -1327,6 +1327,9 @@ function _renderMonitoringToggle() {
   checkbox.checked = !optedOut;
 }
 
+/**
+ * Toggle monitoring opt-in/out and persist the preference.
+ */
 export function toggleMonitoring() {
   const checkbox = /** @type {HTMLInputElement|null} */ (
     document.getElementById("monitoringOptIn")

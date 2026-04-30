@@ -19,6 +19,9 @@ class LandingSection extends BaseSection {
 
 export const { mount, unmount, capabilities } = fromSection(new LandingSection("landing"));
 
+/**
+ * Render the landing section with current wedding info from the store.
+ */
 export function renderLanding() {
   const info = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
 

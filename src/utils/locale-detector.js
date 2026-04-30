@@ -28,7 +28,7 @@ export function isRtl(locale) {
 
 /**
  * Detect the user's preferred locale.
- * @param {{ languages?: readonly string[], language?: string }} [nav]
+ * @param {{ languages?: string[], language?: string }} [nav]
  *   Injectable navigator-like object (defaults to `globalThis.navigator`).
  * @returns {string} Best-guess locale string (e.g. "he", "en-US")
  */
@@ -52,7 +52,7 @@ export function resolveAppLocale(locale, supported = ["he", "en"], fallback = "e
 
 /**
  * Full locale info object.
- * @param {{ languages?: readonly string[], language?: string }} [nav]
+ * @param {{ languages?: string[], language?: string }} [nav]
  * @returns {{ raw: string, primary: string, isRtl: boolean, appLocale: string }}
  */
 export function getLocaleInfo(nav) {

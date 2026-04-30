@@ -46,8 +46,19 @@ export function buildAssertions(scoreOverrides = {}) {
   return out;
 }
 
-/** Build a complete lighthouserc config object.
- * @param {{ baseUrl: string, locales: string[], scoreOverrides?: Record<string,number>, resourceBudgets?: readonly { resourceType: string, budget: number }[], numberOfRuns?: number }} opts
+/**
+ * @typedef {object} LhciOptions
+ * @property {string} baseUrl - Base URL under test
+ * @property {string[]} locales - Locale slugs to generate URLs for
+ * @property {Record<string,number>} [scoreOverrides] - Per-category score overrides
+ * @property {Array<{resourceType:string,budget:number}>} [resourceBudgets] - Resource size budgets
+ * @property {number} [numberOfRuns] - Number of Lighthouse runs per URL
+ */
+
+/**
+ * Build a complete lighthouserc config object.
+ * @param {LhciOptions} opts
+ * @returns {object}
  */
 export function buildLighthouseConfig({
   baseUrl,

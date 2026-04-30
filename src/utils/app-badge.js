@@ -26,6 +26,10 @@ export async function updateBadge(count) {
   }
 }
 
+/**
+ * Clear the app badge (unread count) via the Badging API.
+ * @returns {Promise<boolean>} True if the API is supported and call succeeded.
+ */
 export async function clearBadge() {
   if (!hasBadgeApi()) return false;
   try {

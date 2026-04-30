@@ -276,4 +276,33 @@ export default [
       "jsdoc/valid-types": "error",
     },
   },
+  // S399 — JSDoc gate extended to sections + utils (same rules as core/services/handlers).
+  {
+    files: ["src/sections/**/*.js", "src/utils/**/*.js"],
+    plugins: { jsdoc },
+    rules: {
+      "jsdoc/check-alignment": "error",
+      "jsdoc/check-param-names": "error",
+      "jsdoc/check-tag-names": "error",
+      "jsdoc/check-types": "error",
+      "jsdoc/empty-tags": "error",
+      "jsdoc/no-undefined-types": "off",
+      "jsdoc/require-jsdoc": [
+        "error",
+        {
+          publicOnly: true,
+          require: {
+            FunctionDeclaration: true,
+            ClassDeclaration: true,
+            MethodDefinition: false,
+            ArrowFunctionExpression: false,
+            FunctionExpression: false,
+          },
+        },
+      ],
+      "jsdoc/require-param-name": "error",
+      "jsdoc/require-returns-check": "error",
+      "jsdoc/valid-types": "error",
+    },
+  },
 ];

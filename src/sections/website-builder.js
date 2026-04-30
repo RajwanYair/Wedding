@@ -140,6 +140,10 @@ function _loadSavedConfig() {
 
 // ── Save config action ────────────────────────────────────────────────────
 
+/**
+ * Validate and persist the current website-builder form values.
+ * @returns {{ ok: boolean, errors?: string[] }}
+ */
 export function saveWebsiteConfig() {
   const coupleA = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleA"))?.value ?? "";
   const coupleB = /** @type {HTMLInputElement|null} */ (document.getElementById("wbCoupleB"))?.value ?? "";
@@ -177,6 +181,9 @@ export function saveWebsiteConfig() {
 
 // ── Preview ───────────────────────────────────────────────────────────────
 
+/**
+ * Render a live HTML preview of the public wedding website.
+ */
 export function previewWebsite() {
   const container = document.getElementById("wbPreviewContainer");
   const content = document.getElementById("wbPreviewContent");

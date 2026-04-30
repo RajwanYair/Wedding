@@ -30,6 +30,11 @@ function _setHtml(target, html) {
   }
 }
 
+/**
+ * Render the changelog content into the page.
+ * Fetches and parses CHANGELOG.md on first call, then uses the cached result.
+ * @returns {Promise<void>}
+ */
 export async function renderChangelog() {
   const el = document.getElementById("changelogContent");
   if (!el) return;

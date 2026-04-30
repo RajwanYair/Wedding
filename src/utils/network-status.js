@@ -25,6 +25,10 @@ function notify(online) {
   }
 }
 
+/**
+ * Initialise online/offline event listeners (idempotent).
+ * Must be called once during app bootstrap.
+ */
 export function initNetworkStatus() {
   if (initialised || typeof window === "undefined") return;
   initialised = true;
