@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [22.0.0] — 2026-04-30
+
+> **S474–S483: utility expansion III — meal planner, gift thanks tracker,
+> event timeline conflict detector, vCard 4.0 batch export, weather cache
+> with delta describer, pre-wedding task list, password strength scorer,
+> markdown TOC builder, Hebrew→ASCII slugify; +110 unit tests; release cut.**
+
+### Added
+
+- **S474** — Meal planner (`src/utils/meal-planner.js`):
+  `normaliseMeal/tallyMeals/formatChefReport`; counts confirmed guests only,
+  reports unspecified seats, emits tab-delimited chef-friendly report; 11 tests.
+- **S475** — Gift thanks tracker (`src/utils/gift-thanks.js`):
+  `recordThanks/unrecordThanks/hasThanked/outstanding/channelCounts`;
+  default channel `whatsapp`, default ISO timestamp, replaces existing
+  entry per giftId; 10 tests.
+- **S476** — Event timeline (`src/utils/event-timeline.js`):
+  `sortItems/findConflicts/totalSpan/insertWithShift`; detects overlap and
+  duplicate-id conflicts, cursor-based shift on insertion; 13 tests.
+- **S477** — vCard 4.0 batch export (`src/utils/vcard-batch.js`):
+  RFC 6350 builder with TEXT escaping, 75-octet line folding, and a
+  multi-contact `.vcf` wrapper for iOS/Android/Outlook import; 12 tests.
+- **S478** — Weather cache (`src/utils/weather-cache.js`):
+  `makeCache/isStale/diff/describeDelta`; immutable snapshots, 6h default
+  TTL, human-readable delta label like `+2.0°C, rain ↑5%`; 15 tests.
+- **S479** — Pre-wedding task list (`src/utils/task-list.js`):
+  `addTask/completeTask/daysUntil/groupByDueWindow/progress`; bucketises
+  pending tasks into overdue, due-this-week, due-this-month, later;
+  13 tests.
+- **S480** — Password strength scorer (`src/utils/password-strength.js`):
+  `score(input)` returns 0..4 score plus stable label and i18n suggestion
+  keys; common-password blacklist, repeat penalty; 12 tests.
+- **S481** — Markdown TOC builder (`src/utils/markdown-toc.js`):
+  `parseHeadings/renderToc`; ATX heading parser with code-fence skipping
+  and slug deduplication, configurable minDepth and indent; 12 tests.
+- **S482** — Slug generator (`src/utils/slug.js`):
+  `transliterateHebrew/slugify`; Hebrew alphabet lookup table including
+  final letters, NFKD diacritic strip, custom separator; 12 tests.
+- **S483** — Release v22.0.0 — sync-version propagation across 12 files,
+  CHANGELOG entry, lint clean, all 4587 tests passing across 302 files.
+
 ## [21.0.0] — 2026-04-30
 
 > **S464–S473: utility expansion II — gift registry, seating optimizer,
