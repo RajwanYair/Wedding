@@ -1466,5 +1466,8 @@
   "tip_create_event": "צור אירוע חדש",
   "tip_switch_event": "עבור לאירוע אחר",
   "ws_new_event_prompt": "שם האירוע החדש:",
-  "ws_new_event_default": "חתונה 2"
+  "ws_new_event_default": "חתונה 2",
+  "observability_test_btn": "שלח דוח שגיאה לניסיון",
+  "observability_test_sent": "דוח שגיאה נשלח בהצלחה",
+  "observability_test_no_dsn": "לא הוגדר DSN — הגדר DSN תחילה"
 }

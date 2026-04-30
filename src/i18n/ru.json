@@ -1466,5 +1466,8 @@
   "tip_create_event": "Создать новое событие",
   "tip_switch_event": "Переключиться на другое событие",
   "ws_new_event_prompt": "Название нового события:",
-  "ws_new_event_default": "Свадьба 2"
+  "ws_new_event_default": "Свадьба 2",
+  "observability_test_btn": "Отправить тестовый отчёт об ошибке",
+  "observability_test_sent": "Тестовый отчёт отправлен",
+  "observability_test_no_dsn": "DSN не настроен — сначала задайте DSN"
 }

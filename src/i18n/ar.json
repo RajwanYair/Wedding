@@ -1466,5 +1466,8 @@
   "tip_create_event": "إنشاء حدث جديد",
   "tip_switch_event": "التبديل إلى حدث آخر",
   "ws_new_event_prompt": "اسم الحدث الجديد:",
-  "ws_new_event_default": "حفل زفاف 2"
+  "ws_new_event_default": "حفل زفاف 2",
+  "observability_test_btn": "إرسال تقرير خطأ تجريبي",
+  "observability_test_sent": "تم إرسال تقرير الخطأ التجريبي",
+  "observability_test_no_dsn": "لم يتم تكوين DSN — قم بتعيين DSN أولاً"
 }

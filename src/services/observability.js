@@ -436,12 +436,20 @@ export async function initMonitoring(opts = {}) {
 
   const _env = (typeof import.meta !== "undefined" && /** @type {any} */ (import.meta).env) ?? {};
   const _proc = (typeof globalThis !== "undefined" && (/** @type {any} */ (globalThis)).process?.env) ?? {};
+  // S439: also read the runtime DSN stored by the admin in Settings (wedding_v1_monitoring_dsn)
+  let _runtimeDsn = "";
+  try {
+    if (typeof localStorage !== "undefined") {
+      _runtimeDsn = localStorage.getItem("wedding_v1_monitoring_dsn") ?? "";
+    }
+  } catch { /* storage disabled */ }
   const dsn =
     opts.dsn ??
     _env.VITE_GLITCHTIP_DSN ??
     _proc.VITE_GLITCHTIP_DSN ??
     _env.VITE_SENTRY_DSN ??
-    _proc.VITE_SENTRY_DSN;
+    _proc.VITE_SENTRY_DSN ??
+    _runtimeDsn;
 
   if (!dsn) return false;
 
@@ -675,4 +683,33 @@ export function _resetForTests() {
   _transport = null;
   _lastSampleAt.clear();
   _breadcrumbs.length = 0;
+}
+
+/**
+ * S439: Reset the monitoring initialisation flag so `initMonitoring()` can be
+ * called again after the admin updates the runtime DSN in Settings.
+ * Safe to call any number of times.
+ */
+export function resetMonitoringInit() {
+  _monInitialized = false;
+  _transport = null;
+}
+
+/**
+ * S439: Send a test error to the configured DSN endpoint so the admin can
+ * verify connectivity from the Settings monitoring card.
+ * Resolves `true` when a transport was active and the test event was sent,
+ * `false` otherwise.
+ * @returns {Promise<boolean>}
+ */
+export async function testErrorReport() {
+  await initMonitoring();
+  if (!_transport) return false;
+  try {
+    const testErr = new Error("Wedding Manager — observability test event");
+    captureException(testErr, { source: "settings-test" });
+    return true;
+  } catch {
+    return false;
+  }
 }

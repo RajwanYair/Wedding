@@ -284,6 +284,18 @@ export function register() {
     try { localStorage.setItem("wedding_v1_monitoring_dsn", dsn); } catch { /* storage disabled */ }
     if (statusEl) statusEl.textContent = t("observability_dsn_saved");
     showToast(t("observability_dsn_saved"), "success");
+    // S439: reset monitoring init so next boot (or test) uses the new DSN
+    import("../services/observability.js").then(({ resetMonitoringInit }) => {
+      resetMonitoringInit();
+    }).catch(() => {});
+  });
+  on("testErrorReport", async () => {
+    const { testErrorReport: _test, initMonitoring } = await import("../services/observability.js");
+    await initMonitoring();
+    const ok = await _test();
+    const statusEl = document.getElementById("observabilityDsnStatus");
+    if (statusEl) statusEl.textContent = ok ? t("observability_test_sent") : t("observability_test_no_dsn");
+    showToast(ok ? t("observability_test_sent") : t("observability_test_no_dsn"), ok ? "success" : "error");
   });
   // S217 — Auto-backup
   on("startAutoBackup", () => {

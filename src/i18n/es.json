@@ -1466,5 +1466,8 @@
   "tip_create_event": "Crear un nuevo evento",
   "tip_switch_event": "Cambiar a otro evento",
   "ws_new_event_prompt": "Nombre del nuevo evento:",
-  "ws_new_event_default": "Boda 2"
+  "ws_new_event_default": "Boda 2",
+  "observability_test_btn": "Enviar informe de error de prueba",
+  "observability_test_sent": "Informe de error de prueba enviado",
+  "observability_test_no_dsn": "Sin DSN configurado — establece un DSN primero"
 }

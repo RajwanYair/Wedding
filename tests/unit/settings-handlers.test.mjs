@@ -240,6 +240,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "registerPasskey", "authenticatePasskey", "clearPasskeys",
       "generateApiKey", "copyApiKey", "revokeApiKey",
       "requestGdprErasure",
+      "testErrorReport",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
       "switchLanguage", "toggleLanguage", "clearAuditLog", "clearErrorLog",
       "exportJSON", "importJSON", "copyRsvpLink", "copyContactLink",
