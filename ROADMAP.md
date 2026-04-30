@@ -68,7 +68,7 @@ coverage lines 58% / branches 51%.
 
 ## 1. North Star & Current State
 
-### Actual state — v15.0.0 · 2026-05-24
+### Actual state — v16.0.0 · 2026-06-01
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ coverage lines 58% / branches 51%.
 | Coverage | lines 58% · branches 51% (floor ratchet) | ✅ |
 | Repositories | mandatory data path; ESLint enforced | ✅ |
 | Handlers | clean separation; 7 files | ✅ |
-| i18n keys | **1 209** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ |
+| i18n keys | **1 373** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ |
 | DB migrations | **25** Supabase migrations | ✅ |
 | Active backend | `BACKEND_TYPE = "supabase"` · Supabase is primary backend | ✅ |
 | Auth tokens | AES-GCM encrypted (`secure-storage.js`) | ✅ |
@@ -94,8 +94,10 @@ coverage lines 58% / branches 51%.
 | Supply-chain | OpenSSF Scorecard · SBOM · Trivy · CodeQL · Dependabot grouped | ✅ |
 | Auth providers | Supabase Auth (Google · Apple · email allowlist + anonymous) · SDKs removed | ✅ |
 | Service Worker | precache + 5-strategy cache (cache-first / network-first / SWR) | ✅ |
-| Realtime | Supabase Realtime wired but **idle** | ⚠ |
-| Edge functions | partial (push sender) | ⚠ expand |
+| Realtime | Supabase Realtime **active** — live indicator + presence badges | ✅ |
+| Undo | Ctrl+Z toast for guest/table/vendor deletes | ✅ |
+| Gallery | Supabase Storage upload + data-URL fallback | ✅ |
+| Edge functions | partial (push sender · WABA sender) | ⚠ expand |
 | Themes | 5 base + theme.json + live CSS-var editor | ✅ |
 | Store | Preact Signals reactive store (S400) | ✅ |
 | Modals | 8 native `<dialog>` · autofocus + ESC focus-restore (S402–S403) | ✅ |
@@ -775,6 +777,16 @@ Fixing these five unlocks every other capability downstream.
 | 406 | Mutation testing pilot — Stryker on `core/` + `repositories/` | M |
 | 407 | pnpm evaluation — pilot in CI; result documented in ADR | S |
 | 408 | v15.0.0 release | S |
+
+### Cluster C — Smart, Connected, Native-Class (Sprints 409–418, target v16.0.0)
+
+| Sprint | Goal | Size |
+| --- | --- | --- |
+| 409 | Supabase Realtime live indicator in dashboard | S |
+| 410 | Presence avatar badges on guest rows | S |
+| 411 | Ctrl+Z undo toast handler + pushUndo on deleteTable | S |
+| 417 | Gallery Supabase Storage upload + data-URL fallback | M |
+| 418 | v16.0.0 release | S |
 
 ---
 

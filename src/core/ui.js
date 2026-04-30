@@ -8,8 +8,6 @@
 import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
 import { readBrowserStorage, removeBrowserStorage, writeBrowserStorage } from "./storage.js";
-import { storeSet } from "./store.js";
-import { popUndo } from "../utils/undo.js";
 
 // ── Toast ─────────────────────────────────────────────────────────────────
 
@@ -513,9 +511,12 @@ export function announce(message, politeness = "polite") {
 /**
  * Wire Ctrl+Z / Cmd+Z to pop the undo stack and restore the previous state.
  * Returns a cleanup function that removes the listener.
+ * Deps are injected to avoid circular imports (ui.js has no store dep).
+ * @param {() => { label: string, key: string, snapshot: unknown } | null} popUndoFn
+ * @param {(key: string, value: unknown) => void} storeSetFn
  * @returns {() => void}
  */
-export function initUndoShortcut() {
+export function initUndoShortcut(popUndoFn, storeSetFn) {
   /** @param {KeyboardEvent} e */
   const handler = (e) => {
     if (!(e.ctrlKey || e.metaKey) || e.key !== "z") return;
@@ -523,10 +524,10 @@ export function initUndoShortcut() {
     const tag = /** @type {HTMLElement} */ (e.target).tagName;
     if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
     if (/** @type {HTMLElement} */ (e.target).isContentEditable) return;
-    const entry = popUndo();
+    const entry = popUndoFn();
     if (!entry) return;
     e.preventDefault();
-    storeSet(entry.key, entry.snapshot);
+    storeSetFn(entry.key, entry.snapshot);
     showToast(t("undo_toast"), "success");
   };
   document.addEventListener("keydown", handler);

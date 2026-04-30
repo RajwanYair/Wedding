@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [16.0.0] — 2026-06-01
+
+> **S409–S418: Supabase Realtime live indicator, presence avatar badges, Ctrl+Z undo toast,
+> Supabase Storage gallery upload (offline fallback). Phase C utilities fully wired.**
+
+### Added
+
+- **S409** — Supabase Realtime: `subscribeGuestChanges()` + `activateRealtimeSync()` wired in `main.js`;
+  live indicator badge (`#realtimeBadge`) in dashboard header; `updateRealtimeIndicator()` export in `dashboard.js`
+- **S410** — Presence avatar badges on guest rows: `onPresenceChange` subscribed in `GuestsSection.onMount`;
+  `_updatePresenceBadges()` renders initials chips per row using `groupByViewing` + `badgeFor`;
+  `.presence-avatar` CSS chips added
+- **S411** — Undo Ctrl+Z toast: `initUndoShortcut(popUndo, storeSet)` in `ui.js` (DI, no circular dep);
+  wired in bootstrap; `pushUndo` added to `deleteTable()` in `tables.js`; `undo_delete_table` i18n key (5 locales)
+- **S417** — Gallery Supabase Storage: `handleGalleryUpload` adds photo optimistically as data-URL, then
+  uploads to `wedding-photos` bucket; on success replaces entry with public URL; graceful fallback on error
+- **S418** — v16.0.0 release: version bump propagated to all 12 version-bearing files via `sync-version.mjs`;
+  CHANGELOG + ROADMAP + README updated; git tag + GitHub release
+
+### Changed
+
+- `src/sections/guests.js`: added `onPresenceChange` / `groupByViewing` / `badgeFor` imports; `addCleanup` for presence subscription; `_updatePresenceBadges()` helper
+- `src/sections/tables.js`: `deleteTable()` now calls `pushUndo` before removing entry
+- `src/sections/gallery.js`: `handleGalleryUpload` upgraded to async Supabase Storage upload with data-URL fallback
+- `src/core/ui.js`: `initUndoShortcut(popUndoFn, storeSetFn)` added (dependency-injected)
+- `css/components.css`: `.presence-avatar` + `.presence-badge-cell` + `.realtime-badge` styles added
+- `src/i18n/*.json` (5 locales): 9 new keys — `realtime_connected/disconnected`, `undo_toast/available`, `presence_viewing`, `gallery_upload_supabase_*`, `undo_delete_table`
+
 ## [15.0.0] — 2026-05-24
 
 > **S399–S408: JSDoc gate extended, Preact Signals store, SW 5-strategy rewrite, native `<dialog>` modals (8 files),
