@@ -111,10 +111,9 @@ async function _ensureModalLoaded(modal, modalId) {
 }
 
 /**
- * Open a modal by ID, trapping focus inside it.
+ * Open a modal by ID, using native `<dialog>.showModal()`.
  * Lazy-loads modal HTML template on first open.
- * Native `<dialog>` elements use `showModal()`; legacy `.modal-overlay` divs
- * fall back to the focus-trap implementation. (S103 — dialog adoption.)
+ * The `cancel` event (ESC key) restores focus to the opener.
  * @param {string} modalId
  */
 export async function openModal(modalId) {
@@ -122,7 +121,7 @@ export async function openModal(modalId) {
   if (!modal) return;
   await _ensureModalLoaded(modal, modalId);
   _modalOpener = /** @type {HTMLElement | null} */ (document.activeElement);
-  // Native <dialog> path — browser handles focus trap + Escape automatically.
+  // Native <dialog> path — browser handles focus trap + Escape + autofocus.
   if (
     modal.tagName === "DIALOG" &&
     typeof (/** @type {any} */ (modal).showModal) === "function"
@@ -153,17 +152,13 @@ export async function openModal(modalId) {
       }
       return;
     } catch {
-      // fall through to legacy path
+      // fall through if showModal() throws (should not happen in modern browsers)
     }
   }
+  // Fallback: make element visible without <dialog> API (non-dialog shells).
   modal.hidden = false;
-  modal.classList.remove("auth-hidden");
   modal.setAttribute("aria-modal", "true");
   modal.removeAttribute("aria-hidden");
-  const first = modal.querySelector(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-  );
-  /** @type {HTMLElement | null} */ (first)?.focus();
 }
 
 /**
@@ -184,11 +179,11 @@ export function closeModal(modalId) {
       _modalOpener = null;
       return;
     } catch {
-      // fall through to legacy path
+      // fall through
     }
   }
+  // Fallback for non-dialog elements.
   modal.hidden = true;
-  modal.classList.add("auth-hidden");
   modal.setAttribute("aria-hidden", "true");
   modal.removeAttribute("aria-modal");
   _modalOpener?.focus();
