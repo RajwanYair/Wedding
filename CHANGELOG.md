@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [24.0.0] — 2026-04-30
+
+> **S494–S503: utility expansion V — CSV parser, UUID v4, base64 unicode,
+> text diff, color palette, rate limiter, time-ago, stable sort, retry
+> backoff; +104 unit tests; release cut.**
+
+### Added
+
+- **S494** — CSV parser (`src/utils/csv-parser.js`): RFC4180-style parser
+  with quoted fields, embedded commas, embedded newlines, doubled-quote
+  escaping, custom delimiter, header mode, and trim option; 14 tests.
+- **S495** — UUID generator (`src/utils/uuid-generate.js`):
+  `uuidV4/formatUuid/isUuid/isUuidV4` backed by `crypto.getRandomValues`;
+  RFC 4122 compliant version + variant bits; 11 tests.
+- **S496** — Base64 unicode (`src/utils/base64-unicode.js`):
+  `encode/decode/encodeUrl/decodeUrl`; UTF-8 safe via `TextEncoder`,
+  URL-safe variant strips padding; 11 tests.
+- **S497** — Text diff (`src/utils/diff-text.js`):
+  `diffLines/renderUnified/diffStats`; LCS-based line diff with unified
+  format render and op stats; 11 tests.
+- **S498** — Color palette (`src/utils/color-palette.js`):
+  `hexToHsl/hslToHex/lighten/darken/palette`; 3-digit and 6-digit hex,
+  HSL conversion, 5-stop palette generator; 12 tests.
+- **S499** — Rate limit (`src/utils/rate-limit.js`):
+  `createRateLimiter/createKeyedRateLimiter`; token-bucket with
+  fractional refill and per-key isolation; 10 tests.
+- **S500** — Time ago (`src/utils/time-ago.js`):
+  `timeAgo` relative formatter for he+en, 7 unit steps from year down to
+  second, accepts Date / number / ISO string; 13 tests.
+- **S501** — Stable sort (`src/utils/sort-stable.js`):
+  `sortBy` multi-key stable sorter with locale and natural string
+  compare, selector functions, and asc/desc per key; 12 tests.
+- **S502** — Retry backoff (`src/utils/retry-backoff.js`):
+  `retry/computeDelay`; exponential backoff with full jitter, injectable
+  sleep+rng for deterministic tests; 10 tests.
+- **S503** — Release v24.0.0 — sync-version propagation across 12 files,
+  CHANGELOG entry, lint clean, all 4804 tests passing across 320 files.
+
 ## [23.0.0] — 2026-04-30
 
 > **S484–S493: utility expansion IV — dietary summary, budget allocator,
