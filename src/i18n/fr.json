@@ -1469,5 +1469,22 @@
   "ws_new_event_default": "Mariage 2",
   "observability_test_btn": "Envoyer un rapport d'erreur de test",
   "observability_test_sent": "Rapport d'erreur de test envoyé",
-  "observability_test_no_dsn": "Aucun DSN configuré — définissez d'abord un DSN"
+  "observability_test_no_dsn": "Aucun DSN configuré — définissez d'abord un DSN",
+  "webhook_title": "Abonnements Webhook",
+  "webhook_desc": "Recevez des notifications POST en temps réel vers des URL externes lors d'événements clés.",
+  "webhook_url_placeholder": "https://example.com/hook",
+  "webhook_event_rsvp_confirmed": "RSVP confirmé",
+  "webhook_event_rsvp_declined": "RSVP refusé",
+  "webhook_event_guest_added": "Invité ajouté",
+  "webhook_add": "Ajouter",
+  "webhook_test": "Tester",
+  "webhook_remove": "Supprimer",
+  "webhook_added": "Webhook ajouté",
+  "webhook_removed": "Webhook supprimé",
+  "webhook_ping_ok": "Test Webhook réussi",
+  "webhook_ping_fail": "Test Webhook échoué",
+  "webhook_none": "Aucun webhook enregistré.",
+  "webhook_url_required": "URL requise",
+  "webhook_url_invalid": "URL invalide",
+  "webhook_events_required": "Sélectionnez au moins un événement"
 }

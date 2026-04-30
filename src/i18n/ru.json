@@ -1469,5 +1469,22 @@
   "ws_new_event_default": "Свадьба 2",
   "observability_test_btn": "Отправить тестовый отчёт об ошибке",
   "observability_test_sent": "Тестовый отчёт отправлен",
-  "observability_test_no_dsn": "DSN не настроен — сначала задайте DSN"
+  "observability_test_no_dsn": "DSN не настроен — сначала задайте DSN",
+  "webhook_title": "Подписки Webhook",
+  "webhook_desc": "Получайте POST-уведомления в реальном времени на внешние URL при ключевых событиях.",
+  "webhook_url_placeholder": "https://example.com/hook",
+  "webhook_event_rsvp_confirmed": "RSVP подтверждён",
+  "webhook_event_rsvp_declined": "RSVP отклонён",
+  "webhook_event_guest_added": "Гость добавлен",
+  "webhook_add": "Добавить",
+  "webhook_test": "Тест",
+  "webhook_remove": "Удалить",
+  "webhook_added": "Webhook добавлен",
+  "webhook_removed": "Webhook удалён",
+  "webhook_ping_ok": "Ping Webhook успешен",
+  "webhook_ping_fail": "Ping Webhook не udался",
+  "webhook_none": "Нет зарегистрированных webhooks.",
+  "webhook_url_required": "URL обязателен",
+  "webhook_url_invalid": "Некорректный URL",
+  "webhook_events_required": "Выберите хотя бы одно событие"
 }

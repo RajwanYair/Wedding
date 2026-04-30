@@ -1469,5 +1469,22 @@
   "ws_new_event_default": "חתונה 2",
   "observability_test_btn": "שלח דוח שגיאה לניסיון",
   "observability_test_sent": "דוח שגיאה נשלח בהצלחה",
-  "observability_test_no_dsn": "לא הוגדר DSN — הגדר DSN תחילה"
+  "observability_test_no_dsn": "לא הוגדר DSN — הגדר DSN תחילה",
+  "webhook_title": "מינויי Webhook",
+  "webhook_desc": "קבל התראות POST בזמן אמת לכתובות URL חיצוניות בעת אירועי מפתח.",
+  "webhook_url_placeholder": "https://example.com/hook",
+  "webhook_event_rsvp_confirmed": "RSVP אישר",
+  "webhook_event_rsvp_declined": "RSVP דחה",
+  "webhook_event_guest_added": "אורח נוסף",
+  "webhook_add": "הוסף",
+  "webhook_test": "בדוק",
+  "webhook_remove": "הסר",
+  "webhook_added": "Webhook נוסף",
+  "webhook_removed": "Webhook הוסר",
+  "webhook_ping_ok": "בדיקת Webhook הצליחה",
+  "webhook_ping_fail": "בדיקת Webhook נכשלה",
+  "webhook_none": "אין Webhooks רשומים.",
+  "webhook_url_required": "יש להזין כתובת URL",
+  "webhook_url_invalid": "כתובת URL אינה תקינה",
+  "webhook_events_required": "יש לבחור לפחות אירוע אחד"
 }

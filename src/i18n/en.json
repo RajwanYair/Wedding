@@ -1469,5 +1469,22 @@
   "ws_new_event_default": "Wedding 2",
   "observability_test_btn": "Send Test Error Report",
   "observability_test_sent": "Test error report sent",
-  "observability_test_no_dsn": "No DSN configured — set a DSN first"
+  "observability_test_no_dsn": "No DSN configured — set a DSN first",
+  "webhook_title": "Webhook Subscriptions",
+  "webhook_desc": "Receive real-time POST notifications to external URLs on key events.",
+  "webhook_url_placeholder": "https://example.com/hook",
+  "webhook_event_rsvp_confirmed": "RSVP confirmed",
+  "webhook_event_rsvp_declined": "RSVP declined",
+  "webhook_event_guest_added": "Guest added",
+  "webhook_add": "Add",
+  "webhook_test": "Test",
+  "webhook_remove": "Remove",
+  "webhook_added": "Webhook added",
+  "webhook_removed": "Webhook removed",
+  "webhook_ping_ok": "Webhook ping succeeded",
+  "webhook_ping_fail": "Webhook ping failed",
+  "webhook_none": "No webhooks registered.",
+  "webhook_url_required": "URL is required",
+  "webhook_url_invalid": "Invalid URL",
+  "webhook_events_required": "Select at least one event"
 }

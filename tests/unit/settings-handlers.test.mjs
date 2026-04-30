@@ -145,6 +145,10 @@ vi.mock("../../src/sections/settings.js", () => ({
   copyApiKey: () => _copyApiKeyMock(),
   revokeApiKey: () => _revokeApiKeyMock(),
   requestGdprErasure: () => _requestGdprErasureMock(),
+  addWebhook: () => _addWebhookMock(),
+  removeWebhook: () => _removeWebhookMock(),
+  pingWebhookById: () => _pingWebhookByIdMock(),
+  refreshWebhooks: () => _refreshWebhooksMock(),
 }));
 
 const _registerPasskeyMock = vi.fn(() => Promise.resolve());
@@ -154,6 +158,10 @@ const _generateApiKeyMock = vi.fn();
 const _copyApiKeyMock = vi.fn(() => Promise.resolve());
 const _revokeApiKeyMock = vi.fn();
 const _requestGdprErasureMock = vi.fn();
+const _addWebhookMock = vi.fn(() => Promise.resolve());
+const _removeWebhookMock = vi.fn(() => Promise.resolve());
+const _pingWebhookByIdMock = vi.fn(() => Promise.resolve());
+const _refreshWebhooksMock = vi.fn(() => Promise.resolve());
 const _addLinkMock = vi.fn();
 const _addRegistryLinkMock = vi.fn();
 const _addRegistryPresetMock = vi.fn();
@@ -241,6 +249,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "generateApiKey", "copyApiKey", "revokeApiKey",
       "requestGdprErasure",
       "testErrorReport",
+      "addWebhook", "removeWebhook", "pingWebhookById", "refreshWebhooks",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
       "switchLanguage", "toggleLanguage", "clearAuditLog", "clearErrorLog",
       "exportJSON", "importJSON", "copyRsvpLink", "copyContactLink",

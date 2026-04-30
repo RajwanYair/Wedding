@@ -1600,3 +1600,104 @@ function _refreshApiKeyUI(key) {
     if (val) val.textContent = "";
   }
 }
+
+// ── S441: Webhook subscriptions ───────────────────────────────────────────
+
+/**
+ * Add a webhook from the Settings UI and refresh the list.
+ */
+export async function addWebhook() {
+  const { addWebhook: _add, listWebhooks } = await import("../utils/webhooks.js");
+  const urlInput = /** @type {HTMLInputElement|null} */ (document.getElementById("webhookUrlInput"));
+  const url = urlInput?.value?.trim() ?? "";
+  if (!url) {
+    showToast(t("webhook_url_required"), "error");
+    return;
+  }
+  try { new URL(url); } catch { showToast(t("webhook_url_invalid"), "error"); return; }
+  const checkboxes = /** @type {NodeListOf<HTMLInputElement>} */ (
+    document.querySelectorAll('input[name="webhookEvent"]:checked')
+  );
+  const events = Array.from(checkboxes).map((cb) => cb.value);
+  if (events.length === 0) { showToast(t("webhook_events_required"), "error"); return; }
+  _add({ url, events });
+  if (urlInput) urlInput.value = "";
+  _renderWebhooks(listWebhooks());
+  const status = document.getElementById("webhookStatus");
+  if (status) status.textContent = t("webhook_added");
+  showToast(t("webhook_added"), "success");
+}
+
+/**
+ * Remove a webhook by id.
+ * @param {string} id
+ */
+export async function removeWebhook(id) {
+  const { removeWebhook: _remove, listWebhooks } = await import("../utils/webhooks.js");
+  _remove(id);
+  _renderWebhooks(listWebhooks());
+  showToast(t("webhook_removed"), "info");
+}
+
+/**
+ * Ping a webhook by id and show result.
+ * @param {string} id
+ */
+export async function pingWebhookById(id) {
+  const { pingWebhook } = await import("../utils/webhooks.js");
+  const ok = await pingWebhook(id);
+  const status = document.getElementById("webhookStatus");
+  if (status) status.textContent = ok ? t("webhook_ping_ok") : t("webhook_ping_fail");
+  showToast(ok ? t("webhook_ping_ok") : t("webhook_ping_fail"), ok ? "success" : "error");
+}
+
+/**
+ * Render the webhook list into #webhookList.
+ * @param {Array<{ id: string, url: string, events: string[] }>} webhooks
+ */
+function _renderWebhooks(webhooks) {
+  const list = document.getElementById("webhookList");
+  if (!list) return;
+  list.textContent = "";
+  if (webhooks.length === 0) {
+    const li = document.createElement("li");
+    li.className = "text-hint";
+    li.textContent = t("webhook_none");
+    list.appendChild(li);
+    return;
+  }
+  webhooks.forEach((w) => {
+    const li = document.createElement("li");
+    li.className = "webhook-item";
+    const info = document.createElement("span");
+    info.className = "webhook-url";
+    info.textContent = w.url;
+    const evts = document.createElement("span");
+    evts.className = "webhook-events text-hint";
+    evts.textContent = w.events.join(", ");
+    const testBtn = document.createElement("button");
+    testBtn.className = "btn btn-secondary btn-tiny";
+    testBtn.textContent = t("webhook_test");
+    testBtn.setAttribute("data-action", "pingWebhookById");
+    testBtn.setAttribute("data-id", w.id);
+    const delBtn = document.createElement("button");
+    delBtn.className = "btn btn-danger btn-tiny";
+    delBtn.textContent = t("webhook_remove");
+    delBtn.setAttribute("data-action", "removeWebhook");
+    delBtn.setAttribute("data-id", w.id);
+    li.appendChild(info);
+    li.appendChild(evts);
+    li.appendChild(testBtn);
+    li.appendChild(delBtn);
+    list.appendChild(li);
+  });
+}
+
+/**
+ * Refresh the webhook list UI on settings mount.
+ */
+export async function refreshWebhooks() {
+  const { listWebhooks } = await import("../utils/webhooks.js");
+  _renderWebhooks(listWebhooks());
+}
+

@@ -1469,5 +1469,22 @@
   "ws_new_event_default": "Boda 2",
   "observability_test_btn": "Enviar informe de error de prueba",
   "observability_test_sent": "Informe de error de prueba enviado",
-  "observability_test_no_dsn": "Sin DSN configurado — establece un DSN primero"
+  "observability_test_no_dsn": "Sin DSN configurado — establece un DSN primero",
+  "webhook_title": "Suscripciones Webhook",
+  "webhook_desc": "Recibe notificaciones POST en tiempo real a URLs externas en eventos clave.",
+  "webhook_url_placeholder": "https://example.com/hook",
+  "webhook_event_rsvp_confirmed": "RSVP confirmado",
+  "webhook_event_rsvp_declined": "RSVP rechazado",
+  "webhook_event_guest_added": "Invitado añadido",
+  "webhook_add": "Agregar",
+  "webhook_test": "Probar",
+  "webhook_remove": "Eliminar",
+  "webhook_added": "Webhook agregado",
+  "webhook_removed": "Webhook eliminado",
+  "webhook_ping_ok": "Ping de Webhook exitoso",
+  "webhook_ping_fail": "Ping de Webhook fallido",
+  "webhook_none": "No hay webhooks registrados.",
+  "webhook_url_required": "Se requiere URL",
+  "webhook_url_invalid": "URL inválida",
+  "webhook_events_required": "Selecciona al menos un evento"
 }

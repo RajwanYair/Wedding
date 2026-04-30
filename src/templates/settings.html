@@ -655,6 +655,41 @@
       <p id="apiKeyStatus" aria-live="polite"></p>
     </div>
 
+    <!-- Webhooks (S441) -->
+    <div class="settings-card" data-admin-only id="cardWebhooks">
+      <h3>🪝 <span data-i18n="webhook_title">מינויי Webhook</span></h3>
+      <p class="section-desc" data-i18n="webhook_desc">קבל התראות POST בזמן אמת לכתובות URL חיצוניות בעת אירועי מפתח.</p>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
+        <input
+          type="url"
+          id="webhookUrlInput"
+          class="input"
+          style="flex:1;min-width:12rem"
+          data-i18n-placeholder="webhook_url_placeholder"
+          placeholder="https://example.com/hook"
+        />
+        <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap">
+          <label style="display:flex;gap:0.25rem;align-items:center;font-size:0.8rem">
+            <input type="checkbox" name="webhookEvent" value="rsvp.confirmed" checked />
+            <span data-i18n="webhook_event_rsvp_confirmed">RSVP אישר</span>
+          </label>
+          <label style="display:flex;gap:0.25rem;align-items:center;font-size:0.8rem">
+            <input type="checkbox" name="webhookEvent" value="rsvp.declined" />
+            <span data-i18n="webhook_event_rsvp_declined">RSVP דחה</span>
+          </label>
+          <label style="display:flex;gap:0.25rem;align-items:center;font-size:0.8rem">
+            <input type="checkbox" name="webhookEvent" value="guest.added" />
+            <span data-i18n="webhook_event_guest_added">אורח נוסף</span>
+          </label>
+        </div>
+        <button class="btn btn-primary btn-small" data-action="addWebhook">
+          <span data-i18n="webhook_add">הוסף</span>
+        </button>
+      </div>
+      <ul id="webhookList" class="webhook-list" aria-live="polite"></ul>
+      <p id="webhookStatus" class="section-desc" aria-live="polite"></p>
+    </div>
+
     <!-- Contact Collector -->
     <div class="settings-card">
       <h3>📋 <span data-i18n="contact_settings_title">אסיפת פרטי קשר</span></h3>

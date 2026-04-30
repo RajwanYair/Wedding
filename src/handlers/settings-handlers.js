@@ -62,6 +62,10 @@ import {
   copyApiKey,
   revokeApiKey,
   requestGdprErasure,
+  addWebhook,
+  removeWebhook,
+  pingWebhookById,
+  refreshWebhooks,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -363,6 +367,10 @@ export function register() {
   on("copyApiKey", async () => { await copyApiKey(); });
   on("revokeApiKey", () => { revokeApiKey(); });
   on("requestGdprErasure", () => { requestGdprErasure(); });
+  on("addWebhook", async () => { await addWebhook(); });
+  on("removeWebhook", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await removeWebhook(id); });
+  on("pingWebhookById", async (evt) => { const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? ""; if (id) await pingWebhookById(id); });
+  on("refreshWebhooks", async () => { await refreshWebhooks(); });
   on("sendMagicLink", async () => {
     const input = /** @type {HTMLInputElement|null} */ (document.getElementById("magicLinkEmail"));
     const email = input?.value?.trim() ?? "";

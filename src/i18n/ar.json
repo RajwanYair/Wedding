@@ -1469,5 +1469,22 @@
   "ws_new_event_default": "حفل زفاف 2",
   "observability_test_btn": "إرسال تقرير خطأ تجريبي",
   "observability_test_sent": "تم إرسال تقرير الخطأ التجريبي",
-  "observability_test_no_dsn": "لم يتم تكوين DSN — قم بتعيين DSN أولاً"
+  "observability_test_no_dsn": "لم يتم تكوين DSN — قم بتعيين DSN أولاً",
+  "webhook_title": "اشتراكات Webhook",
+  "webhook_desc": "تلقّ إشعارات POST في الوقت الفعلي إلى عناوين URL خارجية عند الأحداث الرئيسية.",
+  "webhook_url_placeholder": "https://example.com/hook",
+  "webhook_event_rsvp_confirmed": "تأكيد RSVP",
+  "webhook_event_rsvp_declined": "رفض RSVP",
+  "webhook_event_guest_added": "تمت إضافة ضيف",
+  "webhook_add": "إضافة",
+  "webhook_test": "اختبار",
+  "webhook_remove": "إزالة",
+  "webhook_added": "تمت إضافة Webhook",
+  "webhook_removed": "تم إزالة Webhook",
+  "webhook_ping_ok": "نجح اختبار Webhook",
+  "webhook_ping_fail": "فشل اختبار Webhook",
+  "webhook_none": "لا توجد webhooks مسجلة.",
+  "webhook_url_required": "عنوان URL مطلوب",
+  "webhook_url_invalid": "عنوان URL غير صالح",
+  "webhook_events_required": "اختر حدثاً واحداً على الأقل"
 }
