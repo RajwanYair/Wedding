@@ -1532,5 +1532,11 @@
   "ai_panel_not_enabled": "Activa el asistente IA en Configuración primero.",
   "ai_panel_error": "Error de IA",
   "import_csv_imported": "Importados",
-  "import_csv_skipped": "Omitidos (duplicados)"
+  "import_csv_skipped": "Omitidos (duplicados)",
+  "geocode_btn": "Geocodificar dirección",
+  "geocoding": "Buscando dirección…",
+  "geocode_ok": "Dirección ubicada correctamente",
+  "geocode_not_found": "Dirección no encontrada",
+  "geocode_no_address": "Por favor ingrese una dirección primero",
+  "geocode_error": "Error de geocodificación"
 }

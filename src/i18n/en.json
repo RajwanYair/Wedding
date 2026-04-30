@@ -1532,5 +1532,11 @@
   "ai_panel_not_enabled": "Enable AI assistant in Settings first.",
   "ai_panel_error": "AI error",
   "import_csv_imported": "Imported",
-  "import_csv_skipped": "Skipped (duplicates)"
+  "import_csv_skipped": "Skipped (duplicates)",
+  "geocode_btn": "Geocode Address (Nominatim)",
+  "geocoding": "Geocoding…",
+  "geocode_ok": "Address geocoded successfully",
+  "geocode_not_found": "Address not found",
+  "geocode_no_address": "Please enter an address first",
+  "geocode_error": "Geocoding error"
 }

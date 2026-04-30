@@ -1532,5 +1532,11 @@
   "ai_panel_not_enabled": "Сначала включите ИИ-помощника в Настройках.",
   "ai_panel_error": "Ошибка ИИ",
   "import_csv_imported": "Импортировано",
-  "import_csv_skipped": "Пропущено (дубликаты)"
+  "import_csv_skipped": "Пропущено (дубликаты)",
+  "geocode_btn": "Геокодировать адрес",
+  "geocoding": "Геокодирование…",
+  "geocode_ok": "Адрес успешно геокодирован",
+  "geocode_not_found": "Адрес не найден",
+  "geocode_no_address": "Сначала введите адрес",
+  "geocode_error": "Ошибка геокодирования"
 }

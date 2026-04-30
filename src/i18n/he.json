@@ -1532,5 +1532,11 @@
   "ai_panel_not_enabled": "הפעל את עוזר ה-AI בהגדרות תחילה.",
   "ai_panel_error": "שגיאת AI",
   "import_csv_imported": "יובאו",
-  "import_csv_skipped": "דולגו (קיימים)"
+  "import_csv_skipped": "דולגו (קיימים)",
+  "geocode_btn": "אתר כתובת (Nominatim)",
+  "geocoding": "מחפש כתובת…",
+  "geocode_ok": "כתובת אותרה בהצלחה",
+  "geocode_not_found": "כתובת לא נמצאה",
+  "geocode_no_address": "נא להזין כתובת תחילה",
+  "geocode_error": "שגיאה באיתור הכתובת"
 }

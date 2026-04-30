@@ -165,6 +165,8 @@ export function register() {
     const input = e.target instanceof HTMLInputElement ? e.target : null;
     if (input) invitationSection.handleInvitationUpload?.(input);
   });
+  // S453 — geocode venue address using Nominatim
+  on("geocodeVenueAddress", async () => { await invitationSection.geocodeVenueAddress?.(); });
 
   // ── Contact form ──
   on("submitContactForm", () => {

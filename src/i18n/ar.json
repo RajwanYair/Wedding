@@ -1532,5 +1532,11 @@
   "ai_panel_not_enabled": "قم بتفعيل المساعد أولاً في الإعدادات.",
   "ai_panel_error": "خطأ في الذكاء الاصطناعي",
   "import_csv_imported": "تم استيراد",
-  "import_csv_skipped": "تم تخطي (مكررات)"
+  "import_csv_skipped": "تم تخطي (مكررات)",
+  "geocode_btn": "تحديد الموقع (Nominatim)",
+  "geocoding": "جاري البحث عن العنوان…",
+  "geocode_ok": "تم تحديد العنوان بنجاح",
+  "geocode_not_found": "العنوان غير موجود",
+  "geocode_no_address": "يرجى إدخال العنوان أولاً",
+  "geocode_error": "خطأ في تحديد الموقع"
 }

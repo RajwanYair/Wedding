@@ -1532,5 +1532,11 @@
   "ai_panel_not_enabled": "Activez d'abord l'assistant IA dans les Paramètres.",
   "ai_panel_error": "Erreur IA",
   "import_csv_imported": "Importés",
-  "import_csv_skipped": "Ignorés (doublons)"
+  "import_csv_skipped": "Ignorés (doublons)",
+  "geocode_btn": "Géocoder l'adresse",
+  "geocoding": "Géocodage…",
+  "geocode_ok": "Adresse géocodée avec succès",
+  "geocode_not_found": "Adresse introuvable",
+  "geocode_no_address": "Veuillez d'abord entrer une adresse",
+  "geocode_error": "Erreur de géocodage"
 }
