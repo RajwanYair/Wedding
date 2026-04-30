@@ -182,6 +182,47 @@ export async function testAiConnection() {
   }
 }
 
+/**
+ * Handle a CSV file-input change event — reads the file, imports guests,
+ * and shows a toast with the result.  Bound to data-on-change="importGuestsCSV".
+ * @param {HTMLInputElement} input
+ */
+export function importGuestsCsvFile(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    import("../utils/guest-csv-import.js").then(({ importGuestsCsv }) => {
+      const existing = storeGet("guests") ?? [];
+      const result = importGuestsCsv(/** @type {string} */ (e.target?.result ?? ""), existing);
+      if (result.imported > 0) {
+        const updated = [...existing, ...result.guests.map((row) => ({
+          id: crypto.randomUUID(),
+          name: row.name ?? "",
+          phone: row.phone ?? "",
+          email: row.email ?? "",
+          notes: row.notes ?? "",
+          table: row.table ?? "",
+          status: row.status ?? "pending",
+          meal: row.meal ?? "",
+          plusOne: row.plusOne ?? "",
+          side: row.side ?? "",
+          city: row.city ?? "",
+          group: row.group ?? "",
+          rsvpDate: null,
+          checkedIn: false,
+        }))];
+        storeSet("guests", updated);
+      }
+      const msg = `${t("import_csv_imported")}: ${result.imported} / ${t("import_csv_skipped")}: ${result.skipped}`;
+      showToast(msg, result.imported > 0 ? "success" : "info");
+      // reset the input so the same file can be re-imported
+      input.value = "";
+    }).catch(() => {});
+  };
+  reader.readAsText(file);
+}
+
 // ── Settings API ──────────────────────────────────────────────────────────
 
 /**

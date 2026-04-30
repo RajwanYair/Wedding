@@ -1530,5 +1530,7 @@
   "ai_panel_you": "Вы",
   "ai_panel_ai": "ИИ",
   "ai_panel_not_enabled": "Сначала включите ИИ-помощника в Настройках.",
-  "ai_panel_error": "Ошибка ИИ"
+  "ai_panel_error": "Ошибка ИИ",
+  "import_csv_imported": "Импортировано",
+  "import_csv_skipped": "Пропущено (дубликаты)"
 }

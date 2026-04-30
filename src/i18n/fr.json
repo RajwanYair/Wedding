@@ -1530,5 +1530,7 @@
   "ai_panel_you": "Vous",
   "ai_panel_ai": "IA",
   "ai_panel_not_enabled": "Activez d'abord l'assistant IA dans les Paramètres.",
-  "ai_panel_error": "Erreur IA"
+  "ai_panel_error": "Erreur IA",
+  "import_csv_imported": "Importés",
+  "import_csv_skipped": "Ignorés (doublons)"
 }

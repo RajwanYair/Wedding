@@ -1530,5 +1530,7 @@
   "ai_panel_you": "You",
   "ai_panel_ai": "AI",
   "ai_panel_not_enabled": "Enable AI assistant in Settings first.",
-  "ai_panel_error": "AI error"
+  "ai_panel_error": "AI error",
+  "import_csv_imported": "Imported",
+  "import_csv_skipped": "Skipped (duplicates)"
 }

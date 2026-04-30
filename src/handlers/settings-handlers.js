@@ -71,6 +71,7 @@ import {
   exportAuditLog,
   saveAiSettings,
   testAiConnection,
+  importGuestsCsvFile,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -411,4 +412,7 @@ export function register() {
   on("testAiConnection", async () => {
     await testAiConnection();
   });
+
+  // S452 — Guest CSV import
+  on("importGuestsCSV", (el) => importGuestsCsvFile(/** @type {HTMLInputElement} */ (el)));
 }

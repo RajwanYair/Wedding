@@ -1530,5 +1530,7 @@
   "ai_panel_you": "أنت",
   "ai_panel_ai": "الذكاء الاصطناعي",
   "ai_panel_not_enabled": "قم بتفعيل المساعد أولاً في الإعدادات.",
-  "ai_panel_error": "خطأ في الذكاء الاصطناعي"
+  "ai_panel_error": "خطأ في الذكاء الاصطناعي",
+  "import_csv_imported": "تم استيراد",
+  "import_csv_skipped": "تم تخطي (مكررات)"
 }

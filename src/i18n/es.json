@@ -1530,5 +1530,7 @@
   "ai_panel_you": "Tú",
   "ai_panel_ai": "IA",
   "ai_panel_not_enabled": "Activa el asistente IA en Configuración primero.",
-  "ai_panel_error": "Error de IA"
+  "ai_panel_error": "Error de IA",
+  "import_csv_imported": "Importados",
+  "import_csv_skipped": "Omitidos (duplicados)"
 }
