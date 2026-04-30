@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.21.0] — 2026-04-30
+
+> **S379–S388: Coverage gate CI, error boundaries, monitoring injection, DB indexes, OIDC, Trusted Types, CI manualChunks guard, admin store fix, drop Facebook SDK, migrate Google OAuth to Supabase Auth.**
+
+### Added
+
+- **S379** — Coverage gate enforced in CI (`check-coverage-gate.mjs --enforce`): 58/51/66/58 floor; `check:coverage` npm script added
+- **S380** — Error boundaries in `BaseSection._mount()`: uncaught `onMount` errors call `_onError()` → toast + `captureException`
+- **S381** — Monitoring DSN injection via Vite env (`VITE_GLITCHTIP_DSN` / `VITE_SENTRY_DSN`) in `deploy.yml`
+- **S382** — DB composite indexes on `event_id` FK tables: `guests(event_id,status/phone/table_id/deleted_at)`, `vendors(event_id,category)`, `expenses(event_id,category)`, `rsvp_log(event_id,created_at)`; migration `026_composite_indexes.sql`
+- **S383** — GitHub Actions OIDC: `id-token: write` added to release workflow for keyless signing
+- **S384** — Trusted Types CSP sync: `wss://*.supabase.co` added to meta CSP `connect-src`; CI check verifies parity with `_headers`
+- **S385** — CI guard against `manualChunks` re-introduction in `vite.config.js`
+
+### Fixed
+
+- **S386** — `refreshAdminList()` now calls `storeSet("approvedEmails", emails)` before re-rendering, fixing stale local data bug
+
+### Removed
+
+- **S387** — Facebook SDK remnants: `GH_FB_APP_ID` injection, FB CSP frame-src entries, `LOGIN_FACEBOOK` action constant, `sri-check.mjs` reference
+- **S388** — Google GIS SDK removed; `google` ESLint global dropped; `googleSignInBtn` div replaced with `btn-google` Supabase OAuth button; GIS `<script>` tag and `preconnect` hint removed; `preferredTransport("google")` always returns `"supabase"`
+
 ## [13.20.0] — 2026-04-30
 
 > **S376–S378: Scope-lock cleanup — remove orphaned native-mobile scaffolding; modernize tooling/docs/VS Code integration.**
