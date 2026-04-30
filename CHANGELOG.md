@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [14.0.0] — 2026-05-02
+
+> **S389–S397: Auth consolidation (Apple→Supabase), pushState router scaffold, View Transitions API, URL filter state, IDB primary storage, IDB write-queue persistence, edge function expansion (waba-bulk-send), Supabase backend flip, virtual scroll.**
+
+### Added
+
+- **S390** — pushState router scaffold: `router.js` with `navigate()`, `onRouteChange()`, `initRouterListener()`; `navigateTo()` unified; `public/404.html` SPA shim for GitHub Pages
+- **S391** — View Transitions API for section navigation: `withViewTransition()` in `nav.js`; CSS `::view-transition-old/new` fade (180ms/220ms); `prefers-reduced-motion` safe
+- **S392** — URL filter state: `src/utils/url-state.js` (`getUrlParams`, `setUrlParams`, `getUrlParam`); guests section restores `filter`/`sort`/`q` from hash query params on mount and writes on change; 9 new unit tests
+- **S394** — IDB persistent write queue hardening: `pagehide` listener in `initOnlineSync()` to flush queue keys before page unload; `registerBackgroundSync()` called on every `enqueueWrite()`
+- **S395** — `supabase/functions/waba-bulk-send/index.ts`: bulk WhatsApp template broadcast endpoint; max 30 recipients/call; returns per-recipient results
+- **S397** — Virtual scroll for guest list: activates when `guests.length > 200`; `IntersectionObserver` sentinel loads 50 rows/page; extracted `_buildGuestRow()` helper
+
+### Changed
+
+- **S389** — Apple Sign In migrated to Supabase Auth redirect flow; `detectInstalledSdks()` always returns `{ apple: false }`; `loginApple` handler calls `signInWith("apple")`; AppleID CSP entries removed
+- **S393** — `store.js` `_flush()` routes writes through `storage.js` `storageSet()` (IDB-aware) when IDB adapter is active; localStorage fallback on IDB write failure
+- **S396** — `BACKEND_TYPE` flipped from `"sheets"` to `"supabase"` in `src/core/config.js`; Supabase is now the primary backend
+
 ## [13.21.0] — 2026-04-30
 
 > **S379–S388: Coverage gate CI, error boundaries, monitoring injection, DB indexes, OIDC, Trusted Types, CI manualChunks guard, admin store fix, drop Facebook SDK, migrate Google OAuth to Supabase Auth.**

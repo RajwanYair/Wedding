@@ -68,11 +68,11 @@ coverage lines 58% / branches 51%.
 
 ## 1. North Star & Current State
 
-### Actual state — v13.21.0 · 2026-04-30
+### Actual state — v14.0.0 · 2026-05-02
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | **4 179 passing · 268 files · 0 Node warnings** | ✅ |
+| Tests | **4 189 passing · 269 files · 0 Node warnings** | ✅ |
 | TypeScript errors | **0** — baseline cleared S293 | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
@@ -87,12 +87,12 @@ coverage lines 58% / branches 51%.
 | Handlers | clean separation; 7 files | ✅ |
 | i18n keys | **1 209** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ |
 | DB migrations | **25** Supabase migrations | ✅ |
-| Active backend | `BACKEND_TYPE = "sheets"` · Supabase wired but not primary | ❌ P0 |
+| Active backend | `BACKEND_TYPE = "supabase"` · Supabase is primary backend | ✅ |
 | Auth tokens | AES-GCM encrypted (`secure-storage.js`) | ✅ |
 | Bundle | ~45 KB gzip · hard CI gate ≤ 60 KB | ✅ |
 | Node | **22 LTS** CI matrix + `.nvmrc` | ✅ |
 | Supply-chain | OpenSSF Scorecard · SBOM · Trivy · CodeQL · Dependabot grouped | ✅ |
-| Auth providers | Google · Facebook · Apple + email allowlist + anonymous | ⚠ 3 SDKs to consolidate |
+| Auth providers | Supabase Auth (Google · Apple · email allowlist + anonymous) · SDKs removed | ✅ |
 | Service Worker | precache + IDB write queue + Background Sync | ✅ |
 | Realtime | Supabase Realtime wired but **idle** | ⚠ |
 | Edge functions | partial (push sender) | ⚠ expand |
@@ -1045,7 +1045,7 @@ SBOM (`sbom.cdx.json`) documents every dependency; no proprietary service is req
 | **v13.19.0** | Released 2026-05-01 | Phase C6 coverage uplift | S366–S375: 5 test suites (settings/seating/gallery/nav/guests-batch); lines 58%/branches 51%; 4 187 tests |
 | **v13.21.0** | Released 2026-04-30 | Coverage gate, error boundaries, monitoring, DB indexes, auth cleanup | S379–S388: coverage CI gate (58/51/66/58); BaseSection error boundaries; monitoring DSN injection; composite DB indexes; OIDC; Trusted Types CSP sync; FB SDK drop; Google→Supabase Auth |
 | **v13.20.0** | Released 2026-04-30 | Scope-lock cleanup + tooling/docs | S376–S378: removed orphan Capacitor workflow + dead util; locale ru→es/fr corrected; actions v4→v6; .vscode modernised; .github overhaul |
-| **v14.0.0** | Target 2026-Q2 | Phase A — backend convergence + P0 | S379–S398: Supabase flip; pushState router; Supabase Auth (drop 3 SDKs); IDB primary; monitoring; coverage gate; indexes; error boundaries |
+| **v14.0.0** | ✅ 2026-05-02 | Phase A — backend convergence + P0 | S379–S398: Supabase flip; pushState router; Supabase Auth (drop 3 SDKs); IDB primary; monitoring; coverage gate; indexes; error boundaries; View Transitions; URL filter state; virtual scroll; waba-bulk-send |
 | **v15.0.0** | Target 2026-Q3 | Phase B — DX, architecture polish | S399–S408: Signals; SW rewrite; `<dialog>` modals; Playwright E2E expansion; mutation testing pilot |
 | **v16.0.0** | Target 2026-Q4 | Phase C — smart + native-class | S409–S420: WhatsApp Cloud API; AI BYO-key; Realtime; Stripe; Storage; kiosk; AR locale |
 | **v17.0.0** | Candidate 2027-Q1 | Phase D — platform & scale | Theme builder; website builder; org/team; plugin surface; Cloudflare CDN; Capacitor native |
