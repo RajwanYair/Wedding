@@ -1460,5 +1460,11 @@
   "gdpr_erasure_desc": "Demandez la suppression de toutes les données personnelles (PII) conformément au RGPD.",
   "gdpr_erasure_btn": "Demander l'effacement des données personnelles (RGPD)",
   "gdpr_erasure_confirm": "Êtes-vous sûr ? Cela effacera définitivement toutes les données personnelles et ne peut pas être annulé.",
-  "gdpr_erased": "Toutes les données personnelles effacées"
+  "gdpr_erased": "Toutes les données personnelles effacées",
+  "action_create_event": "Nouvel événement",
+  "action_switch_event": "Changer d'événement",
+  "tip_create_event": "Créer un nouvel événement",
+  "tip_switch_event": "Passer à un autre événement",
+  "ws_new_event_prompt": "Nom du nouvel événement:",
+  "ws_new_event_default": "Mariage 2"
 }

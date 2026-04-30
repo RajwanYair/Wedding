@@ -1460,5 +1460,11 @@
   "gdpr_erasure_desc": "اطلب حذف جميع البيانات الشخصية (PII) وفقًا للوائح GDPR.",
   "gdpr_erasure_btn": "طلب مسح البيانات الشخصية (GDPR)",
   "gdpr_erasure_confirm": "هل أنت متأكد؟ سيؤدي هذا إلى مسح جميع البيانات الشخصية بشكل دائم ولا يمكن التراجع عنه.",
-  "gdpr_erased": "تم مسح جميع البيانات الشخصية"
+  "gdpr_erased": "تم مسح جميع البيانات الشخصية",
+  "action_create_event": "حدث جديد",
+  "action_switch_event": "تبديل الحدث",
+  "tip_create_event": "إنشاء حدث جديد",
+  "tip_switch_event": "التبديل إلى حدث آخر",
+  "ws_new_event_prompt": "اسم الحدث الجديد:",
+  "ws_new_event_default": "حفل زفاف 2"
 }

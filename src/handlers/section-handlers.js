@@ -31,6 +31,7 @@ import * as landingSection from "../sections/landing.js";
 import {
   toggleWorkspaceDropdown,
   selectWorkspace,
+  createNewEvent,
 } from "../sections/workspace-switcher.js";
 import {
   onboardingNext,
@@ -191,12 +192,13 @@ export function register() {
     landingSection.showTableFinder(input?.value?.trim() ?? "");
   });
 
-  // ── Workspace switcher (S140) ──
+  // ── Workspace switcher (S140/S436) ──
   on("toggleWorkspaceDropdown", () => toggleWorkspaceDropdown());
   on("selectWorkspace", (_el) => {
     const id = _el?.getAttribute?.("data-action-arg") ?? "";
     selectWorkspace(id);
   });
+  on("createNewEvent", () => createNewEvent());
 
   // ── Notification centre (S143) ──
   on("toggleNotifPanel", () => toggleNotifPanel());

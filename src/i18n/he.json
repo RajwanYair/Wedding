@@ -1460,5 +1460,11 @@
   "gdpr_erasure_desc": "בקש מחיקת כל הנתונים האישיים (PII) בהתאם לתקנות GDPR.",
   "gdpr_erasure_btn": "בקש מחיקת נתונים אישיים (GDPR)",
   "gdpr_erasure_confirm": "האם אתה בטוח? פעולה זו מוחקת את כל הנתונים האישיים מהמכשיר שלך ואינה הפיכה.",
-  "gdpr_erased": "כל הנתונים האישיים נמחקו"
+  "gdpr_erased": "כל הנתונים האישיים נמחקו",
+  "action_create_event": "אירוע חדש",
+  "action_switch_event": "החלף אירוע",
+  "tip_create_event": "צור אירוע חדש",
+  "tip_switch_event": "עבור לאירוע אחר",
+  "ws_new_event_prompt": "שם האירוע החדש:",
+  "ws_new_event_default": "חתונה 2"
 }

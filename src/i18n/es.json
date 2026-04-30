@@ -1460,5 +1460,11 @@
   "gdpr_erasure_desc": "Solicita la eliminación de todos los datos personales (PII) conforme al GDPR.",
   "gdpr_erasure_btn": "Solicitar borrado de datos personales (GDPR)",
   "gdpr_erasure_confirm": "¿Estás seguro? Esto eliminará permanentemente todos los datos personales y no se puede deshacer.",
-  "gdpr_erased": "Todos los datos personales borrados"
+  "gdpr_erased": "Todos los datos personales borrados",
+  "action_create_event": "Nuevo evento",
+  "action_switch_event": "Cambiar evento",
+  "tip_create_event": "Crear un nuevo evento",
+  "tip_switch_event": "Cambiar a otro evento",
+  "ws_new_event_prompt": "Nombre del nuevo evento:",
+  "ws_new_event_default": "Boda 2"
 }

@@ -1460,5 +1460,11 @@
   "gdpr_erasure_desc": "Request deletion of all personal data (PII) in compliance with GDPR.",
   "gdpr_erasure_btn": "Request Personal Data Erasure (GDPR)",
   "gdpr_erasure_confirm": "Are you sure? This will permanently erase all personal data on this device and cannot be undone.",
-  "gdpr_erased": "All personal data erased"
+  "gdpr_erased": "All personal data erased",
+  "action_create_event": "New Event",
+  "action_switch_event": "Switch Event",
+  "tip_create_event": "Create a new event",
+  "tip_switch_event": "Switch to another event",
+  "ws_new_event_prompt": "New event name:",
+  "ws_new_event_default": "Wedding 2"
 }

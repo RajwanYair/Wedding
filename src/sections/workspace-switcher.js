@@ -140,6 +140,21 @@ export function selectWorkspace(/** @type {string} */ id) {
   if (dropdown) dropdown.classList.add("u-hidden");
 }
 
+/**
+ * S436: Create a new event workspace with a user-supplied name.
+ * Prompts for a name, adds it to the workspaces store, and switches to it.
+ */
+export function createNewEvent() {
+  const name = window.prompt(t("ws_new_event_prompt"), t("ws_new_event_default"));
+  if (!name?.trim()) return;
+  const id = `event_${Date.now()}`;
+  const workspaces = /** @type {import('../core/store.js').WorkspaceEntry[]} */ (
+    storeGet(STORAGE_KEY)
+  ) ?? [{ id: "default", name: t("workspace_default"), role: "owner" }];
+  storeSet(STORAGE_KEY, [...workspaces, { id, name: name.trim(), role: "owner" }]);
+  switchWorkspace(id);
+}
+
 class WorkspaceSwitcherSection extends BaseSection {
   async onMount() {
     renderWorkspaceSwitcher();
