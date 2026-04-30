@@ -1417,5 +1417,13 @@
   "push_test_sent": "Push sent to {sent} device(s)",
   "push_test_no_sub": "No registered push subscriptions",
   "locale_picker_title": "Interface Language",
-  "locale_picker_desc": "Choose the display language for the app"
+  "locale_picker_desc": "Choose the display language for the app",
+  "registry_add_title": "Add Registry Link",
+  "registry_add_desc": "Choose a known platform or enter a URL manually",
+  "registry_url_placeholder": "https://...",
+  "registry_name_placeholder": "Site name",
+  "registry_add_btn": "Add",
+  "registry_url_invalid": "Invalid URL (https required)",
+  "registry_link_added": "Link added successfully",
+  "registry_preset_filled": "{platform} URL pre-filled"
 }

@@ -1417,5 +1417,13 @@
   "push_test_sent": "Отправлено: {sent}",
   "push_test_no_sub": "Нет подписчиков",
   "locale_picker_title": "Язык интерфейса",
-  "locale_picker_desc": "Выберите язык отображения приложения"
+  "locale_picker_desc": "Выберите язык отображения приложения",
+  "registry_add_title": "Добавить ссылку на реестр",
+  "registry_add_desc": "Выберите платформу или введите URL вручную",
+  "registry_url_placeholder": "https://...",
+  "registry_name_placeholder": "Название сайта",
+  "registry_add_btn": "Добавить",
+  "registry_url_invalid": "Неверный URL (требуется https)",
+  "registry_link_added": "Ссылка добавлена",
+  "registry_preset_filled": "{platform} URL заполнен"
 }

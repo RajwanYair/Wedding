@@ -1417,5 +1417,13 @@
   "push_test_sent": "Push enviado a {sent} dispositivo(s)",
   "push_test_no_sub": "No hay suscripciones Push registradas",
   "locale_picker_title": "Idioma de la interfaz",
-  "locale_picker_desc": "Elige el idioma de la aplicación"
+  "locale_picker_desc": "Elige el idioma de la aplicación",
+  "registry_add_title": "Agregar enlace de regalos",
+  "registry_add_desc": "Elige una plataforma o ingresa una URL",
+  "registry_url_placeholder": "https://...",
+  "registry_name_placeholder": "Nombre del sitio",
+  "registry_add_btn": "Agregar",
+  "registry_url_invalid": "URL inválida (se requiere https)",
+  "registry_link_added": "Enlace agregado",
+  "registry_preset_filled": "URL de {platform} completada"
 }

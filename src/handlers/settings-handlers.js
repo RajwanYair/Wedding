@@ -186,21 +186,11 @@ export function register() {
     showToast(t("settings_saved"), "success");
   });
   on("addRegistryLink", () => {
-    const urlInput = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("registryInputUrl")
-    );
-    const nameInput = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("registryInputName")
-    );
-    if (!urlInput?.value?.trim()) return;
-    const url = urlInput.value.trim();
-    if (!url.startsWith("https://")) {
-      showToast(t("error_invalid_url"), "error");
-      return;
-    }
-    registrySection.addLink?.({ url, name: nameInput?.value?.trim() || url });
-    if (urlInput) urlInput.value = "";
-    if (nameInput) nameInput.value = "";
+    registrySection.addRegistryLink?.();
+  });
+  on("addRegistryPreset", (el) => {
+    const platformId = el instanceof HTMLElement ? (el.dataset.actionArg ?? "") : "";
+    if (platformId) registrySection.addRegistryPreset?.(platformId);
   });
   on("addApprovedEmail", () => {
     addApprovedEmail();

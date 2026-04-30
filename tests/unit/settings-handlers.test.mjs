@@ -141,8 +141,12 @@ vi.mock("../../src/sections/settings.js", () => ({
 }));
 
 const _addLinkMock = vi.fn();
+const _addRegistryLinkMock = vi.fn();
+const _addRegistryPresetMock = vi.fn();
 vi.mock("../../src/sections/registry.js", () => ({
   addLink: (...a) => _addLinkMock(...a),
+  addRegistryLink: (...a) => _addRegistryLinkMock(...a),
+  addRegistryPreset: (...a) => _addRegistryPresetMock(...a),
 }));
 
 const _saveWebsiteConfigMock = vi.fn();
@@ -217,7 +221,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "pullFromSheets", "toggleLiveSync", "pushAllToSheets", "cleanConfigDuplicates",
       "saveWebAppUrl", "saveSupabaseConfig", "saveBackendType", "supabaseCheckConnection",
       "conflictAcceptAllLocal", "conflictAcceptAllRemote", "conflictApplySelected",
-      "saveTransportSettings", "saveTelemetryOptOut", "addRegistryLink",
+      "saveTransportSettings", "saveTelemetryOptOut", "addRegistryLink", "addRegistryPreset",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
       "switchLanguage", "toggleLanguage", "clearAuditLog", "clearErrorLog",
       "exportJSON", "importJSON", "copyRsvpLink", "copyContactLink",
@@ -438,26 +442,28 @@ describe("S329 — settingsHandlers — register()", () => {
     expect(localStorage.getItem("wedding_v1_telemetry_opt_out")).toBeNull();
   });
 
-  it("addRegistryLink calls addLink with valid https URL", () => {
+  it("addRegistryLink delegates to registrySection.addRegistryLink", () => {
     register();
-    addInput("registryInputUrl", "https://example.com/registry");
-    addInput("registryInputName", "My Wishlist");
     dispatch("addRegistryLink");
-    expect(_addLinkMock).toHaveBeenCalledWith({ url: "https://example.com/registry", name: "My Wishlist" });
+    expect(_addRegistryLinkMock).toHaveBeenCalledTimes(1);
   });
 
-  it("addRegistryLink toasts error for non-https URL", () => {
+  it("addRegistryPreset delegates to registrySection.addRegistryPreset with platformId", () => {
     register();
-    addInput("registryInputUrl", "http://example.com");
-    dispatch("addRegistryLink");
-    expect(_toastCalls[0]?.type).toBe("error");
+    const fn = _handlers.get("addRegistryPreset");
+    const el = document.createElement("button");
+    el.dataset.actionArg = "buyme";
+    fn(el);
+    expect(_addRegistryPresetMock).toHaveBeenCalledWith("buyme");
   });
 
-  it("addRegistryLink does nothing when URL is empty", () => {
+  it("addRegistryPreset does nothing when platformId is empty", () => {
     register();
-    addInput("registryInputUrl", "");
-    dispatch("addRegistryLink");
-    expect(_addLinkMock).not.toHaveBeenCalled();
+    const fn = _handlers.get("addRegistryPreset");
+    const el = document.createElement("button");
+    el.dataset.actionArg = "";
+    fn(el);
+    expect(_addRegistryPresetMock).not.toHaveBeenCalled();
   });
 
   it("addApprovedEmail calls addApprovedEmail and logs", () => {

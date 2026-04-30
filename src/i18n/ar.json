@@ -1417,5 +1417,13 @@
   "push_test_sent": "تم إرسال Push إلى {sent} جهاز",
   "push_test_no_sub": "لا توجد اشتراكات Push مسجلة",
   "locale_picker_title": "لغة الواجهة",
-  "locale_picker_desc": "اختر لغة عرض التطبيق"
+  "locale_picker_desc": "اختر لغة عرض التطبيق",
+  "registry_add_title": "إضافة رابط هدايا",
+  "registry_add_desc": "اختر منصة معروفة أو أدخل رابطاً يدوياً",
+  "registry_url_placeholder": "https://...",
+  "registry_name_placeholder": "اسم الموقع",
+  "registry_add_btn": "إضافة",
+  "registry_url_invalid": "رابط غير صالح (مطلوب https)",
+  "registry_link_added": "تمت إضافة الرابط",
+  "registry_preset_filled": "تم تعبئة {platform}"
 }

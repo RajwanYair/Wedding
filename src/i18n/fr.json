@@ -1417,5 +1417,13 @@
   "push_test_sent": "Push envoyé à {sent} appareil(s)",
   "push_test_no_sub": "Aucun abonnement Push enregistré",
   "locale_picker_title": "Langue de l'interface",
-  "locale_picker_desc": "Choisissez la langue de l'application"
+  "locale_picker_desc": "Choisissez la langue de l'application",
+  "registry_add_title": "Ajouter un lien cadeau",
+  "registry_add_desc": "Choisissez une plateforme ou saisissez une URL",
+  "registry_url_placeholder": "https://...",
+  "registry_name_placeholder": "Nom du site",
+  "registry_add_btn": "Ajouter",
+  "registry_url_invalid": "URL invalide (https requis)",
+  "registry_link_added": "Lien ajouté",
+  "registry_preset_filled": "URL de {platform} préremplie"
 }
