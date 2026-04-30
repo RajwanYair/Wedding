@@ -8,6 +8,7 @@
 
 import { getLocaleCurrency } from "../utils/locale-detector.js";
 import { formatCurrency as _formatCurrency } from "../utils/currency.js";
+import { formatMessage as _icuFmt } from "../utils/icu-format.js";
 
 /** @type {Record<string, string>} */
 let _dict = {};
@@ -129,6 +130,9 @@ export function formatMessage(template, params) {
 
       if (inner.includes(", plural,")) {
         result += _resolvePlural(inner, params);
+      } else if (inner.includes(", select,")) {
+        // S420: delegate gender/select patterns to icu-format.js
+        result += _icuFmt(`{${inner}}`, params, _locale());
       } else if (inner in params) {
         result += String(params[inner]);
       } else {
