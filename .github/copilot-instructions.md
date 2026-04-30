@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v14.0.0
+# GitHub Copilot Instructions — Wedding Manager v15.0.0
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Minimal Runtime Deps
 
@@ -6,9 +6,9 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v14.0.0** |
+| Version | **v15.0.0** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
-| Runtime deps | **3** — `@supabase/supabase-js`, `dompurify`, `valibot`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
+| Runtime deps | **4** — `@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
 | Language | Hebrew RTL primary, English toggle (lazy JSON) |
 | Tests | `npm test` — **4189 tests** across 269 files · 0 Node warnings |

@@ -68,7 +68,7 @@ coverage lines 58% / branches 51%.
 
 ## 1. North Star & Current State
 
-### Actual state — v14.0.0 · 2026-05-02
+### Actual state — v15.0.0 · 2026-05-24
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -93,10 +93,14 @@ coverage lines 58% / branches 51%.
 | Node | **22 LTS** CI matrix + `.nvmrc` | ✅ |
 | Supply-chain | OpenSSF Scorecard · SBOM · Trivy · CodeQL · Dependabot grouped | ✅ |
 | Auth providers | Supabase Auth (Google · Apple · email allowlist + anonymous) · SDKs removed | ✅ |
-| Service Worker | precache + IDB write queue + Background Sync | ✅ |
+| Service Worker | precache + 5-strategy cache (cache-first / network-first / SWR) | ✅ |
 | Realtime | Supabase Realtime wired but **idle** | ⚠ |
 | Edge functions | partial (push sender) | ⚠ expand |
 | Themes | 5 base + theme.json + live CSS-var editor | ✅ |
+| Store | Preact Signals reactive store (S400) | ✅ |
+| Modals | 8 native `<dialog>` · autofocus + ESC focus-restore (S402–S403) | ✅ |
+| Mutation testing | Stryker pilot scoped to `core/` + `repositories/` (S406) | ✅ |
+| pnpm pilot | parallel CI workflow evaluating install-time (S407 · ADR-043) | ⚠ in progress |
 | Plugin surface | manifest validator — data model only | ⚠ |
 | Public website builder | data model + slug — UI not wired | ⚠ |
 | Workspace RBAC | role/permission helpers — UI not wired | ⚠ |
@@ -1046,7 +1050,7 @@ SBOM (`sbom.cdx.json`) documents every dependency; no proprietary service is req
 | **v13.21.0** | Released 2026-04-30 | Coverage gate, error boundaries, monitoring, DB indexes, auth cleanup | S379–S388: coverage CI gate (58/51/66/58); BaseSection error boundaries; monitoring DSN injection; composite DB indexes; OIDC; Trusted Types CSP sync; FB SDK drop; Google→Supabase Auth |
 | **v13.20.0** | Released 2026-04-30 | Scope-lock cleanup + tooling/docs | S376–S378: removed orphan Capacitor workflow + dead util; locale ru→es/fr corrected; actions v4→v6; .vscode modernised; .github overhaul |
 | **v14.0.0** | ✅ 2026-05-02 | Phase A — backend convergence + P0 | S379–S398: Supabase flip; pushState router; Supabase Auth (drop 3 SDKs); IDB primary; monitoring; coverage gate; indexes; error boundaries; View Transitions; URL filter state; virtual scroll; waba-bulk-send |
-| **v15.0.0** | Target 2026-Q3 | Phase B — DX, architecture polish | S399–S408: Signals; SW rewrite; `<dialog>` modals; Playwright E2E expansion; mutation testing pilot |
+| **v15.0.0** | ✅ 2026-05-24 | Phase B — DX, architecture polish | S399–S408: JSDoc gate; Preact Signals store; SW 5-strategy rewrite; native `<dialog>` modals (8); Playwright E2E expansion; visual regression matrix; Stryker mutation pilot; pnpm CI pilot + ADR-043 |
 | **v16.0.0** | Target 2026-Q4 | Phase C — smart + native-class | S409–S420: WhatsApp Cloud API; AI BYO-key; Realtime; Stripe; Storage; kiosk; AR locale |
 | **v17.0.0** | Candidate 2027-Q1 | Phase D — platform & scale | Theme builder; website builder; org/team; plugin surface; Cloudflare CDN; Capacitor native |
 | **v18.0.0** | Candidate 2027-Q3 | Phase E — open platform | REST API; WebAuthn passkeys; theme marketplace; GDPR pack; multi-region |
@@ -1054,7 +1058,7 @@ SBOM (`sbom.cdx.json`) documents every dependency; no proprietary service is req
 
 ---
 
-*Last updated: 2026-04-30 · v13.21.0 ·
+*Last updated: 2026-05-24 · v15.0.0 ·
 See [CHANGELOG.md](CHANGELOG.md) for detailed history ·
 Decisions: [docs/adr/](docs/adr/) ·
 Runbooks: [docs/operations/](docs/operations/).*

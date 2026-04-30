@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [15.0.0] — 2026-05-24
+
+> **S399–S408: JSDoc gate extended, Preact Signals store, SW 5-strategy rewrite, native `<dialog>` modals (8 files),
+> Playwright E2E, visual regression matrix, Stryker mutation pilot, pnpm CI pilot + ADR-043.**
+
+### Added
+
+- **S399** — JSDoc gate extended to `src/sections/**` and `src/utils/**`; fixed 8 files with missing `@returns` / `@param` / `@typedef` annotations
+- **S400** — Preact Signals reactive store (`@preact/signals-core ^1.14.1`): `store.js` rewritten.
+  `_state` Record → `Map<key, Signal>`; `storeBatch()` wraps with `batch()`; API unchanged.
+- **S401** — SW 5-strategy cache rewrite: cache-first (CDN fonts/assets), network-first (Supabase API),
+  stale-while-revalidate (app shell), + Vite-hashed assets fallback; `FONT_CACHE` + `API_CACHE` partitions
+- **S402** — Native dialog batch 1 (4 modals): `openModal()` adds `cancel` listener for ESC focus-restore;
+  `autofocus` on first element in guestModal, tableModal, vendorModal, expenseModal
+- **S403** — Native dialog batch 2 (4 modals): `autofocus` in searchModal, shortcutsModal, printPreviewModal,
+  conflictModal; legacy non-dialog focus path removed from `openModal()`
+- **S404** — Playwright E2E expansion: `multi-event.spec.mjs` (5 tests — storage-prefix isolation,
+  no cross-contamination, nav round-trip); `rsvp-flow.spec.mjs` + 5 tests (submission + offline queue)
+- **S405** — Visual regression per-section × per-theme matrix: `visual.spec.mjs` extended with 20 baseline screenshots (4 sections × 5 themes: default, rosegold, gold, emerald, royal)
+- **S406** — Stryker mutation pilot: `stryker.config.mjs` scoped to `src/core/**` + `src/repositories/**`;
+  `npm run mutate`; devDeps added; threshold high=80/low=60/break=null (warn-only)
+- **S407** — pnpm pilot: `.github/workflows/pnpm-ci.yml` (non-blocking); `docs/adr/043-pnpm-evaluation.md`
+  documents context, constraints, and v15→v16 migration criteria
+- **S408** — v15.0.0 release: version bump propagated to all 12 version-bearing files via `sync-version.mjs`; CHANGELOG + ROADMAP + README updated; git tag + GitHub release
+
+### Changed
+
+- `src/core/store.js`: reactive engine replaced with Preact Signals; `_sig()` internal helper; `reinitStore()` uses `_signals.clear()`; `storeDebug()` uses `[..._signals.keys()]`
+- `public/sw.js`: cache strategy completely rewritten (5 strategies); `FONT_CACHE` + `API_CACHE` added; `activate` handler preserves all named caches
+- `tests/e2e/visual.spec.mjs`: doc header updated to reference S405; snapshot directory documented
+
+### Dependencies
+
+- Added runtime: `@preact/signals-core ^1.14.1`
+- Added devDeps: `@stryker-mutator/core`, `@stryker-mutator/vitest-runner`
+
 ## [14.0.0] — 2026-05-02
 
 > **S389–S397: Auth consolidation (Apple→Supabase), pushState router scaffold, View Transitions API, URL filter state, IDB primary storage, IDB write-queue persistence, edge function expansion (waba-bulk-send), Supabase backend flip, virtual scroll.**
