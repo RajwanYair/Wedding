@@ -12,6 +12,7 @@ Desktop.ini
 node_modules/
 coverage/
 dist/
+.stryker-tmp/
 
 # Lint caches (stored in node_modules/.cache — already ignored, but explicit)
 .eslintcache
