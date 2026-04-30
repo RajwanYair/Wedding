@@ -28,7 +28,7 @@ export const SUPABASE_ANON_KEY = "";
 
 // ── Backend selection ────────────────────────────────────────────────────
 /** @type {'sheets'|'supabase'|'none'} */
-export const BACKEND_TYPE = "sheets";
+export const BACKEND_TYPE = "supabase"; // S396: Supabase is now the primary backend
 
 // ── Auth ─────────────────────────────────────────────────────────────────
 export const GOOGLE_CLIENT_ID = "";
