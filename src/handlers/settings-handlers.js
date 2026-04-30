@@ -320,4 +320,19 @@ export function register() {
   on("loginAnonymousSupabase", async () => {
     await loginSupabaseAnonymous();
   });
+
+  // S427 — Send test Web Push notification
+  on("sendTestPush", async () => {
+    const result = document.getElementById("pushTestResult");
+    if (result) result.textContent = t("push_test_sending");
+    const { sendPushToAdmins } = await import("../services/notifications.js");
+    const { storeGet: _sg } = await import("../core/store.js");
+    const res = await sendPushToAdmins(
+      { title: t("push_test_title"), body: t("push_test_body") },
+      _sg,
+    );
+    const msg = res.sent > 0 ? t("push_test_sent", { sent: res.sent }) : t("push_test_no_sub");
+    if (result) result.textContent = msg;
+    showToast(msg, res.sent > 0 ? "success" : "warning");
+  });
 }

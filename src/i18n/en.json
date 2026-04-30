@@ -1409,5 +1409,11 @@
   "theme_rosegold": "Rose Gold",
   "theme_gold": "Gold",
   "theme_emerald": "Emerald",
-  "theme_royal": "Royal"
+  "theme_royal": "Royal",
+  "push_send_test": "Send Test Push",
+  "push_test_sending": "Sending...",
+  "push_test_title": "Push Test — Wedding Manager",
+  "push_test_body": "This is a test notification. It works! ✅",
+  "push_test_sent": "Push sent to {sent} device(s)",
+  "push_test_no_sub": "No registered push subscriptions"
 }

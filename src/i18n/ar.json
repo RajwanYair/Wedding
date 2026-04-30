@@ -1409,5 +1409,11 @@
   "theme_rosegold": "وردي ذهبي",
   "theme_gold": "ذهبي",
   "theme_emerald": "زمردي",
-  "theme_royal": "ملكي"
+  "theme_royal": "ملكي",
+  "push_send_test": "إرسال Push تجريبي",
+  "push_test_sending": "جارٍ الإرسال...",
+  "push_test_title": "اختبار Push — مدير الزفاف",
+  "push_test_body": "هذا إشعار اختباري. يعمل! ✅",
+  "push_test_sent": "تم إرسال Push إلى {sent} جهاز",
+  "push_test_no_sub": "لا توجد اشتراكات Push مسجلة"
 }

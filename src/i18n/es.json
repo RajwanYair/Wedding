@@ -1413,5 +1413,11 @@
   "theme_rosegold": "Oro rosado",
   "theme_gold": "Oro",
   "theme_emerald": "Esmeralda",
-  "theme_royal": "Real"
+  "theme_royal": "Real",
+  "push_send_test": "Enviar Push de prueba",
+  "push_test_sending": "Enviando...",
+  "push_test_title": "Prueba Push — Gestor de boda",
+  "push_test_body": "Esta es una notificación de prueba. ¡Funciona! ✅",
+  "push_test_sent": "Push enviado a {sent} dispositivo(s)",
+  "push_test_no_sub": "No hay suscripciones Push registradas"
 }

@@ -1410,5 +1410,11 @@
   "theme_rosegold": "רוז גולד",
   "theme_gold": "זהב",
   "theme_emerald": "אמרלד",
-  "theme_royal": "רויאל"
+  "theme_royal": "רויאל",
+  "push_send_test": "שלח Push לדוגמה",
+  "push_test_sending": "שולח...",
+  "push_test_title": "בדיקת Push — מנהל חתונה",
+  "push_test_body": "זו התראת בדיקה. הכל עובד! ✅",
+  "push_test_sent": "נשלחה התראה ל-{sent} התקנים",
+  "push_test_no_sub": "אין מנוים רשומים ל-Push"
 }

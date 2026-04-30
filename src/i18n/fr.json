@@ -1413,5 +1413,11 @@
   "theme_rosegold": "Or rosé",
   "theme_gold": "Or",
   "theme_emerald": "Emeraude",
-  "theme_royal": "Royal"
+  "theme_royal": "Royal",
+  "push_send_test": "Envoyer Push test",
+  "push_test_sending": "Envoi...",
+  "push_test_title": "Test Push — Gestionnaire de mariage",
+  "push_test_body": "Ceci est une notification test. Ça fonctionne ! ✅",
+  "push_test_sent": "Push envoyé à {sent} appareil(s)",
+  "push_test_no_sub": "Aucun abonnement Push enregistré"
 }
