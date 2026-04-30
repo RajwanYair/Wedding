@@ -68,7 +68,7 @@ coverage lines 58% / branches 51%.
 
 ## 1. North Star & Current State
 
-### Actual state — v16.0.0 · 2026-06-01
+### Actual state — v17.0.0 · 2026-06-01
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -76,7 +76,7 @@ coverage lines 58% / branches 51%.
 | TypeScript errors | **0** — baseline cleared S293 | ✅ |
 | Dead exports | 0 — all exports wired | ✅ |
 | Lint (JS · CSS · HTML · MD · i18n parity) | 0 errors · 0 warnings | ✅ |
-| Sections | **23** modules · **18** templates · **8** modals · all on BaseSection | ✅ |
+| Sections | **24** modules · **19** templates · **8** modals · all on BaseSection | ✅ |
 | Services | **25** files (target ≤ 25 held) | ✅ |
 | console.error | 0 outside allowlist (ADR-032) | ✅ |
 | CSS @scope | 0 bare `[data-section]` selectors | ✅ |
@@ -1063,9 +1063,9 @@ SBOM (`sbom.cdx.json`) documents every dependency; no proprietary service is req
 | **v13.20.0** | Released 2026-04-30 | Scope-lock cleanup + tooling/docs | S376–S378: removed orphan Capacitor workflow + dead util; locale ru→es/fr corrected; actions v4→v6; .vscode modernised; .github overhaul |
 | **v14.0.0** | ✅ 2026-05-02 | Phase A — backend convergence + P0 | S379–S398: Supabase flip; pushState router; Supabase Auth (drop 3 SDKs); IDB primary; monitoring; coverage gate; indexes; error boundaries; View Transitions; URL filter state; virtual scroll; waba-bulk-send |
 | **v15.0.0** | ✅ 2026-05-24 | Phase B — DX, architecture polish | S399–S408: JSDoc gate; Preact Signals store; SW 5-strategy rewrite; native `<dialog>` modals (8); Playwright E2E expansion; visual regression matrix; Stryker mutation pilot; pnpm CI pilot + ADR-043 |
-| **v16.0.0** | Target 2026-Q4 | Phase C — smart + native-class | S409–S420: WhatsApp Cloud API; AI BYO-key; Realtime; Stripe; Storage; kiosk; AR locale |
-| **v17.0.0** | Candidate 2027-Q1 | Phase D — platform & scale | Theme builder; website builder; org/team; plugin surface; Cloudflare CDN; Capacitor native |
-| **v18.0.0** | Candidate 2027-Q3 | Phase E — open platform | REST API; WebAuthn passkeys; theme marketplace; GDPR pack; multi-region |
+| **v16.0.0** | ✅ 2026-06-01 | Phase C — smart + native-class | S409–S418: Realtime live indicator; presence avatars; Ctrl+Z undo; Supabase Storage gallery upload |
+| **v17.0.0** | ✅ 2026-06-01 | Phase D — platform & scale | S419–S427: Vendor CSV; ICU AR plurals; venue links; QR cards; budget alerts; haptics; WABA bulk; onboarding wizard; Web Push test |
+| **v18.0.0** | Candidate 2027-Q1 | Phase E — open platform | REST API; WebAuthn passkeys; theme marketplace; GDPR pack; multi-region |
 | **v19.0.0** | Candidate 2028-Q1 | Phase F — AI-native + compliance | AI in every section; photo AI; no-show model; SOC 2 logging |
 
 ---

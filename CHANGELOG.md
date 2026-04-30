@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [17.0.0] — 2026-06-01
+
+> **S419–S427: Vendor CSV import, ICU Arabic plurals, RSVP venue links, QR table cards,
+> budget alerts, haptic feedback, WABA bulk send, onboarding wizard, Web Push test button.**
+
+### Added
+
+- **S419** — Vendor CSV import/export: `importVendorsCSV()` + `downloadVendorCSVTemplate()` in
+  `vendors.js`; "Import CSV" button in vendor admin bar; i18n: `import_vendors_csv`, `vendors_imported`
+- **S420** — ICU `select` forms wired: `formatMessage()` delegates gender/select patterns to
+  `icu-format.js`; Arabic plural keys updated to full 6-form ICU in `ar.json`
+- **S421** — Venue direction links in RSVP confirmation: Waze + Google Maps anchor links + OSM
+  iframe embed rendered when guest status is confirmed and `weddingInfo.lat/lon` set
+- **S422** — QR table cards print: `printQrTableCards()` generates per-table QR PNG data URLs via
+  `qr-code.js`; opens styled print window; button in Settings
+- **S423** — Budget over/near alert toasts: `renderBudgetProgress()` shows `showToast` once when
+  budget is exceeded (≥100%) or nearing limit (≥90%)
+- **S424** — Haptic feedback: WARNING vibration on guest/vendor/table deletes; DOUBLE on Ctrl+Z
+  undo; SUCCESS on Supabase gallery upload
+- **S425** — WABA bulk send button: `sendWabaBlast()` calls `waba-bulk-send` Edge Function with
+  confirmed-guest phone list; shows progress + result toast; button in WhatsApp section
+- **S426** — Onboarding wizard: 4-step first-run wizard (wedding info → guest CSV import → table
+  count → theme); auto-shown on first admin login when `weddingInfo.groom` is empty;
+  new section `onboarding` + template; `onboardingDone` flag prevents repeat
+- **S427** — Web Push test button: "Send Test Push" in Settings calls `push-dispatcher` Edge
+  Function via `sendPushToAdmins`; shows per-device count result
+
+### Changed
+
+- `src/core/constants.js`: `EXTRA_SECTIONS` extended with `"onboarding"`
+- `src/core/i18n.js`: `formatMessage()` delegates `select` ICU patterns to `icu-format.js`
+- `src/sections/whatsapp.js`: `sendWabaBlast()` added; dynamic import of `callEdgeFunction`
+- `src/handlers/section-handlers.js`: wired `sendWabaBlast`, `onboardingNext/Back/PickTheme/Finish`
+- `src/handlers/settings-handlers.js`: wired `sendTestPush` action
+- All 5 i18n locales: 40+ new keys added across S419–S427
+
 ## [16.0.0] — 2026-06-01
 
 > **S409–S418: Supabase Realtime live indicator, presence avatar badges, Ctrl+Z undo toast,
