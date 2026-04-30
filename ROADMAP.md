@@ -68,7 +68,7 @@ coverage lines 58% / branches 51%.
 
 ## 1. North Star & Current State
 
-### Actual state — v17.0.0 · 2026-06-01
+### Actual state — v18.0.0 · 2026-06-22
 
 | Metric | Value | Health |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ coverage lines 58% / branches 51%.
 | Coverage | lines 58% · branches 51% (floor ratchet) | ✅ |
 | Repositories | mandatory data path; ESLint enforced | ✅ |
 | Handlers | clean separation; 7 files | ✅ |
-| i18n keys | **1 373** keys × 5 locales (HE · EN · AR · FR · ES) | ✅ |
+| i18n keys | **1 430+** keys × 6 locales (HE · EN · AR · FR · ES · RU) | ✅ |
 | DB migrations | **25** Supabase migrations | ✅ |
 | Active backend | `BACKEND_TYPE = "supabase"` · Supabase is primary backend | ✅ |
 | Auth tokens | AES-GCM encrypted (`secure-storage.js`) | ✅ |
@@ -1065,12 +1065,12 @@ SBOM (`sbom.cdx.json`) documents every dependency; no proprietary service is req
 | **v15.0.0** | ✅ 2026-05-24 | Phase B — DX, architecture polish | S399–S408: JSDoc gate; Preact Signals store; SW 5-strategy rewrite; native `<dialog>` modals (8); Playwright E2E expansion; visual regression matrix; Stryker mutation pilot; pnpm CI pilot + ADR-043 |
 | **v16.0.0** | ✅ 2026-06-01 | Phase C — smart + native-class | S409–S418: Realtime live indicator; presence avatars; Ctrl+Z undo; Supabase Storage gallery upload |
 | **v17.0.0** | ✅ 2026-06-01 | Phase D — platform & scale | S419–S427: Vendor CSV; ICU AR plurals; venue links; QR cards; budget alerts; haptics; WABA bulk; onboarding wizard; Web Push test |
-| **v18.0.0** | Candidate 2027-Q1 | Phase E — open platform | REST API; WebAuthn passkeys; theme marketplace; GDPR pack; multi-region |
-| **v19.0.0** | Candidate 2028-Q1 | Phase F — AI-native + compliance | AI in every section; photo AI; no-show model; SOC 2 logging |
+| **v18.0.0** | ✅ 2026-06-22 | Phase E — open platform | S428–S437: Russian locale; registry deep-links; hybrid RSVP; observability DSN; WebAuthn passkeys; REST API key UI; GDPR erasure; multi-event quick actions |
+| **v19.0.0** | Candidate 2027-Q1 | Phase F — AI-native + compliance | AI in every section; photo AI; no-show model; SOC 2 logging |
 
 ---
 
-*Last updated: 2026-05-24 · v15.0.0 ·
+*Last updated: 2026-06-22 · v18.0.0 ·
 See [CHANGELOG.md](CHANGELOG.md) for detailed history ·
 Decisions: [docs/adr/](docs/adr/) ·
 Runbooks: [docs/operations/](docs/operations/).*
