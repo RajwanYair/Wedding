@@ -1019,7 +1019,6 @@
   "no_expenses": "אין הוצאות",
   "batch_set_meal": "שנה ארוחה",
   "checkin_table_all": "כניסת כולם בשולחן",
-  "checkin_bulk_done": "צויין כהגיע {n} אורחים",
   "checkin_bulk_done": "צוין כהגיע {n} אורחים",
   "timeline_alarm_title": "תזכורת אירוע",
   "timeline_alarm_minutes": "דקות",
@@ -1416,5 +1415,7 @@
   "push_test_title": "בדיקת Push — מנהל חתונה",
   "push_test_body": "זו התראת בדיקה. הכל עובד! ✅",
   "push_test_sent": "נשלחה התראה ל-{sent} התקנים",
-  "push_test_no_sub": "אין מנוים רשומים ל-Push"
+  "push_test_no_sub": "אין מנוים רשומים ל-Push",
+  "locale_picker_title": "שפת הממשק",
+  "locale_picker_desc": "בחר שפה לתצוגת האפליקציה"
 }

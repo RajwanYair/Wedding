@@ -1415,5 +1415,7 @@
   "push_test_title": "Push Test — Wedding Manager",
   "push_test_body": "This is a test notification. It works! ✅",
   "push_test_sent": "Push sent to {sent} device(s)",
-  "push_test_no_sub": "No registered push subscriptions"
+  "push_test_no_sub": "No registered push subscriptions",
+  "locale_picker_title": "Interface Language",
+  "locale_picker_desc": "Choose the display language for the app"
 }

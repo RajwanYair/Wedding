@@ -1415,5 +1415,7 @@
   "push_test_title": "اختبار Push — مدير الزفاف",
   "push_test_body": "هذا إشعار اختباري. يعمل! ✅",
   "push_test_sent": "تم إرسال Push إلى {sent} جهاز",
-  "push_test_no_sub": "لا توجد اشتراكات Push مسجلة"
+  "push_test_no_sub": "لا توجد اشتراكات Push مسجلة",
+  "locale_picker_title": "لغة الواجهة",
+  "locale_picker_desc": "اختر لغة عرض التطبيق"
 }

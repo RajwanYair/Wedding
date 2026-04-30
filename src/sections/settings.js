@@ -9,7 +9,7 @@ import { storeGet, storeSet } from "../core/store.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 import { getBackendTypeConfig, getSheetsWebAppUrl, getSpreadsheetId } from "../core/app-config.js";
 import { el } from "../core/dom.js";
-import { t, loadLocale, applyI18n, normalizeUiLanguage } from "../core/i18n.js";
+import { t, loadLocale, applyI18n, normalizeUiLanguage, SUPPORTED_LOCALES } from "../core/i18n.js";
 import { STORAGE_KEYS, GUEST_STATUSES } from "../core/constants.js";
 import { save, load, getActiveEventId } from "../core/state.js";
 import { readBrowserStorageJson } from "../core/storage.js";
@@ -73,6 +73,8 @@ class SettingsSection extends BaseSection {
     _renderMonitoringToggle();
     // Wire sync queue monitor badge (S217)
     initQueueMonitor();
+    // Wire multi-locale selector (S429)
+    _renderLocaleSelector();
   }
 }
 
@@ -82,13 +84,15 @@ export const { mount, unmount, capabilities } = fromSection(new SettingsSection(
 
 /**
  * Switch the app language.
- * @param {"he"|"en"} lang
+ * @param {string} lang
  */
 export async function switchLanguage(lang) {
-  const nextLang = normalizeUiLanguage(lang);
-  await loadLocale(nextLang);
+  const supported = /** @type {readonly string[]} */ (SUPPORTED_LOCALES);
+  const nextLang = supported.includes(lang) ? lang : normalizeUiLanguage(lang);
+  await loadLocale(/** @type {"he"|"en"|"ar"|"es"|"fr"|"ru"} */ (nextLang));
   save("lang", nextLang);
   applyI18n();
+  _renderLocaleSelector();
 }
 
 /**
@@ -1373,6 +1377,39 @@ export async function refreshAdminList() {
  */
 export async function checkIsApprovedAdmin(email) {
   return isApprovedAdminAsync(email);
+}
+
+// ── S429 — Multi-locale selector ───────────────────────────────────────────
+
+/** Locale display labels */
+const _LOCALE_LABELS = Object.freeze({
+  he: "עב",
+  en: "EN",
+  ar: "عر",
+  es: "ES",
+  fr: "FR",
+  ru: "RU",
+});
+
+/**
+ * Render the multi-locale selector inside #localeSelector.
+ * Highlights the active locale.
+ */
+function _renderLocaleSelector() {
+  const container = document.getElementById("localeSelector");
+  if (!container) return;
+  container.textContent = "";
+  const active = load("lang") || "he";
+  for (const code of SUPPORTED_LOCALES) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `locale-btn${code === active ? " locale-btn--active" : ""}`;
+    btn.textContent = _LOCALE_LABELS[code] ?? code.toUpperCase();
+    btn.dataset.action = "switchLanguage";
+    btn.dataset.actionArg = code;
+    btn.setAttribute("aria-pressed", String(code === active));
+    container.appendChild(btn);
+  }
 }
 
 // ── Onboarding helpers (S231) ───────────────────────────────────────────────

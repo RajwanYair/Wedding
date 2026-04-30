@@ -840,10 +840,6 @@
   "venue_directions_google": "🗺️ Naviguer avec Google Maps",
   "venue_map_embed": "Carte du lieu",
   "rsvp_download_ics": "",
-  "venue_directions_title": "Itinéraire",
-  "venue_directions_waze": "📍 Naviguer avec Waze",
-  "venue_directions_google": "🗺️ Naviguer avec Google Maps",
-  "venue_map_embed": "Carte du lieu",
   "wa_default_template": "",
   "wa_variable_chips_label": "",
   "language_switched": "",
@@ -1419,5 +1415,7 @@
   "push_test_title": "Test Push — Gestionnaire de mariage",
   "push_test_body": "Ceci est une notification test. Ça fonctionne ! ✅",
   "push_test_sent": "Push envoyé à {sent} appareil(s)",
-  "push_test_no_sub": "Aucun abonnement Push enregistré"
+  "push_test_no_sub": "Aucun abonnement Push enregistré",
+  "locale_picker_title": "Langue de l'interface",
+  "locale_picker_desc": "Choisissez la langue de l'application"
 }

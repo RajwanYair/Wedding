@@ -14,18 +14,20 @@ import { formatMessage as _icuFmt } from "../utils/icu-format.js";
 let _dict = {};
 /** @type {Record<string, string>} */
 let _fallbackDict = {};
-/** @type {'he'|'en'} */
+/** @type {'he'|'en'|'ar'|'es'|'fr'|'ru'} */
 let _lang = "he";
 
 /** RTL languages */
-const RTL_LANGS = new Set(["he"]);
+const RTL_LANGS = new Set(["he", "ar"]);
 const BILINGUAL_LANGS = new Set(["he", "en"]);
+/** All supported locale codes */
+export const SUPPORTED_LOCALES = Object.freeze(["he", "en", "ar", "es", "fr", "ru"]);
 
 /**
  * Load a language pack via Vite dynamic import().
- * Hebrew is bundled eagerly; English is split into a lazy chunk.
+ * Hebrew is bundled eagerly; additional locales are lazy chunks.
  *
- * @param {'he'|'en'} lang
+ * @param {'he'|'en'|'ar'|'es'|'fr'|'ru'} lang
  * @param {Record<string, string>} [_inlineDict]  Injected dict for unit tests only
  * @returns {Promise<void>}
  */
@@ -40,8 +42,20 @@ export async function loadLocale(lang, _inlineDict) {
   if (lang === "en") {
     const { default: dict } = await import("../i18n/en.json");
     _dict = dict;
+  } else if (lang === "ar") {
+    const { default: dict } = await import("../i18n/ar.json");
+    _dict = dict;
+  } else if (lang === "es") {
+    const { default: dict } = await import("../i18n/es.json");
+    _dict = dict;
+  } else if (lang === "fr") {
+    const { default: dict } = await import("../i18n/fr.json");
+    _dict = dict;
+  } else if (lang === "ru") {
+    const { default: dict } = await import("../i18n/ru.json");
+    _dict = dict;
   } else {
-    // Hebrew — bundled eagerly into the main entry chunk
+    // Hebrew — default / fallback
     const { default: dict } = await import("../i18n/he.json");
     _dict = dict;
   }
@@ -50,8 +64,8 @@ export async function loadLocale(lang, _inlineDict) {
 
 /**
  * Set `dir` and `lang` attributes on the document root.
- * RTL for he, LTR for en.
- * @param {'he'|'en'} lang
+ * RTL for he and ar, LTR for others.
+ * @param {string} lang
  */
 function _applyDirection(lang) {
   if (typeof document === "undefined") return;
@@ -267,7 +281,7 @@ export function applyI18n(root = document) {
 
 /** Locale string matching current language */
 function _locale() {
-  const map = { he: "he-IL", en: "en-IL", ar: "ar-SA", es: "es-ES", fr: "fr-FR" };
+  const map = { he: "he-IL", en: "en-IL", ar: "ar-SA", es: "es-ES", fr: "fr-FR", ru: "ru-RU" };
   return map[_lang] ?? "he-IL";
 }
 

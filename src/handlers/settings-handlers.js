@@ -208,9 +208,12 @@ export function register() {
   });
   on("removeApprovedEmail", (el) => removeApprovedEmail(el));
   on("clearAllData", () => clearAllData());
-  on("switchLanguage", async () => {
-    const current = normalizeUiLanguage(load("lang", "he"));
-    await switchLanguage(nextUiLanguage(current));
+  on("switchLanguage", async (el) => {
+    // Multi-locale selector passes lang code in data-action-arg; header toggle uses nextUiLanguage
+    const argLang = el instanceof HTMLElement ? (el.dataset.actionArg ?? "") : "";
+    const current = load("lang", "he");
+    const next = argLang || nextUiLanguage(current);
+    await switchLanguage(next);
     showToast(t("language_switched"), "info");
   });
   on("toggleLanguage", async () => {
