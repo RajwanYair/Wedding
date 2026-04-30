@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [20.0.0] — 2026-07-05
+
+> **S454–S463: utility expansion sprint — guest dedup, WhatsApp DNC, audit retention,
+> image compression, RSVP reminder scheduler, vendor payment alerts, guest tags,
+> recent searches, photo organisation; +99 unit tests; release cut.**
+
+### Added
+
+- **S454** — Guest duplicate detection (`src/utils/guest-dedup.js`):
+  `findDuplicates()` matches guests by phone or normalised name; `mergeGuests()`
+  enriches the primary record with non-empty fields from the duplicate. Settings
+  card with "Find Duplicates" + per-pair "Merge" buttons; 6 i18n keys × 6 locales;
+  10 unit tests.
+- **S455** — WhatsApp Do-Not-Contact list (`src/utils/whatsapp-dnc.js`):
+  `addToDnc/removeFromDnc/isOnDnc/listDnc/clearDnc/filterDnc` — phone-keyed
+  opt-out persisted under `wedding_v1_dnc_list`; `cleanPhone()` normalisation
+  ensures formatted variants match; 9 unit tests.
+- **S456** — Audit log retention helpers (`src/utils/audit-retention.js`):
+  `pruneAuditLog(entries, days)` drops entries older than `days`;
+  `countExpired()` previews the prune; `summariseByAction()` for SOC 2
+  frequency reports; 10 unit tests.
+- **S457** — Image compression util (`src/utils/image-compress.js`):
+  `compressImage(blob, opts)` resizes via `OffscreenCanvas` (or fallback
+  `<canvas>`) and re-encodes (JPEG q=0.82 default); `calculateDimensions()`
+  preserves aspect ratio without upscaling; `formatBytes()` helper; 10 unit
+  tests.
+- **S458** — RSVP follow-up reminder scheduler (`src/utils/rsvp-reminder.js`):
+  `planReminders(eventDate, guests)` returns 3-wave plan (T-30 / T-14 / T-3);
+  `nextDueWave()` for dashboard surfacing; `daysUntilEvent()`; 14 unit tests.
+- **S459** — Vendor payment alert util (`src/utils/vendor-alerts.js`):
+  `findOverdueVendors(vendors, { dueSoonDays })` flags overdue + due-soon
+  vendors with outstanding balances; `totalOutstanding()`; 11 unit tests.
+- **S460** — Guest tag bulk operations (`src/utils/guest-tags.js`):
+  `addTag/removeTag/listTags/filterByTag/bulkSetStatus`; tags normalised
+  (trim + lowercase) and de-duplicated; 13 unit tests.
+- **S461** — Recent searches util (`src/utils/recent-searches.js`):
+  MRU deque persisted under `wedding_v1_recent_searches`; case-insensitive
+  de-duplication, configurable cap (default 10); 10 unit tests.
+- **S462** — Photo organisation helpers (`src/utils/photo-organize.js`):
+  `sortByDate(asc/desc)`, `groupByDay()`, `filterByDateRange()`; 12 unit tests.
+- **S463** — v20.0.0 release: version bumped via `npm run sync:version`;
+  CHANGELOG entry; tag + GitHub release.
+
+### Changed
+
+- ESLint shared base now declares `OffscreenCanvas` and `Image` as readonly
+  browser globals (required by S457).
+- Test suite: **4359 tests** across 284 files (+99 from v19.0.0).
+
 ## [19.0.0] — 2026-07-04
 
 > **S441–S447: Webhook subscriptions, coverage uplift, GDPR export, no-show prediction,
