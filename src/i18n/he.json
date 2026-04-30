@@ -1521,5 +1521,14 @@
   "ai_settings_saved": "הגדרות AI נשמרו.",
   "ai_test_ok": "החיבור תקין.",
   "ai_test_fail": "החיבור נכשל",
-  "ai_key_required": "נדרש מפתח API."
+  "ai_key_required": "נדרש מפתח API.",
+  "ai_panel_title": "עוזר AI",
+  "ai_panel_placeholder": "שאל שאלה…",
+  "ai_panel_send": "שלח",
+  "ai_panel_clear": "נקה שיחה",
+  "ai_panel_thinking": "חושב…",
+  "ai_panel_you": "אתה",
+  "ai_panel_ai": "AI",
+  "ai_panel_not_enabled": "הפעל את עוזר ה-AI בהגדרות תחילה.",
+  "ai_panel_error": "שגיאת AI"
 }

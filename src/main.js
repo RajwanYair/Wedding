@@ -51,6 +51,7 @@ import {
   withViewTransition,
 } from "./core/nav.js";
 import { initCommandPalette } from "./utils/command-palette.js";
+import { initAiPanel } from "./utils/ai-panel.js";
 import {
   showToast,
   openModal,
@@ -372,6 +373,7 @@ let _activeSection = null;
   initKeyboardShortcuts();
   initShortcutsHelp();
   initCommandPalette(); // S447: Ctrl+Shift+K smart guest command palette
+  initAiPanel(); // S450: Ctrl+Shift+A AI assistant panel
   initUndoShortcut(
     () => { const entry = popUndo(); if (entry) vibrate(HAPTIC.DOUBLE); return entry; },
     storeSet,

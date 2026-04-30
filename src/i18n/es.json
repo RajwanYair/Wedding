@@ -1521,5 +1521,14 @@
   "ai_settings_saved": "Ajustes IA guardados.",
   "ai_test_ok": "Conexión exitosa.",
   "ai_test_fail": "Conexión fallida",
-  "ai_key_required": "Se requiere clave API."
+  "ai_key_required": "Se requiere clave API.",
+  "ai_panel_title": "Asistente IA",
+  "ai_panel_placeholder": "Haz una pregunta…",
+  "ai_panel_send": "Enviar",
+  "ai_panel_clear": "Limpiar chat",
+  "ai_panel_thinking": "Pensando…",
+  "ai_panel_you": "Tú",
+  "ai_panel_ai": "IA",
+  "ai_panel_not_enabled": "Activa el asistente IA en Configuración primero.",
+  "ai_panel_error": "Error de IA"
 }

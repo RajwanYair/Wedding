@@ -1521,5 +1521,14 @@
   "ai_settings_saved": "AI settings saved.",
   "ai_test_ok": "Connection successful.",
   "ai_test_fail": "Connection failed",
-  "ai_key_required": "API key required."
+  "ai_key_required": "API key required.",
+  "ai_panel_title": "AI Assistant",
+  "ai_panel_placeholder": "Ask a question…",
+  "ai_panel_send": "Send",
+  "ai_panel_clear": "Clear chat",
+  "ai_panel_thinking": "Thinking…",
+  "ai_panel_you": "You",
+  "ai_panel_ai": "AI",
+  "ai_panel_not_enabled": "Enable AI assistant in Settings first.",
+  "ai_panel_error": "AI error"
 }

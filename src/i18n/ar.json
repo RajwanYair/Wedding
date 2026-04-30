@@ -1521,5 +1521,14 @@
   "ai_settings_saved": "تم حفظ إعدادات الذكاء الاصطناعي.",
   "ai_test_ok": "الاتصال ناجح.",
   "ai_test_fail": "فشل الاتصال",
-  "ai_key_required": "مفتاح API مطلوب."
+  "ai_key_required": "مفتاح API مطلوب.",
+  "ai_panel_title": "مساعد الذكاء الاصطناعي",
+  "ai_panel_placeholder": "اطرح سؤالاً…",
+  "ai_panel_send": "إرسال",
+  "ai_panel_clear": "مسح المحادثة",
+  "ai_panel_thinking": "جاري التفكير…",
+  "ai_panel_you": "أنت",
+  "ai_panel_ai": "الذكاء الاصطناعي",
+  "ai_panel_not_enabled": "قم بتفعيل المساعد أولاً في الإعدادات.",
+  "ai_panel_error": "خطأ في الذكاء الاصطناعي"
 }

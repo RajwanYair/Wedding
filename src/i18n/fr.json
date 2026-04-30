@@ -1521,5 +1521,14 @@
   "ai_settings_saved": "Paramètres IA enregistrés.",
   "ai_test_ok": "Connexion réussie.",
   "ai_test_fail": "Échec de la connexion",
-  "ai_key_required": "Clé API requise."
+  "ai_key_required": "Clé API requise.",
+  "ai_panel_title": "Assistant IA",
+  "ai_panel_placeholder": "Posez une question…",
+  "ai_panel_send": "Envoyer",
+  "ai_panel_clear": "Effacer la conversation",
+  "ai_panel_thinking": "En train de réfléchir…",
+  "ai_panel_you": "Vous",
+  "ai_panel_ai": "IA",
+  "ai_panel_not_enabled": "Activez d'abord l'assistant IA dans les Paramètres.",
+  "ai_panel_error": "Erreur IA"
 }

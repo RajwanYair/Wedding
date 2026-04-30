@@ -1521,5 +1521,14 @@
   "ai_settings_saved": "Настройки ИИ сохранены.",
   "ai_test_ok": "Соединение успешно.",
   "ai_test_fail": "Ошибка соединения",
-  "ai_key_required": "Требуется API-ключ."
+  "ai_key_required": "Требуется API-ключ.",
+  "ai_panel_title": "ИИ-помощник",
+  "ai_panel_placeholder": "Задайте вопрос…",
+  "ai_panel_send": "Отправить",
+  "ai_panel_clear": "Очистить чат",
+  "ai_panel_thinking": "Думает…",
+  "ai_panel_you": "Вы",
+  "ai_panel_ai": "ИИ",
+  "ai_panel_not_enabled": "Сначала включите ИИ-помощника в Настройках.",
+  "ai_panel_error": "Ошибка ИИ"
 }
