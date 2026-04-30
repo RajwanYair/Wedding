@@ -64,7 +64,9 @@ export function enqueueWrite(key, syncFn) {
   if (existing?.timer) clearTimeout(existing.timer);
   const timer = setTimeout(() => _flush(key), DEBOUNCE_MS);
   _queue.set(key, { syncFn, timer });
+  // S394: persist queue keys immediately + register BG sync for offline recovery
   _persistQueueKeys().catch(() => {});
+  registerBackgroundSync().catch(() => {});
 }
 
 /** @type {Map<string, number>} track retry count per key */
@@ -230,6 +232,16 @@ export function initOnlineSync() {
       if (document.visibilityState === "visible" && _queue.size > 0 && navigator.onLine) {
         syncSheetsNow();
       }
+    },
+    { passive: true },
+  );
+
+  // S394: pagehide is more reliable than beforeunload for BFCache-compatible
+  // persistence — ensure queued keys land in IDB before the page is hidden.
+  window.addEventListener(
+    "pagehide",
+    () => {
+      _persistQueueKeys().catch(() => {});
     },
     { passive: true },
   );
