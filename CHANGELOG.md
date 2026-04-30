@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [25.0.0] — 2026-04-30
+
+> **S504–S513: utility expansion VI — LRU cache, query string,
+> deep equal, memoize, Hebrew pluraliser, number format, cron parser,
+> group-by, deep clone; +122 unit tests; release cut.**
+
+### Added
+
+- **S504** — LRU cache (`src/utils/lru-cache.js`):
+  `createLru` Map-backed LRU with optional TTL, recency refresh on get,
+  injectable clock; 12 tests.
+- **S505** — Query string (`src/utils/query-string.js`):
+  `parse/stringify`; arrays via repeated keys, sorted output, plus-as-space,
+  graceful malformed-encoding handling; 17 tests.
+- **S506** — Deep equal (`src/utils/deep-equal.js`):
+  Structural equality with Map / Set / Date / RegExp / typed-array support
+  and cycle-safe `WeakMap`; 15 tests.
+- **S507** — Memoize (`src/utils/memoize.js`):
+  Function memoizer with pluggable key resolver and optional LRU max-size;
+  12 tests.
+- **S508** — Hebrew pluraliser (`src/utils/pluralize-he.js`):
+  `pluralizeHe/formatHeCount` zero/one/two/many forms plus `pluralizeEn`
+  helper; 14 tests.
+- **S509** — Number format (`src/utils/number-format.js`):
+  `formatNumber/formatCompact/formatPercent/roundTo`; Intl-based grouping,
+  short-scale suffixes, signed display; 15 tests.
+- **S510** — Cron parser (`src/utils/cron-parse.js`):
+  `parseCron/matches/nextRun`; 5-field expressions with lists, ranges,
+  steps, and minute-by-minute next-fire iteration; 13 tests.
+- **S511** — Group by (`src/utils/group-by.js`):
+  `groupBy/countBy/sumBy/pivot` row aggregation toolbox; 12 tests.
+- **S512** — Deep clone (`src/utils/deep-clone.js`):
+  Structural clone with Map / Set / Date / RegExp / typed-array support,
+  shared-reference and cycle preservation; 12 tests.
+- **S513** — Release v25.0.0 — sync-version propagation across 12 files,
+  CHANGELOG entry, lint clean, all 4926 tests passing across 329 files.
+
 ## [24.0.0] — 2026-04-30
 
 > **S494–S503: utility expansion V — CSV parser, UUID v4, base64 unicode,
