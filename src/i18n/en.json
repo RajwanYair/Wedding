@@ -772,6 +772,8 @@
   "reset_checkins": "Reset all",
   "filter_by_category": "Filter by category",
   "budget_progress": "Budget progress",
+  "budget_alert_over": "⚠️ Over budget! Check your expenses.",
+  "budget_alert_near": "⚠️ Reached 90% of your budget.",
   "budget_envelopes_title": "Budget envelopes",
   "budget_envelope_over": "over budget",
   "budget_chart": "Expense breakdown",

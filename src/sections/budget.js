@@ -13,6 +13,10 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getAllSummaries } from "../services/analytics.js";
 import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct, projectOverrun } from "../services/analytics.js";
+import { showToast } from "../core/ui.js";
+
+/** S423: Track whether budget-over alert has been shown this session */
+let _budgetAlertShown = false;
 
 class BudgetSection extends BaseSection {
   async onMount() {
@@ -244,6 +248,15 @@ export function renderBudgetProgress() {
 
   const over = target > 0 && spent > target;
   bar.classList.toggle("budget-progress--over", over);
+
+  // S423: Budget alert toast — show once per session when over budget
+  if (over && !_budgetAlertShown) {
+    _budgetAlertShown = true;
+    showToast(t("budget_alert_over"), "warning");
+  } else if (!over && target > 0 && pct >= 90 && !_budgetAlertShown) {
+    _budgetAlertShown = true;
+    showToast(t("budget_alert_near"), "warning");
+  }
 
   if (label) {
     label.textContent =

@@ -766,6 +766,8 @@
   "export_checkin_report": "",
   "reset_checkins": "",
   "filter_by_category": "",
+  "budget_alert_over": "⚠️ ¡Presupuesto excedido! Revisa tus gastos.",
+  "budget_alert_near": "⚠️ Alcanzaste el 90% del presupuesto.",
   "budget_progress": "",
   "budget_envelopes_title": "",
   "budget_envelope_over": "",

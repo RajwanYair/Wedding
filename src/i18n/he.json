@@ -773,6 +773,8 @@
   "reset_checkins": "אפס הכל",
   "filter_by_category": "סינון לפי קטגוריה",
   "budget_progress": "התקדמות תקציב",
+  "budget_alert_over": "⚠️ חרגת מהתקציב! בדוק את ההוצאות.",
+  "budget_alert_near": "⚠️ הגעת ל-90% מהתקציב.",
   "budget_envelopes_title": "מעטפות תקציב",
   "budget_envelope_over": "חרג מהתקציב",
   "budget_chart": "פירוט הוצאות",

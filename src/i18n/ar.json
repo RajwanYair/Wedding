@@ -765,6 +765,8 @@
   "export_checkin_report": "Export check-in report",
   "reset_checkins": "Reset all",
   "filter_by_category": "Filter by category",
+  "budget_alert_over": "⚠️ تجاوزت الميزانية! تحقق من النفقات.",
+  "budget_alert_near": "⚠️ وصلت إلى 90% من الميزانية.",
   "budget_progress": "Budget progress",
   "budget_envelopes_title": "Budget envelopes",
   "budget_envelope_over": "over budget",
