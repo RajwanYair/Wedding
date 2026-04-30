@@ -1376,8 +1376,8 @@
   "whats_new_glitchtip": "Rapport d'erreurs optionnel via GlitchTip",
   "whats_new_notif_panel": "Cloche de notification et sélecteur d'espace de travail connectés",
   "whats_new_service_worker": "Service Worker sauvegarde les écritures entre les sessions",
-  "cmd_palette_title": "Recherche rapide",
-  "cmd_palette_placeholder": "Rechercher invité, table, fournisseur, section…",
+  "cmd_palette_title": "Palette de commandes",
+  "cmd_palette_placeholder": "Rechercher une commande…",
   "cmd_palette_empty": "Tapez pour rechercher…",
   "cmd_palette_no_results": "Aucun résultat",
   "realtime_connected": "🟢 En direct",
@@ -1498,5 +1498,10 @@
   "theme_installed": "Installé",
   "theme_installed_msg": "Thème installé.",
   "audit_log_export_btn": "Exporter le journal d'audit",
-  "audit_log_exported": "Journal d'audit exporté avec succès."
+  "audit_log_exported": "Journal d'audit exporté avec succès.",
+  "cmd_no_results": "Aucun résultat",
+  "cmd_add_guest": "Ajouter un invité",
+  "cmd_find_phone": "Chercher par téléphone",
+  "cmd_export_csv": "Exporter CSV",
+  "cmd_go_to": "Aller à"
 }

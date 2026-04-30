@@ -50,6 +50,7 @@ import {
   navigate,
   withViewTransition,
 } from "./core/nav.js";
+import { initCommandPalette } from "./utils/command-palette.js";
 import {
   showToast,
   openModal,
@@ -370,6 +371,7 @@ let _activeSection = null;
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
   initShortcutsHelp();
+  initCommandPalette(); // S447: Ctrl+Shift+K smart guest command palette
   initUndoShortcut(
     () => { const entry = popUndo(); if (entry) vibrate(HAPTIC.DOUBLE); return entry; },
     storeSet,

@@ -1376,8 +1376,8 @@
   "dns_note_replace_service": "استبدل بمعرّف خدمتك في Render",
   "dns_note_netlify_lb": "أو استخدم موازن التحميل لـ Netlify إذا كنت على خطة مدفوعة",
   "dns_note_cf_root_cname": "يدعم Cloudflare CNAME في المستوى الجذر عبر CNAME Flattening",
-  "cmd_palette_title": "بحث سريع",
-  "cmd_palette_placeholder": "ابحث عن ضيف، طاولة، مورد، قسم…",
+  "cmd_palette_title": "لوحة الأوامر",
+  "cmd_palette_placeholder": "ابحث عن أمر…",
   "cmd_palette_empty": "اكتب للبحث…",
   "cmd_palette_no_results": "لا توجد نتائج",
   "realtime_connected": "🟢 مباشر",
@@ -1498,5 +1498,10 @@
   "theme_installed": "مثبّت",
   "theme_installed_msg": "تم تثبيت الثيم.",
   "audit_log_export_btn": "تصدير سجل التدقيق",
-  "audit_log_exported": "تم تصدير سجل التدقيق بنجاح."
+  "audit_log_exported": "تم تصدير سجل التدقيق بنجاح.",
+  "cmd_no_results": "لم يتم العثور على نتائج",
+  "cmd_add_guest": "إضافة ضيف",
+  "cmd_find_phone": "بحث برقم الهاتف",
+  "cmd_export_csv": "تصدير CSV",
+  "cmd_go_to": "الانتقال إلى"
 }
