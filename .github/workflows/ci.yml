@@ -91,6 +91,10 @@ jobs:
             echo "::error file=public/_headers::Missing trusted-types policy name in CSP"
             exit 1
           fi
+          if ! grep -q "wss://\*\.supabase\.co" index.html; then
+            echo "::error file=index.html::Meta CSP missing wss://*.supabase.co in connect-src (S384)"
+            exit 1
+          fi
           echo "Trusted Types CSP directives verified."
 
       - name: Unit tests (Vitest)
