@@ -111,6 +111,25 @@ export class BaseSection {
   // ── Lifecycle (called by adapter — do not override) ────────────────────
 
   /**
+   * Called when `onMount()` throws an unhandled error. Shows a toast and
+   * reports to observability. Override to customise error handling.
+   * @param {unknown} err
+   * @returns {Promise<void>}
+   */
+  async _onError(err) {
+    try {
+      const [{ showToast }, { captureException }] = await Promise.all([
+        import("./ui.js"),
+        import("../services/observability.js"),
+      ]);
+      captureException(err, { section: this.#name });
+      showToast(`שגיאה בטעינת ${this.#name}`, "error");
+    } catch {
+      /* observability unavailable — fail silently */
+    }
+  }
+
+  /**
    * Internal: call from `fromSection()` adapter only.
    * @param {Record<string, unknown>} [params]
    * @returns {Promise<void>}
@@ -118,7 +137,12 @@ export class BaseSection {
   async _mount(params) {
     if (this.#mounted) return;
     this.#mounted = true;
-    await this.onMount(params);
+    try {
+      await this.onMount(params);
+    } catch (err) {
+      this.#mounted = false;
+      await this._onError(err);
+    }
   }
 
   /**
