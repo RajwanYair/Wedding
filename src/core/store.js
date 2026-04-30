@@ -1,20 +1,27 @@
 /**
- * src/core/store.js — Reactive store V2 (v6.0)
+ * src/core/store.js — Reactive store V3 (v15.0 — S400)
  *
- * Proxy-based reactive store with:
- * - Debounced localStorage persistence
- * - Microtask-batched subscriber notifications
- * - `storeBatch()` for bulk mutations with single notification pass
+ * Preact Signals-backed reactive store with:
+ * - Per-key `signal()` for explicit, 0-config reactivity (no silent nested-mutation misses)
+ * - `batch()` from @preact/signals-core for `storeBatch()` and `pauseNotifications()`
+ * - Microtask-batched subscriber notifications (public API unchanged)
  * - `storeSubscribeScoped()` for auto-cleanup on section unmount
- * - `pauseNotifications()` / `resumeNotifications()` for external batch ops
+ * - Debounced localStorage / IDB persistence (unchanged)
  * - Multi-event namespacing (S9.1) via dynamic prefix from state.js
  * No window.* side effects — consumers import and call directly.
  */
 
+import { signal, batch } from "@preact/signals-core";
 import { STORAGE_PREFIX } from "./config.js";
 import { getActiveEventId } from "./state.js";
 import { isPiiKey, savePii } from "../services/compliance.js";
 import { storageSet, getAdapterType } from "./storage.js";
+
+/**
+ * Per-key Preact Signals. Replaces the plain `_state` Record.
+ * @type {Map<string, ReturnType<typeof signal>>}
+ */
+const _signals = new Map();
 
 /** @type {Map<string, Set<Function>>} */
 const _subs = new Map();
@@ -28,11 +35,9 @@ const _persistMap = new Map();
 /** @type {Set<string>} */
 const _dirty = new Set();
 
+
 /** @type {ReturnType<typeof setTimeout> | null} */
 let _saveTimer = null;
-
-/** @type {Record<string, unknown>} */
-const _state = {};
 
 /** Base prefix */
 const _BASE_PREFIX = STORAGE_PREFIX;
@@ -121,17 +126,18 @@ function _scheduleNotify(key) {
   if (_notifyBatch === null) {
     _notifyBatch = new Set();
     Promise.resolve().then(() => {
-      const batch = _notifyBatch;
+      const pending = _notifyBatch;
       _notifyBatch = null;
-      batch?.forEach((k) => {
+      pending?.forEach((k) => {
+        const v = _sig(k, undefined).value;
         _subs.get(k)?.forEach((f) => {
           try {
-            f(_state[k]);
+            f(v);
           } catch {}
         });
         _subs.get("*")?.forEach((f) => {
           try {
-            f(k, _state[k]);
+            f(k, v);
           } catch {}
         });
       });
@@ -170,10 +176,10 @@ function _flush() {
     if (!storageKey) return;
     if (isPiiKey(key)) {
       // PII keys: fire-and-forget encrypted write (S157)
-      savePii(storageKey, _state[key]);
+      savePii(storageKey, _sig(key, undefined).value);
     } else {
       try {
-        const serialised = JSON.stringify(_state[key]);
+        const serialised = JSON.stringify(_sig(key, undefined).value);
         // S393: Route writes through storage.js (IDB primary, LS fallback).
         // Async fire-and-forget — sync localStorage fallback guards data safety.
         if (getAdapterType() === "indexeddb") {
@@ -199,32 +205,18 @@ if (typeof window !== "undefined") {
   window.addEventListener("beforeunload", _flush);
 }
 
-// ── Proxy factory ─────────────────────────────────────────────────────────
+// ── Public API ────────────────────────────────────────────────────────────
 
 /**
- * Create a reactive proxy for a state value.
- * @template T
- * @param {string} key     Property name in the state object
- * @param {T} initial      Initial value
- * @returns {T}
+ * Get or create the signal for a given key.
+ * @param {string} key
+ * @param {unknown} [defaultVal]
+ * @returns {ReturnType<typeof signal>}
  */
-function _reactive(key, initial) {
-  if (Array.isArray(initial)) {
-    return /** @type {T} */ (
-      new Proxy(initial, {
-        set(target, prop, value) {
-          target[/** @type {any} */ (prop)] = value;
-          _scheduleNotify(key);
-          _scheduleSave(key);
-          return true;
-        },
-      })
-    );
-  }
-  return initial;
+function _sig(key, defaultVal) {
+  if (!_signals.has(key)) _signals.set(key, signal(defaultVal));
+  return /** @type {ReturnType<typeof signal>} */ (_signals.get(key));
 }
-
-// ── Public API ────────────────────────────────────────────────────────────
 
 /**
  * Initialise the store. Call once after state has been loaded from localStorage.
@@ -232,7 +224,7 @@ function _reactive(key, initial) {
  */
 export function initStore(defs) {
   for (const [key, { value, storageKey }] of Object.entries(defs)) {
-    _state[key] = _reactive(key, value);
+    _sig(key, value).value = value;
     if (storageKey) _persistMap.set(key, storageKey);
   }
 }
@@ -243,7 +235,7 @@ export function initStore(defs) {
  * @returns {unknown}
  */
 export function storeGet(key) {
-  return _state[key];
+  return _sig(key, undefined).value;
 }
 
 /**
@@ -252,7 +244,7 @@ export function storeGet(key) {
  * @param {unknown} value
  */
 export function storeSet(key, value) {
-  _state[key] = _reactive(key, value);
+  _sig(key, value).value = value;
   _scheduleNotify(key);
   _scheduleSave(key);
 }
@@ -266,14 +258,15 @@ export function storeFlush() {
 
 /**
  * Execute a callback with all store notifications deferred until completion.
- * Multiple mutations inside the batch trigger only one notification per key.
+ * Uses @preact/signals-core `batch()` — multiple mutations trigger one notification pass.
  *
  * @param {() => void} fn  Synchronous function performing store mutations
  */
 export function storeBatch(fn) {
+  // Pause our own microtask notifications, then flush after batch commits.
   _pauseDepth++;
   try {
-    fn();
+    batch(fn);
   } finally {
     _pauseDepth--;
     if (_pauseDepth === 0) {
@@ -312,7 +305,7 @@ export function storeDebug() {
     subscriberCount[key] = fns.size;
   });
   return {
-    keys: Object.keys(_state),
+    keys: [..._signals.keys()],
     subscriberCount,
     dirtyKeys: [..._dirty],
     scopeCount: _scopedUnsubs.size,
@@ -328,18 +321,16 @@ export function reinitStore(defs) {
   // flush any pending writes to the OLD event before switching
   _flush();
   // clear subscriptions and state — subscribers will re-register on section mount
-  for (const key of Object.keys(_state)) {
-    delete _state[key];
-  }
+  _signals.clear();
   _persistMap.clear();
   _dirty.clear();
   // reinitialise with new data
   for (const [key, { value, storageKey }] of Object.entries(defs)) {
-    _state[key] = _reactive(key, value);
+    _sig(key, value).value = value;
     if (storageKey) _persistMap.set(key, storageKey);
   }
   // notify all subscribers that data has changed
-  for (const key of Object.keys(_state)) {
+  for (const key of _signals.keys()) {
     _scheduleNotify(key);
   }
 }
@@ -355,7 +346,7 @@ export function storeGetBatch(keys) {
   /** @type {Record<string, unknown>} */
   const result = {};
   for (const key of keys) {
-    result[key] = _state[key];
+    result[key] = _sig(key, undefined).value;
   }
   return result;
 }
@@ -371,7 +362,7 @@ export function storeGetBatch(keys) {
  * @returns {T} Updated item
  */
 export function storeUpdate(key, id, patch) {
-  const arr = /** @type {T[]} */ (_state[key]);
+  const arr = /** @type {T[]} */ (_sig(key, undefined).value);
   if (!Array.isArray(arr)) throw new TypeError(`storeUpdate: store["${key}"] is not an array`);
   const idx = arr.findIndex((item) => item.id === id);
   if (idx === -1) throw new RangeError(`storeUpdate: id "${id}" not found in store["${key}"]`);
@@ -392,7 +383,7 @@ export function storeUpdate(key, id, patch) {
  * @returns {T} The upserted item
  */
 export function storeUpsert(key, item) {
-  const arr = /** @type {T[]} */ (_state[key]);
+  const arr = /** @type {T[]} */ (_sig(key, undefined).value);
   if (!Array.isArray(arr)) throw new TypeError(`storeUpsert: store["${key}"] is not an array`);
   const idx = arr.findIndex((i) => i.id === item.id);
   if (idx === -1) {
@@ -415,7 +406,7 @@ export function storeUpsert(key, item) {
  * @returns {boolean}    true if an item was removed, false otherwise
  */
 export function storeRemove(key, id) {
-  const arr = /** @type {{ id: string }[]} */ (_state[key]);
+  const arr = /** @type {{ id: string }[]} */ (_sig(key, undefined).value);
   if (!Array.isArray(arr)) return false;
   const filtered = arr.filter((item) => item.id !== id);
   if (filtered.length === arr.length) return false;
