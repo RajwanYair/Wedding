@@ -30,7 +30,7 @@ src/                 # Active ESM source (Vite entry: src/main.js)
   utils/             # phone · date · sanitize · misc
   templates/         # 15 section HTML files (lazy-loaded by nav.js)
   modals/            # 7 modal HTML files (lazy-loaded on first open)
-  i18n/              # 4 language files (he · en · ar · ru)
+  i18n/              # 5 language files (he · en · ar · es · fr)
 public/              # sw.js · manifest.json · icons
 scripts/             # check-i18n-parity · inject-config · size-report · generate-icons · generate-precache · sri-check · sync-version
 tests/               # repo sanity + unit/integration/e2e coverage

@@ -66,7 +66,7 @@ Vite emits one chunk per dynamic import — the seating-chart bundle
 ### Locale lazy-loading
 
 `src/i18n/he.json` ships in the initial bundle (Hebrew is the
-default). `en.json`, `ar.json`, `ru.json` load only when the user
+default). `en.json`, `ar.json`, `es.json`, `fr.json` load only when the user
 flips the language toggle.
 
 ### Dependency review

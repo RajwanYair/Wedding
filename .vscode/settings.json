@@ -47,9 +47,22 @@
     },
     "github.copilot.chat.codeGeneration.useInstructionFiles": true,
     "github.copilot.chat.organizationCustomAgents.enabled": true,
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.chat.generateTests.codeLens": true,
+    "github.copilot.renameSuggestions.triggerAutomatically": true,
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "Use conventional commits (feat/fix/chore/test/docs). Include sprint ID (e.g. S374) when available. Be concise but mention test count changes."
+        }
+    ],
     "github.copilot.chat.reviewSelection.instructions": [
         {
             "file": ".github/instructions/wedding.instructions.md"
+        }
+    ],
+    "github.copilot.chat.codeGeneration.instructions": [
+        {
+            "file": ".github/copilot-instructions.md"
         }
     ],
     "chat.agent.enabled": true,
@@ -64,6 +77,9 @@
     "chat.promptFilesRecommendations": true,
     "chat.agentFilesLocations": {
         ".github/agents": true
+    },
+    "chat.skillFilesLocations": {
+        ".github/skills": true
     },
 
     // ── Spell Check ──

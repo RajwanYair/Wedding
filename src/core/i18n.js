@@ -190,7 +190,7 @@ function _pluralRules() {
 
 /**
  * Current active language.
- * @returns {'he'|'en'|'ar'|'ru'}
+ * @returns {'he'|'en'|'ar'|'es'|'fr'}
  */
 export function currentLang() {
   return _lang;
@@ -263,7 +263,7 @@ export function applyI18n(root = document) {
 
 /** Locale string matching current language */
 function _locale() {
-  const map = { he: "he-IL", en: "en-IL", ar: "ar-IL", ru: "ru-IL" };
+  const map = { he: "he-IL", en: "en-IL", ar: "ar-SA", es: "es-ES", fr: "fr-FR" };
   return map[_lang] ?? "he-IL";
 }
 

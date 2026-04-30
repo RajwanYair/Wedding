@@ -21,7 +21,7 @@ Must exit 0 with **0 errors, 0 warnings**.
 npm run check:i18n
 ```
 
-Must exit 0. Every key in `he.json` must exist in `en.json`, `ar.json`, and `ru.json`.
+Must exit 0. Every key in `he.json` must exist in `en.json`, `ar.json`, `es.json`, and `fr.json`.
 
 ## Step 3 — Credentials
 

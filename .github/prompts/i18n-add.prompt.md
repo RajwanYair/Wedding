@@ -5,7 +5,7 @@ description: Add a new i18n key to all language files with proper translations
 
 # Add i18n Key
 
-Add the new translation key `${input:key}` with value `${input:heValue}` (Hebrew) to all 4 language files.
+Add the new translation key `${input:key}` with value `${input:heValue}` (Hebrew) to all 5 language files.
 
 ## Steps
 
@@ -21,8 +21,12 @@ Add the new translation key `${input:key}` with value `${input:heValue}` (Hebrew
    - Translate to Modern Standard Arabic (RTL)
    - If uncertain, use a close approximation and add `// TODO: review` comment
 
-4. **Add to `src/i18n/ru.json`** — Russian:
-   - Translate to Russian
+4. **Add to `src/i18n/es.json`** — Spanish:
+   - Translate to Spanish
+   - If uncertain, use a close approximation and add `// TODO: review` comment
+
+5. **Add to `src/i18n/fr.json`** — French:
+   - Translate to French
    - If uncertain, use a close approximation and add `// TODO: review` comment
 
 ## i18n Key Naming Rules
@@ -41,7 +45,7 @@ After adding, run:
 npm run check:i18n
 ```
 
-Must exit 0 with 0 missing keys across all 4 files.
+Must exit 0 with 0 missing keys across all 5 files.
 
 ## Usage in Code
 

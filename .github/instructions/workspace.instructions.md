@@ -59,7 +59,7 @@ src/services/      auth · sheets · backend · presence · supabase · seating
 src/types/         TypeScript type stubs
 src/templates/     lazy section HTML (15 files)
 src/modals/        lazy modal HTML (7 files)
-src/i18n/          he · en · ar · ru locale files
+src/i18n/          he · en · ar · es · fr locale files
 tests/             repo sanity · unit · integration · e2e · perf (4187 tests, 269 files)
 scripts/           build/lint/audit/sync scripts (.mjs)
 supabase/          Edge Functions · migrations

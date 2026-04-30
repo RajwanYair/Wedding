@@ -35,7 +35,7 @@
       }
     },
     {
-      "label": "Test: Unit (2385+ tests)",
+      "label": "Test: Unit (4187+ tests)",
       "type": "npm",
       "script": "test",
       "group": {
@@ -107,6 +107,50 @@
       "label": "Format: Write",
       "type": "npm",
       "script": "format",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Build: Vite",
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Audit: Dead Exports",
+      "type": "npm",
+      "script": "audit:dead",
+      "group": "test",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Sync: Version",
+      "type": "npm",
+      "script": "sync:version",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Security: Scan",
+      "type": "shell",
+      "command": "node scripts/security-scan.mjs && npm run check:credentials && node scripts/check-plaintext-secrets.mjs",
       "group": "test",
       "problemMatcher": [],
       "presentation": {

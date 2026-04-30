@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        locale: [he, en, ar, ru]
+        locale: [he, en, ar, es, fr]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6

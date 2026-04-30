@@ -75,7 +75,7 @@ const x = obj?.prop ?? defaultVal;
 
 - Every visible string: `data-i18n="key"` on HTML element
 - JS strings: `t('key')` — never hardcoded Hebrew or English
-- All 5 locale files require `he` + `en` entries at minimum: `he.json`, `en.json`, `ar.json`, `ru.json`, (fr/es optional)
+- All 5 locale files require `he` + `en` entries at minimum: `he.json`, `en.json`, `ar.json`, `es.json`, `fr.json`
 - Language and theme both persisted in `localStorage`
 - Run `npm run check:i18n` after adding keys — must exit 0
 

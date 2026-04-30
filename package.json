@@ -33,6 +33,9 @@
     "audit:dead": "node scripts/dead-export-check.mjs",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
+    "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
+    "audit:arch": "node scripts/arch-check.mjs --strict",
     "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm test && npm run build"
   },
   "engines": {

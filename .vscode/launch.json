@@ -22,6 +22,28 @@
       "sourceMapPathOverrides": {
         "/@fs/*": "${workspaceFolder}/*"
       }
+    },
+    {
+      "name": "Vitest: Debug current file",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/../MyScripts/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${relativeFile}", "--reporter=verbose"],
+      "cwd": "${workspaceFolder}",
+      "env": { "NODE_NO_WARNINGS": "1" },
+      "console": "integratedTerminal",
+      "sourceMaps": true
+    },
+    {
+      "name": "Vitest: Debug all tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/../MyScripts/node_modules/vitest/vitest.mjs",
+      "args": ["run", "--reporter=verbose"],
+      "cwd": "${workspaceFolder}",
+      "env": { "NODE_NO_WARNINGS": "1" },
+      "console": "integratedTerminal",
+      "sourceMaps": true
     }
   ]
 }
