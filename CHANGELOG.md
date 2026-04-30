@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [26.0.0] — 2026-04-30
+
+> **S514–S523: utility expansion VII — token bucket, CSV, URL builder,
+> hex colour, ms duration, Levenshtein, priority queue, iCal date;
+> +111 unit tests; release cut.**
+
+### Added
+
+- **S514** — Token bucket (`src/utils/token-bucket.js`):
+  Steady-refill rate limiter with injectable clock and `take/available/reset`;
+  10 tests.
+- **S515** — CSV stringify (`src/utils/csv-stringify.js`):
+  RFC-4180 quoting plus an object-row writer with optional header; 12 tests.
+- **S516** — CSV parse (`src/utils/csv-parse.js`):
+  RFC-4180 parser handling embedded quotes/newlines/CRLF and an object reader;
+  13 tests.
+- **S517** — URL builder (`src/utils/url-builder.js`):
+  Sorted-query URL composer with array values, `Date` ISO encoding, and hash;
+  13 tests.
+- **S518** — Hex colour (`src/utils/hex-color.js`):
+  `parseHex/toHex/mixHex/luminance` with 3/4/6/8-digit support and WCAG
+  luminance; 13 tests.
+- **S519** — ms duration (`src/utils/ms-duration.js`):
+  `parseDuration/formatDuration` with combined tokens, fractions, EN+HE
+  labels; 13 tests.
+- **S520** — Levenshtein (`src/utils/levenshtein.js`):
+  Edit distance plus `similarity` and `closestMatch` helpers; 13 tests.
+- **S521** — Priority queue (`src/utils/priority-queue.js`):
+  Binary min-heap with custom comparator and snapshot helpers; 12 tests.
+- **S522** — iCal date (`src/utils/ical-date.js`):
+  RFC-5545 DATE / DATE-TIME format + parse plus text escape for `.ics`
+  payloads; 12 tests.
+- **S523** — Release v26.0.0 — sync-version propagation, CHANGELOG entry,
+  lint clean, all 5037 tests passing across 338 files.
+
 ## [25.0.0] — 2026-04-30
 
 > **S504–S513: utility expansion VI — LRU cache, query string,
