@@ -945,6 +945,7 @@
   "guest_tag_ph": "Add tag...",
   "undo_success": "Undone: {label}",
   "undo_delete_guest": "Delete guest",
+  "undo_delete_table": "Delete table",
   "shortcuts_title": "Keyboard Shortcuts",
   "shortcuts_key": "Key",
   "shortcuts_action": "Action",

@@ -62,6 +62,7 @@ import {
   initSW,
   initInstallPrompt,
   announce,
+  initUndoShortcut,
 } from "./core/ui.js";
 import { fetchGasVersion } from "./core/status-bar.js";
 import { injectTemplate } from "./core/template-loader.js";
@@ -356,6 +357,7 @@ let _activeSection = null;
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
   initShortcutsHelp();
+  initUndoShortcut(); // S411: Ctrl+Z restores last deleted guest/table/vendor
   // Sprint 15: Ctrl+K / Cmd+K opens the search/command palette modal
   initCommandPaletteTrigger(async () => {
     await openModal("searchModal");

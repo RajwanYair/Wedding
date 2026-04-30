@@ -13,6 +13,7 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { TABLE_SHAPES } from "../core/constants.js";
+import { pushUndo } from "../utils/undo.js";
 import {
   validateSeating,
   buildSeatRows,
@@ -68,13 +69,20 @@ export function saveTable(data, existingId = null) {
  * @param {string} id
  */
 export function deleteTable(id) {
+  // S411: snapshot tables before deletion so Ctrl+Z can restore it
+  const tablesBefore = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const target = tablesBefore.find((tb) => tb.id === id);
+  if (target) {
+    pushUndo(t("undo_delete_table") || `Delete table ${target.name}`, "tables", [...tablesBefore]);
+  }
+
   // Unassign any seated guests
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []).map((g) =>
     g.tableId === id ? { ...g, tableId: null } : g,
   );
   storeSet("guests", guests);
 
-  const tables = /** @type {any[]} */ (storeGet("tables") ?? []).filter((tb) => tb.id !== id);
+  const tables = tablesBefore.filter((tb) => tb.id !== id);
   storeSet("tables", tables);
   enqueueWrite("tables", () => syncStoreKeyToSheets("tables"));
 }

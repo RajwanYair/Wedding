@@ -8,6 +8,8 @@
 import { STORAGE_KEYS } from "./constants.js";
 import { t } from "./i18n.js";
 import { readBrowserStorage, removeBrowserStorage, writeBrowserStorage } from "./storage.js";
+import { storeSet } from "./store.js";
+import { popUndo } from "../utils/undo.js";
 
 // ── Toast ─────────────────────────────────────────────────────────────────
 
@@ -504,4 +506,29 @@ export function announce(message, politeness = "polite") {
   requestAnimationFrame(() => {
     region.textContent = message;
   });
+}
+
+// ── S411 Undo shortcut ────────────────────────────────────────────────────
+
+/**
+ * Wire Ctrl+Z / Cmd+Z to pop the undo stack and restore the previous state.
+ * Returns a cleanup function that removes the listener.
+ * @returns {() => void}
+ */
+export function initUndoShortcut() {
+  /** @param {KeyboardEvent} e */
+  const handler = (e) => {
+    if (!(e.ctrlKey || e.metaKey) || e.key !== "z") return;
+    // Skip if user is typing
+    const tag = /** @type {HTMLElement} */ (e.target).tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (/** @type {HTMLElement} */ (e.target).isContentEditable) return;
+    const entry = popUndo();
+    if (!entry) return;
+    e.preventDefault();
+    storeSet(entry.key, entry.snapshot);
+    showToast(t("undo_toast"), "success");
+  };
+  document.addEventListener("keydown", handler);
+  return () => document.removeEventListener("keydown", handler);
 }

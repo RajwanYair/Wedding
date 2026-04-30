@@ -945,6 +945,7 @@
   "guest_tag_ph": "הוסף תגית...",
   "undo_success": "בוטל: {label}",
   "undo_delete_guest": "מחק אורח",
+  "undo_delete_table": "מחק שולחן",
   "shortcuts_title": "קיצורי מקשים",
   "shortcuts_key": "מקש",
   "shortcuts_action": "פעולה",
