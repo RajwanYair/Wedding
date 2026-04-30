@@ -1,11 +1,12 @@
 // @ts-check
 /**
- * Wedding Manager — Visual Regression Tests (S6.9)
+ * Wedding Manager — Visual Regression Tests (S405 expanded)
  *
- * Screenshots are stored in tests/e2e/__screenshots__ alongside this file.
+ * Screenshots are stored in tests/e2e/visual.spec.mjs-snapshots/ alongside this file.
  * First run: `npx playwright test tests/e2e/visual.spec.mjs --update-snapshots`
- * Subsequent runs: diffs > 1% pixel threshold fail the test.
+ * Subsequent runs: diffs > 2% pixel threshold fail the test.
  *
+ * S405 adds per-section × per-theme matrix for baseline capture in CI.
  * Run: npm run test:e2e
  */
 import { test, expect } from "@playwright/test";
@@ -90,5 +91,54 @@ test.describe("Visual regression — themes", () => {
         fullPage: false,
       });
     });
+  }
+});
+
+// ── S405: Per-section × per-theme matrix ─────────────────────────────────
+// Key sections × all 5 themes = 20 baseline screenshots.
+
+const MATRIX_SECTIONS = ["landing", "dashboard", "guests", "tables"];
+const ALL_THEMES = ["default", "rosegold", "gold", "emerald", "royal"];
+
+test.describe("Visual regression — section × theme matrix (S405)", () => {
+  test.use({ viewport: { width: 1280, height: 720 } });
+
+  for (const section of MATRIX_SECTIONS) {
+    for (const theme of ALL_THEMES) {
+      test(`${section}__${theme}`, async ({ page }) => {
+        await page.goto(`/#${section}`);
+        await page.waitForLoadState("networkidle");
+
+        // Apply theme (mirrors settings.js behaviour)
+        if (theme === "default") {
+          await page.evaluate(() => {
+            document.body.className = document.body.className
+              .replace(/\btheme-\S+/g, "")
+              .trim();
+          });
+        } else {
+          await page.evaluate(
+            (t) => {
+              document.body.className = document.body.className
+                .replace(/\btheme-\S+/g, "")
+                .trim();
+              document.body.classList.add(`theme-${t}`);
+            },
+            theme,
+          );
+        }
+
+        // Allow CSS transitions to settle
+        await page.waitForTimeout(200);
+
+        await expect(page).toHaveScreenshot(
+          `matrix-${section}-${theme}.png`,
+          {
+            maxDiffPixelRatio: 0.02,
+            fullPage: false,
+          },
+        );
+      });
+    }
   }
 });
