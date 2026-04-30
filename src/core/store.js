@@ -14,6 +14,7 @@
 import { STORAGE_PREFIX } from "./config.js";
 import { getActiveEventId } from "./state.js";
 import { isPiiKey, savePii } from "../services/compliance.js";
+import { storageSet, getAdapterType } from "./storage.js";
 
 /** @type {Map<string, Set<Function>>} */
 const _subs = new Map();
@@ -172,7 +173,17 @@ function _flush() {
       savePii(storageKey, _state[key]);
     } else {
       try {
-        localStorage.setItem(pfx + storageKey, JSON.stringify(_state[key]));
+        const serialised = JSON.stringify(_state[key]);
+        // S393: Route writes through storage.js (IDB primary, LS fallback).
+        // Async fire-and-forget — sync localStorage fallback guards data safety.
+        if (getAdapterType() === "indexeddb") {
+          storageSet(pfx + storageKey, serialised).catch((err) => {
+            console.warn(`[store] IDB persist failed for "${key}", falling back to localStorage:`, err);
+            try { localStorage.setItem(pfx + storageKey, serialised); } catch { /* best-effort */ }
+          });
+        } else {
+          localStorage.setItem(pfx + storageKey, serialised);
+        }
       } catch (err) {
         console.warn(`[store] Failed to persist "${key}":`, err);
         _onStorageError?.(key, err);
