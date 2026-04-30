@@ -5,6 +5,7 @@
 import { on } from "../core/events.js";
 import { t } from "../core/i18n.js";
 import { showToast, openModal, closeModal, showConfirmDialog } from "../core/ui.js";
+import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { storeGet, storeSet } from "../core/store.js";
 import {
   saveVendor,
@@ -62,7 +63,7 @@ export function register() {
     } else showToast(result.errors?.join(", ") ?? t("error_save"), "error");
   });
   on("deleteVendor", (el) =>
-    showConfirmDialog(t("confirm_delete"), () => deleteVendor(el.dataset.actionArg ?? "")),
+    showConfirmDialog(t("confirm_delete"), () => { vibrate(HAPTIC.WARNING); deleteVendor(el.dataset.actionArg ?? ""); }),
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
   on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());

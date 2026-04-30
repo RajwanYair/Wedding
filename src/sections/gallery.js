@@ -14,6 +14,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { CDN_IMAGE_HOST } from "../core/config.js";
 import { buildCdnImageUrl, buildSrcset, defaultSizes } from "../utils/cdn-image.js";
 import { showToast } from "../core/ui.js";
+import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { getSupabaseClient } from "../core/supabase-client.js";
 
 class GallerySection extends BaseSection {
@@ -95,6 +96,7 @@ async function _uploadToSupabase(file, caption, dataUrl) {
       enqueueWrite("gallery", () => syncStoreKeyToSheets("gallery"));
     }
     showToast(t("gallery_upload_supabase_done"), "success");
+    vibrate(HAPTIC.SUCCESS);
   } catch {
     showToast(t("gallery_upload_supabase_error"), "error");
   }

@@ -5,6 +5,7 @@
 import { on } from "../core/events.js";
 import { t } from "../core/i18n.js";
 import { showToast, openModal, closeModal, showConfirmDialog } from "../core/ui.js";
+import { vibrate, HAPTIC } from "../utils/haptic.js";
 import {
   saveGuest,
   deleteGuest,
@@ -83,7 +84,7 @@ export function register() {
     );
   });
   on("deleteGuest", (el) =>
-    showConfirmDialog(t("confirm_delete"), () => deleteGuest(el.dataset.actionArg ?? "")),
+    showConfirmDialog(t("confirm_delete"), () => { vibrate(HAPTIC.WARNING); deleteGuest(el.dataset.actionArg ?? ""); }),
   );
   on("searchGuests", (_el, e) => {
     const input = /** @type {HTMLInputElement|null} */ (
@@ -108,6 +109,7 @@ export function register() {
   });
   on("batchDeleteGuests", () =>
     showConfirmDialog(t("confirm_delete"), () => {
+      vibrate(HAPTIC.WARNING);
       batchDeleteGuests();
       showToast(t("batch_deleted"), "success");
     }),

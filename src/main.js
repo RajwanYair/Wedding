@@ -66,6 +66,7 @@ import {
 } from "./core/ui.js";
 import { fetchGasVersion } from "./core/status-bar.js";
 import { popUndo } from "./utils/undo.js";
+import { vibrate, HAPTIC } from "./utils/haptic.js";
 import { injectTemplate } from "./core/template-loader.js";
 import { installTrustedTypesPolicy } from "./core/trusted-types.js";
 import { initDualWrite } from "./services/sync.js";
@@ -358,7 +359,10 @@ let _activeSection = null;
   initPullToRefresh(() => syncSheetsNow());
   initKeyboardShortcuts();
   initShortcutsHelp();
-  initUndoShortcut(popUndo, storeSet); // S411: Ctrl+Z restores last deleted guest/table/vendor
+  initUndoShortcut(
+    () => { const entry = popUndo(); if (entry) vibrate(HAPTIC.DOUBLE); return entry; },
+    storeSet,
+  ); // S411: Ctrl+Z restores last deleted guest/table/vendor; S424: haptic DOUBLE on undo
   // Sprint 15: Ctrl+K / Cmd+K opens the search/command palette modal
   initCommandPaletteTrigger(async () => {
     await openModal("searchModal");
