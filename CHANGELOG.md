@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [23.0.0] — 2026-04-30
+
+> **S484–S493: utility expansion IV — dietary summary, budget allocator,
+> URL shortener, image dimensions, intl phone formatter, timezone
+> converter, fuzzy match, calendar grid, CSV import validator; +112
+> unit tests; release cut.**
+
+### Added
+
+- **S484** — Dietary summary (`src/utils/dietary-summary.js`):
+  `summariseDietary/formatKitchenReport`; per-meal seat tally, per-allergy
+  counts (deduped per guest), top-allergies sorted, tab-delimited kitchen
+  report; 12 tests.
+- **S485** — Budget allocator (`src/utils/budget-allocator.js`):
+  `allocate/applySpending`; weight-based split with rounding-remainder
+  distribution to preserve exact totals; over-budget flagging; 12 tests.
+- **S486** — URL shortener (`src/utils/url-shorten.js`):
+  `fnv1a/toBase62/shortToken/shortUrl`; deterministic 32-bit hash with
+  base-62 encoding, optional salt and target length; 15 tests.
+- **S487** — Image dimensions (`src/utils/image-dimensions.js`):
+  Header-byte parser for PNG, GIF, JPEG, and WebP (VP8/VP8X); accepts
+  `Uint8Array` / `ArrayBuffer` / array; 11 tests.
+- **S488** — International phone formatter (`src/utils/phone-format-intl.js`):
+  Country-aware E.164 formatter for IL, US, UK, FR, DE plus generic
+  fallback; `detectCountry` resolves ISO/name; 13 tests.
+- **S489** — Timezone converter (`src/utils/timezone-convert.js`):
+  `formatInZone/offsetMinutes/formatOffset/diffHours`; Intl-based,
+  DST-aware; 13 tests.
+- **S490** — Fuzzy match (`src/utils/fuzzy-match.js`):
+  Two-row Levenshtein distance, normalised similarity score 0..1, ranked
+  search with threshold and limit; 13 tests.
+- **S491** — Calendar grid (`src/utils/calendar-grid.js`):
+  6×7 month grid generator with leading/trailing pad, Sunday/Monday
+  start, leap-year aware; `daysInMonth/isLeapYear` helpers; 11 tests.
+- **S492** — CSV import validator (`src/utils/import-validator.js`):
+  `validateRow/validateBatch`; per-field error map (name, phone, email,
+  seats, meal, side); aggregate `errorsByField` for UI summary; 13 tests.
+- **S493** — Release v23.0.0 — sync-version propagation across 12 files,
+  CHANGELOG entry, lint clean, all 4700 tests passing across 311 files.
+
 ## [22.0.0] — 2026-04-30
 
 > **S474–S483: utility expansion III — meal planner, gift thanks tracker,
