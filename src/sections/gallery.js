@@ -13,6 +13,8 @@ import { currentUser } from "../services/auth.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { CDN_IMAGE_HOST } from "../core/config.js";
 import { buildCdnImageUrl, buildSrcset, defaultSizes } from "../utils/cdn-image.js";
+import { showToast } from "../core/ui.js";
+import { getSupabaseClient } from "../core/supabase-client.js";
 
 class GallerySection extends BaseSection {
   async onMount() {
@@ -31,22 +33,71 @@ export const { mount, unmount, capabilities } = fromSection(new GallerySection("
 
 /**
  * Handle file input change — upload images from device.
- * Reads each selected file as a data-URL and adds to the gallery store.
+ * Reads each file as a data-URL (local fallback), then attempts to upload
+ * to Supabase Storage (bucket "wedding-photos"). On success the public URL
+ * replaces the data-URL so localStorage is not bloated. S417.
  * @param {HTMLInputElement} input
  */
 export function handleGalleryUpload(input) {
   const files = Array.from(input.files ?? []);
   files.forEach((file) => {
     if (!file.type.startsWith("image/")) return;
+    const caption = file.name.replace(/\.[^.]+$/, "");
     const reader = new FileReader();
     reader.onload = (e) => {
-      const url = /** @type {string} */ (e.target?.result);
-      if (url) addGalleryPhoto({ url, caption: file.name.replace(/\.[^.]+$/, "") });
+      const dataUrl = /** @type {string} */ (e.target?.result);
+      if (!dataUrl) return;
+      // Add to store immediately with data-URL (optimistic / offline-first)
+      addGalleryPhoto({ url: dataUrl, caption });
+      // S417: attempt Supabase Storage upload in the background
+      _uploadToSupabase(file, caption, dataUrl);
     };
     reader.readAsDataURL(file);
   });
   // Reset so the same file can be re-selected
   input.value = "";
+}
+
+/**
+ * Upload a photo file to Supabase Storage and replace the stored data-URL
+ * with the resulting public URL if the upload succeeds.
+ * Silently falls back to the data-URL if Supabase is unavailable.
+ * @param {File} file
+ * @param {string} caption
+ * @param {string} dataUrl  The locally-stored fallback URL (to find the entry)
+ */
+async function _uploadToSupabase(file, caption, dataUrl) {
+  const supabase = getSupabaseClient();
+  if (!supabase) return; // Supabase not configured — stay with data-URL
+  try {
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const path = `wedding-photos/${uid()}.${ext}`;
+    const { error } = await supabase.storage.from("wedding-photos").upload(path, file, {
+      contentType: file.type,
+      upsert: false,
+    });
+    if (error) {
+      showToast(t("gallery_upload_supabase_error"), "error");
+      return;
+    }
+    const { data: publicData } = supabase.storage.from("wedding-photos").getPublicUrl(path);
+    const publicUrl = publicData?.publicUrl;
+    if (!publicUrl) {
+      showToast(t("gallery_upload_supabase_error"), "error");
+      return;
+    }
+    // Replace the data-URL entry with the public URL
+    const gallery = /** @type {any[]} */ (storeGet("gallery") ?? []);
+    const idx = gallery.findIndex((p) => p.url === dataUrl && p.caption === caption);
+    if (idx !== -1) {
+      gallery[idx] = { ...gallery[idx], url: publicUrl, storagePath: path };
+      storeSet("gallery", gallery);
+      enqueueWrite("gallery", () => syncStoreKeyToSheets("gallery"));
+    }
+    showToast(t("gallery_upload_supabase_done"), "success");
+  } catch {
+    showToast(t("gallery_upload_supabase_error"), "error");
+  }
 }
 
 /**
