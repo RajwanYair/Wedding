@@ -105,6 +105,14 @@ jobs:
       - name: Vite build
         run: npm run build
 
+      - name: Guard — no manualChunks in vite.config.js (S385)
+        run: |
+          if grep -q "manualChunks" vite.config.js; then
+            echo "::error file=vite.config.js::manualChunks must not be defined — use dynamic import() boundaries instead (S385)"
+            exit 1
+          fi
+          echo "vite.config.js: no manualChunks — auto code-splitting verified."
+
       - name: Coverage report
         if: matrix.node-version == '22'
         run: npm run test:coverage
