@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [13.19.0] — 2026-05-01
+
+> **S366–S375: Phase C6 — coverage uplift: 5 new section/service test suites + coverage ratchet, 4187 tests.**
+
+### Added
+
+- **S366** — Unit tests for `sections/settings.js`: 18 new tests (getDataCompletenessScore, getStoreSizes, startAutoBackup, checkDataIntegrity extras)
+- **S367** — Unit tests for `services/seating.js` export helpers: 21 new tests (buildSeatRows, seatRowsToCsv, seatRowsToJson, suggestSwaps)
+- **S368** — Unit tests for `sections/gallery.js`: 9 new tests (getGalleryStats, deleteGalleryPhoto)
+- **S370** — Unit tests for `core/nav.js` uncovered helpers: 14 new tests (withViewTransition, isViewTransitionSupported, initShortcutsHelp, initCommandPaletteTrigger)
+- **S371** — Unit tests for `sections/guests.js` batch helpers: 17 new tests (batchSetStatus, batchDeleteGuests, findDuplicates, mergeGuests)
+
+### Changed
+
+- **S373** — Coverage ratchet uplift: global `lines:57→58`, `branches:50→51`; `services` stmts 75→76, branches 65→66, fns 76→77; `core` stmts 71→74, branches 64→67, fns 65→66, lines 75→78; `sections` stmts 28→29, branches 25→27, fns 41→43, lines 27→29
+- **S374** — Version bump to v13.19.0; 4187 tests green; 0 lint errors; JSDoc gate already active on core/services/handlers
+
 ## [13.18.0] — 2026-04-30
 
 > **S356–S365: Phase C5 — coverage uplift: 8 new service/core test suites + coverage ratchet, 4108 tests.**
