@@ -1103,8 +1103,8 @@
   "vendor_due_overdue": "Overdue",
   "vendor_due_days": "In {n} days",
   "vendor_due_today": "Today",
-  "noshow_title": "No-Show Prediction",
-  "noshow_rate": "Expected no-show rate",
+  "noshow_title": "توقعات الحضور",
+  "noshow_rate": "معدل الحضور",
   "noshow_expected": "Expected no-shows",
   "noshow_actual_expected": "Expected to attend",
   "noshow_late_rsvp": "Late RSVPs",
@@ -1488,5 +1488,8 @@
   "webhook_url_invalid": "عنوان URL غير صالح",
   "webhook_events_required": "اختر حدثاً واحداً على الأقل",
   "gdpr_export_btn": "تصدير البيانات الشخصية (GDPR)",
-  "gdpr_exported": "تم تصدير البيانات الشخصية بنجاح."
+  "gdpr_exported": "تم تصدير البيانات الشخصية بنجاح.",
+  "noshow_predicted": "الحضور المتوقع",
+  "noshow_based_on": "بناءً على بيانات تسجيل الدخول",
+  "noshow_default": "افتراضي"
 }

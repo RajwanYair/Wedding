@@ -57,6 +57,8 @@ class DashboardSection extends BaseSection {
     this.subscribe("vendors", renderBudgetForecast);
     // F4.1.5 vendor payment due reminders
     this.subscribe("vendors", renderVendorDueReminders);
+    // S444 no-show prediction
+    this.subscribe("guests", updateNoshowWidget);
     this.subscribe(
       "weddingInfo",
       () => {
@@ -79,6 +81,7 @@ class DashboardSection extends BaseSection {
     renderNextTimelineEvent(); // S24.5
     renderBudgetForecast(); // F4.1
     renderVendorDueReminders(); // F4.1.5
+    updateNoshowWidget(); // S444
     updateTopBar();
     updateCountdown();
     updateRsvpDeadlineBanner();
@@ -1114,6 +1117,34 @@ export function getDashboardSnapshot() {
     totalTables: tables.length,
     daysUntilWedding,
   };
+}
+
+/**
+ * S444: Update the no-show prediction widget.
+ * Formula: predictedAttendance = confirmedHeads * (checkinRate || DEFAULT_RATE)
+ */
+export function updateNoshowWidget() {
+  const predicted = document.getElementById("noshowPredicted");
+  const rateEl = document.getElementById("noshowRate");
+  const basis = document.getElementById("noshowBasis");
+  if (!predicted || !rateEl || !basis) return;
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const confirmedHeads = guests
+    .filter((g) => g.status === "confirmed")
+    .reduce((s, g) => s + (g.count || 1) + (g.children || 0), 0);
+  const checkedIn = guests.filter((g) => g.checkedIn).length;
+  const total = guests.length;
+  const DEFAULT_RATE = 0.85;
+  const checkinRate = total > 0 && checkedIn > 0 ? checkedIn / total : DEFAULT_RATE;
+  const attendance = Math.round(confirmedHeads * checkinRate);
+  const rateDisplay = `${Math.round(checkinRate * 100)}%`;
+
+  predicted.textContent = String(attendance);
+  rateEl.textContent = rateDisplay;
+  basis.textContent = checkedIn > 0
+    ? t("noshow_based_on")
+    : `${t("noshow_based_on")} (${rateDisplay} ${t("noshow_default")})`;
 }
 
 // ── C1: What's New Panel (changelog-parser.js, Sprint 47) ────────────────

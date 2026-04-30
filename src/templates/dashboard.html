@@ -88,10 +88,25 @@
         </div>
       </div>
 
+      <!-- No-show Prediction (S444) -->
+      <div class="card" id="noshowWidget">
+        <div class="card-header"><span class="icon">🔮</span> <span data-i18n="noshow_title">תחזית נוכחות</span></div>
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;padding:0.5rem 0">
+          <div>
+            <div class="stat-number" id="noshowPredicted">—</div>
+            <div class="stat-label" data-i18n="noshow_predicted">מגיעים צפויים</div>
+          </div>
+          <div>
+            <div class="stat-number" id="noshowRate">—</div>
+            <div class="stat-label" data-i18n="noshow_rate">שיעור נוכחות</div>
+          </div>
+          <p class="section-desc" id="noshowBasis" style="margin:0;flex:1 1 180px"></p>
+        </div>
+      </div>
+
       <!-- Charts: Guest Analytics -->
       <div class="card">
-        <div class="card-header"><span class="icon">📊</span> <span data-i18n="charts_title">ניתוח אורחים</span></div>
-        <div class="charts-row">
+        <div class="card-header"><span class="icon">📊</span> <span data-i18n="charts_title">ניתוח אורחים</span></div>        <div class="charts-row">
           <div class="chart-wrap">
             <canvas id="chartRsvp" aria-label="RSVP status chart"></canvas>
             <div class="chart-label" data-i18n="chart_rsvp_title">סטטוס הגעה</div>

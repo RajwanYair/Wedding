@@ -1109,8 +1109,8 @@
   "vendor_due_overdue": "באיחור",
   "vendor_due_days": "עוד {n} ימים",
   "vendor_due_today": "היום",
-  "noshow_title": "תחזית אי-הגעה",
-  "noshow_rate": "שיעור אי-הגעה צפוי",
+  "noshow_title": "תחזית נוכחות",
+  "noshow_rate": "שיעור נוכחות",
   "noshow_expected": "צפויים לא להגיע",
   "noshow_actual_expected": "צפויים להגיע",
   "noshow_late_rsvp": "אישרו מאוחר",
@@ -1488,5 +1488,8 @@
   "webhook_url_invalid": "כתובת URL אינה תקינה",
   "webhook_events_required": "יש לבחור לפחות אירוע אחד",
   "gdpr_export_btn": "ייצא נתונים אישיים (GDPR)",
-  "gdpr_exported": "הנתונים האישיים יוצאו בהצלחה."
+  "gdpr_exported": "הנתונים האישיים יוצאו בהצלחה.",
+  "noshow_predicted": "מגיעים צפויים",
+  "noshow_based_on": "מבוסס על נתוני צ'ק-אין",
+  "noshow_default": "ברירת מחדל"
 }

@@ -1109,8 +1109,8 @@
   "vendor_due_overdue": "",
   "vendor_due_days": "",
   "vendor_due_today": "",
-  "noshow_title": "",
-  "noshow_rate": "",
+  "noshow_title": "Прогноз явки",
+  "noshow_rate": "Уровень явки",
   "noshow_expected": "",
   "noshow_actual_expected": "",
   "noshow_late_rsvp": "",
@@ -1488,5 +1488,8 @@
   "webhook_url_invalid": "Некорректный URL",
   "webhook_events_required": "Выберите хотя бы одно событие",
   "gdpr_export_btn": "Экспорт личных данных (GDPR)",
-  "gdpr_exported": "Личные данные успешно экспортированы."
+  "gdpr_exported": "Личные данные успешно экспортированы.",
+  "noshow_predicted": "Ожидаемые гости",
+  "noshow_based_on": "На основе данных регистрации",
+  "noshow_default": "по умолчанию"
 }

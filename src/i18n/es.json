@@ -1104,8 +1104,8 @@
   "vendor_due_overdue": "",
   "vendor_due_days": "",
   "vendor_due_today": "",
-  "noshow_title": "",
-  "noshow_rate": "",
+  "noshow_title": "Pronóstico de asistencia",
+  "noshow_rate": "Tasa de asistencia",
   "noshow_expected": "",
   "noshow_actual_expected": "",
   "noshow_late_rsvp": "",
@@ -1488,5 +1488,8 @@
   "webhook_url_invalid": "URL inválida",
   "webhook_events_required": "Selecciona al menos un evento",
   "gdpr_export_btn": "Exportar datos personales (GDPR)",
-  "gdpr_exported": "Datos personales exportados correctamente."
+  "gdpr_exported": "Datos personales exportados correctamente.",
+  "noshow_predicted": "Asistentes esperados",
+  "noshow_based_on": "Basado en datos de entrada",
+  "noshow_default": "predeterminado"
 }

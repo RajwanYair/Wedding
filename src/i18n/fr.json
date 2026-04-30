@@ -1104,8 +1104,8 @@
   "vendor_due_overdue": "",
   "vendor_due_days": "",
   "vendor_due_today": "",
-  "noshow_title": "",
-  "noshow_rate": "",
+  "noshow_title": "Prévision de présence",
+  "noshow_rate": "Taux de présence",
   "noshow_expected": "",
   "noshow_actual_expected": "",
   "noshow_late_rsvp": "",
@@ -1488,5 +1488,8 @@
   "webhook_url_invalid": "URL invalide",
   "webhook_events_required": "Sélectionnez au moins un événement",
   "gdpr_export_btn": "Exporter les données personnelles (RGPD)",
-  "gdpr_exported": "Données personnelles exportées avec succès."
+  "gdpr_exported": "Données personnelles exportées avec succès.",
+  "noshow_predicted": "Présents attendus",
+  "noshow_based_on": "Basé sur les données d'enregistrement",
+  "noshow_default": "par défaut"
 }
