@@ -1061,6 +1061,8 @@
   "tip_overdue_vendors": "💸 {n} vendor payments are overdue",
   "tip_unseated_confirmed": "🪑 {n} confirmed guests need seating",
   "all_actions_done": "✅ All caught up!",
+  "import_vendors_csv": "📥 استيراد الموردين",
+  "vendors_imported": "تم استيراد {{added}} موردين جدد، تحديث {{updated}}",
   "export_vendor_payments": "📊 Export Payments",
   "vendor_due_date": "Due Date",
   "vendor_payment_status": "Payment Status",

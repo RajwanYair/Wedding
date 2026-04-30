@@ -1069,6 +1069,8 @@
   "tip_unseated_confirmed": "🪑 {n} אורחים מאושרים ללא שולחן",
   "all_actions_done": "✅ הכל מסודר!",
   "export_vendor_payments": "📊 ייצוא תשלומים",
+  "import_vendors_csv": "📥 ייבוא ספקים",
+  "vendors_imported": "יובאו {{added}} ספקים חדשים, עודכנו {{updated}}",
   "vendor_due_date": "תאריך תשלום",
   "vendor_payment_status": "סטטוס תשלום",
   "status_paid": "שולם",

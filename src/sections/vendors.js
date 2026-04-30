@@ -241,6 +241,116 @@ export function exportVendorsCSV() {
 }
 
 /**
+ * S419: Download a blank CSV template for vendor import.
+ */
+export function downloadVendorCSVTemplate() {
+  const header = "Name,Category,Contact,Phone,Price,Paid,Notes";
+  const blob = new Blob([`\uFEFF${header}\n`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "vendors-template.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * S419: Parse a CSV file and bulk-import vendors.
+ * Columns: Name, Category, Contact, Phone, Price, Paid, Notes
+ *          Hebrew aliases: שם, קטגוריה, איש קשר, טלפון, מחיר, שולם, הערות
+ * Existing vendors with matching name+phone are updated.
+ * Dispatches "vendorCsvImportDone" CustomEvent with { added, updated }.
+ * @param {HTMLInputElement|null} [fileInput]
+ */
+export function importVendorsCSV(fileInput) {
+  const input =
+    fileInput ??
+    /** @type {HTMLInputElement} */ (
+      Object.assign(document.createElement("input"), {
+        type: "file",
+        accept: ".csv,text/csv",
+      })
+    );
+  input.addEventListener(
+    "change",
+    () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = /** @type {string} */ (e.target?.result ?? "");
+        const [header, ...rows] = text
+          .replace(/^\uFEFF/, "")
+          .split(/\r?\n/)
+          .filter((l) => l.trim());
+        if (!header) return;
+
+        const cols = header.split(",").map((c) => c.trim().toLowerCase());
+        const colIdx = (/** @type {string} */ name) => cols.indexOf(name);
+
+        const existing = /** @type {any[]} */ (storeGet("vendors") ?? []);
+        let added = 0;
+        let updated = 0;
+
+        rows.forEach((line) => {
+          // Naive CSV split — handles quoted fields
+          const parts = line.match(/("(?:[^"]|"")*"|[^,]*)/g)?.map((p) =>
+            p.startsWith('"') ? p.slice(1, -1).replace(/""/g, '"') : p,
+          ) ?? line.split(",");
+          const get = (/** @type {string} */ name) => parts[colIdx(name)]?.trim() ?? "";
+
+          const name = get("name") || get("שם") || "";
+          if (!name) return; // name is required
+
+          const phone = cleanPhone(get("phone") || get("טלפון") || "");
+          const category = /** @type {any} */ (
+            VENDOR_CATEGORIES.includes(/** @type {any} */ (get("category") || get("קטגוריה")))
+              ? get("category") || get("קטגוריה")
+              : "other"
+          );
+
+          const existingIdx = existing.findIndex(
+            (v) => v.name === name && (phone ? cleanPhone(v.phone || "") === phone : true),
+          );
+
+          const entry = {
+            id: existingIdx >= 0 ? existing[existingIdx].id : uid(),
+            name,
+            category,
+            contact: get("contact") || get("איש קשר") || "",
+            phone,
+            price: Number(get("price") || get("מחיר") || 0) || 0,
+            paid: Number(get("paid") || get("שולם") || 0) || 0,
+            notes: get("notes") || get("הערות") || "",
+            updatedAt: Date.now(),
+            createdAt: existingIdx >= 0 ? existing[existingIdx].createdAt : Date.now(),
+          };
+
+          if (existingIdx >= 0) {
+            existing[existingIdx] = entry;
+            updated++;
+          } else {
+            existing.push(entry);
+            added++;
+          }
+        });
+
+        storeSet("vendors", existing);
+        enqueueWrite("vendors", () => syncStoreKeyToSheets("vendors"));
+        document.dispatchEvent(
+          new CustomEvent("vendorCsvImportDone", { detail: { added, updated }, bubbles: true }),
+        );
+      };
+      reader.readAsText(file, "UTF-8");
+    },
+    { once: true },
+  );
+  input.click();
+}
+
+/**
  * Filter vendors by category for display.
  * @param {string} category — pass "all" to show all
  */

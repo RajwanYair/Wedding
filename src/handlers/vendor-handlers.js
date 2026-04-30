@@ -14,6 +14,8 @@ import {
   filterVendorsByCategory,
   openVendorForEdit,
   setVendorPaymentFilter,
+  importVendorsCSV,
+  downloadVendorCSVTemplate,
 } from "../sections/vendors.js";
 import {
   saveExpense,
@@ -64,6 +66,19 @@ export function register() {
   );
   on("exportVendorsCSV", () => exportVendorsCSV());
   on("exportVendorPaymentsCSV", () => exportVendorPaymentsCSV());
+  // S419: vendor CSV import
+  on("downloadVendorCSVTemplate", () => downloadVendorCSVTemplate());
+  on("importVendorsCSV", () => {
+    importVendorsCSV();
+    document.addEventListener(
+      "vendorCsvImportDone",
+      (e) => {
+        const { added, updated } = /** @type {CustomEvent} */ (e).detail ?? {};
+        showToast(t("vendors_imported", { added: added ?? 0, updated: updated ?? 0 }), "success");
+      },
+      { once: true },
+    );
+  });
   on("filterVendorsByCategory", (el) => filterVendorsByCategory(el.dataset.category ?? "all"));
   on("openEditVendorModal", (el) => {
     openVendorForEdit(el.dataset.actionArg ?? "");

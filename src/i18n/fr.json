@@ -1062,6 +1062,8 @@
   "tip_overdue_vendors": "",
   "tip_unseated_confirmed": "",
   "all_actions_done": "",
+  "import_vendors_csv": "📥 Importer Fournisseurs",
+  "vendors_imported": "Importé {{added}} nouveaux fournisseurs, mis à jour {{updated}}",
   "export_vendor_payments": "",
   "vendor_due_date": "",
   "vendor_payment_status": "",
