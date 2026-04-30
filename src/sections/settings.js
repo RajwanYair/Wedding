@@ -149,6 +149,39 @@ export function exportPersonalData() {
 
 export const { mount, unmount, capabilities } = fromSection(new SettingsSection("settings"));
 
+// ── S449: AI assistant settings ───────────────────────────────────────────
+
+/**
+ * Read the AI settings form and persist to localStorage.
+ */
+export function saveAiSettings() {
+  import("../utils/ai-client.js").then(({ saveAiSettings: _save }) => {
+    const provider = /** @type {HTMLSelectElement|null} */ (document.getElementById("aiProviderSelect"))?.value ?? "openai";
+    const apiKey = /** @type {HTMLInputElement|null} */ (document.getElementById("aiApiKey"))?.value?.trim() ?? "";
+    const model = /** @type {HTMLInputElement|null} */ (document.getElementById("aiModel"))?.value?.trim() ?? "";
+    const enabled = /** @type {HTMLInputElement|null} */ (document.getElementById("aiEnabled"))?.checked ?? false;
+    _save({ provider, apiKey, model, enabled });
+  }).catch(() => {});
+}
+
+/**
+ * Test the current AI connection and surface result in the settings card.
+ */
+export async function testAiConnection() {
+  const statusEl = document.getElementById("aiStatus");
+  if (statusEl) statusEl.textContent = t("ai_testing");
+  try {
+    const { testAiConnection: _test } = await import("../utils/ai-client.js");
+    const result = await _test();
+    if (statusEl) statusEl.textContent = result.ok ? t("ai_test_ok") : `${t("ai_test_fail")}: ${result.message}`;
+    showToast(result.ok ? t("ai_test_ok") : t("ai_test_fail"), result.ok ? "success" : "error");
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (statusEl) statusEl.textContent = `${t("ai_test_fail")}: ${msg}`;
+    showToast(t("ai_test_fail"), "error");
+  }
+}
+
 // ── Settings API ──────────────────────────────────────────────────────────
 
 /**

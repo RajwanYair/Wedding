@@ -697,6 +697,45 @@
       <p id="webhookStatus" class="section-desc" aria-live="polite"></p>
     </div>
 
+    <!-- AI Assistant -->
+    <div class="settings-card" id="cardAiAssistant">
+      <h3>🤖 <span data-i18n="ai_title">עוזר AI</span></h3>
+      <p class="section-desc" data-i18n="ai_desc">הכנס מפתח API משלך לשימוש ב-AI בכל חלקי האפליקציה.</p>
+      <div class="form-group">
+        <label for="aiProviderSelect" data-i18n="ai_provider_label">ספק</label>
+        <select id="aiProviderSelect" class="form-input">
+          <option value="openai" data-i18n="ai_provider_openai">OpenAI (GPT-4o mini)</option>
+          <option value="anthropic" data-i18n="ai_provider_anthropic">Anthropic (Claude)</option>
+          <option value="ollama" data-i18n="ai_provider_ollama">Ollama (מקומי)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="aiApiKey" data-i18n="ai_key_label">מפתח API</label>
+        <input type="password" id="aiApiKey" class="form-input"
+          data-i18n-placeholder="ai_key_placeholder" placeholder="sk-…" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label for="aiModel" data-i18n="ai_model_label">מודל</label>
+        <input type="text" id="aiModel" class="form-input"
+          data-i18n-placeholder="ai_model_placeholder" placeholder="gpt-4o-mini" />
+      </div>
+      <div class="form-group u-flex-row u-gap-sm">
+        <label class="u-flex-row u-gap-xs u-align-center">
+          <input type="checkbox" id="aiEnabled" />
+          <span data-i18n="ai_enabled">הפעל עוזר AI</span>
+        </label>
+      </div>
+      <div class="settings-btn-row">
+        <button class="btn btn-primary btn-small" data-action="saveAiSettings">
+          💾 <span data-i18n="ai_save">שמור הגדרות AI</span>
+        </button>
+        <button class="btn btn-secondary btn-small" data-action="testAiConnection">
+          🔗 <span data-i18n="ai_test">בדוק חיבור</span>
+        </button>
+      </div>
+      <p id="aiStatus" class="section-desc" aria-live="polite"></p>
+    </div>
+
     <!-- Contact Collector -->
     <div class="settings-card">
       <h3>📋 <span data-i18n="contact_settings_title">אסיפת פרטי קשר</span></h3>

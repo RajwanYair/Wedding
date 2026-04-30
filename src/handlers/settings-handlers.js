@@ -69,6 +69,8 @@ import {
   refreshWebhooks,
   installThemeById,
   exportAuditLog,
+  saveAiSettings,
+  testAiConnection,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -399,5 +401,14 @@ export function register() {
     const msg = res.sent > 0 ? t("push_test_sent", { sent: res.sent }) : t("push_test_no_sub");
     if (result) result.textContent = msg;
     showToast(msg, res.sent > 0 ? "success" : "warning");
+  });
+
+  // S449 — AI assistant settings
+  on("saveAiSettings", () => {
+    saveAiSettings();
+    showToast(t("ai_settings_saved"), "success");
+  });
+  on("testAiConnection", async () => {
+    await testAiConnection();
   });
 }
