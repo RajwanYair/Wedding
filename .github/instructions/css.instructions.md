@@ -34,6 +34,19 @@ New rules must go into the appropriate layer. Never add rules outside a layer.
   }
   ```
 
+## CSS @scope
+
+Use `@scope` for section-level style isolation to prevent styles bleeding between sections:
+
+```css
+@scope ([data-section="guests"]) {
+  .filter-toolbar { display: flex; gap: var(--space-2); }
+  .status-badge { border-radius: var(--radius-full); }
+}
+```
+
+All section-scoped rules in `css/components.css` must be wrapped in a `@scope` block. Do not use bare `[data-section]` attribute selectors outside `@scope`.
+
 ## RTL First
 
 - The app is RTL-first (`dir="rtl"`, `lang="he"`).

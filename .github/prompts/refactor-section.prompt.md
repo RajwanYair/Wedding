@@ -49,8 +49,11 @@ export function unmount() {
 - [ ] All user-facing strings use `t('key')` with `data-i18n` on HTML elements
 - [ ] All Sheets writes via `enqueueWrite(key, fn)` only
 - [ ] Section does NOT import other section modules
+- [ ] Section does NOT call repository functions directly — go via handlers
 - [ ] All event wiring via `data-action` attribute (no inline `addEventListener` on static HTML)
+- [ ] All user inputs validated via `sanitize(input, schema)` from `src/utils/sanitize.js`
 - [ ] Private helpers prefixed with `_`
+- [ ] Section styles scoped inside `@scope ([data-section="{name}"])` in `css/components.css`
 
 ## After Refactoring
 

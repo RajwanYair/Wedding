@@ -62,6 +62,11 @@ data-i18n-tooltip="key"           // tooltip text
 // Phone
 cleanPhone('054-123-4567')        // → '972541234567' (wa.me ready)
 
+// Input validation (valibot-backed)
+import { sanitize } from '../utils/sanitize.js';
+const { value, errors } = sanitize(rawInput, { type: 'string', maxLength: 100 });
+if (errors.length) return showError(errors);
+
 // ES2020+ patterns preferred
 const x = obj?.prop ?? defaultVal;
 ```
@@ -70,7 +75,8 @@ const x = obj?.prop ?? defaultVal;
 
 - Every visible string: `data-i18n="key"` on HTML element
 - JS strings: `t('key')` — never hardcoded Hebrew or English
-- Both `he` and `en` entries required in the `I18N` object
+- All 5 locale files require `he` + `en` entries at minimum: `he.json`, `en.json`, `ar.json`, `ru.json`, (fr/es optional)
 - Language and theme both persisted in `localStorage`
+- Run `npm run check:i18n` after adding keys — must exit 0
 
 Project-wide data models and release rules are defined in `.github/copilot-instructions.md`.

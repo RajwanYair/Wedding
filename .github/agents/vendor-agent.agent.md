@@ -3,6 +3,7 @@ name: vendor-agent
 description: "Vendor management specialist for the Wedding Manager. Use when: adding vendor features, budget tracking, payment workflows, vendor categories, or expense reporting."
 tools:
   - read_file
+  - create_file
   - replace_string_in_file
   - multi_replace_string_in_file
   - file_search
@@ -11,6 +12,9 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
+  - runSubagent
+  - vscode_askQuestions
+  - vscode_listCodeUsages
 ---
 
 # Vendor Agent
@@ -30,6 +34,9 @@ You are a vendor management specialist for a wedding app.
 - `src/sections/vendors.js` — vendor CRUD, search, filter by category
 - `src/sections/expenses.js` — expense CRUD, category breakdown
 - `src/sections/budget.js` — budget overview with vendor + expense totals
+- `src/handlers/vendor-handlers.js` — action dispatch for vendor/expense actions
+- `src/repositories/vendor-repo.js` — data access layer (CRUD helpers)
+- `src/services/commerce.js` — budget helpers, expense summary, checkout payload builder
 - `src/modals/vendorModal.html` — vendor add/edit modal template
 - `src/modals/expenseModal.html` — expense add/edit modal template
 
@@ -42,7 +49,8 @@ getExpenseSummary() // { total, byCategory }
 
 ## Vendor Categories
 
-Standard categories: venue, catering, photography, music, flowers, design, makeup, attire, transport, other
+Standard categories defined in `VENDOR_CATEGORIES` constant:
+venue, catering, photography, music, flowers, design, makeup, attire, transport, other
 
 ## Budget Pattern
 
@@ -56,3 +64,13 @@ Standard categories: venue, catering, photography, music, flowers, design, makeu
 - `cleanPhone()` converts Israeli `05X` to international `972` format
 - Click-to-call with `tel:` links
 - WhatsApp contact via `wa.me` deep links
+
+## Validation
+
+Use `valibot` schemas from `src/utils/sanitize.js` to validate vendor/expense inputs:
+
+```js
+import { sanitize } from '../utils/sanitize.js';
+const { value, errors } = sanitize(rawInput, vendorSchema);
+if (errors.length) return showFieldErrors(errors);
+```

@@ -27,10 +27,11 @@
 ### Code Quality
 
 - [ ] `npm run lint` passes (0 errors, 0 warnings)
-- [ ] `npm test` passes (2385+ tests, 147 suites)
-- [ ] No `innerHTML` with unsanitized data — `textContent` only
+- [ ] `npm test` passes (4187+ tests, 269 files, 0 Node warnings)
+- [ ] No `innerHTML` with unsanitized data — `textContent` or `sanitize()` only
 - [ ] No hardcoded colors — CSS custom properties only
 - [ ] No inline `getElementById` — `el` object only
+- [ ] New exports have corresponding unit tests
 
 ### i18n
 
@@ -39,17 +40,19 @@
 
 ### If new JS added
 
-- [ ] `// @ts-check` header present
-- [ ] `'use strict'` present
-- [ ] Function registered via `data-action` or via `window.xxx` for cross-module calls
+- [ ] Section exports `mount()`, `unmount()`, and `render*()` if it's a section module
+- [ ] User inputs validated via `sanitize(input, schema)` from `src/utils/sanitize.js`
+- [ ] New data domain has a repository file `src/repositories/<domain>-repo.js`
 
 ### If CSS changed
 
 - [ ] Inside correct `@layer` block
+- [ ] Section-scoped styles wrapped in `@scope ([data-section="{name}"])` block
 - [ ] Font keywords lowercase (`tahoma` not `Tahoma`)
 - [ ] Multi-word fonts quoted (`"Segoe UI"`)
 
 ### Version bump (if releasing)
 
-- [ ] `src/core/config.js`, `public/sw.js`, `package.json`, `tests/wedding.test.mjs` updated
+- [ ] `package.json` + `src/core/config.js` bumped, then `npm run sync:version` run
 - [ ] `CHANGELOG.md` new entry added
+- [ ] `README.md` test-count badge updated

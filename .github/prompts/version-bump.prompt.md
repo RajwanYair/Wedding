@@ -9,20 +9,22 @@ Bump the app version from the current version to `${input:newVersion}`.
 
 ## Files to Update
 
-Update the version string in ALL of these files:
+Update the version string in ALL of these files (or run `npm run sync:version` after bumping `package.json` and `src/core/config.js`):
 
 1. `src/core/config.js` — `APP_VERSION`
 2. `public/sw.js` — `CACHE_NAME` constant
 3. `package.json` — `"version"` field
 4. `tests/wedding.test.mjs` — expected version string in version test
 5. `CHANGELOG.md` — add new entry at the top (see format below)
-6. `README.md` — version badge `?label=version&message=vX.Y.Z`
-7. `.github/copilot-instructions.md` — version in Quick Facts table
+6. `README.md` — version badge + tests-passing badge
+7. `.github/copilot-instructions.md` — version + test count in Quick Facts table
 8. `.github/copilot/config.json` — `welcomeMessage` version string
 9. `.github/instructions/workspace.instructions.md` — version in title
 10. `.github/workflows/ci.yml` — version in header comment
 11. `ARCHITECTURE.md` — version in h1
-12. `ROADMAP.md` — current state block + release table
+12. `ROADMAP.md` — current state block + release table row
+13. `AGENTS.md` — version in project identity block
+14. `src/types.d.ts` — `@version` JSDoc tag
 
 ## CHANGELOG Entry Format
 

@@ -17,10 +17,10 @@ The app is RTL-first. `index.html` has `dir="rtl" lang="he"`. English is a secon
 
 1. Add the key to `src/i18n/he.json` (Hebrew — required).
 2. Add the same key to `src/i18n/en.json` (English — required).
-3. Optionally add to `src/i18n/ar.json` and `src/i18n/ru.json`.
+3. Add to `src/i18n/ar.json` (Arabic) and `src/i18n/ru.json` (Russian) — required for full parity.
 4. In HTML: `<span data-i18n="myKey"></span>`.
 5. In JS: `t('myKey')` — imported from `src/core/i18n.js`.
-6. Run `npm run check:i18n` to verify parity across all locale files.
+6. Run `npm run check:i18n` to verify parity across all locale files (must exit 0).
 
 ## Plurals
 

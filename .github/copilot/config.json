@@ -1,19 +1,29 @@
 {
-    "version": "1.1.0",
-    "chat": {
-      "localeOverride": "auto",
-    "welcomeMessage": "Wedding Manager v13.19.0 — Hebrew RTL · ES2025 · Vite 8 · CI green · 0 lint warnings",
-      "defaultModel": "claude-sonnet-4-5"
-    },
-    "codeGeneration": {
-        "useInstructionFiles": true,
-        "includedFiles": [
-            ".github/copilot-instructions.md"
-        ]
-    },
-    "review": {
-        "enabled": true
-    }
+  "version": "1.2.0",
+  "chat": {
+    "localeOverride": "auto",
+    "welcomeMessage": "Wedding Manager v13.19.0 — Hebrew RTL · ES2025 · Vite 8 · 4187 tests · 0 lint · CI green",
+    "defaultModel": "claude-sonnet-4-6"
+  },
+  "codeGeneration": {
+    "useInstructionFiles": true,
+    "includedFiles": [
+      ".github/copilot-instructions.md"
+    ]
+  },
+  "review": {
+    "enabled": true,
+    "instructions": [
+      "Verify no innerHTML with unsanitized data — textContent or sanitize() only.",
+      "All visible strings must use data-i18n='key' (HTML) or t('key') (JS) — both he+en required.",
+      "Confirm all colors use CSS custom properties — no hardcoded hex/rgb.",
+      "Sheets writes must use enqueueWrite() — never call syncStoreKeyToSheets directly.",
+      "Auth gate: isApprovedAdmin(email) is the single source of truth for admin access.",
+      "All localStorage keys must use the wedding_v1_ prefix.",
+      "Section modules must export mount(), unmount(), and at least one render*() function.",
+      "New dependencies must be justified — runtime dep count target is 3."
+    ]
+  }
 }
 
 

@@ -38,9 +38,10 @@ enqueueWrite("guests", () => syncGuestsToSheets());
 
 1. Add a key to `STORAGE_KEYS` in `src/core/constants.js`.
 2. Add a default value to `src/core/defaults.js`.
-3. Read with `storeGet(STORAGE_KEYS.MY_KEY)`.
-4. Write with `storeSet(STORAGE_KEYS.MY_KEY, newValue)`.
-5. Subscribe in `mount()`, unsubscribe in `unmount()`.
+3. Create `src/repositories/<domain>-repo.js` with CRUD helpers (only layer that mutates store arrays).
+4. Read with `storeGet(STORAGE_KEYS.MY_KEY)`.
+5. Write with `storeSet(STORAGE_KEYS.MY_KEY, newValue)` — from repository only.
+6. Subscribe in section `mount()`, unsubscribe in `unmount()`.
 
 ## Optimistic Updates
 
@@ -66,6 +67,7 @@ try {
 
 - [ ] New domain key added to `STORAGE_KEYS`.
 - [ ] Default value in `defaults.js`.
+- [ ] Repository file `src/repositories/<domain>-repo.js` owns all mutations.
 - [ ] Subscriptions cleaned up in `unmount()`.
 - [ ] Sheets sync uses `enqueueWrite()`.
 - [ ] No direct `localStorage` access outside `src/core/storage.js`.

@@ -14,6 +14,7 @@ Run these first:
 ```bash
 node scripts/security-scan.mjs
 npm run check:credentials
+node scripts/check-plaintext-secrets.mjs
 npm audit --audit-level=moderate
 ```
 

@@ -30,7 +30,7 @@ Entry point: `src/core/nav-auth.js` — `isApprovedAdmin(email)` is the single g
 
 ## Input Sanitization
 
-Use `sanitize(input, schema)` from `src/utils/sanitize.js` for all user inputs:
+Use `sanitize(input, schema)` from `src/utils/sanitize.js` (powered by `valibot`) for all user inputs:
 
 ```js
 import { sanitize } from "../utils/sanitize.js";
@@ -44,6 +44,7 @@ if (errors.length) return showError(errors);
 - **Never use `innerHTML` with unsanitized data** — use `textContent` or `sanitize()`.
 - **Never use `eval()`** — ESLint `no-eval` rule is enforced.
 - Phone numbers: `cleanPhone(raw)` from `src/utils/phone.js` before storing or sending.
+- All valibot schemas are defined in `src/utils/sanitize.js` — do not inline validation logic.
 
 ## Security Headers
 

@@ -7,7 +7,7 @@ applyTo: "src/**/*.js,scripts/**/*.mjs"
 ## Module System
 
 - Pure ESM (`"type": "module"` in package.json). No `require()`, no `module.exports`.
-- Every file starts with a JSDoc block comment describing purpose and sprint tag.
+- Every file starts with a JSDoc `/** @file ... */` block describing purpose and sprint tag.
 - Imports are grouped: (1) Node built-ins, (2) local `../core/`, (3) local `../services/`, (4) local `../utils/`, (5) local `../sections/`.
 
 ## Safety Rules
@@ -23,19 +23,60 @@ applyTo: "src/**/*.js,scripts/**/*.mjs"
 - Cross-module communication: store subscriptions via `storeSubscribe()`. Do NOT import section modules into other section modules.
 - Sheets writes: `enqueueWrite('key', fn)` only. Never call `syncStoreKeyToSheets` directly from sections.
 
+## Architecture Layers
+
+```text
+src/sections/       — UI mount/unmount/render only; no direct data access
+src/handlers/       — data-action dispatch; thin glue between UI and services
+src/repositories/   — CRUD helpers; the only place raw store arrays are mutated
+src/services/       — business logic (auth, sheets, seating, commerce …)
+src/core/           — store, nav, i18n, events, config, dom (shared infrastructure)
+```
+
+- Section modules **must not** call repository functions directly — go via handlers.
+- Repository functions **must not** call section render functions — mutations trigger reactivity via `storeSet`.
+
 ## Section Module Contract
 
 Every section file in `src/sections/` must export:
 
 - `mount()` — called when section becomes active; registers store subscriptions; returns nothing
-- `unmount()` — cleans up subscriptions and timers
+- `unmount()` — cleans up subscriptions and timers; must not throw
 - `render*()` — one or more render functions called internally and via namespace from `src/main.js`
+
+```js
+const _unsubs = [];
+
+export function mount() {
+  _unsubs.push(storeSubscribe('guests', renderGuests));
+  renderGuests();
+}
+
+export function unmount() {
+  _unsubs.forEach(fn => fn());
+  _unsubs.length = 0;
+}
+```
+
+## Input Validation
+
+Use `sanitize(input, schema)` from `src/utils/sanitize.js` (backed by `valibot`) for all user-supplied inputs:
+
+```js
+import { sanitize } from '../utils/sanitize.js';
+const { value, errors } = sanitize(rawPhone, { type: 'string', minLength: 7 });
+if (errors.length) return showError(errors);
+```
+
+Never roll your own validation. All schemas live in `src/utils/sanitize.js`.
 
 ## Naming
 
 - Functions: `camelCase`. Classes: `PascalCase`. Constants: `UPPER_SNAKE_CASE`.
 - Private helpers (not exported): prefix with `_`, e.g. `_buildRow()`.
 - Exported section render functions: `render` + PascalCase section name, e.g. `renderDashboard()`.
+- Handler files: `<domain>-handlers.js`, e.g. `guest-handlers.js`.
+- Repository files: `<domain>-repo.js`, e.g. `guest-repo.js`.
 
 ## Error Handling
 

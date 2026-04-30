@@ -37,7 +37,7 @@ Must exit 0. All secret fields must be empty strings in source.
 npm test
 ```
 
-Must exit 0. **0 failures, 0 skipped**.
+Must exit 0. **0 failures, 0 skipped, 0 Node warnings**.
 
 ## Step 5 — Build
 
@@ -53,7 +53,7 @@ Must exit 0. Check `dist/` was generated.
 npm run size
 ```
 
-Review output. Main bundle should be < 500 KB gzipped.
+Review output. Main bundle should be < 500 KB uncompressed.
 
 ## Step 7 — Service Worker
 
@@ -61,12 +61,7 @@ Verify `public/sw.js` `CACHE_NAME` contains `${input:version}`.
 
 ## Step 8 — Version Files
 
-Run `npm run sync:version` and confirm all version-bearing files match `${input:version}`:
-
-- `src/core/config.js` → `APP_VERSION`
-- `package.json` → `"version"`
-- `public/sw.js` → `CACHE_NAME`
-- `tests/wedding.test.mjs` → version assertion
+Run `npm run sync:version` and confirm all 14 version-bearing files match `${input:version}`.
 
 ## Step 9 — CHANGELOG
 
@@ -75,12 +70,22 @@ Run `npm run sync:version` and confirm all version-bearing files match `${input:
 ## Step 10 — Dead Export Audit
 
 ```bash
-npm run audit:dead
+node scripts/dead-export-check.mjs
 ```
 
-Review output. Section exports are expected (namespace access). Flag any new dead exports in core modules.
+Section exports are expected (namespace access). Flag any new dead exports in core/services.
 
-## Step 11 — Security Scan
+## Step 11 — Architecture Audits
+
+```bash
+node scripts/audit-base-section.mjs
+node scripts/audit-console-error.mjs
+node scripts/audit-css-scope.mjs --enforce
+```
+
+All must exit 0.
+
+## Step 12 — Security Scan
 
 ```bash
 node scripts/security-scan.mjs
@@ -89,17 +94,18 @@ npm audit --audit-level=moderate
 
 Both must exit 0.
 
-## Step 12 — Commit & Tag
+## Step 13 — Commit & Tag
 
 ```bash
 git add -A
-git commit -m "chore(release): ${input:version}"
+git commit -m "${input:version} — <sprint summary>"
 git tag ${input:version}
 git push && git push --tags
 ```
 
-## Step 13 — GitHub Release
+## Step 14 — GitHub Release
 
 ```bash
-gh release create ${input:version} --title "${input:version} — <title>" --notes-file CHANGELOG_EXCERPT.md
+$env:GH_PAGER = ""
+gh release create ${input:version} --title "${input:version} — <title>" --generate-notes
 ```

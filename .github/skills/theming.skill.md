@@ -74,6 +74,19 @@ Font stack: `tahoma, "Segoe UI", Arial, sans-serif` (RTL-optimized).
 - Always wrap animations in `@media (prefers-reduced-motion: no-preference)`.
 - Transition duration tokens: `--duration-fast` (150ms), `--duration-normal` (300ms).
 
+## CSS @scope
+
+Use `@scope` for section-level style isolation in `css/components.css`:
+
+```css
+@scope ([data-section="guests"]) {
+  .filter-toolbar { display: flex; gap: var(--space-2); }
+  .guest-row { border-bottom: 1px solid var(--border-subtle); }
+}
+```
+
+Do not use bare `[data-section]` selectors outside a `@scope` block.
+
 ## Responsive
 
 - RTL-first: `dir="rtl"` on `<html>`.

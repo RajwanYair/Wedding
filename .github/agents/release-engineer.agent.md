@@ -11,6 +11,8 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
+  - runSubagent
+  - vscode_askQuestions
 ---
 
 # Release Engineer Agent
@@ -27,7 +29,7 @@ sync, tag pushed, GH release published.
 - Deploy target: GitHub Pages — <https://rajwanyair.github.io/Wedding>
 - Shell quirks (Windows pwsh): set `$env:GH_PAGER = ""` before any `gh` CLI call
 
-## Version-Bearing Files (12)
+## Version-Bearing Files (14)
 
 These are kept in sync by `scripts/sync-version.mjs`. Run it after editing
 `package.json` so they all match.
@@ -46,23 +48,26 @@ These are kept in sync by `scripts/sync-version.mjs`. Run it after editing
 | 10 | `.github/workflows/ci.yml` | header comment |
 | 11 | `ARCHITECTURE.md` | h1 version |
 | 12 | `ROADMAP.md` | current state block + release table |
+| 13 | `AGENTS.md` | version in project identity |
+| 14 | `src/types.d.ts` | `@version` JSDoc tag |
 
 ## Pre-Release Checklist (must all be green)
 
 1. `npm run lint` — 0 errors, 0 warnings, 0 Node warnings
-2. `npm test` — every suite passes, 0 skipped, 0 Node warnings
+2. `npm test` — every suite passes, 0 skipped, 0 Node warnings (currently **4187 tests** across **269 files**)
 3. `npm ci` — no `npm WARN deprecated` entries
-4. No dead code / orphan templates / unused exports
-5. No `eval`, no unsanitized `innerHTML` (CI security scan green)
+4. No dead code / orphan templates / unused exports (`node scripts/dead-export-check.mjs`)
+5. No `eval`, no unsanitized `innerHTML` (`node scripts/security-scan.mjs`)
 6. `npm run build` exits 0; `npm run size` within budget (≤ 60 KB gzip)
 7. `public/sw.js` `CACHE_NAME` matches new `vX.Y.Z`
 8. `CHANGELOG.md` has an entry; `README.md` badges match `package.json`
 9. Auth providers confirmed: secrets present in GH repo settings
-10. Commit + push: `git commit -m "vX.Y.Z — <theme>"` + `git push`
-11. Tag + push: `git tag vX.Y.Z && git push --tags`
-12. GH release: `gh release create vX.Y.Z --generate-notes`
-13. i18n parity: every new `t('key')` has both `he` and `en` entries
-14. Linked issues closed with commit hash in their closing comment
+10. `node scripts/audit-base-section.mjs` — 0 legacy sections outside BaseSection
+11. Commit + push: `git commit -m "vX.Y.Z — <theme>"` + `git push`
+12. Tag + push: `git tag vX.Y.Z && git push --tags`
+13. GH release: `$env:GH_PAGER = ""; gh release create vX.Y.Z --generate-notes`
+14. i18n parity: every new `t('key')` has both `he` and `en` entries (`npm run check:i18n`)
+15. Linked issues closed with commit hash in their closing comment
 
 ## Workflow
 

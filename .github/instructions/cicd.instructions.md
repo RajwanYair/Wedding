@@ -8,17 +8,19 @@ description: "Use when: editing CI/CD workflows, GitHub Actions, or any YAML con
 ## Workflow Standards
 
 - Use `actions/checkout@v6` and `actions/setup-node@v6` (major-tag pins — sub-version tags like `@v6.0.2` do not exist and cause VS Code "unable to resolve" errors)
-- `permissions: contents: read` (least privilege)
+- `permissions: contents: read` (least privilege); escalate only when the job needs write access
 - Install deps via `npm ci`; use `cache: 'npm'` in `setup-node` (CI creates its own `node_modules/`; locally deps resolve from parent `../MyScripts/node_modules/`)
 - Keep `package.json` `packageManager` current so local tooling, cache behavior, and Copilot environment hints stay aligned
 - Lint via `npm run lint` — must exit 0 with **0 errors, 0 warnings** (ESLint `--max-warnings 0`)
 - i18n parity: `npm run check:i18n`
-- Unit tests: `npm test` (Vitest, current suite) — Node matrix: `["22", "24"]`
-- **Never** use `npx vitest run` — use `npm test` to avoid DEPRECATED cache warning
-- Prefer `npm run build` over direct `npx vite build` in workflows so hooks and script-level conventions stay centralized
+- Unit tests: `npm test` (Vitest 4, current suite) — Node matrix: `["22", "24"]`
+- **Never** use `npx vitest run` in workflows — use `npm test` to avoid DEPRECATED cache warning
+- Prefer `npm run build` over direct `npx vite build` so hooks and script-level conventions stay centralized
 - Deploy via GitHub Pages on push to `main`
 - Release: `release.yml` auto-attaches artifacts on tags (`vX.Y.Z`)
-- CodeQL for JavaScript should use `github/codeql-action@v4`, `build-mode: none`, and `security-extended,security-and-quality`
+- CodeQL for JavaScript: use `github/codeql-action@v4`, `build-mode: none`, `security-extended,security-and-quality`
+- SBOM: `sbom.yml` generates CycloneDX SBOM on every tag push
+- Supply chain: `scorecard.yml` and `trivy.yml` run weekly hardened security scans
 
 ## Lint Gate — Zero Tolerance
 
@@ -33,7 +35,7 @@ No `// eslint-disable` without a real violation. Stale disables error via `repor
 
 ## Node.js Target
 
-Node.js ≥ 22 (`engines.node` in `package.json`); CI runs on 22 + 24
+Node.js ≥ 22 (`engines.node` in `package.json`); CI matrix: `["22", "24"]`.
 
 ## Commit Convention
 
@@ -44,8 +46,14 @@ Commit after **every Copilot chat session** or sprint with a clear summary messa
 
 - Never log secrets in CI output
 - Use `${{ secrets.TOKEN }}` for credentials
-- Pin action versions to specific tags (e.g. `@v4`, not `@latest`)
+- Pin action versions to specific major tags (e.g. `@v4`, not `@latest`)
 - `npm audit --audit-level=high` must return 0 high/critical vulns before tagging
+- `node scripts/check-plaintext-secrets.mjs` must exit 0 on every PR
+
+## Copilot Code Review
+
+Copilot PR review is enabled via `.github/copilot/config.json`. Review instructions are applied
+automatically to all PRs. Do not suppress or override them in workflow files.
 
 ## VS Code Extension — Known False Positives
 

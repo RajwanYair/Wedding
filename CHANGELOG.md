@@ -38,7 +38,10 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **S364** — Coverage ratchet uplift: global `lines:56→57`, `branches:49→50`, `functions:65→66`, `statements:56→57`; `utils` lines 96→97, stmts 93→94; `repos` lines 94→95, stmts 82→83; `services` lines 76→77, stmts 74→75; `core` lines 74→75, functions 64→65, stmts 70→71; `sections` stmts 27→28
+- **S364** — Coverage ratchet uplift: global `lines:56→57`, `branches:49→50`, `functions:65→66`,
+  `statements:56→57`; `utils` lines 96→97, stmts 93→94; `repos` lines 94→95, stmts 82→83;
+  `services` lines 76→77, stmts 74→75; `core` lines 74→75, functions 64→65, stmts 70→71;
+  `sections` stmts 27→28
 - **S365** — Version bump to v13.18.0; 4108 tests green; 0 lint errors
 
 ## [13.17.0] — 2025-07-14

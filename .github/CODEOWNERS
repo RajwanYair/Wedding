@@ -12,6 +12,15 @@
 /src/sections/rsvp.js @RajwanYair
 /src/core/state.js @RajwanYair
 
+# Data layer — mutations only here
+/src/repositories/ @RajwanYair
+
+# Action dispatch — thin glue layer
+/src/handlers/ @RajwanYair
+
+# Database migrations — irreversible
+/supabase/migrations/ @RajwanYair
+
 # Core CSS variables — theme changes need careful review
 /css/variables.css @RajwanYair
 
@@ -19,3 +28,4 @@
 /index.html @RajwanYair
 /README.md @RajwanYair
 /CHANGELOG.md @RajwanYair
+/package.json @RajwanYair

@@ -51,4 +51,5 @@ applyTo: "supabase/**,src/services/supabase*.js,src/core/supabase-client.js"
 
 - Never log or expose `service_role` key in client code.
 - Store secrets only in GitHub Secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`).
+- Run `node scripts/check-plaintext-secrets.mjs` before any commit touching `src/services/` or `supabase/`.
 - `scripts/inject-config.mjs` injects values at build time — never hardcode in source.

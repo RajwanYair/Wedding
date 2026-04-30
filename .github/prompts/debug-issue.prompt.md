@@ -35,7 +35,10 @@ Search for relevant code using these patterns:
 | Phone lookup failing | Is `cleanPhone()` normalizing the input before lookup? |
 | Auth redirect loop | Is `PUBLIC_SECTIONS` including the target section? |
 | Missing i18n text | Does the key exist in both `he.json` and `en.json`? |
-| Modal not opening | Is `openModal('<modalName>')` called with the correct modal name from `MODAL_NAMES`? |
+| Modal not opening | Is `openModal('<modalName>')` called with the correct name from `MODALS` in `constants.js`? |
+| Validation error | Did `sanitize(input, schema)` return `errors`? Check the schema in `src/utils/sanitize.js`. |
+| Repository not found | Does `src/repositories/<domain>-repo.js` exist and export the expected helper? |
+| Handler not firing | Is the `data-action` attribute value registered in the handlers map in `src/core/events.js`? |
 
 ### 4. Write a Failing Test
 
