@@ -141,11 +141,17 @@ vi.mock("../../src/sections/settings.js", () => ({
   registerPasskey: () => _registerPasskeyMock(),
   authenticatePasskey: () => _authenticatePasskeyMock(),
   clearPasskeys: () => _clearPasskeysMock(),
+  generateApiKey: () => _generateApiKeyMock(),
+  copyApiKey: () => _copyApiKeyMock(),
+  revokeApiKey: () => _revokeApiKeyMock(),
 }));
 
 const _registerPasskeyMock = vi.fn(() => Promise.resolve());
 const _authenticatePasskeyMock = vi.fn(() => Promise.resolve());
 const _clearPasskeysMock = vi.fn();
+const _generateApiKeyMock = vi.fn();
+const _copyApiKeyMock = vi.fn(() => Promise.resolve());
+const _revokeApiKeyMock = vi.fn();
 const _addLinkMock = vi.fn();
 const _addRegistryLinkMock = vi.fn();
 const _addRegistryPresetMock = vi.fn();
@@ -230,6 +236,7 @@ describe("S329 — settingsHandlers — register()", () => {
       "saveTransportSettings", "saveTelemetryOptOut", "addRegistryLink", "addRegistryPreset",
       "saveObservabilityDsn",
       "registerPasskey", "authenticatePasskey", "clearPasskeys",
+      "generateApiKey", "copyApiKey", "revokeApiKey",
       "addApprovedEmail", "removeApprovedEmail", "clearAllData",
       "switchLanguage", "toggleLanguage", "clearAuditLog", "clearErrorLog",
       "exportJSON", "importJSON", "copyRsvpLink", "copyContactLink",

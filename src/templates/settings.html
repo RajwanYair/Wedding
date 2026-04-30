@@ -635,6 +635,26 @@
       </div>
     </div>
 
+    <!-- API Key (S434) -->
+    <div class="settings-card" data-admin-only id="cardApiKey">
+      <h3>🔐 <span data-i18n="api_key_title">מפתח API</span></h3>
+      <p class="section-desc" data-i18n="api_key_desc">צור מפתח API לגישה תכנותית לנתוני האירוע.</p>
+      <div id="apiKeyDisplay" class="u-hidden">
+        <code id="apiKeyValue" dir="ltr" style="word-break:break-all"></code>
+        <button class="btn btn-secondary btn-small u-mr-sm" data-action="copyApiKey">
+          <span data-i18n="api_key_copy">העתק</span>
+        </button>
+        <button class="btn btn-danger btn-small" data-action="revokeApiKey">
+          <span data-i18n="api_key_revoke">בטל מפתח</span>
+        </button>
+      </div>
+      <p id="apiKeyNone" class="text-hint"><span data-i18n="api_key_none">אין מפתח פעיל.</span></p>
+      <button class="btn btn-primary u-mt-sm" data-action="generateApiKey">
+        <span data-i18n="api_key_generate">צור מפתח חדש</span>
+      </button>
+      <p id="apiKeyStatus" aria-live="polite"></p>
+    </div>
+
     <!-- Contact Collector -->
     <div class="settings-card">
       <h3>📋 <span data-i18n="contact_settings_title">אסיפת פרטי קשר</span></h3>

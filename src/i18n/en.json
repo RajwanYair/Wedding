@@ -1446,5 +1446,15 @@
   "passkey_auth_success": "Passkey sign-in successful",
   "passkey_error": "Passkey error — please try again",
   "passkey_cleared": "All passkeys cleared",
-  "passkey_none": "No passkeys stored"
+  "passkey_none": "No passkeys stored",
+  "api_key_title": "API Key",
+  "api_key_desc": "Generate an API key for programmatic access to event data.",
+  "api_key_none": "No active API key.",
+  "api_key_generate": "Generate New Key",
+  "api_key_copy": "Copy",
+  "api_key_revoke": "Revoke Key",
+  "api_key_generated": "API key generated",
+  "api_key_copied": "Key copied",
+  "api_key_copy_error": "Copy failed",
+  "api_key_revoked": "API key revoked"
 }

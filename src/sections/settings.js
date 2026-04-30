@@ -86,6 +86,10 @@ class SettingsSection extends BaseSection {
         _refreshPasskeyList(listPasskeys());
       }
     }).catch(() => {});
+    // Wire API key UI (S434)
+    import("../utils/api-key.js").then(({ getApiKey }) => {
+      _refreshApiKeyUI(getApiKey());
+    }).catch(() => {});
   }
 }
 
@@ -1514,5 +1518,64 @@ function _refreshPasskeyList(creds) {
     ts.textContent = ` — ${new Date(cred.ts).toLocaleDateString()}`;
     row.appendChild(ts);
     container.appendChild(row);
+  }
+}
+
+// ── S434: API Key management ─────────────────────────────────────────────────
+
+/**
+ * Generate a new API key and refresh the UI.
+ */
+export function generateApiKey() {
+  import("../utils/api-key.js").then(({ generateApiKey: _gen }) => {
+    const key = _gen();
+    _refreshApiKeyUI(key);
+    const status = document.getElementById("apiKeyStatus");
+    if (status) { status.textContent = t("api_key_generated"); }
+  }).catch(() => {});
+}
+
+/**
+ * Copy the current API key to clipboard.
+ */
+export async function copyApiKey() {
+  const { getApiKey } = await import("../utils/api-key.js");
+  const key = getApiKey();
+  if (!key) return;
+  try {
+    await navigator.clipboard.writeText(key);
+    showToast(t("api_key_copied"), "success");
+  } catch {
+    showToast(t("api_key_copy_error"), "error");
+  }
+}
+
+/**
+ * Revoke the current API key and refresh UI.
+ */
+export function revokeApiKey() {
+  import("../utils/api-key.js").then(({ revokeApiKey: _revoke }) => {
+    _revoke();
+    _refreshApiKeyUI(null);
+    showToast(t("api_key_revoked"), "info");
+  }).catch(() => {});
+}
+
+/**
+ * @param {string|null} key
+ */
+function _refreshApiKeyUI(key) {
+  const display = document.getElementById("apiKeyDisplay");
+  const none = document.getElementById("apiKeyNone");
+  const val = document.getElementById("apiKeyValue");
+  if (!display || !none) return;
+  if (key) {
+    display.classList.remove("u-hidden");
+    none.classList.add("u-hidden");
+    if (val) val.textContent = key;
+  } else {
+    display.classList.add("u-hidden");
+    none.classList.remove("u-hidden");
+    if (val) val.textContent = "";
   }
 }

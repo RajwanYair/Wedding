@@ -1446,5 +1446,15 @@
   "passkey_auth_success": "Inicio con Passkey exitoso",
   "passkey_error": "Error de Passkey — inténtalo de nuevo",
   "passkey_cleared": "Todos los Passkeys borrados",
-  "passkey_none": "No hay Passkeys almacenados"
+  "passkey_none": "No hay Passkeys almacenados",
+  "api_key_title": "Clave API",
+  "api_key_desc": "Genera una clave API para acceso programático a los datos del evento.",
+  "api_key_none": "Sin clave API activa.",
+  "api_key_generate": "Generar nueva clave",
+  "api_key_copy": "Copiar",
+  "api_key_revoke": "Revocar clave",
+  "api_key_generated": "Clave API generada",
+  "api_key_copied": "Clave copiada",
+  "api_key_copy_error": "Error al copiar",
+  "api_key_revoked": "Clave API revocada"
 }

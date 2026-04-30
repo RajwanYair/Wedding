@@ -58,6 +58,9 @@ import {
   registerPasskey,
   authenticatePasskey,
   clearPasskeys,
+  generateApiKey,
+  copyApiKey,
+  revokeApiKey,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -343,6 +346,9 @@ export function register() {
   on("clearPasskeys", () => {
     clearPasskeys();
   });
+  on("generateApiKey", () => { generateApiKey(); });
+  on("copyApiKey", async () => { await copyApiKey(); });
+  on("revokeApiKey", () => { revokeApiKey(); });
   on("sendMagicLink", async () => {
     const input = /** @type {HTMLInputElement|null} */ (document.getElementById("magicLinkEmail"));
     const email = input?.value?.trim() ?? "";

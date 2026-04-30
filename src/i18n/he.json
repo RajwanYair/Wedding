@@ -1446,5 +1446,15 @@
   "passkey_auth_success": "כניסה עם Passkey הצליחה",
   "passkey_error": "שגיאה בPpasskey — נסה שנית",
   "passkey_cleared": "כל Passkeys נמחקו",
-  "passkey_none": "אין Passkeys שמורים"
+  "passkey_none": "אין Passkeys שמורים",
+  "api_key_title": "מפתח API",
+  "api_key_desc": "צור מפתח API לגישה תכנותית לנתוני האירוע.",
+  "api_key_none": "אין מפתח פעיל.",
+  "api_key_generate": "צור מפתח חדש",
+  "api_key_copy": "העתק",
+  "api_key_revoke": "בטל מפתח",
+  "api_key_generated": "מפתח API נוצר",
+  "api_key_copied": "מפתח הועתק",
+  "api_key_copy_error": "שגיאה בהעתקה",
+  "api_key_revoked": "מפתח API בוטל"
 }

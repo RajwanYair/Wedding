@@ -1446,5 +1446,15 @@
   "passkey_auth_success": "Connexion Passkey réussie",
   "passkey_error": "Erreur Passkey — réessayez",
   "passkey_cleared": "Tous les Passkeys supprimés",
-  "passkey_none": "Aucun Passkey enregistré"
+  "passkey_none": "Aucun Passkey enregistré",
+  "api_key_title": "Clé API",
+  "api_key_desc": "Générez une clé API pour un accès programmatique aux données de l'événement.",
+  "api_key_none": "Aucune clé API active.",
+  "api_key_generate": "Générer une nouvelle clé",
+  "api_key_copy": "Copier",
+  "api_key_revoke": "Révoquer la clé",
+  "api_key_generated": "Clé API générée",
+  "api_key_copied": "Clé copiée",
+  "api_key_copy_error": "Échec de la copie",
+  "api_key_revoked": "Clé API révoquée"
 }

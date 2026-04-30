@@ -1446,5 +1446,15 @@
   "passkey_auth_success": "نجح تسجيل الدخول بـ Passkey",
   "passkey_error": "خطأ في Passkey — حاول مرة أخرى",
   "passkey_cleared": "تم مسح جميع Passkeys",
-  "passkey_none": "لا توجد Passkeys محفوظة"
+  "passkey_none": "لا توجد Passkeys محفوظة",
+  "api_key_title": "مفتاح API",
+  "api_key_desc": "أنشئ مفتاح API للوصول البرمجي إلى بيانات الحدث.",
+  "api_key_none": "لا يوجد مفتاح API نشط.",
+  "api_key_generate": "إنشاء مفتاح جديد",
+  "api_key_copy": "نسخ",
+  "api_key_revoke": "إلغاء المفتاح",
+  "api_key_generated": "تم إنشاء مفتاح API",
+  "api_key_copied": "تم نسخ المفتاح",
+  "api_key_copy_error": "فشل النسخ",
+  "api_key_revoked": "تم إلغاء مفتاح API"
 }

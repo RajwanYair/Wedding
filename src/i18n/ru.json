@@ -1446,5 +1446,15 @@
   "passkey_auth_success": "Вход по Passkey выполнен успешно",
   "passkey_error": "Ошибка Passkey — попробуйте ещё раз",
   "passkey_cleared": "Все Passkeys удалены",
-  "passkey_none": "Нет сохранённых Passkeys"
+  "passkey_none": "Нет сохранённых Passkeys",
+  "api_key_title": "API-ключ",
+  "api_key_desc": "Создайте API-ключ для программного доступа к данным мероприятия.",
+  "api_key_none": "Нет активного API-ключа.",
+  "api_key_generate": "Создать новый ключ",
+  "api_key_copy": "Копировать",
+  "api_key_revoke": "Отозвать ключ",
+  "api_key_generated": "API-ключ создан",
+  "api_key_copied": "Ключ скопирован",
+  "api_key_copy_error": "Ошибка копирования",
+  "api_key_revoked": "API-ключ отозван"
 }
