@@ -39,7 +39,6 @@ jobs:
       - name: Inject GitHub Secrets into config
         env:
           GH_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GH_FB_APP_ID: ${{ secrets.FB_APP_ID }}
           GH_APPLE_SERVICE_ID: ${{ secrets.APPLE_SERVICE_ID }}
           GH_SHEETS_WEBAPP_URL: ${{ secrets.SHEETS_WEBAPP_URL }}
           GH_SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}

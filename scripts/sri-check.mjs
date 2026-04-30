@@ -64,7 +64,6 @@ console.log('          crossorigin="anonymous"></script>\n');
 
 console.log("External scripts (not version-pinned — SRI not applicable):");
 console.log('  https://accounts.google.com/gsi/client   → crossorigin="anonymous" only');
-console.log("  https://connect.facebook.net/…/sdk.js    → loaded dynamically by auth.js");
 console.log("  https://appleid.cdn-apple.com/…/auth.js  → loaded dynamically by auth.js\n");
 
 /* ── S4.3: Also scan dist/ build output if it exists ── */

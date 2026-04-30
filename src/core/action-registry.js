@@ -20,7 +20,6 @@ export const ACTIONS = /** @type {const} */ ({
 
   // ── Auth ───────────────────────────────────────────────────────────────
   SUBMIT_EMAIL_LOGIN: "submitEmailLogin",
-  LOGIN_FACEBOOK: "loginFacebook",
   LOGIN_APPLE: "loginApple",
   SIGN_OUT: "signOut",
   SHOW_AUTH_OVERLAY: "showAuthOverlay",

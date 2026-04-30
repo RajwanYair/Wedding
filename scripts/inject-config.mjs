@@ -8,7 +8,6 @@
  *
  * Environment variables → JS constants patched:
  *   GH_GOOGLE_CLIENT_ID   → GOOGLE_CLIENT_ID
- *   GH_FB_APP_ID          → FB_APP_ID
  *   GH_APPLE_SERVICE_ID   → APPLE_SERVICE_ID
  *   GH_SHEETS_WEBAPP_URL  → SHEETS_WEBAPP_URL
  *   GH_SPREADSHEET_ID     → SPREADSHEET_ID
@@ -30,7 +29,6 @@ const ESM_CONFIG = resolve(ROOT, "src", "core", "config.js");
 /** @type {Array<[envVar: string, jsConst: string]>} */
 const SUBSTITUTIONS = [
   ["GH_GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_ID"],
-  ["GH_FB_APP_ID", "FB_APP_ID"],
   ["GH_APPLE_SERVICE_ID", "APPLE_SERVICE_ID"],
   ["GH_SHEETS_WEBAPP_URL", "SHEETS_WEBAPP_URL"],
   ["GH_SPREADSHEET_ID", "SPREADSHEET_ID"],
