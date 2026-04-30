@@ -91,6 +91,8 @@ const browserGlobals = shared?.browserGlobals ?? {
   HTMLAnchorElement: "readonly",
   HTMLImageElement: "readonly",
   HTMLCanvasElement: "readonly",
+  OffscreenCanvas: "readonly",
+  Image: "readonly",
   KeyboardEvent: "readonly",
   Event: "readonly",
   MouseEvent: "readonly",
