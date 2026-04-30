@@ -118,6 +118,7 @@ import * as websiteBuilderSection from "./sections/website-builder.js";
 import * as runOfShowSection from "./sections/run-of-show.js";
 import * as notificationPanelSection from "./sections/notification-panel.js";
 import * as workspaceSwitcherSection from "./sections/workspace-switcher.js";
+import * as onboardingSection from "./sections/onboarding.js";
 
 // ── Domain action handlers (extracted) ───────────────────────────────────
 import { register as registerGuestHandlers } from "./handlers/guest-handlers.js";
@@ -151,6 +152,7 @@ const SECTIONS = {
   changelog: changelogSection,
   "website-builder": websiteBuilderSection,
   "run-of-show": runOfShowSection,
+  onboarding: onboardingSection,
 };
 
 /** @type {string|null} currently mounted section name */
@@ -334,6 +336,15 @@ let _activeSection = null;
     const hashSection = location.hash.slice(1).trim();
     if (!PUBLIC_SECTIONS.has(hashSection)) {
       await _switchSection("landing");
+    }
+  }
+
+  // 8b. S426 — Show onboarding wizard on first admin login if wedding info is blank
+  if (currentUser()?.isAdmin) {
+    const _obInfo = /** @type {Record<string,string>} */ (storeGet("weddingInfo") ?? {});
+    const _obDone = storeGet("onboardingDone");
+    if (!_obInfo.groom && !_obDone) {
+      await _switchSection("onboarding");
     }
   }
 

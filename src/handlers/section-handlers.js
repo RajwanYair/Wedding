@@ -33,6 +33,12 @@ import {
   selectWorkspace,
 } from "../sections/workspace-switcher.js";
 import {
+  onboardingNext,
+  onboardingBack,
+  onboardingPickTheme,
+  onboardingFinish,
+} from "../sections/onboarding.js";
+import {
   toggleNotifPanel,
   markAllNotifRead,
 } from "../sections/notification-panel.js";
@@ -109,6 +115,13 @@ export function register() {
   on("checkGreenApiConnection", () => checkGreenApiConnection());
   on("sendWhatsAppReminder", () => sendWhatsAppReminder());
   on("sendWabaBlast", () => sendWabaBlast());
+
+  // ── Onboarding wizard (S426) ──
+  on("onboardingNext", () => onboardingNext());
+  on("onboardingBack", () => onboardingBack());
+  on("onboardingPickTheme", (el) => onboardingPickTheme(el.dataset.actionArg ?? ""));
+  on("onboardingFinish", () => onboardingFinish());
+
   on("saveGreenApiConfig", (_el, e) => {
     const form = /** @type {HTMLFormElement|null} */ (
       /** @type {HTMLElement} */ (e.target).closest("form")
