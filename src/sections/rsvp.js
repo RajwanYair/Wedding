@@ -15,6 +15,7 @@ import { enqueueWrite, appendToRsvpLog, syncStoreKeyToSheets } from "../core/syn
 import { GUEST_SIDES, RSVP_RESPONSE_STATUSES, MEAL_TYPES } from "../core/constants.js";
 import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { buildGoogleCalendarLink, buildIcsDataUrl } from "../utils/calendar-link.js";
+import { buildWazeUrl, buildGoogleMapsUrl, buildOsmEmbedUrl } from "../utils/venue-links.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -232,6 +233,7 @@ function _showConfirmation(/** @type {string} */ status) {
   if (status === "confirmed") {
     confirmEl.textContent = t("rsvp_confirmed");
     _renderCalendarLinks(confirmEl);
+    _renderVenueLinks(confirmEl);
   } else if (status === "declined") {
     confirmEl.textContent = t("rsvp_declined");
   } else {
@@ -290,6 +292,62 @@ function _renderCalendarLinks(parent) {
   ics.className = "btn btn-sm";
   ics.textContent = t("rsvp_download_ics");
   wrap.appendChild(ics);
+
+  parent.appendChild(wrap);
+}
+
+/**
+ * S421: Append venue direction links (Waze, Google Maps) and an OSM embed
+ * to the confirmation panel. Skips silently if weddingInfo lacks lat/lon.
+ * @param {HTMLElement} parent
+ */
+function _renderVenueLinks(parent) {
+  const info = /** @type {Record<string, any>} */ (storeGet("weddingInfo") ?? {});
+  const lat = parseFloat(info.lat);
+  const lon = parseFloat(info.lon);
+  if (!lat || !lon || Number.isNaN(lat) || Number.isNaN(lon)) return;
+
+  const wrap = document.createElement("div");
+  wrap.className = "rsvp-venue-actions";
+  wrap.style.marginTop = "0.75rem";
+  wrap.style.display = "flex";
+  wrap.style.gap = "0.5rem";
+  wrap.style.flexWrap = "wrap";
+
+  const heading = document.createElement("strong");
+  heading.textContent = t("venue_directions_title");
+  heading.style.flex = "1 0 100%";
+  wrap.appendChild(heading);
+
+  const waze = document.createElement("a");
+  waze.href = buildWazeUrl(lat, lon);
+  waze.target = "_blank";
+  waze.rel = "noopener noreferrer";
+  waze.className = "btn btn-sm";
+  waze.textContent = t("venue_directions_waze");
+  wrap.appendChild(waze);
+
+  const gmaps = document.createElement("a");
+  gmaps.href = buildGoogleMapsUrl(lat, lon);
+  gmaps.target = "_blank";
+  gmaps.rel = "noopener noreferrer";
+  gmaps.className = "btn btn-sm";
+  gmaps.textContent = t("venue_directions_google");
+  wrap.appendChild(gmaps);
+
+  // OSM embed (iframe)
+  const osmUrl = buildOsmEmbedUrl(lat, lon);
+  const iframe = document.createElement("iframe");
+  iframe.src = osmUrl;
+  iframe.width = "100%";
+  iframe.height = "200";
+  iframe.style.flex = "1 0 100%";
+  iframe.style.border = "none";
+  iframe.style.borderRadius = "8px";
+  iframe.style.marginTop = "0.5rem";
+  iframe.title = t("venue_map_embed");
+  iframe.loading = "lazy";
+  wrap.appendChild(iframe);
 
   parent.appendChild(wrap);
 }
