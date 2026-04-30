@@ -101,10 +101,11 @@ export default defineConfig({
         // S346 fix (v13.16.0 corrected): re-measured floor(actual) — lower by ~1% variance.
         // S354 uplift (v13.17.0): stmts ~57.79%, branches ~50.57%, functions ~66.17%, lines ~57.39%.
         // S364 uplift (v13.18.0): stmts 57.42%, branches 50.57%, functions 66.2%, lines 57.76%.
-        lines: 57,
-        branches: 50,
+        // S373 uplift (v13.19.0): stmts 58.33%, branches 51.61%, functions 66.73%, lines 58.81%.
+        lines: 58,
+        branches: 51,
         functions: 66,
-        statements: 57,
+        statements: 58,
         // S234 + S289: per-directory ratchet to measured floors (floor(actual)).
         // S354 uplift: utils stmts 93→93(stable), utils lines 94→96;
         //              repos stmts 71→82, repos lines 83→94;
@@ -115,11 +116,16 @@ export default defineConfig({
         //              services stmts 74→75, services lines 76→77;
         //              core stmts 70→71, core branches 64→65, core functions 64→65, core lines 74→75;
         //              sections stmts 27→28 (all others stable).
+        // S373 uplift: utils stmts 94(stable), utils lines 97(stable);
+        //              repos stmts 83(stable), repos lines 95(stable);
+        //              services stmts 75→76, services branches 65→66, services lines 77(stable);
+        //              core stmts 71→74, core branches 65→67, core functions 65→66, core lines 75→78;
+        //              sections stmts 28→29, sections branches 25→27, sections fns 41→43, sections lines 27→29.
         "src/utils/**": { lines: 97, branches: 82, functions: 94, statements: 94 },
         "src/repositories/**": { lines: 95, branches: 54, functions: 97, statements: 83 },
-        "src/services/**": { lines: 77, branches: 65, functions: 76, statements: 75 },
-        "src/core/**": { lines: 75, branches: 64, functions: 65, statements: 71 },
-        "src/sections/**": { lines: 27, branches: 25, functions: 41, statements: 28 },
+        "src/services/**": { lines: 77, branches: 66, functions: 77, statements: 76 },
+        "src/core/**": { lines: 78, branches: 67, functions: 66, statements: 74 },
+        "src/sections/**": { lines: 29, branches: 27, functions: 43, statements: 29 },
       },
     },
   },
