@@ -181,6 +181,98 @@ export function setSearchQuery(query) {
   renderGuests();
 }
 
+/** S397: Virtual scroll — only active when guest list > VIRTUAL_THRESHOLD */
+const VIRTUAL_THRESHOLD = 200;
+const VIRTUAL_PAGE = 50; // rows to render per IntersectionObserver trigger
+
+/** @type {{ guests: any[], rendered: number, observer: IntersectionObserver | null }} */
+const _vs = { guests: [], rendered: 0, observer: null };
+
+/**
+ * Build a single guest table row element.
+ * @param {any} g  Guest record
+ * @returns {HTMLTableRowElement}
+ */
+function _buildGuestRow(g) {
+  const tr = document.createElement("tr");
+  tr.dataset.id = g.id;
+  if (_pendingSync.has(g.id)) tr.dataset.syncPending = "1";
+
+  // S11.4 Checkbox column
+  const checkTd = document.createElement("td");
+  const cb = document.createElement("input");
+  cb.type = "checkbox";
+  cb.className = "guest-select-cb";
+  cb.dataset.guestId = g.id;
+  cb.addEventListener("change", _updateBatchToolbar);
+  checkTd.appendChild(cb);
+  tr.appendChild(checkTd);
+
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const table = tables.find((tb) => tb.id === g.tableId);
+  const cells = [
+    `${g.firstName} ${g.lastName || ""}`,
+    t(`side_${g.side}`) || g.side || "",
+    g.phone || "",
+    String((g.count || 1) + (g.children || 0)),
+    t(`meal_${g.meal}`) || g.meal || "",
+    g.transport || "",
+    t(`status_${g.status}`) || g.status,
+    table ? table.name : "",
+  ];
+  cells.forEach((txt) => {
+    const td = document.createElement("td");
+    td.textContent = txt;
+    tr.appendChild(td);
+  });
+
+  // Actions cell
+  const actionsTd = document.createElement("td");
+  actionsTd.className = "u-text-nowrap";
+  const editBtn = document.createElement("button");
+  editBtn.className = "btn btn-small btn-secondary";
+  editBtn.textContent = t("btn_edit");
+  editBtn.dataset.action = "openEditGuestModal";
+  editBtn.dataset.actionArg = g.id;
+  actionsTd.appendChild(editBtn);
+  const delBtn = document.createElement("button");
+  delBtn.className = "btn btn-small btn-danger u-ml-xs";
+  delBtn.textContent = t("btn_delete");
+  delBtn.dataset.action = "deleteGuest";
+  delBtn.dataset.actionArg = g.id;
+  actionsTd.appendChild(delBtn);
+  tr.appendChild(actionsTd);
+
+  return tr;
+}
+
+/**
+ * Append the next virtual scroll page of rows + move the sentinel.
+ * @param {HTMLTableSectionElement} tbody
+ */
+function _vsAppendPage(tbody) {
+  const end = Math.min(_vs.rendered + VIRTUAL_PAGE, _vs.guests.length);
+  for (let i = _vs.rendered; i < end; i++) {
+    tbody.appendChild(_buildGuestRow(_vs.guests[i]));
+  }
+  _vs.rendered = end;
+  // Disconnect if all rows rendered
+  if (_vs.rendered >= _vs.guests.length) {
+    _vs.observer?.disconnect();
+    return;
+  }
+  // Move sentinel to just before end of tbody for next trigger
+  let sentinel = tbody.querySelector("tr.vs-sentinel");
+  if (!sentinel) {
+    sentinel = document.createElement("tr");
+    sentinel.className = "vs-sentinel";
+    sentinel.setAttribute("aria-hidden", "true");
+    const td = document.createElement("td");
+    sentinel.appendChild(td);
+  }
+  tbody.appendChild(sentinel);
+}
+
 /**
  * Render the guest table from current store state, applying filter + sort.
  */
@@ -210,60 +302,30 @@ export function renderGuests() {
     return av.localeCompare(bv, "he");
   });
 
-  // Table rows
-  tbody.textContent = "";
-  guests.forEach((g) => {
-    const tr = document.createElement("tr");
-    tr.dataset.id = g.id;
-    if (_pendingSync.has(g.id)) tr.dataset.syncPending = "1";
-
-    // S11.4 Checkbox column
-    const checkTd = document.createElement("td");
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.className = "guest-select-cb";
-    cb.dataset.guestId = g.id;
-    cb.addEventListener("change", _updateBatchToolbar);
-    checkTd.appendChild(cb);
-    tr.appendChild(checkTd);
-
-    const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-    const table = tables.find((tb) => tb.id === g.tableId);
-    const cells = [
-      `${g.firstName} ${g.lastName || ""}`,
-      t(`side_${g.side}`) || g.side || "",
-      g.phone || "",
-      String((g.count || 1) + (g.children || 0)),
-      t(`meal_${g.meal}`) || g.meal || "",
-      g.transport || "",
-      t(`status_${g.status}`) || g.status,
-      table ? table.name : "",
-    ];
-    cells.forEach((txt) => {
-      const td = document.createElement("td");
-      td.textContent = txt;
-      tr.appendChild(td);
-    });
-
-    // Actions cell
-    const actionsTd = document.createElement("td");
-    actionsTd.className = "u-text-nowrap";
-    const editBtn = document.createElement("button");
-    editBtn.className = "btn btn-small btn-secondary";
-    editBtn.textContent = t("btn_edit");
-    editBtn.dataset.action = "openEditGuestModal";
-    editBtn.dataset.actionArg = g.id;
-    actionsTd.appendChild(editBtn);
-    const delBtn = document.createElement("button");
-    delBtn.className = "btn btn-small btn-danger u-ml-xs";
-    delBtn.textContent = t("btn_delete");
-    delBtn.dataset.action = "deleteGuest";
-    delBtn.dataset.actionArg = g.id;
-    actionsTd.appendChild(delBtn);
-    tr.appendChild(actionsTd);
-
-    tbody.appendChild(tr);
-  });
+  // S397: Virtual scroll — activate when list is large
+  if (guests.length > VIRTUAL_THRESHOLD) {
+    _vs.observer?.disconnect();
+    _vs.guests = guests;
+    _vs.rendered = 0;
+    tbody.textContent = "";
+    _vsAppendPage(tbody);
+    // Set up IntersectionObserver on sentinel
+    const sentinel = tbody.querySelector("tr.vs-sentinel");
+    if (sentinel) {
+      _vs.observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]?.isIntersecting) _vsAppendPage(tbody);
+        },
+        { rootMargin: "200px" },
+      );
+      _vs.observer.observe(sentinel);
+    }
+  } else {
+    // Standard render for small lists
+    _vs.observer?.disconnect();
+    tbody.textContent = "";
+    guests.forEach((g) => tbody.appendChild(_buildGuestRow(g)));
+  }
 
   if (empty) {
     empty.classList.toggle("u-hidden", guests.length > 0);
