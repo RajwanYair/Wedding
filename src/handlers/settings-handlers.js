@@ -55,6 +55,9 @@ import {
   refreshAdminList,
   checkIsApprovedAdmin,
   resetOnboarding,
+  registerPasskey,
+  authenticatePasskey,
+  clearPasskeys,
 } from "../sections/settings.js";
 import { sendMagicLink, loginSupabaseAnonymous } from "../services/auth.js";
 import { load } from "../core/state.js";
@@ -330,6 +333,16 @@ export function register() {
     if (email) await checkIsApprovedAdmin(email);
   });
   on("resetOnboarding", () => resetOnboarding());
+  // S433 — WebAuthn passkey scaffold
+  on("registerPasskey", async () => {
+    await registerPasskey();
+  });
+  on("authenticatePasskey", async () => {
+    await authenticatePasskey();
+  });
+  on("clearPasskeys", () => {
+    clearPasskeys();
+  });
   on("sendMagicLink", async () => {
     const input = /** @type {HTMLInputElement|null} */ (document.getElementById("magicLinkEmail"));
     const email = input?.value?.trim() ?? "";

@@ -1435,5 +1435,16 @@
   "observability_dsn_save": "שמור DSN",
   "observability_dsn_saved": "DSN נשמר",
   "observability_dsn_cleared": "DSN נמחק",
-  "observability_dsn_invalid": "DSN לא תקין — בדוק את הפורמט"
+  "observability_dsn_invalid": "DSN לא תקין — בדוק את הפורמט",
+  "passkey_title": "כניסה עם Passkey",
+  "passkey_desc": "השתמש בחיישן טביעת אצבע, Face ID או מכשיר FIDO2 לכניסה מאובטחת.",
+  "passkey_not_supported": "מכשיר זה אינו תומך ב-Passkeys.",
+  "passkey_register": "רשום Passkey חדש",
+  "passkey_authenticate": "כניסה עם Passkey",
+  "passkey_clear": "מחק כל Passkey",
+  "passkey_registered": "Passkey נרשם בהצלחה",
+  "passkey_auth_success": "כניסה עם Passkey הצליחה",
+  "passkey_error": "שגיאה בPpasskey — נסה שנית",
+  "passkey_cleared": "כל Passkeys נמחקו",
+  "passkey_none": "אין Passkeys שמורים"
 }

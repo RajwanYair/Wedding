@@ -612,6 +612,29 @@
       </div>
     </div>
 
+    <!-- S433: WebAuthn Passkey scaffold -->
+    <div class="settings-card" data-admin-only id="cardPasskey">
+      <h3>🔑 <span data-i18n="passkey_title">כניסה עם Passkey</span></h3>
+      <p class="section-desc" data-i18n="passkey_desc">השתמש בחיישן טביעת אצבע, Face ID או מכשיר FIDO2 לכניסה מאובטחת.</p>
+      <div id="passkeyNotSupported" class="u-hidden">
+        <p class="text-warn" data-i18n="passkey_not_supported">מכשיר זה אינו תומך ב-Passkeys.</p>
+      </div>
+      <div id="passkeySupported">
+        <div id="passkeyList" style="margin-bottom:0.5rem"></div>
+        <div class="btn-group" style="gap:0.5rem;display:flex;flex-wrap:wrap">
+          <button class="btn btn-primary btn-small" data-action="registerPasskey">
+            ➕ <span data-i18n="passkey_register">רשום Passkey חדש</span>
+          </button>
+          <button class="btn btn-secondary btn-small" data-action="authenticatePasskey">
+            🔐 <span data-i18n="passkey_authenticate">כניסה עם Passkey</span>
+          </button>
+          <button class="btn btn-danger btn-small" data-action="clearPasskeys">
+            🗑️ <span data-i18n="passkey_clear">מחק כל Passkey</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Contact Collector -->
     <div class="settings-card">
       <h3>📋 <span data-i18n="contact_settings_title">אסיפת פרטי קשר</span></h3>

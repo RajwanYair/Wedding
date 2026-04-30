@@ -1435,5 +1435,16 @@
   "observability_dsn_save": "Enregistrer DSN",
   "observability_dsn_saved": "DSN enregistré",
   "observability_dsn_cleared": "DSN effacé",
-  "observability_dsn_invalid": "DSN invalide — vérifiez le format"
+  "observability_dsn_invalid": "DSN invalide — vérifiez le format",
+  "passkey_title": "Connexion par Passkey",
+  "passkey_desc": "Utilisez une empreinte, Face ID ou un appareil FIDO2 pour une connexion sécurisée.",
+  "passkey_not_supported": "Cet appareil ne prend pas en charge les Passkeys.",
+  "passkey_register": "Enregistrer un nouveau Passkey",
+  "passkey_authenticate": "Se connecter avec Passkey",
+  "passkey_clear": "Supprimer tous les Passkeys",
+  "passkey_registered": "Passkey enregistré avec succès",
+  "passkey_auth_success": "Connexion Passkey réussie",
+  "passkey_error": "Erreur Passkey — réessayez",
+  "passkey_cleared": "Tous les Passkeys supprimés",
+  "passkey_none": "Aucun Passkey enregistré"
 }

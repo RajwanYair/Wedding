@@ -1435,5 +1435,16 @@
   "observability_dsn_save": "حفظ DSN",
   "observability_dsn_saved": "تم حفظ DSN",
   "observability_dsn_cleared": "تم مسح DSN",
-  "observability_dsn_invalid": "DSN غير صالح — تحقق من الصيغة"
+  "observability_dsn_invalid": "DSN غير صالح — تحقق من الصيغة",
+  "passkey_title": "تسجيل الدخول بـ Passkey",
+  "passkey_desc": "استخدم بصمة الإصبع أو Face ID أو جهاز FIDO2 لتسجيل دخول آمن.",
+  "passkey_not_supported": "هذا الجهاز لا يدعم Passkeys.",
+  "passkey_register": "تسجيل Passkey جديد",
+  "passkey_authenticate": "تسجيل الدخول بـ Passkey",
+  "passkey_clear": "مسح جميع Passkeys",
+  "passkey_registered": "تم تسجيل Passkey بنجاح",
+  "passkey_auth_success": "نجح تسجيل الدخول بـ Passkey",
+  "passkey_error": "خطأ في Passkey — حاول مرة أخرى",
+  "passkey_cleared": "تم مسح جميع Passkeys",
+  "passkey_none": "لا توجد Passkeys محفوظة"
 }

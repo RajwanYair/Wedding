@@ -75,6 +75,17 @@ class SettingsSection extends BaseSection {
     initQueueMonitor();
     // Wire multi-locale selector (S429)
     _renderLocaleSelector();
+    // Wire passkey UI visibility (S433)
+    import("../utils/webauthn.js").then(({ isPasskeySupported, listPasskeys }) => {
+      const notSupported = document.getElementById("passkeyNotSupported");
+      const supported = document.getElementById("passkeySupported");
+      if (!isPasskeySupported()) {
+        notSupported?.classList.remove("u-hidden");
+        supported?.classList.add("u-hidden");
+      } else {
+        _refreshPasskeyList(listPasskeys());
+      }
+    }).catch(() => {});
   }
 }
 
@@ -1426,4 +1437,82 @@ function _renderLocaleSelector() {
  */
 export function resetOnboarding() {
   setOnboardingState({ step: ONBOARDING_STEPS[0] ?? "welcome", completed: false });
+}
+
+// ── S433: WebAuthn Passkey scaffold ─────────────────────────────────────────
+
+/**
+ * Register a new passkey for the current admin.
+ * Uses dynamic import of webauthn.js (utility module).
+ */
+export async function registerPasskey() {
+  const { registerPasskey: _register, listPasskeys } = await import("../utils/webauthn.js");
+  if (!(await import("../utils/webauthn.js")).isPasskeySupported()) {
+    showToast(t("passkey_not_supported"), "error");
+    return;
+  }
+  const result = await _register({ id: "admin", name: "Admin", displayName: "Wedding Admin" });
+  if (result) {
+    showToast(t("passkey_registered"), "success");
+    _refreshPasskeyList(listPasskeys());
+  } else {
+    showToast(t("passkey_error"), "error");
+  }
+}
+
+/**
+ * Authenticate using a stored passkey.
+ */
+export async function authenticatePasskey() {
+  const { authenticatePasskey: _auth, isPasskeySupported } = await import("../utils/webauthn.js");
+  if (!isPasskeySupported()) {
+    showToast(t("passkey_not_supported"), "error");
+    return;
+  }
+  const result = await _auth();
+  if (result) {
+    showToast(t("passkey_auth_success"), "success");
+  } else {
+    showToast(t("passkey_error"), "error");
+  }
+}
+
+/**
+ * Clear all stored passkeys.
+ */
+export function clearPasskeys() {
+  import("../utils/webauthn.js").then(({ clearPasskeys: _clear }) => {
+    _clear();
+    const list = document.getElementById("passkeyList");
+    if (list) list.textContent = "";
+    showToast(t("passkey_cleared"), "info");
+  }).catch(() => {});
+}
+
+/**
+ * Render stored passkey list into #passkeyList.
+ * @param {{ credentialId: string, userId: string, ts: number }[]} creds
+ */
+function _refreshPasskeyList(creds) {
+  const container = document.getElementById("passkeyList");
+  if (!container) return;
+  container.textContent = "";
+  if (creds.length === 0) {
+    const msg = document.createElement("p");
+    msg.className = "text-hint";
+    msg.textContent = t("passkey_none");
+    container.appendChild(msg);
+    return;
+  }
+  for (const cred of creds) {
+    const row = document.createElement("div");
+    row.className = "passkey-row";
+    const id = document.createElement("code");
+    id.textContent = `${cred.credentialId.slice(0, 16)}…`;
+    row.appendChild(id);
+    const ts = document.createElement("span");
+    ts.textContent = ` — ${new Date(cred.ts).toLocaleDateString()}`;
+    row.appendChild(ts);
+    container.appendChild(row);
+  }
 }

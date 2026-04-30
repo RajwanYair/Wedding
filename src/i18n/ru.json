@@ -1435,5 +1435,16 @@
   "observability_dsn_save": "Сохранить DSN",
   "observability_dsn_saved": "DSN сохранён",
   "observability_dsn_cleared": "DSN удалён",
-  "observability_dsn_invalid": "Неверный DSN — проверьте формат"
+  "observability_dsn_invalid": "Неверный DSN — проверьте формат",
+  "passkey_title": "Вход по Passkey",
+  "passkey_desc": "Используйте отпечаток пальца, Face ID или FIDO2 для безопасного входа.",
+  "passkey_not_supported": "Это устройство не поддерживает Passkeys.",
+  "passkey_register": "Зарегистрировать Passkey",
+  "passkey_authenticate": "Войти с Passkey",
+  "passkey_clear": "Удалить все Passkeys",
+  "passkey_registered": "Passkey зарегистрирован успешно",
+  "passkey_auth_success": "Вход по Passkey выполнен успешно",
+  "passkey_error": "Ошибка Passkey — попробуйте ещё раз",
+  "passkey_cleared": "Все Passkeys удалены",
+  "passkey_none": "Нет сохранённых Passkeys"
 }

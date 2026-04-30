@@ -1435,5 +1435,16 @@
   "observability_dsn_save": "Guardar DSN",
   "observability_dsn_saved": "DSN guardado",
   "observability_dsn_cleared": "DSN borrado",
-  "observability_dsn_invalid": "DSN inválido — comprueba el formato"
+  "observability_dsn_invalid": "DSN inválido — comprueba el formato",
+  "passkey_title": "Inicio con Passkey",
+  "passkey_desc": "Usa huella, Face ID o un dispositivo FIDO2 para un inicio seguro.",
+  "passkey_not_supported": "Este dispositivo no admite Passkeys.",
+  "passkey_register": "Registrar nuevo Passkey",
+  "passkey_authenticate": "Iniciar con Passkey",
+  "passkey_clear": "Borrar todos los Passkeys",
+  "passkey_registered": "Passkey registrado con éxito",
+  "passkey_auth_success": "Inicio con Passkey exitoso",
+  "passkey_error": "Error de Passkey — inténtalo de nuevo",
+  "passkey_cleared": "Todos los Passkeys borrados",
+  "passkey_none": "No hay Passkeys almacenados"
 }

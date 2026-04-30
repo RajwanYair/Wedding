@@ -1435,5 +1435,16 @@
   "observability_dsn_save": "Save DSN",
   "observability_dsn_saved": "DSN saved",
   "observability_dsn_cleared": "DSN cleared",
-  "observability_dsn_invalid": "Invalid DSN — check the format"
+  "observability_dsn_invalid": "Invalid DSN — check the format",
+  "passkey_title": "Passkey Sign-In",
+  "passkey_desc": "Use fingerprint, Face ID or a FIDO2 device for secure sign-in.",
+  "passkey_not_supported": "This device does not support Passkeys.",
+  "passkey_register": "Register New Passkey",
+  "passkey_authenticate": "Sign In with Passkey",
+  "passkey_clear": "Clear All Passkeys",
+  "passkey_registered": "Passkey registered successfully",
+  "passkey_auth_success": "Passkey sign-in successful",
+  "passkey_error": "Passkey error — please try again",
+  "passkey_cleared": "All passkeys cleared",
+  "passkey_none": "No passkeys stored"
 }
