@@ -1362,5 +1362,13 @@
   "cmd_palette_title": "Búsqueda rápida",
   "cmd_palette_placeholder": "Buscar invitado, mesa, proveedor, sección…",
   "cmd_palette_empty": "Escribe para buscar…",
-  "cmd_palette_no_results": "Sin resultados"
+  "cmd_palette_no_results": "Sin resultados",
+  "realtime_connected": "🟢 En vivo",
+  "realtime_disconnected": "⚪ Desconectado",
+  "undo_toast": "Acción deshecha",
+  "undo_available": "Deshacer (Ctrl+Z)",
+  "presence_viewing": "Viendo: {name}",
+  "gallery_upload_supabase": "Subir al almacenamiento en la nube",
+  "gallery_upload_supabase_done": "Subido a la nube ✅",
+  "gallery_upload_supabase_error": "Error al subir a la nube"
 }

@@ -1362,5 +1362,13 @@
   "cmd_palette_title": "Quick Search",
   "cmd_palette_placeholder": "Search guest, table, vendor, section…",
   "cmd_palette_empty": "Type to search…",
-  "cmd_palette_no_results": "No results found"
+  "cmd_palette_no_results": "No results found",
+  "realtime_connected": "🟢 Live",
+  "realtime_disconnected": "⚪ Offline",
+  "undo_toast": "Action undone",
+  "undo_available": "Undo (Ctrl+Z)",
+  "presence_viewing": "Viewing: {name}",
+  "gallery_upload_supabase": "Upload to cloud storage",
+  "gallery_upload_supabase_done": "Uploaded to cloud ✅",
+  "gallery_upload_supabase_error": "Cloud upload failed"
 }

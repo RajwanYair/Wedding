@@ -1363,5 +1363,13 @@
   "cmd_palette_title": "חיפוש מהיר",
   "cmd_palette_placeholder": "חפש אורח, שולחן, ספק, מקטע…",
   "cmd_palette_empty": "הקלד לחיפוש…",
-  "cmd_palette_no_results": "לא נמצאו תוצאות"
+  "cmd_palette_no_results": "לא נמצאו תוצאות",
+  "realtime_connected": "🟢 חי",
+  "realtime_disconnected": "⚪ לא מחובר",
+  "undo_toast": "הפעולה בוטלה",
+  "undo_available": "בטל (Ctrl+Z)",
+  "presence_viewing": "צופה: {name}",
+  "gallery_upload_supabase": "העלה לאחסון ענן",
+  "gallery_upload_supabase_done": "הועלה לאחסון ענן ✅",
+  "gallery_upload_supabase_error": "שגיאה בהעלאה לענן"
 }

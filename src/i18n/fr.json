@@ -1362,5 +1362,13 @@
   "cmd_palette_title": "Recherche rapide",
   "cmd_palette_placeholder": "Rechercher invité, table, fournisseur, section…",
   "cmd_palette_empty": "Tapez pour rechercher…",
-  "cmd_palette_no_results": "Aucun résultat"
+  "cmd_palette_no_results": "Aucun résultat",
+  "realtime_connected": "🟢 En direct",
+  "realtime_disconnected": "⚪ Hors ligne",
+  "undo_toast": "Action annulée",
+  "undo_available": "Annuler (Ctrl+Z)",
+  "presence_viewing": "Visualisation : {name}",
+  "gallery_upload_supabase": "Téléverser vers le stockage cloud",
+  "gallery_upload_supabase_done": "Téléversé dans le cloud ✅",
+  "gallery_upload_supabase_error": "Échec du téléversement cloud"
 }

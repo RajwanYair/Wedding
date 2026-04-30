@@ -412,9 +412,19 @@ let _activeSection = null;
     });
   });
 
-  // 11h. S17 — Activate Supabase Realtime when backend is configured
-  import("./services/realtime.js").then(({ activateRealtimeSync }) => {
-    activateRealtimeSync(["guests", "tables", "config"]).catch(() => {});
+  // 11h. S17/S409 — Activate Supabase Realtime + subscribe to live guest changes
+  import("./services/realtime.js").then(({ activateRealtimeSync, subscribeGuestChanges, isRealtimeConnected }) => {
+    activateRealtimeSync(["guests", "tables", "config"])
+      .then((connected) => {
+        if (connected) {
+          subscribeGuestChanges();
+          // S409: Update live indicator in dashboard if mounted
+          import("./sections/dashboard.js").then(({ updateRealtimeIndicator }) => {
+            updateRealtimeIndicator(isRealtimeConnected());
+          }).catch(() => {});
+        }
+      })
+      .catch(() => {});
   });
 
   // 11i. Phase 4.2 — App Badging API: badge icon with pending RSVP count

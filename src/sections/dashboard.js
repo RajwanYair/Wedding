@@ -102,6 +102,19 @@ class DashboardSection extends BaseSection {
 export const { mount, unmount, capabilities } = fromSection(new DashboardSection("dashboard"));
 
 /**
+ * S409: Update the realtime live indicator badge in the dashboard header.
+ * @param {boolean} connected
+ */
+export function updateRealtimeIndicator(connected) {
+  const badge = document.getElementById("realtimeBadge");
+  if (!badge) return;
+  badge.textContent = t(connected ? "realtime_connected" : "realtime_disconnected");
+  badge.classList.toggle("realtime-badge--on", connected);
+  badge.classList.toggle("realtime-badge--off", !connected);
+  badge.hidden = false;
+}
+
+/**
  * Render all dashboard stat elements from the current store state.
  */
 function renderDashboard() {

@@ -1362,5 +1362,13 @@
   "cmd_palette_title": "بحث سريع",
   "cmd_palette_placeholder": "ابحث عن ضيف، طاولة، مورد، قسم…",
   "cmd_palette_empty": "اكتب للبحث…",
-  "cmd_palette_no_results": "لا توجد نتائج"
+  "cmd_palette_no_results": "لا توجد نتائج",
+  "realtime_connected": "🟢 مباشر",
+  "realtime_disconnected": "⚪ غير متصل",
+  "undo_toast": "تم التراجع عن الإجراء",
+  "undo_available": "تراجع (Ctrl+Z)",
+  "presence_viewing": "يشاهد: {name}",
+  "gallery_upload_supabase": "رفع إلى التخزين السحابي",
+  "gallery_upload_supabase_done": "تم الرفع إلى السحابة ✅",
+  "gallery_upload_supabase_error": "فشل الرفع إلى السحابة"
 }
