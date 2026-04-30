@@ -280,11 +280,9 @@ export function getUserId(session) {
  * @returns {{ google: boolean, apple: boolean }}
  */
 export function detectInstalledSdks() {
-  /** @type {any} */
-  const w = typeof window === "undefined" ? {} : window;
   return {
     google: false, // S388: Google OAuth migrated to Supabase Auth redirect
-    apple: typeof w.AppleID?.auth?.signIn === "function",
+    apple: false,  // S389: Apple OAuth migrated to Supabase Auth redirect
   };
 }
 
@@ -306,20 +304,9 @@ export function preferredTransport(provider) {
  * @returns {Promise<OAuthProfile | null>}
  */
 export async function signInWith(provider) {
-  const transport = preferredTransport(provider);
-  if (transport === "supabase") {
-    const { signInWithProvider } = await import("./supabase.js");
-    signInWithProvider(provider);
-    return null;
-  }
-  /** @type {any} */
-  const w = window;
-  if (provider === "apple") {
-    const resp = await w.AppleID.auth.signIn();
-    const email = resp?.user?.email ?? "";
-    const name = `${resp?.user?.name?.firstName ?? ""} ${resp?.user?.name?.lastName ?? ""}`.trim();
-    return { email, name, provider };
-  }
+  // S388/S389: All providers migrated to Supabase Auth redirect.
+  const { signInWithProvider } = await import("./supabase.js");
+  signInWithProvider(provider);
   return null;
 }
 

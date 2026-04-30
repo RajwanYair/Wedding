@@ -596,23 +596,9 @@ function _registerHandlers() {
     const { signInWith } = await import("./services/auth.js");
     signInWith("google");
   });
-  on("loginApple", () => {
-    const AppleID = /** @type {any} */ (window).AppleID;
-    if (!AppleID) return;
-    AppleID.auth
-      .signIn()
-      .then((/** @type {any} */ response) => {
-        const email = response?.user?.email ?? "";
-        const name =
-          `${response?.user?.name?.firstName ?? ""} ${response?.user?.name?.lastName ?? ""}`.trim();
-        const result = loginOAuth(email, name, "", "apple");
-        if (result) {
-          closeModal("authOverlay");
-          _switchSection("dashboard");
-          showToast(t("auth_welcome", { name: result.name }), "success");
-        }
-      })
-      .catch(() => {});
+  on("loginApple", async () => {
+    const { signInWith } = await import("./services/auth.js");
+    signInWith("apple"); // S389: Supabase Auth redirect (AppleID SDK removed)
   });
   on("signOut", () => {
     clearSession();

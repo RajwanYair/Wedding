@@ -24,10 +24,11 @@ describe("oauth-providers (S94)", () => {
     expect(detectInstalledSdks().google).toBe(false);
   });
 
-  it("detectInstalledSdks detects Apple when window.AppleID.auth.signIn is a function", () => {
+  it("detectInstalledSdks always returns apple:false (S389 — Supabase Auth only)", () => {
+    // Even if window.AppleID is present, S389 migration always returns false
     // @ts-ignore — stub
     window.AppleID = { auth: { signIn: () => {} } };
-    expect(detectInstalledSdks().apple).toBe(true);
+    expect(detectInstalledSdks().apple).toBe(false);
   });
 
   it("preferredTransport always returns 'supabase' for Google (S388 — GIS SDK removed)", () => {
@@ -36,7 +37,13 @@ describe("oauth-providers (S94)", () => {
     expect(preferredTransport("google")).toBe("supabase");
   });
 
-  it("preferredTransport falls back to 'supabase' when SDK is missing", () => {
+  it("preferredTransport always returns 'supabase' for Apple (S389 — AppleID SDK removed)", () => {
+    // @ts-ignore — stub (SDK presence must not change the transport)
+    window.AppleID = { auth: { signIn: () => {} } };
+    expect(preferredTransport("apple")).toBe("supabase");
+  });
+
+  it("preferredTransport always returns 'supabase' for both providers", () => {
     expect(preferredTransport("apple")).toBe("supabase");
     expect(preferredTransport("google")).toBe("supabase");
   });
