@@ -1425,5 +1425,9 @@
   "registry_add_btn": "Добавить",
   "registry_url_invalid": "Неверный URL (требуется https)",
   "registry_link_added": "Ссылка добавлена",
-  "registry_preset_filled": "{platform} URL заполнен"
+  "registry_preset_filled": "{platform} URL заполнен",
+  "label_virtual_link": "Ссылка для онлайн-участия (Zoom / Teams)",
+  "ph_virtual_link": "https://zoom.us/j/...",
+  "rsvp_virtual_label": "Вы также можете присоединиться онлайн!",
+  "rsvp_join_online": "Присоединиться онлайн"
 }

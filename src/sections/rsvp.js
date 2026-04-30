@@ -234,6 +234,7 @@ function _showConfirmation(/** @type {string} */ status) {
     confirmEl.textContent = t("rsvp_confirmed");
     _renderCalendarLinks(confirmEl);
     _renderVenueLinks(confirmEl);
+    _renderVirtualLink(confirmEl); // S431: show join link for hybrid events
   } else if (status === "declined") {
     confirmEl.textContent = t("rsvp_declined");
   } else {
@@ -292,6 +293,37 @@ function _renderCalendarLinks(parent) {
   ics.className = "btn btn-sm";
   ics.textContent = t("rsvp_download_ics");
   wrap.appendChild(ics);
+
+  parent.appendChild(wrap);
+}
+
+/**
+ * S431: Append a "Join Online" button if the couple has set a virtual/hybrid link.
+ * Safe: only renders if virtualLink is an https URL.
+ * @param {HTMLElement} parent
+ */
+function _renderVirtualLink(parent) {
+  const info = /** @type {Record<string, string|undefined>} */ (storeGet("weddingInfo") ?? {});
+  const url = info.virtualLink ?? "";
+  if (!url.startsWith("https://")) return;
+
+  const wrap = document.createElement("div");
+  wrap.className = "rsvp-virtual-actions";
+  wrap.style.marginTop = "0.75rem";
+
+  const label = document.createElement("strong");
+  label.textContent = t("rsvp_virtual_label");
+  label.style.display = "block";
+  label.style.marginBottom = "0.5rem";
+  wrap.appendChild(label);
+
+  const btn = document.createElement("a");
+  btn.href = url;
+  btn.target = "_blank";
+  btn.rel = "noopener noreferrer";
+  btn.className = "btn btn-primary";
+  btn.textContent = t("rsvp_join_online");
+  wrap.appendChild(btn);
 
   parent.appendChild(wrap);
 }

@@ -1425,5 +1425,9 @@
   "registry_add_btn": "Add",
   "registry_url_invalid": "Invalid URL (https required)",
   "registry_link_added": "Link added successfully",
-  "registry_preset_filled": "{platform} URL pre-filled"
+  "registry_preset_filled": "{platform} URL pre-filled",
+  "label_virtual_link": "Virtual / Hybrid Join Link (Zoom / Teams)",
+  "ph_virtual_link": "https://zoom.us/j/...",
+  "rsvp_virtual_label": "You can also join online!",
+  "rsvp_join_online": "Join Online"
 }

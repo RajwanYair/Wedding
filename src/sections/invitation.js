@@ -39,6 +39,7 @@ export function updateWeddingDetails() {
     { id: "venueWaze", key: "venueWaze" },
     { id: "venueLat", key: "venueLat" },
     { id: "venueLon", key: "venueLon" },
+    { id: "virtualLink", key: "virtualLink" }, // S431: virtual/hybrid event join link
   ];
   const delta = /** @type {Record<string,string>} */ ({});
   fieldMap.forEach(({ id, key }) => {

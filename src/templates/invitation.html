@@ -94,6 +94,14 @@
             <input type="number" id="venueLon" step="any" dir="ltr" placeholder="34.7818" data-on-input="updateWeddingDetails">
           </div>
         </div>
+        <!-- S431: Virtual / hybrid event join link -->
+        <div class="form-group">
+          <label data-i18n="label_virtual_link">קישור השתתפות מרחוק (Zoom / Teams)</label>
+          <input type="url" id="virtualLink" dir="ltr"
+            data-i18n-placeholder="ph_virtual_link"
+            placeholder="https://zoom.us/j/..."
+            data-on-input="updateWeddingDetails">
+        </div>
       </div>
 
       <!-- Venue Map (auto-generated from address via OpenStreetMap) -->

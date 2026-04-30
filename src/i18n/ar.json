@@ -1425,5 +1425,9 @@
   "registry_add_btn": "إضافة",
   "registry_url_invalid": "رابط غير صالح (مطلوب https)",
   "registry_link_added": "تمت إضافة الرابط",
-  "registry_preset_filled": "تم تعبئة {platform}"
+  "registry_preset_filled": "تم تعبئة {platform}",
+  "label_virtual_link": "رابط المشاركة عن بُعد (Zoom / Teams)",
+  "ph_virtual_link": "https://zoom.us/j/...",
+  "rsvp_virtual_label": "يمكنكم المشاركة عبر الإنترنت!",
+  "rsvp_join_online": "انضم عبر الإنترنت"
 }
