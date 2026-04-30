@@ -68,15 +68,22 @@ export function isViewTransitionSupported() {
 
 /**
  * Navigate to a section by name. Pushes a history entry (back button works).
+ * Also emits to router.js `onRouteChange` subscribers (S390 unified routing).
  * @param {string} name
+ * @param {Record<string, string>} [params]
  */
-export function navigateTo(name) {
+export function navigateTo(name, params = {}) {
   if (!name) return;
   _activeSection = name;
+  // Emit via router.js so all `onRouteChange` subscribers fire (ADR-025 R1).
+  import("./router.js").then(({ navigate, currentRoute }) => {
+    const current = currentRoute();
+    if (current.section !== name) navigate(name, params);
+  });
   // pushState adds a history entry so browser back/forward works.
   // Guard against duplicate entries when re-navigating to the active section.
   if (location.hash !== `#${name}`) {
-    history.pushState(null, "", `#${name}`);
+    history.pushState({ section: name, params }, "", `#${name}`);
   }
   _withViewTransition(() => {
     const tab = document.querySelector(
