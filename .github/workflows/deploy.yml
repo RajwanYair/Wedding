@@ -50,6 +50,9 @@ jobs:
         run: node scripts/inject-config.mjs
 
       - name: Build with Vite
+        env:
+          VITE_GLITCHTIP_DSN: ${{ secrets.GLITCHTIP_DSN }}
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: npm run build
 
       - name: Setup Pages
