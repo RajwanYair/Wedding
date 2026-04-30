@@ -4,6 +4,52 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [21.0.0] — 2026-04-30
+
+> **S464–S473: utility expansion II — gift registry, seating optimizer,
+> budget forecast, notification batch queue, CSV builder, iCal export,
+> QR batch tokens, WCAG contrast checker, time-format helpers; +118 unit
+> tests; release cut.**
+
+### Added
+
+- **S464** — Gift registry helpers (`src/utils/gift-registry.js`):
+  `markReceived/markPending/summarise/filterByState`; tracks giver + ISO
+  timestamp on receipt; aggregate totals + estimated value rollup; 11 tests.
+- **S465** — Seating optimizer (`src/utils/seating-optimizer.js`):
+  `planSeating()` greedy assignment with group affinity (largest group
+  first, prefers tables already hosting the group, splits when no single
+  table fits); `applyPlan()` materialises assignments; `remainingCapacity()`;
+  12 tests.
+- **S466** — Budget forecast (`src/utils/budget-forecast.js`):
+  `forecast(budget, expenses)` returns per-category remaining, utilisation,
+  and over-budget flags with totals; surfaces unbudgeted spending categories;
+  `projectFinal(spent, progress)` linear projection; 10 tests.
+- **S467** — Notification batch queue (`src/utils/notification-batch.js`):
+  priority-ordered FIFO with `enqueue/takeBatch/groupByCategory/pruneOlderThan`;
+  category + minPriority filters; 13 tests.
+- **S468** — CSV export builder (`src/utils/csv-export-builder.js`):
+  RFC 4180 escaper + builder with column descriptors + per-column formatters;
+  UTF-8 BOM by default for Excel; `inferColumns()`; 16 tests.
+- **S469** — iCal export (`src/utils/ical-export.js`):
+  RFC 5545 minimal subset — `escapeText`, `formatDateTime` (UTC), `foldLine`
+  (75-octet wrap), `buildIcs()` with multi-event support; 12 tests.
+- **S470** — QR batch tokens (`src/utils/qr-batch.js`):
+  base64url `encodeToken/decodeToken` (Hebrew/unicode-safe), `buildBatch()`
+  per-guest deep-link URLs, `manifestText()` printable manifest; 12 tests.
+- **S471** — WCAG contrast checker (`src/utils/contrast-check.js`):
+  `parseHex/relativeLuminance/contrastRatio/wcagLevel/passesAA`; 21:1 max,
+  AA/AAA classification with large-text variants; 15 tests.
+- **S472** — Time-format helpers (`src/utils/time-format.js`):
+  `daysBetween/decomposeDuration/formatCountdown/weddingPhase`; UI badge
+  buckets (past / tonight / imminent / soon / weeks-away / future); 17 tests.
+- **S473** — v21.0.0 release: `npm run sync:version`, CHANGELOG entry,
+  tag, push, GitHub release.
+
+### Changed
+
+- Test suite: **4 477 tests** across 293 files (+118 from v20.0.0).
+
 ## [20.0.0] — 2026-07-05
 
 > **S454–S463: utility expansion sprint — guest dedup, WhatsApp DNC, audit retention,
