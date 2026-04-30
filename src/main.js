@@ -48,6 +48,7 @@ import {
   initShortcutsHelp,
   initCommandPaletteTrigger,
   navigate,
+  withViewTransition,
 } from "./core/nav.js";
 import {
   showToast,
@@ -698,26 +699,27 @@ async function _switchSection(name) {
     return;
   }
 
-  // Update active states on nav tabs
-  document.querySelectorAll("[data-tab]").forEach((btn) => {
-    const active = /** @type {HTMLElement} */ (btn).dataset.tab === name;
-    btn.classList.toggle("active", active);
-    // aria-selected is only valid on role=tab; bottom-nav buttons have no role
-    // so signal active state via aria-current=page there.
-    if (btn.getAttribute("role") === "tab") {
-      btn.setAttribute("aria-selected", String(active));
-    } else if (active) {
-      btn.setAttribute("aria-current", "page");
-    } else {
-      btn.removeAttribute("aria-current");
-    }
-  });
+  // Update active states on nav tabs + show/hide sections using View Transitions (S391)
+  withViewTransition(() => {
+    // Update active states on nav tabs
+    document.querySelectorAll("[data-tab]").forEach((btn) => {
+      const active = /** @type {HTMLElement} */ (btn).dataset.tab === name;
+      btn.classList.toggle("active", active);
+      if (btn.getAttribute("role") === "tab") {
+        btn.setAttribute("aria-selected", String(active));
+      } else if (active) {
+        btn.setAttribute("aria-current", "page");
+      } else {
+        btn.removeAttribute("aria-current");
+      }
+    });
 
-  // Show/hide section panes
-  document.querySelectorAll(".section").forEach((sec) => {
-    const isTarget = sec.id === `sec-${name}`;
-    sec.classList.toggle("active", isTarget);
-    sec.setAttribute("aria-hidden", String(!isTarget));
+    // Show/hide section panes
+    document.querySelectorAll(".section").forEach((sec) => {
+      const isTarget = sec.id === `sec-${name}`;
+      sec.classList.toggle("active", isTarget);
+      sec.setAttribute("aria-hidden", String(!isTarget));
+    });
   });
 
   // Lazy-load template on first visit
