@@ -109,6 +109,7 @@ import {
   VENDOR_CATEGORY_VALUES,
   EXPENSE_CATEGORY_VALUES,
 } from "../core/domain-enums.js";
+import { slugify } from "../utils/slugify.js";
 
 /**
  * @typedef {{
@@ -296,12 +297,9 @@ const ALL_SECTIONS = /** @type {WebsiteSection[]} */ ([
 /** Build a URL-safe slug from two first names + year. */
 export function buildSiteSlug(/** @type {string} */ coupleA, /** @type {string} */ coupleB, /** @type {string|number} */ year) {
   const clean = (/** @type {string|number} */ s) =>
-    String(s ?? "").trim().toLowerCase()
-      .replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").slice(0, 20);
-  const a = clean(coupleA) || "name";
-  const b = clean(coupleB) || "name";
+    slugify(String(s ?? ""), { latinize: true, maxLength: 20 }) || "name";
   const y = String(year ?? new Date().getFullYear()).slice(-4);
-  return `${a}-and-${b}-${y}`;
+  return `${clean(coupleA)}-and-${clean(coupleB)}-${y}`;
 }
 
 /**
