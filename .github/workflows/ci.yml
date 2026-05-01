@@ -45,6 +45,9 @@ jobs:
       - name: Validate i18n parity
         run: npm run check:i18n
 
+      - name: Validate ICU MessageFormat (S583)
+        run: npm run check:i18n:icu
+
       - name: Check credential hygiene
         run: npm run check:credentials
 

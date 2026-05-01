@@ -26,6 +26,8 @@
     "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:md && npm run validate:mermaid",
     "lint:fix": "npm run lint:css -- --fix && npm run lint:js -- --fix",
     "check:i18n": "node scripts/check-i18n-parity.mjs --dir src/i18n --primary he",
+    "check:i18n:icu": "node scripts/check-i18n-icu.mjs",
+    "check:i18n:icu:strict": "node scripts/check-i18n-icu.mjs --strict",
     "check:credentials": "node scripts/check-credentials.mjs",
     "check:credentials:warn": "node scripts/check-credentials.mjs --warn",
     "sync:version": "node scripts/sync-version.mjs",
@@ -40,7 +42,7 @@
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
     "audit:arch": "node scripts/arch-check.mjs --strict",
     "check:coverage": "node scripts/check-coverage-gate.mjs --enforce",
-    "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run check:canonical-facts && npm run audit:utils && npm test && npm run build"
+    "ci": "npm run lint && npm run check:i18n && npm run check:i18n:icu && npm run check:credentials && npm run check:canonical-facts && npm run audit:utils && npm test && npm run build"
   },
   "engines": {
     "node": ">=22.0.0"
