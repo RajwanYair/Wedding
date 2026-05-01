@@ -18,7 +18,8 @@ const cmds = [
 describe("S600 command-palette-search", () => {
   it("fuzzyScore: prefix beats substring beats subsequence", () => {
     expect(fuzzyScore("Add Guest", "add")).toBeGreaterThan(fuzzyScore("Open Add", "add"));
-    expect(fuzzyScore("Open Add", "add")).toBeGreaterThan(fuzzyScore("Open Settings", "se"));
+    // Substring (idx>0) beats subsequence-only:
+    expect(fuzzyScore("Open Add", "add")).toBeGreaterThan(fuzzyScore("Add Guest", "ag"));
   });
 
   it("fuzzyScore returns 0 when chars missing", () => {
