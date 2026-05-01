@@ -27,6 +27,11 @@ import {
   totalArea,
   listFurnitureTypes,
 } from "../utils/floor-plan.js";
+import {
+  planSeating as _planSeating,
+  applyPlan as _applyPlan,
+  remainingCapacity as _remainingCapacity,
+} from "../utils/seating-optimizer.js";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
@@ -747,4 +752,41 @@ export function saveFloorPlanItem(item) {
 /** @returns {readonly string[]} */
 export function getFurnitureTypes() {
   return listFurnitureTypes();
+}
+
+// ── S616: Seating optimizer wiring ───────────────────────────────────────
+
+/**
+ * Build a deterministic seating plan for unseated confirmed guests using
+ * the pure seating-optimizer helper.
+ *
+ * @param {{ confirmedOnly?: boolean }} [opts]
+ * @returns {ReturnType<typeof _planSeating>}
+ */
+export function buildSeatingPlan(opts) {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  return _planSeating(guests, tables, opts ?? {});
+}
+
+/**
+ * Apply a seating plan in-place, persist the updated guest list, and return
+ * the count of new assignments + any leftover unseated ids.
+ *
+ * @param {ReturnType<typeof _planSeating>} plan
+ * @returns {{ assigned: number, unseated: string[] }}
+ */
+export function commitSeatingPlan(plan) {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const next = _applyPlan(guests, plan);
+  storeSet("guests", next);
+  enqueueWrite("guests", () => syncStoreKeyToSheets("guests"));
+  return { assigned: plan.assignments.length, unseated: [...plan.unseated] };
+}
+
+/** @returns {Record<string, number>} remaining seats per tableId */
+export function getRemainingSeatsByTable() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  return Object.fromEntries(_remainingCapacity(tables, guests));
 }
