@@ -3526,6 +3526,67 @@
     }
   }
 
+  /* ── S569: container-q coverage for remaining sections ── */
+
+  /* Vendors — collapse the table to stacked rows on narrow panes */
+  @container section-pane (max-width: 520px) {
+    .vendor-table thead {
+      display: none;
+    }
+    .vendor-table,
+    .vendor-table tbody,
+    .vendor-table tr {
+      display: block;
+      width: 100%;
+    }
+    .vendor-table td {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.4rem 0.6rem;
+    }
+    .vendor-total-banner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.4rem;
+    }
+  }
+
+  /* Expenses — single column for stats on narrow panes */
+  @container section-pane (max-width: 460px) {
+    .expense-stats-row {
+      flex-direction: column;
+    }
+    .expense-top-categories-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  /* Gallery — denser thumbnail grid on narrow panes */
+  @container section-pane (max-width: 420px) {
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.5rem;
+    }
+  }
+
+  /* Gifts/registry — stack input controls on narrow panes */
+  @container section-pane (max-width: 440px) {
+    .gift-input {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  /* Invitation preview — reduce padding on narrow panes */
+  @container section-pane (max-width: 480px) {
+    .invitation-preview {
+      padding: 1.2rem;
+      border-radius: 16px;
+    }
+  }
+
   /* ── S19b: @starting-style — modal entrance without JS animation class ── */
   /* Animate the backdrop overlay open */
   .modal-overlay {
