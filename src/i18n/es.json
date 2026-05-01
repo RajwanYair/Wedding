@@ -1554,5 +1554,9 @@
   "dedup_none_found": "No se encontraron duplicados",
   "dedup_merge_btn": "Fusionar",
   "dedup_merged": "Invitados fusionados exitosamente",
-  "theme_json_file_aria": "Archivo JSON del tema"
+  "theme_json_file_aria": "Archivo JSON del tema",
+  "vendor_sla_tier_gold": "Oro",
+  "vendor_sla_tier_silver": "Plata",
+  "vendor_sla_tier_bronze": "Bronce",
+  "vendor_sla_tier_watch": "Vigilar"
 }

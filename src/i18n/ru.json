@@ -1554,5 +1554,9 @@
   "dedup_none_found": "Дубликаты не найдены",
   "dedup_merge_btn": "Объединить",
   "dedup_merged": "Гости успешно объединены",
-  "theme_json_file_aria": "JSON-файл темы"
+  "theme_json_file_aria": "JSON-файл темы",
+  "vendor_sla_tier_gold": "Золото",
+  "vendor_sla_tier_silver": "Серебро",
+  "vendor_sla_tier_bronze": "Бронза",
+  "vendor_sla_tier_watch": "Наблюдение"
 }

@@ -1554,5 +1554,9 @@
   "dedup_none_found": "Aucun doublon trouvé",
   "dedup_merge_btn": "Fusionner",
   "dedup_merged": "Invités fusionnés avec succès",
-  "theme_json_file_aria": "Fichier JSON du thème"
+  "theme_json_file_aria": "Fichier JSON du thème",
+  "vendor_sla_tier_gold": "Or",
+  "vendor_sla_tier_silver": "Argent",
+  "vendor_sla_tier_bronze": "Bronze",
+  "vendor_sla_tier_watch": "Surveiller"
 }

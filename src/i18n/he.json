@@ -1554,5 +1554,9 @@
   "dedup_none_found": "לא נמצאו כפילויות",
   "dedup_merge_btn": "מזג",
   "dedup_merged": "אורחים מוזגו בהצלחה",
-  "theme_json_file_aria": "קובץ JSON של ערכת נושא"
+  "theme_json_file_aria": "קובץ JSON של ערכת נושא",
+  "vendor_sla_tier_gold": "זהב",
+  "vendor_sla_tier_silver": "כסף",
+  "vendor_sla_tier_bronze": "ארד",
+  "vendor_sla_tier_watch": "מעקב"
 }

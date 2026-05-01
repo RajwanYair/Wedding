@@ -16,6 +16,7 @@ import { buildVCardDataUrl, getVCardFilename } from "../utils/vcard.js";
 import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
 import { getOverdueVendors, buildPaymentTimeline, topVendorsByCost } from "../services/analytics.js";
 import { VENDOR_CATEGORIES } from "../core/constants.js";
+import { scoreVendor, scoreTier } from "../utils/vendor-sla.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -117,6 +118,17 @@ function renderVendors() {
       if (ci === 5 && isOverdue) {
         td.classList.add("vendor-overdue-cell");
         td.textContent = `⚠️ ${txt}`;
+      }
+      // S604: SLA tier badge appended to rating cell when interactions tracked
+      if (ci === 6 && Array.isArray(v.slaInteractions) && v.slaInteractions.length > 0) {
+        const score = scoreVendor(v.slaInteractions);
+        const tier = scoreTier(score);
+        const badge = document.createElement("span");
+        badge.className = `sla-badge sla-badge--${tier}`;
+        badge.textContent = t(`vendor_sla_tier_${tier}`) || tier;
+        badge.title = `${Math.round(score)} / 100`;
+        td.appendChild(document.createTextNode(" "));
+        td.appendChild(badge);
       }
       tr.appendChild(td);
     });

@@ -4598,4 +4598,35 @@
     opacity: 0.3;
   }
 
+  /* ── S604: Vendor SLA tier badge ── */
+  .sla-badge {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    vertical-align: middle;
+  }
+  .sla-badge--gold {
+    background: color-mix(in sRGB, var(--accent-gold, gold) 25%, transparent);
+    color: var(--accent-gold, #b8860b);
+    border: 1px solid color-mix(in sRGB, var(--accent-gold, gold) 50%, transparent);
+  }
+  .sla-badge--silver {
+    background: color-mix(in sRGB, var(--text-secondary, #888) 18%, transparent);
+    color: var(--text-primary);
+    border: 1px solid color-mix(in sRGB, var(--text-secondary, #888) 35%, transparent);
+  }
+  .sla-badge--bronze {
+    background: color-mix(in sRGB, #cd7f32 20%, transparent);
+    color: #cd7f32;
+    border: 1px solid color-mix(in sRGB, #cd7f32 40%, transparent);
+  }
+  .sla-badge--watch {
+    background: color-mix(in sRGB, var(--negative, #dc2626) 18%, transparent);
+    color: var(--negative, #dc2626);
+    border: 1px solid color-mix(in sRGB, var(--negative, #dc2626) 35%, transparent);
+  }
+
 } /* end @layer components */

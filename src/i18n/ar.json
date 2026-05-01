@@ -1554,5 +1554,9 @@
   "dedup_none_found": "لا توجد مكررات",
   "dedup_merge_btn": "دمج",
   "dedup_merged": "تم دمج الضيوف بنجاح",
-  "theme_json_file_aria": "ملف JSON للسمة"
+  "theme_json_file_aria": "ملف JSON للسمة",
+  "vendor_sla_tier_gold": "ذهبي",
+  "vendor_sla_tier_silver": "فضي",
+  "vendor_sla_tier_bronze": "برونزي",
+  "vendor_sla_tier_watch": "مراقبة"
 }

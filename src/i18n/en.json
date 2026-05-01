@@ -1554,5 +1554,9 @@
   "dedup_none_found": "No duplicates found",
   "dedup_merge_btn": "Merge",
   "dedup_merged": "Guests merged successfully",
-  "theme_json_file_aria": "Theme JSON file"
+  "theme_json_file_aria": "Theme JSON file",
+  "vendor_sla_tier_gold": "Gold",
+  "vendor_sla_tier_silver": "Silver",
+  "vendor_sla_tier_bronze": "Bronze",
+  "vendor_sla_tier_watch": "Watch"
 }
