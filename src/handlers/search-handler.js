@@ -10,11 +10,29 @@ import { buildSearchIndex, searchIndex } from "../services/analytics.js";
 import { closeModal } from "../core/ui.js";
 import { navigateTo } from "../core/nav.js";
 import { t } from "../core/i18n.js";
+import { searchCommands, paletteReducer } from "../utils/command-palette-search.js";
 
 /** @typedef {import("../services/analytics.js").SearchEntry} SearchEntry */
 
 /** Cached index — rebuilt each time the modal opens. */
 let _index = /** @type {SearchEntry[]} */ ([]);
+
+/**
+ * S609: Static command list surfaced in the Cmd-K palette. These are
+ * fuzzy-matched via {@link searchCommands} from
+ * `utils/command-palette-search.js` and merged into the dynamic index.
+ * @type {{ id: string, label: string, keywords?: string, action: string }[]}
+ */
+const STATIC_COMMANDS = [
+  { id: "cmd:sync", label: "Sync Now", keywords: "sheets refresh upload", action: "sync" },
+  { id: "cmd:add-guest", label: "Add Guest", keywords: "create new guest", action: "add-guest" },
+  { id: "cmd:settings", label: "Open Settings", keywords: "preferences", action: "open-settings" },
+  { id: "cmd:export-csv", label: "Export Guests CSV", keywords: "download", action: "export-csv" },
+  { id: "cmd:toggle-theme", label: "Toggle Theme", keywords: "dark light", action: "toggle-theme" },
+];
+
+/** Reducer-driven palette navigation state (S609). */
+let _paletteState = /** @type {{ index: number, total: number }} */ ({ index: 0, total: 0 });
 
 /**
  * Type-icon map for result entries.
@@ -158,7 +176,20 @@ export function initSearchModalHandlers() {
 
   input.addEventListener("input", () => {
     const results = searchIndex(_index, input.value);
-    _renderResults(results, list);
+    // S609: merge fuzzy-matched static commands into results
+    const matched = searchCommands(STATIC_COMMANDS, input.value).map((c) => ({
+      id: c.id,
+      type: /** @type {const} */ ("command"),
+      label: c.label,
+      hint: c.keywords ?? "",
+      action: c.action,
+    }));
+    const merged = /** @type {SearchEntry[]} */ ([...results, ...matched]);
+    _renderResults(merged, list);
+    _paletteState = paletteReducer(_paletteState, {
+      type: "setTotal",
+      total: merged.length,
+    });
   });
 
   // Keyboard navigation: arrow-down from input focuses first item.
