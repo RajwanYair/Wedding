@@ -21,6 +21,10 @@ import {
   validateAnswers as _validateAnswers,
   expandPlusOnes as _expandPlusOnes,
 } from "../utils/rsvp-question-engine.js";
+import {
+  planReminders as _planReminders,
+  nextDueWave as _nextDueWave,
+} from "../utils/rsvp-reminder.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -538,4 +542,31 @@ export function validateRsvpAnswers(answers) {
  */
 export function expandRsvpPlusOnes(primaryGuestId, plusOnes) {
   return _expandPlusOnes(primaryGuestId, plusOnes);
+}
+
+// ── S617: RSVP reminder scheduler wiring ─────────────────────────────────
+
+/**
+ * Build the default 3-wave reminder plan (30/14/3 days) for the current
+ * event date and pending guests.
+ *
+ * @returns {ReturnType<typeof _planReminders>}
+ */
+export function getReminderPlan() {
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _planReminders(info.weddingDate ?? "", guests);
+}
+
+/**
+ * Return the next reminder wave that is due as of today (or null if all
+ * waves have passed or no event date is set).
+ *
+ * @param {string|Date} [today]
+ * @returns {ReturnType<typeof _nextDueWave>}
+ */
+export function getNextDueReminder(today) {
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _nextDueWave(info.weddingDate ?? "", guests, today ?? new Date());
 }
