@@ -4,6 +4,52 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.0.0] — 2026-05-19
+
+> **S584–S593: Cluster B closes — accessibility depth, UI primitives,
+> and per-locale visual parity.** Adds Hebrew + VoiceOver Playwright
+> screen-reader matrices, a hard reduced-motion audit + reduce guards
+> across `auth.css`/`layout.css`, high-contrast theme verification with
+> `forced-colors` + `prefers-contrast: more` coverage, an audit log
+> viewer with action/entity/user/date/text filters, two new Web
+> Component primitives (`<rsvp-pill>` and `<table-card>`), an Animation
+> Timeline orchestrator that wraps `document.startViewTransition` and
+> honours reduced motion, the LH-CI per-locale matrix expanded to all 6
+> shipped locales, and visual regression coverage of the landing page
+> across all 6 locales (RTL + LTR). 5417 tests / 384 files.
+
+### Added
+
++ **S584** Hebrew screen-reader Playwright matrix
+  (`tests/e2e/screen-reader-he.spec.mjs`) + accessible-name
+  resolution unit tests.
++ **S585** VoiceOver role/role-description matrix
+  (`tests/e2e/screen-reader-vo.spec.mjs`) + roledescription unit
+  tests.
++ **S586** `scripts/audit-reduced-motion.mjs` (with `--strict` flag) +
+  reduce guards in `css/auth.css` and `css/layout.css`.
++ **S587** High-contrast theme verification: `applyTheme`
+  + `forced-colors` + `prefers-contrast: more` regression tests.
++ **S588** Audit log viewer filters: `src/utils/audit-filter.js`
+  with `filterAuditEntries` / `uniqueAuditActions` /
+  `uniqueAuditEntities` (10 tests).
++ **S589** `<rsvp-pill>` + `<table-card>` Web Component primitives
+  with derived status, reduced-motion-aware bar fill (10 tests).
++ **S590** `src/core/animation-timeline.js` —
+  `createTimeline()` + `playInViewTransition()` +
+  `reducedMotionPreferred()` (9 tests).
++ **S591** LH-CI matrix expanded to 6 locales (he, en, ar, ru, fr, es)
+  + workflow import path fixed to `platform-ops.js`.
++ **S592** `tests/e2e/visual-locale-rtl.spec.mjs` per-locale RTL parity
+  + unit-level locale parity check.
++ **S593** v31.0.0 release.
+
+### Changed
+
++ `package.json` 30.2.0 → 31.0.0; `src/types.d.ts` + `ARCHITECTURE.md`
+  via `npm run sync:version`.
++ `AGENTS.md` canonical facts: tests 5369 → 5417, files 376 → 384.
+
 ## [30.2.0] — 2026-05-18
 
 > **S574–S583: Cluster B opens — Capacitor 6 mobile shells + native
