@@ -17,16 +17,19 @@ import { buildBitLink, buildPayBoxLink } from "../utils/payment-link.js";
 import { getOverdueVendors, buildPaymentTimeline, topVendorsByCost } from "../services/analytics.js";
 import { VENDOR_CATEGORIES } from "../core/constants.js";
 import { scoreVendor, scoreTier } from "../utils/vendor-sla.js";
+import { groupThreads, unreadCount } from "../utils/vendor-inbox.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
     this.subscribe("vendors", renderVendors);
     this.subscribe("vendors", renderOverdueChip); // S23.5
+    this.subscribe("vendor_messages", renderInboxChip); // S605
     this.subscribe("vendors", renderVendorPaymentTimeline); // C1 Sprint 45
     this.subscribe("vendors", renderVendorSpendTimeline); // S147
     this.subscribe("vendors", renderTopVendorsByCost); // S147
     renderVendors();
     renderOverdueChip(); // S23.5
+    renderInboxChip(); // S605
     renderVendorPaymentTimeline(); // C1 Sprint 45
     renderVendorSpendTimeline(); // S147
     renderTopVendorsByCost(); // S147
@@ -308,9 +311,11 @@ export function importVendorsCSV(fileInput) {
 
         rows.forEach((line) => {
           // Naive CSV split — handles quoted fields
-          const parts = line.match(/("(?:[^"]|"")*"|[^,]*)/g)?.map((p) =>
-            p.startsWith('"') ? p.slice(1, -1).replace(/""/g, '"') : p,
-          ) ?? line.split(",");
+          const parts =
+            line
+              .match(/("(?:[^"]|"")*"|[^,]*)/g)
+              ?.map((p) => (p.startsWith('"') ? p.slice(1, -1).replace(/""/g, '"') : p)) ??
+            line.split(",");
           const get = (/** @type {string} */ name) => parts[colIdx(name)]?.trim() ?? "";
 
           const name = get("name") || get("שם") || "";
@@ -433,6 +438,32 @@ function renderOverdueChip() {
   const count = getOverdueVendors().length;
   if (count > 0) {
     chip.textContent = `⚠️ ${t("plural_vendors_overdue", { count })}`;
+    /** @type {HTMLElement} */ (chip).hidden = false;
+  } else {
+    /** @type {HTMLElement} */ (chip).hidden = true;
+  }
+}
+
+// ── S605: Vendor inbox unread chip ───────────────────────────────────────
+
+/**
+ * Show/hide the inbox unread count chip. Reads vendor messages from the
+ * `vendor_messages` store key (an array of `VendorMessage`). Hidden when
+ * no unread messages exist.
+ */
+function renderInboxChip() {
+  const chip = document.getElementById("vendorInboxChip");
+  if (!chip) return;
+  const messages = /** @type {any[]} */ (storeGet("vendor_messages") ?? []);
+  if (!Array.isArray(messages) || messages.length === 0) {
+    /** @type {HTMLElement} */ (chip).hidden = true;
+    return;
+  }
+  const threads = groupThreads(messages);
+  const total = threads.reduce((sum, th) => sum + unreadCount(th), 0);
+  if (total > 0) {
+    chip.textContent = `💬 ${total}`;
+    chip.title = t("vendor_inbox_unread_tooltip") || "Unread vendor messages";
     /** @type {HTMLElement} */ (chip).hidden = false;
   } else {
     /** @type {HTMLElement} */ (chip).hidden = true;

@@ -1558,5 +1558,6 @@
   "vendor_sla_tier_gold": "Золото",
   "vendor_sla_tier_silver": "Серебро",
   "vendor_sla_tier_bronze": "Бронза",
-  "vendor_sla_tier_watch": "Наблюдение"
+  "vendor_sla_tier_watch": "Наблюдение",
+  "vendor_inbox_unread_tooltip": "Непрочитанные сообщения поставщиков"
 }

@@ -1558,5 +1558,6 @@
   "vendor_sla_tier_gold": "זהב",
   "vendor_sla_tier_silver": "כסף",
   "vendor_sla_tier_bronze": "ארד",
-  "vendor_sla_tier_watch": "מעקב"
+  "vendor_sla_tier_watch": "מעקב",
+  "vendor_inbox_unread_tooltip": "הודעות ספקים שלא נקראו"
 }

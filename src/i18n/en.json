@@ -1558,5 +1558,6 @@
   "vendor_sla_tier_gold": "Gold",
   "vendor_sla_tier_silver": "Silver",
   "vendor_sla_tier_bronze": "Bronze",
-  "vendor_sla_tier_watch": "Watch"
+  "vendor_sla_tier_watch": "Watch",
+  "vendor_inbox_unread_tooltip": "Unread vendor messages"
 }

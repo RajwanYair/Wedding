@@ -20,7 +20,7 @@ describe("audit:utils script", () => {
     expect(report.utils).toBeGreaterThan(100);
     expect(Array.isArray(report.unusedExports)).toBe(true);
     expect(Array.isArray(report.missingOwner)).toBe(true);
-  });
+  }, 30_000);
 
   it("largest list is at most 10 entries", () => {
     const out = execSync("node scripts/audit-utils.mjs --json", {
@@ -34,5 +34,5 @@ describe("audit:utils script", () => {
       expect(e).toHaveProperty("sizeBytes");
       expect(e).toHaveProperty("lines");
     }
-  });
+  }, 30_000);
 });

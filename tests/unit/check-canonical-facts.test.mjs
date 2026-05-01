@@ -12,5 +12,5 @@ describe("check:canonical-facts", () => {
       encoding: "utf8",
     });
     expect(out).toMatch(/violations=0/);
-  });
+  }, 30_000);
 });

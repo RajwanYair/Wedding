@@ -4629,4 +4629,24 @@
     border: 1px solid color-mix(in sRGB, var(--negative, #dc2626) 35%, transparent);
   }
 
+  /* ── S605: badge color variants for header chips ── */
+  .badge--danger {
+    background: color-mix(in sRGB, var(--negative, #dc2626) 18%, transparent);
+    color: var(--negative, #dc2626);
+    border: 1px solid color-mix(in sRGB, var(--negative, #dc2626) 35%, transparent);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge--info {
+    background: color-mix(in sRGB, var(--accent, #6366f1) 16%, transparent);
+    color: var(--accent, #6366f1);
+    border: 1px solid color-mix(in sRGB, var(--accent, #6366f1) 35%, transparent);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
 } /* end @layer components */
