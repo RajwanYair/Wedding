@@ -18,6 +18,7 @@ import { pushUndo } from "../utils/undo.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
 import { getUrlParam, setUrlParams } from "../utils/url-state.js";
 import { onPresenceChange, groupByViewing, badgeFor } from "../services/realtime.js";
+import { tallyMeals as _tallyMeals, formatChefReport as _formatChefReport } from "../utils/meal-planner.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -995,4 +996,34 @@ export function renderDuplicates() {
 
     container.appendChild(card);
   });
+}
+
+// ── S615: Meal-planner / chef report ─────────────────────────────────────
+
+/**
+ * Tally confirmed-guest meal counts by type using the pure meal-planner
+ * helper. Maps the section's guest store into the helper input shape.
+ *
+ * @returns {ReturnType<typeof _tallyMeals>}
+ */
+export function getMealReport() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _tallyMeals(
+    guests.map((g) => ({
+      id: String(g.id ?? ""),
+      meal: g.meal,
+      status: g.status,
+      seats: Number(g.seats) || 1,
+    })),
+  );
+}
+
+/**
+ * Build a tab-separated chef report (meal type ↔ count) ready to copy
+ * into a kitchen brief or print.
+ *
+ * @returns {string}
+ */
+export function getChefReport() {
+  return _formatChefReport(getMealReport());
 }
