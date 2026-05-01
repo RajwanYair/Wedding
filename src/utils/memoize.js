@@ -5,6 +5,7 @@
  * @typedef {object} MemoOptions
  * @property {(...args: any[]) => string} [resolver] - cache key from args
  * @property {number} [max] - if set, oldest keys are evicted
+ * @owner shared
  */
 
 /**

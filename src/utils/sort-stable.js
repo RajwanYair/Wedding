@@ -6,6 +6,7 @@
  * @property {"asc" | "desc"} [dir]
  * @property {"locale" | "natural" | "raw"} [compare]
  * @property {string} [locale]
+ * @owner shared
  */
 
 /**

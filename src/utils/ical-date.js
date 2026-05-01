@@ -1,6 +1,7 @@
 /**
  * iCalendar (RFC 5545) date utilities — format/parse `DATE` and
  * `DATE-TIME` (UTC) values used in `.ics` files.
+ * @owner shared
  */
 
 /**

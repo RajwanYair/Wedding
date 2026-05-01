@@ -2,6 +2,7 @@
  * Deterministic URL shortener — converts long URLs to fixed-length opaque
  * tokens via a stable hash. Pure; no network. Tokens can be reversed by a
  * caller-supplied lookup table (the function only generates the token).
+ * @owner shared
  */
 
 const ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

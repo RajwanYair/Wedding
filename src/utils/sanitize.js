@@ -3,6 +3,7 @@
  *
  * Named-export version of the `sanitize()` function from js/utils.js.
  * No runtime dependencies. No window.* side effects.
+ * @owner sections
  */
 
 /** @typedef {{ type: string, max?: number, maxLength?: number, min?: number, required?: boolean, values?: string[], default?: unknown }} SanitizeField */

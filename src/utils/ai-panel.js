@@ -8,6 +8,7 @@
  *   initAiPanel()        — register Ctrl+Shift+A keyboard shortcut
  *   openAiPanel(prompt?) — open (or focus) the panel
  *   closeAiPanel()       — close the panel
+ * @owner main.js
  */
 
 import { t } from "../core/i18n.js";

@@ -20,6 +20,7 @@
  * @property {string} [baseUrl]    Defaults to "https://example.com/checkin".
  * @property {string} [eventId]    Optional event scoping query parameter.
  * @property {string} [param="t"]  Query param name for the token.
+ * @owner shared
  */
 
 /**

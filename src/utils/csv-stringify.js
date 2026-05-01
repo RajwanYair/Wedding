@@ -1,6 +1,7 @@
 /**
  * RFC-4180 CSV stringifier.  Quotes fields that contain commas, quotes,
  * or line breaks; escapes embedded quotes by doubling them.
+ * @owner shared
  */
 
 /**

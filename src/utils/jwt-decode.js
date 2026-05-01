@@ -3,6 +3,7 @@
  * base64url to JSON.  **Does not verify signatures.**  Use only for
  * reading non-sensitive claims (exp, sub) on tokens we already trust
  * (e.g. Supabase session tokens already validated by the SDK).
+ * @owner shared
  */
 
 /**

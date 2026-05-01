@@ -6,6 +6,7 @@
  * For full HTML5 entity support use the platform's `DOMParser`; this
  * helper is for environments where a DOM is unavailable (Workers,
  * sheets export pipelines).
+ * @owner shared
  */
 
 const NAMED_DECODE = /** @type {Record<string, string>} */ ({

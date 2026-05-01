@@ -3,6 +3,7 @@
  *
  * Pure helpers that validate a custom domain and produce the DNS
  * records the user must add at their registrar. No network calls.
+ * @owner sections
  */
 
 const DOMAIN_RE = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/i;

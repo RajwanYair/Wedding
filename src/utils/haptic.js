@@ -6,6 +6,7 @@
  * (desktop, iOS Safari, Firefox for Android < 129).
  *
  * No `window.*` side-effects. ESM, zero runtime deps.
+ * @owner sections
  */
 
 // ── Feature detection ────────────────────────────────────────────────────

@@ -1,6 +1,7 @@
 /**
  * Set / multiset / token similarity helpers based on Jaccard index.
  * Used by guest-name de-duplication and fuzzy search ranking.
+ * @owner shared
  */
 
 /**

@@ -1,5 +1,6 @@
 /**
  * src/utils/misc.js — Miscellaneous helpers (S0 named-export module)
+ * @owner sections
  */
 
 /**

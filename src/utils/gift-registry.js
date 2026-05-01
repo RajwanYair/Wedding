@@ -11,6 +11,7 @@
  * @property {boolean} [received] True once gift received.
  * @property {string} [giverId] Guest id who gave the gift.
  * @property {string} [receivedAt] ISO timestamp of receipt.
+ * @owner shared
  */
 
 /**

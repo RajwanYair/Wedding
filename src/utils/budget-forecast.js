@@ -28,6 +28,7 @@
  * @property {number} utilisation
  * @property {number} categoriesOverBudget
  * @property {CategoryForecast[]} categories
+ * @owner shared
  */
 
 /**

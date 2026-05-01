@@ -16,6 +16,7 @@
  *   currency?: string,
  *   description?: string
  * }} PaymentSource
+ * @owner sections
  */
 
 const _BIT_BASE = "https://apps.bit.co.il/pay";

@@ -6,6 +6,7 @@
  * @typedef {object} DiffOp
  * @property {"equal" | "add" | "remove"} type
  * @property {string} value
+ * @owner shared
  */
 
 /**

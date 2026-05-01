@@ -6,6 +6,7 @@
  * to Google Calendar / Apple Calendar (.ics).
  *
  * All inputs are validated; outputs are deterministic and safe to embed.
+ * @owner sections
  */
 
 /** Approx. ±0.005° box (~500 m) around the marker for the OSM iframe. */

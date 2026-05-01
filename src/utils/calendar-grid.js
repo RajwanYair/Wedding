@@ -10,6 +10,7 @@
  * @property {Date} date
  * @property {boolean} inMonth
  * @property {string} isoDate     YYYY-MM-DD (UTC date components)
+ * @owner shared
  */
 
 /**

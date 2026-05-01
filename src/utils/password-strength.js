@@ -8,6 +8,7 @@
  * @property {0|1|2|3|4} score
  * @property {"empty"|"very-weak"|"weak"|"fair"|"strong"|"very-strong"} label
  * @property {string[]} suggestions   i18n keys, e.g. "password.add_symbol".
+ * @owner shared
  */
 
 const COMMON = new Set([

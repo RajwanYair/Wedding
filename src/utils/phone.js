@@ -3,6 +3,7 @@
  *
  * Converts Israeli phone numbers to international wa.me-ready format.
  * Named exports only — no window.* side effects.
+ * @owner sections
  */
 
 /**

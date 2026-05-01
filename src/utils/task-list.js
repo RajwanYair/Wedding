@@ -9,6 +9,7 @@
  * @property {number} [daysBefore]  How many days before the event the task
  *                                  is due (e.g. 30 = "1 month before").
  * @property {string} [category]
+ * @owner shared
  */
 
 const MS_PER_DAY = 86_400_000;

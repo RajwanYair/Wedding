@@ -7,6 +7,7 @@
  * @typedef {object} TimeAgoOptions
  * @property {TimeAgoLocale} [locale]
  * @property {Date | number} [now]
+ * @owner shared
  */
 
 const STEPS = [

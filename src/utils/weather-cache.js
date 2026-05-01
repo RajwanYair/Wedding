@@ -15,6 +15,7 @@
  * @property {string} fetchedAt        ISO timestamp of fetch.
  * @property {string} forDate          ISO date the forecast is for.
  * @property {WeatherSnapshot} snapshot
+ * @owner shared
  */
 
 const DEFAULT_TTL_MS = 6 * 60 * 60 * 1000; // 6h

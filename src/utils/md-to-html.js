@@ -13,6 +13,7 @@
  *   const doc = parser.parseFromString(mdToHtml(markdownString), "text/html");
  *   el.textContent = "";
  *   for (const child of doc.body.childNodes) el.appendChild(document.importNode(child, true));
+ * @owner sections
  */
 
 /**

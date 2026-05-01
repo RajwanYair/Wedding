@@ -6,6 +6,7 @@
  * - Special pairs taken care of: 15 → ט״ו (not י״ה) and 16 → ט״ז.
  * - Emits geresh (׳) for single letters and gershayim (״) before the
  *   final letter for multi-letter values, per modern convention.
+ * @owner shared
  */
 
 const UNITS = [

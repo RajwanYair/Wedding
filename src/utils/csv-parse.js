@@ -2,6 +2,7 @@
  * Streaming-friendly RFC-4180 CSV parser.  Handles quoted fields,
  * embedded commas / newlines, doubled-quote escapes, and \r\n or \n line
  * endings.  Returns an array of string arrays.
+ * @owner shared
  */
 
 /**

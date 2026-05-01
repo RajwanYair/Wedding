@@ -2,6 +2,7 @@
  * S434: REST API key management utility.
  * Generates, stores, and revokes a local API key in localStorage.
  * Key is crypto.randomUUID-based and stored under the standard prefix.
+ * @owner sections
  */
 
 const STORAGE_KEY = "wedding_v1_api_key";

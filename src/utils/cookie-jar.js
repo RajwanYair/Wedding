@@ -2,6 +2,7 @@
  * Cookie helpers — parse a `document.cookie` header into an object and
  * serialize back to a single `Set-Cookie` value.  Pure functions; no
  * direct `document` access so the helpers run in Workers and tests.
+ * @owner shared
  */
 
 /**

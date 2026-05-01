@@ -13,6 +13,7 @@
  * @property {string} [description]
  * @property {string} [url]
  * @property {string} [organizer] Email of organizer.
+ * @owner shared
  */
 
 const CRLF = "\r\n";

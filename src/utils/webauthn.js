@@ -6,6 +6,7 @@
  * scaffold phase — credentials are stored in localStorage for demo purposes.
  *
  * Security note: a production implementation must validate assertions server-side.
+ * @owner sections
  */
 
 const STORAGE_KEY = "wedding_v1_passkey_creds";

@@ -2,6 +2,7 @@
  * Number formatting helpers — thousands grouping, decimals, signed display,
  * compact short-scale (k/M/B), and Hebrew-friendly formatting via
  * `Intl.NumberFormat`.  Pure: no DOM, no locale side-effects.
+ * @owner shared
  */
 
 /**

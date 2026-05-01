@@ -5,6 +5,7 @@
  * URLs from a public Git repository URL plus optional env-var hints.
  *
  * All functions are pure. They do NOT make network calls.
+ * @owner sections
  */
 
 /** @typedef {{ repoUrl: string, branch?: string, envVars?: string[], projectName?: string }} DeployInput */

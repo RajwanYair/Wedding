@@ -7,6 +7,7 @@
  * Exports:
  *   parseCsvGuests(csvText)              → GuestRow[]
  *   importGuestsCsv(csvText, existing)   → { imported: number, skipped: number, guests: GuestRow[] }
+ * @owner sections
  */
 
 import { cleanPhone } from "./phone.js";

@@ -4,6 +4,7 @@
  * Pure functions over a Guest[] list. Tags are stored as `string[]` on each
  * guest. Functions return new arrays so callers can pass the result straight
  * to `storeSet("guests", …)`.
+ * @owner shared
  */
 
 /**

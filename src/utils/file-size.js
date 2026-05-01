@@ -1,6 +1,7 @@
 /**
  * Format a byte count as a human-readable file size.  Supports binary
  * (`KiB`, `MiB`) and decimal (`kB`, `MB`) modes plus EN/HE locale labels.
+ * @owner shared
  */
 
 const UNITS_BIN = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];

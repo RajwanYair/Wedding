@@ -1,6 +1,7 @@
 /**
  * Levenshtein edit distance + similarity helpers.  Uses a single-row
  * dynamic-programming buffer for O(min(a,b)) memory.
+ * @owner shared
  */
 
 /**

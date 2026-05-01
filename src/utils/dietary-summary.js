@@ -14,6 +14,7 @@
  * @property {Record<string, number>} byMeal
  * @property {Record<string, number>} byAllergy
  * @property {Array<{ key: string, count: number }>} topAllergies
+ * @owner shared
  */
 
 /**

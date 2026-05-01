@@ -11,6 +11,7 @@
  *   renderQrToCanvas(text, canvas, cellSize?) — draws QR onto a canvas element
  *   getQrDataUrl(text, size?)                 — returns PNG data URL
  *   buildCheckinUrl(guestId)                  — canonical check-in URL for guest
+ * @owner sections
  */
 
 // ── Minimal QR encoder (ISO 18004 — byte mode, ECC level M) ──────────────

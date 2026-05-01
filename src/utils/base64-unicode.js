@@ -1,6 +1,7 @@
 /**
  * Unicode-safe base64 encoder/decoder using `btoa`/`atob` over UTF-8 bytes.
  * Also exports a base64url variant for URL-safe payloads.
+ * @owner shared
  */
 
 /**

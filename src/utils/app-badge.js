@@ -4,6 +4,7 @@
  * Thin wrapper around the App Badging API. No-ops on browsers that do not
  * support it (Safari iOS/macOS, older Firefox). All calls are guarded with
  * try/catch — badge updates must never throw into the main app flow.
+ * @owner main.js
  */
 
 function hasBadgeApi() {

@@ -3,6 +3,7 @@
  *
  * Utilities for RSVP deadline management: countdown, overdue detection,
  * reminder scheduling.
+ * @owner main.js
  */
 
 // ── Countdown ─────────────────────────────────────────────────────────────

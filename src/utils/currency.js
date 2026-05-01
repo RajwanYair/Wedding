@@ -3,6 +3,7 @@
  * @description Currency formatting and parsing utilities.
  * Primary currency: ILS (₪) with Israel locale.
  * Also supports USD and EUR. All functions are pure (no DOM, no network).
+ * @owner core
  */
 
 // ─── Constants ────────────────────────────────────────────────────────────────

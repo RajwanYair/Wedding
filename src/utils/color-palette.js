@@ -6,6 +6,7 @@
  * @property {number} h - 0..360
  * @property {number} s - 0..100
  * @property {number} l - 0..100
+ * @owner shared
  */
 
 /**

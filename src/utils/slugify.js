@@ -3,6 +3,7 @@
  * non-alphanumerics with the separator, collapses runs, and trims.
  * Hebrew and other non-Latin scripts are kept by default; pass
  * `latinize: true` to drop them entirely.
+ * @owner services
  */
 
 /**

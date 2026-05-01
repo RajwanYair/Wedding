@@ -1,6 +1,7 @@
 /**
  * Array chunking helpers — split into fixed-size chunks, into N parts,
  * and group consecutive runs.
+ * @owner shared
  */
 
 /**

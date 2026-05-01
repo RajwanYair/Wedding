@@ -3,6 +3,7 @@
  * **replaced** rather than merged.  Source values of `undefined` are
  * skipped (so partial overrides do not erase target keys).  Returns a
  * new object; inputs are not mutated.
+ * @owner shared
  */
 
 /**

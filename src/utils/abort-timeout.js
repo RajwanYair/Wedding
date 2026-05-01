@@ -4,6 +4,7 @@
  * `AbortSignal.timeout` and `AbortSignal.any` are widely supported but
  * not in every environment our tests target.  These helpers are
  * environment-agnostic.
+ * @owner shared
  */
 
 /**

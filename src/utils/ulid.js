@@ -2,6 +2,7 @@
  * ULID — Universally Unique Lexicographically Sortable Identifier.
  * 26-character Crockford base32: 10 chars timestamp (ms) + 16 chars
  * randomness.  See https://github.com/ulid/spec.
+ * @owner shared
  */
 
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"; // Crockford

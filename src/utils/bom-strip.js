@@ -1,6 +1,7 @@
 /**
  * Strip leading byte-order marks from imported text — common cause of
  * silent failures in CSV / JSON imports from Excel and Google Sheets.
+ * @owner shared
  */
 
 const BOMS = [

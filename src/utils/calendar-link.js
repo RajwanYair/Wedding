@@ -12,6 +12,7 @@
  *   end?: Date | string | number,
  *   url?: string
  * }} CalendarEvent
+ * @owner sections
  */
 
 const HOUR_MS = 3_600_000;

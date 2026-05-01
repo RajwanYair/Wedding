@@ -1,6 +1,7 @@
 /**
  * Tiny MIME-type lookup table for the file types the wedding app touches:
  * images, audio, common documents, and import/export formats.
+ * @owner shared
  */
 
 /** @type {Readonly<Record<string, string>>} */

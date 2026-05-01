@@ -5,6 +5,7 @@
  * for one or more locales, plus the resource-size / category budgets.
  *
  * No fetch, no Node fs — safe to import in browser bundles.
+ * @owner shared
  */
 
 const DEFAULT_BUDGETS = Object.freeze({

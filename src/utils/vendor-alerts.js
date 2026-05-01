@@ -4,6 +4,7 @@
  * Pure functions over a Vendor[] list. Identifies vendors with outstanding
  * balances that are overdue or due soon, so the dashboard can surface a toast
  * or badge.
+ * @owner shared
  */
 
 /**

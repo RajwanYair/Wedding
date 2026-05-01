@@ -8,6 +8,7 @@
  * @property {number} width
  * @property {number} height
  * @property {"png"|"gif"|"jpeg"|"webp"} type
+ * @owner shared
  */
 
 /**

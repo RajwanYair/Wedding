@@ -1,5 +1,6 @@
 /**
  * IPv4 / IPv6 address parsing and validation helpers.  Pure JS, no DNS.
+ * @owner shared
  */
 
 /**

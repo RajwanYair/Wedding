@@ -9,6 +9,7 @@
  * @property {1|2|3|4|5|6} depth
  * @property {string} text
  * @property {string} slug
+ * @owner shared
  */
 
 import { slugify } from "./slug.js";

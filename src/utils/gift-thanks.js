@@ -10,6 +10,7 @@
  * @property {string} sentAt         ISO timestamp the thank-you went out.
  * @property {"whatsapp" | "email" | "card" | "other"} [channel]
  * @property {string} [notes]
+ * @owner shared
  */
 
 /**

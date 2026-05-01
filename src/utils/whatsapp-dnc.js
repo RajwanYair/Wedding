@@ -6,6 +6,7 @@
  * comparison works regardless of input formatting.
  *
  * Storage: `wedding_v1_dnc_list` — JSON array of cleaned phone strings.
+ * @owner shared
  */
 
 import { cleanPhone } from "./phone.js";

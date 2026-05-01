@@ -6,6 +6,7 @@
  * @property {number} capacity - max tokens
  * @property {number} refillPerSec - tokens added per second
  * @property {() => number} [now] - clock fn (ms epoch)
+ * @owner shared
  */
 
 /**

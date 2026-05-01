@@ -5,6 +5,7 @@
  * date and current RSVP status. Pure functions (no side effects). UI/handlers
  * are responsible for actually dispatching messages via the existing WABA
  * pipeline.
+ * @owner shared
  */
 
 /**

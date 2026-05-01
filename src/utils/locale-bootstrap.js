@@ -5,6 +5,7 @@
  * map into a fully-keyed locale file (all keys from base locale present,
  * untranslated keys set to ""). This keeps parity checks passing while
  * community translators fill in remaining strings.
+ * @owner shared
  */
 
 /**

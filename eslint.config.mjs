@@ -256,7 +256,7 @@ export default [
     rules: {
       "jsdoc/check-alignment": "error",
       "jsdoc/check-param-names": "error",
-      "jsdoc/check-tag-names": "error",
+      "jsdoc/check-tag-names": ["error", { definedTags: ["owner"] }],
       "jsdoc/check-types": "error",
       "jsdoc/empty-tags": "error",
       "jsdoc/no-undefined-types": "off", // too noisy with our DOM/store types
@@ -285,7 +285,7 @@ export default [
     rules: {
       "jsdoc/check-alignment": "error",
       "jsdoc/check-param-names": "error",
-      "jsdoc/check-tag-names": "error",
+      "jsdoc/check-tag-names": ["error", { definedTags: ["owner"] }],
       "jsdoc/check-types": "error",
       "jsdoc/empty-tags": "error",
       "jsdoc/no-undefined-types": "off",

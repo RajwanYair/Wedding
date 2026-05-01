@@ -2,6 +2,7 @@
  * Timezone display helpers using the Intl API. Wedding events are in
  * Asia/Jerusalem; guests may live elsewhere. These helpers render an ISO
  * timestamp in any IANA timezone with stable formatting.
+ * @owner shared
  */
 
 /**

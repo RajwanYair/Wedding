@@ -3,6 +3,7 @@
  * RegExps, and typed arrays.  Uses a `WeakMap` to preserve cyclic and
  * shared references.  Pure: no `structuredClone` dependency to keep
  * behaviour deterministic across runtimes.
+ * @owner shared
  */
 
 /**

@@ -4,6 +4,7 @@
  * Exports:
  *   findDuplicates(guests)              → DuplicatePair[]
  *   mergeGuests(primaryId, dupId, gs)   → Guest[] (new array with dup removed, primary enriched)
+ * @owner sections
  */
 
 import { cleanPhone } from "./phone.js";

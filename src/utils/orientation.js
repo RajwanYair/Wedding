@@ -10,6 +10,7 @@
  *   unlockOrientation();                  // release after scan ends
  *
  * No window.* side-effects. ESM. Zero runtime deps.
+ * @owner sections
  */
 
 // ── Feature detection ─────────────────────────────────────────────────────

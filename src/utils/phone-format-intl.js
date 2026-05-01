@@ -8,6 +8,7 @@
  * @property {string} iso         ISO-3166 alpha-2.
  * @property {string} name
  * @property {(rest: string) => string} format
+ * @owner shared
  */
 
 /**

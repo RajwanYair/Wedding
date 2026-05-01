@@ -6,6 +6,7 @@
  * @property {number} max - max entries, must be ≥ 1
  * @property {number} [ttlMs] - if set, entries older than ttl are evicted on get
  * @property {() => number} [now] - clock fn for TTL (default Date.now)
+ * @owner shared
  */
 
 /**

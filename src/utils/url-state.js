@@ -8,6 +8,7 @@
  * Format: `#guests?filter=confirmed&sort=lastName&q=Cohen`
  *
  * Named exports only — no side effects.
+ * @owner sections
  */
 
 /**

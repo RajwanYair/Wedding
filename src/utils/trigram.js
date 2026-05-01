@@ -2,6 +2,7 @@
  * Tiny trigram (n-gram) index for fuzzy substring search across a small
  * collection of strings.  Used for guest / vendor quick-lookups where a
  * full-text engine is overkill.
+ * @owner shared
  */
 
 /**

@@ -2,6 +2,7 @@
  * Escape a string for safe insertion into a `RegExp` source.  Escapes the
  * 12 ECMAScript regex metacharacters and `-` (so it is safe inside a
  * character class).  Non-string inputs return an empty string.
+ * @owner shared
  */
 
 const META = /[.*+?^${}()|[\]\\\-/]/g;

@@ -1,6 +1,7 @@
 /**
  * Binary min-heap priority queue.  Pure: `compare(a, b)` returns negative
  * when `a` should come out first.  Default compare orders by `priority`.
+ * @owner shared
  */
 
 /**

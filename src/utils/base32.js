@@ -1,6 +1,7 @@
 /**
  * RFC-4648 Base32 encoder/decoder with optional `=` padding.
  * Operates on `Uint8Array` ↔ string.
+ * @owner shared
  */
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";

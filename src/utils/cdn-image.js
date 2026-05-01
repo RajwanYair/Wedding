@@ -1,4 +1,5 @@
-﻿/**
+/** @owner sections */
+/**
  * src/utils/cdn-image.js - S127 Cloudflare CDN image URL helpers.
  *
  * Builds Cloudflare Images / Image Resizing URLs and srcset strings:

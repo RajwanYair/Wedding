@@ -9,6 +9,7 @@
  * Designed as a zero-dep replacement for `intl-messageformat`. Locale-aware
  * plural categories use `Intl.PluralRules`. Unknown patterns fall back to
  * the literal string so we never break the UI.
+ * @owner core
  */
 
 const _pluralCache = new Map();

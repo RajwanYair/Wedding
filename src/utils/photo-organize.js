@@ -4,6 +4,7 @@
  * Pure functions over a Photo[] list with `takenAt` ISO timestamps. Used by
  * the gallery section to render chronological galleries grouped by day, and
  * to sort photos uploaded in batch.
+ * @owner shared
  */
 
 /**

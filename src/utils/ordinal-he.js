@@ -1,6 +1,7 @@
 /**
  * Hebrew ordinal helpers — masculine/feminine ordinals 1..10 and a
  * fallback for higher values, plus an English ordinal helper.
+ * @owner shared
  */
 
 const HE_M = [

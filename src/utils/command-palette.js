@@ -2,6 +2,7 @@
  * S447: Smart guest command palette.
  * Opens a `<dialog>` overlay on Ctrl+K / Cmd+K.
  * Commands dispatch data-action events or navigate directly.
+ * @owner main.js
  */
 
 import { t } from "../core/i18n.js";

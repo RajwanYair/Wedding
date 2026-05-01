@@ -9,6 +9,7 @@
  * @property {Set<number>} dom - 1..31
  * @property {Set<number>} month - 1..12
  * @property {Set<number>} dow - 0..6 (Sun..Sat)
+ * @owner shared
  */
 
 const RANGES = [

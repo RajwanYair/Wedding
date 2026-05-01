@@ -3,6 +3,7 @@
  *
  * Pure functions over an audit log array. Callers persist the result via
  * `storeSet("auditLog", pruned)`.
+ * @owner shared
  */
 
 /**

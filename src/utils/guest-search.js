@@ -4,6 +4,7 @@
  * Pure functions for filtering and searching guest lists by name, phone,
  * status, side, group, meal, table, and accessibility needs.
  * No imports from other src modules — fully self-contained.
+ * @owner sections
  */
 
 /**

@@ -2,6 +2,7 @@
  * Fisher–Yates shuffle helpers.  Pure / non-mutating by default; pass
  * an explicit RNG to make the shuffle deterministic (seating drafts,
  * unit tests, demo data).
+ * @owner shared
  */
 
 /**

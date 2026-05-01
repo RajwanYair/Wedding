@@ -22,6 +22,7 @@
  * @property {Array<{ guestId: string, tableId: string }>} assignments
  *   New assignments produced by this run.
  * @property {string[]} unseated   Guest ids that could not be placed.
+ * @owner shared
  */
 
 /**

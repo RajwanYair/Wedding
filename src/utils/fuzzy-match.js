@@ -6,6 +6,7 @@
  * @property {string} value
  * @property {number} distance
  * @property {number} score      0..1, where 1 is exact match.
+ * @owner shared
  */
 
 /**

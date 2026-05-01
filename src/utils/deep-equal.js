@@ -2,6 +2,7 @@
  * Structural equality for plain JS values.  Handles primitives, arrays,
  * plain objects, Maps, Sets, Dates, RegExps, and typed arrays.  Cycles are
  * detected with a WeakMap pair-set.
+ * @owner shared
  */
 
 /**

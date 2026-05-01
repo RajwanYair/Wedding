@@ -15,6 +15,7 @@
  * @property {number} [size=10]            Max items per batch.
  * @property {string} [category]           Restrict to a single category.
  * @property {number} [minPriority]        Drop items below this priority.
+ * @owner shared
  */
 
 /**

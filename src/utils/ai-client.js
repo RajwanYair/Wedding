@@ -8,6 +8,7 @@
  *   saveAiSettings(opts)     → void  (persists to localStorage)
  *   askAi(prompt, opts?)     → Promise<string>  (calls the API, returns text)
  *   testAiConnection()       → Promise<{ ok: boolean, message: string }>
+ * @owner sections
  */
 
 const STORAGE_KEY = "wedding_v1_ai_settings";

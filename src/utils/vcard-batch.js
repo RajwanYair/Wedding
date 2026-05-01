@@ -11,6 +11,7 @@
  * @property {string} [email]
  * @property {string} [organization]
  * @property {string} [note]
+ * @owner shared
  */
 
 const CRLF = "\r\n";

@@ -11,6 +11,7 @@
  * @property {(err: unknown) => boolean} [shouldRetry]
  * @property {(ms: number) => Promise<void>} [sleep]
  * @property {() => number} [random] - 0..1
+ * @owner shared
  */
 
 /**

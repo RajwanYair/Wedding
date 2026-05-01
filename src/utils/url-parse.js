@@ -1,6 +1,7 @@
 /**
  * URL parsing helpers built on the platform `URL` API, with safer
  * predicates that don't throw and a few wedding-specific shortcuts.
+ * @owner shared
  */
 
 /**

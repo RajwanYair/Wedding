@@ -1,6 +1,7 @@
 /**
  * Millisecond duration parser/formatter.  Inspired by `ms` but pure ESM
  * with English + Hebrew formatting and no implicit unit fallthrough.
+ * @owner shared
  */
 
 const UNIT_MS = /** @type {const} */ ({

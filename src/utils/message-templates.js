@@ -18,6 +18,7 @@
  *     weddingDate: "15.08.2025",
  *     tableName: "Table 3",
  *   });
+ * @owner services
  */
 
 // ── Template store ─────────────────────────────────────────────────────────

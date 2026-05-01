@@ -8,6 +8,7 @@
  *   buildPrintHtml(title, columns, rows, opts?) → string
  *   printGuestList()                            — opens printable guest roster
  *   printTableLayout()                          — opens printable table seating map
+ * @owner handlers
  */
 
 import { storeGet } from "../core/store.js";

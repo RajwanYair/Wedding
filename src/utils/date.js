@@ -2,6 +2,7 @@
  * src/utils/date.js — Date/time utilities (S0 named-export module)
  *
  * All dates use the Asia/Jerusalem timezone.
+ * @owner sections
  */
 
 import { formatDate, currentLang } from "../core/i18n.js";

@@ -2,6 +2,7 @@
  * src/utils/form-helpers.js — Shared form-value extraction (F1.1)
  *
  * Replaces the duplicated `getVal()` closures that appeared 10+ times in main.js.
+ * @owner shared
  */
 
 /**

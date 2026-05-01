@@ -5,6 +5,7 @@
  *
  * Returns the throttled wrapper, which exposes `cancel()` and
  * `flush()` for tests and teardown.
+ * @owner shared
  */
 
 /**

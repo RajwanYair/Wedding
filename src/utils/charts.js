@@ -1,5 +1,6 @@
 /**
  * src/utils/charts.js — Pure SVG chart primitives for analytics section
+ * @owner sections
  */
 
 import { t } from "../core/i18n.js";

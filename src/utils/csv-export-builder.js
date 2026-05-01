@@ -15,6 +15,7 @@
  * @property {string} [newline="\r\n"]  Row terminator.
  * @property {boolean} [bom=true]       Prepend UTF-8 BOM (Excel friendliness).
  * @property {boolean} [headers=true]   Emit header row.
+ * @owner shared
  */
 
 /**

@@ -3,6 +3,7 @@
  *
  * Browser language / locale detection with RTL support.
  * Fully injectable for testing (no direct navigator access).
+ * @owner core
  */
 
 /** @type {Set<string>} ISO 639-1 RTL language codes */

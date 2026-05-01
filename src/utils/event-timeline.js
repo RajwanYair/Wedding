@@ -16,6 +16,7 @@
  * @property {string} aId
  * @property {string} bId
  * @property {"overlap" | "duplicate-id"} kind
+ * @owner shared
  */
 
 /**

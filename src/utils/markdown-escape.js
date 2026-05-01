@@ -2,6 +2,7 @@
  * Escape characters that would otherwise be interpreted by CommonMark.
  * Used when injecting untrusted data into Markdown templates (e.g.
  * release notes, vendor notes that may flow into a Markdown export).
+ * @owner shared
  */
 
 const MD_SPECIAL = /[\\`*_{}[\]()#+\-.!|>~]/g;

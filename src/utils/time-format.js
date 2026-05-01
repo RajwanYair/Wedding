@@ -3,6 +3,7 @@
  *
  * Pure functions; no DOM, no external i18n dependency. Returns the *English*
  * label by default (callers can map via i18n or supply Hebrew labels).
+ * @owner shared
  */
 
 const DAY_MS = 24 * 60 * 60 * 1000;

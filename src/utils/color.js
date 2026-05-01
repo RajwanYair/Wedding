@@ -1,6 +1,7 @@
 /**
  * Color helpers — hex / RGB / HSL conversion and contrast checks.
  * Used for theme variant generation and accessibility checks.
+ * @owner shared
  */
 
 /**

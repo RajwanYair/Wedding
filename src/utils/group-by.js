@@ -1,5 +1,6 @@
 /**
  * Tiny grouping/aggregation toolbox.  All functions are pure and immutable.
+ * @owner shared
  */
 
 /**

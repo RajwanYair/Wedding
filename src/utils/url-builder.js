@@ -2,6 +2,7 @@
  * Tiny URL builder — joins a base + path segments and appends a sorted
  * query string.  Skips null/undefined values; arrays expand via repeated
  * keys; encodes safely with `encodeURIComponent`.
+ * @owner shared
  */
 
 /**

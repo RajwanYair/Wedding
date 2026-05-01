@@ -8,6 +8,7 @@
  * @property {string} one - form for n=1
  * @property {string} two - form for n=2 (dual)
  * @property {string} many - form for n>=3
+ * @owner shared
  */
 
 /**

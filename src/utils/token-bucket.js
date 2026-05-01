@@ -1,6 +1,7 @@
 /**
  * Token-bucket rate limiter.  Refills at a steady rate and lets callers
  * `take(n)` tokens or peek at the current count.  Pure (clock injectable).
+ * @owner shared
  */
 
 /**

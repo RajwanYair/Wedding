@@ -17,6 +17,7 @@
  * @property {Record<string, number>} byType  Per-meal-type seat counts.
  * @property {Array<{ type: string, count: number }>} sorted
  *   Same data sorted by descending count.
+ * @owner shared
  */
 
 /**

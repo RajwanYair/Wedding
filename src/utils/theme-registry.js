@@ -2,6 +2,7 @@
  * S445: Theme Marketplace registry.
  * COMMUNITY_THEMES provides a curated set of installable themes with preview swatches.
  * installTheme() applies a theme's CSS variables via applyThemeVars.
+ * @owner sections
  */
 
 import { applyThemeVars } from "../services/theme.js";

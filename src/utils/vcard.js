@@ -12,6 +12,7 @@
  *   notes?: string,
  *   contractUrl?: string
  * }} VCardSource
+ * @owner sections
  */
 
 /**

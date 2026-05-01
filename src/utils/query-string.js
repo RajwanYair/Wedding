@@ -2,6 +2,7 @@
  * Query-string parser/serialiser.  Supports repeated keys → arrays,
  * boolean-empty values, and nested bracket notation `a[0]=x&a[1]=y`.
  * Pure: no `URL`, no `URLSearchParams` mutations leaked.
+ * @owner shared
  */
 
 /**

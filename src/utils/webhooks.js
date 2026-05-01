@@ -1,6 +1,7 @@
 /**
  * S441: Webhook subscription management.
  * Stores webhook endpoints in localStorage; supports add, list, remove, and ping.
+ * @owner sections
  */
 
 const STORAGE_KEY = "wedding_v1_webhooks";

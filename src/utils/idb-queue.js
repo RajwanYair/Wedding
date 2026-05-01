@@ -12,6 +12,7 @@
  *   idbQueueClear()              → Promise<void>
  *
  * Falls back silently to an empty result if IDB is unavailable (SSR / test).
+ * @owner services
  */
 
 const DB_NAME = "wedding_offline_queue";

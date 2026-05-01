@@ -3,6 +3,7 @@
  *
  * Implements the relative-luminance formula from WCAG 2.x §1.4.3.
  * Pure functions; no DOM access.
+ * @owner shared
  */
 
 /**

@@ -11,6 +11,7 @@
  * @property {string} category
  * @property {number} amount        Whole units (cents/agorot).
  * @property {number} percent       Percentage of total, 1 decimal.
+ * @owner shared
  */
 
 /**

@@ -3,6 +3,7 @@
  *
  * Reduces image dimensions and re-encodes (default: JPEG q=0.82) before upload.
  * Pure DOM/canvas — no library dependencies.
+ * @owner shared
  */
 
 /**

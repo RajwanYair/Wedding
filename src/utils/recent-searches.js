@@ -4,6 +4,7 @@
  * Maintains a most-recently-used deque (default cap 10) of search strings,
  * persisted to localStorage. Entries are de-duplicated case-insensitively but
  * the original casing of the most recent entry is preserved.
+ * @owner shared
  */
 
 const STORAGE_KEY = "wedding_v1_recent_searches";

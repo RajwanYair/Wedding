@@ -3,6 +3,7 @@
  *
  * Stores snapshots of store keys before destructive operations.
  * Call pushUndo() before a delete/edit, then popUndo() on Ctrl+Z.
+ * @owner sections
  */
 
 /** @typedef {{ label: string, key: string, snapshot: unknown }} UndoEntry */

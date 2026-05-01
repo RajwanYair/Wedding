@@ -5,6 +5,7 @@
  * standard `online` / `offline` window events, updates a small body-class
  * + ARIA-live region for screen reader announcements, and exposes a
  * subscriber API for callers (e.g. main.js shows toasts).
+ * @owner main.js
  */
 
 const listeners = new Set();

@@ -2,6 +2,7 @@
  * FNV-1a 32-bit hash — a small non-cryptographic hash used for cache
  * keys, bloom-filter inputs, and sharding.  Not suitable for security
  * purposes; for crypto use Web Crypto.
+ * @owner shared
  */
 
 const FNV_OFFSET_32 = 0x811c9dc5;

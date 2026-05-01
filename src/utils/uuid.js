@@ -3,6 +3,7 @@
  * (`crypto.getRandomValues`); falls back to `Math.random` only when no
  * crypto is available so the function is always callable.  Production
  * code in browsers always hits the CSPRNG path.
+ * @owner shared
  */
 
 const HEX = "0123456789abcdef";

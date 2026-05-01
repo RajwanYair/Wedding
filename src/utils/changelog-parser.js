@@ -10,6 +10,7 @@
  *   - item ...
  *   ### Changed (12.3.0)
  *   - item ...
+ * @owner sections
  */
 
 /**

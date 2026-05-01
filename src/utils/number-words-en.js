@@ -1,6 +1,7 @@
 /**
  * Convert integers (0–9_999_999) to English words and back.  Used for
  * cheque-style amounts in vendor payment exports.
+ * @owner shared
  */
 
 const ONES = [

@@ -22,6 +22,7 @@
  * @property {number} validCount
  * @property {number} invalidCount
  * @property {Record<string, number>} errorsByField
+ * @owner shared
  */
 
 const PHONE_RE = /^[+\d][\d\s\-()]{6,}$/;

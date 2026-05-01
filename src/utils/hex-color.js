@@ -1,5 +1,6 @@
 /**
  * Hex / RGB colour helpers.
+ * @owner shared
  */
 
 /**

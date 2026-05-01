@@ -1,5 +1,6 @@
 /**
  * Numeric range generators.  All are pure and accept a `step` argument.
+ * @owner shared
  */
 
 /**
