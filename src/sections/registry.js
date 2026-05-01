@@ -11,6 +11,13 @@ import { storeGet, storeSet } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 import { showToast } from "../core/ui.js";
+import {
+  amazonIlLink,
+  kspLink,
+  zapLink,
+  boutiqueLink,
+  detectProvider,
+} from "../utils/registry-links.js";
 
 // ── Platform registry (S430) ──────────────────────────────────────────────
 
@@ -33,7 +40,13 @@ function detectPlatform(url) {
   try {
     const host = new URL(url).hostname.replace("www.", "");
     const found = REGISTRY_PLATFORMS.find((p) => host === p.domain || host.endsWith(`.${p.domain}`));
-    return found ? { label: found.label, icon: found.icon } : null;
+    if (found) return { label: found.label, icon: found.icon };
+    // S611: fall back to the canonical provider detector for ksp / zap.
+    const provider = detectProvider(url);
+    if (provider === "ksp") return { label: "KSP", icon: "🛒" };
+    if (provider === "zap") return { label: "Zap", icon: "🛒" };
+    if (provider === "amazon") return { label: "Amazon", icon: "📦" };
+    return null;
   } catch {
     return null;
   }
@@ -172,5 +185,51 @@ export function addRegistryPreset(platformId) {
   if (nameInput) nameInput.value = p.label;
   input?.focus();
   showToast(t("registry_preset_filled", { platform: p.label }), "info");
+}
+
+// ── S611: registry deep-link builders (UTM-tagged) ─────────────────────────
+
+/**
+ * Build a UTM-tagged Amazon IL product link.
+ * @param {string} asin
+ * @param {{ source?: string, medium?: string, campaign?: string, content?: string }} [utm]
+ */
+export function buildAmazonIlLink(asin, utm) {
+  return amazonIlLink(asin, utm ?? {});
+}
+
+/**
+ * Build a UTM-tagged KSP search link.
+ * @param {string} query
+ * @param {{ source?: string, medium?: string, campaign?: string, content?: string }} [utm]
+ */
+export function buildKspLink(query, utm) {
+  return kspLink(query, utm ?? {});
+}
+
+/**
+ * Build a UTM-tagged Zap search link.
+ * @param {string} query
+ * @param {{ source?: string, medium?: string, campaign?: string, content?: string }} [utm]
+ */
+export function buildZapLink(query, utm) {
+  return zapLink(query, utm ?? {});
+}
+
+/**
+ * Build a UTM-tagged generic boutique link (https-only).
+ * @param {string} baseUrl
+ * @param {{ source?: string, medium?: string, campaign?: string, content?: string }} [utm]
+ */
+export function buildBoutiqueLink(baseUrl, utm) {
+  return boutiqueLink(baseUrl, utm ?? {});
+}
+
+/**
+ * Detect which provider a registry URL belongs to.
+ * @param {string} url
+ */
+export function getRegistryProvider(url) {
+  return detectProvider(url);
 }
 
