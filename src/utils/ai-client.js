@@ -13,7 +13,7 @@
 
 const STORAGE_KEY = "wedding_v1_ai_settings";
 
-/** @typedef {{ provider: string, apiKey: string, model: string, enabled: boolean }} AiSettings */
+/** @typedef {{ provider: string, apiKey: string, model: string, enabled: boolean, proxyUrl: string }} AiSettings */
 
 const PROVIDER_ENDPOINTS = {
   openai: "https://api.openai.com/v1/chat/completions",
@@ -41,12 +41,13 @@ function getAiSettings() {
         apiKey: parsed.apiKey ?? "",
         model: parsed.model ?? "",
         enabled: parsed.enabled ?? false,
+        proxyUrl: parsed.proxyUrl ?? "",
       };
     }
   } catch {
     /* storage disabled or corrupt */
   }
-  return { provider: "openai", apiKey: "", model: "", enabled: false };
+  return { provider: "openai", apiKey: "", model: "", enabled: false, proxyUrl: "" };
 }
 
 /**
@@ -60,6 +61,7 @@ export function saveAiSettings(opts) {
     apiKey: opts.apiKey ?? current.apiKey,
     model: opts.model ?? current.model,
     enabled: opts.enabled ?? current.enabled,
+    proxyUrl: opts.proxyUrl ?? current.proxyUrl,
   };
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
@@ -166,3 +168,65 @@ export async function testAiConnection() {
     return { ok: false, message: msg };
   }
 }
+
+/**
+ * Stream AI response token-by-token.  When a `proxyUrl` is configured the
+ * request is sent through the Cloudflare Worker proxy (S564–S566) which
+ * keeps third-party keys off the public origin.  Yields incremental text
+ * chunks until the stream completes.
+ *
+ * @param {string} prompt
+ * @param {{ system?: string }} [opts]
+ * @returns {AsyncGenerator<string, void, void>}
+ */
+export async function* streamAi(prompt, opts = {}) {
+  const { provider, apiKey, model, enabled, proxyUrl } = getAiSettings();
+  if (!enabled) throw new Error("AI assistant is not enabled.");
+  const resolvedModel = model || DEFAULT_MODELS[provider] || "gpt-4o-mini";
+  const messages = [];
+  if (opts.system) messages.push({ role: "system", content: opts.system });
+  messages.push({ role: "user", content: prompt });
+
+  // Use proxy when configured; otherwise direct provider stream is not
+  // yet supported here (UI falls back to non-streaming askAi()).
+  if (!proxyUrl) {
+    const text = await askAi(prompt, opts);
+    yield text;
+    return;
+  }
+
+  const res = await fetch(`${proxyUrl.replace(/\/$/, "")}/ai/chat?stream=1`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({ provider, model: resolvedModel, messages }),
+  });
+  if (!res.ok || !res.body) {
+    throw new Error(`AI stream error ${res.status}`);
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let nl;
+    while ((nl = buffer.indexOf("\n")) !== -1) {
+      const line = buffer.slice(0, nl).trim();
+      buffer = buffer.slice(nl + 1);
+      if (!line || !line.startsWith("data:")) continue;
+      const payload = line.slice(5).trim();
+      if (payload === "[DONE]") return;
+      try {
+        const obj = JSON.parse(payload);
+        if (typeof obj.text === "string") yield obj.text;
+      } catch {
+        /* ignore malformed line */
+      }
+    }
+  }
+}
+

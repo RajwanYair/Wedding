@@ -70,6 +70,23 @@ export default {
         messages,
         apiKey: auth.replace(/^Bearer\s+/i, ""),
       });
+      // Streaming branch: emit a single SSE event with the full text.
+      // True provider-side streaming lives behind each adapter (S566+).
+      if (url.searchParams.get("stream") === "1") {
+        const sse = `data: ${JSON.stringify({ text: result.text })}
+
+data: [DONE]
+
+`;
+        return new Response(sse, {
+          status: 200,
+          headers: {
+            "content-type": "text/event-stream; charset=utf-8",
+            "cache-control": "no-cache",
+            ...corsHeaders(env, request),
+          },
+        });
+      }
       return json(result, env, request);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "proxy_error";
