@@ -3124,6 +3124,33 @@
     transform: translateY(0);
   }
 
+  /* ── S571: Animation Timeline API scroll reveals ──
+     Progressive enhancement: browsers that support `animation-timeline:
+     view()` get a smooth, GPU-accelerated reveal driven by scroll
+     position.  The IntersectionObserver path above (.stat-hidden /
+     .stat-visible) remains the baseline.  We also honour
+     `prefers-reduced-motion` to skip the reveal entirely. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .stat-card,
+      .analytics-kpi-grid > * {
+        animation: stat-card-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 30%;
+      }
+    }
+  }
+  @keyframes stat-card-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   /* ── Sprint 2: Connection status indicator ── */
   .sync-status {
     display: inline-flex;
