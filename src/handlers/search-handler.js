@@ -25,6 +25,7 @@ const TYPE_ICONS = {
   guest: "👤",
   table: "🪑",
   vendor: "🏪",
+  command: "⚡",
 };
 
 /**
@@ -96,6 +97,45 @@ function _activateEntry(entry) {
     navigateTo("tables");
   } else if (entry.type === "vendor") {
     navigateTo("vendors");
+  } else if (entry.type === "command") {
+    _runCommand(entry.action ?? "");
+  }
+}
+
+/**
+ * Dispatch a static command.  S567: keep this dispatcher tiny — each
+ * branch should either navigate or trigger an existing global side effect.
+ * @param {string} action
+ */
+function _runCommand(action) {
+  switch (action) {
+    case "sync": {
+      void import("../services/sheets.js").then((m) => m.syncSheetsNow?.()).catch(() => {});
+      break;
+    }
+    case "add-guest": {
+      navigateTo("guests");
+      void import("../core/ui.js").then((m) => m.openModal?.("guestModal")).catch(() => {});
+      break;
+    }
+    case "open-settings": {
+      navigateTo("settings");
+      break;
+    }
+    case "export-csv": {
+      void import("../sections/guests.js")
+        .then((m) => m.exportGuestsCSV?.())
+        .catch(() => {});
+      break;
+    }
+    case "toggle-theme": {
+      void import("../core/ui.js")
+        .then((m) => m.cycleTheme?.())
+        .catch(() => {});
+      break;
+    }
+    default:
+      /* unknown command — silently ignore */
   }
 }
 

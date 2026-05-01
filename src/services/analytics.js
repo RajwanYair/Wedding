@@ -799,7 +799,25 @@ export function getOverBudgetCategories() {
 // §5 — Search index: Cmd-K command palette (from search-index.js, S109)
 // ══════════════════════════════════════════════════════════════════════════════════════════════════
 
-/** @typedef {{ id: string, type: "guest"|"table"|"vendor"|"section", label: string, hint?: string }} SearchEntry */
+/** @typedef {{ id: string, type: "guest"|"table"|"vendor"|"section"|"command", label: string, hint?: string, action?: string }} SearchEntry */
+
+/**
+ * Static command entries — actions invokable from the palette.  S567:
+ * promotes Cmd-K from a navigator into a true command palette.  Each
+ * entry's `action` field is a stable identifier dispatched by
+ * `search-handler._activateEntry`.
+ *
+ * @returns {SearchEntry[]}
+ */
+function _commandEntries() {
+  return [
+    { id: "cmd:sync", type: "command", label: _t("cmd_sync_now") || "Sync now", action: "sync" },
+    { id: "cmd:add-guest", type: "command", label: _t("cmd_add_guest") || "Add guest", action: "add-guest" },
+    { id: "cmd:settings", type: "command", label: _t("cmd_open_settings") || "Open settings", action: "open-settings" },
+    { id: "cmd:export", type: "command", label: _t("cmd_export_csv") || "Export guests CSV", action: "export-csv" },
+    { id: "cmd:theme", type: "command", label: _t("cmd_toggle_theme") || "Toggle theme", action: "toggle-theme" },
+  ];
+}
 
 /**
  * Build the command-palette index from current store state.
@@ -807,7 +825,7 @@ export function getOverBudgetCategories() {
  */
 export function buildSearchIndex() {
   /** @type {SearchEntry[]} */
-  const out = [];
+  const out = [..._commandEntries()];
 
   for (const sectionId of SECTION_LIST) {
     const key = `nav_${sectionId}`;
