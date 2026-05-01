@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [29.0.0] — 2026-05-15
+
+> **S544–S553: utility expansion X — color, HTML entities, cookie jar,
+> abort/timeout, trigram index, FNV-1a hash, throttle, Fisher-Yates
+> shuffle, BOM strip; +97 unit tests; release cut.**
+
+### Added
+
+- **S544** — Color utilities (`src/utils/color.js`): `parseHex`, `toHex`,
+  `rgbToHsl`, `hslToRgb`, WCAG `luminance` / `contrastRatio`,
+  `adjustLightness`. 14 unit tests.
+- **S545** — HTML entities (`src/utils/html-entities.js`): `escapeHtml`,
+  `unescapeHtml` with named table (amp, lt, gt, quot, apos, nbsp, copy,
+  reg, trade, hellip, ndash, mdash, lsquo, rsquo, ldquo, rdquo) +
+  decimal / hex numeric refs, unknown entities preserved. 11 unit tests.
+- **S546** — Cookie jar (`src/utils/cookie-jar.js`): `parseCookies`
+  (URI-decoded, last-wins, tolerant) + `serializeCookie` with token-name
+  validation and path/domain/expires/maxAge/secure/httpOnly/sameSite
+  attributes. 15 unit tests.
+- **S547** — Abort/timeout helpers (`src/utils/abort-timeout.js`):
+  `timeoutSignal(ms)`, `anySignal(iter)`, `withTimeout(promise, ms)` —
+  TimeoutError-named errors. 9 unit tests.
+- **S548** — Trigram index (`src/utils/trigram.js`): `ngrams` with
+  padding + `buildTrigramIndex(items, getText)` returning a Jaccard
+  search function with `{limit, minScore}` options. 10 unit tests.
+- **S549** — FNV-1a 32-bit hash (`src/utils/fnv1a.js`): `fnv1a32`,
+  `fnv1a32Hex`, `fnv1a32Bytes` with reference vectors. 8 unit tests.
+- **S550** — Throttle (`src/utils/throttle.js`): leading/trailing
+  `throttle(fn, wait, opts)` with `cancel()` and `flush()`. 8 unit tests.
+- **S551** — Shuffle (`src/utils/shuffle.js`): Fisher-Yates `shuffle`
+  (immutable), `sample(arr, k)`, `shuffleInPlace`, and Mulberry32
+  seedable PRNG. 10 unit tests.
+- **S552** — BOM strip (`src/utils/bom-strip.js`): `stripBom`,
+  `stripBomBytes` (UTF-8 / UTF-16 LE / UTF-16 BE), `hasBom` — fixes
+  silent CSV/JSON import failures from Excel & Google Sheets. 12 unit
+  tests.
+- **S553** — Release v29.0.0 — sync-version propagation, CHANGELOG entry,
+  lint clean, all 5341 tests passing across 365 files.
+
 ## [28.0.0] — 2026-05-01
 
 > **S534–S543: utility expansion IX — slugify, Jaccard, IP, URL, Hebrew
