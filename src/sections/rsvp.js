@@ -16,6 +16,11 @@ import { GUEST_SIDES, RSVP_RESPONSE_STATUSES, MEAL_TYPES } from "../core/constan
 import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { buildGoogleCalendarLink, buildIcsDataUrl } from "../utils/calendar-link.js";
 import { buildWazeUrl, buildGoogleMapsUrl, buildOsmEmbedUrl } from "../utils/venue-links.js";
+import {
+  visibleQuestions as _visibleQuestions,
+  validateAnswers as _validateAnswers,
+  expandPlusOnes as _expandPlusOnes,
+} from "../utils/rsvp-question-engine.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -489,4 +494,48 @@ export function getRsvpDailyTrend() {
   return [...byDay.entries()]
     .map(([date, count]) => ({ date, count }))
     .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// ── S607: Conditional RSVP question engine integration ─────────────────────
+
+/**
+ * Read the custom RSVP questions configured on `weddingInfo.rsvpQuestions`.
+ * Each question follows the {@link import("../utils/rsvp-question-engine.js").Question} shape.
+ * @returns {any[]}
+ */
+export function getRsvpQuestions() {
+  const info = /** @type {any} */ (storeGet("weddingInfo") ?? {});
+  return Array.isArray(info.rsvpQuestions) ? info.rsvpQuestions : [];
+}
+
+/**
+ * Compute which custom questions should be visible for the supplied
+ * answers map (after evaluating each question's `showWhen` condition).
+ * @param {Record<string, unknown>} answers
+ * @returns {any[]}
+ */
+export function getVisibleRsvpQuestions(answers) {
+  return _visibleQuestions(getRsvpQuestions(), answers ?? {});
+}
+
+/**
+ * Validate the supplied answers map against currently-visible required
+ * questions. Returns `{ valid, missing }` — `missing` contains the IDs
+ * of unanswered required questions.
+ * @param {Record<string, unknown>} answers
+ * @returns {{ valid: boolean, missing: string[] }}
+ */
+export function validateRsvpAnswers(answers) {
+  return _validateAnswers(getRsvpQuestions(), answers ?? {});
+}
+
+/**
+ * Expand a confirmed plus-one count into synthetic guest stubs the
+ * seating planner can later promote to full guest records. Called
+ * automatically by {@link submitRsvp} when `count > 1`.
+ * @param {string} primaryGuestId
+ * @param {number} plusOnes
+ */
+export function expandRsvpPlusOnes(primaryGuestId, plusOnes) {
+  return _expandPlusOnes(primaryGuestId, plusOnes);
 }
