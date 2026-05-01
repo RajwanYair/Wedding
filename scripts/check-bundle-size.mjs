@@ -12,7 +12,8 @@
  */
 
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
-import { join, extname, basename } from "node:path";
+import { join, extname, basename, dirname, resolve as pResolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 
 const DIST = "dist";
@@ -23,7 +24,10 @@ const BUDGETS = {
   total: 220, // sum of all gzip chunks
 };
 
-const OVERRIDE_FILE = "bundle.budget.json";
+const OVERRIDE_FILE = pResolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "bundle.budget.json",
+);
 
 function loadOverrides() {
   if (!existsSync(OVERRIDE_FILE)) return {};

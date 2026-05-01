@@ -1123,7 +1123,7 @@ export function getDashboardSnapshot() {
  * S444: Update the no-show prediction widget.
  * Formula: predictedAttendance = confirmedHeads * (checkinRate || DEFAULT_RATE)
  */
-export function updateNoshowWidget() {
+function updateNoshowWidget() {
   const predicted = document.getElementById("noshowPredicted");
   const rateEl = document.getElementById("noshowRate");
   const basis = document.getElementById("noshowBasis");

@@ -218,7 +218,7 @@ competitor. $0/month self-hosted.*
 | 55 | GitHub Actions (7 workflows + OIDC) | Active | **KEEP + add Trivy daily + ZAP weekly** | Static + runtime defence. |
 | 56 | Dependabot (grouped) | Active | **KEEP** | Weekly cadence. |
 | 57 | Stryker mutation gate | Active | **KEEP — score ≥ 70%** | Floor never drops. |
-| 58 | Bundle budget (`bundle.budget.json`) | Active | **KEEP — ≤ 60 KB gzip immutable** | Bundle moat is the moat. |
+| 58 | Bundle budget (`scripts/bundle.budget.json`) | Active | **KEEP — ≤ 60 KB gzip immutable** | Bundle moat is the moat. |
 
 ### 2.5 Infrastructure & Hosting
 

@@ -15,7 +15,7 @@ import { showToast } from "../core/ui.js";
 // ── Platform registry (S430) ──────────────────────────────────────────────
 
 /** Known gift-registry platforms with display info and preset URL templates. */
-export const REGISTRY_PLATFORMS = Object.freeze([
+const REGISTRY_PLATFORMS = Object.freeze([
   { id: "amazon_il",   label: "Amazon IL",   icon: "📦", domain: "amazon.co.il",   url: "https://www.amazon.co.il/wedding/" },
   { id: "amazon_com",  label: "Amazon",      icon: "📦", domain: "amazon.com",     url: "https://www.amazon.com/wedding/registry/" },
   { id: "giftly",      label: "Giftly",      icon: "🎀", domain: "giftly.com",     url: "https://www.giftly.com/gift-cards" },
@@ -29,7 +29,7 @@ export const REGISTRY_PLATFORMS = Object.freeze([
  * @param {string} url
  * @returns {{ label: string, icon: string } | null}
  */
-export function detectPlatform(url) {
+function detectPlatform(url) {
   try {
     const host = new URL(url).hostname.replace("www.", "");
     const found = REGISTRY_PLATFORMS.find((p) => host === p.domain || host.endsWith(`.${p.domain}`));

@@ -5,7 +5,7 @@
  * Baseline-aware typecheck wrapper around `tsc --noEmit`.
  *
  *   - Runs `tsc --noEmit` against `tsconfig.json`.
- *   - Reads the committed baseline from `typecheck-baseline.txt` (a sorted
+ *   - Reads the committed baseline from `scripts/typecheck-baseline.txt` (a sorted
  *     list of error fingerprints `<file>:<code>:<message>` — line/column are
  *     intentionally excluded so unrelated edits do not invalidate entries).
  *   - Exit codes:
@@ -29,7 +29,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
-const baselinePath = resolve(projectRoot, "typecheck-baseline.txt");
+const baselinePath = resolve(__dirname, "typecheck-baseline.txt");
 
 const UPDATE = process.argv.includes("--update");
 

@@ -43,7 +43,7 @@ Adopt the following **gzip** budgets:
 
 ### Override mechanism
 
-A new `bundle.budget.json` at the repo root may pin a per-chunk override:
+A new `scripts/bundle.budget.json` may pin a per-chunk override:
 
 ```json
 {
@@ -80,5 +80,5 @@ Any override must include a comment and be reviewed at every minor release.
 
 - [x] Decision document committed
 - [ ] `scripts/check-bundle-size.mjs` lands in v11.9.0 as advisory
-- [ ] `bundle.budget.json` committed with the v11.9.0 measurement baseline
+- [ ] `scripts/bundle.budget.json` committed with the v11.9.0 measurement baseline
 - [ ] CI flips to enforcing mode in v12.0.0

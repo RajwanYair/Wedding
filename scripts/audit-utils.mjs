@@ -8,7 +8,7 @@
  *
  * Flags:
  *   --enforce        non-zero exit on any new violation above baseline
- *   --baseline N     override baseline (default: read from ../bundle.budget.json or 0)
+ *   --baseline N     override baseline (default: 0)
  *   --json           emit machine-readable JSON only
  *
  * Owner tag: each `src/utils/*.js` file SHOULD declare `@owner <module>` near

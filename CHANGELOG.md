@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.1.1] — 2026-05-01
+
+> **Production-readiness pass.** Tidies the workspace root, prunes
+> dead exports that were unimported, relocates two long-form config
+> files into `scripts/`, and refreshes the shared `../MyScripts`
+> tooling. No behavior changes; all 5488 tests still green.
+
+### Changed
+
++ Moved `bundle.budget.json` → `scripts/bundle.budget.json` and
+  `typecheck-baseline.txt` → `scripts/typecheck-baseline.txt`.
+  Updated `scripts/check-bundle-size.mjs`, `scripts/typecheck.mjs`,
+  `scripts/audit-utils.mjs`, `docs/adr/024-bundle-size-budget.md`,
+  and `ROADMAP.md` to point at the new locations.
++ Deleted post-release temp `release-notes.tmp.md` (already
+  `.gitignore`d, just stale on disk).
++ De-exported three internal-only symbols flagged by
+  `audit:dead`: `updateNoshowWidget` (`sections/dashboard.js`),
+  `REGISTRY_PLATFORMS` and `detectPlatform` (`sections/registry.js`).
+  Dead-export count: 5 → 2 (remaining two are intentional planned
+  native NFC API surface).
++ Refreshed shared `../MyScripts/node_modules/` (already current).
+
+### Notes
+
++ Kiosk-mode and error-monitoring opt-out toggles are intentionally
+  retained: removing them would block users from exiting kiosk mode
+  at the venue and would violate GDPR by removing the telemetry
+  opt-out path.
++ `scripts/typecheck.mjs` is not wired into CI; its 117 strict-mode
+  findings are pre-existing and out of scope for this patch.
+
 ## [31.1.0] — 2026-05-26
 
 > **S594–S603: Phase C foundations — Vendor CRM, Stripe Connect,
