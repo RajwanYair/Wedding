@@ -62,18 +62,25 @@ const utilFiles = readdirSync(UTILS_DIR)
   .map((f) => join(UTILS_DIR, f));
 
 const otherFiles = [
-  ...walk(SRC_DIR, new Set([".js", ".ts", ".mjs"])).filter(
-    (f) => !f.startsWith(`${UTILS_DIR}\\`) && !f.startsWith(`${UTILS_DIR}/`),
-  ),
+  ...walk(SRC_DIR, new Set([".js", ".ts", ".mjs"])),
   ...walk(TESTS_DIR, new Set([".js", ".mjs", ".ts"])),
 ];
 
 /**
- * Read the merged source of every consumer file (lazy; only do this once).
+ * Read each consumer file once; per-util we test names against the global
+ * merged source minus that util's own contribution.  Util-to-util imports
+ * count as usage, but a file cannot satisfy its own export.
  */
-const mergedConsumerSrc = otherFiles
-  .map((f) => readFileSync(f, "utf8"))
-  .join("\n\n");
+const sourceByFile = new Map();
+for (const f of otherFiles) sourceByFile.set(f, readFileSync(f, "utf8"));
+const globalSrc = [...sourceByFile.values()].join("\n\n");
+const selfSrcCache = new Map();
+function consumerSrcFor(utilFile) {
+  if (!selfSrcCache.has(utilFile)) {
+    selfSrcCache.set(utilFile, sourceByFile.get(utilFile) ?? "");
+  }
+  return { global: globalSrc, self: selfSrcCache.get(utilFile) };
+}
 
 const EXPORT_RE =
   /export\s+(?:async\s+)?(?:function\*?|class|const|let|var)\s+(\w+)/g;
@@ -108,7 +115,22 @@ for (const file of utilFiles) {
 
   for (const name of exportNames) {
     const re = new RegExp(`\\b${name}\\b`);
-    if (!re.test(mergedConsumerSrc)) {
+    const { global, self } = consumerSrcFor(file);
+    // Count occurrences in self vs global; if all matches are within self
+    // (or none anywhere), the export is unused externally.
+    const globalMatches = global.match(re);
+    if (!globalMatches) {
+      unusedExports.push({ file: rel, name });
+      continue;
+    }
+    const selfHas = re.test(self);
+    if (!selfHas) continue; // matches exist in some consumer → used
+    // self has matches; check if any consumer OTHER than self matches
+    const globalCount = (global.match(new RegExp(`\\b${name}\\b`, "g")) ?? [])
+      .length;
+    const selfCount = (self.match(new RegExp(`\\b${name}\\b`, "g")) ?? [])
+      .length;
+    if (globalCount <= selfCount) {
       unusedExports.push({ file: rel, name });
     }
   }

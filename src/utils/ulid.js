@@ -5,7 +5,6 @@
  */
 
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"; // Crockford
-const ALPHABET_SET = new Set(ALPHABET);
 const ULID_RE = /^[0-9A-HJKMNP-TV-Z]{26}$/;
 
 /**
@@ -86,6 +85,3 @@ function defaultRandom() {
   return Math.random();
 }
 
-// Re-export the alphabet for callers that want to validate manually.
-export const ULID_ALPHABET = ALPHABET;
-export { ALPHABET_SET as _ULID_ALPHABET_SET };

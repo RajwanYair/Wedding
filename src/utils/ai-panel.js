@@ -238,7 +238,7 @@ async function _sendMessage() {
  * Open (or focus) the AI panel.
  * @param {string} [initialPrompt]
  */
-export function openAiPanel(initialPrompt) {
+function openAiPanel(initialPrompt) {
   if (_dialog) {
     _dialog.showModal();
     if (initialPrompt && _inputEl) _inputEl.value = initialPrompt;
@@ -251,7 +251,7 @@ export function openAiPanel(initialPrompt) {
 /**
  * Close the AI panel dialog.
  */
-export function closeAiPanel() {
+function closeAiPanel() {
   if (_dialog) {
     _dialog.close();
     _dialog.remove();

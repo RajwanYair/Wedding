@@ -5,7 +5,6 @@
  * All keys stored in localStorage; never sent to any first-party server.
  *
  * Exports:
- *   getAiSettings()          → { provider, apiKey, model, enabled }
  *   saveAiSettings(opts)     → void  (persists to localStorage)
  *   askAi(prompt, opts?)     → Promise<string>  (calls the API, returns text)
  *   testAiConnection()       → Promise<{ ok: boolean, message: string }>
@@ -31,7 +30,7 @@ const DEFAULT_MODELS = {
  * Return persisted AI settings (or safe defaults).
  * @returns {AiSettings}
  */
-export function getAiSettings() {
+function getAiSettings() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -166,6 +165,3 @@ export async function testAiConnection() {
     return { ok: false, message: msg };
   }
 }
-
-/** Exported provider→endpoint map for use in UI. */
-export { PROVIDER_ENDPOINTS, DEFAULT_MODELS };
