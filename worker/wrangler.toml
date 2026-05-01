@@ -1,0 +1,6 @@
+name = "wedding-ai-proxy"
+main = "index.js"
+compatibility_date = "2026-05-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://rajwanyair.github.io,http://localhost:5173,http://localhost:4173"

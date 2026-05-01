@@ -194,6 +194,18 @@ export default [
     },
     rules: { "no-console": "off" },
   },
+  // Cloudflare Worker — runs on Workers runtime; has fetch/Response/Request globals.
+  {
+    files: ["worker/**/*.js"],
+    languageOptions: {
+      globals: {
+        ...browserGlobals,
+        Response: "readonly",
+        Request: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
   // Section files — enforce arch boundary: sections must not statically import heavy services
   // (B9 ROADMAP Phase B). Use src/core/sync.js bridge, src/repositories/, or dynamic import().
   {
