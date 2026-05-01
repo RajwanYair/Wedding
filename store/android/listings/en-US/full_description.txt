@@ -1,0 +1,13 @@
+Wedding Manager — end-to-end wedding planning.
+
+* Guest list with fast search and CSV/Excel import
+* One-tap RSVP with phone-number lookup
+* Smart drag-and-drop seating plan
+* Two-way sync with Google Sheets
+* Personalised WhatsApp invites
+* Vendors, budget and payments
+* Door check-in with NFC
+* Full Hebrew RTL, works offline
+* 6 languages: Hebrew, English, Arabic, French, Spanish, Russian
+
+Your privacy matters: no tracking, no ads, local AES-GCM encryption of personal data.
