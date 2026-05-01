@@ -1553,5 +1553,6 @@
   "dedup_find_btn": "Trouver les doublons",
   "dedup_none_found": "Aucun doublon trouvé",
   "dedup_merge_btn": "Fusionner",
-  "dedup_merged": "Invités fusionnés avec succès"
+  "dedup_merged": "Invités fusionnés avec succès",
+  "theme_json_file_aria": "Fichier JSON du thème"
 }

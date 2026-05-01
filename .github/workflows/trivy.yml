@@ -23,7 +23,7 @@ jobs:
     permissions:
       security-events: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Run Trivy (filesystem)
         uses: aquasecurity/trivy-action@0.28.0

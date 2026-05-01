@@ -29,10 +29,10 @@ jobs:
     name: Migration static audit (no Docker)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
@@ -56,13 +56,12 @@ jobs:
     # Skip silently on PRs from forks (no secret access).
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install Supabase CLI
         run: |
           curl -fsSL https://supabase.com/install.sh | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-        continue-on-error: true
 
       - name: Run supabase db lint
         run: |

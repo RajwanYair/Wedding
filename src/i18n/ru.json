@@ -1553,5 +1553,6 @@
   "dedup_find_btn": "Найти дубликаты",
   "dedup_none_found": "Дубликаты не найдены",
   "dedup_merge_btn": "Объединить",
-  "dedup_merged": "Гости успешно объединены"
+  "dedup_merged": "Гости успешно объединены",
+  "theme_json_file_aria": "JSON-файл темы"
 }

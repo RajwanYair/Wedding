@@ -1,5 +1,5 @@
 # =============================================================================
-# CI — Wedding Manager v31.1.1
+# CI — Wedding Manager v31.1.2
 # Lint, i18n parity, unit tests, Vite build, security scan, Lighthouse, size, E2E
 # =============================================================================
 
@@ -25,10 +25,10 @@ jobs:
       matrix:
         node-version: ["22", "24"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
@@ -75,7 +75,7 @@ jobs:
       - name: Audit Supabase migrations (enforce — S243)
         run: node scripts/audit-supabase-migrations.mjs --enforce
 
-      - name: Supabase SQL lint — BASELINE=0 (S304: 008 fixed with DO block guard)
+      - name: "Supabase SQL lint — BASELINE=0 (S304: 008 fixed with DO block guard)"
         run: node scripts/audit-supabase-lint.mjs --enforce
 
       - name: Architecture check — no section→service direct imports (enforce — S290)
@@ -132,10 +132,10 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
@@ -192,10 +192,10 @@ jobs:
     needs: lint-and-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
@@ -216,10 +216,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-test
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
@@ -256,10 +256,10 @@ jobs:
     needs: lint-and-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"

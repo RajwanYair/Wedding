@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.1.2] — 2026-05-01
+
+> **Production-readiness pass II.** Removes CI waivers, fixes a YAML
+> parser-breaking name in `ci.yml`, pins all GitHub Actions to
+> versions that actually exist (`@v6` → `@v4`), eliminates every
+> inline style in `settings.html`, and clears the remaining VS Code
+> extension warnings. No runtime behavior changes; all 5488 tests
+> still green.
+
+### Changed
+
++ **CI waivers removed** — dropped `continue-on-error: true` from
+  `branch-protection.apply` and the Supabase CLI install step.
+  Failures now surface instead of being swallowed.
++ **Dead workflow deleted** — removed `.github/workflows/pnpm-ci.yml`
+  (a v15-era pnpm pilot that had been silently `continue-on-error`).
++ **GitHub Actions pinned to existing versions** — bulk-replaced
+  `actions/checkout@v6{,.0.2}` → `@v4` and
+  `actions/setup-node@v6{,.4.0}` → `@v4` across all 16 workflows
+  plus the composite action. The `@v6` tags do not exist on
+  GitHub and were causing `Unable to resolve action` warnings.
++ **`ci.yml` YAML syntax** — quoted the Supabase SQL lint step name
+  so the inline `(S304: 008 …)` colon no longer breaks the parser.
++ **`tsconfig.worker.json`** — `lib: ["es2023", …]` → `["es2022", …]`
+  (es2023 is not in the schema enum) and enabled
+  `forceConsistentCasingInFileNames`.
++ **`css/auth.css`** — reordered `-webkit-backdrop-filter` before
+  `backdrop-filter` per Stylelint vendor-prefix rule.
++ **`settings.html`** — replaced 15 inline `style="…"` attributes
+  with reusable utility classes
+  (`u-flex-row`, `u-flex-row--sm`, `u-flex-row--mb`, `u-mb-xs`,
+  `u-mt-form`, `u-mt-btn`, `u-break-all`, `u-flex-1-min`,
+  `checkbox-inline`, `hr-soft`) appended to `css/components.css`.
++ **A11y label** — `themeJsonFileInput` gained `aria-label` +
+  `title` + `data-i18n-aria-label="theme_json_file_aria"`
+  (key added to all 6 locales).
++ **markdownlint scope** — `.markdownlint-cli2.jsonc` now ignores
+  `store/`, `coverage/`, `dist/` so Google Play `whatsnew-*` text
+  files no longer trigger MD041.
++ **Docs synchronised** — `.github/copilot-instructions.md` and
+  `.github/instructions/cicd.instructions.md` updated to reflect
+  `checkout@v4` / `setup-node@v4`.
+
+### Notes
+
++ Three workflow files (`trufflehog.yml`, `zap-baseline.yml`,
+  `lighthouse.yml`) still show `Unable to resolve action` warnings
+  for `actions/checkout@v4` in the local VS Code Problems panel
+  while `ci.yml` reports the same string clean. This is a partial
+  cache miss in the GitHub Actions extension, not a project issue
+  — the actions resolve correctly on github.com.
+
 ## [31.1.1] — 2026-05-01
 
 > **Production-readiness pass.** Tidies the workspace root, prunes

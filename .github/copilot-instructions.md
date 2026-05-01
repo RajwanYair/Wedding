@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v31.1.1
+# GitHub Copilot Instructions — Wedding Manager v31.1.2
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Minimal Runtime Deps
 
@@ -6,7 +6,7 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v31.1.1** |
+| Version | **v31.1.2** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **4** — `@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
@@ -116,7 +116,7 @@ Run before every version tag / GitHub Pages deploy. All items must be green.
 | --- | --- |
 | ESLint scope | `src/` uses `^_` varsIgnorePattern |
 | Stylelint fonts | lowercase: `tahoma` ✅; multi-word: `"Segoe UI"` ✅ |
-| GH Actions | `checkout@v6` · `setup-node@v6` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
+| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
 | Copilot customizations | Prefer `.agent.md` + `.prompt.md` + `.instructions.md` + `.vscode/mcp.json`; use Chat Customizations editor for discovery |
 | OAuth globals | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs` |
 | RSVP flow | `lookupRsvpByPhone()` fires on phone input; phone-first lookup |

@@ -430,14 +430,14 @@
           📥 <span data-i18n="theme_vars_import">ייבוא</span>
         </button>
       </div>
-      <input type="file" id="themeJsonFileInput" accept=".json" class="u-hidden" />
+      <input type="file" id="themeJsonFileInput" accept=".json" class="u-hidden" aria-label="Theme JSON file" title="Theme JSON file" data-i18n-aria-label="theme_json_file_aria" />
     </div>
 
     <!-- Theme Marketplace (S445) -->
     <div class="settings-card" id="cardThemeMarketplace">
       <h3>🛍️ <span data-i18n="theme_marketplace_title">מרקטפלייס ערכות נושא</span></h3>
       <p class="section-desc" data-i18n="theme_marketplace_desc">התקן ערכת נושא מהקהילה בלחיצה אחת.</p>
-      <div id="themeMarketplaceList" class="theme-marketplace-list" style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.5rem"></div>
+      <div id="themeMarketplaceList" class="theme-marketplace-list u-flex-row--lg"></div>
     </div>
 
     <!-- Plugin Manager (S141) -->
@@ -639,8 +639,8 @@
         <p class="text-warn" data-i18n="passkey_not_supported">מכשיר זה אינו תומך ב-Passkeys.</p>
       </div>
       <div id="passkeySupported">
-        <div id="passkeyList" style="margin-bottom:0.5rem"></div>
-        <div class="btn-group" style="gap:0.5rem;display:flex;flex-wrap:wrap">
+        <div id="passkeyList" class="u-mb-xs"></div>
+        <div class="btn-group u-flex-row">
           <button class="btn btn-primary btn-small" data-action="registerPasskey">
             ➕ <span data-i18n="passkey_register">רשום Passkey חדש</span>
           </button>
@@ -659,7 +659,7 @@
       <h3>🔐 <span data-i18n="api_key_title">מפתח API</span></h3>
       <p class="section-desc" data-i18n="api_key_desc">צור מפתח API לגישה תכנותית לנתוני האירוע.</p>
       <div id="apiKeyDisplay" class="u-hidden">
-        <code id="apiKeyValue" dir="ltr" style="word-break:break-all"></code>
+        <code id="apiKeyValue" dir="ltr" class="u-break-all"></code>
         <button class="btn btn-secondary btn-small u-mr-sm" data-action="copyApiKey">
           <span data-i18n="api_key_copy">העתק</span>
         </button>
@@ -678,25 +678,24 @@
     <div class="settings-card" data-admin-only id="cardWebhooks">
       <h3>🪝 <span data-i18n="webhook_title">מינויי Webhook</span></h3>
       <p class="section-desc" data-i18n="webhook_desc">קבל התראות POST בזמן אמת לכתובות URL חיצוניות בעת אירועי מפתח.</p>
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
+      <div class="u-flex-row--mb">
         <input
           type="url"
           id="webhookUrlInput"
-          class="input"
-          style="flex:1;min-width:12rem"
+          class="input u-flex-1-min"
           data-i18n-placeholder="webhook_url_placeholder"
           placeholder="https://example.com/hook"
         />
-        <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap">
-          <label style="display:flex;gap:0.25rem;align-items:center;font-size:0.8rem">
+        <div class="u-flex-row--sm">
+          <label class="checkbox-inline">
             <input type="checkbox" name="webhookEvent" value="rsvp.confirmed" checked />
             <span data-i18n="webhook_event_rsvp_confirmed">RSVP אישר</span>
           </label>
-          <label style="display:flex;gap:0.25rem;align-items:center;font-size:0.8rem">
+          <label class="checkbox-inline">
             <input type="checkbox" name="webhookEvent" value="rsvp.declined" />
             <span data-i18n="webhook_event_rsvp_declined">RSVP דחה</span>
           </label>
-          <label style="display:flex;gap:0.25rem;align-items:center;font-size:0.8rem">
+          <label class="checkbox-inline">
             <input type="checkbox" name="webhookEvent" value="guest.added" />
             <span data-i18n="webhook_event_guest_added">אורח נוסף</span>
           </label>
@@ -941,7 +940,7 @@
         <span data-i18n="monitoring_opt_in">אפשר דיווח שגיאות</span>
       </label>
       <!-- S432: Observability DSN (Sentry-compatible) -->
-      <div class="form-group" style="margin-top:0.75rem">
+      <div class="form-group u-mt-form">
         <label for="observabilityDsn" data-i18n="observability_dsn_label">DSN לניטור שגיאות (Sentry / GlitchTip)</label>
         <input
           type="url"
@@ -950,10 +949,10 @@
           data-i18n-placeholder="ph_observability_dsn"
           placeholder="https://key@sentry.io/project-id"
         />
-        <button class="btn btn-secondary btn-small" style="margin-top:0.4rem" data-action="saveObservabilityDsn">
+        <button class="btn btn-secondary btn-small u-mt-btn" data-action="saveObservabilityDsn">
           <span data-i18n="observability_dsn_save">שמור DSN</span>
         </button>
-        <button class="btn btn-secondary btn-small" style="margin-top:0.4rem" data-action="testErrorReport" id="testErrorReportBtn">
+        <button class="btn btn-secondary btn-small u-mt-btn" data-action="testErrorReport" id="testErrorReportBtn">
           <span data-i18n="observability_test_btn">שלח דוח שגיאה לניסיון</span>
         </button>
         <p id="observabilityDsnStatus" class="section-desc" aria-live="polite"></p>
@@ -974,14 +973,13 @@
         🗑️ <span data-i18n="clear_data_btn">מחק את כל הנתונים</span>
       </button>
       <!-- GDPR Erasure (S435) -->
-      <hr style="margin:1rem 0;opacity:0.3">
+      <hr class="hr-soft">
       <p class="section-desc" data-i18n="gdpr_erasure_desc">
         בקש מחיקת כל הנתונים האישיים (PII) בהתאם לתקנות GDPR.
       </p>
       <!-- GDPR Export (S443) -->
       <button
-        class="btn btn-secondary"
-        style="margin-bottom:0.5rem"
+        class="btn btn-secondary u-mb-xs"
         data-action="exportPersonalData"
         id="gdprExportBtn"
       >

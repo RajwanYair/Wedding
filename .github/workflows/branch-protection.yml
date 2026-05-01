@@ -73,7 +73,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     needs: verify
-    continue-on-error: true
     steps:
       - name: Set minimum branch protection via GitHub API
         env:

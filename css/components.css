@@ -4547,4 +4547,55 @@
     }
   }
 
+  /* ── Settings inline-style replacements (S604: zero inline styles) ── */
+  .u-flex-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .u-flex-row--sm {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .u-flex-row--lg {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  .u-flex-row--mb {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .u-mb-xs {
+    margin-bottom: 0.5rem;
+  }
+  .u-mt-form {
+    margin-top: 0.75rem;
+  }
+  .u-mt-btn {
+    margin-top: 0.4rem;
+  }
+  .u-break-all {
+    word-break: break-all;
+  }
+  .u-flex-1-min {
+    flex: 1;
+    min-width: 12rem;
+  }
+  .checkbox-inline {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+  .hr-soft {
+    margin: 1rem 0;
+    opacity: 0.3;
+  }
+
 } /* end @layer components */

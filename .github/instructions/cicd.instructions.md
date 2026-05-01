@@ -7,7 +7,7 @@ description: "Use when: editing CI/CD workflows, GitHub Actions, or any YAML con
 
 ## Workflow Standards
 
-- Use `actions/checkout@v6` and `actions/setup-node@v6` (major-tag pins — sub-version tags like `@v6.0.2` do not exist and cause VS Code "unable to resolve" errors)
+- Use `actions/checkout@v4` and `actions/setup-node@v4` (major-tag pins — `@v6` and sub-version tags like `@v6.0.2` do not exist and cause VS Code "unable to resolve" errors)
 - `permissions: contents: read` (least privilege); escalate only when the job needs write access
 - Install deps via `npm ci`; use `cache: 'npm'` in `setup-node` (CI creates its own `node_modules/`; locally deps resolve from parent `../MyScripts/node_modules/`)
 - Keep `package.json` `packageManager` current so local tooling, cache behavior, and Copilot environment hints stay aligned

@@ -1553,5 +1553,6 @@
   "dedup_find_btn": "Buscar duplicados",
   "dedup_none_found": "No se encontraron duplicados",
   "dedup_merge_btn": "Fusionar",
-  "dedup_merged": "Invitados fusionados exitosamente"
+  "dedup_merged": "Invitados fusionados exitosamente",
+  "theme_json_file_aria": "Archivo JSON del tema"
 }

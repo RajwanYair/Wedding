@@ -1553,5 +1553,6 @@
   "dedup_find_btn": "البحث عن المكررين",
   "dedup_none_found": "لا توجد مكررات",
   "dedup_merge_btn": "دمج",
-  "dedup_merged": "تم دمج الضيوف بنجاح"
+  "dedup_merged": "تم دمج الضيوف بنجاح",
+  "theme_json_file_aria": "ملف JSON للسمة"
 }

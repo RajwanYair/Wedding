@@ -1389,7 +1389,7 @@
   "cmd_sync_now": "Sync now",
   "cmd_add_guest": "Add guest",
   "cmd_open_settings": "Open settings",
-  "cmd_export_csv": "Export guests CSV",
+  "cmd_export_csv": "Export CSV",
   "cmd_toggle_theme": "Toggle theme",
   "realtime_connected": "🟢 Live",
   "realtime_disconnected": "⚪ Offline",
@@ -1511,9 +1511,7 @@
   "audit_log_export_btn": "Export Audit Log",
   "audit_log_exported": "Audit log exported successfully.",
   "cmd_no_results": "No results found",
-  "cmd_add_guest": "Add guest",
   "cmd_find_phone": "Find by phone",
-  "cmd_export_csv": "Export CSV",
   "cmd_go_to": "Go to",
   "ai_title": "AI Assistant",
   "ai_desc": "Enter your own API key to use AI features throughout the app.",
@@ -1555,5 +1553,6 @@
   "dedup_find_btn": "Find Duplicates",
   "dedup_none_found": "No duplicates found",
   "dedup_merge_btn": "Merge",
-  "dedup_merged": "Guests merged successfully"
+  "dedup_merged": "Guests merged successfully",
+  "theme_json_file_aria": "Theme JSON file"
 }
