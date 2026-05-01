@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [28.0.0] — 2026-05-01
+
+> **S534–S543: utility expansion IX — slugify, Jaccard, IP, URL, Hebrew
+> numerals, JWT decode, English number words, regex escape, deep-merge;
+> +107 unit tests; release cut.**
+
+### Added
+
+- **S534** — Slugify (`src/utils/slugify.js`):
+  Unicode-aware URL slug builder with diacritic stripping, optional
+  Latin-only mode, custom separator, and length cap; 12 tests.
+- **S535** — Jaccard (`src/utils/jaccard.js`):
+  set, multiset, and token Jaccard similarity plus distance helper;
+  13 tests.
+- **S536** — IP address (`src/utils/ip-addr.js`):
+  IPv4 / IPv6 validators, dotted-quad ↔ int conversion, RFC1918 check;
+  11 tests.
+- **S537** — URL parse (`src/utils/url-parse.js`):
+  safe `parseUrl`, HTTP-only `isHttpUrl`, query parse / build / patch
+  helpers; 17 tests.
+- **S538** — Hebrew numerals (`src/utils/he-numerals.js`):
+  Gematria-style encode and decode with geresh / gershayim and the
+  ט״ו / ט״ז special cases; 12 tests.
+- **S539** — JWT decode (`src/utils/jwt-decode.js`):
+  segment / payload decoder and `isJwtExpired` (no signature verify);
+  11 tests.
+- **S540** — Number words EN (`src/utils/number-words-en.js`):
+  integer ↔ English words for cheque-style amounts (0 – 9_999_999);
+  12 tests.
+- **S541** — Escape regex (`src/utils/escape-regex.js`):
+  RegExp metacharacter escape and case-insensitive literal builder;
+  9 tests.
+- **S542** — Deep-merge (`src/utils/deep-merge.js`):
+  recursive plain-object merge with array replacement, undefined skip,
+  and `__proto__` / `constructor` / `prototype` pollution guard;
+  10 tests.
+- **S543** — Release v28.0.0 — sync-version propagation, CHANGELOG entry,
+  lint clean, all 5244 tests passing across 356 files.
+
 ## [27.0.0] — 2026-05-01
 
 > **S524–S533: utility expansion VIII — UUID, ULID, base32, chunk, range,
