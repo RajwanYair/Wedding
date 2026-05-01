@@ -187,4 +187,13 @@
   body.guest-mode .nav-tabs {
     display: none !important;
   }
+
+  /* S586: reduced-motion guard — disable auth overlay/modal animations */
+  @media (prefers-reduced-motion: reduce) {
+    .auth-overlay,
+    .auth-overlay * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 } /* end @layer auth */

@@ -472,4 +472,14 @@
     padding: 0;
     margin: 0;
   }
+
+  /* S586: reduced-motion guard for layout-level transitions */
+  @media (prefers-reduced-motion: reduce) {
+    .bottom-nav,
+    .status-bar,
+    .status-bar * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 } /* end @layer layout */
