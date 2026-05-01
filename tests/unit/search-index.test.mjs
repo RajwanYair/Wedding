@@ -37,7 +37,7 @@ describe("S109 — search-index", () => {
   it("buildSearchIndex includes sections, guests, tables, vendors", async () => {
     const { buildSearchIndex } = await import("../../src/services/analytics.js");
     const idx = buildSearchIndex();
-    expect(idx.length).toBe(3 + 2 + 1 + 1); // 3 sections + 2g + 1t + 1v
+    expect(idx.length).toBe(5 + 3 + 2 + 1 + 1); // 5 commands + 3 sections + 2g + 1t + 1v
     expect(idx.find((e) => e.id === "section:dashboard")?.type).toBe("section");
     expect(idx.find((e) => e.id === "guest:g1")?.label).toBe("Dana Cohen");
   });
