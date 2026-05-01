@@ -32,6 +32,7 @@
     "icons": "node scripts/generate-icons.mjs",
     "sri": "node scripts/sri-check.mjs",
     "audit:dead": "node scripts/dead-export-check.mjs",
+    "audit:utils": "node scripts/audit-utils.mjs",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
