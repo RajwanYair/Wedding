@@ -1,0 +1,8 @@
+v30.1.0 — Capacitor mobile shells go live in internal testing.
+
+* Native NFC tap-to-check-in
+* Haptic feedback + native share sheet
+* Cmd-K command palette
+* AI edge proxy (BYO key)
+* light-dark() theme + OKLCH accents
+* Animation Timeline scroll reveals
