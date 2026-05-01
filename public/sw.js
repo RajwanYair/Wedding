@@ -1,5 +1,5 @@
 // =============================================================================
-// Service Worker — Wedding Manager v29.0.0
+// Service Worker — Wedding Manager v30.0.0
 // S401 — Strategy cache patterns:
 //   · Cache-first     — fonts/icons (immutable CDN assets)
 //   · Network-first   — Supabase API (data freshness; cache as offline fallback)
@@ -9,7 +9,7 @@
 // =============================================================================
 "use strict";
 
-const CACHE_NAME = "wedding-v29.0.0";
+const CACHE_NAME = "wedding-v30.0.0";
 const FONT_CACHE  = "wedding-fonts-v1";   // immutable; cleared only on SW uninstall
 const API_CACHE   = "wedding-api-v1";     // network-first; stale data served offline
 // Static assets to pre-cache. Vite-built JS/CSS have hashed filenames and are
@@ -289,6 +289,25 @@ self.addEventListener("sync", function (e) {
   if (e.tag === RSVP_SYNC_TAG || e.tag === WRITE_SYNC_TAG) {
     e.waitUntil(flushQueue(e.tag));
   }
+});
+
+// ── Periodic Background Sync (S563) ──────────────────────────────────────────
+// Optional Chromium-only API that wakes the SW at most ~once/24 h to refresh
+// caches (manifest, locale JSON, RSVP queue).  Registered by `src/core/ui.js`
+// when permission is granted.  Other browsers ignore this listener.
+const PERIODIC_REFRESH_TAG = "wedding-refresh";
+
+self.addEventListener("periodicsync", function (e) {
+  if (e.tag !== PERIODIC_REFRESH_TAG) return;
+  e.waitUntil(
+    Promise.all([
+      flushQueue(RSVP_SYNC_TAG).catch(function () {}),
+      flushQueue(WRITE_SYNC_TAG).catch(function () {}),
+      caches.open(CACHE_NAME).then(function (cache) {
+        return cache.add("/Wedding/").catch(function () {});
+      }),
+    ]),
+  );
 });
 
 // ── Message: SKIP_WAITING — new SW takes over immediately ────────────────────

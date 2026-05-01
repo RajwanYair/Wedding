@@ -4,6 +4,59 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [30.0.0] — 2026-05-16
+
+> **S554–S563: Phase A — Consolidation & AI Prep.** Net –2 utility files,
+> +1 owner-tag enforcement, +3 security/observability workflows
+> (TruffleHog, OWASP ZAP, UptimeRobot ops doc), +1 ADR (Cloudflare proxy),
+> +1 canonical-facts gate, +1 Periodic Background Sync handler. 5319 tests
+> across 365 files; 0 lint warnings; 0 unused exports across 128 utils.
+
+### Added
+
+- **S554** — `audit:utils` script (`scripts/audit-utils.mjs`): scans every
+  `src/utils/*.js`, detects unused exports + missing `@owner` JSDoc tags,
+  reports the ten largest util files, supports `--json` / `--enforce` /
+  `--baseline=N`. Wired into `npm ci` after S557. 2 unit tests.
+- **S557** — `@owner <module>` JSDoc tag injected into all 128 utility
+  files; ESLint `jsdoc/check-tag-names` extended with `definedTags:
+  ["owner"]` so the gate is enforced at lint time.
+- **S558** — `## Canonical Facts` block at the top of `AGENTS.md` (single
+  source of truth for version/test counts/utility count) +
+  `scripts/check-canonical-facts.mjs` cross-checks `package.json` and
+  `.github/copilot-instructions.md`. Wired into `npm ci`. 1 unit test.
+- **S559** — UptimeRobot ops runbook (`docs/operations/uptime.md`)
+  defining the four monitors, alert routing, status-badge format, and SLO.
+- **S560** — ADR-044 *Cloudflare proxy in front of GitHub Pages*
+  (Proposed) — covers custom domain, edge caching, header injection,
+  bot protection; rollback documented.
+- **S561** — TruffleHog GitHub Action (`.github/workflows/trufflehog.yml`)
+  — verified-secret scan on every push and PR + weekly cron.
+- **S562** — OWASP ZAP baseline GitHub Action
+  (`.github/workflows/zap-baseline.yml`) + permissive `.zap/rules.tsv` —
+  weekly informational scan against the built `dist/`.
+- **S563** — Periodic Background Sync handler in `public/sw.js` (tag
+  `wedding-refresh`); listener no-ops on browsers without
+  `periodicsync` support.
+
+### Changed
+
+- **S555** — Cull batch 1: dropped 7 externally-unused exports
+  (`ai-client.js`: `getAiSettings`, `PROVIDER_ENDPOINTS`, `DEFAULT_MODELS`;
+  `ai-panel.js`: `openAiPanel`, `closeAiPanel`; `ulid.js`:
+  `ULID_ALPHABET`, `_ULID_ALPHABET_SET`).
+- **S556** — Cull batch 2: removed two duplicate utilities
+  (`csv-parser.js`, `uuid-generate.js`); `slug.js` was kept after a
+  failing test surfaced its unique `transliterateHebrew`. Wired
+  `slugify` into `web-presence.buildSiteSlug`. Net utils: 130 → 128.
+- **README/Copilot/AGENTS** — Test badges synced to 5319/365; new
+  Uptime badge added; canonical facts kept in lockstep by S558 gate.
+
+### Removed
+
+- 2 utility modules (`csv-parser.js`, `uuid-generate.js`) and their tests.
+- 7 unused exports across `ai-client.js`, `ai-panel.js`, `ulid.js`.
+
 ## [29.0.0] — 2026-05-15
 
 > **S544–S553: utility expansion X — color, HTML entities, cookie jar,
