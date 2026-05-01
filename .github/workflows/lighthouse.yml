@@ -25,8 +25,8 @@ jobs:
       matrix:
         locale: [he, en, ar, es, fr, ru]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload Lighthouse artifact (${{ matrix.locale }})
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lighthouse-reports-${{ matrix.locale }}
           path: .lighthouseci

@@ -29,8 +29,8 @@ jobs:
     timeout-minutes: 45
     if: ${{ secrets.APPSTORE_API_KEY_BASE64 != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
@@ -92,8 +92,8 @@ jobs:
     timeout-minutes: 30
     if: ${{ secrets.PLAY_STORE_JSON != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: "npm"
