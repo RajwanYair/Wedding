@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        locale: [he, en, ar, es, fr]
+        locale: [he, en, ar, es, fr, ru]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -42,7 +42,7 @@ jobs:
       - name: Generate per-locale LH config
         run: |
           node -e "
-            import('file://' + process.cwd() + '/src/services/lighthouse-config.js')
+            import('file://' + process.cwd() + '/src/services/platform-ops.js')
               .then(m => {
                 const cfg = m.buildLighthouseConfig('${{ matrix.locale }}');
                 require('fs').writeFileSync('.lighthouserc-locale.json', JSON.stringify(cfg, null, 2));

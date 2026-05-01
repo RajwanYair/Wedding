@@ -513,7 +513,7 @@ export function buildLighthouseConfig(locale, options = {}) {
  * @returns {ReadonlyArray<string>}
  */
 export function getLighthouseLocales() {
-  return Object.freeze(["he", "en", "ar", "ru"]);
+  return Object.freeze(["he", "en", "ar", "ru", "fr", "es"]);
 }
 
 // ── §3 — Row Level Security audit helpers ────────────────────────────────

@@ -7,8 +7,8 @@ import { buildLighthouseConfig, getLighthouseLocales } from "../../src/services/
 
 describe("Lighthouse Config (Sprint 153)", () => {
   describe("getLighthouseLocales", () => {
-    it("returns 4 locales", () => {
-      expect(getLighthouseLocales()).toEqual(["he", "en", "ar", "ru"]);
+    it("returns 6 locales", () => {
+      expect(getLighthouseLocales()).toEqual(["he", "en", "ar", "ru", "fr", "es"]);
     });
 
     it("is frozen", () => {
