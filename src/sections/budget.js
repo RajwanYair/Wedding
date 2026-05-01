@@ -15,6 +15,11 @@ import { getAllSummaries } from "../services/analytics.js";
 import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct, projectOverrun } from "../services/analytics.js";
 import { showToast } from "../core/ui.js";
 import { allocateMilestones, isValidSchedule, outstandingBalance } from "../utils/payment-milestones.js";
+import {
+  forecast as _forecastByCategory,
+  projectFinal as _projectFinal,
+  spendByCategory as _spendByCategory,
+} from "../utils/budget-forecast.js";
 
 /** S423: Track whether budget-over alert has been shown this session */
 let _budgetAlertShown = false;
@@ -707,3 +712,40 @@ export function renderVendorMilestones() {
     total: totalOutstanding,
   });
 }
+
+// ── S614: Per-category forecast ───────────────────────────────────────────
+
+/**
+ * Build per-category budget vs actual forecast using the pure
+ * `budget-forecast` helper. Maps the section's `budget` and `expenses`
+ * stores into the helper's input shape.
+ *
+ * @returns {ReturnType<typeof _forecastByCategory>}
+ */
+export function getCategoryForecast() {
+  const budget = /** @type {any[]} */ (storeGet("budget") ?? []);
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  /** @type {Array<{ category: string, amount: number }>} */
+  const lines = budget.map((b) => ({ category: String(b.category ?? ""), amount: Number(b.amount) || 0 }));
+  /** @type {Array<{ category: string, amount: number }>} */
+  const exps = expenses.map((e) => ({ category: String(e.category ?? ""), amount: Number(e.amount) || 0 }));
+  return _forecastByCategory(lines, exps);
+}
+
+/**
+ * Project the final total spend assuming linear burn, given how much of
+ * the wedding planning timeline has elapsed (0..1).
+ *
+ * @param {number} progress 0..1
+ * @returns {number} projected final total (NaN if progress ≤ 0)
+ */
+export function getProjectedFinalSpend(progress) {
+  const expenses = /** @type {any[]} */ (storeGet("expenses") ?? []);
+  const totals = _spendByCategory(
+    expenses.map((e) => ({ category: String(e.category ?? ""), amount: Number(e.amount) || 0 })),
+  );
+  let totalSpent = 0;
+  for (const v of totals.values()) totalSpent += v;
+  return _projectFinal(totalSpent, progress);
+}
+
