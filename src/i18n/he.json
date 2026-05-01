@@ -1563,5 +1563,6 @@
   "vendor_milestones_title": "תשלומי ספקים — אבני דרך",
   "vendor_milestones_summary": "{count} תשלומים פתוחים, סה\"כ ₪{total}",
   "vendor_milestone_no_date": "ללא תאריך",
-  "plugin_csp_label": "מדיניות אבטחה (CSP)"
+  "plugin_csp_label": "מדיניות אבטחה (CSP)",
+  "floor_plan_collision_detected": "התנגשות בין רהיטים"
 }

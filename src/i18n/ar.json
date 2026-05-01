@@ -1563,5 +1563,6 @@
   "vendor_milestones_title": "دفعات الموردين",
   "vendor_milestones_summary": "{count} دفعات مفتوحة — المتبقي ₪{total}",
   "vendor_milestone_no_date": "لا يوجد تاريخ",
-  "plugin_csp_label": "سياسة الأمان (CSP)"
+  "plugin_csp_label": "سياسة الأمان (CSP)",
+  "floor_plan_collision_detected": "تم اكتشاف تصادم في الأثاث"
 }

@@ -21,6 +21,12 @@ import {
   seatRowsToJson,
   downloadTextFile,
 } from "../services/seating.js";
+import {
+  validateFurniture,
+  findCollisions,
+  totalArea,
+  listFurnitureTypes,
+} from "../utils/floor-plan.js";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
@@ -673,4 +679,72 @@ export function getUnseatedGuestBreakdown() {
     byGroup[group] = (byGroup[group] || 0) + 1;
   }
   return { total: unseated.length, bySide, byGroup };
+}
+
+// ── S612: Floor-plan collision validator ──────────────────────────────────
+
+/**
+ * Read the persisted floor-plan layout. Stored under the `floorPlan`
+ * store key as `{ items: Furniture[], room: { width, height } }`.
+ * @returns {{ items: any[], room: { width: number, height: number } }}
+ */
+export function getFloorPlan() {
+  const fp = /** @type {any} */ (storeGet("floorPlan")) ?? {};
+  return {
+    items: Array.isArray(fp.items) ? fp.items : [],
+    room: fp.room && typeof fp.room === "object" ? fp.room : { width: 0, height: 0 },
+  };
+}
+
+/**
+ * Validate every furniture item in the current layout against the room
+ * bounds and shape constraints, then collect any pairwise collisions.
+ *
+ * @returns {{ ok: boolean, errors: Record<string, string[]>, collisions: Array<[string, string]>, area: number }}
+ */
+export function validateFloorPlanLayout() {
+  const { items, room } = getFloorPlan();
+  /** @type {Record<string, string[]>} */
+  const errors = {};
+  for (const item of items) {
+    const errs = validateFurniture(item, room);
+    if (errs.length > 0) errors[item.id || "(unknown)"] = errs;
+  }
+  const collisions = findCollisions(items);
+  return {
+    ok: Object.keys(errors).length === 0 && collisions.length === 0,
+    errors,
+    collisions,
+    area: totalArea(items),
+  };
+}
+
+/**
+ * Persist a single furniture item if it passes validation and does not
+ * collide with any other item in the saved layout.
+ *
+ * @param {any} item
+ * @returns {{ ok: boolean, errors?: string[], collidesWith?: string[] }}
+ */
+export function saveFloorPlanItem(item) {
+  const { items, room } = getFloorPlan();
+  const errs = validateFurniture(item, room);
+  if (errs.length > 0) return { ok: false, errors: errs };
+  const next = [...items.filter((i) => i.id !== item.id), item];
+  const collisions = findCollisions(next).filter((p) => p.includes(item.id));
+  if (collisions.length > 0) {
+    return {
+      ok: false,
+      errors: [t("floor_plan_collision_detected")],
+      collidesWith: collisions.map(([a, b]) => (a === item.id ? b : a)),
+    };
+  }
+  storeSet("floorPlan", { items: next, room });
+  enqueueWrite("floorPlan", () => syncStoreKeyToSheets("floorPlan"));
+  return { ok: true };
+}
+
+/** @returns {readonly string[]} */
+export function getFurnitureTypes() {
+  return listFurnitureTypes();
 }

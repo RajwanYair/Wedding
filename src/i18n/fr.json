@@ -1563,5 +1563,6 @@
   "vendor_milestones_title": "Échéances de paiement fournisseurs",
   "vendor_milestones_summary": "{count} paiements ouverts — ₪{total} restants",
   "vendor_milestone_no_date": "Sans date",
-  "plugin_csp_label": "Politique de sécurité (CSP)"
+  "plugin_csp_label": "Politique de sécurité (CSP)",
+  "floor_plan_collision_detected": "Collision de mobilier détectée"
 }
