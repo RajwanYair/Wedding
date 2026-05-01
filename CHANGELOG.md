@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.2.0] — 2026-05-08
+
+> **Phase C — UI wiring batch (S604–S612).** Connects nine pure helpers
+> from v31.1.0 into the live UI. Adds collision validation, fuzzy command
+> palette, payment milestones outlook, conditional RSVP questions, plugin
+> CSP preview, registry deep-links, workspace permission matrix, vendor
+> SLA tier badge, and inbox unread chip. Test count grows 5488 → 5528;
+> 0 lint warnings, 0 Node warnings.
+
+### Added
+
++ **S604 Vendors** — SLA tier badge surfaces `tierFor()` next to each vendor.
++ **S605 Vendors** — Inbox unread chip + flake-proof execSync test timeouts.
++ **S606 Budget** — Vendor payment milestones outlook card backed by
+  `allocateMilestones()` / `outstandingBalance()`.
++ **S607 RSVP** — Conditional question engine (`visibleQuestions`,
+  `validateAnswers`, `expandPlusOnes`) exposed via section helpers.
++ **S608 Settings** — Strict plugin manifest validator + per-plugin CSP
+  preview line driven by `buildCsp()` / `hasScope()`.
++ **S609 Cmd-K palette** — Fuzzy command merge using `searchCommands()` +
+  `paletteReducer()`; static commands appended after dynamic results.
++ **S610 Workspace** — Permission matrix helpers
+  (`canPerformWorkspaceAction`, `canAssignWorkspaceRole`,
+  `getWorkspacePermissionMatrix`, `getWorkspaceRoleRank`) with
+  `co_planner` → `co-planner` legacy normalisation.
++ **S611 Registry** — UTM-tagged deep-link builders for Amazon.IL, KSP,
+  Zap, and boutique URLs; `getRegistryProvider()` helper.
++ **S612 Tables** — Floor-plan collision validator on save:
+  `validateFloorPlanLayout()`, `saveFloorPlanItem()`, `getFloorPlan()`,
+  `getFurnitureTypes()`.
+
+### Tests
+
++ 5488 → 5528 (+40); 402 files; 0 Node warnings.
++ New integration suites under `tests/unit/` for each sprint.
++ Hardened `audit-utils` and `check-canonical-facts` execSync tests with
+  `30_000` ms timeout to eliminate parallel-fork flake.
+
 ## [31.1.2] — 2026-05-01
 
 > **Production-readiness pass II.** Removes CI waivers, fixes a YAML

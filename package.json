@@ -1,6 +1,6 @@
 {
   "name": "wedding-manager",
-  "version": "31.1.2",
+  "version": "31.2.0",
   "description": "Wedding Management App — Hebrew RTL, RSVP, table seating, WhatsApp confirmations",
   "type": "module",
   "private": true,
