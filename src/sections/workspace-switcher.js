@@ -9,6 +9,13 @@ import { storeGet, storeSet } from "../core/store.js";
 import { t } from "../core/i18n.js";
 import { hasPermission } from "../services/workspace.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
+import {
+  canPerform as _uiCanPerform,
+  canAssignRole as _uiCanAssignRole,
+  roleRank as _uiRoleRank,
+  listRoles as _uiListRoles,
+  listActions as _uiListActions,
+} from "../utils/workspace-ui-roles.js";
 
 const STORAGE_KEY = "workspaces";
 const ACTIVE_KEY = "activeWorkspace";
@@ -167,3 +174,67 @@ class WorkspaceSwitcherSection extends BaseSection {
 }
 
 export const { mount, unmount, capabilities } = fromSection(new WorkspaceSwitcherSection("workspace-switcher"));
+
+// ── S610: workspace permission matrix helpers ─────────────────────────────
+
+/**
+ * Translate the legacy `co_planner` role used by the older workspace
+ * service into the canonical `co-planner` role used by the new
+ * permission matrix.
+ * @param {string} role
+ */
+function _normaliseRole(role) {
+  return role === "co_planner" ? "co-planner" : role;
+}
+
+/**
+ * Check whether the supplied role is allowed to perform a workspace
+ * UI action. Uses the canonical permission matrix from
+ * `utils/workspace-ui-roles.js`.
+ *
+ * @param {string} role
+ * @param {string} action
+ * @returns {boolean}
+ */
+export function canPerformWorkspaceAction(role, action) {
+  return _uiCanPerform(/** @type {any} */ (_normaliseRole(role)), /** @type {any} */ (action));
+}
+
+/**
+ * Check whether `actor` may assign `target` role to another member.
+ * @param {string} actor
+ * @param {string} target
+ */
+export function canAssignWorkspaceRole(actor, target) {
+  return _uiCanAssignRole(
+    /** @type {any} */ (_normaliseRole(actor)),
+    /** @type {any} */ (_normaliseRole(target)),
+  );
+}
+
+/**
+ * Build the role × action permission matrix used for the workspace
+ * settings UI.
+ * @returns {{ roles: ReadonlyArray<string>, actions: ReadonlyArray<string>, grid: Record<string, Record<string, boolean>> }}
+ */
+export function getWorkspacePermissionMatrix() {
+  const roles = _uiListRoles();
+  const actions = _uiListActions();
+  /** @type {Record<string, Record<string, boolean>>} */
+  const grid = {};
+  for (const r of roles) {
+    grid[r] = {};
+    for (const a of actions) {
+      grid[r][a] = _uiCanPerform(r, a);
+    }
+  }
+  return { roles, actions, grid };
+}
+
+/**
+ * Numeric rank of a role (higher = more privileged).
+ * @param {string} role
+ */
+export function getWorkspaceRoleRank(role) {
+  return _uiRoleRank(/** @type {any} */ (_normaliseRole(role)));
+}
