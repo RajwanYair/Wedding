@@ -1,0 +1,10 @@
+# ZAP baseline rules — start permissive (informational only).
+# To make a rule fail the build, change IGNORE → WARN (informational) or FAIL.
+#
+# Format (tab-separated):
+#   ID    ACTION    URL_REGEX    NOTES
+#
+# Updated: S562 (2026-05).
+10049	IGNORE	.*	Storable and Cacheable Content
+10038	IGNORE	.*	Content Security Policy (CSP) Header Not Set — addressed by GH Pages _headers
+10036	IGNORE	.*	HTTP Server Response Header — GitHub controlled

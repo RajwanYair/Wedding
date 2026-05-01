@@ -1,0 +1,44 @@
+name: zap-baseline
+
+on:
+  schedule:
+    - cron: "37 5 * * 0" # weekly Sunday 05:37 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write # ZAP can open an issue when findings appear
+
+jobs:
+  zap:
+    name: OWASP ZAP baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install deps
+        run: npm ci --ignore-scripts
+      - name: Build
+        run: npm run build
+      - name: Serve dist with `npm run preview`
+        run: |
+          npx --yes serve -l 4173 dist &
+          # wait until it answers
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 2
+          done
+      - name: ZAP baseline scan
+        uses: zaproxy/action-baseline@v0.13.0
+        with:
+          target: "http://127.0.0.1:4173/"
+          rules_file_name: ".zap/rules.tsv"
+          cmd_options: "-a -j -T 5"
+          allow_issue_writing: true
+          fail_action: false # informational; do not block until baselined
