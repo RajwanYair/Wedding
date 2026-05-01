@@ -4,9 +4,67 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [30.2.0] — 2026-05-18
+
+> **S574–S583: Cluster B opens — Capacitor 6 mobile shells + native
+> bridges + ICU MessageFormat depth.** Adds iOS + Android Capacitor
+> scaffolding with a CI build matrix and TestFlight / Play Internal
+> distribution, native NFC / Haptics / Share bridges with web fallbacks,
+> App Store + Play Store metadata (privacy manifest, data-safety form,
+> he-IL/en-US listings), HE + AR ICU plural × gender keys, and a new
+> `check:i18n:icu` CI gate enforcing brace balance, mandatory `other`
+> arms, and (in `--strict`) full CLDR plural categories per locale.
+> 5369 tests across 376 files; 0 lint warnings.
+
+### Added
+
++ **S574 Capacitor 6 scaffold** — `capacitor.config.json`,
+  `src/native/platform.js` (`isNative`, `platform`, `isIOS`, `isAndroid`,
+  `isWeb`); ADR-046.
++ **S575 mobile build matrix** — `.github/workflows/mobile-build.yml`
+  (iOS macOS-15 + Android ubuntu-latest), keystore decode + .p12 import,
+  signs only when secrets are present; `docs/operations/mobile-signing.md`
+  rotation guide.
++ **S576 NFC bridge** — `src/native/nfc.js` with
+  `encodeGuestPayload` / `decodeGuestPayload` (`wedding:guest:<id>`),
+  `readGuestTag` / `writeGuestTag`; Capacitor + Web NFC fallback.
++ **S577 Haptics + Share bridges** — `src/native/haptics.js`
+  (`impact` / `notificationSuccess` / `selectionChanged`) and
+  `src/native/share.js` (`share` / `canShare`); Capacitor + Web
+  Share / `navigator.vibrate` fallbacks; safe no-op when neither is
+  available.
++ **S578 iOS App Store metadata** — `store/ios/PrivacyInfo.xcprivacy.json`
+  (NSPrivacyCollectedDataTypes for contacts/phone/name/email,
+  NSPrivacyAccessedAPI categories), `store/ios/listing.md` (he-IL +
+  en-US copy, screenshots matrix, privacy answers).
++ **S579 Play Store metadata** — `store/android/listings/{he-IL,en-US}/`
+  (title / short / full descriptions), `store/android/data-safety.md`
+  (Data Safety form, permissions justification, content rating).
++ **S580 TestFlight + Play Internal distribution** —
+  `.github/workflows/mobile-distribute.yml` triggered on `v*.*.*` tags,
+  uploads to TestFlight (`xcrun altool`) and Play (track parameter:
+  internal/alpha/beta/production); `store/android/whatsnew/whatsnew-*`.
++ **S581 ICU HE plural+gender keys** — `icu_rsvp_confirmed_gendered`,
+  `icu_rsvp_declined_gendered`, `icu_invite_greeting_gendered`,
+  `icu_attending_compound` (plural × gender nested),
+  `icu_seat_assignment_gendered`, `icu_meal_choice_gendered`; EN
+  parity copy + empty-string parity for ar/fr/es/ru.
++ **S582 ICU AR plural+gender keys** — Arabic translations of all six
+  S581 keys with full CLDR coverage (`zero/one/two/few/many/other`),
+  including the nested compound `icu_attending_compound`.
++ **S583 `check:i18n:icu` CI gate** — `scripts/check-i18n-icu.mjs`
+  validates brace balance + mandatory `other` arms; `--strict` flag
+  enforces locale-required CLDR plural categories. Wired into
+  `package.json` (`check:i18n:icu`, `check:i18n:icu:strict`) + `npm run ci`
+  + `.github/workflows/ci.yml`.
+
+### Changed
+
++ `package.json` — added `check:i18n:icu` to the `ci` script chain.
++ `.github/workflows/ci.yml` — new "Validate ICU MessageFormat" step.
+
 ## [30.1.0] — 2026-05-17
 
-> **S564–S573: Cluster A close — AI edge proxy + Cmd-K palette + TS pilot
 > and visual polish.** Adds a Cloudflare Worker scaffold (`worker/`) with
 > a 4-provider router (OpenAI / Anthropic / Gemini / Ollama), SSE
 > streaming, BYO-key wiring, true command palette actions, an
