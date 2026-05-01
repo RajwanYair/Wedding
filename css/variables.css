@@ -44,6 +44,22 @@
     --warning-tint: color-mix(in sRGB, var(--warning) 18%, transparent);
     --focus-ring: color-mix(in sRGB, var(--accent) 70%, transparent);
 
+    /* S570: light-dark() + color-mix() across theme tokens.
+       Browsers honour `color-scheme: dark light` and pick the matching
+       value automatically.  These tokens layer on top of the explicit
+       theme palettes above; theme classes still override `--accent` and
+       friends, but neutrals derive from system preference. */
+    --neutral-bg: light-dark(#fafaf7, #0f0520);
+    --neutral-surface: light-dark(#fff, #1a0a2e);
+    --neutral-border: light-dark(#e5e2db, #2d1b4e);
+    --neutral-text: light-dark(#1a1a1a, #f0e6d6);
+    --neutral-text-soft: light-dark(#444, rgba(240, 230, 214, 0.75));
+
+    /* OKLCH-mixed accent variants — perceptually uniform hover/active states */
+    --accent-hover: color-mix(in oklch, var(--accent) 88%, white);
+    --accent-active: color-mix(in oklch, var(--accent) 78%, black);
+    --accent-on-surface: color-mix(in oklch, var(--accent) 92%, var(--neutral-text));
+
     /* Container query breakpoints (logical, for @container use) */
     --cq-sm: 320px;
     --cq-md: 480px;
