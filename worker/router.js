@@ -1,12 +1,14 @@
 /**
  * @owner edge
  * Provider router — selects an adapter based on the request body's
- * `provider` field.  Adapters land in S565; this scaffold supports only
- * a no-op echo provider used by tests.
+ * `provider` field.  Real adapters live in `./providers.js` (S565);
+ * the `echo` adapter remains for tests.
  *
  * @typedef {{ model: string, messages: unknown, apiKey: string }} ProxyRequest
  * @typedef {{ text: string, model: string, provider: string }} ProxyResponse
  */
+
+import { ADAPTERS as PROVIDER_ADAPTERS } from "./providers.js";
 
 /**
  * @param {string} provider
@@ -42,6 +44,7 @@ async function echoAdapter(req) {
 /** @type {Record<string, (r: ProxyRequest) => Promise<ProxyResponse>>} */
 const ADAPTERS = {
   echo: echoAdapter,
+  ...PROVIDER_ADAPTERS,
 };
 
 /** @returns {string[]} */
