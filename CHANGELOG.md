@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [27.0.0] — 2026-05-01
+
+> **S524–S533: utility expansion VIII — UUID, ULID, base32, chunk, range,
+> Hebrew ordinals, MIME type, file size, Markdown escape; +100 unit tests;
+> release cut.**
+
+### Added
+
+- **S524** — UUID v4 (`src/utils/uuid.js`):
+  RFC-4122 v4 generator using CSPRNG plus `isUuid` validator; 10 tests.
+- **S525** — ULID (`src/utils/ulid.js`):
+  Crockford base32 timestamp + random IDs with `isUlid` and
+  `ulidTimestamp`; 10 tests.
+- **S526** — Base32 (`src/utils/base32.js`):
+  RFC-4648 encoder/decoder with optional `=` padding and case-insensitive
+  decode; 10 tests.
+- **S527** — Chunk (`src/utils/chunk.js`):
+  `chunk/partition/groupConsecutive` array splitting helpers; 13 tests.
+- **S528** — Range (`src/utils/range.js`):
+  `range/inclusive/iterRange` numeric range generators with negative
+  steps; 13 tests.
+- **S529** — Hebrew ordinals (`src/utils/ordinal-he.js`):
+  `ordinalHe` masculine/feminine 1-10 plus `ordinalEn` companion;
+  10 tests.
+- **S530** — MIME type (`src/utils/mime-type.js`):
+  `mimeFromExt/extFromMime/mimeBucket` lookup over the file types the app
+  touches; 10 tests.
+- **S531** — File size (`src/utils/file-size.js`):
+  `formatFileSize/parseFileSize` with binary, decimal, and Hebrew labels;
+  12 tests.
+- **S532** — Markdown escape (`src/utils/markdown-escape.js`):
+  `escapeMarkdown/escapeInlineCode/escapeTableCell` for safe injection
+  into Markdown; 12 tests.
+- **S533** — Release v27.0.0 — sync-version propagation, CHANGELOG entry,
+  lint clean, all 5137 tests passing across 347 files.
+
 ## [26.0.0] — 2026-04-30
 
 > **S514–S523: utility expansion VII — token bucket, CSV, URL builder,
