@@ -1562,5 +1562,6 @@
   "vendor_inbox_unread_tooltip": "رسائل موردين غير مقروءة",
   "vendor_milestones_title": "دفعات الموردين",
   "vendor_milestones_summary": "{count} دفعات مفتوحة — المتبقي ₪{total}",
-  "vendor_milestone_no_date": "لا يوجد تاريخ"
+  "vendor_milestone_no_date": "لا يوجد تاريخ",
+  "plugin_csp_label": "سياسة الأمان (CSP)"
 }

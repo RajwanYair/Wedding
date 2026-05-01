@@ -45,6 +45,11 @@ import {
 } from "../utils/theme-registry.js";
 import { validatePluginManifest } from "../services/export.js";
 import {
+  validateManifest as _strictValidateManifest,
+  buildCsp as _buildPluginCsp,
+  hasScope as _pluginHasScope,
+} from "../utils/plugin-manifest.js";
+import {
   addAdminUser,
   removeAdminUser,
   signInWith,
@@ -1437,6 +1442,15 @@ function renderPluginList() {
       info.appendChild(author);
     }
 
+    // S608: required CSP directives derived from declared permissions
+    const csp = _buildPluginCsp(plugin);
+    const cspLine = document.createElement("div");
+    cspLine.className = "plugin-csp u-text-sm u-text-muted";
+    cspLine.textContent = `${t("plugin_csp_label")}: ${Object.entries(csp)
+      .map(([k, v]) => `${k} ${v.join(" ")}`)
+      .join("; ")}`;
+    info.appendChild(cspLine);
+
     row.appendChild(info);
 
     // Toggle button
@@ -1484,6 +1498,12 @@ export function installPlugin() {
             showToast(`${t("plugin_invalid")}: ${result.errors.join(", ")}`, "error");
             return;
           }
+          // S608: stricter scope/CSP validation via utils/plugin-manifest.js
+          const strictErrs = _strictValidateManifest(manifest);
+          if (strictErrs.length > 0) {
+            showToast(`${t("plugin_invalid")}: ${strictErrs.join(", ")}`, "error");
+            return;
+          }
           if (result.warnings.length > 0) {
             showToast(`${t("plugin_warnings")}: ${result.warnings.join(", ")}`, "warning");
           }
@@ -1513,6 +1533,25 @@ export function installPlugin() {
     { once: true },
   );
   input.click();
+}
+
+// S608: helpers for plugin runtime — expose CSP/scope checks for callers.
+/**
+ * Compute the minimal CSP directives required by an installed plugin
+ * based on its declared permissions.
+ * @param {{ permissions?: readonly string[] }} plugin
+ */
+export function getPluginCsp(plugin) {
+  return _buildPluginCsp(plugin);
+}
+
+/**
+ * Check if an installed plugin holds a permission scope.
+ * @param {{ permissions?: readonly string[] }} plugin
+ * @param {string} scope
+ */
+export function pluginHasScope(plugin, scope) {
+  return _pluginHasScope(plugin, /** @type {any} */ (scope));
 }
 
 // ── Deploy buttons (S196 / Roadmap S152) ────────────────────────────────────

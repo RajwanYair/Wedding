@@ -1562,5 +1562,6 @@
   "vendor_inbox_unread_tooltip": "Unread vendor messages",
   "vendor_milestones_title": "Vendor payment milestones",
   "vendor_milestones_summary": "{count} open payments — ₪{total} outstanding",
-  "vendor_milestone_no_date": "No due date"
+  "vendor_milestone_no_date": "No due date",
+  "plugin_csp_label": "Security policy (CSP)"
 }
