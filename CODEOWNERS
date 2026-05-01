@@ -1,0 +1,26 @@
+# Wedding Manager — Code Ownership
+#
+# Default owner for everything in the repo.
+# Required reviewer for all PRs unless overridden below.
+
+*                               @RajwanYair
+
+# Build / CI / release surfaces — owner-only changes
+/.github/workflows/             @RajwanYair
+/.github/copilot-instructions.md @RajwanYair
+/scripts/sync-version.mjs       @RajwanYair
+/scripts/check-canonical-facts.mjs @RajwanYair
+/package.json                   @RajwanYair
+/package-lock.json              @RajwanYair
+
+# Security-sensitive surfaces
+/SECURITY.md                    @RajwanYair
+/scripts/security-scan.mjs      @RajwanYair
+/scripts/check-credentials.mjs  @RajwanYair
+/supabase/                      @RajwanYair
+
+# Canonical docs
+/AGENTS.md                      @RajwanYair
+/ARCHITECTURE.md                @RajwanYair
+/ROADMAP.md                     @RajwanYair
+/CHANGELOG.md                   @RajwanYair
