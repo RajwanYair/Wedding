@@ -28,6 +28,9 @@
 | [020](020-service-directory-dedup.md) | Service directory dedup | Accepted | 2026-04-29 | architecture |
 | [021](021-diataxis-docs-reorganization.md) | Diátaxis docs reorganization | Proposed | 2026-04-29 | docs |
 | [022](022-action-namespace-migration.md) | Action namespace migration sequence | Proposed | 2026-04-29 | architecture |
+| [042](042-ci-baseline-gating.md) | CI baseline gating | Accepted | 2026-05 | CI |
+| [043](043-pnpm-evaluation.md) | pnpm evaluation | Proposed | 2026-05 | tooling |
+| [044](044-cloudflare-proxy.md) | Cloudflare proxy in front of GitHub Pages | Proposed | 2026-05-15 | infra, edge |
 
 ## Status legend
 
