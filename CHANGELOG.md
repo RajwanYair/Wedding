@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.1.0] — 2026-05-26
+
+> **S594–S603: Phase C foundations — Vendor CRM, Stripe Connect,
+> floor-plan, conditional RSVP, plugin runtime, Cmd-K, workspace roles,
+> and gift registry.** Lays the pure-helper layer for the upcoming
+> Phase C UI work: Vendor CRM inbox + SLA scoring, Stripe Connect
+> milestone allocator, floor-plan furniture model with collision
+> detection, conditional RSVP question engine, sandboxed plugin
+> manifest validator + permission scopes, Cmd-K palette fuzzy search +
+> keyboard reducer, workspace UI permission matrix, and gift-registry
+> deep-link builders for Amazon IL, KSP, Zap, and boutique stores.
+> 5488 tests / 393 files / 138 utils.
+
+### Added
+
++ **S594** Vendor CRM inbox scaffold
+  (`src/utils/vendor-inbox.js`): `groupThreads`, `lastActivity`,
+  `unreadCount`, `searchThreads`.
++ **S595** SLA scoring helpers (`src/utils/vendor-sla.js`):
+  `avgResponseMinutes`, `onTimeRate`, `acceptanceRate`, `scoreVendor`,
+  `scoreTier` (gold/silver/bronze/watch).
++ **S596** Stripe Connect milestone helpers
+  (`src/utils/payment-milestones.js`): `allocateMilestones`,
+  `outstandingBalance`, `buildStripeTransferPayload` (cents + metadata).
++ **S597** Floor-plan furniture model (`src/utils/floor-plan.js`):
+  `validateFurniture`, `intersects`, `findCollisions`, `totalArea`.
++ **S598** Conditional RSVP question engine
+  (`src/utils/rsvp-question-engine.js`): `evaluateCondition`,
+  `visibleQuestions`, `validateAnswers`, `expandPlusOnes`.
++ **S599** Plugin runtime manifest + permission scopes
+  (`src/utils/plugin-manifest.js`): `validateManifest`, `hasScope`,
+  `buildCsp` for sandbox iframe.
++ **S600** Cmd-K palette fuzzy search + keyboard reducer
+  (`src/utils/command-palette-search.js`): `fuzzyScore`,
+  `searchCommands`, `paletteReducer`.
++ **S601** Workspace UI permission matrix
+  (`src/utils/workspace-ui-roles.js`): `canPerform`, `canAssignRole`,
+  `roleRank` for owner/co-planner/vendor/photographer/guest.
++ **S602** Gift registry deep-link builders
+  (`src/utils/registry-links.js`): `amazonIlLink`, `kspLink`,
+  `zapLink`, `boutiqueLink`, `detectProvider` with UTM tagging.
++ **S603** v31.1.0 release: 71 new tests, 9 new utils, canonical facts
+  updated, sync-version propagated to all version-bearing files.
+
 ## [31.0.0] — 2026-05-19
 
 > **S584–S593: Cluster B closes — accessibility depth, UI primitives,

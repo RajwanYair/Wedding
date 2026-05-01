@@ -35,7 +35,7 @@
  * @property {"text"|"choice"|"number"|"boolean"} type
  * @property {string} label
  * @property {boolean=} required
- * @property {readonly unknown[]=} choices
+ * @property {readonly unknown[]} [choices]
  * @property {Cond=} showWhen
  */
 
