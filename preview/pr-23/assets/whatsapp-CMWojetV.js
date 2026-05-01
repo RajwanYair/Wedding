@@ -1,0 +1,80 @@
+var e=`<div class="card">
+        <div class="card-header"><span class="icon">📱</span> <span data-i18n="wa_title">שליחת הזמנות בוואטסאפ</span></div>
+
+        <!-- Message Template -->
+        <div class="form-group">
+          <label for="waTemplate" data-i18n="wa_template_label">תבנית הודעה</label>
+          <textarea id="waTemplate" rows="6" data-on-input="updateWaPreview" class="u-direction-rtl" data-i18n-tooltip="tip_wa_template"></textarea>
+          <!-- Variable chips (Sprint 55) -->
+          <div id="waVariableChips" class="wa-variable-chips" aria-label="placeholder chips"></div>
+        </div>
+
+        <!-- Preview -->
+        <div class="whatsapp-preview">
+          <div class="wa-bubble" id="waPreviewBubble"></div>
+          <div class="wa-time" id="waPreviewTime"></div>
+        </div>
+
+        <!-- Send Options -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">📤</span> <span data-i18n="wa_send_title">שליחה</span></div>
+          <div class="wa-filter-row">
+            <button class="btn btn-whatsapp" data-action="sendWhatsAppAll" data-action-arg="pending" data-i18n-tooltip="tip_wa_pending">
+              <span>📱</span> <span data-i18n="wa_send_pending">שלח לממתינים</span>
+            </button>
+            <button class="btn btn-whatsapp" data-action="sendWhatsAppAll" data-action-arg="all" data-i18n-tooltip="tip_wa_all">
+              <span>📱</span> <span data-i18n="wa_send_all">שלח לכולם</span>
+            </button>
+          </div>
+          <p class="text-note" data-i18n="wa_note">* ההודעות ייפתחו בוואטסאפ ווב / אפליקציה. יש לאשר שליחה ידנית לכל אורח.</p>
+        </div>
+
+        <!-- Green API Auto-Send -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">⚡</span> <span data-i18n="wa_api_title">שליחה אוטומטית (Green API)</span></div>
+          <p class="text-note" data-i18n="wa_api_desc">שלח הודעות ישירות ללא אישור ידני בכל הודעה. דורש הגדרת Green API בהגדרות.</p>
+          <div class="wa-filter-row">
+            <button class="btn btn-green-api" data-action="sendWhatsAppAllViaApi" data-action-arg="pending" data-i18n-tooltip="tip_wa_api_pending">
+              <span>⚡</span> <span data-i18n="wa_api_pending">שלח לממתינים (API)</span>
+            </button>
+            <button class="btn btn-green-api" data-action="sendWhatsAppAllViaApi" data-action-arg="all" data-i18n-tooltip="tip_wa_api_all">
+              <span>⚡</span> <span data-i18n="wa_api_all">שלח לכולם (API)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- WABA Bulk Send (S425) -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">📣</span> <span data-i18n="waba_bulk_send_title">שליחה מאסיבית WABA</span></div>
+          <p class="text-note" data-i18n="waba_bulk_send_desc">שלח תבנית WABA לכל האורחים המאושרים דרך Meta WhatsApp Business API. דורש הגדרת WA_ACCESS_TOKEN ב-Supabase.</p>
+          <div class="wa-filter-row">
+            <button class="btn btn-primary" data-action="sendWabaBlast">
+              <span>📣</span> <span data-i18n="waba_bulk_send">שלח WABA לכל המאושרים</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- S12.1 RSVP Reminder -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">🔔</span> <span data-i18n="wa_reminder_title">תזכורת RSVP</span></div>
+          <p class="text-note" data-i18n="wa_reminder_desc">שלח תזכורת לאורחים שקיבלו הזמנה אך לא אישרו עדיין.</p>
+          <div class="form-group">
+            <label data-i18n="wa_reminder_template_label">תבנית תזכורת</label>
+            <textarea id="waReminderTemplate" rows="4" class="u-direction-rtl" placeholder="שלום {name}, רק מזכירים - נשמח לדעת אם אתם מגיעים לחתונה ב{date}! {rsvpLink}"></textarea>
+          </div>
+          <div class="wa-filter-row">
+            <button class="btn btn-warning btn-small" data-action="sendWhatsAppReminder">
+              <span>🔔</span> <span data-i18n="wa_send_reminder">שלח תזכורת לממתינים</span>
+            </button>
+            <span class="text-note" id="waReminderCount"></span>
+          </div>
+        </div>
+
+        <!-- Guest list for individual send -->
+        <div class="card u-mt-md">
+          <div class="card-header"><span class="icon">👤</span> <span data-i18n="wa_individual">שליחה בודדת</span></div>
+          <div id="waGuestList"></div>
+        </div>
+      </div>
+`;export{e as default};
+//# sourceMappingURL=whatsapp-CMWojetV.js.map

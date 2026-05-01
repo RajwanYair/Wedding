@@ -1,0 +1,2 @@
+function e(e){let t=String(e??``).replace(/[\s\-().]/g,``);return t?(t.startsWith(`0`)&&(t=`972${t.slice(1)}`),!t.startsWith(`972`)&&!t.startsWith(`+`)&&(t=`972${t}`),t.replace(/^\+/,``)):``}function t(e){return/^[0-9]{9,15}$/.test(e)}export{t as n,e as t};
+//# sourceMappingURL=phone-C-wY_HZ9.js.map

@@ -1,0 +1,33 @@
+var e=`<!-- src/templates/run-of-show.html — S144 run-of-show editor -->
+<div class="section-header">
+  <h2>🎬 <span data-i18n="ros_title">לוח זמנים ליום החתונה</span></h2>
+  <p class="section-desc" data-i18n="ros_desc">
+    ערוך את סדר הפעילויות ביום החתונה, גרור לסידור מחדש
+  </p>
+</div>
+
+<div class="ros-toolbar">
+  <button class="btn btn-primary btn-small" data-action="rosAddItem" type="button">
+    ➕ <span data-i18n="ros_add_item">הוסף פעילות</span>
+  </button>
+  <button class="btn btn-secondary btn-small" data-action="rosResetDefault" type="button">
+    ↺ <span data-i18n="ros_reset">תבנית ברירת מחדל</span>
+  </button>
+</div>
+
+<div
+  class="ros-overlap-warnings u-hidden"
+  id="rosOverlapWarnings"
+  role="alert"
+  aria-live="polite"
+></div>
+
+<div
+  class="ros-timeline"
+  id="rosTimeline"
+  role="list"
+  aria-label="לוח זמנים ליום החתונה"
+  data-i18n-aria="ros_timeline_aria"
+></div>
+`;export{e as default};
+//# sourceMappingURL=run-of-show-DpPzCk3G.js.map

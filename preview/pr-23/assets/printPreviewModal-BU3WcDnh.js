@@ -1,0 +1,41 @@
+var e=`<div class="modal modal--wide">
+    <div class="modal-header">
+      <h2 id="printPreviewTitle" data-i18n="print_preview_title">תצוגה מקדימה להדפסה</h2>
+      <button class="modal-close" data-action="closeModal" data-action-arg="printPreviewModal">
+        &times;
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Section picker -->
+      <div class="print-picker-row">
+        <label for="printSectionSelect" data-i18n="print_section_label">בחר מקטע להדפסה:</label>
+        <select id="printSectionSelect" data-action="previewPrintSection" autofocus>
+          <option value="guests" data-i18n="nav_guests">אורחים</option>
+          <option value="seating" data-i18n="print_seating">סידורי ישיבה</option>
+          <option value="vendors" data-i18n="nav_vendors">ספקים</option>
+          <option value="budget" data-i18n="nav_budget">תקציב</option>
+          <option value="timeline" data-i18n="nav_timeline">ציר זמן</option>
+        </select>
+      </div>
+
+      <!-- Preview pane -->
+      <div id="printPreviewPane" class="print-preview-pane"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-action="executePrint" data-i18n="print_execute">
+        🖨️ הדפס
+      </button>
+      <button
+        class="btn btn-secondary"
+        data-action="closeModal"
+        data-action-arg="printPreviewModal"
+        data-i18n="btn_cancel"
+      >
+        ביטול
+      </button>
+    </div>
+  </div>
+`;export{e as default};
+//# sourceMappingURL=printPreviewModal-BU3WcDnh.js.map

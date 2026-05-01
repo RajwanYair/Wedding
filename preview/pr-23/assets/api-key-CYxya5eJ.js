@@ -1,0 +1,2 @@
+var e=`wedding_v1_api_key`;function t(){let t=`wk_${crypto.randomUUID().replace(/-/g,``)}`;return localStorage.setItem(e,t),t}function n(){try{return localStorage.getItem(e)}catch{return null}}function r(){try{localStorage.removeItem(e)}catch{}}export{t as generateApiKey,n as getApiKey,r as revokeApiKey};
+//# sourceMappingURL=api-key-CYxya5eJ.js.map
