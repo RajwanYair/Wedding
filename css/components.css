@@ -2483,6 +2483,22 @@
   .budget-envelope-stats {
     font-size: 0.875rem;
   }
+  /* S606: vendor milestone outlook list */
+  .vendor-milestones-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+  }
+  .vendor-milestone-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
   .empty-emoji {
     font-size: 2rem;
     display: block;

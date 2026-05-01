@@ -14,6 +14,7 @@ import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getAllSummaries } from "../services/analytics.js";
 import { getBurndownData, getProjectedEndDate, getBudgetConsumptionPct, projectOverrun } from "../services/analytics.js";
 import { showToast } from "../core/ui.js";
+import { allocateMilestones, isValidSchedule, outstandingBalance } from "../utils/payment-milestones.js";
 
 /** S423: Track whether budget-over alert has been shown this session */
 let _budgetAlertShown = false;
@@ -35,12 +36,15 @@ class BudgetSection extends BaseSection {
     // S145: budget projection panel
     this.subscribe("expenses", renderBudgetProjection);
     this.subscribe("weddingInfo", renderBudgetProjection);
+    // S606: vendor payment milestones outlook
+    this.subscribe("vendors", renderVendorMilestones);
     renderBudget();
     renderBudgetProgress();
     renderExpenseCategoryBreakdown(); // S22.3
     _renderEnvelopeSummary(); // Sprint 28 / C1
     renderBudgetBurndownChart(); // C1 Sprint 46
     renderBudgetProjection(); // S145
+    renderVendorMilestones(); // S606
   }
 }
 
@@ -630,4 +634,76 @@ export function getTopExpenses(limit = 10) {
     })),
   ];
   return items.sort((a, b) => b.amount - a.amount).slice(0, limit);
+}
+
+// ── S606: Vendor payment milestones outlook ─────────────────────────────
+/**
+ * Aggregate upcoming vendor payment milestones across all vendors that
+ * carry a `paymentSchedule` (array of MilestoneSpec) or pre-allocated
+ * `paymentMilestones` (array of ScheduledMilestone). Renders a compact
+ * outlook card sorted by due date with a total outstanding summary.
+ *
+ * Renders to #vendorMilestonesCard / #vendorMilestonesList /
+ * #vendorMilestonesSummary if present.
+ */
+export function renderVendorMilestones() {
+  const card = /** @type {HTMLElement|null} */ (document.getElementById("vendorMilestonesCard"));
+  const list = /** @type {HTMLElement|null} */ (document.getElementById("vendorMilestonesList"));
+  const summary = /** @type {HTMLElement|null} */ (
+    document.getElementById("vendorMilestonesSummary")
+  );
+  if (!card || !list || !summary) return;
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  /** @type {{ vendor: string, name: string, amount: number, dueDate?: string, paid?: boolean }[]} */
+  const rows = [];
+  let totalOutstanding = 0;
+
+  for (const v of vendors) {
+    /** @type {any[]} */
+    let milestones = [];
+    if (Array.isArray(v.paymentMilestones) && v.paymentMilestones.length > 0) {
+      milestones = v.paymentMilestones;
+    } else if (
+      Array.isArray(v.paymentSchedule) &&
+      isValidSchedule(v.paymentSchedule) &&
+      Number(v.price) > 0
+    ) {
+      milestones = allocateMilestones(Number(v.price), v.paymentSchedule);
+    }
+    if (milestones.length === 0) continue;
+    totalOutstanding += outstandingBalance(milestones);
+    for (const m of milestones) {
+      if (m.paid) continue;
+      rows.push({
+        vendor: String(v.id || ""),
+        name: String(v.name || ""),
+        amount: Number(m.amount) || 0,
+        dueDate: m.dueDate,
+      });
+    }
+  }
+
+  list.textContent = "";
+  if (rows.length === 0) {
+    card.hidden = true;
+    return;
+  }
+  card.hidden = false;
+  rows.sort((a, b) => (a.dueDate || "").localeCompare(b.dueDate || ""));
+  for (const r of rows.slice(0, 8)) {
+    const li = document.createElement("li");
+    li.className = "vendor-milestone-item";
+    const label = document.createElement("span");
+    label.textContent = `${r.name} — ${r.dueDate || t("vendor_milestone_no_date")}`;
+    const amt = document.createElement("strong");
+    amt.textContent = `₪${r.amount}`;
+    li.appendChild(label);
+    li.appendChild(amt);
+    list.appendChild(li);
+  }
+  summary.textContent = t("vendor_milestones_summary", {
+    count: rows.length,
+    total: totalOutstanding,
+  });
 }

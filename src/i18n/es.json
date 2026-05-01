@@ -1559,5 +1559,8 @@
   "vendor_sla_tier_silver": "Plata",
   "vendor_sla_tier_bronze": "Bronce",
   "vendor_sla_tier_watch": "Vigilar",
-  "vendor_inbox_unread_tooltip": "Mensajes de proveedores no leídos"
+  "vendor_inbox_unread_tooltip": "Mensajes de proveedores no leídos",
+  "vendor_milestones_title": "Hitos de pago a proveedores",
+  "vendor_milestones_summary": "{count} pagos abiertos — ₪{total} pendientes",
+  "vendor_milestone_no_date": "Sin fecha"
 }

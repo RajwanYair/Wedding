@@ -1559,5 +1559,8 @@
   "vendor_sla_tier_silver": "Серебро",
   "vendor_sla_tier_bronze": "Бронза",
   "vendor_sla_tier_watch": "Наблюдение",
-  "vendor_inbox_unread_tooltip": "Непрочитанные сообщения поставщиков"
+  "vendor_inbox_unread_tooltip": "Непрочитанные сообщения поставщиков",
+  "vendor_milestones_title": "Этапы оплаты поставщикам",
+  "vendor_milestones_summary": "{count} открытых платежей — ₪{total} к оплате",
+  "vendor_milestone_no_date": "Без даты"
 }
