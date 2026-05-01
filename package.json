@@ -33,13 +33,14 @@
     "sri": "node scripts/sri-check.mjs",
     "audit:dead": "node scripts/dead-export-check.mjs",
     "audit:utils": "node scripts/audit-utils.mjs --enforce",
+    "check:canonical-facts": "node scripts/check-canonical-facts.mjs --enforce",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
     "audit:arch": "node scripts/arch-check.mjs --strict",
     "check:coverage": "node scripts/check-coverage-gate.mjs --enforce",
-    "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run audit:utils && npm test && npm run build"
+    "ci": "npm run lint && npm run check:i18n && npm run check:credentials && npm run check:canonical-facts && npm run audit:utils && npm test && npm run build"
   },
   "engines": {
     "node": ">=22.0.0"

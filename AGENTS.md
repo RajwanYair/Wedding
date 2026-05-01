@@ -2,6 +2,18 @@
 
 > For cloud agents (GitHub Copilot Workspace, Claude, ChatGPT) and CI pipelines.
 
+## Canonical Facts
+
+> **Source of truth.** Other docs (copilot-instructions, README badges, agent files) must mirror these
+> values. `npm run check:canonical-facts` enforces parity.
+
+- version: `29.0.0`
+- tests: `5318`
+- test_files: `364`
+- utils: `128`
+- locales: `6` (he, en, ar, fr, es, ru)
+- node: `>=22.0.0`
+
 ## Project Identity
 
 - **App**: Wedding Manager v29.0.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
