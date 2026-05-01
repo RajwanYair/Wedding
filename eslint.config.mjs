@@ -122,6 +122,7 @@ const browserGlobals = shared?.browserGlobals ?? {
   TextEncoder: "readonly",
   TextDecoder: "readonly",
   ServiceWorkerRegistration: "readonly",
+  customElements: "readonly",
 };
 const nodeGlobals = shared?.nodeGlobals ?? {
   process: "readonly",
@@ -182,6 +183,8 @@ export default [
         // Web Vitals / performance observers (monitoring.js)
         PerformanceObserver: "readonly",
         PerformanceEventTiming: "readonly",
+        // S572: Custom Elements / Web Components
+        customElements: "readonly",
       },
     },
     rules,
