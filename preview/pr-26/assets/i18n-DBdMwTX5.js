@@ -1,0 +1,1 @@
+import{n as e}from"./i18n-DNA5sOFX.js";export{e as applyI18n};
