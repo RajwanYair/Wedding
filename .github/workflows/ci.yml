@@ -81,6 +81,9 @@ jobs:
       - name: Architecture check — no section→service direct imports (enforce — S290)
         run: node scripts/arch-check.mjs --strict
 
+      - name: Audit CSS a11y — reduced-motion + contrast + forced-colors (S586-S587)
+        run: npm run audit:a11y
+
       - name: Audit Trusted Types sinks — enforce baseline=19 ratchet (S318-S321)
         run: node scripts/audit-trusted-types.mjs --baseline=5
 

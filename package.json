@@ -43,7 +43,7 @@
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.mjs\" \"css/**/*.css\" \"*.json\" \"*.mjs\"",
     "audit:arch": "node scripts/arch-check.mjs --strict",
     "check:coverage": "node scripts/check-coverage-gate.mjs --enforce",
-    "ci": "npm run lint && npm run check:i18n && npm run check:i18n:icu && npm run check:credentials && npm run check:canonical-facts && npm run audit:utils && npm test && npm run build"
+    "ci": "npm run lint && npm run check:i18n && npm run check:i18n:icu && npm run check:credentials && npm run check:canonical-facts && npm run audit:utils && npm run audit:a11y && npm test && npm run build"
   },
   "engines": {
     "node": ">=22.0.0"
