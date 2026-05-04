@@ -18,6 +18,10 @@ import { getOverdueVendors, buildPaymentTimeline, topVendorsByCost } from "../se
 import { VENDOR_CATEGORIES } from "../core/constants.js";
 import { scoreVendor, scoreTier } from "../utils/vendor-sla.js";
 import { groupThreads, unreadCount } from "../utils/vendor-inbox.js";
+import {
+  findOverdueVendors as _findOverdueVendors,
+  totalOutstanding as _totalOutstanding,
+} from "../utils/vendor-alerts.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -709,27 +713,37 @@ function renderVendorPaymentTimeline() {
     const pct = cat.totalCost > 0 ? Math.round((cat.totalPaid / cat.totalCost) * 100) : 0;
 
     const lbl = _svgEl("text");
-    lbl.setAttribute("x", "0"); lbl.setAttribute("y", String(y + 21));
-    lbl.setAttribute("font-size", "11"); lbl.setAttribute("fill", "var(--text)");
+    lbl.setAttribute("x", "0");
+    lbl.setAttribute("y", String(y + 21));
+    lbl.setAttribute("font-size", "11");
+    lbl.setAttribute("fill", "var(--text)");
     lbl.textContent = String(cat.category);
     svgEl.appendChild(lbl);
 
     const bgRect = _svgEl("rect");
-    bgRect.setAttribute("x", String(labelW)); bgRect.setAttribute("y", String(y + 4));
-    bgRect.setAttribute("width", String(totalW)); bgRect.setAttribute("height", String(rowH - 8));
-    bgRect.setAttribute("fill", "var(--surface-2,#e2e8f0)"); bgRect.setAttribute("rx", "4");
+    bgRect.setAttribute("x", String(labelW));
+    bgRect.setAttribute("y", String(y + 4));
+    bgRect.setAttribute("width", String(totalW));
+    bgRect.setAttribute("height", String(rowH - 8));
+    bgRect.setAttribute("fill", "var(--surface-2,#e2e8f0)");
+    bgRect.setAttribute("rx", "4");
     svgEl.appendChild(bgRect);
 
     const paidRect = _svgEl("rect");
-    paidRect.setAttribute("x", String(labelW)); paidRect.setAttribute("y", String(y + 4));
-    paidRect.setAttribute("width", String(paidW)); paidRect.setAttribute("height", String(rowH - 8));
-    paidRect.setAttribute("fill", "var(--success)"); paidRect.setAttribute("rx", "4");
+    paidRect.setAttribute("x", String(labelW));
+    paidRect.setAttribute("y", String(y + 4));
+    paidRect.setAttribute("width", String(paidW));
+    paidRect.setAttribute("height", String(rowH - 8));
+    paidRect.setAttribute("fill", "var(--success)");
+    paidRect.setAttribute("rx", "4");
     paidRect.setAttribute("opacity", "0.85");
     svgEl.appendChild(paidRect);
 
     const pctLbl = _svgEl("text");
-    pctLbl.setAttribute("x", String(labelW + totalW + 6)); pctLbl.setAttribute("y", String(y + 21));
-    pctLbl.setAttribute("font-size", "11"); pctLbl.setAttribute("fill", "var(--text)");
+    pctLbl.setAttribute("x", String(labelW + totalW + 6));
+    pctLbl.setAttribute("y", String(y + 21));
+    pctLbl.setAttribute("font-size", "11");
+    pctLbl.setAttribute("fill", "var(--text)");
     pctLbl.textContent = `${pct}%`;
     svgEl.appendChild(pctLbl);
   });
@@ -777,10 +791,8 @@ function renderVendorSpendTimeline() {
   const chartH = h - padB - 14;
   const maxY = Math.max(points[points.length - 1]?.cumulative ?? 0, 1);
 
-  const scaleX = (/** @type {number} */ i) =>
-    padL + (i / Math.max(points.length - 1, 1)) * chartW;
-  const scaleY = (/** @type {number} */ val) =>
-    h - padB - (val / maxY) * chartH;
+  const scaleX = (/** @type {number} */ i) => padL + (i / Math.max(points.length - 1, 1)) * chartW;
+  const scaleY = (/** @type {number} */ val) => h - padB - (val / maxY) * chartH;
 
   const linePts = points.map((p, i) => `${scaleX(i)},${scaleY(p.cumulative)}`).join(" ");
   const title = t("vendor_spend_timeline_title");
@@ -808,21 +820,27 @@ function renderVendorSpendTimeline() {
   }
 
   const startLbl = _svgEl2("text");
-  startLbl.setAttribute("x", String(padL)); startLbl.setAttribute("y", String(h - 4));
-  startLbl.setAttribute("font-size", "9"); startLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
+  startLbl.setAttribute("x", String(padL));
+  startLbl.setAttribute("y", String(h - 4));
+  startLbl.setAttribute("font-size", "9");
+  startLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
   startLbl.textContent = points[0]?.date ?? "";
   svgEl2.appendChild(startLbl);
 
   const endLbl = _svgEl2("text");
-  endLbl.setAttribute("x", String(w - 8)); endLbl.setAttribute("y", String(h - 4));
-  endLbl.setAttribute("font-size", "9"); endLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
+  endLbl.setAttribute("x", String(w - 8));
+  endLbl.setAttribute("y", String(h - 4));
+  endLbl.setAttribute("font-size", "9");
+  endLbl.setAttribute("fill", "var(--text-muted,#6b7280)");
   endLbl.setAttribute("text-anchor", "end");
   endLbl.textContent = points[points.length - 1]?.date ?? "";
   svgEl2.appendChild(endLbl);
 
   const totalLbl = _svgEl2("text");
-  totalLbl.setAttribute("x", String(w / 2)); totalLbl.setAttribute("y", "12");
-  totalLbl.setAttribute("font-size", "10"); totalLbl.setAttribute("fill", "var(--text)");
+  totalLbl.setAttribute("x", String(w / 2));
+  totalLbl.setAttribute("y", "12");
+  totalLbl.setAttribute("font-size", "10");
+  totalLbl.setAttribute("fill", "var(--text)");
   totalLbl.setAttribute("text-anchor", "middle");
   totalLbl.textContent = `₪${(points[points.length - 1]?.cumulative ?? 0).toLocaleString()}`;
   svgEl2.appendChild(totalLbl);
@@ -871,25 +889,56 @@ function renderTopVendorsByCost() {
     const barW = Math.max((v.cost / maxCost) * barMaxW, 2);
 
     const nameLbl = _svgEl3("text");
-    nameLbl.setAttribute("x", "0"); nameLbl.setAttribute("y", String(y + 18));
-    nameLbl.setAttribute("font-size", "11"); nameLbl.setAttribute("fill", "var(--text)");
+    nameLbl.setAttribute("x", "0");
+    nameLbl.setAttribute("y", String(y + 18));
+    nameLbl.setAttribute("font-size", "11");
+    nameLbl.setAttribute("fill", "var(--text)");
     nameLbl.textContent = String(v.name);
     svgEl3.appendChild(nameLbl);
 
     const bar = _svgEl3("rect");
-    bar.setAttribute("x", String(labelW)); bar.setAttribute("y", String(y + 2));
-    bar.setAttribute("width", String(barW)); bar.setAttribute("height", String(barH - 4));
-    bar.setAttribute("fill", "var(--accent,#8b5cf6)"); bar.setAttribute("rx", "4");
+    bar.setAttribute("x", String(labelW));
+    bar.setAttribute("y", String(y + 2));
+    bar.setAttribute("width", String(barW));
+    bar.setAttribute("height", String(barH - 4));
+    bar.setAttribute("fill", "var(--accent,#8b5cf6)");
+    bar.setAttribute("rx", "4");
     bar.setAttribute("opacity", "0.85");
     svgEl3.appendChild(bar);
 
     const costLbl = _svgEl3("text");
-    costLbl.setAttribute("x", String(labelW + barW + 6)); costLbl.setAttribute("y", String(y + 18));
-    costLbl.setAttribute("font-size", "11"); costLbl.setAttribute("fill", "var(--text)");
+    costLbl.setAttribute("x", String(labelW + barW + 6));
+    costLbl.setAttribute("y", String(y + 18));
+    costLbl.setAttribute("font-size", "11");
+    costLbl.setAttribute("fill", "var(--text)");
     costLbl.textContent = `₪${v.cost.toLocaleString()}`;
     svgEl3.appendChild(costLbl);
   });
 
   container.textContent = "";
   container.appendChild(svgEl3);
+}
+
+// ── S618: Vendor payment alerts ──────────────────────────────────────────
+
+/**
+ * Surface vendors whose payment due date is overdue or within
+ * dueSoonDays days, sorted most-overdue first.
+ *
+ * @param {{ dueSoonDays?: number, now?: Date }} [opts]
+ * @returns {ReturnType<typeof _findOverdueVendors>}
+ */
+export function getVendorAlerts(opts) {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  return _findOverdueVendors(vendors, opts ?? {});
+}
+
+/**
+ * Total amount owed across all non-deleted vendors.
+ *
+ * @returns {number}
+ */
+export function getTotalVendorOutstanding() {
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  return _totalOutstanding(vendors);
 }

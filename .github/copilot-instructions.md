@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions — Wedding Manager v31.2.0
+# GitHub Copilot Instructions — Wedding Manager v31.3.0
 
 > Modular wedding app · Hebrew RTL · RSVP · Tables · WhatsApp · Google Sheets sync · Minimal Runtime Deps
 
@@ -6,7 +6,7 @@
 
 | Key | Value |
 | --- | --- |
-| Version | **v31.2.0** |
+| Version | **v31.3.0** |
 | Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
 | Runtime deps | **4** — `@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
@@ -25,12 +25,12 @@ index.html           # HTML shell
 css/                 # 7 modules: variables · base · layout · components · responsive · print · auth
 src/                 # Active ESM source (Vite entry: src/main.js)
   core/              # store · events · i18n · nav · state · ui · dom · config · template-loader
-  sections/          # 18 section modules with mount/unmount lifecycle
+  sections/          # 24 section modules with mount/unmount lifecycle
   services/          # auth · sheets · sheets-impl · backend · presence · supabase
   utils/             # phone · date · sanitize · misc
   templates/         # 15 section HTML files (lazy-loaded by nav.js)
   modals/            # 7 modal HTML files (lazy-loaded on first open)
-  i18n/              # 5 language files (he · en · ar · es · fr)
+  i18n/              # 6 language files (he · en · ar · es · fr · ru)
 public/              # sw.js · manifest.json · icons
 scripts/             # check-i18n-parity · inject-config · size-report · generate-icons · generate-precache · sri-check · sync-version
 tests/               # repo sanity + unit/integration/e2e coverage

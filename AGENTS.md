@@ -16,7 +16,7 @@
 
 ## Project Identity
 
-- **App**: Wedding Manager v31.2.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
+- **App**: Wedding Manager v31.3.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
 - **Stack**: Vanilla JS ES2025 + Vite 8 + CSS `@layer` — minimal runtime deps (`@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`)
 - **Entry**: `src/main.js` (ESM, Vite build)
 - **Deploy**: GitHub Pages — <https://rajwanyair.github.io/Wedding>
@@ -62,6 +62,10 @@ supabase/     — Migrations and edge functions
 | Analytics Agent  | `.github/agents/analytics-agent.agent.md`  | Dashboard stats, charts, reporting, export              |
 | Vendor Agent     | `.github/agents/vendor-agent.agent.md`     | Vendors, expenses, budget tracking, payments            |
 | Release Engineer | `.github/agents/release-engineer.agent.md` | Version bumps, CHANGELOG, sync-version, tagging, GH release notes |
+| Supabase Agent   | `.github/agents/supabase-agent.agent.md`   | Migrations, RLS policies, edge functions, realtime, auth |
+| Security Agent   | `.github/agents/security-agent.agent.md`   | OWASP Top 10, CSP/Trusted Types, secrets, supply chain |
+| Performance Agent | `.github/agents/performance-agent.agent.md` | Bundle size, Lighthouse, caching, lazy loading, TTI |
+| i18n Agent       | `.github/agents/i18n-agent.agent.md`       | Locale management, RTL parity, ICU MessageFormat, translations |
 
 ## Common Tasks
 

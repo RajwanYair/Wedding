@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v31.2.0
+# Workspace — Wedding Manager v31.3.0
 
 ## Available Agents
 
@@ -13,6 +13,10 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | `@vendor-agent` | `.github/agents/vendor-agent.agent.md` | vendors/budget/payments/expenses |
 | `@analytics-agent` | `.github/agents/analytics-agent.agent.md` | dashboards/funnels/reports/charts |
 | `@release-engineer` | `.github/agents/release-engineer.agent.md` | version bump/CHANGELOG/tagging/GH release |
+| `@supabase-agent` | `.github/agents/supabase-agent.agent.md` | migrations/RLS/edge functions/realtime |
+| `@security-agent` | `.github/agents/security-agent.agent.md` | OWASP/CSP/secrets/supply chain |
+| `@performance-agent` | `.github/agents/performance-agent.agent.md` | bundle size/LH scores/caching/lazy loading |
+| `@i18n-agent` | `.github/agents/i18n-agent.agent.md` | locales/RTL parity/ICU/translations |
 
 ## Available Prompts
 
