@@ -42,6 +42,7 @@ export const EXTRA_SECTIONS = /** @type {const} */ ([
   "website-builder",
   "run-of-show",
   "onboarding",
+  "audit-log",
 ]);
 
 /**
