@@ -3630,6 +3630,56 @@
     }
   }
 
+  /* WhatsApp section — bubble + template layouts adapt to pane width */
+  @container section-pane (max-width: 440px) {
+    .wa-template-list {
+      grid-template-columns: 1fr;
+    }
+    .wa-bubble {
+      max-width: 95%;
+    }
+    .wa-compose-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  /* Timeline / Tasks — stack event cards vertically on narrow panes */
+  @container section-pane (max-width: 460px) {
+    .timeline-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .timeline-card-meta {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .task-card-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  /* Modal — container-aware form layouts inside dialogs */
+  .modal {
+    container-type: inline-size;
+    container-name: modal;
+  }
+
+  @container modal (max-width: 400px) {
+    .modal-form .form-row {
+      grid-template-columns: 1fr;
+    }
+    .modal-form .btn-group {
+      flex-direction: column;
+    }
+    .modal-footer {
+      flex-direction: column-reverse;
+      gap: 0.5rem;
+    }
+  }
+
   /* ── S19b: @starting-style — modal entrance without JS animation class ── */
   /* Animate the backdrop overlay open */
   .modal-overlay {
