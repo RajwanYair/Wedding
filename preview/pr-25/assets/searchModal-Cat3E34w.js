@@ -1,0 +1,34 @@
+var e=`<!-- S214: Command Palette / Search Modal — Cmd-K -->
+<div class="modal search-modal">
+  <div class="modal-header">
+    <h2 data-i18n="cmd_palette_title">חיפוש מהיר</h2>
+    <button class="modal-close" data-action="closeModal" data-action-arg="searchModal" aria-label="סגור">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="search-input-wrap">
+      <input
+        id="cmdPaletteInput"
+        class="search-input"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        data-i18n-placeholder="cmd_palette_placeholder"
+        placeholder="חפש אורח, שולחן, ספק, מקטע…"
+        aria-label="חיפוש מהיר"
+        aria-controls="cmdPaletteResults"
+        aria-autocomplete="list"
+        autofocus
+      >
+    </div>
+    <ul
+      id="cmdPaletteResults"
+      class="cmd-palette-results"
+      role="listbox"
+      aria-label="תוצאות חיפוש"
+    >
+      <li class="cmd-palette-empty" data-i18n="cmd_palette_empty">הקלד לחיפוש…</li>
+    </ul>
+  </div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=searchModal-Cat3E34w.js.map

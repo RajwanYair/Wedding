@@ -1,0 +1,1 @@
+import{F as e}from"./compliance-YJtVqI7r.js";export{e as writeNFCTag};

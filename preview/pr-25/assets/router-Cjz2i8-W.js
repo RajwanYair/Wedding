@@ -1,0 +1,1 @@
+import{n as e,r as t,t as n}from"./router-YZTUw2hh.js";export{n as currentRoute,e as initRouterListener,t as navigate};

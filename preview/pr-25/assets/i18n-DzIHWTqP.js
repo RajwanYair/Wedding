@@ -1,0 +1,1 @@
+import{n as e}from"./i18n-D_90qPOD.js";export{e as applyI18n};
