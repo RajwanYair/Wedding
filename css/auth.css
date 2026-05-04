@@ -196,4 +196,53 @@
       transition: none !important;
     }
   }
+
+  /* S587: high-contrast overrides for auth components */
+  @media (prefers-contrast: more) {
+    .auth-overlay {
+      background: var(--bg-primary);
+    }
+    .auth-card {
+      border: 2px solid var(--accent);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .auth-btn {
+      border: 2px solid currentColor;
+    }
+    .auth-divider {
+      border-color: var(--text-primary);
+    }
+    .user-role-chip {
+      border: 1px solid currentColor;
+    }
+    .user-signout-btn {
+      border: 2px solid var(--text-primary);
+    }
+  }
+
+  /* S587: forced-colors for auth components (Windows HC) */
+  @media (forced-colors: active) {
+    .auth-card {
+      border: 1px solid CanvasText;
+      forced-color-adjust: none;
+    }
+    .auth-btn {
+      border: 1px solid ButtonText;
+    }
+    .auth-btn:hover {
+      border-color: Highlight;
+      color: HighlightText;
+    }
+    .user-signout-btn {
+      border: 1px solid ButtonText;
+    }
+    .user-role-chip {
+      border: 1px solid CanvasText;
+      color: CanvasText;
+    }
+    .auth-divider {
+      border-color: CanvasText;
+    }
+  }
 } /* end @layer auth */
