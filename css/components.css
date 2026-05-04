@@ -3167,6 +3167,34 @@
     }
   }
 
+  /* ── S571b: Animation Timeline scroll reveals for list items ──
+     Extends scroll-driven animation to timeline items, budget cards,
+     vendor cards, and gallery thumbnails. Baseline remains unchanged
+     for browsers without `animation-timeline` support. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .timeline-item,
+      .budget-category-card,
+      .vendor-card,
+      .gallery-thumb,
+      .expense-row {
+        animation: list-item-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 25%;
+      }
+    }
+  }
+  @keyframes list-item-reveal {
+    from {
+      opacity: 0;
+      transform: translateX(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
   /* ── Sprint 2: Connection status indicator ── */
   .sync-status {
     display: inline-flex;
