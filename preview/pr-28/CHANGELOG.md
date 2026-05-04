@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.3.0] — 2025-07-10
+
+> **Phase D — Accessibility, DevEx & Observability.** Enhances OS-preference
+> CSS coverage (reduced-motion, high-contrast, forced-colors), adds container
+> queries and `light-dark()` to components, creates an audit-log viewer section,
+> standardizes handler JSDoc contracts, and wires a11y auditing into CI.
+> Codespaces devcontainer added for first-PR contributors.
+> Test count: 5548 across 407 files; 0 lint warnings, 0 Node warnings.
+
+### Added
+
++ **S586** — Enhanced `audit-reduced-motion.mjs` → full a11y audit checking
+  `prefers-reduced-motion`, `prefers-contrast`, and `forced-colors` coverage.
++ **S587** — High-contrast + `forced-colors: active` overrides for 12+
+  component families in `components.css` (guest-table, charts, header,
+  countdown, nav, switches, dropdowns, progress bars).
++ **S587b** — Auth layer high-contrast + forced-colors overrides (auth-card,
+  auth-btn, auth-divider, user-role-chip, user-signout-btn).
++ **S569** — Container query coverage: modals, WhatsApp panel, timeline/tasks
+  as inline-size containers with responsive breakpoints.
++ **S570** — `light-dark()` finish: cards, modals, toasts, dropdowns, tables,
+  form inputs, and `btn-secondary` now use color-scheme-aware tokens.
++ **S588** — Audit log viewer section (`src/sections/audit-log.js` +
+  template) with paginated Supabase query, filter by actor/action/date, i18n.
++ **Devcontainer** — `.devcontainer/devcontainer.json` for GitHub Codespaces
+  (Node 22, Vite port 5173, ESLint/Stylelint/Prettier/Copilot extensions).
++ **Handler JSDoc** — All 7 handler files annotated with `@module`, `@owner`,
+  `@returns {void}` on every `register()` function.
++ **CI audit:a11y** — `npm run audit:a11y` wired into `ci` script and
+  `.github/workflows/ci.yml`.
+
 ## [31.2.0] — 2026-05-08
 
 > **Phase C — UI wiring batch (S604–S612).** Connects nine pure helpers
