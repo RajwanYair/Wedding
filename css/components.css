@@ -4665,4 +4665,111 @@
     font-weight: 600;
   }
 
+  /* ── S587: High Contrast — component-level overrides ── */
+  @media (prefers-contrast: more) {
+    .guest-table th {
+      border-bottom: 2px solid var(--text-primary);
+    }
+    .guest-table td {
+      border-bottom: 1px solid var(--text-secondary);
+    }
+    .guest-row:hover {
+      outline: 2px solid var(--accent);
+    }
+    .progress-bar {
+      border: 1px solid var(--text-primary);
+    }
+    .progress-fill {
+      border-inline-end: 1px solid var(--text-primary);
+    }
+    .chart-bar,
+    .chart-slice {
+      stroke: var(--text-primary);
+      stroke-width: 1px;
+    }
+    .header {
+      border-bottom: 2px solid var(--accent);
+    }
+    .countdown-item {
+      border: 1px solid var(--text-secondary);
+    }
+    .bottom-nav {
+      border-top: 2px solid var(--accent);
+    }
+    .switch-track {
+      border: 2px solid var(--text-primary);
+    }
+    .table-shape {
+      border: 2px solid var(--accent);
+    }
+    .seating-chair {
+      border: 1px solid var(--text-primary);
+    }
+    .wa-bubble {
+      border: 1px solid var(--text-secondary);
+    }
+    .rsvp-hero {
+      border: 2px solid var(--accent);
+    }
+    .dropdown-menu {
+      border: 2px solid var(--text-primary);
+    }
+    .dropdown-item:hover {
+      outline: 2px solid var(--accent);
+    }
+  }
+
+  /* ── S587: Forced Colors (Windows HC) — component-level ── */
+  @media (forced-colors: active) {
+    .guest-table th,
+    .guest-table td {
+      border: 1px solid CanvasText;
+    }
+    .progress-bar {
+      border: 1px solid CanvasText;
+    }
+    .progress-fill {
+      background: Highlight;
+    }
+    .switch-track {
+      border: 1px solid ButtonText;
+    }
+    .switch-track[aria-checked="true"] {
+      background: Highlight;
+    }
+    .switch-thumb {
+      background: ButtonFace;
+      border: 1px solid ButtonText;
+    }
+    .header {
+      border-bottom: 1px solid CanvasText;
+    }
+    .countdown-item {
+      border: 1px solid CanvasText;
+    }
+    .bottom-nav {
+      border-top: 1px solid CanvasText;
+    }
+    .table-shape {
+      border: 2px solid Highlight;
+      forced-color-adjust: none;
+    }
+    .dropdown-menu {
+      border: 1px solid CanvasText;
+    }
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+      background: Highlight;
+      color: HighlightText;
+    }
+    .rsvp-hero {
+      border: 1px solid CanvasText;
+    }
+    .chart-bar,
+    .chart-slice {
+      stroke: CanvasText;
+      forced-color-adjust: none;
+    }
+  }
+
 } /* end @layer components */
