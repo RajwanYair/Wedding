@@ -35,6 +35,7 @@
     "sri": "node scripts/sri-check.mjs",
     "audit:dead": "node scripts/dead-export-check.mjs",
     "audit:utils": "node scripts/audit-utils.mjs --enforce",
+    "audit:a11y": "node scripts/audit-reduced-motion.mjs --strict",
     "check:canonical-facts": "node scripts/check-canonical-facts.mjs --enforce",
     "precache": "node scripts/generate-precache.mjs",
     "size": "node scripts/size-report.mjs",
