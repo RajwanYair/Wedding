@@ -1,0 +1,1 @@
+import{n as e}from"./i18n-CpJPX2Xg.js";export{e as applyI18n};
