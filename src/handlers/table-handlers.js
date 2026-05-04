@@ -1,5 +1,12 @@
 /**
- * src/handlers/table-handlers.js — Table domain action handlers
+ * @module handlers/table-handlers
+ * @description Table/seating domain action handlers.
+ *
+ * Contract: register() → on(actionName, callback) → section function → repository.
+ * Each handler reads DOM state, delegates to a section/service function,
+ * then shows user feedback (toast/modal/vibrate).
+ *
+ * @owner tables
  */
 
 import { on } from "../core/events.js";
@@ -23,6 +30,7 @@ import {
 /**
  * Register `data-action` handlers for the seating/tables section.
  * Idempotent — call once at app boot.
+ * @returns {void}
  */
 export function register() {
   on("saveTable", () => {

@@ -1,5 +1,12 @@
 /**
- * src/handlers/guest-handlers.js — Guest domain action handlers
+ * @module handlers/guest-handlers
+ * @description Guest domain action handlers.
+ *
+ * Contract: register() → on(actionName, callback) → section function → repository.
+ * Each handler reads DOM state, delegates to a section/service function,
+ * then shows user feedback (toast/modal/vibrate).
+ *
+ * @owner guests
  */
 
 import { on } from "../core/events.js";
@@ -29,6 +36,7 @@ import { batchMarkInvitationSent } from "../sections/invitation.js";
 /**
  * Register `data-action` handlers for the guests section.
  * Idempotent — call once at app boot.
+ * @returns {void}
  */
 export function register() {
   on("saveGuest", () => {

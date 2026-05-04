@@ -1,6 +1,13 @@
 /**
- * src/handlers/section-handlers.js — RSVP, gallery, WhatsApp, timeline,
- * invitation, contact-form, and landing action handlers
+ * @module handlers/section-handlers
+ * @description RSVP, gallery, WhatsApp, timeline, invitation, contact-form,
+ * and landing action handlers.
+ *
+ * Contract: register() → on(actionName, callback) → section function → repository.
+ * Each handler reads DOM state, delegates to a section/service function,
+ * then shows user feedback (toast/modal/vibrate).
+ *
+ * @owner sections
  */
 
 import { on } from "../core/events.js";
@@ -52,6 +59,7 @@ import { buildPreviewHtml, executePrint } from "../services/export.js";
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).
  * Idempotent — call once at app boot.
+ * @returns {void}
  */
 export function register() {
   // ── RSVP ──

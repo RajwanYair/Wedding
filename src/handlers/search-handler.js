@@ -1,9 +1,12 @@
 /**
- * src/handlers/search-handler.js — S214 Cmd-K command palette handler.
+ * @module handlers/search-handler
+ * @description S214 Cmd-K command palette handler.
  *
  * Wires the search modal input to buildSearchIndex + searchIndex.
  * Called once on first modal open via initSearchModalHandlers().
  * Exported for deferred setup from main.js.
+ *
+ * @owner nav
  */
 
 import { buildSearchIndex, searchIndex } from "../services/analytics.js";

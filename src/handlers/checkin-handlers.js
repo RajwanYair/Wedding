@@ -1,5 +1,12 @@
 /**
- * src/handlers/checkin-handlers.js — Check-in domain action handlers
+ * @module handlers/checkin-handlers
+ * @description Check-in domain action handlers.
+ *
+ * Contract: register() → on(actionName, callback) → section function → repository.
+ * Each handler reads DOM state, delegates to a section/service function,
+ * then shows user feedback (toast/modal/vibrate).
+ *
+ * @owner checkin
  */
 
 import { on } from "../core/events.js";
@@ -22,6 +29,7 @@ import { bulkCheckIn } from "../services/guest-service.js";
 /**
  * Register `data-action` handlers for the check-in section.
  * Idempotent — call once at app boot.
+ * @returns {void}
  */
 export function register() {
   on("checkInGuest", (el) => checkInGuest(el.dataset.actionArg ?? ""));

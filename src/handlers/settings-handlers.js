@@ -1,5 +1,12 @@
 /**
- * src/handlers/settings-handlers.js — Settings, sheets sync, and conflict resolution handlers
+ * @module handlers/settings-handlers
+ * @description Settings, sheets sync, and conflict resolution handlers.
+ *
+ * Contract: register() → on(actionName, callback) → section function → repository.
+ * Each handler reads DOM state, delegates to a section/service function,
+ * then shows user feedback (toast/modal/vibrate).
+ *
+ * @owner settings
  */
 
 import { on } from "../core/events.js";
@@ -83,6 +90,7 @@ import { saveWebsiteConfig, previewWebsite } from "../sections/website-builder.j
 /**
  * Register `data-action` handlers for the settings section.
  * Idempotent — call once at app boot.
+ * @returns {void}
  */
 export function register() {
   // ── Sheets / Sync ──
