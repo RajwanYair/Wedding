@@ -1,0 +1,95 @@
+var e=`<!-- src/templates/website-builder.html — S139 Public wedding website builder -->
+<div class="card">
+  <div class="card-header">
+    <span class="icon">🌐</span>
+    <span data-i18n="website_builder_title">בונה אתר חתונה</span>
+  </div>
+
+  <p class="section-desc" data-i18n="website_builder_desc">
+    צור אתר חתונה ציבורי עם הגדרות פרטיות ותצוגה מקדימה
+  </p>
+
+  <!-- Couple info form -->
+  <div class="website-builder-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="wbCoupleA" data-i18n="website_couple_a">שם ראשון (א׳)</label>
+        <input id="wbCoupleA" type="text" class="form-input" maxlength="80" />
+      </div>
+      <div class="form-group">
+        <label for="wbCoupleB" data-i18n="website_couple_b">שם ראשון (ב׳)</label>
+        <input id="wbCoupleB" type="text" class="form-input" maxlength="80" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="wbDate" data-i18n="website_date">תאריך חתונה</label>
+        <input id="wbDate" type="date" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label for="wbVisibility" data-i18n="website_visibility">נראות</label>
+        <select id="wbVisibility" class="form-input">
+          <option value="public" data-i18n="website_vis_public">ציבורי</option>
+          <option value="password" data-i18n="website_vis_password">מוגן בסיסמה</option>
+          <option value="private" data-i18n="website_vis_private">פרטי</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" id="wbPasswordGroup" style="display:none">
+      <label for="wbPassword" data-i18n="website_password">סיסמה</label>
+      <input id="wbPassword" type="password" class="form-input" maxlength="72" />
+    </div>
+
+    <!-- Section toggles -->
+    <div class="form-group">
+      <label data-i18n="website_sections_label">סעיפים באתר</label>
+      <div id="wbSectionToggles" class="website-section-toggles"></div>
+    </div>
+
+    <!-- Slug preview -->
+    <div class="form-group">
+      <label data-i18n="website_slug_label">כתובת האתר</label>
+      <div class="website-slug-preview">
+        <code id="wbSlugPreview">—</code>
+      </div>
+    </div>
+
+    <div class="website-builder-actions">
+      <button class="btn btn-primary" data-action="saveWebsiteConfig" type="button">
+        💾 <span data-i18n="website_save">שמור הגדרות</span>
+      </button>
+      <button class="btn btn-secondary" data-action="previewWebsite" type="button">
+        👁️ <span data-i18n="website_preview">תצוגה מקדימה</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Preview iframe -->
+  <div id="wbPreviewContainer" class="website-preview-container u-hidden">
+    <h4 data-i18n="website_preview_title">תצוגה מקדימה</h4>
+    <div class="website-preview-frame">
+      <div id="wbPreviewContent" class="website-preview-content"></div>
+    </div>
+  </div>
+
+  <!-- DNS Instructions (S198 / Roadmap S154) -->
+  <div class="settings-card u-mt-md" id="wbDnsCard">
+    <h3>🌐 <span data-i18n="dns_title">הגדרות DNS לדומיין מותאם אישית</span></h3>
+    <p class="section-desc" data-i18n="dns_description">הוסף את רשומות ה-DNS הבאות אצל ספק הדומיין שלך:</p>
+    <div class="form-group u-mt-sm">
+      <label for="wbCustomDomain" data-i18n="domain_custom_label">דומיין מותאם</label>
+      <input
+        type="text"
+        id="wbCustomDomain"
+        class="form-control"
+        placeholder="rsvp.example.com"
+        dir="ltr"
+      />
+    </div>
+    <div id="wbDnsInstructions" class="dns-instructions u-mt-sm" hidden></div>
+  </div>
+</div>
+`;export{e as default};
+//# sourceMappingURL=website-builder-B56yrzKC.js.map

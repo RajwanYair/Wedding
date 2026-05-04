@@ -1,0 +1,33 @@
+<!doctype html>
+<!--
+  public/404.html — GitHub Pages SPA routing shim (S390)
+
+  GitHub Pages serves this file for unknown paths (e.g. /Wedding/guests).
+  This script converts the path-based URL back to a hash URL and redirects
+  to the app root, preserving backward compat when FEATURE_PUSHSTATE_ROUTER
+  is later enabled.
+
+  Pattern: /Wedding/guests?id=abc → /#guests?id=abc
+  This lets browsers that bookmarked or shared a pushState URL still land
+  in the correct section after a hard reload.
+-->
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wedding Manager — Redirecting…</title>
+    <script>
+      (function () {
+        var base = '/Wedding';
+        var path = window.location.pathname;
+        // Strip the base prefix to get the section name.
+        var section = path.slice(base.length).replace(/^\//, '').split('/')[0] || '';
+        var search = window.location.search || '';
+        var hash = section ? ('#' + section + search) : '';
+        var dest = base + '/' + hash;
+        window.location.replace(dest);
+      }());
+    </script>
+  </head>
+  <body></body>
+</html>

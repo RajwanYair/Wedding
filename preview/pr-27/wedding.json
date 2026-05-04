@@ -1,0 +1,15 @@
+{
+    "_comment": "Public wedding event configuration. Edit this file to set defaults without touching JS source. Values here are merged into the app's initial state and can still be overridden per-user in Settings.",
+    "groom": "אליאור",
+    "groomEn": "Elior",
+    "bride": "טובה",
+    "brideEn": "Tova",
+    "date": "2026-05-07",
+    "hebrewDate": "כ' באייר התשפ\"ו",
+    "time": "18:00",
+    "ceremonyTime": "18:50",
+    "venue": "נוף הירדן",
+    "address": "מצפה יריחו",
+    "wazeLink": "https://ul.waze.com/ul?ll=31.81436241%2C35.39636135&navigate=yes&zoom=17&utm_campaign=default&utm_source=waze_website&utm_medium=lm_share_location",
+    "giftBudget": 0
+}
