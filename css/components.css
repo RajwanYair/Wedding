@@ -3795,6 +3795,35 @@
     background: light-dark(rgba(255, 255, 255, 0.65), var(--bg-card));
   }
 
+  /* ── S570: light-dark() + color-mix() finish across component tokens ── */
+  .card {
+    background: light-dark(rgba(255, 255, 255, 0.7), var(--bg-card));
+    border-color: light-dark(rgba(0, 0, 0, 0.08), rgba(212, 165, 116, 0.15));
+  }
+  .modal {
+    background: light-dark(#fff, var(--bg-secondary));
+    border-color: light-dark(rgba(0, 0, 0, 0.1), rgba(212, 165, 116, 0.2));
+  }
+  .toast {
+    background: light-dark(#fff, var(--bg-secondary));
+    border-color: light-dark(rgba(0, 0, 0, 0.12), rgba(212, 165, 116, 0.2));
+  }
+  .dropdown-menu {
+    background: light-dark(#fff, var(--bg-secondary));
+    border-color: light-dark(rgba(0, 0, 0, 0.08), rgba(212, 165, 116, 0.15));
+  }
+  .guest-table th {
+    background: light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.04));
+  }
+  .form-input,
+  .form-select {
+    background: light-dark(#fff, rgba(255, 255, 255, 0.05));
+    border-color: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.1));
+  }
+  .btn-secondary {
+    background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.08));
+  }
+
   /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 6px;
