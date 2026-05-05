@@ -102,6 +102,8 @@ class SettingsSection extends BaseSection {
     }).catch(() => {});
     // Wire theme marketplace (S445)
     renderThemeMarketplace();
+    // Populate AI settings form (S685)
+    loadAiSettingsForm();
   }
 }
 
@@ -167,7 +169,10 @@ export function saveAiSettings() {
     const apiKey = /** @type {HTMLInputElement|null} */ (document.getElementById("aiApiKey"))?.value?.trim() ?? "";
     const model = /** @type {HTMLInputElement|null} */ (document.getElementById("aiModel"))?.value?.trim() ?? "";
     const enabled = /** @type {HTMLInputElement|null} */ (document.getElementById("aiEnabled"))?.checked ?? false;
-    _save({ provider, apiKey, model, enabled });
+    const proxyUrl = /** @type {HTMLInputElement|null} */ (document.getElementById("aiProxyUrl"))?.value?.trim() ?? "";
+    _save({ provider, apiKey, model, enabled, proxyUrl });
+    const statusEl = document.getElementById("aiStatus");
+    if (statusEl) statusEl.textContent = t("ai_saved");
   }).catch(() => {});
 }
 
@@ -187,6 +192,81 @@ export async function testAiConnection() {
     if (statusEl) statusEl.textContent = `${t("ai_test_fail")}: ${msg}`;
     showToast(t("ai_test_fail"), "error");
   }
+}
+
+/** Model suggestions per provider (S685). */
+const _AI_MODELS = {
+  openai: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
+  anthropic: ["claude-3-5-sonnet-20241022", "claude-3-haiku-20240307", "claude-3-opus-20240229"],
+  gemini: ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash", "gemini-2.5-pro"],
+  ollama: ["llama3", "llama3:8b", "mistral", "phi3", "gemma2"],
+};
+
+/**
+ * Update datalist options + model placeholder when provider changes (S685).
+ */
+export function onAiProviderChange() {
+  const select = /** @type {HTMLSelectElement|null} */ (document.getElementById("aiProviderSelect"));
+  const datalist = document.getElementById("aiModelSuggestions");
+  const modelInput = /** @type {HTMLInputElement|null} */ (document.getElementById("aiModel"));
+  const keyInput = /** @type {HTMLInputElement|null} */ (document.getElementById("aiApiKey"));
+  const hintEl = document.getElementById("aiModelHint");
+  if (!select) return;
+  const provider = select.value;
+  const models = _AI_MODELS[provider] ?? [];
+  if (datalist) {
+    datalist.textContent = "";
+    for (const m of models) {
+      const opt = document.createElement("option");
+      opt.value = m;
+      datalist.appendChild(opt);
+    }
+  }
+  if (modelInput && !modelInput.value) {
+    modelInput.placeholder = models[0] ?? "";
+  }
+  if (hintEl) {
+    hintEl.textContent = provider === "ollama"
+      ? t("ai_model_hint_ollama")
+      : provider === "gemini"
+        ? t("ai_model_hint_gemini")
+        : "";
+  }
+  if (keyInput) {
+    const placeholders = { openai: "sk-…", anthropic: "sk-ant-…", gemini: "AIzaSy…", ollama: "" };
+    keyInput.placeholder = placeholders[provider] ?? "sk-…";
+  }
+}
+
+/**
+ * Populate the AI settings form from localStorage on mount (S685).
+ */
+export function loadAiSettingsForm() {
+  import("../utils/ai-client.js").then(({ saveAiSettings: _ }) => {
+    // Read saved settings directly from localStorage to avoid circular import.
+    let saved;
+    try {
+      const raw = localStorage.getItem("wedding_v1_ai_settings");
+      saved = raw ? JSON.parse(raw) : {};
+    } catch {
+      saved = {};
+    }
+    const set = /** @param {string} id @param {string} val */ (id, val) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el instanceof HTMLInputElement && el.type === "checkbox") {
+        el.checked = Boolean(val);
+      } else if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement) {
+        el.value = val ?? "";
+      }
+    };
+    set("aiProviderSelect", saved.provider ?? "openai");
+    set("aiApiKey", saved.apiKey ?? "");
+    set("aiModel", saved.model ?? "");
+    set("aiEnabled", saved.enabled ?? false);
+    set("aiProxyUrl", saved.proxyUrl ?? "");
+    onAiProviderChange();
+  }).catch(() => {});
 }
 
 /**

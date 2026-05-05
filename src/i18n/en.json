@@ -495,8 +495,6 @@
   "col_expense_amount": "Amount",
   "col_table_name": "Table Name",
   "col_vendor_name": "Vendor Name",
-  "col_table_name": "Table Name",
-  "col_vendor_name": "Vendor Name",
   "col_assigned": "Assigned",
   "col_capacity": "Capacity",
   "col_date": "Date",
@@ -1593,5 +1591,12 @@
   "audit_log_col_details": "Details",
   "audit_log_empty": "No actions found for the selected range",
   "audit_log_prev": "Previous",
-  "audit_log_next": "Next"
+  "audit_log_next": "Next",
+  "ai_provider_gemini": "Google Gemini",
+  "ai_proxy_label": "Proxy URL (optional)",
+  "ai_proxy_placeholder": "https://wedding-ai-proxy.workers.dev",
+  "ai_proxy_hint": "Leave empty for direct provider access",
+  "ai_model_hint_ollama": "Ollama model name (e.g. llama3)",
+  "ai_model_hint_gemini": "Gemini model name (e.g. gemini-1.5-flash)",
+  "ai_saved": "AI settings saved"
 }

@@ -1591,5 +1591,12 @@
   "audit_log_col_details": "פרטים",
   "audit_log_empty": "אין פעולות בטווח הנבחר",
   "audit_log_prev": "הקודם",
-  "audit_log_next": "הבא"
+  "audit_log_next": "הבא",
+  "ai_provider_gemini": "Google Gemini",
+  "ai_proxy_label": "כתובת Proxy (אופציונלי)",
+  "ai_proxy_placeholder": "https://wedding-ai-proxy.workers.dev",
+  "ai_proxy_hint": "השאר ריק לגישה ישירה לספק",
+  "ai_model_hint_ollama": "שם מודל Ollama (לדוגמה: llama3)",
+  "ai_model_hint_gemini": "שם מודל Gemini (לדוגמה: gemini-1.5-flash)",
+  "ai_saved": "הגדרות AI נשמרו"
 }
