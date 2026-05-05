@@ -29,6 +29,8 @@ Choose the correct layer:
 | Section feature | `src/sections/<name>.js` | `mount()`, `unmount()`, `render*()` exports |
 | Data access | `src/repositories/<name>-repo.js` | CRUD via `storeGet`/`storeSet` |
 | Action handler | `src/handlers/<domain>-handlers.js` | `data-action` dispatch |
+| AI integration | `src/services/ai-proxy.js` | `callAiProxy(prompt, opts)` — never fetch AI directly |
+| Worker feature | `worker/src/index.ts` | Cloudflare Worker — separate wrangler deploy |
 
 **Rules:**
 
@@ -77,9 +79,17 @@ import { fnv1a32 } from "./fnv1a.js";         // hash
 import { cleanPhone } from "./phone.js";        // phone normalize
 import { sanitize } from "./sanitize.js";       // input validation
 
+// AI proxy pattern
+import { callAiProxy } from "../services/ai-proxy.js";
+const result = await callAiProxy(prompt, { model: 'gemini-flash' });
+
 // Tests pattern
 beforeEach(() => resetIdCounter());             // reset sequential IDs
 
 // Commit convention
 "feat(S{N}): {domain} — {what} + {count} tests"
+
+// Valid @owner values
+// guest | vendor-crm | rsvp | checkin | calendar | analytics
+// plugin-runtime | whatsapp | ai-proxy | floor-plan | tables | sections
 ```

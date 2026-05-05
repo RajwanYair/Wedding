@@ -69,17 +69,18 @@ index.html         shell and nav chrome
 css/               layered stylesheets (7 modules, @layer ordered)
 src/main.js        bootstrap entry (Vite 8 ESM)
 src/core/          store · nav · events · i18n · ui · config · dom · router
-src/sections/      runtime-mounted features (23 modules)
+src/sections/      runtime-mounted features (24 modules)
 src/handlers/      action dispatch (data-action handlers, domain-split)
 src/repositories/  data access layer (CRUD helpers per domain)
-src/services/      auth · sheets · backend · presence · supabase · seating
+src/services/      auth · sheets · backend · presence · supabase · seating · ai-proxy
 src/types/         TypeScript type stubs
 src/templates/     lazy section HTML (15 files)
 src/modals/        lazy modal HTML (7 files)
 src/i18n/          he · en · ar · es · fr locale files
-tests/             repo sanity · unit · integration · e2e · perf (6448 tests, 458 files)
+tests/             repo sanity · unit · integration · e2e · perf (6450 tests, 458 files)
 scripts/           build/lint/audit/sync scripts (.mjs)
 supabase/          Edge Functions · migrations
+worker/            Cloudflare Worker AI proxy (wrangler.toml · src/index.ts)
 public/            sw.js · manifest.json · offline.html · _headers
 docs/              ADRs · how-tos · integrations · operations
 ```

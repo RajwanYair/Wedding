@@ -13,8 +13,11 @@ tools:
   - run_in_terminal
   - manage_todo_list
   - runSubagent
+  - runTests
+  - memory
   - vscode_askQuestions
   - vscode_listCodeUsages
+  - vscode_renameSymbol
 ---
 
 # Guest Manager Agent
@@ -35,8 +38,8 @@ Canonical type shapes and enums live in `src/types.d.ts` and `src/core/constants
 ## Key Files
 
 - `src/sections/guests.js` — guest CRUD, search, filter
-- `src/sections/tables.js` — seating plan, table assignment
-- `src/sections/rsvp.js` — public RSVP form
+- `src/sections/tables.js` — seating plan, table assignment, floor-plan canvas
+- `src/sections/rsvp.js` — public RSVP form with conditional questions
 - `src/handlers/guest-handlers.js` — action dispatch (data-action handlers)
 - `src/repositories/guest-repo.js` — data access layer (CRUD helpers)
 - `src/services/seating.js` — seat export helpers (buildSeatRows, suggestSwaps)
@@ -73,6 +76,30 @@ seatRowsToCsv(rows)             // UTF-8 BOM CSV string
 seatRowsToJson(rows)            // JSON array string
 suggestSwaps(guests, tables)    // [ { guest, fromTable, toTable, reason } ]
 ```
+
+## Floor Plan & Seating Constraints
+
+```js
+applyFloorPlanPreset(preset)    // set layout: "banquet" | "classroom" | "cocktail"
+exportFloorPlanSvg()            // download SVG of current floor plan
+toggleSeatingConstraints()      // show/hide constraint config panel
+addSeatingConstraint()          // add a new seating constraint rule
+```
+
+Constraint rules (defined in `src/sections/tables.js`):
+
+- `must_sit_together` — two guests must share a table
+- `cannot_sit_together` — two guests must not share a table
+- `prefer_front` / `prefer_back` — positional preference
+
+## RSVP Conditional Questions
+
+RSVP supports dynamic follow-up questions based on guest responses:
+
+- Questions defined in Settings → RSVP Questions
+- `evaluateConditionalQuestions(guest)` re-evaluates which questions apply on every answer change
+- Stored in guest record under `conditionalAnswers: Record<questionId, string>`
+- All new question labels must have `he` + `en` i18n keys
 
 ## Guest Enums
 

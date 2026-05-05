@@ -12,6 +12,8 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
+  - runTests
+  - memory
   - vscode_askQuestions
   - vscode_listCodeUsages
 ---
@@ -31,10 +33,11 @@ You are an analytics and reporting specialist for a wedding app.
 ## Key Files
 
 - `src/sections/analytics.js` — main analytics section (mount/unmount lifecycle)
-- `src/sections/dashboard.js` — summary dashboard cards
+- `src/sections/dashboard.js` — summary dashboard cards + AI suggestions widget
 - `src/sections/budget.js` — budget overview and breakdown
 - `src/sections/expenses.js` — expense tracking and charts
 - `src/sections/checkin.js` — check-in tracking and stats
+- `src/services/ai-proxy.js` — AI inference via CF Worker (used by AI suggestions)
 - `src/handlers/section-handlers.js` — action handlers for analytics export/filter actions
 - `src/repositories/` — data access layer (guestRepo, tableRepo, vendorRepo, expenseRepo)
 
@@ -51,7 +54,24 @@ getVipNotCheckedIn()            // Guest[] — VIP guests not yet checked in
 getAccessibilityNotCheckedIn()  // Guest[] — accessibility-flagged guests not yet checked in
 getCheckinRateBySide()          // { groom: n%, bride: n%, mutual: n% }
 getCheckinRateByTable()         // Map<tableId, { rate, checked, total }>
+refreshAiSuggestions()          // re-run AI suggestions widget (calls callAiProxy internally)
 ```
+
+## AI Dashboard Suggestions
+
+The dashboard AI widget (`src/sections/dashboard.js`) uses `callAiProxy()` to generate
+priority-badged suggestions based on current event stats:
+
+```js
+// Trigger from data-action or from code:
+refreshAiSuggestions();  // exported as renderAiSuggestions
+```
+
+- Suggestions are shown with priority badges (high/medium/low)
+- Each suggestion maps to a quick-action button targeting a specific section
+- Calls `callAiProxy(prompt, { model: 'gemini-flash' })` with a structured stats prompt
+- Falls back to static rule-based suggestions when AI proxy is unavailable
+- AI provider settings (BYO key / Gemini / proxy URL) configured in Settings → AI Provider
 
 ## RSVP Funnel
 

@@ -12,14 +12,14 @@
 
 ## Getting Help
 
-| Channel                                                                                | Use For                                       |
-| -------------------------------------------------------------------------------------- | --------------------------------------------- |
-| [README](https://github.com/RajwanYair/Wedding#readme)                                 | Setup, usage, and feature overview            |
-| [CHANGELOG](https://github.com/RajwanYair/Wedding/blob/main/CHANGELOG.md)              | Version history and release notes             |
-| [ARCHITECTURE](https://github.com/RajwanYair/Wedding/blob/main/ARCHITECTURE.md)        | Module layout, data flow, design decisions    |
-| [Discussions](https://github.com/RajwanYair/Wedding/discussions)                       | Questions, ideas, and general help            |
-| [Issues](https://github.com/RajwanYair/Wedding/issues/new/choose)                      | Bug reports, feature requests                 |
-| [Security Advisories](https://github.com/RajwanYair/Wedding/security/advisories/new)   | Private security vulnerability reports        |
+| Channel                                                                              | Use For                                    |
+| ------------------------------------------------------------------------------------ | ------------------------------------------ |
+| [README](https://github.com/RajwanYair/Wedding#readme)                               | Setup, usage, and feature overview         |
+| [CHANGELOG](https://github.com/RajwanYair/Wedding/blob/main/CHANGELOG.md)            | Version history and release notes          |
+| [ARCHITECTURE](https://github.com/RajwanYair/Wedding/blob/main/ARCHITECTURE.md)      | Module layout, data flow, design decisions |
+| [Discussions](https://github.com/RajwanYair/Wedding/discussions)                     | Questions, ideas, and general help         |
+| [Issues](https://github.com/RajwanYair/Wedding/issues/new/choose)                    | Bug reports, feature requests              |
+| [Security Advisories](https://github.com/RajwanYair/Wedding/security/advisories/new) | Private security vulnerability reports     |
 
 ## Quick Troubleshooting
 

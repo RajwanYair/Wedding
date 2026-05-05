@@ -21,6 +21,10 @@ description: "Use when: editing CI/CD workflows, GitHub Actions, or any YAML con
 - CodeQL for JavaScript: use `github/codeql-action@v4`, `build-mode: none`, `security-extended,security-and-quality`
 - SBOM: `sbom.yml` generates CycloneDX SBOM on every tag push
 - Supply chain: `scorecard.yml` and `trivy.yml` run weekly hardened security scans
+- CF Worker: `worker/` is deployed separately with `npx wrangler deploy` — not part of Vite build
+- Copilot Coding Agent bootstrap: `copilot-setup-steps.yml` runs before any agent-mode task
+- Label sync: `sync-labels.yml` keeps repo labels in sync with `.github/labels.yml` via `EndBug/label-sync@v2`
+- Auto-merge: `dependabot-auto-merge.yml` merges minor/patch Dependabot PRs after CI is green
 
 ## Lint Gate — Zero Tolerance
 
@@ -50,10 +54,21 @@ Commit after **every Copilot chat session** or sprint with a clear summary messa
 - `npm audit --audit-level=high` must return 0 high/critical vulns before tagging
 - `node scripts/check-plaintext-secrets.mjs` must exit 0 on every PR
 
-## Copilot Code Review
+## Copilot Code Review + Coding Agent
 
 Copilot PR review is enabled via `.github/copilot/config.json`. Review instructions are applied
 automatically to all PRs. Do not suppress or override them in workflow files.
+
+The **Copilot Coding Agent** (`copilot-setup-steps.yml`) bootstraps a Codespace-like environment
+for agent-mode tasks. Ensure it runs `npm ci` from the repo root (not `../MyScripts/`)
+so the agent has its own isolated `node_modules/`.
+
+When using GitHub Copilot Chat in agent mode:
+
+- Use `model: claude-sonnet-4-6` in the agent frontmatter for best results
+- Use `manage_todo_list` to track multi-step tasks
+- Use `memory` for session/repo notes that survive across turns
+- Use `runTests` instead of `run_in_terminal` for targeted test runs
 
 ## VS Code Extension — Known False Positives
 

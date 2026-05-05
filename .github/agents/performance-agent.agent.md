@@ -11,6 +11,8 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
+  - runTests
+  - memory
   - vscode_askQuestions
 ---
 
@@ -29,6 +31,7 @@ ensure < 3s TTI on 3G, and optimize caching/lazy-loading strategies.
 - Build: Vite 8 with dynamic `import()` only (no `manualChunks`)
 - Caching: Service Worker 5-strategy cache + precache + IDB queue
 - Fonts: System stack (zero font downloads)
+- AI Proxy: CF Worker at `worker/` — AI calls offloaded to edge, not in the client bundle
 - Images: Supabase Storage + CF transforms (planned)
 
 ## Performance Budget

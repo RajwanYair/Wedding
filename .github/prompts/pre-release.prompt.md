@@ -94,7 +94,17 @@ npm audit --audit-level=moderate
 
 Both must exit 0.
 
-## Step 13 — Commit & Tag
+## Step 13 — CF Worker (if changed)
+
+If `worker/` was modified, verify the worker builds:
+
+```bash
+cd worker && npx wrangler deploy --dry-run
+```
+
+Update `AI_PROXY_URL` in app config if the worker endpoint changed.
+
+## Step 14 — Commit & Tag
 
 ```bash
 git add -A

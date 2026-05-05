@@ -14,6 +14,7 @@ Scaffold a new feature using the current modular architecture. Ask the user what
 - [ ] Create `src/sections/{name}.js` with `mount()`, `unmount()`, and `render{Name}()` exports
 - [ ] If new CRUD data: create `src/repositories/{name}-repo.js` with `create`, `read`, `update`, `delete` helpers
 - [ ] If new data-action handlers: create or extend `src/handlers/{domain}-handlers.js`
+- [ ] If AI-powered: use `callAiProxy(prompt, opts)` from `src/services/ai-proxy.js` — never fetch AI directly
 - [ ] Add `{NAME}: '{name}'` to `SECTION_LIST` or `EXTRA_SECTIONS` in `src/core/constants.js`
 - [ ] Import as namespace in `src/main.js`: `import * as {Name}Section from "./sections/{name}.js"`
 - [ ] Add `he` + `en` keys to `src/i18n/he.json` and `src/i18n/en.json`; run `npm run check:i18n`

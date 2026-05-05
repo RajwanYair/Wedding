@@ -63,6 +63,16 @@ try {
 - Use store subscriptions for reactive cross-section updates.
 - Use `data-action` event delegation for user interactions (see `src/core/events.js`).
 
+## AI Settings Store Keys
+
+The AI proxy configuration is stored in the `settings` domain:
+
+- `storeGet(STORAGE_KEYS.SETTINGS)` returns the full settings object
+- AI provider preferences: `settings.aiProvider` — `'gemini-flash'` | `'gemini-pro'`
+- AI suggestions enabled: `settings.aiSuggestionsEnabled` — boolean (default `true`)
+
+These values are read by `callAiProxy()` in `src/services/ai-proxy.js` to select the model.
+
 ## Checklist
 
 - [ ] New domain key added to `STORAGE_KEYS`.

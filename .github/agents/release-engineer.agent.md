@@ -12,6 +12,8 @@ tools:
   - run_in_terminal
   - manage_todo_list
   - runSubagent
+  - runTests
+  - memory
   - vscode_askQuestions
 ---
 
@@ -54,7 +56,7 @@ These are kept in sync by `scripts/sync-version.mjs`. Run it after editing
 ## Pre-Release Checklist (must all be green)
 
 1. `npm run lint` — 0 errors, 0 warnings, 0 Node warnings
-2. `npm test` — every suite passes, 0 skipped, 0 Node warnings (currently **6448 tests** across **458 files**)
+2. `npm test` — every suite passes, 0 skipped, 0 Node warnings (currently **6450 tests** across **458 files**)
 3. `npm ci` — no `npm WARN deprecated` entries
 4. No dead code / orphan templates / unused exports (`node scripts/dead-export-check.mjs`)
 5. No `eval`, no unsanitized `innerHTML` (`node scripts/security-scan.mjs`)
@@ -114,6 +116,14 @@ npm run lint; npm test; npm run build
 git add -A; git commit -m "vX.Y.Z — fix(...)"; git push
 git tag vX.Y.Z; git push --tags
 $env:GH_PAGER = ""; gh release create vX.Y.Z --generate-notes
+```
+
+### Worker deploy (AI proxy update)
+
+```pwsh
+# From repo root after editing worker/src/index.ts
+npx wrangler deploy
+# Verify the new AI_PROXY_URL if endpoint changed
 ```
 
 ### Hotfix on tagged release

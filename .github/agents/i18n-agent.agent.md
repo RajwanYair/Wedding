@@ -12,6 +12,8 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
+  - runTests
+  - memory
   - vscode_askQuestions
 ---
 

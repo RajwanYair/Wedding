@@ -65,6 +65,17 @@ Run: `npm run check:credentials` — must exit 0 before any commit touching `src
 
 `FB`, `AppleID`, `google` are declared `readonly` in `eslint.config.mjs` — do not re-declare.
 
+## CF Worker / AI Proxy Security
+
+The Cloudflare Worker in `worker/` proxies AI API calls to protect the API key:
+
+- The AI API key is stored as a **Cloudflare Worker secret** — never in `src/` or committed to git.
+- `callAiProxy(prompt, opts)` in `src/services/ai-proxy.js` sends requests to the worker; it does NOT include the AI API key.
+- The worker adds the AI API key as a `Bearer` token in a server-side `Authorization` header — invisible to the browser.
+- Error responses from the worker must **not** include the API key or the upstream error message verbatim.
+- Rate limiting is enforced in the worker via Cloudflare KV — default 60 req/min per IP.
+- If `AI_PROXY_URL` is not set, `callAiProxy()` fails gracefully with a static message — no crash.
+
 ## Checklist
 
 - [ ] All user inputs pass through `sanitize()`.
@@ -73,3 +84,5 @@ Run: `npm run check:credentials` — must exit 0 before any commit touching `src
 - [ ] No hardcoded credentials in source files.
 - [ ] `npm run check:credentials` passes.
 - [ ] New headers added to `public/_headers` if needed.
+- [ ] AI API key stored only in CF Worker secrets — not in `src/` or `.env` files.
+- [ ] `callAiProxy()` used for all AI requests — no direct AI API `fetch` calls in `src/`.

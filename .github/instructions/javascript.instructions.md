@@ -29,12 +29,43 @@ applyTo: "src/**/*.js,scripts/**/*.mjs"
 src/sections/       — UI mount/unmount/render only; no direct data access
 src/handlers/       — data-action dispatch; thin glue between UI and services
 src/repositories/   — CRUD helpers; the only place raw store arrays are mutated
-src/services/       — business logic (auth, sheets, seating, commerce …)
+src/services/       — business logic (auth, sheets, seating, ai-proxy, commerce …)
 src/core/           — store, nav, i18n, events, config, dom (shared infrastructure)
+worker/             — Cloudflare Worker AI proxy (separate bundle, not imported by src/)
 ```
 
 - Section modules **must not** call repository functions directly — go via handlers.
 - Repository functions **must not** call section render functions — mutations trigger reactivity via `storeSet`.
+- AI calls must always go through `callAiProxy()` from `src/services/ai-proxy.js` — never `fetch` AI APIs directly from section modules.
+
+## AI Proxy Pattern
+
+```js
+import { callAiProxy } from '../services/ai-proxy.js';
+
+// opts: { model?: 'gemini-flash' | 'gemini-pro', timeout?: number }
+const text = await callAiProxy('Summarize guest stats: confirmed=42, pending=8', {
+  model: 'gemini-flash',
+});
+```
+
+- `AI_PROXY_URL` is injected at build time by `scripts/inject-config.mjs`
+- Falls back gracefully when proxy is unavailable (shows static message)
+- Never log the AI response if it may contain PII
+
+## Command Palette Registration
+
+```js
+// src/core/nav.js — initCommandPalette() wires the Cmd-K palette
+// Register custom commands via the command registry:
+import { registerCommand } from '../core/command-registry.js';
+
+registerCommand({
+  id: 'myFeature.doSomething',
+  label: t('cmd_my_feature'),
+  action: () => doSomething(),
+});
+```
 
 ## Section Module Contract
 

@@ -11,6 +11,8 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
+  - runTests
+  - memory
   - vscode_askQuestions
 ---
 
@@ -29,6 +31,7 @@ best practices.
 - Storage: AES-GCM encryption for PII at rest in IndexedDB
 - Secrets: GitHub Secrets + OIDC tokens (no long-lived PATs)
 - CI: CodeQL + Trivy + Trufflehog + OpenSSF Scorecard + SBOM (CycloneDX)
+- AI Proxy: CF Worker at `worker/` — API keys in Cloudflare Secrets, never in app source
 - Zero telemetry pledge: no analytics, no tracking, no phone-home
 
 ## Security Layers
@@ -89,6 +92,8 @@ npm run sri
 - ❌ PII in `localStorage` — use encrypted IDB
 - ❌ `unsafe-inline` or `unsafe-eval` in CSP
 - ❌ Suppressing Trivy/CodeQL findings without ADR
+- ❌ AI API keys in `src/` — store in Cloudflare Secrets (`wrangler secret put AI_API_KEY`)
+- ❌ Calling AI provider APIs directly from section code — always route through `callAiProxy()`
 
 ## Common Tasks
 

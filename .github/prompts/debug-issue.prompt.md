@@ -39,6 +39,8 @@ Search for relevant code using these patterns:
 | Validation error | Did `sanitize(input, schema)` return `errors`? Check the schema in `src/utils/sanitize.js`. |
 | Repository not found | Does `src/repositories/<domain>-repo.js` exist and export the expected helper? |
 | Handler not firing | Is the `data-action` attribute value registered in the handlers map in `src/core/events.js`? |
+| AI suggestion not loading | Is `callAiProxy()` returning an error? Check `AI_PROXY_URL` config and CF Worker logs. |
+| Floor plan not rendering | Is `applyFloorPlanPreset()` called after the tables section is mounted? |
 
 ### 4. Write a Failing Test
 

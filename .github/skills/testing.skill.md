@@ -7,7 +7,10 @@ description: "Testing conventions and patterns for the Wedding Manager test suit
 ## Test Runner
 
 Vitest 4 (`pool: forks`, `--no-warnings`). Run: `npm test`.
-Current suite: **6448 tests** across **458 files** · 0 Node warnings.
+Current suite: **6450 tests** across **458 files** · 0 Node warnings.
+
+> **Copilot Chat**: use the `runTests` tool to run targeted test files instead of a terminal `npm test`.
+> This avoids running the full suite when you only changed one module.
 
 ## File Organization
 

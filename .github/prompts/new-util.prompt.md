@@ -30,6 +30,8 @@ Read `src/core/constants.js` and `src/types.d.ts` — use existing enums, don't 
  */
 ```
 
+Valid `@owner` values: `guest` | `vendor-crm` | `rsvp` | `checkin` | `calendar` | `analytics` | `plugin-runtime` | `whatsapp` | `ai-proxy` | `floor-plan` | `tables` | `shared`
+
 ### Mandatory patterns
 
 - **Pure functions only** — no DOM, no store, no network, no `localStorage`

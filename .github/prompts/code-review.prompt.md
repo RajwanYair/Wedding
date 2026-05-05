@@ -26,6 +26,9 @@ Report findings first, ordered by severity, with file:line references for every 
 - [ ] Repository functions do not call section render functions
 - [ ] Sheets writes use `enqueueWrite()` — never direct `syncStoreKeyToSheets`
 - [ ] `mount()` registers subscriptions; `unmount()` cleans them all up
+- [ ] AI calls use `callAiProxy()` from `src/services/ai-proxy.js` — no direct AI API fetches
+- [ ] New `data-action` attributes have a matching `on()` registration in the appropriate handler file
+- [ ] `worker/` code does not import from `src/` (separate CF bundle)
 
 ## i18n
 
@@ -56,5 +59,7 @@ Report findings first, ordered by severity, with file:line references for every 
 
 - [ ] New exported functions have corresponding unit tests
 - [ ] Coverage does not drop below ratchet floor after change
+- [ ] New `data-action` values are covered by `wiring.test.mjs`
+- [ ] New i18n keys are covered by locale parity tests
 
 Prefer bug risk, regression risk, missing tests, and security findings over stylistic commentary.

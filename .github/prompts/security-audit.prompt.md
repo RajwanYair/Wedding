@@ -41,6 +41,8 @@ All must exit 0 before proceeding.
 - [ ] All DOM text insertion uses `textContent` or `sanitize()` from `src/utils/sanitize.js`
 - [ ] No `eval()` or `new Function()` calls
 - [ ] Supabase queries use parameterized calls (`.eq()`, `.match()`) — no string concatenation
+- [ ] AI calls use `callAiProxy()` from `src/services/ai-proxy.js`; raw API keys never present in `src/`
+- [ ] CF Worker (`worker/`) does not reflect error details that could expose internal URLs or API keys
 
 ### A05 — Security Misconfiguration
 

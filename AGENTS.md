@@ -8,7 +8,7 @@
 > values. `npm run check:canonical-facts` enforces parity.
 
 - version: `32.0.0`
-- tests: `6448`
+- tests: `6450`
 - test_files: `458`
 - utils: `190`
 - locales: `6` (he, en, ar, fr, es, ru)
@@ -16,19 +16,21 @@
 
 ## Project Identity
 
-- **App**: Wedding Manager v32.0.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
+- **App**: Wedding Manager v32.0.0 — Hebrew RTL, RSVP, table seating, WhatsApp, AI suggestions, floor-plan canvas, vendor negotiation, multi-language
 - **Stack**: Vanilla JS ES2025 + Vite 8 + CSS `@layer` — minimal runtime deps (`@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`)
 - **Entry**: `src/main.js` (ESM, Vite build)
+- **AI Proxy**: Cloudflare Worker at `worker/` — `callAiProxy()` in `src/services/ai-proxy.js`
 - **Deploy**: GitHub Pages — <https://rajwanyair.github.io/Wedding>
 
 ## Repository Layout
 
 ```text
-src/          — App source (core/, sections/, services/, utils/, i18n/, templates/)
+src/          — App source (core/, sections/, services/, utils/, i18n/, templates/, handlers/, repositories/)
 css/          — 7 CSS modules (@layer ordered)
 tests/        — Vitest unit + integration; tests/e2e/ Playwright
 public/       — SW, manifest, offline.html
-scripts/      — Build/lint/sync scripts (.mjs)
+scripts/      — Build/lint/audit/sync scripts (.mjs)
+worker/       — Cloudflare Worker AI proxy (wrangler.toml · src/index.ts)
 .github/      — Actions, Copilot instructions, agents, prompts, issue templates
 docs/         — ADRs, integration guides, ops runbooks
 supabase/     — Migrations and edge functions

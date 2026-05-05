@@ -13,6 +13,8 @@ tools:
   - run_in_terminal
   - manage_todo_list
   - runSubagent
+  - runTests
+  - memory
   - vscode_askQuestions
 ---
 
@@ -66,9 +68,30 @@ Use `@scope` for section-level style isolation (avoids bleeding into other secti
 
 ## Key Sections
 
-- **Dashboard**: stats grid, countdown, progress bar, quick actions
-- **Guests**: search + filter toolbar, data table, status badges
-- **Tables**: visual floor plan grid, drag-and-drop, round/rect shapes
+- **Dashboard**: stats grid, countdown, progress bar, quick actions, AI suggestions widget
+- **Guests**: search + filter toolbar, data table, status badges, family-first auto-seat
+- **Tables**: visual floor plan canvas, drag-and-drop, round/rect shapes, preset layouts
 - **Invitation**: SVG auto-generated + custom image upload
 - **WhatsApp**: message template editor, preview bubble, send buttons
-- **RSVP**: public-facing form with status selector
+- **RSVP**: public-facing form with conditional follow-up questions
+- **Vendors**: negotiation panel, payment schedule, SLA timeline
+
+## Floor Plan Canvas
+
+The floor plan (`src/sections/tables.js`) uses an HTML5 canvas for visual layout:
+
+- **Presets**: `applyFloorPlanPreset("banquet" | "classroom" | "cocktail")` arranges tables
+- **SVG export**: `exportFloorPlanSvg()` downloads an SVG snapshot
+- Table shapes: `round` (circle SVG) or `rect` (rectangle SVG)
+- Each table card shows occupancy percentage via a CSS progress indicator
+- Use `--table-occupied-color` and `--table-empty-color` custom properties for status colors
+- Drag handles use `cursor: grab` / `cursor: grabbing` state
+
+## Command Palette (Cmd-K)
+
+The command palette (`initCommandPalette()` in `src/core/nav.js`) provides:
+
+- Fuzzy-search over all registered commands
+- Keyboard shortcut: `Cmd+K` / `Ctrl+K`
+- AI inline command via `dispatchAiCommand(prompt)` — shows inline suggestion overlay
+- Styling: glassmorphism panel, `z-index: var(--z-overlay)`, RTL-aware input
