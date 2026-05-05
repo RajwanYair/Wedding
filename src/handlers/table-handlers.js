@@ -25,6 +25,10 @@ import {
   printTransportManifest,
   exportSeatMapCsv,
   exportSeatMapJson,
+  toggleSeatingConstraints,
+  addSeatingConstraint,
+  applyFloorPlanPreset,
+  exportFloorPlanSvg,
 } from "../sections/tables.js";
 
 /**
@@ -71,4 +75,9 @@ export function register() {
     openTableForEdit(el.dataset.actionArg ?? "");
     openModal("tableModal");
   });
+  // S690/S691 — seating constraints + floor plan
+  on("toggleSeatingConstraints", () => toggleSeatingConstraints());
+  on("addSeatingConstraint", () => addSeatingConstraint());
+  on("applyFloorPlanPreset", (el) => applyFloorPlanPreset(el?.dataset?.actionArg ?? "banquet"));
+  on("exportFloorPlanSvg", () => exportFloorPlanSvg());
 }

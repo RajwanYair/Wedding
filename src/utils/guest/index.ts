@@ -219,7 +219,14 @@ export function autoAssign(guests: SeatGuest[], tables: SeatTable[]): Assignment
     }
   }
 
-  const sortedGroups = Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
+  const sortedGroups = Object.entries(groups).sort((a, b) => {
+    // Family group always gets priority seating
+    const PRIORITY: Record<string, number> = { family: 10 };
+    const pa = PRIORITY[a[0]] ?? 0;
+    const pb = PRIORITY[b[0]] ?? 0;
+    if (pb !== pa) return pb - pa;
+    return b[1].length - a[1].length;
+  });
 
   for (const [_groupName, members] of sortedGroups) {
     const table = tableCopies.find((t) => t.capacity - t.assigned.length >= members.length);

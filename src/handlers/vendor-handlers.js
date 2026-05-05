@@ -24,6 +24,9 @@ import {
   setVendorPaymentFilter,
   importVendorsCSV,
   downloadVendorCSVTemplate,
+  startVendorNegotiation,
+  submitVendorOffer,
+  generatePaymentSchedule,
 } from "../sections/vendors.js";
 import {
   saveExpense,
@@ -152,4 +155,8 @@ export function register() {
   on("printMealPerTable", () => printMealPerTable());
   on("exportEventSummary", () => exportEventSummary());
   on("printDietaryCards", () => printDietaryCards());
+  // S692/S693 — vendor negotiation + payment schedule
+  on("startVendorNegotiation", () => startVendorNegotiation());
+  on("submitVendorOffer", () => submitVendorOffer());
+  on("generatePaymentSchedule", () => generatePaymentSchedule());
 }

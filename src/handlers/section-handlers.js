@@ -55,6 +55,7 @@ import {
   resetDefault as rosResetDefault,
 } from "../sections/run-of-show.js";
 import { buildPreviewHtml, executePrint } from "../services/export.js";
+import { refreshAiSuggestions } from "../sections/dashboard.js";
 
 /**
  * Register section-level `data-action` handlers (navigation, modals, etc).
@@ -253,4 +254,6 @@ function _setPreviewHtml(target, html) {
     );
     if (sel) executePrint(sel.value);
   });
+  // S688 — AI suggestions refresh
+  on("refreshAiSuggestions", () => refreshAiSuggestions());
 }
