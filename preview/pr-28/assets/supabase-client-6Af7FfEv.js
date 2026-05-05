@@ -1,0 +1,1 @@
+import{t as e}from"./supabase-client-BOifEWbE.js";export{e as getSupabaseClient};

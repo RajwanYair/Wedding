@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.4.0] — 2025-07-14
+
+> **Phase E — Animation, i18n Completeness & Section Parity.**
+> Scroll-driven animation timeline reveals, full i18n key parity across all
+> 6 locales (9 new `col_*` + `analytics_no_guests` + `domain_custom_label`),
+> Periodic Background Sync registration, CSS `@scope` for audit-log +
+> onboarding sections, `@starting-style` section entry animations with
+> extended view-transition names, standalone `expenses.html` template +
+> `#sec-expenses` container, and `contact-form.js` alias resolving
+> section-template parity to 23/23.
+> Test count: 5548 across 407 files; 0 lint warnings, 0 Node warnings.
+
+### Added
+
++ **S571b** — Scroll-driven Animation Timeline API: `.timeline-item`,
+  `.budget-category-card`, `.vendor-card`, `.gallery-thumb`, `.expense-row`
+  get `animation-timeline: view()` scroll-reveal via `@supports` guard.
++ **S563** — Register `navigator.periodicSync` ("wedding-refresh", 24 h) in
+  `initSW()` after SW registration; guards with `permissions.query`; adds
+  `periodic-background-sync` to `manifest.json`.
++ **S213** — `@scope (#sec-audit-log)` and `@scope (#sec-onboarding)` blocks
+  in `components.css` (completing all 23-section `@scope` coverage).
++ **S590** — `@starting-style` entry animation (`opacity:0 → 1`,
+  `translateY(8px) → 0`) on `.section.active` in `layout.css`; extended
+  per-section `view-transition-name` list to include audit-log, onboarding,
+  run-of-show, contact-form, website-builder.
++ `src/templates/expenses.html` — standalone expenses template with all
+  required element IDs; `#sec-expenses` container in `index.html`.
++ `src/sections/contact-form.js` — re-export alias for `contact-collector.js`
+  so `check-section-template-parity` reports 23/23 sections present.
+
+### Fixed
+
++ **i18n parity** — Added 9 missing keys to all 6 locales:
+  `col_table_name`, `col_vendor_name`, `col_assigned`, `col_capacity`,
+  `col_date`, `col_description`, `col_guests`, `analytics_no_guests`,
+  `domain_custom_label`. Coverage audit: 1033/1033 keys in he + en.
++ **Canonical facts sync** — `scripts/sync-version.mjs` now patches the
+  `- version:` line in `AGENTS.md`; `AGENTS.md` updated to v31.3.0 baseline.
+
 ## [31.3.0] — 2025-07-10
 
 > **Phase D — Accessibility, DevEx & Observability.** Enhances OS-preference

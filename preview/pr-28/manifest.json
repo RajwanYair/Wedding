@@ -95,5 +95,6 @@
             "icons": [{ "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" }],
             "launch_type": "single-client"
         }
-    ]
+    ],
+    "permissions": ["periodic-background-sync"]
 }
