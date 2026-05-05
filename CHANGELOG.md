@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.7.0] — 2025-07-14
+
+> **Phase C — Advanced Utilities & AI Streaming.**
+> Vendor catalogue import, badge printing, trigger automation, budget
+> benchmarks, multi-event workspace, floor-plan collision, seating
+> constraints, AI streaming, guest timeline.
+> Test count: 6121 across 440 files; 0 lint warnings, 0 Node warnings.
+
+### Added
+
+- `src/utils/vendor-catalogue.js` — CSV/JSON vendor import, Lystio IL format, enrichment (S646)
+- `src/utils/badge-printer.js` — kiosk badge layout, thermal text, batch print jobs (S647)
+- `src/utils/trigger-automation.js` — event-based trigger engine, condition eval, execution logs (S648)
+- `src/utils/budget-benchmark.js` — Israeli regional benchmarks, category deviation scoring (S649)
+- `src/utils/multi-event.js` — multi-event workspace, templates, guest list merge (S650)
+- `src/utils/floor-plan-collision.js` — 2D AABB collision, snap grid, rotation, boundary check (S651)
+- `src/utils/seating-constraint.js` — together/apart rules, violation detect, contradictions (S652)
+- `src/utils/ai-streaming.js` — SSE parser, multi-provider normalize, token estimate (S653)
+- `src/utils/guest-timeline.js` — per-guest activity log, typed entries, milestone tracking (S654)
+
+### Fixed
+
+- `vendor-catalogue.js`: Rolldown `??` operator precedence fix (parenthesized `?? x || y`)
+- `sprint.prompt.md`, `utils.instructions.md`: markdownlint formatting fixes
+
 ## [31.6.0] — 2026-05-05
 
 > **Phase C — Infrastructure Glue & Builder Utilities.**

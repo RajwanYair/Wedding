@@ -2,7 +2,7 @@
 description: "Use when: exploring the Wedding workspace file structure, available agents, prompts, or project resources."
 ---
 
-# Workspace — Wedding Manager v31.6.0
+# Workspace — Wedding Manager v31.7.0
 
 ## Available Agents
 
@@ -77,7 +77,7 @@ src/types/         TypeScript type stubs
 src/templates/     lazy section HTML (15 files)
 src/modals/        lazy modal HTML (7 files)
 src/i18n/          he · en · ar · es · fr locale files
-tests/             repo sanity · unit · integration · e2e · perf (5810 tests, 423 files)
+tests/             repo sanity · unit · integration · e2e · perf (6121 tests, 440 files)
 scripts/           build/lint/audit/sync scripts (.mjs)
 supabase/          Edge Functions · migrations
 public/            sw.js · manifest.json · offline.html · _headers

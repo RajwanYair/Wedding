@@ -45,7 +45,7 @@ now done are recorded in §17 ("Done — Carried Forward"); only live items flow
 
 **State (2025-07-15, v31.5.0):**
 
-- **5810 tests** across **423** files · 0 lint errors · 0 warnings · 0 Node warnings
+- **6121 tests** across **440** files · 0 lint errors · 0 warnings · 0 Node warnings
 - **24** sections · **25** services · **11** repositories · **7** handlers · **31** core modules ·
   **138** utilities · **26** Supabase migrations · **12** edge functions · **6** locales
   (HE · EN · AR · FR · ES · RU)
@@ -106,7 +106,7 @@ competitor. $0/month self-hosted. AI-augmented developer experience with 9 speci
 
 | Dimension | Value | Health |
 | --- | --- | --- |
-| Tests | 5810 / 423 files / 0 Node warnings | ✅ |
+| Tests | 6121 / 440 files / 0 Node warnings | ✅ |
 | Sections | 24 (BaseSection lifecycle) | ✅ |
 | Services | 25 (target ≤ 25 held) | ✅ |
 | Utilities | 138 | ⚠ audit & cap |
@@ -648,7 +648,7 @@ v31.4.0: Animation timeline API, full i18n parity (6 locales), periodicSync,
 v31.5.0: CI audit:utils gate, ICU --strict plural arms (76 fixes across HE/AR/ES/FR/RU),
 vendor contracts, plugin review, website preview, payment receipts, dietary cascade,
 floor-plan presets, workspace invitations.
-Test count: 5810 across 423 files. Agent count: 9. Workflows: 18.
+Test count: 6121 across 440 files. Agent count: 9. Workflows: 18.
 
 ### Phase C — v32.0.0 — Vendor CRM, Payments, Plugin Runtime
 

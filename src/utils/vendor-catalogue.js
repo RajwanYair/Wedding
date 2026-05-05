@@ -149,7 +149,7 @@ export function enrichIsraelVendor(vendor) {
   if (result.phone) {
     result.phone = result.phone.replace(/[^0-9+]/g, "");
     if (result.phone.startsWith("05")) {
-      result.phone = "+972" + result.phone.slice(1);
+      result.phone = `+972${result.phone.slice(1)}`;
     }
   }
 

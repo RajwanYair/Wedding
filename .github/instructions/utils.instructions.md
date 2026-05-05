@@ -8,6 +8,7 @@ description: "Utility helper conventions for src/utils/*.js — pure functions, 
 ## What Belongs in `src/utils/`
 
 Pure, stateless helper functions with **no** side-effects. Utilities must not:
+
 - Access the DOM
 - Read/write `localStorage` or the store
 - Make network requests
@@ -77,6 +78,7 @@ Test file must **not** use `// @vitest-environment happy-dom` — utils are DOM-
 ## Naming Conflicts
 
 Before creating a new utility, check for an existing file:
+
 ```bash
 Get-ChildItem src/utils -Filter "*.js" | Select-Object Name
 ```
