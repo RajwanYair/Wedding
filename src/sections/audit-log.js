@@ -166,9 +166,3 @@ class AuditLogSection extends BaseSection {
 
 const sectionInstance = new AuditLogSection("audit-log");
 export const { mount, unmount, capabilities } = fromSection(sectionInstance);
-
-/** @param {"next"|"prev"} direction */
-export function navigatePage(direction) {
-  if (direction === "next") sectionInstance.nextPage();
-  else sectionInstance.prevPage();
-}

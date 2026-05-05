@@ -25,7 +25,6 @@ import {
   validateFurniture,
   findCollisions,
   totalArea,
-  listFurnitureTypes,
 } from "../utils/floor-plan.js";
 import {
   planSeating as _planSeating,
@@ -747,11 +746,6 @@ export function saveFloorPlanItem(item) {
   storeSet("floorPlan", { items: next, room });
   enqueueWrite("floorPlan", () => syncStoreKeyToSheets("floorPlan"));
   return { ok: true };
-}
-
-/** @returns {readonly string[]} */
-export function getFurnitureTypes() {
-  return listFurnitureTypes();
 }
 
 // ── S616: Seating optimizer wiring ───────────────────────────────────────

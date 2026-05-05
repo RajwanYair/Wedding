@@ -51,6 +51,7 @@ export async function isNfcAvailable() {
 
 /**
  * Read a single NFC tag.
+ * Exported for native Capacitor bridge — intentionally not imported via ES modules.
  * @param {{ signal?: AbortSignal }} [opts]
  * @returns {Promise<string | null>} guestId or null
  */
@@ -103,6 +104,7 @@ export async function readGuestTag(opts = {}) {
  * Write a guest payload to a tag.
  * @param {string} guestId
  * @returns {Promise<void>}
+ * Exported for native Capacitor bridge — intentionally not imported via ES modules.
  */
 export async function writeGuestTag(guestId) {
   const payload = encodeGuestPayload(guestId);
