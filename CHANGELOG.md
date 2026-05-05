@@ -4,15 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [31.7.0] — 2025-07-14
+## [32.0.0] — 2025-07-15
 
-> **Phase C — Advanced Utilities & AI Streaming.**
-> Vendor catalogue import, badge printing, trigger automation, budget
-> benchmarks, multi-event workspace, floor-plan collision, seating
-> constraints, AI streaming, guest timeline.
-> Test count: 6121 across 440 files; 0 lint warnings, 0 Node warnings.
+> **Cluster C.1 — TypeScript Foundation + Util Domain Restructure.**
+> Full TypeScript migration of core modules, domain barrel modules for
+> vendor/guest/rsvp/plugin/ai util clusters, dead-export cleanup, and
+> `@owner` CI gate enforcement.
+> Test count: 6448 across 458 files; 0 lint warnings, 0 Node warnings.
 
 ### Added
+
+- `src/core/app-types.ts` — branded IDs, Result<T,E>, and shared utility types (S674)
+- `src/utils/vendor/index.ts` — vendor domain module merging vendor-negotiate, vendor-timeline, vendor-sla, vendor-inbox (S677)
+- `src/utils/guest/index.ts` — guest domain module merging guest-seating-auto, dietary-cascade, dietary-summary, rsvp-plusone-chain (S678)
+- `src/utils/rsvp/{conditional,engine,builder,index}.ts` — RSVP domain module with namespace exports (S679)
+- `src/utils/plugin/index.ts` — plugin domain module merging plugin-permission, plugin-sandbox (S680)
+- `src/utils/ai/index.ts` — AI domain module merging ai-suggest, ai-client, ai-commands, ai-panel, ai-streaming (S681)
+- `scripts/audit-utils.mjs` — `--enforce-owner` flag for CI gate on `@owner` JSDoc tags (S683)
+
+### Changed
+
+- `src/core/constants.js` → `constants.ts` with `as const` and union type exports (S675)
+- `src/core/store.js` → `store.ts` with full TypeScript signatures (S676)
+- `ci.yml` — audit-utils step now uses `--enforce-owner` (S683)
+- `npm run typecheck` script added for TSC validation
+
+### Fixed
+
+- Removed dead exports: `navigatePage` (audit-log.js), `getFurnitureTypes`+`listFurnitureTypes` import (tables.js) (S682)
+- Pre-existing TSC errors in plugin-permission.js and ai-suggest.js resolved via TypeScript conversion
+
+## [31.7.0] — 2025-07-14
 
 - `src/utils/vendor-catalogue.js` — CSV/JSON vendor import, Lystio IL format, enrichment (S646)
 - `src/utils/badge-printer.js` — kiosk badge layout, thermal text, batch print jobs (S647)

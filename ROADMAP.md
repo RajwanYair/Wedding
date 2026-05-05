@@ -19,7 +19,7 @@ competitor and developer experience unmatched in the category.
 ## Contents
 
 0. [Executive Summary](#0-executive-summary)
-1. [Current State (v31.8.0)](#1-current-state-v3180)
+1. [Current State (v32.0.0)](#1-current-state-v3200)
 2. [Deep Decision Rethink — Every Layer](#2-deep-decision-rethink--every-layer)
 3. [Competitive Landscape — 18-Product Comparison](#3-competitive-landscape--18-product-comparison)
 4. [Harvested Best Practices](#4-harvested-best-practices)
@@ -96,7 +96,7 @@ competitor and developer experience unmatched in the category.
 
 ---
 
-## 1. Current State (v31.8.0)
+## 1. Current State (v32.0.0)
 
 ### North Star
 
@@ -839,8 +839,8 @@ npm run check:credentials  # 0 secrets
 | v30.0.0 | Consolidation & AI Activation (Phase A) | Released |
 | v31.0.0 | Mobile Native & Locale Depth (Phase B) | Released |
 | v31.5.0 | Agent expansion + workflow hardening | Released |
-| **v31.8.0** | **Phase C prep: 10 feature utils (S664–S673)** | **Current** |
-| v32.0.0 | Wire Everything + TypeScript + AI Proxy (Phase C) | Q3 2026 |
+| v31.8.0 | Phase C prep: 10 feature utils (S664–S673) | Released |
+| **v32.0.0** | **TypeScript Foundation + Util Domain Restructure (Cluster C.1)** | **Current** |
 | v33.0.0 | Platform & API (Phase D) | Q4 2026 |
 | v34.0.0 | Scale, Compliance & Native (Phase E) | Q1 2027 |
 | v35.0.0 | AI-Native (Phase F.1) | Q2 2027 |
