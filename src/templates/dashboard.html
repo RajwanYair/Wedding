@@ -284,3 +284,15 @@
         </div>
         <div id="dashWhatsNewContent" class="u-text-sm"></div>
       </div>
+
+      <!-- S688: AI Suggestions widget (wire ai-suggest) -->
+      <div class="card" id="dashAiSuggestionsCard" hidden>
+        <div class="card-header">
+          <span class="icon">🤖</span>
+          <span data-i18n="dash_ai_suggestions_title">הצעות AI</span>
+          <span id="dashAiSuggestionsBadge" class="badge badge--warning u-mr-xs" hidden></span>
+          <button class="btn btn-ghost btn-small u-mr-auto" data-action="refreshAiSuggestions"
+            data-i18n="dash_ai_refresh" style="margin-inline-start:auto">🔄</button>
+        </div>
+        <div id="dashAiSuggestionsList" class="ai-suggestions-list"></div>
+      </div>

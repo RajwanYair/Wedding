@@ -1604,5 +1604,9 @@
   "cmd_ai_draft_message": "נסח הודעה (AI)",
   "cmd_ai_draft_message_prompt": "נסח הודעת הזמנה לחתונה",
   "ai_no_suggestions": "לא נמצאו הצעות לשיפור",
-  "ai_error": "שגיאה בעוזר AI"
+  "ai_error": "שגיאה בעוזר AI",
+  "dash_ai_suggestions_title": "הצעות AI",
+  "dash_ai_refresh": "רענן",
+  "dash_ai_suggestion_dismiss": "התעלם",
+  "dash_ai_suggestion_apply": "יישם"
 }

@@ -88,6 +88,8 @@ class DashboardSection extends BaseSection {
     _startCountdownTimer();
     // C1 Sprint 47: What's New panel (async, non-blocking)
     renderWhatsNewPanel();
+    // S688: AI suggestions widget (async, non-blocking)
+    renderAiSuggestions();
     // S2.6: wire stat counter observer after first render
     setTimeout(initStatCounterObserver, 0);
   }
@@ -1202,3 +1204,96 @@ async function renderWhatsNewPanel() {
     if (c) /** @type {HTMLElement} */ (c).hidden = true;
   }
 }
+
+// ── S688: AI Suggestions widget ───────────────────────────────────────────────
+
+/** Priority order for suggestion chips. */
+const _PRIORITY_COLORS = { high: "#ef4444", medium: "#f59e0b", low: "#6b7280" };
+
+/**
+ * Render the AI suggestions widget in the dashboard (S688).
+ * Lazy-loads ai-suggest and computes suggestions from live store data.
+ */
+export async function renderAiSuggestions() {
+  const card = /** @type {HTMLElement|null} */ (document.getElementById("dashAiSuggestionsCard"));
+  const list = document.getElementById("dashAiSuggestionsList");
+  const badge = /** @type {HTMLElement|null} */ (document.getElementById("dashAiSuggestionsBadge"));
+  if (!card || !list) return;
+
+  try {
+    const { suggestSeating, suggestBudget, suggestVendor, sortSuggestions, getActiveSuggestions } =
+      await import("../utils/ai-suggest.js");
+
+    const guests = /** @type {Array<{id:string,name:string,group?:string,plusOne?:boolean}>} */ (storeGet("guests") ?? []);
+    const tables = /** @type {Array<{capacity:number}>} */ (storeGet("tables") ?? []);
+    const vendors = /** @type {Array<{id:string,name:string,paid:number,price:number,total:number,dueDate?:number}>} */ (storeGet("vendors") ?? []);
+    const expenses = /** @type {Array<{amount:number}>} */ (storeGet("expenses") ?? []);
+    const info = /** @type {{budget?:number}} */ (storeGet("weddingInfo") ?? {});
+
+    const avgCapacity = tables.length
+      ? Math.round(tables.reduce((s, tb) => s + (tb.capacity || 8), 0) / tables.length) : 8;
+    const totalBudget = Number(info.budget) || 0;
+    const spent = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+    const committed = vendors.reduce((s, v) => s + Number(v.price || 0) - Number(v.paid || 0), 0);
+    const vendorData = vendors.map((v) => ({ id: v.id, name: v.name, paid: v.paid || 0, total: v.price || 0, dueDate: v.dueDate }));
+
+    const all = [
+      ...suggestSeating(guests, avgCapacity),
+      ...suggestBudget({ totalBudget, spent, committed, guestCount: guests.length }),
+      ...suggestVendor(vendorData),
+    ];
+    const active = sortSuggestions(getActiveSuggestions(all));
+
+    list.textContent = "";
+
+    if (!active.length) {
+      const p = document.createElement("p");
+      p.className = "u-text-muted u-text-center u-py-sm";
+      p.textContent = t("ai_no_suggestions");
+      list.appendChild(p);
+      if (badge) badge.hidden = true;
+      card.hidden = false;
+      return;
+    }
+
+    // Show badge count
+    if (badge) {
+      badge.textContent = String(active.length);
+      badge.hidden = false;
+    }
+
+    for (const sug of active.slice(0, 8)) {
+      const item = document.createElement("div");
+      item.className = "ai-suggestion-item";
+      item.style.cssText = "display:flex;align-items:flex-start;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.06)";
+
+      const dot = document.createElement("span");
+      dot.style.cssText = `flex-shrink:0;width:0.5rem;height:0.5rem;border-radius:50%;background:${_PRIORITY_COLORS[sug.priority] ?? "#888"};margin-top:0.4rem`;
+
+      const text = document.createElement("div");
+      text.style.cssText = "flex:1;min-width:0";
+
+      const title = document.createElement("div");
+      title.style.cssText = "font-weight:600;font-size:0.875rem";
+      title.textContent = sug.title;
+
+      const desc = document.createElement("div");
+      desc.style.cssText = "font-size:0.8rem;color:var(--color-text-muted,rgba(255,255,255,0.6));margin-top:0.125rem";
+      desc.textContent = sug.description;
+
+      text.appendChild(title);
+      text.appendChild(desc);
+      item.appendChild(dot);
+      item.appendChild(text);
+      list.appendChild(item);
+    }
+
+    card.hidden = false;
+  } catch {
+    if (card) card.hidden = true;
+  }
+}
+
+/** Exported action: refresh AI suggestions on user request (data-action="refreshAiSuggestions"). */
+export { renderAiSuggestions as refreshAiSuggestions };
+
