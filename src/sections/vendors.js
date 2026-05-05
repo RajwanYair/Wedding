@@ -22,6 +22,16 @@ import {
   findOverdueVendors as _findOverdueVendors,
   totalOutstanding as _totalOutstanding,
 } from "../utils/vendor-alerts.js";
+import {
+  startNegotiation as _startNegotiation,
+  submitOffer as _submitOffer,
+  getSavings as _getSavings,
+  suggestCounterOffer as _suggestCounterOffer,
+} from "../utils/vendor-negotiate.js";
+import {
+  getVendorTimelineSummary as _getTimelineSummary,
+  getOverdueMilestones as _getOverdueMilestones,
+} from "../utils/vendor-timeline.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -31,12 +41,15 @@ class VendorsSection extends BaseSection {
     this.subscribe("vendors", renderVendorPaymentTimeline); // C1 Sprint 45
     this.subscribe("vendors", renderVendorSpendTimeline); // S147
     this.subscribe("vendors", renderTopVendorsByCost); // S147
+    this.subscribe("vendors", renderVendorTimelineSummary); // S692
     renderVendors();
     renderOverdueChip(); // S23.5
     renderInboxChip(); // S605
     renderVendorPaymentTimeline(); // C1 Sprint 45
     renderVendorSpendTimeline(); // S147
     renderTopVendorsByCost(); // S147
+    renderVendorTimelineSummary(); // S692
+    _populateNegotiateVendorSelect(); // S692
   }
 }
 
@@ -942,3 +955,141 @@ export function getTotalVendorOutstanding() {
   const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
   return _totalOutstanding(vendors);
 }
+
+// ── S692: Vendor negotiation panel ───────────────────────────────────────
+
+/** Currently active negotiation state (one at a time for simplicity). */
+let _activeNegotiation = /** @type {any|null} */ (null);
+
+/** Populate the vendor select for the negotiation panel. */
+function _populateNegotiateVendorSelect() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("negotiateVendorSelect"));
+  if (!sel) return;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  sel.textContent = "";
+  const blank = document.createElement("option");
+  blank.value = "";
+  blank.textContent = t("vendor_negotiate_select_placeholder");
+  sel.appendChild(blank);
+  for (const v of vendors) {
+    const opt = document.createElement("option");
+    opt.value = v.id;
+    opt.textContent = v.name || v.id;
+    sel.appendChild(opt);
+  }
+}
+
+/**
+ * Start a negotiation from the panel form.
+ */
+export function startVendorNegotiation() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("negotiateVendorSelect"));
+  const budgetEl = /** @type {HTMLInputElement|null} */ (document.getElementById("negotiateBudget"));
+  const offerEl = /** @type {HTMLInputElement|null} */ (document.getElementById("negotiateOffer"));
+  const resultEl = document.getElementById("vendorNegotiateResult");
+
+  const vendorId = sel?.value;
+  const budget = Number(budgetEl?.value || 0);
+  const initialOffer = Number(offerEl?.value || 0);
+
+  if (!vendorId || budget <= 0 || initialOffer <= 0) {
+    if (resultEl) {
+      resultEl.style.color = "var(--color-danger, #ef4444)";
+      resultEl.textContent = t("vendor_negotiate_fill_all");
+    }
+    return;
+  }
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const vendor = vendors.find((v) => v.id === vendorId);
+  if (!vendor) return;
+
+  const asking = Number(vendor.price || 0);
+  _activeNegotiation = _startNegotiation({
+    vendorId,
+    vendorName: vendor.name || vendorId,
+    service: vendor.category || "",
+    initialAsk: asking,
+    budget,
+  });
+  // Submit the initial offer
+  if (initialOffer > 0) {
+    _activeNegotiation = _submitOffer(_activeNegotiation, "client", initialOffer);
+  }
+
+  if (resultEl) {
+    resultEl.style.color = "inherit";
+    const savings = _getSavings(_activeNegotiation);
+    const suggested = _suggestCounterOffer(_activeNegotiation);
+    resultEl.textContent =
+      `${t("vendor_negotiate_started")} | ${t("vendor_negotiate_savings")}: ₪${savings} | ${t("vendor_negotiate_suggested")}: ₪${suggested}`;
+  }
+}
+
+/**
+ * Submit the next offer in the active negotiation.
+ */
+export function submitVendorOffer() {
+  const offerEl = /** @type {HTMLInputElement|null} */ (document.getElementById("negotiateOffer"));
+  const resultEl = document.getElementById("vendorNegotiateResult");
+  if (!_activeNegotiation) {
+    if (resultEl) {
+      resultEl.style.color = "var(--color-danger, #ef4444)";
+      resultEl.textContent = t("vendor_negotiate_no_active");
+    }
+    return;
+  }
+  const offer = Number(offerEl?.value || 0);
+  if (offer <= 0) return;
+
+  _activeNegotiation = _submitOffer(_activeNegotiation, "client", offer);
+  if (resultEl) {
+    resultEl.style.color = "inherit";
+    const savings = _getSavings(_activeNegotiation);
+    const suggested = _suggestCounterOffer(_activeNegotiation);
+    resultEl.textContent =
+      `${t("vendor_negotiate_offer_sent")} | ${t("vendor_negotiate_savings")}: ₪${savings} | ${t("vendor_negotiate_suggested")}: ₪${suggested}`;
+  }
+}
+
+// ── S692: Vendor timeline summary ────────────────────────────────────────
+
+/**
+ * Render a summary of upcoming + overdue vendor milestones.
+ */
+function renderVendorTimelineSummary() {
+  const container = document.getElementById("vendorTimelineSummary");
+  if (!container) return;
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  if (!vendors.length) {
+    container.textContent = t("vendor_timeline_empty");
+    return;
+  }
+
+  container.textContent = "";
+  for (const v of vendors.slice(0, 10)) {
+    const events = Array.isArray(v.timeline) ? v.timeline : [];
+    const milestones = Array.isArray(v.milestones) ? v.milestones : [];
+    const summary = _getTimelineSummary(events, milestones, v.id);
+    if (!summary) continue;
+
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;justify-content:space-between;padding:0.25rem 1rem;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.06)";
+
+    const name = document.createElement("span");
+    name.style.fontWeight = "600";
+    name.textContent = v.name || v.id;
+
+    const info = document.createElement("span");
+    info.style.color = "var(--color-text-muted, rgba(255,255,255,0.6))";
+    const total = summary.totalEvents + summary.totalMilestones;
+    const overdue = _getOverdueMilestones(milestones).length;
+    info.textContent = `${total} ${t("vendor_timeline_events")} · ${overdue} ${t("vendor_timeline_overdue")}`;
+
+    row.appendChild(name);
+    row.appendChild(info);
+    container.appendChild(row);
+  }
+}
+

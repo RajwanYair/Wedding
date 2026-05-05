@@ -63,3 +63,45 @@
   </div>
   <div id="vendorTopCost"></div>
 </div>
+
+<!-- S692: Negotiation panel -->
+<div class="card" id="vendorNegotiatePanel">
+  <div class="card-header">
+    <span class="icon">🤝</span>
+    <span data-i18n="vendor_negotiate_title">ניהול משא ומתן</span>
+  </div>
+  <div style="padding:1rem">
+    <div class="form-group">
+      <label for="negotiateVendorSelect" data-i18n="vendor_negotiate_vendor">ספק</label>
+      <select id="negotiateVendorSelect"></select>
+    </div>
+    <div class="form-group" style="display:flex;gap:0.5rem">
+      <div style="flex:1">
+        <label for="negotiateBudget" data-i18n="vendor_negotiate_budget">תקציב מקסימלי (₪)</label>
+        <input id="negotiateBudget" type="number" min="0" step="100" />
+      </div>
+      <div style="flex:1">
+        <label for="negotiateOffer" data-i18n="vendor_negotiate_offer">הצעה ראשונה (₪)</label>
+        <input id="negotiateOffer" type="number" min="0" step="100" />
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem">
+      <button class="btn btn-primary btn-small" data-action="startVendorNegotiation">
+        <span>🚀</span> <span data-i18n="vendor_negotiate_start">התחל משא ומתן</span>
+      </button>
+      <button class="btn btn-secondary btn-small" data-action="submitVendorOffer">
+        <span>💬</span> <span data-i18n="vendor_negotiate_submit">שלח הצעה</span>
+      </button>
+    </div>
+    <div id="vendorNegotiateResult" style="margin-top:0.75rem;font-size:0.875rem"></div>
+  </div>
+</div>
+
+<!-- S692: Vendor timeline summary -->
+<div class="card" id="vendorTimelineSummaryCard">
+  <div class="card-header">
+    <span class="icon">📅</span>
+    <span data-i18n="vendor_timeline_summary_title">סיכום ציר זמן ספקים</span>
+  </div>
+  <div id="vendorTimelineSummary"></div>
+</div>

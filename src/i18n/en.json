@@ -1632,5 +1632,22 @@
   "floor_plan_export_svg": "Export SVG",
   "floor_plan_empty": "No floor plan defined. Choose a preset to start.",
   "floor_plan_collisions": "{n} collision(s) detected",
-  "floor_plan_no_collisions": "No collisions ✔️"
+  "floor_plan_no_collisions": "No collisions ✔️",
+  "vendor_negotiate_title": "Vendor Negotiation",
+  "vendor_negotiate_vendor": "Vendor",
+  "vendor_negotiate_budget": "Max budget (₪)",
+  "vendor_negotiate_offer": "Initial offer (₪)",
+  "vendor_negotiate_start": "Start negotiation",
+  "vendor_negotiate_submit": "Submit offer",
+  "vendor_negotiate_fill_all": "Select a vendor and fill in amounts",
+  "vendor_negotiate_started": "Negotiation started",
+  "vendor_negotiate_savings": "Savings",
+  "vendor_negotiate_suggested": "Suggested counter",
+  "vendor_negotiate_offer_sent": "Offer submitted",
+  "vendor_negotiate_no_active": "No active negotiation",
+  "vendor_negotiate_select_placeholder": "Select vendor...",
+  "vendor_timeline_summary_title": "Vendor Timeline Summary",
+  "vendor_timeline_events": "events",
+  "vendor_timeline_overdue": "overdue",
+  "vendor_timeline_empty": "No vendor timelines defined"
 }

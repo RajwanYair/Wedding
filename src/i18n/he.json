@@ -1632,5 +1632,22 @@
   "floor_plan_export_svg": "ייצוא SVG",
   "floor_plan_empty": "לא הוגדרה תכנית אולם. בחר פריסה להתחל.",
   "floor_plan_collisions": "{n} התנגשויות בתכנית",
-  "floor_plan_no_collisions": "אין התנגשויות ✔️"
+  "floor_plan_no_collisions": "אין התנגשויות ✔️",
+  "vendor_negotiate_title": "ניהול משא ומתן",
+  "vendor_negotiate_vendor": "ספק",
+  "vendor_negotiate_budget": "תקציב מקסימלי (₪)",
+  "vendor_negotiate_offer": "הצעה ראשונה (₪)",
+  "vendor_negotiate_start": "התחל משא ומתן",
+  "vendor_negotiate_submit": "שלח הצעה",
+  "vendor_negotiate_fill_all": "בחר ספק ומלא סכומות",
+  "vendor_negotiate_started": "משא ומתן התחיל",
+  "vendor_negotiate_savings": "חיסכון",
+  "vendor_negotiate_suggested": "הצעה מומלצת",
+  "vendor_negotiate_offer_sent": "הצעה נשלחה",
+  "vendor_negotiate_no_active": "אין משא ומתן פעיל",
+  "vendor_negotiate_select_placeholder": "בחר ספק...",
+  "vendor_timeline_summary_title": "סיכום ציר זמן ספקים",
+  "vendor_timeline_events": "אירועים",
+  "vendor_timeline_overdue": "באיחור",
+  "vendor_timeline_empty": "אין ציר זמן לספקים"
 }
