@@ -11,7 +11,7 @@
 | Runtime deps | **4** — `@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
 | Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
 | Language | Hebrew RTL primary, English toggle (lazy JSON) |
-| Tests | `npm test` — **5528 tests** across 402 files · 0 Node warnings · 138 utils |
+| Tests | `npm test` — **5548 tests** across 407 files · 0 Node warnings · 138 utils |
 | Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
 | Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
 | Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |

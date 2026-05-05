@@ -7,9 +7,9 @@
 > **Source of truth.** Other docs (copilot-instructions, README badges, agent files) must mirror these
 > values. `npm run check:canonical-facts` enforces parity.
 
-- version: `31.2.0`
-- tests: `5528`
-- test_files: `402`
+- version: `31.3.0`
+- tests: `5548`
+- test_files: `407`
 - utils: `138`
 - locales: `6` (he, en, ar, fr, es, ru)
 - node: `>=22.0.0`

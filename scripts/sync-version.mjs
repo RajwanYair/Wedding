@@ -111,8 +111,11 @@ patch("tests/wedding.test.mjs", [
   ],
 ]);
 
-// AGENTS.md — app version reference
-patch("AGENTS.md", [[/(Wedding Manager v)[\d.]+/, `$1${ver}`]]);
+// AGENTS.md — app version reference (heading + canonical facts block)
+patch("AGENTS.md", [
+  [/(Wedding Manager v)[\d.]+/, `$1${ver}`],
+  [/(- version: `)\d+\.\d+\.\d+(`)/,  `$1${ver}$2`],
+]);
 
 // ROADMAP.md — Current State heading
 patch("ROADMAP.md", [[/(## Current State \(v)[\d.]+(\))/, `$1${ver}$2`]]);
