@@ -50,6 +50,12 @@ import {
   hasScope as _pluginHasScope,
 } from "../utils/plugin-manifest.js";
 import {
+  getRiskScore as _getPluginRiskScore,
+  getPermissionDescription as _getPermissionDescription,
+  getDangerousPermissions as _getDangerousPermissions,
+  getPermissionSummary as _getPluginPermSummary,
+} from "../utils/plugin-permission.js";
+import {
   addAdminUser,
   removeAdminUser,
   signInWith,
@@ -1536,6 +1542,46 @@ function renderPluginList() {
       .map(([k, v]) => `${k} ${v.join(" ")}`)
       .join("; ")}`;
     info.appendChild(cspLine);
+
+    // S694: permissions risk panel
+    const mockManifest = { id: plugin.id, name: plugin.name, version: plugin.version,
+      permissions: plugin.permissions ?? [], author: plugin.author ?? "", trusted: false };
+    const riskScore = _getPluginRiskScore(/** @type {any} */ (mockManifest));
+    const permSummary = _getPluginPermSummary(/** @type {any} */ (mockManifest));
+    const dangerous = _getDangerousPermissions(/** @type {any} */ (mockManifest));
+
+    const riskBadge = document.createElement("span");
+    riskBadge.className = `plugin-risk-badge plugin-risk-badge--${riskScore === 0 ? "safe" : riskScore < 40 ? "low" : riskScore < 70 ? "medium" : "high"}`;
+    riskBadge.textContent = riskScore === 0
+      ? `🟢 ${t("plugin_risk_safe")}`
+      : riskScore < 40
+      ? `🟡 ${t("plugin_risk_low")}`
+      : riskScore < 70
+      ? `🟠 ${t("plugin_risk_medium")}`
+      : `🔴 ${t("plugin_risk_high")}`;
+    riskBadge.title = `${t("plugin_risk_score")}: ${riskScore}/100 — ${permSummary.write} write, ${permSummary.dangerous} dangerous`;
+    info.appendChild(riskBadge);
+
+    if (dangerous.length > 0) {
+      const dangerLine = document.createElement("div");
+      dangerLine.className = "plugin-perm-danger u-text-sm";
+      dangerLine.textContent = `⚠️ ${t("plugin_dangerous_perms")}: ${dangerous.map((s) => _getPermissionDescription(/** @type {any} */ (s))).join(", ")}`;
+      info.appendChild(dangerLine);
+    }
+
+    // Permission chips
+    if (plugin.permissions?.length > 0) {
+      const permChips = document.createElement("div");
+      permChips.className = "plugin-perm-chips";
+      for (const scope of plugin.permissions) {
+        const chip = document.createElement("span");
+        chip.className = `plugin-perm-chip${dangerous.includes(scope) ? " plugin-perm-chip--danger" : ""}`;
+        chip.textContent = scope;
+        chip.title = _getPermissionDescription(/** @type {any} */ (scope));
+        permChips.appendChild(chip);
+      }
+      info.appendChild(permChips);
+    }
 
     row.appendChild(info);
 
