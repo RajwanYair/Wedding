@@ -15,6 +15,12 @@ import { renderArrivalForecast } from "./analytics.js";
 import { RSVP_RESPONSE_STATUSES } from "../core/constants.js";
 import { getLatestEntry, getEntriesSince, flattenItems } from "../utils/changelog-parser.js";
 import { STORAGE_KEYS } from "../core/constants.js";
+import { showToast } from "../core/ui.js";
+import {
+  forecast as _forecast,
+  spendByCategory as _spendByCategory,
+  projectFinal as _projectFinal,
+} from "../utils/budget-forecast.js";
 
 /** @type {ReturnType<typeof setInterval> | null} */
 let _countdownTimer = null;
@@ -1296,4 +1302,80 @@ export async function renderAiSuggestions() {
 
 /** Exported action: refresh AI suggestions on user request (data-action="refreshAiSuggestions"). */
 export { renderAiSuggestions as refreshAiSuggestions };
+
+// ─── S711: Budget Forecast CSV Export ────────────────────────────────────────
+
+/**
+ * Build budget forecast from store and export as a CSV file download.
+ * Uses vendor expenses as actual spend and budget target as budget lines.
+ */
+export function exportBudgetForecastCsv() {
+  const vendors = storeGet("vendors") ?? [];
+  const budgetTarget = Number(storeGet("weddingInfo")?.budgetTarget ?? 0);
+
+  // Build expense list from vendor records
+  const expenses = vendors
+    .filter((v) => v && typeof v.category === "string")
+    .map((v) => ({
+      category: v.category,
+      amount: Number(v.paid ?? 0),
+    }));
+
+  // Build a budget line per unique category if we have a global target
+  const cats = [...new Set(vendors.map((v) => v.category).filter(Boolean))];
+  const perCat = cats.length > 0 ? budgetTarget / cats.length : 0;
+  const budget = cats.map((c) => ({ category: c, amount: perCat }));
+
+  const summary = _forecast(budget, expenses);
+
+  // CSV header
+  const header = [
+    t("budget_forecast_col_category"),
+    t("budget_forecast_col_budget"),
+    t("budget_forecast_col_spent"),
+    t("budget_forecast_col_remaining"),
+    t("budget_forecast_col_utilisation"),
+    t("budget_forecast_col_over"),
+  ].join(",");
+
+  const rows = summary.categories.map((c) =>
+    [
+      JSON.stringify(c.category),
+      c.budget.toFixed(2),
+      c.spent.toFixed(2),
+      c.remaining.toFixed(2),
+      (c.utilisation * 100).toFixed(1),
+      c.overBudget ? "1" : "0",
+    ].join(","),
+  );
+
+  const csv = [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "budget-forecast.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast(t("budget_forecast_exported"), "success");
+  return summary;
+}
+
+/**
+ * Get the budget forecast summary without exporting.
+ *
+ * @returns {import("../utils/budget-forecast.js").ForecastSummary}
+ */
+export function getBudgetForecastSummary() {
+  const vendors = storeGet("vendors") ?? [];
+  const budgetTarget = Number(storeGet("weddingInfo")?.budgetTarget ?? 0);
+  const expenses = vendors
+    .filter((v) => v && typeof v.category === "string")
+    .map((v) => ({ category: v.category, amount: Number(v.paid ?? 0) }));
+  const cats = [...new Set(vendors.map((v) => v.category).filter(Boolean))];
+  const perCat = cats.length > 0 ? budgetTarget / cats.length : 0;
+  const budget = cats.map((c) => ({ category: c, amount: perCat }));
+  return _forecast(budget, expenses);
+}
 
