@@ -1,30 +1,22 @@
 /**
  * src/types.d.ts — Shared type definitions for the Wedding Manager (v31.7.0)
  *
- * TypeScript-first types with discriminated unions derived from canonical
- * constants where possible.
+ * TypeScript-first types with discriminated unions re-exported from the
+ * canonical constants (now in constants.ts).
  * Import: `import type { Guest, Table } from './types';`
  */
 
-import {
-  GUEST_GROUPS,
-  GUEST_SIDES,
-  GUEST_STATUSES,
-  MEAL_TYPES,
-  TABLE_SHAPES,
+import type {
+  GuestStatus,
+  GuestSide,
+  GuestGroup,
+  MealType,
+  TableShape,
 } from "./core/constants.js";
 
-// ── Enums (discriminated union string literals) ───────────────────────────
-
-export type GuestStatus = (typeof GUEST_STATUSES)[number];
-export type GuestSide = (typeof GUEST_SIDES)[number];
-export type GuestGroup = (typeof GUEST_GROUPS)[number];
-export type MealType = (typeof MEAL_TYPES)[number];
-export type TableShape = (typeof TABLE_SHAPES)[number];
-export type BackendType = "sheets" | "supabase" | "both" | "none";
-export type AuthProvider = "google" | "facebook" | "apple" | "anonymous" | "email";
-
-// ── Core Data Models ──────────────────────────────────────────────────────
+// Re-export enum types so consumers can import from one place.
+export type { GuestStatus, GuestSide, GuestGroup, MealType, TableShape };
+──────────────────────
 
 /** Guest record stored in the reactive store. */
 export interface Guest {

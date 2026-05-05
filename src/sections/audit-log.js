@@ -1,4 +1,4 @@
-﻿/**
+/**
  * src/sections/audit-log.js — Audit log viewer section (S588)
  *
  * Reads audit_log entries from Supabase and displays a paginated,

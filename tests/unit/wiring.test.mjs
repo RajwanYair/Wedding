@@ -5,7 +5,7 @@
  *   1. src/core/template-loader.js  (_loaders map)
  *   2. src/core/nav.js              (_sections array)
  *   3. src/main.js                  (SECTIONS map)
- *      src/core/constants.js        (PUBLIC_SECTIONS)
+ *      src/core/constants.ts        (PUBLIC_SECTIONS)
  *   4. src/sections/index.js        (barrel exports)
  *   5. index.html                   (section containers + data-template + nav tabs)
  *   6. src/templates/*.html          (template files exist on disk)
@@ -35,7 +35,7 @@ const MAIN_JS = readFileSync(resolve(root, "src", "main.js"), "utf8");
 const SECTION_RESOLVER_JS = readFileSync(resolve(root, "src", "core", "section-resolver.js"), "utf8");
 const UI_JS = readFileSync(resolve(root, "src", "core", "ui.js"), "utf8");
 const SHEETS_IMPL = readFileSync(resolve(root, "src", "services", "sheets.js"), "utf8");
-const CONSTANTS_JS = readFileSync(resolve(root, "src", "core", "constants.js"), "utf8");
+const CONSTANTS_JS = readFileSync(resolve(root, "src", "core", "constants.ts"), "utf8");
 const I18N_HE = JSON.parse(readFileSync(resolve(root, "src", "i18n", "he.json"), "utf8"));
 const I18N_EN = JSON.parse(readFileSync(resolve(root, "src", "i18n", "en.json"), "utf8"));
 
@@ -57,9 +57,9 @@ function extractLoaderKeys() {
   return [...block[1].matchAll(/["']?([a-z][-a-z]*)["']?\s*:/g)].map((m) => m[1]);
 }
 
-/** Extract _sections list — may be inline array or imported from constants.js */
+/** Extract _sections list — may be inline array or imported from constants.ts */
 function extractNavSections() {
-  // Check if nav.js imports from constants.js
+  // Check if nav.js imports from constants.js (resolves to .ts)
   if (NAV_JS.includes('SECTION_LIST')) {
     return extractSectionList();
   }
@@ -68,9 +68,9 @@ function extractNavSections() {
   return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 }
 
-/** Extract SECTION_LIST from constants.js */
+/** Extract SECTION_LIST from constants.ts (supports both Object.freeze([]) and plain [] as const) */
 function extractSectionList() {
-  const block = CONSTANTS_JS.match(/SECTION_LIST\s*=.*?\(\[([\s\S]*?)\]\)/);
+  const block = CONSTANTS_JS.match(/SECTION_LIST\s*=\s*[^[]*\[([\s\S]*?)\]/);
   if (!block) return [];
   return [...block[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 }

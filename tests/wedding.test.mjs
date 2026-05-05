@@ -35,7 +35,7 @@ const packageJson = JSON.parse(read("package.json"));
 const serviceWorker = read("public/sw.js");
 const mainSource = read("src/main.js");
 const typesSource = read("src/types.d.ts");
-const constantsSource = read("src/core/constants.js");
+const constantsSource = read("src/core/constants.ts");
 const runtimeSources = [
   read("src/main.js"),
   read("src/core/config.js"),
