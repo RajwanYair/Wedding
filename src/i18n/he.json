@@ -1608,5 +1608,6 @@
   "dash_ai_suggestions_title": "הצעות AI",
   "dash_ai_refresh": "רענן",
   "dash_ai_suggestion_dismiss": "התעלם",
-  "dash_ai_suggestion_apply": "יישם"
+  "dash_ai_suggestion_apply": "יישם",
+  "rsvp_cq_select_placeholder": "בחר אפשרות"
 }

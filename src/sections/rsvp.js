@@ -25,9 +25,190 @@ import {
   planReminders as _planReminders,
   nextDueWave as _nextDueWave,
 } from "../utils/rsvp-reminder.js";
+import {
+  getVisibleQuestions as _conditionalVisible,
+  validateAnswers as _conditionalValidate,
+} from "../utils/conditional-rsvp.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
+
+// ── S689: Conditional RSVP questions ─────────────────────────────────────
+
+/** @type {import("../utils/conditional-rsvp.js").RsvpAnswer[]} */
+let _conditionalAnswers = [];
+
+/**
+ * Render conditional questions into #rsvpConditionalQuestions based on
+ * custom questions stored in localStorage + current answers.
+ */
+function _renderConditionalQuestions() {
+  const container = /** @type {HTMLElement|null} */ (document.getElementById("rsvpConditionalQuestions"));
+  if (!container) return;
+
+  /** @type {import("../utils/conditional-rsvp.js").RsvpQuestion[]} */
+  const allQuestions = /** @type {any} */ (storeGet("rsvpCustomQuestions") ?? []);
+  if (!allQuestions.length) {
+    container.hidden = true;
+    return;
+  }
+
+  const visible = _conditionalVisible(allQuestions, _conditionalAnswers);
+  container.hidden = visible.length === 0;
+  container.textContent = "";
+
+  for (const q of visible) {
+    const group = document.createElement("div");
+    group.className = "form-group";
+
+    const label = document.createElement("label");
+    label.htmlFor = `rsvpCQ_${q.id}`;
+    label.textContent = q.label;
+    if (q.required) {
+      const req = document.createElement("span");
+      req.textContent = " *";
+      req.setAttribute("aria-hidden", "true");
+      label.appendChild(req);
+    }
+
+    let input;
+    if (q.type === "boolean") {
+      const wrap = document.createElement("label");
+      wrap.className = "form-checkbox";
+      input = document.createElement("input");
+      input.type = "checkbox";
+      input.id = `rsvpCQ_${q.id}`;
+      input.dataset.cqId = q.id;
+      wrap.appendChild(input);
+      const span = document.createElement("span");
+      span.textContent = q.label;
+      wrap.appendChild(span);
+      group.replaceChildren(wrap);
+    } else if (q.type === "select" && q.options.length) {
+      input = document.createElement("select");
+      input.id = `rsvpCQ_${q.id}`;
+      input.dataset.cqId = q.id;
+      const blank = document.createElement("option");
+      blank.value = "";
+      blank.textContent = t("rsvp_cq_select_placeholder");
+      input.appendChild(blank);
+      for (const opt of q.options) {
+        const o = document.createElement("option");
+        o.value = opt;
+        o.textContent = opt;
+        input.appendChild(o);
+      }
+      group.appendChild(label);
+      group.appendChild(input);
+    } else if (q.type === "multiselect" && q.options.length) {
+      group.appendChild(label);
+      for (const opt of q.options) {
+        const wrap = document.createElement("label");
+        wrap.className = "form-checkbox";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = opt;
+        cb.dataset.cqId = q.id;
+        cb.dataset.cqMulti = "1";
+        wrap.appendChild(cb);
+        const span = document.createElement("span");
+        span.textContent = opt;
+        wrap.appendChild(span);
+        group.appendChild(wrap);
+      }
+      input = null;
+    } else {
+      // text / number
+      input = document.createElement("input");
+      input.type = q.type === "number" ? "number" : "text";
+      input.id = `rsvpCQ_${q.id}`;
+      input.dataset.cqId = q.id;
+      group.appendChild(label);
+      group.appendChild(input);
+    }
+
+    if (input && q.type !== "boolean") {
+      // Restore saved answer
+      const prev = _conditionalAnswers.find((a) => a.questionId === q.id);
+      if (prev) {
+        if (input instanceof HTMLInputElement) input.value = String(prev.value);
+        else if (input instanceof HTMLSelectElement) input.value = String(prev.value);
+      }
+
+      // Re-evaluate visibility on change
+      input.addEventListener("change", () => {
+        _syncConditionalAnswer(q.id, input);
+        _renderConditionalQuestions();
+      });
+    } else if (q.type === "multiselect") {
+      for (const cb of /** @type {HTMLInputElement[]} */ ([...group.querySelectorAll(`[data-cq-id="${q.id}"]`)])) {
+        cb.addEventListener("change", () => {
+          _syncConditionalAnswerMulti(q.id, group);
+          _renderConditionalQuestions();
+        });
+      }
+    } else if (input && q.type === "boolean") {
+      input.addEventListener("change", () => {
+        _syncConditionalAnswer(q.id, input);
+        _renderConditionalQuestions();
+      });
+    }
+
+    if (q.type !== "multiselect" && q.type !== "boolean") {
+      // already appended
+    } else if (q.type === "boolean") {
+      // already appended
+    }
+    container.appendChild(group);
+  }
+}
+
+/**
+ * Sync a single-value answer from an input element.
+ * @param {string} qId
+ * @param {HTMLInputElement|HTMLSelectElement} el
+ */
+function _syncConditionalAnswer(qId, el) {
+  const val = el instanceof HTMLInputElement && el.type === "checkbox" ? el.checked : el.value;
+  const idx = _conditionalAnswers.findIndex((a) => a.questionId === qId);
+  if (idx !== -1) _conditionalAnswers[idx] = { questionId: qId, value: val };
+  else _conditionalAnswers.push({ questionId: qId, value: val });
+}
+
+/**
+ * Sync a multi-select answer from checkboxes within a container.
+ * @param {string} qId
+ * @param {HTMLElement} container
+ */
+function _syncConditionalAnswerMulti(qId, container) {
+  const checked = /** @type {string[]} */ (
+    [...container.querySelectorAll(`input[type="checkbox"][data-cq-id="${qId}"]`)]
+      .filter((/** @type {HTMLInputElement} */ cb) => cb.checked)
+      .map((/** @type {HTMLInputElement} */ cb) => cb.value)
+  );
+  const idx = _conditionalAnswers.findIndex((a) => a.questionId === qId);
+  if (idx !== -1) _conditionalAnswers[idx] = { questionId: qId, value: checked };
+  else _conditionalAnswers.push({ questionId: qId, value: checked });
+}
+
+/**
+ * Collect conditional answers for RSVP submission.
+ * Returns { valid, missing } from validateAnswers.
+ * @returns {{ valid: boolean, missing: string[], answers: import("../utils/conditional-rsvp.js").RsvpAnswer[] }}
+ */
+export function collectConditionalAnswers() {
+  const allQuestions = /** @type {any} */ (storeGet("rsvpCustomQuestions") ?? []);
+  const result = _conditionalValidate(allQuestions, _conditionalAnswers);
+  return { ...result, answers: _conditionalAnswers };
+}
+
+/**
+ * Initialize conditional RSVP questions widget — call after form is in DOM.
+ */
+export function initConditionalQuestions() {
+  _conditionalAnswers = [];
+  _renderConditionalQuestions();
+}
 
 class RsvpSection extends BaseSection {
   async onMount(/** @type {Record<string, unknown>} */ params) {
@@ -39,6 +220,8 @@ class RsvpSection extends BaseSection {
     }
     // S11.1 — Auto-lookup from URL guestId param
     _autoLookupFromUrl();
+    // S689 — Conditional custom questions
+    initConditionalQuestions();
   }
 
   onUnmount() {
