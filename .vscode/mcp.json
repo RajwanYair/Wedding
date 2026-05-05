@@ -29,14 +29,26 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "${workspaceFolder}"
+        "${workspaceFolder}",
+        "--exclude",
+        "coverage,dist,lcov-report,.git,node_modules"
       ],
-      "description": "Scoped read/write access to the Wedding workspace."
+      "description": "Scoped read/write access to the Wedding workspace — heavy dirs excluded."
     },
     "gitkraken": {
       "type": "http",
       "url": "https://mcp.gitkraken.com/sse",
       "description": "GitKraken git history, blame, branch, and launchpad context in chat."
+    },
+    "supabase": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only"
+      ],
+      "description": "Supabase schema, table data, and RLS policy inspection — read-only, no mutations from chat."
     }
   }
 }

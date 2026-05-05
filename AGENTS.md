@@ -94,6 +94,14 @@ See `.github/prompts/debug-issue.prompt.md`.
 
 See `.github/prompts/security-audit.prompt.md`.
 
+### Implement roadmap sprints
+
+See `.github/prompts/sprint.prompt.md` — implements N sprints in priority order, commits each, releases at end.
+
+### Add a new utility helper
+
+See `.github/prompts/new-util.prompt.md` — scaffolds `src/utils/<name>.js` with JSDoc, tests, lint, and commit.
+
 ## CI Commands
 
 ```bash

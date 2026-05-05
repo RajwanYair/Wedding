@@ -12,7 +12,6 @@ tools:
   - get_errors
   - run_in_terminal
   - manage_todo_list
-  - runSubagent
   - vscode_askQuestions
   - vscode_listCodeUsages
 ---

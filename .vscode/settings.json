@@ -104,10 +104,16 @@
     // ── Search / Explorer ──
     "search.exclude": {
         "**/node_modules": true,
-        "**/.git": true
+        "**/.git": true,
+        "**/coverage": true,
+        "**/dist": true,
+        "**/lcov-report": true,
+        "**/*.lcov": true
     },
     "files.exclude": {
-        "**/node_modules": true
+        "**/node_modules": true,
+        "**/coverage": true,
+        "**/dist": true
     },
     // ── Terminal ──
     "terminal.integrated.defaultProfile.windows": "PowerShell",

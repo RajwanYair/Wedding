@@ -26,9 +26,11 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | `/code-review` | `prompts/code-review.prompt.md` | full security + i18n + quality audit |
 | `/debug-issue` | `prompts/debug-issue.prompt.md` | structured bug investigation |
 | `/i18n-add` | `prompts/i18n-add.prompt.md` | add key to all 5 locale files |
+| `/new-util` | `prompts/new-util.prompt.md` | scaffold a pure utility helper with tests |
 | `/pre-release` | `prompts/pre-release.prompt.md` | full pre-release checklist |
 | `/refactor-section` | `prompts/refactor-section.prompt.md` | bring section to mount/unmount contract |
 | `/security-audit` | `prompts/security-audit.prompt.md` | OWASP Top 10 review |
+| `/sprint` | `prompts/sprint.prompt.md` | implement N roadmap sprints + release |
 | `/version-bump` | `prompts/version-bump.prompt.md` | bump version across all 14 files |
 
 ## Available Skills
@@ -40,6 +42,17 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | `auth-security` | `skills/auth-security.skill.md` | auth flow, token storage, input sanitization |
 | `rtl-i18n` | `skills/rtl-i18n.skill.md` | Hebrew/RTL layout, i18n key management |
 | `theming` | `skills/theming.skill.md` | CSS layers, themes, custom properties |
+
+## Auto-Loaded Instructions
+
+| Pattern | File | Triggers when |
+| --- | --- | --- |
+| `src/utils/**/*.js` | `instructions/utils.instructions.md` | editing any utility helper |
+| `src/**/*.js,scripts/**/*.mjs` | `instructions/javascript.instructions.md` | any JS source file |
+| `css/**/*.css` | `instructions/css.instructions.md` | any CSS file |
+| `tests/**` | `instructions/tests.instructions.md` | any test file |
+| `supabase/**` | `instructions/supabase.instructions.md` | Supabase migrations/functions |
+| `**/*.html` | `instructions/wedding.instructions.md` | HTML templates/index |
 
 ## Canonical Docs
 
@@ -64,7 +77,7 @@ src/types/         TypeScript type stubs
 src/templates/     lazy section HTML (15 files)
 src/modals/        lazy modal HTML (7 files)
 src/i18n/          he · en · ar · es · fr locale files
-tests/             repo sanity · unit · integration · e2e · perf (4187 tests, 269 files)
+tests/             repo sanity · unit · integration · e2e · perf (5810 tests, 423 files)
 scripts/           build/lint/audit/sync scripts (.mjs)
 supabase/          Edge Functions · migrations
 public/            sw.js · manifest.json · offline.html · _headers
