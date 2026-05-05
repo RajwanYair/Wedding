@@ -133,7 +133,13 @@ export function initCommandPalette() {
 
   /** @param {KeyboardEvent} e */
   const handler = (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "k") {
+    // S686: Ctrl+K (primary) or Ctrl+Shift+K (legacy) opens the command palette.
+    // Skip when focus is inside an input to avoid hijacking text editing.
+    const tag = /** @type {HTMLElement} */ (e.target).tagName;
+    const inInput = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT"
+      || /** @type {HTMLElement} */ (e.target).isContentEditable;
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      if (inInput && !e.shiftKey) return; // allow native browser address-bar behaviour in inputs
       e.preventDefault();
       openCommandPalette();
     }

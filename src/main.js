@@ -378,12 +378,13 @@ let _activeSection = null;
     () => { const entry = popUndo(); if (entry) vibrate(HAPTIC.DOUBLE); return entry; },
     storeSet,
   ); // S411: Ctrl+Z restores last deleted guest/table/vendor; S424: haptic DOUBLE on undo
-  // Sprint 15: Ctrl+K / Cmd+K opens the search/command palette modal
-  initCommandPaletteTrigger(async () => {
-    await openModal("searchModal");
-    // S214: wire search-index to the modal on first open
-    const { initSearchModalHandlers } = await import("./handlers/search-handler.js");
-    initSearchModalHandlers();
+  // S686: Ctrl+K / Cmd+K opens the command palette (primary shortcut)
+  // initCommandPaletteTrigger is kept for backwards compat; initCommandPalette
+  // now handles both Ctrl+K and Ctrl+Shift+K directly.
+  initCommandPaletteTrigger(() => {
+    import("./utils/command-palette.js").then(({ openCommandPalette }) => {
+      openCommandPalette();
+    }).catch(() => {});
   });
 
   // 11b. Wire sync status indicator (S3.6)
