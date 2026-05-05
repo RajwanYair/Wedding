@@ -16,3 +16,22 @@ REQUEST_TIMEOUT_MS = "30000"
 
 [limits]
 cpu_ms = 50
+
+# ── S699: Production environment with custom domain ───────────────────────
+
+[env.production]
+name = "wedding-ai-proxy-prod"
+vars = { ALLOWED_ORIGINS = "https://wedding.rajwanyair.com,https://rajwanyair.github.io", OLLAMA_ORIGIN = "", REQUEST_TIMEOUT_MS = "30000" }
+
+# Custom route: requests to api.wedding.rajwanyair.com/* are handled by this Worker.
+# To activate: set zone_name to your Cloudflare-managed domain,
+# then create a CNAME record: api.wedding.rajwanyair.com → <worker-subdomain>.workers.dev
+[[env.production.routes]]
+pattern = "api.wedding.rajwanyair.com/*"
+zone_name = "rajwanyair.com"
+
+# ── Staging environment ────────────────────────────────────────────────────
+
+[env.staging]
+name = "wedding-ai-proxy-staging"
+vars = { ALLOWED_ORIGINS = "https://rajwanyair.github.io,http://localhost:5173", OLLAMA_ORIGIN = "", REQUEST_TIMEOUT_MS = "30000" }
