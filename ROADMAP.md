@@ -1,4 +1,4 @@
-# Wedding Manager — Roadmap v31.2.0 (2026 Best-in-Class Refresh)
+# Wedding Manager — Roadmap v31.4.0 (2026 Best-in-Class Refresh)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
@@ -20,7 +20,7 @@ now done are recorded in §17 ("Done — Carried Forward"); only live items flow
 ## Contents
 
 0. [Executive Summary](#0-executive-summary-tldr)
-1. [North Star & Current State (v31.2.0)](#1-north-star--current-state-v3120)
+1. [North Star & Current State (v31.4.0)](#1-north-star--current-state-v3140)
 2. [Re-opened Decisions — Master Verdict Matrix](#2-re-opened-decisions--master-verdict-matrix)
 3. [First-Principles Rethink — If We Built Today (mid-2026)](#3-first-principles-rethink--if-we-built-today-mid-2026)
 4. [Competitive Landscape & Harvest Matrix](#4-competitive-landscape--harvest-matrix)
@@ -43,9 +43,9 @@ now done are recorded in §17 ("Done — Carried Forward"); only live items flow
 
 ## 0. Executive Summary (TL;DR)
 
-**State (2026-05-04, v31.2.0):**
+**State (2026-07-14, v31.4.0):**
 
-- **5528 tests** across **402** files · 0 lint errors · 0 warnings · 0 Node warnings
+- **5548 tests** across **407** files · 0 lint errors · 0 warnings · 0 Node warnings
 - **24** sections · **25** services · **11** repositories · **7** handlers · **31** core modules ·
   **138** utilities · **26** Supabase migrations · **12** edge functions · **6** locales
   (HE · EN · AR · FR · ES · RU)
@@ -78,7 +78,7 @@ now done are recorded in §17 ("Done — Carried Forward"); only live items flow
 
 ---
 
-## 1. North Star & Current State (v31.2.0)
+## 1. North Star & Current State (v31.4.0)
 
 ### North Star
 
@@ -639,10 +639,13 @@ and **platform features (plugin runtime, public API, marketplace)**. These defin
 **Goal:** Cull utility sprawl. Deploy AI edge proxy. Close infrastructure gaps.
 **Status:** Completed. Utility audit done; agents expanded; infrastructure gaps closed.
 
-### Phase B — v31.0.0 → v31.2.0 — Mobile Native & Locale Depth ✅ IN PROGRESS
+### Phase B — v31.0.0 → v31.4.0 — Mobile Native, Locale Depth & Animation ✅ IN PROGRESS
 
 **Status:** Capacitor scaffold done; ICU partial; mobile builds available.
-Test count: 5528 across 402 files. Agent count: 9. Workflows: 18.
+v31.3.0: Accessibility + DevEx + observability phase complete.
+v31.4.0: Animation timeline API, full i18n parity (6 locales), periodicSync,
+@scope expansion (23/23 sections), @starting-style section entries, section-template parity 23/23.
+Test count: 5548 across 407 files. Agent count: 9. Workflows: 18.
 
 ### Phase C — v32.0.0 — Vendor CRM, Payments, Plugin Runtime
 
