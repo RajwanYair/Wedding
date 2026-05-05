@@ -105,3 +105,31 @@
   </div>
   <div id="vendorTimelineSummary"></div>
 </div>
+
+<!-- S693: Payment schedule generator -->
+<div class="card" id="vendorPayScheduleCard">
+  <div class="card-header">
+    <span class="icon">💳</span>
+    <span data-i18n="vendor_pay_schedule_title">לוח תשלומים לספקים</span>
+  </div>
+  <div style="padding:1rem">
+    <div class="form-group" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:120px">
+        <label for="paySchedVendor" data-i18n="vendor_pay_sched_vendor">ספק</label>
+        <select id="paySchedVendor"></select>
+      </div>
+      <div style="flex:1;min-width:100px">
+        <label for="paySchedInstallments" data-i18n="vendor_pay_sched_installments">מספר תשלומים</label>
+        <input id="paySchedInstallments" type="number" min="1" max="24" value="3" />
+      </div>
+      <div style="flex:1;min-width:100px">
+        <label for="paySchedIntervalDays" data-i18n="vendor_pay_sched_interval">מרווח (ימים)</label>
+        <input id="paySchedIntervalDays" type="number" min="1" max="365" value="30" />
+      </div>
+      <button class="btn btn-primary btn-small" data-action="generatePaymentSchedule" style="align-self:flex-end">
+        <span>📋</span> <span data-i18n="vendor_pay_sched_generate">צור לוח</span>
+      </button>
+    </div>
+    <div id="vendorPayScheduleResult" style="margin-top:0.75rem;font-size:0.875rem"></div>
+  </div>
+</div>

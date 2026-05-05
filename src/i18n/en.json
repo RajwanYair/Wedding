@@ -1649,5 +1649,13 @@
   "vendor_timeline_summary_title": "Vendor Timeline Summary",
   "vendor_timeline_events": "events",
   "vendor_timeline_overdue": "overdue",
-  "vendor_timeline_empty": "No vendor timelines defined"
+  "vendor_timeline_empty": "No vendor timelines defined",
+  "vendor_pay_schedule_title": "Vendor Payment Schedule",
+  "vendor_pay_sched_vendor": "Vendor",
+  "vendor_pay_sched_installments": "Installments",
+  "vendor_pay_sched_interval": "Interval (days)",
+  "vendor_pay_sched_generate": "Generate Schedule",
+  "vendor_pay_sched_select": "Select vendor...",
+  "vendor_pay_sched_installments_of": "installments of",
+  "vendor_pay_sched_total": "Total"
 }

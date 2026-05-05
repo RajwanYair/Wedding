@@ -1649,5 +1649,13 @@
   "vendor_timeline_summary_title": "סיכום ציר זמן ספקים",
   "vendor_timeline_events": "אירועים",
   "vendor_timeline_overdue": "באיחור",
-  "vendor_timeline_empty": "אין ציר זמן לספקים"
+  "vendor_timeline_empty": "אין ציר זמן לספקים",
+  "vendor_pay_schedule_title": "לוח תשלומים לספקים",
+  "vendor_pay_sched_vendor": "ספק",
+  "vendor_pay_sched_installments": "מספר תשלומים",
+  "vendor_pay_sched_interval": "מרווח (ימים)",
+  "vendor_pay_sched_generate": "צור לוח",
+  "vendor_pay_sched_select": "בחר ספק...",
+  "vendor_pay_sched_installments_of": "תשלומים של",
+  "vendor_pay_sched_total": "סה״כ"
 }

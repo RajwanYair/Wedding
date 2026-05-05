@@ -32,6 +32,11 @@ import {
   getVendorTimelineSummary as _getTimelineSummary,
   getOverdueMilestones as _getOverdueMilestones,
 } from "../utils/vendor-timeline.js";
+import {
+  generateInstallments as _generateInstallments,
+  getScheduleStats as _getScheduleStats,
+  getVendorPayments as _getVendorPayments,
+} from "../utils/payment-schedule.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -50,6 +55,7 @@ class VendorsSection extends BaseSection {
     renderTopVendorsByCost(); // S147
     renderVendorTimelineSummary(); // S692
     _populateNegotiateVendorSelect(); // S692
+    _populatePayScheduleVendorSelect(); // S693
   }
 }
 
@@ -1092,4 +1098,87 @@ function renderVendorTimelineSummary() {
     container.appendChild(row);
   }
 }
+
+// ── S693: Payment schedule generator ─────────────────────────────────────
+
+/** Populate the vendor select in the payment schedule panel. */
+function _populatePayScheduleVendorSelect() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("paySchedVendor"));
+  if (!sel) return;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  sel.textContent = "";
+  const blank = document.createElement("option");
+  blank.value = "";
+  blank.textContent = t("vendor_pay_sched_select");
+  sel.appendChild(blank);
+  for (const v of vendors) {
+    const opt = document.createElement("option");
+    opt.value = v.id;
+    opt.textContent = `${v.name || v.id} — ₪${v.price || 0}`;
+    sel.appendChild(opt);
+  }
+}
+
+/**
+ * Generate a payment installment schedule for the selected vendor.
+ * Stores schedule in `wedding_v1_payment_schedule` under the vendor's entry.
+ */
+export function generatePaymentSchedule() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("paySchedVendor"));
+  const installEl = /** @type {HTMLInputElement|null} */ (document.getElementById("paySchedInstallments"));
+  const intervalEl = /** @type {HTMLInputElement|null} */ (document.getElementById("paySchedIntervalDays"));
+  const resultEl = document.getElementById("vendorPayScheduleResult");
+
+  const vendorId = sel?.value;
+  const installments = Math.max(1, Number(installEl?.value || 3));
+  const intervalDays = Math.max(1, Number(intervalEl?.value || 30));
+
+  if (!vendorId) {
+    if (resultEl) {
+      resultEl.style.color = "var(--color-danger, #ef4444)";
+      resultEl.textContent = t("vendor_pay_sched_select");
+    }
+    return;
+  }
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const vendor = vendors.find((v) => v.id === vendorId);
+  if (!vendor) return;
+
+  const totalAmount = Number(vendor.price || 0);
+  const startDate = Date.now();
+
+  const payments = _generateInstallments({ vendorId, totalAmount, installments, startDate, intervalDays, currency: "ILS" });
+  const stats = _getScheduleStats(payments);
+
+  // Persist schedule
+  const allSchedules = /** @type {Record<string, any[]>} */ (storeGet("paymentSchedules") ?? {});
+  allSchedules[vendorId] = payments;
+  storeSet("paymentSchedules", allSchedules);
+
+  if (resultEl) {
+    resultEl.textContent = "";
+    const summary = document.createElement("div");
+    summary.style.marginBottom = "0.5rem";
+    summary.style.fontWeight = "600";
+    summary.textContent = `${installments} ${t("vendor_pay_sched_installments_of")} ₪${Math.round(totalAmount / installments)} — ${t("vendor_pay_sched_total")}: ₪${stats.total}`;
+    resultEl.appendChild(summary);
+
+    for (const p of payments) {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;justify-content:space-between;padding:0.2rem 0;font-size:0.8rem;border-bottom:1px solid rgba(255,255,255,0.06)";
+
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = p.label;
+
+      const amtSpan = document.createElement("span");
+      amtSpan.textContent = `₪${p.amount} · ${new Date(p.dueDate).toLocaleDateString("he-IL")}`;
+
+      row.appendChild(labelSpan);
+      row.appendChild(amtSpan);
+      resultEl.appendChild(row);
+    }
+  }
+}
+
 
