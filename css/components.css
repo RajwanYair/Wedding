@@ -4655,7 +4655,71 @@
     gap: 0.5rem;
   }
 
-  /* S694 — Plugin permission badges */
+  /* S695 — Theme Marketplace browser */
+  .theme-mkt-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .theme-mkt-stats {
+    margin-bottom: 0.5rem;
+  }
+
+  .theme-mkt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .theme-mkt-card {
+    background: color-mix(in sRGB, var(--accent) 5%, var(--bg-card));
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .theme-mkt-swatches {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .theme-mkt-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--swatch, #888);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-block;
+  }
+
+  .theme-mkt-name {
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+
+  .theme-mkt-rating {
+    font-size: 0.72rem;
+    color: #f59e0b;
+  }
+
+  .theme-mkt-author {
+    font-size: 0.72rem;
+  }
+
+  .theme-mkt-btn-row {
+    display: flex;
+    gap: 0.3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
   .plugin-risk-badge {
     display: inline-block;
     font-size: 0.75rem;

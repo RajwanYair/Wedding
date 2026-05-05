@@ -43,6 +43,15 @@ import {
   installTheme as _installTheme,
   listInstalledThemes,
 } from "../utils/theme-registry.js";
+import {
+  searchThemes as _searchThemes,
+  sortThemes as _sortThemes,
+  installTheme as _installThemeListing,
+  activateTheme as _activateThemeListing,
+  uninstallTheme as _uninstallThemeListing,
+  rateTheme as _rateThemeListing,
+  getMarketplaceStats as _getMarketplaceStats,
+} from "../utils/theme-marketplace.js";
 import { validatePluginManifest } from "../services/export.js";
 import {
   validateManifest as _strictValidateManifest,
@@ -2055,41 +2064,170 @@ export async function refreshWebhooks() {
   _renderWebhooks(listWebhooks());
 }
 
-// ── S445: Theme Marketplace ───────────────────────────────────────────────
+// ── S445 / S695: Theme Marketplace ──────────────────────────────────────────
+
+/** In-memory installed theme listings (S695 — full marketplace state). */
+const _MARKETPLACE_STORAGE_KEY = "wedding_v1_theme_marketplace_installed";
+
+function _getMarketplaceInstalled() {
+  try {
+    return JSON.parse(localStorage.getItem(_MARKETPLACE_STORAGE_KEY) ?? "[]");
+  } catch {
+    return [];
+  }
+}
+
+function _saveMarketplaceInstalled(/** @type {any[]} */ installed) {
+  localStorage.setItem(_MARKETPLACE_STORAGE_KEY, JSON.stringify(installed));
+}
 
 /**
  * Render community theme cards into #themeMarketplaceList.
+ * S695: Enhanced with search, sort, rating display, activate/uninstall actions.
  */
 export function renderThemeMarketplace() {
   const container = document.getElementById("themeMarketplaceList");
   if (!container) return;
-  const installed = listInstalledThemes();
   container.textContent = "";
-  for (const theme of COMMUNITY_THEMES) {
-    const card = document.createElement("div");
-    card.style.cssText = "border:1px solid rgba(255,255,255,0.15);border-radius:0.5rem;padding:0.75rem;min-width:160px;text-align:center";
-    const swatches = document.createElement("div");
-    swatches.style.cssText = "display:flex;gap:3px;justify-content:center;margin-bottom:0.4rem";
-    for (const color of theme.swatches) {
-      const dot = document.createElement("span");
-      dot.style.cssText = `width:18px;height:18px;border-radius:50%;background:${color};display:inline-block;border:1px solid rgba(255,255,255,0.2)`;
-      swatches.appendChild(dot);
-    }
-    const label = document.createElement("div");
-    label.textContent = theme.name;
-    label.style.cssText = "font-size:0.8rem;margin-bottom:0.4rem;font-weight:600";
-    const btn = document.createElement("button");
-    btn.className = installed.includes(theme.id) ? "btn btn-secondary btn-small" : "btn btn-primary btn-small";
-    btn.dataset.action = "installThemeById";
-    btn.dataset.id = theme.id;
-    const span = document.createElement("span");
-    span.textContent = installed.includes(theme.id) ? t("theme_installed") : t("theme_install");
-    btn.appendChild(span);
-    card.appendChild(swatches);
-    card.appendChild(label);
-    card.appendChild(btn);
-    container.appendChild(card);
+
+  // S695: search + sort controls
+  const toolbar = document.createElement("div");
+  toolbar.className = "theme-mkt-toolbar";
+
+  const searchInput = document.createElement("input");
+  searchInput.type = "search";
+  searchInput.className = "input-field input-field--sm";
+  searchInput.placeholder = t("theme_search_placeholder");
+  searchInput.id = "themeMktSearch";
+  toolbar.appendChild(searchInput);
+
+  const sortSel = document.createElement("select");
+  sortSel.className = "input-field input-field--sm";
+  sortSel.id = "themeMktSort";
+  for (const [val, label] of [["downloads", t("theme_sort_popular")], ["rating", t("theme_sort_rating")], ["newest", t("theme_sort_newest")]]) {
+    const opt = document.createElement("option");
+    opt.value = val;
+    opt.textContent = label;
+    sortSel.appendChild(opt);
   }
+  toolbar.appendChild(sortSel);
+  container.appendChild(toolbar);
+
+  // Build listing objects from COMMUNITY_THEMES (bridge S664 util types)
+  const installedLegacy = listInstalledThemes();
+  const installedFull = _getMarketplaceInstalled();
+
+  const _renderCards = () => {
+    const existing = container.querySelector(".theme-mkt-grid");
+    if (existing) existing.remove();
+
+    const query = /** @type {HTMLInputElement|null} */ (document.getElementById("themeMktSearch"))?.value ?? "";
+    const sortBy = /** @type {HTMLSelectElement|null} */ (document.getElementById("themeMktSort"))?.value ?? "downloads";
+
+    const listings = COMMUNITY_THEMES.map((theme) => ({
+      id: theme.id,
+      name: theme.name,
+      author: theme.author ?? "",
+      version: theme.version ?? "1.0.0",
+      description: theme.description ?? "",
+      tags: theme.tags ?? [],
+      rating: theme.rating ?? 4.0,
+      downloads: theme.downloads ?? 0,
+      previewUrl: "",
+      cssUrl: "",
+      publishedAt: theme.publishedAt ?? new Date().toISOString(),
+      swatches: theme.swatches ?? [],
+    }));
+
+    const filtered = _searchThemes(/** @type {any} */ (listings), query);
+    const sorted = _sortThemes(/** @type {any} */ (filtered), /** @type {any} */ (sortBy));
+
+    const stats = _getMarketplaceStats(/** @type {any} */ (listings), installedFull);
+    const statsEl = container.querySelector(".theme-mkt-stats") ?? document.createElement("div");
+    statsEl.className = "theme-mkt-stats u-text-sm u-text-muted";
+    statsEl.textContent = `${stats.totalThemes} ${t("theme_mkt_total")} · ${stats.installed} ${t("theme_mkt_installed")}${stats.activeTheme ? ` · ${t("theme_mkt_active")}: ${stats.activeTheme}` : ""}`;
+    if (!container.querySelector(".theme-mkt-stats")) container.insertBefore(statsEl, toolbar.nextSibling);
+
+    const grid = document.createElement("div");
+    grid.className = "theme-mkt-grid";
+
+    for (const theme of sorted) {
+      const card = document.createElement("div");
+      card.className = "theme-mkt-card";
+
+      // Swatches
+      const swatches = document.createElement("div");
+      swatches.className = "theme-mkt-swatches";
+      const swatchList = /** @type {any} */ (theme).swatches ?? [];
+      for (const color of swatchList) {
+        const dot = document.createElement("span");
+        dot.className = "theme-mkt-swatch";
+        dot.style.setProperty("--swatch", color);
+        swatches.appendChild(dot);
+      }
+      card.appendChild(swatches);
+
+      // Name
+      const name = document.createElement("div");
+      name.className = "theme-mkt-name";
+      name.textContent = theme.name;
+      card.appendChild(name);
+
+      // Rating
+      const rating = document.createElement("div");
+      rating.className = "theme-mkt-rating";
+      const stars = Math.round(theme.rating);
+      rating.textContent = `${"★".repeat(stars)}${"☆".repeat(5 - stars)} ${theme.rating.toFixed(1)}`;
+      card.appendChild(rating);
+
+      // Author
+      if (theme.author) {
+        const author = document.createElement("div");
+        author.className = "theme-mkt-author u-text-sm u-text-muted";
+        author.textContent = theme.author;
+        card.appendChild(author);
+      }
+
+      const isInstalled = installedLegacy.includes(theme.id);
+      const installedEntry = installedFull.find((/** @type {any} */ i) => i.themeId === theme.id);
+      const isActive = installedEntry?.active ?? false;
+
+      const btnRow = document.createElement("div");
+      btnRow.className = "theme-mkt-btn-row";
+
+      if (isInstalled) {
+        const activateBtn = document.createElement("button");
+        activateBtn.className = `btn btn-small ${isActive ? "btn-success" : "btn-secondary"}`;
+        activateBtn.dataset.action = "activateThemeById";
+        activateBtn.dataset.id = theme.id;
+        activateBtn.textContent = isActive ? `✓ ${t("theme_active")}` : t("theme_activate");
+        btnRow.appendChild(activateBtn);
+
+        const uninstallBtn = document.createElement("button");
+        uninstallBtn.className = "btn btn-small btn-danger";
+        uninstallBtn.dataset.action = "uninstallThemeById";
+        uninstallBtn.dataset.id = theme.id;
+        uninstallBtn.textContent = t("theme_uninstall");
+        btnRow.appendChild(uninstallBtn);
+      } else {
+        const btn = document.createElement("button");
+        btn.className = "btn btn-primary btn-small";
+        btn.dataset.action = "installThemeById";
+        btn.dataset.id = theme.id;
+        btn.textContent = t("theme_install");
+        btnRow.appendChild(btn);
+      }
+
+      card.appendChild(btnRow);
+      grid.appendChild(card);
+    }
+
+    container.appendChild(grid);
+  };
+
+  searchInput.addEventListener("input", _renderCards);
+  sortSel.addEventListener("change", _renderCards);
+  _renderCards();
 }
 
 /**
@@ -2099,7 +2237,41 @@ export function renderThemeMarketplace() {
 export function installThemeById(id) {
   const ok = _installTheme(id);
   if (ok) {
+    // S695: also track in marketplace installed list
+    const installed = _getMarketplaceInstalled();
+    const { installed: newInstalled } = _installThemeListing(
+      /** @type {any} */ ({ id, name: id, author: "", version: "1.0.0", tags: [], rating: 0, downloads: 0, previewUrl: "", cssUrl: "", publishedAt: new Date().toISOString() }),
+      installed,
+    );
+    _saveMarketplaceInstalled(newInstalled);
     showToast(t("theme_installed_msg"), "success");
     renderThemeMarketplace();
   }
 }
+
+/**
+ * Activate an installed theme by id.
+ * S695: Uses activateTheme() from theme-marketplace.js.
+ * @param {string} id
+ */
+export function activateThemeById(id) {
+  const installed = _getMarketplaceInstalled();
+  const updated = _activateThemeListing(id, installed);
+  _saveMarketplaceInstalled(updated);
+  showToast(t("theme_activated_msg"), "success");
+  renderThemeMarketplace();
+}
+
+/**
+ * Uninstall a community theme by id.
+ * S695: Uses uninstallTheme() from theme-marketplace.js.
+ * @param {string} id
+ */
+export function uninstallThemeById(id) {
+  const installed = _getMarketplaceInstalled();
+  const updated = _uninstallThemeListing(id, installed);
+  _saveMarketplaceInstalled(updated);
+  showToast(t("theme_uninstalled_msg"), "success");
+  renderThemeMarketplace();
+}
+

@@ -75,6 +75,8 @@ import {
   pingWebhookById,
   refreshWebhooks,
   installThemeById,
+  activateThemeById,
+  uninstallThemeById,
   exportAuditLog,
   saveAiSettings,
   testAiConnection,
@@ -430,6 +432,16 @@ export function register() {
     // @ts-ignore
     const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
     if (id) installThemeById(id);
+  });
+  on("activateThemeById", (evt) => {
+    // @ts-ignore
+    const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
+    if (id) activateThemeById(id);
+  });
+  on("uninstallThemeById", (evt) => {
+    // @ts-ignore
+    const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
+    if (id) uninstallThemeById(id);
   });
   on("exportAuditLog", () => {
     exportAuditLog();
