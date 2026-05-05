@@ -77,8 +77,8 @@ jobs:
       - name: Architecture check — no section→service direct imports (enforce — S290)
         run: node scripts/arch-check.mjs --strict
 
-      - name: Audit utils — no unused exports, no missing @owner (S618)
-        run: node scripts/audit-utils.mjs
+      - name: Audit utils — no unused exports, no missing @owner (S618, S683)
+        run: node scripts/audit-utils.mjs --enforce-owner
 
       - name: Audit CSS a11y — reduced-motion + contrast + forced-colors (S586-S587)
         run: npm run audit:a11y

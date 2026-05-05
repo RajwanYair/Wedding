@@ -8,6 +8,7 @@
  *
  * Flags:
  *   --enforce        non-zero exit on any new violation above baseline
+ *   --enforce-owner  non-zero exit when any file is missing an @owner tag (S683)
  *   --baseline N     override baseline (default: 0)
  *   --json           emit machine-readable JSON only
  *
@@ -27,6 +28,7 @@ const TESTS_DIR = join(ROOT, "tests");
 
 const args = new Set(process.argv.slice(2));
 const ENFORCE = args.has("--enforce");
+const ENFORCE_OWNER = args.has("--enforce-owner");
 const JSON_ONLY = args.has("--json");
 const BASELINE_ARG = process.argv.find((a) => a.startsWith("--baseline="));
 const BASELINE = BASELINE_ARG ? Number(BASELINE_ARG.split("=")[1]) : 0;
@@ -181,5 +183,9 @@ if (JSON_ONLY) {
 }
 
 if (ENFORCE && violations > BASELINE) {
+  process.exit(1);
+}
+if (ENFORCE_OWNER && missingOwner.length > 0) {
+  if (!JSON_ONLY) console.error(`[audit:utils] ERROR: ${missingOwner.length} file(s) missing @owner tag. Use --enforce-owner to block CI.`);
   process.exit(1);
 }
