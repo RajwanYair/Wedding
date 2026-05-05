@@ -1,0 +1,41 @@
+# =============================================================================
+# Sync Labels — Wedding Manager
+#
+# Keeps the GitHub repository labels in sync with .github/labels.yml.
+# Runs automatically when labels.yml changes, also available via manual
+# dispatch to force a full sync.
+#
+# Harvested from FamilyDashBoard parallel project (May 2026).
+# =============================================================================
+name: Sync Labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/labels.yml"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: sync-labels
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Sync repo labels from labels.yml
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync labels
+        uses: EndBug/label-sync@v2
+        with:
+          config-file: .github/labels.yml
+          # Keep any labels created manually in the GitHub UI
+          delete-other-labels: false
+          token: ${{ secrets.GITHUB_TOKEN }}

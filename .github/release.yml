@@ -1,0 +1,77 @@
+# =============================================================================
+# .github/release.yml — Auto-generated GitHub release notes configuration
+#
+# Categorizes merged PRs into sections in release notes by label.
+# Triggered when you click "Generate release notes" in the GitHub release UI
+# or via `gh release create --generate-notes`.
+#
+# Reference:
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+#
+# Harvested from FamilyDashBoard / CrossTide parallel projects (May 2026).
+# =============================================================================
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+      - stale
+      - duplicate
+      - invalid
+      - wontfix
+    authors:
+      - dependabot
+  categories:
+    - title: "🚀 New Features"
+      labels:
+        - enhancement
+        - feature
+    - title: "🐛 Bug Fixes"
+      labels:
+        - bug
+        - fix
+    - title: "💍 Wedding Domain"
+      labels:
+        - rsvp
+        - guests
+        - tables
+        - vendors
+        - whatsapp
+        - sheets-sync
+    - title: "🎨 Design & UI"
+      labels:
+        - ui
+        - design
+        - rtl
+        - accessibility
+        - i18n
+    - title: "🔐 Security"
+      labels:
+        - security
+        - supabase
+    - title: "⚡ Performance"
+      labels:
+        - performance
+    - title: "🧪 Tests & Quality"
+      labels:
+        - tests
+        - quality
+    - title: "📖 Documentation"
+      labels:
+        - documentation
+        - docs
+    - title: "⚙️ CI/CD & Infrastructure"
+      labels:
+        - ci
+        - ci/cd
+        - github-config
+        - copilot-config
+        - dependencies
+        - build
+    - title: "🧹 Maintenance"
+      labels:
+        - chore
+        - maintenance
+        - refactor
+    - title: "🔄 Other Changes"
+      labels:
+        - "*"

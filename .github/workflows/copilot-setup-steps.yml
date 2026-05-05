@@ -1,0 +1,47 @@
+name: Copilot Setup Steps
+# =============================================================================
+# Bootstrap environment for the GitHub Copilot Coding Agent.
+#
+# Reference:
+# https://docs.github.com/en/copilot/customizing-copilot/customizing-the-development-environment-for-copilot-coding-agent
+#
+# This repository's tooling lives in the parent MyScripts/ folder (shared
+# node_modules across multiple sibling repos). The Coding Agent runs in an
+# isolated container that only checks out THIS repo, so we re-create a minimal
+# parent-folder layout by running `npm ci` directly inside the project.
+#
+# Harvested from FamilyDashBoard parallel project (May 2026).
+# =============================================================================
+
+on:
+  workflow_dispatch:
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify toolchain
+        run: |
+          node --version
+          npm --version
+          npx vitest --version
+          npx eslint --version
+          npx vite --version
+
+      - name: Smoke-run lint (cached)
+        run: npm run lint:js -- --max-warnings 0
