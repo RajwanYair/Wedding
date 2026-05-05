@@ -1,12 +1,12 @@
 /**
  * @owner edge
  * Provider adapters for the AI edge proxy.  Each adapter accepts a
- * normalised `ProxyRequest` ({ model, messages, apiKey }) and returns a
- * normalised `ProxyResponse` ({ provider, model, text }).
+ * normalised `ProxyRequest` ({ model, messages, apiKey, ollamaOrigin?, timeoutMs? })
+ * and returns a normalised `ProxyResponse` ({ provider, model, text }).
  *
- * Streaming lands in S566; this module does request/response only.
+ * S684: Ollama URL is now configurable via `OLLAMA_ORIGIN` env var.
  *
- * @typedef {{ model: string, messages: Array<{role: string, content: string}>, apiKey: string }} ProxyRequest
+ * @typedef {{ model: string, messages: Array<{role: string, content: string}>, apiKey: string, ollamaOrigin?: string, timeoutMs?: number }} ProxyRequest
  * @typedef {{ provider: string, model: string, text: string }} ProxyResponse
  */
 
@@ -14,8 +14,16 @@ const ENDPOINTS = {
   openai: "https://api.openai.com/v1/chat/completions",
   anthropic: "https://api.anthropic.com/v1/messages",
   gemini: "https://generativelanguage.googleapis.com/v1beta/models",
-  ollama: "http://localhost:11434/v1/chat/completions",
 };
+
+/**
+ * Create an AbortSignal that times out after `ms` milliseconds (or 30s default).
+ * @param {number} [ms]
+ * @returns {AbortSignal}
+ */
+function _timeout(ms = 30_000) {
+  return AbortSignal.timeout(ms);
+}
 
 /**
  * @param {ProxyRequest} req
@@ -32,6 +40,7 @@ export async function openaiAdapter(req) {
       model: req.model,
       messages: req.messages,
     }),
+    signal: _timeout(req.timeoutMs),
   });
   if (!r.ok) throw new Error(`openai_${r.status}`);
   /** @type {{choices?: Array<{message?: {content?: string}}>}} */
@@ -64,6 +73,7 @@ export async function anthropicAdapter(req) {
       system,
       messages,
     }),
+    signal: _timeout(req.timeoutMs),
   });
   if (!r.ok) throw new Error(`anthropic_${r.status}`);
   /** @type {{content?: Array<{type?: string, text?: string}>}} */
@@ -81,14 +91,20 @@ export async function anthropicAdapter(req) {
  */
 export async function geminiAdapter(req) {
   const url = `${ENDPOINTS.gemini}/${encodeURIComponent(req.model)}:generateContent?key=${encodeURIComponent(req.apiKey)}`;
-  const contents = req.messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
-  }));
+  // Strip system role — Gemini uses a separate systemInstruction field
+  const contents = req.messages
+    .filter((m) => m.role !== "system")
+    .map((m) => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: m.content }],
+    }));
+  const system = req.messages.find((m) => m.role === "system")?.content;
+  const body = system ? { contents, systemInstruction: { parts: [{ text: system }] } } : { contents };
   const r = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ contents }),
+    body: JSON.stringify(body),
+    signal: _timeout(req.timeoutMs),
   });
   if (!r.ok) throw new Error(`gemini_${r.status}`);
   /** @type {{candidates?: Array<{content?: {parts?: Array<{text?: string}>}}>}} */
@@ -107,10 +123,14 @@ export async function geminiAdapter(req) {
  */
 export async function ollamaAdapter(req) {
   // Ollama exposes an OpenAI-compatible endpoint.  apiKey is ignored.
-  const r = await fetch(ENDPOINTS.ollama, {
+  // S684: OLLAMA_ORIGIN is passed via req.ollamaOrigin (from Worker env).
+  const origin = (req.ollamaOrigin ?? "http://localhost:11434").replace(/\/$/, "");
+  const url = `${origin}/v1/chat/completions`;
+  const r = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ model: req.model, messages: req.messages }),
+    signal: _timeout(req.timeoutMs),
   });
   if (!r.ok) throw new Error(`ollama_${r.status}`);
   /** @type {{choices?: Array<{message?: {content?: string}}>}} */

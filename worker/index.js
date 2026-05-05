@@ -65,11 +65,11 @@ export default {
     }
 
     try {
-      const result = await route(provider, {
-        model,
-        messages,
-        apiKey: auth.replace(/^Bearer\s+/i, ""),
-      });
+      const result = await route(
+        provider,
+        { model, messages, apiKey: auth.replace(/^Bearer\s+/i, "") },
+        env,
+      );
       // Streaming branch: emit a single SSE event with the full text.
       // True provider-side streaming lives behind each adapter (S566+).
       if (url.searchParams.get("stream") === "1") {

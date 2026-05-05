@@ -36,4 +36,18 @@ describe("worker router", () => {
     const out = await route("static", { model: "m", messages: [], apiKey: "k" });
     expect(out.text).toBe("ok");
   });
+
+  it("route passes env to adapter (S684)", async () => {
+    let capturedOrigin = "";
+    _registerAdapter("env-check", async (req) => {
+      capturedOrigin = req.ollamaOrigin ?? "";
+      return { provider: "env-check", model: req.model, text: "ok" };
+    });
+    await route(
+      "env-check",
+      { model: "m", messages: [], apiKey: "k" },
+      { OLLAMA_ORIGIN: "https://ollama.example.com" },
+    );
+    expect(capturedOrigin).toBe("https://ollama.example.com");
+  });
 });

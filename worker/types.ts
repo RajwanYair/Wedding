@@ -31,4 +31,8 @@ export type Adapter = (req: ProxyRequest) => Promise<ProxyResponse>;
 /** Cloudflare Worker environment bindings (declared in wrangler.toml). */
 export interface WorkerEnv {
   ALLOWED_ORIGINS?: string;
+  /** Base URL of the self-hosted Ollama instance (no trailing slash). */
+  OLLAMA_ORIGIN?: string;
+  /** Per-request timeout in milliseconds (default: 30000). */
+  REQUEST_TIMEOUT_MS?: string;
 }

@@ -93,6 +93,22 @@ describe("worker providers", () => {
       apiKey: "",
     });
     expect(out.text).toBe("local");
+    const [url] = globalThis.fetch.mock.calls[0];
+    expect(url).toMatch(/localhost:11434/);
+  });
+
+  it("ollamaAdapter uses custom ollamaOrigin (S684)", async () => {
+    globalThis.fetch.mockResolvedValueOnce(
+      ok({ choices: [{ message: { content: "remote" } }] }),
+    );
+    await ollamaAdapter({
+      model: "llama3",
+      messages: [{ role: "user", content: "hi" }],
+      apiKey: "",
+      ollamaOrigin: "https://ollama.example.com",
+    });
+    const [url] = globalThis.fetch.mock.calls[0];
+    expect(url).toMatch(/ollama\.example\.com/);
   });
 
   it("adapters throw on non-2xx", async () => {

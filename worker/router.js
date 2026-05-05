@@ -4,7 +4,7 @@
  * `provider` field.  Real adapters live in `./providers.js` (S565);
  * the `echo` adapter remains for tests.
  *
- * @typedef {{ model: string, messages: unknown, apiKey: string }} ProxyRequest
+ * @typedef {{ model: string, messages: unknown, apiKey: string, ollamaOrigin?: string, timeoutMs?: number }} ProxyRequest
  * @typedef {{ text: string, model: string, provider: string }} ProxyResponse
  */
 
@@ -13,14 +13,21 @@ import { ADAPTERS as PROVIDER_ADAPTERS } from "./providers.js";
 /**
  * @param {string} provider
  * @param {ProxyRequest} req
+ * @param {{ OLLAMA_ORIGIN?: string, REQUEST_TIMEOUT_MS?: string }} [env]
  * @returns {Promise<ProxyResponse>}
  */
-export async function route(provider, req) {
+export async function route(provider, req, env) {
   const adapter = ADAPTERS[provider];
   if (!adapter) {
     throw new Error(`unsupported_provider:${provider}`);
   }
-  return adapter(req);
+  // Inject env-configurable values into the request.
+  const enriched = {
+    ...req,
+    ollamaOrigin: env?.OLLAMA_ORIGIN ?? req.ollamaOrigin,
+    timeoutMs: env?.REQUEST_TIMEOUT_MS ? Number(env.REQUEST_TIMEOUT_MS) : req.timeoutMs,
+  };
+  return adapter(enriched);
 }
 
 /**

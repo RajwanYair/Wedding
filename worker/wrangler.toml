@@ -4,3 +4,15 @@ compatibility_date = "2026-05-01"
 
 [vars]
 ALLOWED_ORIGINS = "https://rajwanyair.github.io,http://localhost:5173,http://localhost:4173"
+# Set OLLAMA_ORIGIN to your self-hosted Ollama base URL (e.g. https://ollama.example.com).
+# Leave empty to disable Ollama routing in the hosted Worker.
+OLLAMA_ORIGIN = ""
+# Optional: per-request timeout in milliseconds (default: 30000).
+REQUEST_TIMEOUT_MS = "30000"
+
+# Secrets (set via `wrangler secret put <NAME>`):
+#   None — API keys are forwarded from the browser via Authorization header.
+#   The Worker never stores or logs them.
+
+[limits]
+cpu_ms = 50
