@@ -48,12 +48,13 @@
        Browsers honour `color-scheme: dark light` and pick the matching
        value automatically.  These tokens layer on top of the explicit
        theme palettes above; theme classes still override `--accent` and
-       friends, but neutrals derive from system preference. */
-    --neutral-bg: light-dark(#fafaf7, #0f0520);
-    --neutral-surface: light-dark(#fff, #1a0a2e);
-    --neutral-border: light-dark(#e5e2db, #2d1b4e);
-    --neutral-text: light-dark(#1a1a1a, #f0e6d6);
-    --neutral-text-soft: light-dark(#444, rgba(240, 230, 214, 0.75));
+       friends, but neutrals derive from system preference.
+       Fallback values (dark mode) for Safari 17.4 which lacks light-dark(). */
+    --neutral-bg: #0f0520;
+    --neutral-surface: #1a0a2e;
+    --neutral-border: #2d1b4e;
+    --neutral-text: #f0e6d6;
+    --neutral-text-soft: rgba(240, 230, 214, 0.75);
 
     /* OKLCH-mixed accent variants — perceptually uniform hover/active states */
     --accent-hover: color-mix(in oklch, var(--accent) 88%, white);
@@ -64,6 +65,17 @@
     --cq-sm: 320px;
     --cq-md: 480px;
     --cq-lg: 720px;
+  }
+
+  /* light-dark() system-preference tokens — Chrome 123+, Firefox 120+, Safari 17.5+ */
+  @supports (color: light-dark(#fff, #000)) {
+    :root {
+      --neutral-bg: light-dark(#fafaf7, #0f0520);
+      --neutral-surface: light-dark(#fff, #1a0a2e);
+      --neutral-border: light-dark(#e5e2db, #2d1b4e);
+      --neutral-text: light-dark(#1a1a1a, #f0e6d6);
+      --neutral-text-soft: light-dark(#444, rgba(240, 230, 214, 0.75));
+    }
   }
 
   /* ── Theme: Rose Gold ── */

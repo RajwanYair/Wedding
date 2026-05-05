@@ -1,6 +1,7 @@
 # ADR-025: Migrate Hash Router to `pushState` + Typed Routes
 
 - **Status**: Proposed
+- **Supersedes**: ADR-014 (earlier draft of the same decision)
 - **Date**: 2026-04-29
 - **Targeted release**: v12.0.0 (Phase A6)
 - **Related**: ADR-002 (ESM modules), ADR-012 (event bus), ROADMAP §6 Phase A

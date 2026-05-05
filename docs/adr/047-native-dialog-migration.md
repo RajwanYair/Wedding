@@ -1,4 +1,4 @@
-# ADR 013 — Native `<dialog>` Modal Migration
+# ADR 047 — Native `<dialog>` Modal Migration
 
 **Status**: Accepted (S103/S104, v12.5.8)
 

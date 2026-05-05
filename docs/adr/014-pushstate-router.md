@@ -1,6 +1,6 @@
 # ADR-014: Hash Router → `pushState` + Typed Routes
 
-**Status:** Proposed (target v12.0.0)
+**Status:** Superseded by ADR-025
 **Date:** 2026-04-28
 **Deciders:** Engineering Team
 

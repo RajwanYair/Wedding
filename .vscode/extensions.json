@@ -31,10 +31,6 @@
       "jock.svg",
       "ms-vscode.vscode-js-profile-flame",
       "ms-edgetools.vscode-edge-devtools",
-      "pwesium.chromium-source-tools"
-    ],
-    "unwantedRecommendations": [
-      "hookyqr.beautify",
-      "ms-vscode.vscode-typescript-tslint-plugin"
-    ]
-}
+      "pwesium.chromium-source-tools",
+      /* Browser compat tooling */
+      "webhint.vscode-webhint"
