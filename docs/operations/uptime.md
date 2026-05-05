@@ -19,6 +19,30 @@ in the README badge.
 | 2 | Wedding SW          | <https://rajwanyair.github.io/Wedding/sw.js>               | HTTPS      | 5 min    |
 | 3 | Wedding manifest    | <https://rajwanyair.github.io/Wedding/manifest.json>       | HTTPS      | 5 min    |
 | 4 | Supabase REST       | `${SUPABASE_URL}/rest/v1/`                                 | HTTPS      | 5 min    |
+| 5 | Health endpoint     | <https://rajwanyair.github.io/Wedding/health.json>         | HTTPS JSON | 5 min    |
+| 6 | CF Worker health    | <https://api.wedding.rajwanyair.com/health>                | HTTPS JSON | 5 min    |
+
+## Health Endpoints
+
+### Static: `public/health.json`
+
+`GET /health.json` returns:
+
+```json
+{ "status": "ok", "version": "32.0.0", "app": "wedding-manager" }
+```
+
+Cache-Control is `no-cache` so UptimeRobot always reads a fresh response.
+
+### Worker: `/health`
+
+`GET https://api.wedding.rajwanyair.com/health` returns:
+
+```json
+{ "ok": true, "ts": 1715000000000 }
+```
+
+The CF Worker handles this route natively (see `worker/index.js`).
 
 ## Alerting
 

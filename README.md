@@ -14,6 +14,7 @@
 [![CodeQL](https://github.com/RajwanYair/Wedding/actions/workflows/codeql.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/codeql.yml)
 [![Scorecard](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/scorecard.yml)
 [![SBOM](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/sbom.yml)
+[![Uptime](https://img.shields.io/badge/uptime-monitored-brightgreen?style=flat-square&logo=uptimerobot)](docs/operations/uptime.md)
 [![Trivy](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml/badge.svg)](https://github.com/RajwanYair/Wedding/actions/workflows/trivy.yml)
 [![ADRs](https://img.shields.io/badge/ADRs-42-7f5af0?style=flat-square)](docs/adr/README.md)
 [![Audits](https://img.shields.io/badge/audits-dead%20%C2%B7%20actions%20%C2%B7%20types-1abc9c?style=flat-square)](.github/workflows/ci.yml)
