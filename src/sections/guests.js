@@ -20,6 +20,8 @@ import { getUrlParam, setUrlParams } from "../utils/url-state.js";
 import { onPresenceChange, groupByViewing, badgeFor } from "../services/realtime.js";
 import { tallyMeals as _tallyMeals, formatChefReport as _formatChefReport } from "../utils/meal-planner.js";
 import { printGuestList, printTableLayout } from "../utils/pdf-export.js";
+import { buildBatch } from "../utils/qr-batch.js";
+import { getQrDataUrl } from "../utils/qr-code.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -451,6 +453,37 @@ export function printGuests() {
  */
 export function printTables() {
   printTableLayout();
+}
+
+/**
+ * Open a print window with per-guest QR check-in cards (S705).
+ * Uses qr-batch.js to build deep-link tokens and qr-code.js for images.
+ * Each card shows guest name + QR code linking to the check-in URL.
+ */
+export function printGuestQrBatch() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const eligible = guests.filter((g) => g.status !== "declined" && g.id);
+  if (eligible.length === 0) {
+    return;
+  }
+  const baseUrl = `${window.location.origin}${window.location.pathname}#checkin`;
+  const entries = buildBatch(eligible.map((g) => ({
+    id: String(g.id),
+    name: `${g.firstName ?? ""} ${g.lastName ?? ""}`.trim() || String(g.id),
+    phone: g.phone,
+  })), { baseUrl });
+
+  const cards = entries.map((e) => {
+    const dataUrl = getQrDataUrl(e.url, 120);
+    return `<div class="qr-card"><img src="${dataUrl}" alt="QR ${e.name}" width="120" height="120"><p>${e.name}</p></div>`;
+  }).join("");
+
+  const html = `<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="utf-8"><title>${t("qr_batch_title")}</title><style>body{font-family:Arial,sans-serif;margin:1rem}.qr-card{display:inline-block;text-align:center;margin:0.5rem;padding:0.5rem;border:1px solid #ccc;width:140px}p{margin:0.25rem 0;font-size:0.8rem}@media print{@page{margin:1cm}}</style></head><body><h1>${t("qr_batch_title")}</h1>${cards}</body></html>`;
+  const win = window.open("", "_blank", "width=900,height=700");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+  win.focus();
 }
 
 /**
