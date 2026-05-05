@@ -15,6 +15,17 @@ import { cleanPhone } from "../utils/phone.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { personalizeMessage, getVariableHints } from "../services/wa-messaging.js";
 import { showToast } from "../core/ui.js";
+import {
+  scheduleMessage as _scheduleMessage,
+  createAbTest as _createAbTest,
+  markSent as _markSent,
+  markDelivered as _markDelivered,
+  cancelMessage as _cancelMessage,
+  getReadyToSend as _getReadyToSend,
+  abStats as _abStats,
+  queueSummary as _queueSummary,
+  resetIdCounter as _resetSchedulerIdCounter,
+} from "../utils/whatsapp-scheduler.js";
 
 class WhatsAppSection extends BaseSection {
   async onMount() {
@@ -529,3 +540,100 @@ export async function sendWabaBlast(template = "wedding_invite") {
   const data = /** @type {{ sent: number, failed: number }} */ (result.data ?? {});
   showToast(t("waba_bulk_sent", { sent: data.sent ?? 0, failed: data.failed ?? 0 }), "success");
 }
+
+// ─── S710: WhatsApp Message Scheduler + A/B ──────────────────────────────────
+
+const _WA_SCHED_KEY = "wedding_v1_wa_schedule";
+
+/**
+ * Schedule a WhatsApp message and persist to the queue.
+ *
+ * @param {string} phone
+ * @param {string} templateId
+ * @param {string} scheduledAt — ISO 8601
+ * @param {string} [variant]
+ * @returns {import("../utils/whatsapp-scheduler.js").ScheduledMessage}
+ */
+export function scheduleWhatsAppMessage(phone, templateId, scheduledAt, variant = "control") {
+  const msg = _scheduleMessage(cleanPhone(phone), templateId, scheduledAt, variant);
+  const queue = storeGet(_WA_SCHED_KEY) ?? [];
+  storeSet(_WA_SCHED_KEY, [...queue, msg]);
+  enqueueWrite(_WA_SCHED_KEY, () => {});
+  showToast(t("wa_scheduled"), "success");
+  return msg;
+}
+
+/**
+ * Create an A/B test batch and persist to the queue.
+ *
+ * @param {string[]} phones
+ * @param {string} templateIdA
+ * @param {string} templateIdB
+ * @param {string} scheduledAt
+ * @param {number} [splitRatio]
+ * @returns {{ a: import("../utils/whatsapp-scheduler.js").ScheduledMessage[], b: import("../utils/whatsapp-scheduler.js").ScheduledMessage[] }}
+ */
+export function createAbTestMessages(phones, templateIdA, templateIdB, scheduledAt, splitRatio = 50) {
+  const { a, b } = _createAbTest(phones.map(cleanPhone), templateIdA, templateIdB, scheduledAt, splitRatio);
+  const queue = storeGet(_WA_SCHED_KEY) ?? [];
+  storeSet(_WA_SCHED_KEY, [...queue, ...a, ...b]);
+  enqueueWrite(_WA_SCHED_KEY, () => {});
+  showToast(t("wa_ab_test_created", { a: a.length, b: b.length }), "success");
+  return { a, b };
+}
+
+/**
+ * Cancel a queued message by id.
+ *
+ * @param {string} msgId
+ * @returns {boolean}
+ */
+export function cancelScheduledMessage(msgId) {
+  const queue = storeGet(_WA_SCHED_KEY) ?? [];
+  const idx = queue.findIndex((m) => m.id === msgId);
+  if (idx < 0) return false;
+  queue[idx] = _cancelMessage(queue[idx]);
+  storeSet(_WA_SCHED_KEY, queue);
+  enqueueWrite(_WA_SCHED_KEY, () => {});
+  showToast(t("wa_schedule_cancelled"), "info");
+  return true;
+}
+
+/**
+ * Get the full scheduler queue.
+ *
+ * @returns {import("../utils/whatsapp-scheduler.js").ScheduledMessage[]}
+ */
+export function getSchedulerQueue() {
+  return storeGet(_WA_SCHED_KEY) ?? [];
+}
+
+/**
+ * Get messages ready to send (queued + scheduledAt <= now).
+ *
+ * @param {Date} [now]
+ * @returns {import("../utils/whatsapp-scheduler.js").ScheduledMessage[]}
+ */
+export function getReadyMessages(now) {
+  return _getReadyToSend(getSchedulerQueue(), now);
+}
+
+/**
+ * Get A/B delivery stats for the current queue.
+ *
+ * @returns {ReturnType<typeof import("../utils/whatsapp-scheduler.js").abStats>}
+ */
+export function getAbTestResults() {
+  return _abStats(getSchedulerQueue());
+}
+
+/**
+ * Get queue summary by status.
+ *
+ * @returns {ReturnType<typeof import("../utils/whatsapp-scheduler.js").queueSummary>}
+ */
+export function getQueueSummary() {
+  return _queueSummary(getSchedulerQueue());
+}
+
+export { _resetSchedulerIdCounter as resetSchedulerIdCounter };
