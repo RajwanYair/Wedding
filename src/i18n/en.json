@@ -1622,5 +1622,15 @@
   "constraint_empty": "No constraints defined",
   "constraint_no_violations": "All constraints satisfied ✔️",
   "constraint_violations": "{n} constraint violation(s)",
-  "ph_constraint_guest": "Guest name..."
+  "ph_constraint_guest": "Guest name...",
+  "floor_plan_title": "Venue Floor Plan",
+  "floor_plan_preset_none": "Choose layout...",
+  "floor_plan_preset_banquet": "Banquet",
+  "floor_plan_preset_u": "U-Shape",
+  "floor_plan_preset_cocktail": "Cocktail",
+  "floor_plan_apply": "Apply Layout",
+  "floor_plan_export_svg": "Export SVG",
+  "floor_plan_empty": "No floor plan defined. Choose a preset to start.",
+  "floor_plan_collisions": "{n} collision(s) detected",
+  "floor_plan_no_collisions": "No collisions ✔️"
 }

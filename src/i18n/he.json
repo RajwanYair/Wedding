@@ -1622,5 +1622,15 @@
   "constraint_empty": "אין אילוצים מוגדרים",
   "constraint_no_violations": "כל האילוצים מתקיימים ✔️",
   "constraint_violations": "{n} הפרות אילוץ",
-  "ph_constraint_guest": "שם אורח..."
+  "ph_constraint_guest": "שם אורח...",
+  "floor_plan_title": "תכנית אולם",
+  "floor_plan_preset_none": "בחר פריסה...",
+  "floor_plan_preset_banquet": "באנקט",
+  "floor_plan_preset_u": "U-Shape",
+  "floor_plan_preset_cocktail": "קוקטייל",
+  "floor_plan_apply": "החל פריסה",
+  "floor_plan_export_svg": "ייצוא SVG",
+  "floor_plan_empty": "לא הוגדרה תכנית אולם. בחר פריסה להתחל.",
+  "floor_plan_collisions": "{n} התנגשויות בתכנית",
+  "floor_plan_no_collisions": "אין התנגשויות ✔️"
 }

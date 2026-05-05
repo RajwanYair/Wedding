@@ -41,6 +41,8 @@ import {
   createSeatGuest as _createSeatGuest,
   createSeatTable as _createSeatTable,
 } from "../utils/guest-seating-auto.js";
+import { getPreset as _getFloorPreset, listPresets as _listFloorPresets } from "../utils/floor-plan-presets.js";
+import { toSvg as _floorPlanToSvg, exportLayout as _exportLayout } from "../utils/floor-plan-io.js";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
@@ -48,7 +50,9 @@ class TablesSection extends BaseSection {
   async onMount() {
     this.subscribe("tables", renderTables);
     this.subscribe("guests", renderTables);
+    this.subscribe("floorPlan", _renderFloorPlanCanvas);
     renderTables();
+    _renderFloorPlanCanvas();
   }
 }
 
@@ -938,3 +942,79 @@ export function getRemainingSeatsByTable() {
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
   return Object.fromEntries(_remainingCapacity(tables, guests));
 }
+
+// ── S691: Floor-plan canvas ───────────────────────────────────────────────
+
+/**
+ * Apply a preset floor-plan layout to the store and re-render the canvas.
+ * The preset select value drives which template is loaded.
+ */
+export function applyFloorPlanPreset() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("floorPlanPreset"));
+  const presetId = sel?.value;
+  if (!presetId) return;
+
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const preset = _getFloorPreset(presetId, { tableCount: tables.length || 10 });
+  if (!preset) return;
+
+  storeSet("floorPlan", { items: preset.items, room: preset.room });
+  enqueueWrite("floorPlan", () => syncStoreKeyToSheets("tables"));
+  _renderFloorPlanCanvas();
+}
+
+/**
+ * Export the current floor-plan canvas as an inline SVG download.
+ */
+export function exportFloorPlanSvg() {
+  const fp = /** @type {any} */ (storeGet("floorPlan")) ?? {};
+  const items = Array.isArray(fp.items) ? fp.items : [];
+  const room = fp.room ?? { width: 800, height: 600 };
+  const svg = _floorPlanToSvg(room, items);
+  const blob = new Blob([svg], { type: "image/svg+xml" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "floor-plan.svg";
+  a.click();
+}
+
+/**
+ * Render the SVG floor-plan into #floorPlanCanvas, with collision highlights.
+ */
+function _renderFloorPlanCanvas() {
+  const canvas = document.getElementById("floorPlanCanvas");
+  const collisionEl = document.getElementById("floorPlanCollisions");
+  if (!canvas) return;
+
+  const fp = /** @type {any} */ (storeGet("floorPlan")) ?? {};
+  const items = Array.isArray(fp.items) ? fp.items : [];
+  const room = fp.room ?? { width: 800, height: 600 };
+
+  if (!items.length) {
+    canvas.textContent = t("floor_plan_empty");
+    if (collisionEl) collisionEl.textContent = "";
+    return;
+  }
+
+  const svg = _floorPlanToSvg(room, items);
+  canvas.innerHTML = ""; // replaces existing SVG (safe: SVG markup from our own toSvg utility, no user data)
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svg, "image/svg+xml");
+  const svgEl = doc.documentElement;
+  svgEl.style.maxWidth = "100%";
+  svgEl.style.height = "auto";
+  canvas.appendChild(svgEl);
+
+  // Show collision warnings
+  const collisions = findCollisions(items);
+  if (collisionEl) {
+    if (collisions.length) {
+      collisionEl.style.color = "var(--color-danger, #ef4444)";
+      collisionEl.textContent = t("floor_plan_collisions").replace("{n}", String(collisions.length));
+    } else {
+      collisionEl.style.color = "var(--color-success, #22c55e)";
+      collisionEl.textContent = t("floor_plan_no_collisions");
+    }
+  }
+}
+

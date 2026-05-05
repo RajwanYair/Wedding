@@ -93,3 +93,27 @@
         </div>
         <div id="transportManifest"></div>
       </div>
+
+      <!-- S691: Floor-plan canvas -->
+      <div class="card" id="floorPlanCard">
+        <div class="card-header">
+          <span class="icon">🗺️</span>
+          <span data-i18n="floor_plan_title">תכנית אולם</span>
+          <div class="section-toolbar-start">
+            <select id="floorPlanPreset" style="font-size:0.8rem;padding:0.2rem 0.5rem">
+              <option value="" data-i18n="floor_plan_preset_none">בחר פריסה...</option>
+              <option value="banquet" data-i18n="floor_plan_preset_banquet">באנקט</option>
+              <option value="u_shape" data-i18n="floor_plan_preset_u">U-Shape</option>
+              <option value="cocktail" data-i18n="floor_plan_preset_cocktail">קוקטייל</option>
+            </select>
+            <button class="btn btn-primary btn-small" data-action="applyFloorPlanPreset">
+              <span data-i18n="floor_plan_apply">החל פריסה</span>
+            </button>
+            <button class="btn btn-secondary btn-small" data-action="exportFloorPlanSvg">
+              <span>📥</span> <span data-i18n="floor_plan_export_svg">ייצוא SVG</span>
+            </button>
+          </div>
+        </div>
+        <div id="floorPlanCanvas" style="overflow:auto;min-height:200px;padding:0.5rem"></div>
+        <div id="floorPlanCollisions" style="padding:0.25rem 1rem;font-size:0.8rem"></div>
+      </div>
