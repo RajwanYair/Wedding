@@ -15,6 +15,7 @@ import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { guestMatchesQuery } from "../utils/guest-search.js";
 import { pushUndo } from "../utils/undo.js";
+import { showToast } from "../core/ui.js";
 import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/constants.js";
 import { getUrlParam, setUrlParams } from "../utils/url-state.js";
 import { onPresenceChange, groupByViewing, badgeFor } from "../services/realtime.js";
@@ -23,6 +24,13 @@ import { printGuestList, printTableLayout } from "../utils/pdf-export.js";
 import { buildBatch } from "../utils/qr-batch.js";
 import { getQrDataUrl } from "../utils/qr-code.js";
 import { buildBatch as buildVcfBatch } from "../utils/vcard-batch.js";
+import {
+  addTag as _addTag,
+  removeTag as _removeTag,
+  listTags as _listTags,
+  filterByTag as _filterByTag,
+  bulkSetStatus as _bulkSetStatus,
+} from "../utils/guest-tags.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -1101,4 +1109,81 @@ export function getMealReport() {
  */
 export function getChefReport() {
   return _formatChefReport(getMealReport());
+}
+
+// ─── S712: Guest Tags Integration ────────────────────────────────────────────
+
+/**
+ * Add a tag to a set of guests and persist to store.
+ *
+ * @param {string[]} ids
+ * @param {string} tag
+ * @returns {{ ok: boolean }}
+ */
+export function addGuestTag(ids, tag) {
+  if (!tag || !tag.trim()) {
+    showToast(t("guest_tag_empty"), "error");
+    return { ok: false };
+  }
+  const guests = storeGet("guests") ?? [];
+  const updated = _addTag(guests, ids, tag);
+  storeSet("guests", updated);
+  enqueueWrite("guests", () => {});
+  showToast(t("guest_tag_added"), "success");
+  return { ok: true };
+}
+
+/**
+ * Remove a tag from a set of guests and persist to store.
+ *
+ * @param {string[]} ids
+ * @param {string} tag
+ * @returns {{ ok: boolean }}
+ */
+export function removeGuestTag(ids, tag) {
+  if (!tag || !tag.trim()) {
+    showToast(t("guest_tag_empty"), "error");
+    return { ok: false };
+  }
+  const guests = storeGet("guests") ?? [];
+  const updated = _removeTag(guests, ids, tag);
+  storeSet("guests", updated);
+  enqueueWrite("guests", () => {});
+  showToast(t("guest_tag_removed"), "success");
+  return { ok: true };
+}
+
+/**
+ * Get all unique tags across all guests.
+ *
+ * @returns {string[]}
+ */
+export function getAllGuestTags() {
+  return _listTags(storeGet("guests") ?? []);
+}
+
+/**
+ * Get guests filtered by a specific tag.
+ *
+ * @param {string} tag
+ * @returns {import("../utils/guest-tags.js").GuestLite[]}
+ */
+export function getGuestsByTag(tag) {
+  return _filterByTag(storeGet("guests") ?? [], tag);
+}
+
+/**
+ * Bulk-set a status on a set of guests (used with tag-based selection).
+ *
+ * @param {string[]} ids
+ * @param {string} status
+ * @returns {{ ok: boolean, count: number }}
+ */
+export function bulkSetGuestStatus(ids, status) {
+  const guests = storeGet("guests") ?? [];
+  const updated = _bulkSetStatus(guests, ids, status);
+  storeSet("guests", updated);
+  enqueueWrite("guests", () => {});
+  showToast(t("guest_tag_bulk_updated"), "success");
+  return { ok: true, count: ids.length };
 }
