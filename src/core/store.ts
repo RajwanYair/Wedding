@@ -1,5 +1,5 @@
 /**
- * src/core/store.js — Reactive store V3 (v15.0 — S400)
+ * src/core/store.ts — Reactive store V3 (v15.0 — S676)
  *
  * Preact Signals-backed reactive store with:
  * - Per-key `signal()` for explicit, 0-config reactivity (no silent nested-mutation misses)
@@ -17,27 +17,19 @@ import { getActiveEventId } from "./state.js";
 import { isPiiKey, savePii } from "../services/compliance.js";
 import { storageSet, getAdapterType } from "./storage.js";
 
-/**
- * Per-key Preact Signals. Replaces the plain `_state` Record.
- * @type {Map<string, ReturnType<typeof signal>>}
- */
-const _signals = new Map();
+/** Per-key Preact Signals. Replaces the plain `_state` Record. */
+const _signals = new Map<string, ReturnType<typeof signal>>();
 
-/** @type {Map<string, Set<Function>>} */
-const _subs = new Map();
+const _subs = new Map<string, Set<(value: unknown) => void>>();
 
-/** @type {Set<string> | null} */
-let _notifyBatch = null;
+let _notifyBatch: Set<string> | null = null;
 
-/** @type {Map<string, string>} state-key → localStorage-key */
-const _persistMap = new Map();
+/** state-key → localStorage-key */
+const _persistMap = new Map<string, string>();
 
-/** @type {Set<string>} */
-const _dirty = new Set();
+const _dirty = new Set<string>();
 
-
-/** @type {ReturnType<typeof setTimeout> | null} */
-let _saveTimer = null;
+let _saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 /** Base prefix */
 const _BASE_PREFIX = STORAGE_PREFIX;
@@ -53,33 +45,26 @@ function _prefix() {
 
 // ── Scoped subscription tracking ──────────────────────────────────────────
 
-/**
- * Map of scope names → Set of unsubscribe functions.
- * When a scope is cleaned up, all its subscriptions are removed.
- * @type {Map<string, Set<() => void>>}
- */
-const _scopedUnsubs = new Map();
+/** Map of scope names → Set of unsubscribe functions. */
+const _scopedUnsubs = new Map<string, Set<() => void>>();
 
 // ── Batch / Pause state ───────────────────────────────────────────────────
 
 /** When > 0, notifications are paused and keys are collected for deferred notify. */
 let _pauseDepth = 0;
-/** Keys that were mutated while notifications were paused. */
-/** @type {Set<string>} */
-const _pausedKeys = new Set();
+const _pausedKeys = new Set<string>();
 
 // ── Subscribers ───────────────────────────────────────────────────────────
 
 /**
  * Subscribe to a specific state key or all changes via "*".
- * @param {string} key
- * @param {Function} fn
- * @returns {() => void}  Unsubscribe function
+ * @param key - store key or "*" for all changes
+ * @param fn - callback receiving the new value
+ * @returns unsubscribe function
  */
-export function storeSubscribe(key, fn) {
+export function storeSubscribe(key: string, fn: (value: unknown) => void): () => void {
   if (!_subs.has(key)) _subs.set(key, new Set());
-  const _sub = /** @type {Set<Function>} */ (_subs.get(key));
-  _sub.add(fn);
+  (_subs.get(key) as Set<(v: unknown) => void>).add(fn);
   return () => _subs.get(key)?.delete(fn);
 }
 
@@ -88,24 +73,23 @@ export function storeSubscribe(key, fn) {
  * When `cleanupScope(sectionName)` is called (e.g. on section unmount),
  * all subscriptions registered under that scope are automatically removed.
  *
- * @param {string} key        Store key to subscribe to (or "*")
- * @param {Function} fn       Callback
- * @param {string} scope      Scope name (typically the section name)
- * @returns {() => void}      Unsubscribe function (also callable manually)
+ * @param key - store key or "*"
+ * @param fn - callback
+ * @param scope - scope name (section name)
+ * @returns unsubscribe function
  */
-export function storeSubscribeScoped(key, fn, scope) {
+export function storeSubscribeScoped(key: string, fn: (value: unknown) => void, scope: string): () => void {
   const unsub = storeSubscribe(key, fn);
   if (!_scopedUnsubs.has(scope)) _scopedUnsubs.set(scope, new Set());
-  /** @type {Set<() => void>} */ (_scopedUnsubs.get(scope)).add(unsub);
+  (_scopedUnsubs.get(scope) as Set<() => void>).add(unsub);
   return unsub;
 }
 
 /**
  * Clean up all subscriptions for a given scope.
  * Call this in the section's `unmount()` function.
- * @param {string} scope
  */
-export function cleanupScope(scope) {
+export function cleanupScope(scope: string): void {
   const unsubs = _scopedUnsubs.get(scope);
   if (unsubs) {
     unsubs.forEach((fn) => fn());
@@ -114,10 +98,7 @@ export function cleanupScope(scope) {
   }
 }
 
-/**
- * @param {string} key
- */
-function _scheduleNotify(key) {
+function _scheduleNotify(key: string): void {
   // If notifications are paused (inside batch or manual pause), collect keys
   if (_pauseDepth > 0) {
     _pausedKeys.add(key);
@@ -135,7 +116,8 @@ function _scheduleNotify(key) {
             f(v);
           } catch {}
         });
-        _subs.get("*")?.forEach((f) => {
+        // "*" subscribers receive (key, value) — cast fn to accept two args
+        (_subs.get("*") as Set<(...a: unknown[]) => void> | undefined)?.forEach((f) => {
           try {
             f(k, v);
           } catch {}
@@ -143,7 +125,7 @@ function _scheduleNotify(key) {
       });
     });
   }
-  /** @type {Set<string>} */ (_notifyBatch).add(key);
+  (_notifyBatch as Set<string>).add(key);
 }
 
 /**
@@ -159,11 +141,9 @@ function _flushPausedNotifications() {
 
 // ── Persistence ───────────────────────────────────────────────────────────
 
-/** @type {((key: string, err: unknown) => void) | null} */
-const _onStorageError = null;
+const _onStorageError: ((key: string, err: unknown) => void) | null = null;
 
-/** @param {string} key */
-function _scheduleSave(key) {
+function _scheduleSave(key: string): void {
   if (_persistMap.has(key)) _dirty.add(key);
   if (_saveTimer !== null) clearTimeout(_saveTimer);
   _saveTimer = setTimeout(_flush, 250);
@@ -171,7 +151,7 @@ function _scheduleSave(key) {
 
 function _flush() {
   const pfx = _prefix();
-  _dirty.forEach((key) => {
+  _dirty.forEach((key: string) => {
     const storageKey = _persistMap.get(key);
     if (!storageKey) return;
     if (isPiiKey(key)) {
@@ -207,22 +187,19 @@ if (typeof window !== "undefined") {
 
 // ── Public API ────────────────────────────────────────────────────────────
 
-/**
- * Get or create the signal for a given key.
- * @param {string} key
- * @param {unknown} [defaultVal]
- * @returns {ReturnType<typeof signal>}
- */
-function _sig(key, defaultVal) {
+/** Get or create the signal for a given key. */
+function _sig(key: string, defaultVal?: unknown): ReturnType<typeof signal> {
   if (!_signals.has(key)) _signals.set(key, signal(defaultVal));
-  return /** @type {ReturnType<typeof signal>} */ (_signals.get(key));
+  return _signals.get(key) as ReturnType<typeof signal>;
 }
+
+/** StoreDef — one entry in the store initialisation map. */
+type StoreDef = { value: unknown; storageKey?: string };
 
 /**
  * Initialise the store. Call once after state has been loaded from localStorage.
- * @param {Record<string, { value: unknown, storageKey?: string }>} defs
  */
-export function initStore(defs) {
+export function initStore(defs: Record<string, StoreDef>): void {
   for (const [key, { value, storageKey }] of Object.entries(defs)) {
     _sig(key, value).value = value;
     if (storageKey) _persistMap.set(key, storageKey);
@@ -231,19 +208,15 @@ export function initStore(defs) {
 
 /**
  * Get a state value.
- * @param {string} key
- * @returns {unknown}
  */
-export function storeGet(key) {
+export function storeGet(key: string): unknown {
   return _sig(key, undefined).value;
 }
 
 /**
  * Set a state value and notify subscribers.
- * @param {string} key
- * @param {unknown} value
  */
-export function storeSet(key, value) {
+export function storeSet(key: string, value: unknown): void {
   _sig(key, value).value = value;
   _scheduleNotify(key);
   _scheduleSave(key);
@@ -252,7 +225,7 @@ export function storeSet(key, value) {
 /**
  * Force-flush any pending saves to localStorage immediately.
  */
-export function storeFlush() {
+export function storeFlush(): void {
   _flush();
 }
 
@@ -262,7 +235,7 @@ export function storeFlush() {
  *
  * @param {() => void} fn  Synchronous function performing store mutations
  */
-export function storeBatch(fn) {
+export function storeBatch(fn: () => void): void {
   // Pause our own microtask notifications, then flush after batch commits.
   _pauseDepth++;
   try {
@@ -279,7 +252,7 @@ export function storeBatch(fn) {
  * Pause all subscriber notifications. Pair with `resumeNotifications()`.
  * Supports nesting — notifications resume only when depth returns to 0.
  */
-export function pauseNotifications() {
+export function pauseNotifications(): void {
   _pauseDepth++;
 }
 
@@ -287,7 +260,7 @@ export function pauseNotifications() {
  * Resume subscriber notifications after a `pauseNotifications()` call.
  * Flushes all deferred notifications when the outermost pause ends.
  */
-export function resumeNotifications() {
+export function resumeNotifications(): void {
   if (_pauseDepth > 0) _pauseDepth--;
   if (_pauseDepth === 0) {
     _flushPausedNotifications();
@@ -298,9 +271,8 @@ export function resumeNotifications() {
  * Debug utility — returns diagnostic info about the store.
  * @returns {{ keys: string[], subscriberCount: Record<string, number>, dirtyKeys: string[], scopeCount: number }}
  */
-export function storeDebug() {
-  /** @type {Record<string, number>} */
-  const subscriberCount = {};
+export function storeDebug(): { keys: string[]; subscriberCount: Record<string, number>; dirtyKeys: string[]; scopeCount: number } {
+  const subscriberCount: Record<string, number> = {};
   _subs.forEach((fns, key) => {
     subscriberCount[key] = fns.size;
   });
@@ -315,9 +287,8 @@ export function storeDebug() {
 /**
  * Re-initialise the store with new definitions (S9.1 event switch).
  * Flushes pending writes for the OLD event, then reloads all keys.
- * @param {Record<string, { value: unknown, storageKey?: string }>} defs
  */
-export function reinitStore(defs) {
+export function reinitStore(defs: Record<string, StoreDef>): void {
   // flush any pending writes to the OLD event before switching
   _flush();
   // clear subscriptions and state — subscribers will re-register on section mount
@@ -339,12 +310,9 @@ export function reinitStore(defs) {
 
 /**
  * Get multiple store values in one call.
- * @param {string[]} keys
- * @returns {Record<string, unknown>}
  */
-export function storeGetBatch(keys) {
-  /** @type {Record<string, unknown>} */
-  const result = {};
+export function storeGetBatch(keys: string[]): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
   for (const key of keys) {
     result[key] = _sig(key, undefined).value;
   }
@@ -361,12 +329,12 @@ export function storeGetBatch(keys) {
  * @param {Partial<T>} patch  Fields to apply (shallow merge)
  * @returns {T} Updated item
  */
-export function storeUpdate(key, id, patch) {
-  const arr = /** @type {T[]} */ (_sig(key, undefined).value);
+export function storeUpdate<T extends { id: string }>(key: string, id: string, patch: Partial<T>): T {
+  const arr = _sig(key, undefined).value as T[];
   if (!Array.isArray(arr)) throw new TypeError(`storeUpdate: store["${key}"] is not an array`);
   const idx = arr.findIndex((item) => item.id === id);
   if (idx === -1) throw new RangeError(`storeUpdate: id "${id}" not found in store["${key}"]`);
-  const updated = /** @type {T} */ ({ ...arr[idx], ...patch, id });
+  const updated = { ...arr[idx], ...patch, id } as T;
   const next = [...arr];
   next[idx] = updated;
   storeSet(key, next);
@@ -382,14 +350,14 @@ export function storeUpdate(key, id, patch) {
  * @param {T} item       Item to upsert
  * @returns {T} The upserted item
  */
-export function storeUpsert(key, item) {
-  const arr = /** @type {T[]} */ (_sig(key, undefined).value);
+export function storeUpsert<T extends { id: string }>(key: string, item: T): T {
+  const arr = _sig(key, undefined).value as T[];
   if (!Array.isArray(arr)) throw new TypeError(`storeUpsert: store["${key}"] is not an array`);
   const idx = arr.findIndex((i) => i.id === item.id);
   if (idx === -1) {
     storeSet(key, [...arr, item]);
   } else {
-    const updated = /** @type {T} */ ({ ...arr[idx], ...item });
+    const updated = { ...arr[idx], ...item } as T;
     const next = [...arr];
     next[idx] = updated;
     storeSet(key, next);
@@ -405,8 +373,8 @@ export function storeUpsert(key, item) {
  * @param {string} id    ID of the item to remove
  * @returns {boolean}    true if an item was removed, false otherwise
  */
-export function storeRemove(key, id) {
-  const arr = /** @type {{ id: string }[]} */ (_sig(key, undefined).value);
+export function storeRemove(key: string, id: string): boolean {
+  const arr = _sig(key, undefined).value as Array<{ id: string }> | undefined;
   if (!Array.isArray(arr)) return false;
   const filtered = arr.filter((item) => item.id !== id);
   if (filtered.length === arr.length) return false;
@@ -424,8 +392,8 @@ export function storeRemove(key, id) {
  * @param {Function} fn      Callback (called once)
  * @returns {() => void}     Cancel function (no-op once already fired)
  */
-export function storeSubscribeOnce(key, fn) {
-  const unsub = storeSubscribe(key, (/** @type {unknown} */ value) => {
+export function storeSubscribeOnce(key: string, fn: (value: unknown) => void): () => void {
+  const unsub = storeSubscribe(key, (value) => {
     unsub();
     fn(value);
   });
@@ -440,7 +408,7 @@ export function storeSubscribeOnce(key, fn) {
  * @param {() => Promise<void>} fn   Async function performing store mutations
  * @returns {Promise<void>}
  */
-export async function storeBatchAsync(fn) {
+export async function storeBatchAsync(fn: () => Promise<void>): Promise<void> {
   _pauseDepth++;
   try {
     await fn();
@@ -458,9 +426,8 @@ export async function storeBatchAsync(fn) {
  *
  * @returns {{ perKey: Record<string, number>, total: number, scopes: number }}
  */
-export function getSubscriberStats() {
-  /** @type {Record<string, number>} */
-  const perKey = {};
+export function getSubscriberStats(): { perKey: Record<string, number>; total: number; scopes: number } {
+  const perKey: Record<string, number> = {};
   let total = 0;
   _subs.forEach((fns, key) => {
     const count = fns.size;
@@ -477,7 +444,7 @@ export function getSubscriberStats() {
  * @param {string} [scope]
  * @returns {number}
  */
-export function getSubscriptionCount(scope) {
+export function getSubscriptionCount(scope?: string): number {
   if (scope !== undefined) {
     return _scopedUnsubs.get(scope)?.size ?? 0;
   }

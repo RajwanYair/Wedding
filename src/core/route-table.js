@@ -17,8 +17,9 @@
 
 import { SECTION_LIST, EXTRA_SECTIONS, PUBLIC_SECTIONS } from "./constants.js";
 
-/** All routable section names (admin + extra). */
-const ALL_SECTIONS = new Set([...SECTION_LIST, ...EXTRA_SECTIONS]);
+/** All routable section names (admin + extra).
+ * @type {Set<string>} */
+const ALL_SECTIONS = /** @type {Set<string>} */ (new Set([...SECTION_LIST, ...EXTRA_SECTIONS]));
 
 /**
  * @typedef {{ section: string, params: Record<string, string> }} ParsedRoute

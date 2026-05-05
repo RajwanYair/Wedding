@@ -16,7 +16,11 @@ import type {
 
 // Re-export enum types so consumers can import from one place.
 export type { GuestStatus, GuestSide, GuestGroup, MealType, TableShape };
-──────────────────────
+
+export type BackendType = "sheets" | "supabase" | "both" | "none";
+export type AuthProvider = "google" | "facebook" | "apple" | "anonymous" | "email";
+
+// ── Core Data Models ──────────────────────────────────────────────────────
 
 /** Guest record stored in the reactive store. */
 export interface Guest {

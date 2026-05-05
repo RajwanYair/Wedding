@@ -19,7 +19,8 @@
 import { SECTION_LIST } from "./constants.js";
 import { FEATURE_PUSHSTATE_ROUTER } from "./config.js";
 
-const _validSections = new Set(SECTION_LIST);
+/** @type {Set<string>} */
+const _validSections = /** @type {Set<string>} */ (new Set(SECTION_LIST));
 
 /** @type {Set<(r: Route) => void>} */
 const _subscribers = new Set();

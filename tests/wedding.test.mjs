@@ -41,7 +41,7 @@ const runtimeSources = [
   read("src/core/config.js"),
   read("src/core/i18n.js"),
   read("src/core/nav.js"),
-  read("src/core/store.js"),
+  read("src/core/store.ts"),
   read("src/services/auth.js"),
   read("src/services/sheets.js"),
 ].join("\n");

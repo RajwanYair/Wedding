@@ -56,7 +56,7 @@ function _signal(key) {
       } catch {
         /* ignore subscriber error */
       }
-      return storeSubscribe(key, /** @type {Function} */ (fn));
+      return storeSubscribe(key, /** @type {(value: unknown) => void} */ (fn));
     },
   });
 }
