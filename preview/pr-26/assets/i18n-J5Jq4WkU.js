@@ -1,0 +1,1 @@
+import{n as e}from"./i18n-DPgHvFQk.js";export{e as applyI18n};
