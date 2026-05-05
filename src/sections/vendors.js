@@ -47,6 +47,13 @@ import {
 import {
   buildReceipt as _buildReceipt,
 } from "../utils/payment-receipt.js";
+import {
+  validateContract,
+  canTransition,
+  contractSummary,
+  expiringWithin as _expiringWithin,
+  CONTRACT_STATUSES,
+} from "../utils/vendor-contracts.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -1359,4 +1366,104 @@ export function generateVendorReceipt() {
 
   showToast(t("vendor_receipt_generated"), "success");
 }
+
+// ─── S707: Vendor Contract Management ────────────────────────────────────────
+
+const _CONTRACTS_KEY = "wedding_v1_vendor_contracts";
+
+/**
+ * Get all contracts for a given vendor (or all contracts if vendorId omitted).
+ *
+ * @param {string} [vendorId]
+ * @returns {import("../utils/vendor-contracts.js").VendorContract[]}
+ */
+export function getVendorContracts(vendorId) {
+  const all = storeGet(_CONTRACTS_KEY) ?? [];
+  return vendorId ? all.filter((c) => c.vendorId === vendorId) : all;
+}
+
+/**
+ * Save (add or update) a vendor contract.
+ * Validates the contract before persisting; returns errors array on failure.
+ *
+ * @param {import("../utils/vendor-contracts.js").VendorContract} contract
+ * @returns {{ ok: boolean, errors: string[] }}
+ */
+export function saveVendorContract(contract) {
+  const errors = validateContract(contract);
+  if (errors.length) {
+    showToast(t("vendor_contract_invalid"), "error");
+    return { ok: false, errors };
+  }
+  const all = storeGet(_CONTRACTS_KEY) ?? [];
+  const idx = all.findIndex((c) => c.id === contract.id);
+  if (idx >= 0) {
+    all[idx] = { ...all[idx], ...contract };
+    storeSet(_CONTRACTS_KEY, all);
+    enqueueWrite(_CONTRACTS_KEY, () => {});
+    showToast(t("vendor_contract_updated"), "success");
+  } else {
+    storeSet(_CONTRACTS_KEY, [...all, contract]);
+    enqueueWrite(_CONTRACTS_KEY, () => {});
+    showToast(t("vendor_contract_added"), "success");
+  }
+  return { ok: true, errors: [] };
+}
+
+/**
+ * Delete a vendor contract by id.
+ *
+ * @param {string} id
+ * @returns {boolean} true if deleted
+ */
+export function deleteVendorContract(id) {
+  const all = storeGet(_CONTRACTS_KEY) ?? [];
+  const next = all.filter((c) => c.id !== id);
+  if (next.length === all.length) return false;
+  storeSet(_CONTRACTS_KEY, next);
+  enqueueWrite(_CONTRACTS_KEY, () => {});
+  return true;
+}
+
+/**
+ * Transition a contract's status if the transition is allowed.
+ *
+ * @param {string} id
+ * @param {string} toStatus
+ * @returns {{ ok: boolean, error?: string }}
+ */
+export function transitionContractStatus(id, toStatus) {
+  const all = storeGet(_CONTRACTS_KEY) ?? [];
+  const idx = all.findIndex((c) => c.id === id);
+  if (idx < 0) return { ok: false, error: "not found" };
+  const current = all[idx].status;
+  if (!canTransition(current, toStatus)) {
+    return { ok: false, error: `cannot transition from ${current} to ${toStatus}` };
+  }
+  all[idx] = { ...all[idx], status: toStatus };
+  storeSet(_CONTRACTS_KEY, all);
+  enqueueWrite(_CONTRACTS_KEY, () => {});
+  return { ok: true };
+}
+
+/**
+ * Get a summary of all contracts across all vendors.
+ *
+ * @returns {{ total: number, byStatus: Record<string, number>, totalValue: number, signedValue: number }}
+ */
+export function getContractSummary() {
+  return contractSummary(storeGet(_CONTRACTS_KEY) ?? []);
+}
+
+/**
+ * Get contracts expiring within `days` from today.
+ *
+ * @param {number} [days=30]
+ * @returns {import("../utils/vendor-contracts.js").VendorContract[]}
+ */
+export function getExpiringContracts(days = 30) {
+  return _expiringWithin(storeGet(_CONTRACTS_KEY) ?? [], days);
+}
+
+export { CONTRACT_STATUSES };
 
