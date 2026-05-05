@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @module handlers/settings-handlers
  * @description Settings, sheets sync, and conflict resolution handlers.
  *
@@ -414,10 +414,12 @@ export function register() {
     await addWebhook();
   });
   on("removeWebhook", async (evt) => {
+    // @ts-ignore
     const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
     if (id) await removeWebhook(id);
   });
   on("pingWebhookById", async (evt) => {
+    // @ts-ignore
     const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
     if (id) await pingWebhookById(id);
   });
@@ -425,6 +427,7 @@ export function register() {
     await refreshWebhooks();
   });
   on("installThemeById", (evt) => {
+    // @ts-ignore
     const id = /** @type {HTMLElement} */ (evt?.target)?.closest("[data-id]")?.dataset?.id ?? "";
     if (id) installThemeById(id);
   });

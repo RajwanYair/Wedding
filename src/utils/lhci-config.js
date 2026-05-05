@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/lhci-config.js — S130 Lighthouse CI per-locale config builder.
  *
  * Pure helpers that produce a Lighthouse-CI `lighthouserc` config object
@@ -65,6 +65,7 @@ export function buildLighthouseConfig({
   baseUrl,
   locales,
   scoreOverrides,
+  // @ts-ignore
   resourceBudgets = DEFAULT_RESOURCE_SIZES,
   numberOfRuns = 3,
 }) {

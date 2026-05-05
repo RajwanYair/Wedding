@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Fisher–Yates shuffle helpers.  Pure / non-mutating by default; pass
  * an explicit RNG to make the shuffle deterministic (seating drafts,
  * unit tests, demo data).
@@ -25,7 +25,7 @@ export function mulberry32(seed) {
  *
  * @template T
  * @param {readonly T[]} arr
- * @param {() => number} [rng] — defaults to `Math.random`
+ * @param {() => number} [rng] - defaults to `Math.random`
  * @returns {T[]}
  */
 export function shuffle(arr, rng = Math.random) {

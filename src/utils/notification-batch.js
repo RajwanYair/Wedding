@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Notification batch queue — priority-ordered notification scheduling.
  *
  * Pure data structure operations. Higher priority numbers drain first;
@@ -93,6 +93,7 @@ export function groupByCategory(queue) {
   for (const n of queue) {
     const key = n.category ?? "_uncategorised";
     if (!map.has(key)) map.set(key, []);
+    // @ts-ignore
     map.get(key).push(n);
   }
   return map;

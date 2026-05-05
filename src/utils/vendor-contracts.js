@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/vendor-contracts.js — S620 Vendor contracts data model & helpers
  *
  * Pure helpers for vendor contract management — status lifecycle, term
@@ -80,7 +80,7 @@ export function validateContract(c) {
  * Determine whether a signed contract has expired relative to a reference date.
  *
  * @param {VendorContract} c
- * @param {string} [refDate] — ISO date, defaults to today
+ * @param {string} [refDate] - ISO date, defaults to today
  * @returns {boolean}
  */
 export function isExpired(c, refDate) {

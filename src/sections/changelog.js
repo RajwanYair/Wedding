@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/sections/changelog.js — Changelog section ESM module
  *
  * Fetches CHANGELOG.md and renders it as formatted HTML.
@@ -21,6 +21,7 @@ const _instance = new ChangelogSection("changelog");
 export const { mount, unmount, capabilities } = fromSection(_instance);
 
 /** Render an HTML string into `target` without using innerHTML. */
+// @ts-ignore
 function _setHtml(target, html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");

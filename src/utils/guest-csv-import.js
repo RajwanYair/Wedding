@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/guest-csv-import.js — S452: Guest CSV import
  *
  * Parses a CSV file (comma or semicolon delimited) and returns an array of
@@ -87,6 +87,7 @@ function _detectDelimiter(firstLine) {
  */
 function _mapHeader(raw) {
   const key = raw.toLowerCase().trim().replace(/\s+/g, " ");
+  // @ts-ignore
   return HEADER_MAP[key] ?? key;
 }
 

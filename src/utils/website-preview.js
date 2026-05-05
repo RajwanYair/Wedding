@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/website-preview.js — S622 Public wedding website preview helpers
  *
  * Pure helpers for the website-builder section's live preview feature.
@@ -80,7 +80,7 @@ export function buildPreview(config) {
  * Generate countdown data from event date.
  *
  * @param {string} eventDate — ISO date string
- * @param {string} [refDate] — reference date, defaults to now
+ * @param {string} [refDate] - reference date, defaults to now
  * @returns {{ days: number, isPast: boolean }}
  */
 export function countdownDays(eventDate, refDate) {

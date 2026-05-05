@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Throttle a function so it runs at most once every `wait` milliseconds.
  * Trailing calls within the window are coalesced into one invocation
  * fired at the end of the window with the latest arguments.
@@ -41,11 +41,13 @@ export function throttle(fn, wait, opts = {}) {
   };
 
   /** @type {any} */
+  // @ts-ignore
   const wrapped = function (...args) {
     const now = Date.now();
     if (lastCall === 0 && !leading) lastCall = now;
     const remaining = wait - (now - lastCall);
     lastArgs = args;
+    // @ts-ignore
     lastThis = this;
     if (remaining <= 0 || remaining > wait) {
       if (timer) {

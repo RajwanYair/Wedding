@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/floor-plan-presets.js — S625 Floor-plan preset layouts
  *
  * Pre-configured floor plan templates for common wedding setups:
@@ -26,7 +26,7 @@
 /**
  * Generate a banquet-style layout: head table + rows of round tables.
  *
- * @param {number} [tableCount] — number of guest tables (default 10)
+ * @param {number} [tableCount] - number of guest tables (default 10)
  * @returns {FloorPlanPreset}
  */
 export function banquetPreset(tableCount = 10) {
@@ -93,7 +93,7 @@ export function uShapePreset() {
 /**
  * Generate a cocktail-style layout: standing tables, bar, lounge areas.
  *
- * @param {number} [highTopCount] — number of standing tables (default 8)
+ * @param {number} [highTopCount] - number of standing tables (default 8)
  * @returns {FloorPlanPreset}
  */
 export function cocktailPreset(highTopCount = 8) {

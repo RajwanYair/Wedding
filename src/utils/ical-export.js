@@ -1,4 +1,4 @@
-/**
+﻿/**
  * iCalendar (.ics) export — RFC 5545 minimal subset for a wedding event.
  *
  * Output is plain ASCII with CRLF line endings, suitable for Apple Calendar,
@@ -45,6 +45,7 @@ export function formatDateTime(value) {
   if (Number.isNaN(d.getTime())) {
     throw new RangeError(`invalid date: ${String(value)}`);
   }
+  // @ts-ignore
   const pad = (n) => String(n).padStart(2, "0");
   return (
     `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}` +

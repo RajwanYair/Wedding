@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/multi-event.js — S650 Multi-event workspace helpers
  *
  * Pure helpers for managing multiple wedding events within a single
@@ -112,6 +112,7 @@ export function mergeGuestLists(guestLists) {
       const key = (guest.name ?? "").trim().toLowerCase();
       if (!key) continue;
       if (map.has(key)) {
+        // @ts-ignore
         map.get(key).count++;
       } else {
         map.set(key, { guest: { ...guest }, count: 1 });

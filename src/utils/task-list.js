@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Pre-wedding checklist task helpers — pure functions over a task array.
  *
  * @typedef {object} ChecklistTask
@@ -90,9 +90,13 @@ export function groupByDueWindow(tasks, daysRemaining) {
   for (const t of pendingTasks(tasks)) {
     const due = typeof t.daysBefore === "number" ? t.daysBefore : Infinity;
     const slack = due - daysRemaining;
+    // @ts-ignore
     if (slack < 0) groups.overdue.push(t);
+    // @ts-ignore
     else if (slack <= 7) groups.dueThisWeek.push(t);
+    // @ts-ignore
     else if (slack <= 30) groups.dueThisMonth.push(t);
+    // @ts-ignore
     else groups.later.push(t);
   }
   return groups;

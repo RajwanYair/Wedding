@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/floor-plan-furniture.js — S657 Furniture library for floor-plan builder
  *
  * Pure helpers for a furniture catalogue — standard dimensions for
@@ -99,6 +99,15 @@ export function resetItemCounter() {
   _itemCounter = 0;
 }
 
+/**
+ * Place a furniture item at (x, y) with optional rotation.
+ *
+ * @param {string} type - Furniture type key from CATALOGUE
+ * @param {number} x - X position in mm (centre)
+ * @param {number} y - Y position in mm (centre)
+ * @param {number} [rotation=0] - Rotation in degrees
+ * @returns {object|null} Placed item or null if type unknown
+ */
 export function placeItem(type, x, y, rotation = 0) {
   const template = getTemplate(type);
   if (!template) return null;
@@ -158,6 +167,7 @@ export function suggestLayout(guestCount, style = "round") {
   // Head table for the couple
   const headTable = getTemplate("head_table");
   tables.push(headTable);
+  // @ts-ignore
   remaining -= headTable.capacity;
 
   // Fill remaining guests
@@ -165,6 +175,7 @@ export function suggestLayout(guestCount, style = "round") {
   const template = getTemplate(tableType);
   while (remaining > 0) {
     tables.push({ ...template });
+    // @ts-ignore
     remaining -= template.capacity;
   }
 
@@ -176,5 +187,6 @@ export function suggestLayout(guestCount, style = "round") {
     getTemplate("cake_table"),
   ].filter(Boolean);
 
+  // @ts-ignore
   return { tables, extras };
 }

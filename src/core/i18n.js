@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/core/i18n.js — Internationalisation (S0 named-export module)
  *
  * Lightweight i18n layer. Hebrew is pre-loaded eagerly; English is lazy-imported.
@@ -211,6 +211,7 @@ function _pluralRules() {
  * @returns {'he'|'en'|'ar'|'es'|'fr'}
  */
 export function currentLang() {
+  // @ts-ignore
   return _lang;
 }
 

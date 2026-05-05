@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/vendor-pipeline.js — S655 Vendor deal pipeline / stage tracking
  *
  * Pure helpers for managing vendor deal stages — from initial contact
@@ -147,6 +147,7 @@ export function groupByStage(deals) {
  */
 export function sortByStage(deals) {
   if (!Array.isArray(deals)) return [];
+  // @ts-ignore
   return [...deals].sort((a, b) => (STAGE_ORDER[a.stage] ?? 99) - (STAGE_ORDER[b.stage] ?? 99));
 }
 

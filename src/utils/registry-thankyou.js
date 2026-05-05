@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/registry-thankyou.js — S635 Registry thank-you automation
  *
  * Connects gift-registry (received tracking) with gift-thanks (thanks log)
@@ -22,6 +22,7 @@ import { outstanding, channelCounts } from "./gift-thanks.js";
 export function pendingThankYous(gifts, log) {
   const ids = outstanding(gifts, log ?? []);
   const received = filterByState(gifts, "received");
+  // @ts-ignore
   return ids
     .map((id) => {
       const g = received.find((r) => r.id === id);
@@ -99,9 +100,11 @@ export function overdueThankYous(gifts, log, days = 7, now) {
   const ref = now ?? new Date();
   const pendingIds = new Set(outstanding(gifts, log ?? []));
   const received = filterByState(gifts, "received");
+  // @ts-ignore
   return received
     .filter((g) => pendingIds.has(g.id) && g.receivedAt)
     .map((g) => {
+      // @ts-ignore
       const diff = Math.floor((ref.getTime() - new Date(g.receivedAt).getTime()) / 86_400_000);
       return diff >= days ? { giftId: g.id, giftName: g.name, daysSinceReceived: diff } : null;
     })

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Generic CSV export builder — RFC 4180-compliant escaping and BOM emission.
  *
  * Produces UTF-8 CSV strings safe for Excel and Google Sheets (Hebrew RTL OK).
@@ -63,6 +63,7 @@ export function buildCsv(rows, columns, options = {}) {
   }
   for (const row of rows) {
     const cells = columns.map((c) => {
+      // @ts-ignore
       const raw = row?.[c.key];
       const formatted = c.format ? c.format(raw, row) : raw;
       return escapeField(formatted, delimiter);

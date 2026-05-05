@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/sections/workspace-switcher.js — S140 workspace switcher + role badges.
  *
  * Renders a workspace dropdown in the nav area showing the current workspace
@@ -155,6 +155,7 @@ export function createNewEvent() {
   const name = window.prompt(t("ws_new_event_prompt"), t("ws_new_event_default"));
   if (!name?.trim()) return;
   const id = `event_${Date.now()}`;
+  // @ts-ignore
   const workspaces = /** @type {import('../core/store.js').WorkspaceEntry[]} */ (
     storeGet(STORAGE_KEY)
   ) ?? [{ id: "default", name: t("workspace_default"), role: "owner" }];

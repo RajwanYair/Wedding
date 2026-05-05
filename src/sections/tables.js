@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/sections/tables.js — Tables section ESM module (S0.8)
  *
  * Table CRUD, seating floor plan, and auto-assignment logic.
@@ -511,7 +511,7 @@ export async function printQrTableCards() {
     .map(
       (c) =>
         `<div class="qr-card">
-          <h2>${c.name.replace(/[<>&"]/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[ch] ?? ch)}</h2>
+          <h2>${c.name.replace(/[<>&"]/g, (/** @type {string} */ ch) => (/** @type {Record<string,string>} */({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }))[ch] ?? ch)}</h2>
           <img src="${c.dataUrl}" alt="QR ${c.name}" width="180" height="180" />
           <p>${c.capacity} מקומות</p>
         </div>`,

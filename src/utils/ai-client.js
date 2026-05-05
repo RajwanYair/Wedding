@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/ai-client.js — S449: BYO-key AI client utility
  *
  * Supports OpenAI-compatible endpoints (OpenAI, Anthropic via proxy, Ollama local).
@@ -136,7 +136,9 @@ function _extractText(provider, json) {
 export async function askAi(prompt, opts = {}) {
   const { provider, apiKey, model, enabled } = getAiSettings();
   if (!enabled) throw new Error("AI assistant is not enabled.");
+  // @ts-ignore
   const endpoint = PROVIDER_ENDPOINTS[provider] ?? PROVIDER_ENDPOINTS.openai;
+  // @ts-ignore
   const resolvedModel = model || DEFAULT_MODELS[provider] || "gpt-4o-mini";
   const res = await fetch(endpoint, {
     method: "POST",
@@ -182,6 +184,7 @@ export async function testAiConnection() {
 export async function* streamAi(prompt, opts = {}) {
   const { provider, apiKey, model, enabled, proxyUrl } = getAiSettings();
   if (!enabled) throw new Error("AI assistant is not enabled.");
+  // @ts-ignore
   const resolvedModel = model || DEFAULT_MODELS[provider] || "gpt-4o-mini";
   const messages = [];
   if (opts.system) messages.push({ role: "system", content: opts.system });

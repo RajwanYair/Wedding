@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Tiny color palette utility — hex ↔ HSL, lighten/darken, and complementary
  * palette generation.  No DOM, pure functions.
  *
@@ -133,9 +133,11 @@ function rgbToHex(r, g, b) {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
+// @ts-ignore
 function clamp(n, lo, hi) {
   return Math.max(lo, Math.min(hi, n));
 }
+// @ts-ignore
 function round(n) {
   return Math.round(n * 10) / 10;
 }

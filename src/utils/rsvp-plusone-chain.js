@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/rsvp-plusone-chain.js — S645 RSVP plus-one chain management
  *
  * Pure helpers for managing plus-one chains: generating sub-guest
@@ -52,7 +52,7 @@ export function createPlusOne(parentGuestId, name, index = 1) {
  *
  * @param {string} parentGuestId
  * @param {number} count
- * @param {string[]} [names] — optional names for each plus-one
+ * @param {string[]} [names] - optional names for each plus-one
  * @returns {PlusOneEntry[]}
  */
 export function generateChain(parentGuestId, count, names) {

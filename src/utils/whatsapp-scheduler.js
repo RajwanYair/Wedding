@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/whatsapp-scheduler.js — S642 WhatsApp scheduler + A/B
  *
  * Pure helpers for scheduling WhatsApp messages, managing
@@ -55,7 +55,7 @@ export function scheduleMessage(recipientPhone, templateId, scheduledAt, variant
  * @param {string} templateIdA
  * @param {string} templateIdB
  * @param {string} scheduledAt
- * @param {number} [splitRatio] — percentage assigned to A (0-100), default 50
+ * @param {number} [splitRatio] - percentage assigned to A (0-100), default 50
  * @returns {{ a: ScheduledMessage[], b: ScheduledMessage[] }}
  */
 export function createAbTest(phones, templateIdA, templateIdB, scheduledAt, splitRatio = 50) {

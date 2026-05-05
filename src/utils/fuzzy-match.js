@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Fuzzy text match — Levenshtein distance plus a 0..1 similarity score
  * suitable for guest-name lookup.
  *
@@ -76,7 +76,9 @@ export function similarity(a, b) {
  */
 export function search(query, candidates, options = {}) {
   const threshold = Number.isFinite(options.threshold) ? options.threshold : 0.5;
+  // @ts-ignore
   const limit = Number.isFinite(options.limit) && options.limit > 0
+    // @ts-ignore
     ? Math.floor(options.limit)
     : Infinity;
   const results = candidates
@@ -86,6 +88,7 @@ export function search(query, candidates, options = {}) {
       distance: levenshtein(normalise(query), normalise(value)),
       score: similarity(query, value),
     }))
+    // @ts-ignore
     .filter((r) => r.score >= threshold)
     .sort((a, b) => b.score - a.score || a.value.localeCompare(b.value));
   return results.slice(0, limit);

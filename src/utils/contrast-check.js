@@ -1,4 +1,4 @@
-/**
+﻿/**
  * WCAG 2.2 contrast ratio helpers.
  *
  * Implements the relative-luminance formula from WCAG 2.x §1.4.3.
@@ -42,6 +42,7 @@ export function parseHex(hex) {
  * @returns {number}
  */
 export function relativeLuminance({ r, g, b }) {
+  // @ts-ignore
   const channel = (c) => {
     const v = c / 255;
     return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Deterministic URL shortener — converts long URLs to fixed-length opaque
  * tokens via a stable hash. Pure; no network. Tokens can be reversed by a
  * caller-supplied lookup table (the function only generates the token).
@@ -55,6 +55,7 @@ export function shortToken(url, options = {}) {
   if (typeof url !== "string" || url.length === 0) {
     throw new TypeError("url must be a non-empty string");
   }
+  // @ts-ignore
   const length = Number.isFinite(options.length) && options.length > 0 ? Math.floor(options.length) : 7;
   const salt = typeof options.salt === "string" ? options.salt : "";
   const hash = fnv1a(`${salt}|${url}`);

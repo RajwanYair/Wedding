@@ -166,6 +166,22 @@
     },
     // ── Playwright ──
     "playwright.reuseBrowser": false,
-    "playwright.showTrace": false
+    "playwright.showTrace": false,
+    // ── TypeScript / JavaScript Language Service ──
+    // Prevent VS Code from type-checking .js/.mjs files that are NOT covered
+    // by tsconfig.json (tests/, scripts/, worker/) using an implicit project.
+    // Those files are checked by ESLint + Vitest; TS strict mode on them
+    // would generate tens of thousands of spurious Problems panel entries.
+    "javascript.implicitProjectConfig.checkJs": false,
+    "javascript.implicitProjectConfig.strictNullChecks": false,
+    // Validate .js files explicitly included in tsconfig.json (src/**).
+    "typescript.validate.enable": true,
+    // Exclude dirs from TS language server indexing to reduce memory/CPU.
+    "typescript.preferences.includePackageJsonAutoImports": "off",
+    "typescript.tsserver.watchOptions": {
+        "watchFile": "useFsEvents",
+        "watchDirectory": "useFsEvents",
+        "fallbackPolling": "dynamicPriority"
+    }
 }
 

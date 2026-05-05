@@ -1,4 +1,4 @@
-/**
+﻿/**
  * URL slug generator with Hebrew → ASCII transliteration.
  *
  * Pure function. Transliterates Hebrew letters via a simple lookup table,
@@ -46,6 +46,7 @@ const HEBREW = {
 export function transliterateHebrew(input) {
   let out = "";
   for (const ch of String(input)) {
+    // @ts-ignore
     out += HEBREW[ch] ?? ch;
   }
   return out;

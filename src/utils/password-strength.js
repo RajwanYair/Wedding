@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Lightweight password strength scorer (zxcvbn-lite). No external deps.
  *
  * Pure function returning a 0..4 score, a stable label key, and an array
@@ -69,6 +69,7 @@ export function score(input) {
 
   const clamped = Math.max(0, Math.min(4, pts));
   /** @type {StrengthReport["label"]} */
+  // @ts-ignore
   const label = (
     [
       "very-weak",

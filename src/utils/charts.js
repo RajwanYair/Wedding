@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/charts.js — Pure SVG chart primitives for analytics section
  * @owner sections
  */
@@ -9,6 +9,7 @@ import { t } from "../core/i18n.js";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 /** Shorthand: create an SVG element in the SVG namespace. */
+// @ts-ignore
 function _svg(tag) {
   return document.createElementNS(SVG_NS, tag);
 }

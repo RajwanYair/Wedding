@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/payment-receipt.js — S623 Payment receipt generator
  *
  * Pure helpers for generating payment receipt data structures. Used by
@@ -83,7 +83,7 @@ export function applyTax(subtotal, taxRate) {
  * @param {string} params.vendorId
  * @param {string} params.vendorName
  * @param {readonly PaymentLine[]} params.lines
- * @param {number} [params.taxRate] — decimal (default 0.17 for Israeli VAT)
+ * @param {number} [params.taxRate] - decimal (default 0.17 for Israeli VAT)
  * @param {string} [params.currency]
  * @param {string} [params.notes]
  * @param {string} [params.timestamp]

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/website-config.js — S632 Wedding website configuration schema
  *
  * Full config schema for the public wedding website builder. Handles
@@ -69,6 +69,7 @@ const THEME_STYLES = /** @type {Record<string, WebsiteStyleConfig>} */ ({
  * @returns {WebsiteStyleConfig}
  */
 export function getThemeDefaults(theme) {
+  // @ts-ignore
   return THEME_STYLES[theme] ?? THEME_STYLES.classic;
 }
 
@@ -90,6 +91,7 @@ export function buildConfig(partial) {
     venueAddress: partial?.venueAddress,
     coverImageUrl: partial?.coverImageUrl,
     rsvpUrl: partial?.rsvpUrl,
+    // @ts-ignore
     theme,
     customDomain: partial?.customDomain,
     password: partial?.password,

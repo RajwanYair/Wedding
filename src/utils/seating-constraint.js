@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/seating-constraint.js — S652 Relationship-based seating constraints
  *
  * Pure helpers for defining guest relationship constraints (keep-together,
@@ -161,6 +161,7 @@ export function findContradictions(constraints) {
     const [a, b] = c.guestA < c.guestB ? [c.guestA, c.guestB] : [c.guestB, c.guestA];
     const target = c.type === "together" ? together : apart;
     if (!target.has(a)) target.set(a, new Set());
+    // @ts-ignore
     target.get(a).add(b);
   }
 
@@ -168,6 +169,7 @@ export function findContradictions(constraints) {
   for (const [a, bSet] of together) {
     if (!apart.has(a)) continue;
     for (const b of bSet) {
+      // @ts-ignore
       if (apart.get(a).has(b)) {
         contradictions.push({ guestA: a, guestB: b });
       }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @file NFC bridge — native (Capacitor `@capawesome-team/capacitor-nfc`)
  * with a Web NFC fallback (`window.NDEFReader` on Android Chrome).

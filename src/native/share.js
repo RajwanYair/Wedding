@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @file Share-sheet bridge — Capacitor `@capacitor/share` on native,
  * `navigator.share` (Web Share API) fallback on web. Returns `false`

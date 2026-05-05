@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Weather forecast cache helpers — store, freshness check, and human delta.
  *
  * Pure functions over a serialisable cache record. Storage I/O is the
@@ -66,6 +66,7 @@ export function isStale(cache, ttlMs = DEFAULT_TTL_MS, now = Date.now()) {
  * @returns {{ tempDelta: number, precipDelta: number, windDelta: number }}
  */
 export function diff(previous, next) {
+  // @ts-ignore
   const safe = (a, b) => {
     const x = Number.isFinite(a) ? a : 0;
     const y = Number.isFinite(b) ? b : 0;

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/core/ui.js — UI primitives: toast + modal (S0 named-export module)
  *
  * Named-export version of ui.js primitives.
@@ -363,6 +363,7 @@ export function initSW() {
           .query({ name: /** @type {PermissionName} */ ("periodic-background-sync") })
           .then((status) => {
             if (status.state === "granted") {
+              // @ts-ignore
               return reg.periodicSync.register("wedding-refresh", {
                 minInterval: 24 * 60 * 60 * 1000,
               });

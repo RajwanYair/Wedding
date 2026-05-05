@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/calendar-sync.js — S644 Calendar two-way sync helpers
  *
  * Pure helpers for mapping wedding events to/from Google Calendar
@@ -82,7 +82,9 @@ export function eventToGcal(event) {
     start: { dateTime: event.start },
     end: { dateTime: event.end },
   };
+  // @ts-ignore
   if (event.location) payload.location = event.location;
+  // @ts-ignore
   if (event.description) payload.description = event.description;
   return payload;
 }

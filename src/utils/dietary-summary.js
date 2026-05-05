@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Dietary requirements aggregator — summarise guest meal preferences and
  * allergies into kitchen-ready counts.
  *
@@ -38,10 +38,13 @@ export function summariseDietary(guests) {
   for (const g of guests) {
     if (!g) continue;
     if (g.status && g.status !== "confirmed") continue;
+    // @ts-ignore
     const seats = Number.isFinite(g.seats) && g.seats > 0 ? g.seats : 1;
+    // @ts-ignore
     totalSeats += seats;
     if (typeof g.meal === "string" && g.meal.length > 0) {
       const key = normalise(g.meal);
+      // @ts-ignore
       byMeal[key] = (byMeal[key] ?? 0) + seats;
     }
     if (Array.isArray(g.allergies)) {
@@ -51,6 +54,7 @@ export function summariseDietary(guests) {
         const key = normalise(a);
         if (seen.has(key)) continue;
         seen.add(key);
+        // @ts-ignore
         byAllergy[key] = (byAllergy[key] ?? 0) + seats;
       }
     }

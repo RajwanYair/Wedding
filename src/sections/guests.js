@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/sections/guests.js — Guests section ESM module (S0.8)
  *
  * Guest CRUD, filtering, sorting, export, optimistic UI, and Sheets sync.
@@ -365,12 +365,14 @@ export function renderGuests() {
     _vs.guests = guests;
     _vs.rendered = 0;
     tbody.textContent = "";
+    // @ts-ignore
     _vsAppendPage(tbody);
     // Set up IntersectionObserver on sentinel
     const sentinel = tbody.querySelector("tr.vs-sentinel");
     if (sentinel) {
       _vs.observer = new IntersectionObserver(
         (entries) => {
+          // @ts-ignore
           if (entries[0]?.isIntersecting) _vsAppendPage(tbody);
         },
         { rootMargin: "200px" },

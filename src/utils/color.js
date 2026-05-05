@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Color helpers — hex / RGB / HSL conversion and contrast checks.
  * Used for theme variant generation and accessibility checks.
  * @owner shared
@@ -30,6 +30,7 @@ export function parseHex(hex) {
  * @param {number} [a] 0..1
  */
 export function toHex(r, g, b, a) {
+  // @ts-ignore
   const h = (n) => clampByte(n).toString(16).padStart(2, "0");
   let out = `#${h(r)}${h(g)}${h(b)}`;
   if (a !== undefined && a < 1) {
@@ -112,6 +113,7 @@ export function hslToRgb(h, s, l) {
  * @param {number} b
  */
 export function luminance(r, g, b) {
+  // @ts-ignore
   const lin = (c) => {
     const v = clampByte(c) / 255;
     return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;

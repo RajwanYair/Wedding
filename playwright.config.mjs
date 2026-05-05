@@ -8,7 +8,16 @@ const TEMP_BASE = join(tmpdir(), "wedding-dev");
 /**
  * Wedding Manager — Playwright E2E configuration.
  *
- * Multi-browser (Chromium, Firefox, WebKit) + mobile viewports.
+ * Browser coverage matrix (10 projects):
+ *   Desktop : Chromium (Chrome/Opera), Firefox, WebKit (Safari), Edge
+ *   Android : Pixel 7 (Chrome), Galaxy S9+ (Samsung Internet / Chrome), Galaxy Tab S4
+ *   iOS     : iPhone 14 (Safari), iPhone SE (small), iPad Mini landscape, iPad Pro
+ *
+ * Engines covered:
+ *   Chromium — Chrome, Edge, Opera, Samsung Internet, Android Chrome
+ *   Gecko    — Firefox desktop + mobile
+ *   WebKit   — Safari macOS/iOS, all iOS browsers, iPadOS
+ *
  * Install browsers once:  npx playwright install --with-deps
  * Run tests:               npm run test:e2e
  */
@@ -39,6 +48,7 @@ export default defineConfig({
   },
 
   projects: [
+    /* ── Desktop browsers ────────────────────────────────────────── */
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
@@ -52,12 +62,47 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
     },
     {
-      name: "mobile-portrait",
+      /* Microsoft Edge — Chromium engine, distinct UA + EdgeHTML quirks */
+      name: "edge",
+      use: { ...devices["Desktop Edge"], channel: "msedge" },
+    },
+    /* ── Android mobile ──────────────────────────────────────────── */
+    {
+      /* Android Chrome — most common Android browser (Pixel flagship) */
+      name: "android-chrome",
+      use: { ...devices["Pixel 7"] },
+    },
+    {
+      /* Samsung Internet — default browser on Galaxy devices; Chromium-based
+         but ships its own UA and has historically had layout differences. */
+      name: "android-samsung",
+      use: { ...devices["Galaxy S9+"] },
+    },
+    {
+      /* Android tablet — landscape layout, touch targets */
+      name: "android-tablet",
+      use: { ...devices["Galaxy Tab S4 landscape"] },
+    },
+    /* ── iOS / iPadOS ────────────────────────────────────────────── */
+    {
+      /* Standard iPhone — existing portrait smoke coverage */
+      name: "iphone",
       use: { ...devices["iPhone 14"] },
     },
     {
-      name: "tablet-landscape",
+      /* iPhone SE — 375×667 viewport; tests small-screen layout */
+      name: "iphone-se",
+      use: { ...devices["iPhone SE"] },
+    },
+    {
+      /* iPad Mini landscape — existing tablet coverage */
+      name: "ipad-mini",
       use: { ...devices["iPad Mini landscape"] },
+    },
+    {
+      /* iPad Pro landscape — large tablet, tests wide-screen layout */
+      name: "ipad-pro",
+      use: { ...devices["iPad Pro landscape"] },
     },
   ],
 

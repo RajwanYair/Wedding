@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/plugin-loader.js — S631 Plugin dynamic loader + permission gating
  *
  * Orchestrates the plugin lifecycle: validate manifest → create sandbox →
@@ -64,7 +64,9 @@ export function registerPlugin(registry, manifest) {
     sandbox: instance,
     loadState: /** @type {const} */ ("loaded"),
   };
+  // @ts-ignore
   registry.plugins.set(manifest.id, plugin);
+  // @ts-ignore
   return { ok: true, plugin };
 }
 

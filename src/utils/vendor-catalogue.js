@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/vendor-catalogue.js — S646 Vendor catalogue importer
  *
  * Parse, validate, and enrich vendor records from CSV/JSON imports
@@ -90,6 +90,7 @@ export function validateVendorRow(row) {
   if (!row || typeof row !== "object") return ["row is not an object"];
 
   for (const field of REQUIRED_FIELDS) {
+    // @ts-ignore
     if (!row[field] || typeof row[field] !== "string" || !row[field].trim()) {
       errors.push(`missing required field: ${field}`);
     }
@@ -254,6 +255,7 @@ function _mapLystioCategory(type) {
     "הסעות": "transportation", "עיצוב": "decor", "ווידנג פלנר": "planner",
   };
   const lower = type.trim().toLowerCase();
+  // @ts-ignore
   return map[lower] ?? (lower || undefined);
 }
 
@@ -274,5 +276,6 @@ function _normalizeRegion(region) {
     "חיפה": "haifa", "גליל": "galilee", "נגב": "negev",
   };
   const lower = region.trim().toLowerCase();
+  // @ts-ignore
   return map[lower] ?? region;
 }

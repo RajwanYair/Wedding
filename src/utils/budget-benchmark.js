@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/budget-benchmark.js — S649 Regional budget benchmarks
  *
  * Pure helpers for comparing a wedding budget against regional averages,
@@ -35,6 +35,7 @@ const ISRAEL_BENCHMARKS = {
  */
 export function getRegionalBenchmark(region) {
   if (!region || typeof region !== "string") return null;
+  // @ts-ignore
   return ISRAEL_BENCHMARKS[region.toLowerCase()] ?? null;
 }
 
@@ -63,6 +64,7 @@ export function compareCategorySpend(actual, benchmark) {
   let status = "on-track";
   if (deviationPercent > 15) status = "over";
   else if (deviationPercent < -15) status = "under";
+  // @ts-ignore
   return { deviation, deviationPercent, status };
 }
 

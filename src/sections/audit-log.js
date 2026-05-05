@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/sections/audit-log.js — Audit log viewer section (S588)
  *
  * Reads audit_log entries from Supabase and displays a paginated,
@@ -10,7 +10,7 @@
 import { BaseSection, fromSection } from "../core/section-base.js";
 import { el } from "../core/dom.js";
 import { getSupabaseClient } from "../core/supabase-client.js";
-import { formatRelativeDate } from "../utils/date.js";
+import { formatRelative as formatRelativeDate } from "../utils/date.js";
 
 const PAGE_SIZE = 25;
 
@@ -30,12 +30,13 @@ class AuditLogSection extends BaseSection {
   }
 
   _bindFilters() {
-    const actorEl = el("auditLogActorFilter");
-    const actionEl = el("auditLogActionFilter");
-    const dateEl = el("auditLogDateRange");
+    const actorEl = el.auditLogActorFilter;
+    const actionEl = el.auditLogActionFilter;
+    const dateEl = el.auditLogDateRange;
 
     if (actorEl) {
       actorEl.addEventListener("change", () => {
+        // @ts-ignore
         this._actorFilter = actorEl.value;
         this._page = 0;
         this._fetchAndRender();
@@ -43,6 +44,7 @@ class AuditLogSection extends BaseSection {
     }
     if (actionEl) {
       actionEl.addEventListener("change", () => {
+        // @ts-ignore
         this._actionFilter = actionEl.value;
         this._page = 0;
         this._fetchAndRender();
@@ -50,6 +52,7 @@ class AuditLogSection extends BaseSection {
     }
     if (dateEl) {
       dateEl.addEventListener("change", () => {
+        // @ts-ignore
         this._dateFilter = dateEl.value;
         this._page = 0;
         this._fetchAndRender();
@@ -96,9 +99,9 @@ class AuditLogSection extends BaseSection {
    * @param {number} total
    */
   _renderRows(rows, total) {
-    const tbody = el("auditLogBody");
-    const emptyEl = el("auditLogEmpty");
-    const pageInfo = el("auditLogPageInfo");
+    const tbody = el.auditLogBody;
+    const emptyEl = el.auditLogEmpty;
+    const pageInfo = el.auditLogPageInfo;
 
     if (emptyEl) emptyEl.classList.add("u-hidden");
 
@@ -140,8 +143,8 @@ class AuditLogSection extends BaseSection {
   }
 
   _renderEmpty() {
-    const tbody = el("auditLogBody");
-    const emptyEl = el("auditLogEmpty");
+    const tbody = el.auditLogBody;
+    const emptyEl = el.auditLogEmpty;
 
     if (tbody) tbody.textContent = "";
     if (emptyEl) emptyEl.classList.remove("u-hidden");

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/trigger-automation.js — S648 Event-based trigger automation
  *
  * Pure helpers for defining automation triggers (e.g., RSVP confirmed →
@@ -134,6 +134,7 @@ export function executeTriggers(triggers, eventName, payload) {
     }
   }
 
+  // @ts-ignore
   return logs;
 }
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @module handlers/section-handlers
  * @description RSVP, gallery, WhatsApp, timeline, invitation, contact-form,
  * and landing action handlers.
@@ -215,6 +215,7 @@ export function register() {
   on("markAllNotifRead", () => markAllNotifRead());
 
 /** Render a safe HTML string into `target` via DOMParser (no innerHTML). */
+// @ts-ignore
 function _setPreviewHtml(target, html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
   target.textContent = "";

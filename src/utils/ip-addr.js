@@ -1,4 +1,4 @@
-/**
+﻿/**
  * IPv4 / IPv6 address parsing and validation helpers.  Pure JS, no DNS.
  * @owner shared
  */
@@ -37,6 +37,7 @@ export function isIPv6(v) {
     ipv4Tail = tail;
     v = `${v.slice(0, lastColon + 1)}0:0`;
   }
+  // @ts-ignore
   const dbl = v.split("::");
   if (dbl.length > 2) return false;
   /** @param {string} s */

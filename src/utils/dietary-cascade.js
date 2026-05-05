@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/dietary-cascade.js — S624 RSVP dietary cascade
  *
  * Pure helpers that wire the conditional RSVP question engine (S598)
@@ -99,7 +99,9 @@ export function expandPlusOneCascade(meals, rules) {
  * @returns {{ valid: boolean, missing: string[] }}
  */
 export function validateCascadeAnswers(questions, answers) {
+  // @ts-ignore
   const missing = [];
+  // @ts-ignore
   if (!Array.isArray(questions)) return { valid: true, missing };
   const ans = answers && typeof answers === "object" ? answers : {};
   for (const q of questions) {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/workspace-invite.js — S626 Workspace invitation helpers
  *
  * Pure helpers for inviting users to a wedding workspace. Generates
@@ -66,7 +66,7 @@ export function validateInvite({ email, role, workspaceId }) {
  * @param {string} params.email
  * @param {string} params.role
  * @param {string} params.invitedBy
- * @param {number} [params.expiryDays] — days until expiry (default 7)
+ * @param {number} [params.expiryDays] - days until expiry (default 7)
  * @returns {{ ok: boolean, invite?: WorkspaceInvite, errors?: string[] }}
  */
 export function createInvite({ workspaceId, email, role, invitedBy, expiryDays = 7 }) {
@@ -95,7 +95,7 @@ export function createInvite({ workspaceId, email, role, invitedBy, expiryDays =
  * Accept a pending invite.
  *
  * @param {WorkspaceInvite} invite
- * @param {string} [refDate] — reference date for expiry check
+ * @param {string} [refDate] - reference date for expiry check
  * @returns {{ ok: boolean, invite?: WorkspaceInvite, error?: string }}
  */
 export function acceptInvite(invite, refDate) {

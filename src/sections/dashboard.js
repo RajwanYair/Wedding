@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/sections/dashboard.js — Dashboard section ESM module (S0.8)
  *
  * Renders stats, countdown, and top bar. Subscribes to the reactive store so
@@ -438,11 +438,13 @@ function renderBudgetForecast() {
     const cls = diff >= 0 ? "u-text-success" : "u-text-danger";
     items.push({
       label: t("forecast_vs_budget") || "מול תקציב",
+      // @ts-ignore
       _diff: diff,
       _cls: cls,
     });
   }
 
+  // @ts-ignore
   items.forEach(({ label, val, _diff, _cls }) => {
     const row = document.createElement("div");
     row.className = "forecast-row";

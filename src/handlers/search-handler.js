@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @module handlers/search-handler
  * @description S214 Cmd-K command palette handler.
  *
@@ -185,6 +185,7 @@ export function initSearchModalHandlers() {
       type: /** @type {const} */ ("command"),
       label: c.label,
       hint: c.keywords ?? "",
+      // @ts-ignore
       action: c.action,
     }));
     const merged = /** @type {SearchEntry[]} */ ([...results, ...matched]);

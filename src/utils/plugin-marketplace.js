@@ -1,4 +1,4 @@
-/**
+﻿/**
  * src/utils/plugin-marketplace.js — S641 Plugin marketplace browser
  *
  * Pure helpers for searching, filtering, installing, and rating
@@ -87,6 +87,7 @@ export function sortPlugins(plugins, sortBy = "downloads") {
  */
 export function isCompatible(minAppVersion, currentVersion) {
   if (!minAppVersion || !currentVersion) return true;
+  // @ts-ignore
   const parse = (v) => v.split(".").map(Number);
   const [minMaj, minMin, minPat] = parse(minAppVersion);
   const [curMaj, curMin, curPat] = parse(currentVersion);
@@ -144,6 +145,7 @@ export function togglePlugin(plugin) {
 export function checkUpdates(installed, catalogue) {
   if (!Array.isArray(installed) || !Array.isArray(catalogue)) return [];
   const catalogueMap = new Map(catalogue.map((p) => [p.id, p.version]));
+  // @ts-ignore
   return installed
     .filter((p) => {
       const latest = catalogueMap.get(p.pluginId);

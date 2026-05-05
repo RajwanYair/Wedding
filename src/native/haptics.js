@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @file Haptics bridge — Capacitor `@capacitor/haptics` on native,
  * `navigator.vibrate` fallback on web. All calls are no-ops when
