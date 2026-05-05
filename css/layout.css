@@ -415,6 +415,14 @@
   .section.active {
     display: block;
     contain: layout style;
+    /* S590: @starting-style entry animation — triggers when display:none → block */
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease;
+    @starting-style {
+      opacity: 0;
+      transform: translateY(8px);
+    }
   }
   @keyframes fadeIn {
     from {

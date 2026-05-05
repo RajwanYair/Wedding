@@ -2964,6 +2964,12 @@
   #section-changelog.active  { view-transition-name: vt-changelog; }
   #section-vendors.active    { view-transition-name: vt-vendors; }
   #section-expenses.active   { view-transition-name: vt-expenses; }
+  /* S590: add view-transition names for newer sections */
+  #section-audit-log.active  { view-transition-name: vt-audit-log; }
+  #section-onboarding.active { view-transition-name: vt-onboarding; }
+  #section-run-of-show.active { view-transition-name: vt-run-of-show; }
+  #section-contact-form.active { view-transition-name: vt-contact-form; }
+  #section-website-builder.active { view-transition-name: vt-website-builder; }
 
   @keyframes slide-in-from-right {
     from {
