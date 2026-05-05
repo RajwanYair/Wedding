@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deepClone } from "../../src/utils/deep-clone.js";
+import { deepClone } from "../../src/utils/deep.js";
 
 describe("deep-clone", () => {
   it("returns primitives unchanged", () => {

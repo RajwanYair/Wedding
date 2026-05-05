@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { deepEqual } from "../../src/utils/deep-equal.js";
+import { deepEqual } from "../../src/utils/deep.js";
 
 describe("deep-equal", () => {
   it("primitives compare by value", () => {

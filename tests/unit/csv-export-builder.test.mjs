@@ -3,7 +3,7 @@ import {
   escapeField,
   buildCsv,
   inferColumns,
-} from "../../src/utils/csv-export-builder.js";
+} from "../../src/utils/csv.js";
 
 describe("csv-export-builder", () => {
   it("escapeField returns plain text untouched", () => {

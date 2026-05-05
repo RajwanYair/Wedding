@@ -77,7 +77,7 @@ src/types/         TypeScript type stubs
 src/templates/     lazy section HTML (15 files)
 src/modals/        lazy modal HTML (7 files)
 src/i18n/          he · en · ar · es · fr locale files
-tests/             repo sanity · unit · integration · e2e · perf (6121 tests, 440 files)
+tests/             repo sanity · unit · integration · e2e · perf (6448 tests, 458 files)
 scripts/           build/lint/audit/sync scripts (.mjs)
 supabase/          Edge Functions · migrations
 public/            sw.js · manifest.json · offline.html · _headers

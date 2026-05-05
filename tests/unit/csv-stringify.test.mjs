@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   stringifyCsv,
   stringifyCsvObjects,
-} from "../../src/utils/csv-stringify.js";
+} from "../../src/utils/csv.js";
 
 describe("csv-stringify", () => {
   it("plain rows join with CRLF by default", () => {

@@ -25,16 +25,9 @@ jobs:
       matrix:
         node-version: ["22", "24"]
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: ./.github/actions/node-setup
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Setup shared tooling (CI shim)
         run: node scripts/ensure-shared-tooling.mjs
@@ -141,16 +134,7 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: npm audit
         run: npm audit --audit-level=high
@@ -201,16 +185,7 @@ jobs:
     needs: lint-and-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: Install @lhci/cli
         run: npm install -g @lhci/cli@0.14.0
@@ -225,16 +200,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-test
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: Generate size report
         run: node scripts/size-report.mjs | tee size-report.txt
@@ -265,16 +231,7 @@ jobs:
     needs: lint-and-test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium

@@ -25,14 +25,7 @@ jobs:
       matrix:
         locale: [he, en, ar, es, fr, ru]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/node-setup
 
       - name: Build production bundle for Lighthouse
         env:

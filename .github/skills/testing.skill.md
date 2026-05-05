@@ -7,7 +7,7 @@ description: "Testing conventions and patterns for the Wedding Manager test suit
 ## Test Runner
 
 Vitest 4 (`pool: forks`, `--no-warnings`). Run: `npm test`.
-Current suite: **6121 tests** across **440 files** · 0 Node warnings.
+Current suite: **6448 tests** across **458 files** · 0 Node warnings.
 
 ## File Organization
 

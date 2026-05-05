@@ -282,7 +282,9 @@ describe("Quality scripts", function () {
 
   it("CI workflow uses npm ci and npm test", function () {
     const ci = read(".github/workflows/ci.yml");
-    assert.ok(ci.includes("npm ci"));
+    const nodeSetup = read(".github/actions/node-setup/action.yml");
+    // npm ci may live in the shared composite action rather than inline
+    assert.ok(ci.includes("npm ci") || (ci.includes("node-setup") && nodeSetup.includes("npm ci")));
     assert.ok(ci.includes("npm test"));
   });
 });
