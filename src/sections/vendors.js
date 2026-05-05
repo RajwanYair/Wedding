@@ -7,6 +7,7 @@
 import { storeGet, storeSet } from "../core/store.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
 import { t } from "../core/i18n.js";
+import { showToast } from "../core/ui.js";
 import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
@@ -37,6 +38,15 @@ import {
   getScheduleStats as _getScheduleStats,
   getVendorPayments as _getVendorPayments,
 } from "../utils/payment-schedule.js";
+import {
+  createConnectAccount as _createConnectAccount,
+  buildOnboardingUrl as _buildOnboardingUrl,
+  isPayoutReady as _isPayoutReady,
+  payoutSummary as _payoutSummary,
+} from "../utils/stripe-connect.js";
+import {
+  buildReceipt as _buildReceipt,
+} from "../utils/payment-receipt.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -56,6 +66,7 @@ class VendorsSection extends BaseSection {
     renderVendorTimelineSummary(); // S692
     _populateNegotiateVendorSelect(); // S692
     _populatePayScheduleVendorSelect(); // S693
+    _populateStripeVendorSelect(); // S697
   }
 }
 
@@ -1181,4 +1192,171 @@ export function generatePaymentSchedule() {
   }
 }
 
+// ── S697: Stripe Connect onboarding + vendor receipt ─────────────────────
+
+/** Storage key for Stripe Connect accounts. */
+const _STRIPE_ACCOUNTS_KEY = "wedding_v1_stripe_accounts";
+
+/**
+ * Populate the #stripeVendorSelect dropdown.
+ */
+function _populateStripeVendorSelect() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("stripeVendorSelect"));
+  if (!sel) return;
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  sel.textContent = "";
+  const defaultOpt = document.createElement("option");
+  defaultOpt.value = "";
+  defaultOpt.textContent = `— ${t("vendor_pay_sched_select")} —`;
+  sel.appendChild(defaultOpt);
+  for (const v of vendors) {
+    const opt = document.createElement("option");
+    opt.value = v.id;
+    opt.textContent = `${v.category ? `[${v.category}] ` : ""}${v.name || v.id}`;
+    sel.appendChild(opt);
+  }
+}
+
+/**
+ * Set up Stripe Connect for the selected vendor.
+ * Creates a connect account record and shows the onboarding URL.
+ */
+export function setupVendorStripe() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("stripeVendorSelect"));
+  const resultEl = document.getElementById("vendorStripeResult");
+  const vendorId = sel?.value;
+
+  if (!vendorId) {
+    if (resultEl) {
+      resultEl.style.color = "var(--color-danger, #ef4444)";
+      resultEl.textContent = t("vendor_pay_sched_select");
+    }
+    return;
+  }
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const vendor = vendors.find((v) => v.id === vendorId);
+  if (!vendor) return;
+
+  // Create or retrieve connect account record (demo: uses vendorId as acct id)
+  const accounts = JSON.parse(localStorage.getItem(_STRIPE_ACCOUNTS_KEY) || "{}");
+  if (!accounts[vendorId]) {
+    accounts[vendorId] = _createConnectAccount(
+      vendorId,
+      `acct_demo_${vendorId.slice(0, 8)}`,
+      vendor.phone ? `vendor_${vendorId}@example.com` : `vendor_${vendorId}@example.com`,
+      vendor.name,
+    );
+    localStorage.setItem(_STRIPE_ACCOUNTS_KEY, JSON.stringify(accounts));
+  }
+
+  const account = accounts[vendorId];
+  const onboardingUrl = _buildOnboardingUrl(
+    account.stripeAccountId,
+    `${window.location.origin}/#vendors?stripe=success`,
+    `${window.location.origin}/#vendors?stripe=refresh`,
+  );
+
+  const payoutReady = _isPayoutReady(account);
+
+  if (resultEl) {
+    resultEl.style.color = "";
+    resultEl.textContent = "";
+
+    const statusRow = document.createElement("div");
+    statusRow.style.marginBottom = "0.5rem";
+    const statusLabel = document.createElement("strong");
+    statusLabel.textContent = `${t("vendor_stripe_status")}: `;
+    statusRow.appendChild(statusLabel);
+    const statusVal = document.createElement("span");
+    statusVal.textContent = payoutReady
+      ? t("vendor_stripe_active")
+      : `${account.status} (${t("vendor_stripe_pending_onboard")})`;
+    statusVal.style.color = payoutReady ? "var(--color-success, #22c55e)" : "var(--color-warning, #f59e0b)";
+    statusRow.appendChild(statusVal);
+    resultEl.appendChild(statusRow);
+
+    const linkRow = document.createElement("div");
+    const link = document.createElement("a");
+    link.href = onboardingUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = t("vendor_stripe_open_onboarding");
+    link.className = "btn btn-ghost btn-small";
+    linkRow.appendChild(link);
+    resultEl.appendChild(linkRow);
+  }
+
+  showToast(t("vendor_stripe_initiated"), "success");
+}
+
+/**
+ * Generate and display a receipt for the selected vendor.
+ */
+export function generateVendorReceipt() {
+  const sel = /** @type {HTMLSelectElement|null} */ (document.getElementById("stripeVendorSelect"));
+  const resultEl = document.getElementById("vendorStripeResult");
+  const vendorId = sel?.value;
+
+  if (!vendorId) {
+    if (resultEl) {
+      resultEl.style.color = "var(--color-danger, #ef4444)";
+      resultEl.textContent = t("vendor_pay_sched_select");
+    }
+    return;
+  }
+
+  const vendors = /** @type {any[]} */ (storeGet("vendors") ?? []);
+  const vendor = vendors.find((v) => v.id === vendorId);
+  if (!vendor) return;
+
+  const totalCents = Math.round(Number(vendor.price || 0) * 100);
+  const paidCents = Math.round(Number(vendor.paid || 0) * 100);
+
+  const receipt = _buildReceipt({
+    vendorId: vendor.id,
+    vendorName: vendor.name || vendor.id,
+    lines: [
+      { description: t("vendor_receipt_service"), amount: totalCents },
+      { description: t("vendor_receipt_paid"), amount: -paidCents },
+    ],
+    taxRate: 0.17,
+    currency: "ILS",
+  });
+
+  if (resultEl) {
+    resultEl.style.color = "";
+    resultEl.textContent = "";
+
+    const header = document.createElement("div");
+    header.style.fontWeight = "600";
+    header.style.marginBottom = "0.5rem";
+    header.textContent = `${t("vendor_receipt_title")}: ${receipt.receiptNumber}`;
+    resultEl.appendChild(header);
+
+    for (const line of receipt.lines) {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;justify-content:space-between;font-size:0.82rem;padding:0.15rem 0;border-bottom:1px solid rgba(255,255,255,0.06)";
+      const desc = document.createElement("span");
+      desc.textContent = line.description;
+      const amt = document.createElement("span");
+      amt.textContent = `₪${(line.amount / 100).toFixed(2)}`;
+      row.appendChild(desc);
+      row.appendChild(amt);
+      resultEl.appendChild(row);
+    }
+
+    const totRow = document.createElement("div");
+    totRow.style.cssText = "display:flex;justify-content:space-between;font-weight:600;margin-top:0.5rem";
+    const totLabel = document.createElement("span");
+    totLabel.textContent = t("vendor_receipt_total");
+    const totVal = document.createElement("span");
+    totVal.textContent = `₪${(receipt.total / 100).toFixed(2)}`;
+    totRow.appendChild(totLabel);
+    totRow.appendChild(totVal);
+    resultEl.appendChild(totRow);
+  }
+
+  showToast(t("vendor_receipt_generated"), "success");
+}
 

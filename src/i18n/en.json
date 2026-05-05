@@ -1681,5 +1681,19 @@
   "vendor_pay_sched_generate": "Generate Schedule",
   "vendor_pay_sched_select": "Select vendor...",
   "vendor_pay_sched_installments_of": "installments of",
-  "vendor_pay_sched_total": "Total"
+  "vendor_pay_sched_total": "Total",
+  "vendor_stripe_title": "Stripe Connect — Vendor Payments",
+  "vendor_stripe_select": "Select vendor to connect",
+  "vendor_stripe_setup": "Set up Stripe",
+  "vendor_stripe_receipt": "Issue receipt",
+  "vendor_stripe_status": "Status",
+  "vendor_stripe_active": "Active — payouts enabled",
+  "vendor_stripe_pending_onboard": "awaiting onboarding",
+  "vendor_stripe_open_onboarding": "Open Stripe Connect wizard",
+  "vendor_stripe_initiated": "Stripe setup initiated",
+  "vendor_receipt_service": "Vendor service fee",
+  "vendor_receipt_paid": "Already paid",
+  "vendor_receipt_title": "Receipt",
+  "vendor_receipt_total": "Total due",
+  "vendor_receipt_generated": "Receipt generated"
 }

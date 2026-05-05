@@ -1687,5 +1687,19 @@
   "vendor_pay_sched_generate": "צור לוח",
   "vendor_pay_sched_select": "בחר ספק...",
   "vendor_pay_sched_installments_of": "תשלומים של",
-  "vendor_pay_sched_total": "סה״כ"
+  "vendor_pay_sched_total": "סה״כ",
+  "vendor_stripe_title": "Stripe Connect — גביית תשלומים מספקים",
+  "vendor_stripe_select": "ספק לחיבור",
+  "vendor_stripe_setup": "הגדר Stripe",
+  "vendor_stripe_receipt": "הנפק קבלה",
+  "vendor_stripe_status": "סטאטוס",
+  "vendor_stripe_active": "פעיל — פינוי מוכן",
+  "vendor_stripe_pending_onboard": "בהמתנה",
+  "vendor_stripe_open_onboarding": "פתח אשף Stripe Connect",
+  "vendor_stripe_initiated": "הגדרת Stripe הופעלה",
+  "vendor_receipt_service": "שירותי ספק",
+  "vendor_receipt_paid": "שולם עד כה",
+  "vendor_receipt_title": "קבלה",
+  "vendor_receipt_total": "סה״כ לתשלום",
+  "vendor_receipt_generated": "קבלה הופקה בהצלחה"
 }

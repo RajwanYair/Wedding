@@ -27,6 +27,8 @@ import {
   startVendorNegotiation,
   submitVendorOffer,
   generatePaymentSchedule,
+  setupVendorStripe,
+  generateVendorReceipt,
 } from "../sections/vendors.js";
 import {
   saveExpense,
@@ -159,4 +161,7 @@ export function register() {
   on("startVendorNegotiation", () => startVendorNegotiation());
   on("submitVendorOffer", () => submitVendorOffer());
   on("generatePaymentSchedule", () => generatePaymentSchedule());
+  // S697 — Stripe Connect onboarding + receipts
+  on("setupVendorStripe", () => setupVendorStripe());
+  on("generateVendorReceipt", () => generateVendorReceipt());
 }
