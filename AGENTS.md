@@ -7,16 +7,16 @@
 > **Source of truth.** Other docs (copilot-instructions, README badges, agent files) must mirror these
 > values. `npm run check:canonical-facts` enforces parity.
 
-- version: `32.0.0`
-- tests: `6450`
-- test_files: `458`
+- version: `32.1.0`
+- tests: `6619`
+- test_files: `467`
 - utils: `190`
 - locales: `6` (he, en, ar, fr, es, ru)
 - node: `>=22.0.0`
 
 ## Project Identity
 
-- **App**: Wedding Manager v32.0.0 — Hebrew RTL, RSVP, table seating, WhatsApp, AI suggestions, floor-plan canvas, vendor negotiation, multi-language
+- **App**: Wedding Manager v32.1.0 — Hebrew RTL, RSVP, table seating, WhatsApp, AI suggestions, floor-plan canvas, vendor negotiation, multi-language
 - **Stack**: Vanilla JS ES2025 + Vite 8 + CSS `@layer` — minimal runtime deps (`@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`)
 - **Entry**: `src/main.js` (ESM, Vite build)
 - **AI Proxy**: Cloudflare Worker at `worker/` — `callAiProxy()` in `src/services/ai-proxy.js`

@@ -4,7 +4,42 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [32.0.0] — 2025-07-15
+## [32.1.0] — 2025-07-19
+
+> **Cluster C.2 — Plugin Permissions, Theme Marketplace, Registry Deep-links, Stripe Connect,
+> Capacitor, CF Proxy, DevContainer, User Guides.**
+> Ten sprints (S694–S703): plugin risk badges, community theme browser, registry affiliate
+> deep-links, Stripe Connect vendor onboarding + receipts, Capacitor iOS/Android build scripts,
+> CF Worker production environment + custom domain, UptimeRobot /health endpoint, DevContainer
+> for Codespaces, Diátaxis couple/planner user guides, and v32.1.0 release.
+> Test count: 6619 across 467 files; 0 lint warnings, 0 Node warnings.
+
+### Added (32.1.0)
+
+- Plugin risk badges and permission chips in Settings → Plugins (S694): `.plugin-risk-badge`
+  CSS, `plugin_risk_*` i18n keys, 16 tests
+- Theme Marketplace browser in Settings (S695): `renderThemeMarketplace()`, `.theme-mkt-*` CSS,
+  13 i18n keys, 18 tests
+- Registry deep-link + store detection + affiliate tag input (S696): `copyRegistryDeepLink()`,
+  `saveAffiliateTag()`, store badges, 21 tests
+- Stripe Connect vendor onboarding + receipt generation in Vendors section (S697):
+  `setupVendorStripe()`, `generateVendorReceipt()`, 16 i18n keys, 23 tests
+- Capacitor native build scripts (`build:ios`, `build:android`, `build:native`) +
+  `scripts/build-native.mjs` helper (S698): 18 tests
+- CF Worker production env + custom domain route in `wrangler.toml` (S699):
+  `[env.production]`, `[env.staging]`, `api.wedding.rajwanyair.com` CSP, setup guide, 19 tests
+- `public/health.json` static health endpoint + `_headers` cache rules + uptime.md monitors
+  (S700): 14 tests
+- DevContainer upgrades: Playwright browser install, port 4173, vitest.explorer extension,
+  `NODE_NO_WARNINGS` env (S701): 17 tests
+- Couple Guide (Diátaxis Tutorial+How-to): quick-start checklist, 10 sections (S702)
+- Planner Guide (Diátaxis How-to+Reference): multi-event, budget, analytics, Stripe, AI,
+  registry, plugins, 8-step checklist (S702): 23 tests combined
+
+### Fixed (32.1.0)
+
+- `es.json` missing 38 i18n keys from S694–S697 (`plugin_risk_*`, `theme_mkt_*`,
+  `registry_affiliate_*`, `vendor_stripe_*`, `vendor_receipt_*`)
 
 > **Cluster C.1 — TypeScript Foundation + Util Domain Restructure.**
 > Full TypeScript migration of core modules, domain barrel modules for
