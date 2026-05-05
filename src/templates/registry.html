@@ -7,6 +7,7 @@
   <p class="section-subtitle" data-i18n="registry_subtitle">
     בחר אתר מתנות להציג לאורחים
   </p>
+  <div id="registryStats" class="registry-stats u-text-muted u-mb-xs"></div>
   <div id="registryLinks" class="registry-cards-list"></div>
 </div>
 
@@ -42,4 +43,18 @@
     </button>
   </div>
   <p id="registryAddError" class="text-error u-mt-xs" aria-live="polite"></p>
+
+  <!-- S696: Affiliate tag -->
+  <div class="registry-add-row u-mt-sm">
+    <input
+      type="text"
+      id="registryAffiliateTag"
+      class="input-field"
+      data-i18n-placeholder="registry_affiliate_placeholder"
+      placeholder="קוד שותף (affiliate)"
+    />
+    <button class="btn btn-secondary btn-small" data-action="saveAffiliateTag" type="button">
+      <span data-i18n="registry_save_affiliate">שמור קוד</span>
+    </button>
+  </div>
 </div>

@@ -221,6 +221,13 @@ export function register() {
     const platformId = el instanceof HTMLElement ? (el.dataset.actionArg ?? "") : "";
     if (platformId) registrySection.addRegistryPreset?.(platformId);
   });
+  on("copyRegistryDeepLink", (el) => {
+    const url = el instanceof HTMLElement ? (el.dataset.url ?? "") : "";
+    if (url) registrySection.copyRegistryDeepLink?.(url);
+  });
+  on("saveAffiliateTag", () => {
+    registrySection.saveAffiliateTag?.();
+  });
   on("addApprovedEmail", () => {
     addApprovedEmail();
     logAdminAction("email:add", "");

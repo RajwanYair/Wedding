@@ -18,6 +18,14 @@ import {
   boutiqueLink,
   detectProvider,
 } from "../utils/registry-links.js";
+import {
+  detectStore,
+  generateDeepLink,
+  getRegistryStats,
+} from "../utils/registry-deeplink.js";
+
+/** localStorage key for affiliate tag. */
+const _AFFILIATE_KEY = "wedding_v1_registry_affiliate_tag";
 
 // ── Platform registry (S430) ──────────────────────────────────────────────
 
@@ -68,7 +76,28 @@ function renderRegistry() {
   if (!container) return;
   container.textContent = "";
 
-  const registryLinks = /** @type {string[]} */ (JSON.parse(info.registryLinks || "[]"));
+  const rawLinks = JSON.parse(info.registryLinks || "[]");
+  // normalise: string entries or {url,name} objects
+  const registryLinks = rawLinks
+    .map((/** @type {unknown} */ item) =>
+      typeof item === "string" ? item : (/** @type {any} */ (item)).url
+    )
+    .filter((/** @type {unknown} */ u) => typeof u === "string" && u.startsWith("https://"));
+
+  // Stats
+  const statsEl = document.getElementById("registryStats");
+  if (statsEl) {
+    const fakeItems = registryLinks.map((url, idx) => ({
+      id: `ri_${idx}`, name: url, store: detectStore(url),
+      url, price: 0, currency: "ILS", purchased: false, affiliateTag: null,
+    }));
+    const stats = getRegistryStats(fakeItems);
+    statsEl.textContent = "";
+    const statsText = document.createElement("span");
+    statsText.textContent = t("registry_stats", { total: stats.total });
+    statsEl.appendChild(statsText);
+  }
+
   if (registryLinks.length === 0) {
     const msg = document.createElement("p");
     msg.textContent = t("registry_empty");
@@ -77,8 +106,11 @@ function renderRegistry() {
   }
 
   registryLinks.forEach((url) => {
-    if (!url.startsWith("https://")) return; // security: only https links
     const platform = detectPlatform(url);
+    const store = detectStore(url);
+
+    const wrap = document.createElement("div");
+    wrap.className = "registry-entry";
 
     const card = document.createElement("a");
     card.href = url;
@@ -96,14 +128,60 @@ function renderRegistry() {
     label.textContent = platform?.label ?? new URL(url).hostname.replace("www.", "");
     card.appendChild(label);
 
+    const storeBadge = document.createElement("span");
+    storeBadge.className = "registry-store-badge";
+    storeBadge.textContent = store.replace("_", " ");
+    card.appendChild(storeBadge);
+
     const arrow = document.createElement("span");
     arrow.className = "registry-platform-arrow";
     arrow.textContent = "↗";
     arrow.setAttribute("aria-hidden", "true");
     card.appendChild(arrow);
 
-    container.appendChild(card);
+    wrap.appendChild(card);
+
+    // Deep-link copy button (S696)
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "btn btn-ghost btn-small registry-deeplink-btn";
+    copyBtn.dataset.action = "copyRegistryDeepLink";
+    copyBtn.dataset.url = url;
+    copyBtn.setAttribute("aria-label", t("registry_copy_deeplink"));
+    copyBtn.textContent = "🔗";
+    wrap.appendChild(copyBtn);
+
+    container.appendChild(wrap);
   });
+}
+
+/**
+ * Copy the affiliate deep-link for a registry URL to the clipboard.
+ * @param {string} url
+ */
+export function copyRegistryDeepLink(url) {
+  if (!url.startsWith("https://")) return;
+  const affiliateTag = localStorage.getItem(_AFFILIATE_KEY) || "";
+  const { deepLink } = generateDeepLink(url, affiliateTag || null);
+  navigator.clipboard?.writeText(deepLink).then(() => {
+    showToast(t("registry_deeplink_copied"), "success");
+  }).catch(() => {
+    showToast(deepLink, "info"); // fallback: show URL
+  });
+}
+
+/**
+ * Save affiliate tag from the #registryAffiliateTag input.
+ */
+export function saveAffiliateTag() {
+  const input = /** @type {HTMLInputElement|null} */ (document.getElementById("registryAffiliateTag"));
+  const tag = input?.value?.trim() ?? "";
+  if (tag) {
+    localStorage.setItem(_AFFILIATE_KEY, tag);
+  } else {
+    localStorage.removeItem(_AFFILIATE_KEY);
+  }
+  showToast(t("registry_affiliate_saved"), "success");
 }
 
 /** Render platform preset quick-add buttons (admin only). */
