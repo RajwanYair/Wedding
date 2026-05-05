@@ -356,6 +356,21 @@ export function initSW() {
     .register("./sw.js")
     .then((reg) => {
       _swReg = reg;
+
+      // S563 — register Periodic Background Sync (≥24 h) when permitted
+      if ("periodicSync" in reg) {
+        navigator.permissions
+          .query({ name: /** @type {PermissionName} */ ("periodic-background-sync") })
+          .then((status) => {
+            if (status.state === "granted") {
+              return reg.periodicSync.register("wedding-refresh", {
+                minInterval: 24 * 60 * 60 * 1000,
+              });
+            }
+          })
+          .catch(() => {});
+      }
+
       if (reg.waiting) {
         _pendingSW = reg.waiting;
         _handleUpdate();
