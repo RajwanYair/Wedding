@@ -65,6 +65,14 @@ import {
   getPermissionSummary as _getPluginPermSummary,
 } from "../utils/plugin-permission.js";
 import {
+  createRegistry,
+  registerPlugin as _registerPlugin,
+  unregisterPlugin as _unregisterPlugin,
+  pluginCanCall as _pluginCanCall,
+  listPlugins as _listPlugins,
+  pluginSummaries as _pluginSummaries,
+} from "../utils/plugin-loader.js";
+import {
   addAdminUser,
   removeAdminUser,
   signInWith,
@@ -2273,5 +2281,78 @@ export function uninstallThemeById(id) {
   _saveMarketplaceInstalled(updated);
   showToast(t("theme_uninstalled_msg"), "success");
   renderThemeMarketplace();
+}
+
+// ─── S709: Plugin Loader Runtime ─────────────────────────────────────────────
+
+/** Module-level plugin registry (singleton per page load). */
+let _pluginRegistry = createRegistry();
+
+/**
+ * (Re)initialise the plugin registry. Useful for testing.
+ */
+export function initPluginRuntime() {
+  _pluginRegistry = createRegistry();
+}
+
+/**
+ * Register a plugin manifest into the runtime sandbox.
+ * Returns the result from plugin-loader.js (ok, plugin, errors).
+ *
+ * @param {import("../utils/plugin-manifest.js").PluginManifest} manifest
+ * @returns {{ ok: boolean, plugin?: object, errors?: string[] }}
+ */
+export function registerPluginRuntime(manifest) {
+  const result = _registerPlugin(_pluginRegistry, manifest);
+  if (result.ok) {
+    showToast(t("plugin_runtime_loaded"), "success");
+  } else {
+    const msg = result.errors?.includes(`plugin "${manifest?.id}" is already registered`)
+      ? t("plugin_runtime_already")
+      : t("plugin_runtime_failed");
+    showToast(msg, "error");
+  }
+  return result;
+}
+
+/**
+ * Unregister (unload) a plugin from the runtime.
+ *
+ * @param {string} pluginId
+ * @returns {boolean}
+ */
+export function unregisterPluginRuntime(pluginId) {
+  const ok = _unregisterPlugin(_pluginRegistry, pluginId);
+  showToast(ok ? t("plugin_runtime_unloaded") : t("plugin_runtime_not_found"), ok ? "success" : "error");
+  return ok;
+}
+
+/**
+ * Check whether a registered plugin has a specific permission method.
+ *
+ * @param {string} pluginId
+ * @param {string} method
+ * @returns {boolean}
+ */
+export function getPluginCanCall(pluginId, method) {
+  return _pluginCanCall(_pluginRegistry, pluginId, method);
+}
+
+/**
+ * List IDs of all loaded plugins.
+ *
+ * @returns {string[]}
+ */
+export function listLoadedPlugins() {
+  return _listPlugins(_pluginRegistry);
+}
+
+/**
+ * Get summary info for all loaded plugins (id, name, version, loadState).
+ *
+ * @returns {{ id: string, name: string, version: string, loadState: string }[]}
+ */
+export function getLoadedPluginSummaries() {
+  return _pluginSummaries(_pluginRegistry);
 }
 
