@@ -22,6 +22,7 @@ import { tallyMeals as _tallyMeals, formatChefReport as _formatChefReport } from
 import { printGuestList, printTableLayout } from "../utils/pdf-export.js";
 import { buildBatch } from "../utils/qr-batch.js";
 import { getQrDataUrl } from "../utils/qr-code.js";
+import { buildBatch as buildVcfBatch } from "../utils/vcard-batch.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -484,6 +485,35 @@ export function printGuestQrBatch() {
   win.document.write(html);
   win.document.close();
   win.focus();
+}
+
+/**
+ * Export all guests with contact info as a vCard 4.0 batch .vcf file (S706).
+ * Uses vcard-batch.js buildBatch() to produce a standards-compliant multi-contact file.
+ */
+export function exportGuestsVcf() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const contacts = guests
+    .filter((g) => g.status !== "declined")
+    .map((g) => ({
+      id: String(g.id ?? ""),
+      name: `${g.firstName ?? ""} ${g.lastName ?? ""}`.trim() || String(g.id),
+      phone: g.phone,
+      email: g.email,
+    }));
+  const vcf = buildVcfBatch(contacts);
+  if (!vcf) {
+    return;
+  }
+  const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "wedding-guests.vcf";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 /**
