@@ -4,12 +4,17 @@
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "npm ci",
-  "forwardPorts": [5173],
+  "postCreateCommand": "npm ci && npx playwright install --with-deps chromium",
+  "postStartCommand": "git config --global core.autocrlf input",
+  "forwardPorts": [5173, 4173],
   "portsAttributes": {
     "5173": {
       "label": "Vite Dev Server",
       "onAutoForward": "openBrowser"
+    },
+    "4173": {
+      "label": "Vite Preview",
+      "onAutoForward": "notify"
     }
   },
   "customizations": {
@@ -21,14 +26,20 @@
         "esbenp.prettier-vscode",
         "GitHub.copilot",
         "GitHub.copilot-chat",
-        "GitHub.vscode-pull-request-github"
+        "GitHub.vscode-pull-request-github",
+        "ms-playwright.playwright",
+        "vitest.explorer"
       ],
       "settings": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "eslint.useFlatConfig": true,
-        "files.eol": "\n"
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
       }
     }
+  },
+  "remoteEnv": {
+    "NODE_NO_WARNINGS": "1"
   }
 }
