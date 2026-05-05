@@ -1598,5 +1598,11 @@
   "ai_proxy_hint": "השאר ריק לגישה ישירה לספק",
   "ai_model_hint_ollama": "שם מודל Ollama (לדוגמה: llama3)",
   "ai_model_hint_gemini": "שם מודל Gemini (לדוגמה: gemini-1.5-flash)",
-  "ai_saved": "הגדרות AI נשמרו"
+  "ai_saved": "הגדרות AI נשמרו",
+  "cmd_ai_suggest_seating": "הצע סידורי ישיבה (AI)",
+  "cmd_ai_suggest_budget": "הצע טיפים תקציביים (AI)",
+  "cmd_ai_draft_message": "נסח הודעה (AI)",
+  "cmd_ai_draft_message_prompt": "נסח הודעת הזמנה לחתונה",
+  "ai_no_suggestions": "לא נמצאו הצעות לשיפור",
+  "ai_error": "שגיאה בעוזר AI"
 }

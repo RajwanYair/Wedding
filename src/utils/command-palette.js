@@ -1,12 +1,14 @@
 /**
- * S447: Smart guest command palette.
+ * S447 + S687: Smart guest command palette.
  * Opens a `<dialog>` overlay on Ctrl+K / Cmd+K.
  * Commands dispatch data-action events or navigate directly.
+ * S687: AI inline commands (suggest seating, suggest budget, draft message).
  * @owner main.js
  */
 
 import { t } from "../core/i18n.js";
 import { navigateTo } from "../core/nav.js";
+import { storeGet } from "../core/store.js";
 
 /** @type {HTMLDialogElement | null} */
 let _dialog = null;
@@ -48,6 +50,31 @@ function _buildCommands() {
       run: () => {
         closeCommandPalette();
         document.body.dispatchEvent(new CustomEvent("action", { detail: "exportJSON", bubbles: true }));
+      },
+    },
+    // S687: AI inline commands
+    {
+      id: "ai_suggest_seating",
+      label: () => `🤖 ${t("cmd_ai_suggest_seating")}`,
+      run: () => {
+        closeCommandPalette();
+        _runAiSuggestSeating();
+      },
+    },
+    {
+      id: "ai_suggest_budget",
+      label: () => `🤖 ${t("cmd_ai_suggest_budget")}`,
+      run: () => {
+        closeCommandPalette();
+        _runAiSuggestBudget();
+      },
+    },
+    {
+      id: "ai_draft_message",
+      label: () => `🤖 ${t("cmd_ai_draft_message")}`,
+      run: () => {
+        closeCommandPalette();
+        _runAiDraftMessage();
       },
     },
   ];
@@ -188,3 +215,115 @@ function _renderList(list, commands, onRun) {
     list.appendChild(li);
   }
 }
+
+// ── S687: AI inline command runners ───────────────────────────────────────
+
+/**
+ * Show a non-blocking toast-style AI result overlay near top of screen.
+ * @param {string} title
+ * @param {string} body
+ */
+function _showAiResult(title, body) {
+  const existing = document.getElementById("aiInlineResult");
+  if (existing) existing.remove();
+  const el = document.createElement("div");
+  el.id = "aiInlineResult";
+  el.setAttribute("role", "status");
+  el.setAttribute("aria-live", "polite");
+  el.style.cssText = [
+    "position:fixed",
+    "top:5rem",
+    "inset-inline-end:1rem",
+    "max-width:min(400px,90vw)",
+    "background:var(--color-surface,#1a1a2e)",
+    "color:var(--color-text,#fff)",
+    "border:1px solid rgba(255,255,255,0.15)",
+    "border-radius:0.75rem",
+    "padding:1rem",
+    "z-index:9999",
+    "box-shadow:0 4px 20px rgba(0,0,0,0.4)",
+    "font-size:0.875rem",
+    "line-height:1.5",
+  ].join(";");
+
+  const h = document.createElement("strong");
+  h.style.cssText = "display:block;margin-bottom:0.5rem;font-size:0.95rem";
+  h.textContent = title;
+
+  const p = document.createElement("p");
+  p.style.cssText = "margin:0 0 0.75rem";
+  p.textContent = body;
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.textContent = t("close");
+  close.style.cssText = "background:none;border:1px solid rgba(255,255,255,0.2);color:inherit;border-radius:0.375rem;padding:0.25rem 0.75rem;cursor:pointer;font-size:0.8rem";
+  close.addEventListener("click", () => el.remove());
+
+  el.appendChild(h);
+  el.appendChild(p);
+  el.appendChild(close);
+  document.body.appendChild(el);
+
+  // Auto-dismiss after 15 s
+  setTimeout(() => el.remove(), 15_000);
+}
+
+/**
+ * Run AI seating suggestions using current guest + table data (S687).
+ */
+async function _runAiSuggestSeating() {
+  try {
+    const { suggestSeating, sortSuggestions } = await import("../utils/ai-suggest.js");
+    const guests = /** @type {Array<{id:string,name:string,group?:string,plusOne?:boolean}>} */ (storeGet("guests") ?? []);
+    const tables = /** @type {Array<{capacity:number}>} */ (storeGet("tables") ?? []);
+    const avgCapacity = tables.length ? Math.round(tables.reduce((s, tb) => s + (tb.capacity || 8), 0) / tables.length) : 8;
+    const suggestions = sortSuggestions(suggestSeating(guests, avgCapacity));
+    if (!suggestions.length) {
+      _showAiResult(`🤖 ${t("cmd_ai_suggest_seating")}`, t("ai_no_suggestions"));
+      return;
+    }
+    const lines = suggestions.slice(0, 5).map((s) => `• [${s.priority}] ${s.title}: ${s.description}`).join("\n");
+    _showAiResult(`🤖 ${t("cmd_ai_suggest_seating")}`, lines);
+  } catch {
+    _showAiResult(`🤖 ${t("cmd_ai_suggest_seating")}`, t("ai_error"));
+  }
+}
+
+/**
+ * Run AI budget suggestions using current expense + vendor data (S687).
+ */
+async function _runAiSuggestBudget() {
+  try {
+    const { suggestBudget, sortSuggestions } = await import("../utils/ai-suggest.js");
+    const info = /** @type {{budget?:number}} */ (storeGet("weddingInfo") ?? {});
+    const expenses = /** @type {Array<{amount:number}>} */ (storeGet("expenses") ?? []);
+    const vendors = /** @type {Array<{price:number,paid:number}>} */ (storeGet("vendors") ?? []);
+    const guests = /** @type {unknown[]} */ (storeGet("guests") ?? []);
+    const totalBudget = Number(info.budget) || 0;
+    const spent = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+    const committed = vendors.reduce((s, v) => s + Number(v.price || 0) - Number(v.paid || 0), 0);
+    const suggestions = sortSuggestions(suggestBudget({ totalBudget, spent, committed, guestCount: guests.length }));
+    if (!suggestions.length) {
+      _showAiResult(`🤖 ${t("cmd_ai_suggest_budget")}`, t("ai_no_suggestions"));
+      return;
+    }
+    const lines = suggestions.slice(0, 5).map((s) => `• [${s.priority}] ${s.title}: ${s.description}`).join("\n");
+    _showAiResult(`🤖 ${t("cmd_ai_suggest_budget")}`, lines);
+  } catch {
+    _showAiResult(`🤖 ${t("cmd_ai_suggest_budget")}`, t("ai_error"));
+  }
+}
+
+/**
+ * Open the AI panel to draft a WhatsApp/email message (S687).
+ */
+async function _runAiDraftMessage() {
+  try {
+    const { openAiPanel } = await import("./ai-panel.js");
+    openAiPanel(t("cmd_ai_draft_message_prompt"));
+  } catch {
+    _showAiResult(`🤖 ${t("cmd_ai_draft_message")}`, t("ai_error"));
+  }
+}
+
