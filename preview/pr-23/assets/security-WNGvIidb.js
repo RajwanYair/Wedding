@@ -1,1 +1,0 @@
-import{F as e}from"./compliance-DivdpvSj.js";export{e as writeNFCTag};
