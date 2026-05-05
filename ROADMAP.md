@@ -1,887 +1,745 @@
-# Wedding Manager — Roadmap v31.5.0 (2026 Best-in-Class Refresh)
+# Wedding Manager — Roadmap v31.8.0 (2026 Best-in-Class Deep Rethink)
 
 > Architecture: [ARCHITECTURE.md](ARCHITECTURE.md) · History: [CHANGELOG.md](CHANGELOG.md) ·
 > Contributors: [CONTRIBUTING.md](CONTRIBUTING.md) · ADRs: [docs/adr/](docs/adr/) ·
 > Operations: [docs/operations/](docs/operations/)
 
-This document is a **deep, full-stack re-evaluation of every architecturally significant decision**
-in the project — frontend, backend, language, docs, build tooling, configuration, external APIs,
-database, and infrastructure — including decisions previously sealed as "clean" or "done." Nothing
-is grandfathered. The goal is a **best-in-class, Hebrew-first RTL, offline-first, WhatsApp-native,
-open-source, self-hostable wedding management platform** with a bundle 5–10× smaller than every
-commercial competitor.
+This document is a **comprehensive, first-principles re-evaluation of every decision** in the
+project — frontend runtime, backend infrastructure, code language, documentation strategy, code
+architecture, configuration management, tooling versions, external APIs, database design, and
+deployment infrastructure. **Nothing is grandfathered.** Every decision — including ones that
+appeared clean — is reopened for scrutiny.
 
-This roadmap **supersedes and consolidates** the prior v13.21 roadmap and the operational
-methodology prompt (formerly `ROADMAP.new.md`). Decisions and sprints from the prior plan that are
-now done are recorded in §17 ("Done — Carried Forward"); only live items flow into the forward plan.
+The goal: **best-in-class, Hebrew-first RTL, offline-first, WhatsApp-native, open-source,
+self-hostable wedding management platform** with a bundle 5–10× smaller than every commercial
+competitor and developer experience unmatched in the category.
 
 ---
 
 ## Contents
 
-0. [Executive Summary](#0-executive-summary-tldr)
-1. [North Star & Current State (v31.5.0)](#1-north-star--current-state-v3150)
-2. [Re-opened Decisions — Master Verdict Matrix](#2-re-opened-decisions--master-verdict-matrix)
-3. [First-Principles Rethink — If We Built Today (mid-2026)](#3-first-principles-rethink--if-we-built-today-mid-2026)
-4. [Competitive Landscape & Harvest Matrix](#4-competitive-landscape--harvest-matrix)
-5. [Honest Audit by Layer](#5-honest-audit-by-layer)
-6. [Lessons Learned](#6-lessons-learned)
+0. [Executive Summary](#0-executive-summary)
+1. [Current State (v31.8.0)](#1-current-state-v3180)
+2. [Deep Decision Rethink — Every Layer](#2-deep-decision-rethink--every-layer)
+3. [Competitive Landscape — 18-Product Comparison](#3-competitive-landscape--18-product-comparison)
+4. [Harvested Best Practices](#4-harvested-best-practices)
+5. [Honest Audit — What's Wrong](#5-honest-audit--whats-wrong)
+6. [What We Got Right & Wrong](#6-what-we-got-right--wrong)
 7. [Technical Debt & Risk Register](#7-technical-debt--risk-register)
-8. [Improve / Rewrite / Refactor / Enhance](#8-improve--rewrite--refactor--enhance)
+8. [Improve / Rewrite / Refactor / Enhance Plan](#8-improve--rewrite--refactor--enhance-plan)
 9. [Phased Plan v32 → v36](#9-phased-plan-v32--v36)
 10. [Sprint Backlog — Next 30 Sprints](#10-sprint-backlog--next-30-sprints)
-11. [Migration Playbooks](#11-migration-playbooks)
+11. [Architecture Target State (v36)](#11-architecture-target-state-v36)
 12. [Cost & Self-Hosting Profile](#12-cost--self-hosting-profile)
 13. [Success Metrics & SLOs](#13-success-metrics--slos)
 14. [Open Decisions Register](#14-open-decisions-register)
 15. [Operational Methodology](#15-operational-methodology)
 16. [Working Principles](#16-working-principles)
 17. [Release Line](#17-release-line)
-18. [Done — Carried Forward (v13 → v31)](#18-done--carried-forward-v13--v31)
+18. [Done — Sealed Decisions (v0 → v31.8)](#18-done--sealed-decisions-v0--v318)
 
 ---
 
-## 0. Executive Summary (TL;DR)
+## 0. Executive Summary
 
-**State (2025-07-15, v31.5.0):**
+### State (2026-05-05, v31.8.0)
 
-- **6121 tests** across **440** files · 0 lint errors · 0 warnings · 0 Node warnings
-- **24** sections · **25** services · **11** repositories · **7** handlers · **31** core modules ·
-  **138** utilities · **26** Supabase migrations · **12** edge functions · **6** locales
-  (HE · EN · AR · FR · ES · RU)
-- `BACKEND_TYPE = "supabase"` (primary, runtime); Sheets demoted to import/export
-- Auth: email allowlist + Google + Apple OAuth (Facebook removed); anonymous guest default
-- Bundle target ≤ 60 KB gzip (hard CI gate); WCAG 2.2 AA + axe-zero; Lighthouse ≥ 95
-- pushState router · View Transitions API · native `<dialog>` modals · Preact Signals store
-- Offline: Service Worker strategy cache + IDB queue + Background Sync API
-- 18 GitHub Actions workflows · CodeQL · OpenSSF Scorecard · CycloneDX SBOM · Trivy weekly ·
-  Trufflehog · ZAP baseline · OIDC
-- GitHub Pages canonical · MIT licence · zero-telemetry pledge
-- **9 Copilot agents** · 5 domain skills · 8 reusable prompts — full AI-augmented DX
+| Metric | Value | Health |
+| --- | --- | --- |
+| Tests | ~6300+ across 474 files | ✅ |
+| Sections | 27 (with mount/unmount lifecycle) | ✅ |
+| Services | 25 (target ≤ 25 held) | ✅ |
+| Core modules | 33 | ✅ |
+| Utilities | **190** | ⚠️ **Critical sprawl** |
+| Repositories | 11 (mandatory data path) | ✅ |
+| Handlers | 7 | ✅ |
+| Locales | 6 (HE · EN · AR · FR · ES · RU) | ✅ |
+| Supabase migrations | 26 | ✅ |
+| Edge functions | 13 | ✅ |
+| Bundle | ~50 KB gzip (gate ≤ 60 KB) | ✅ |
+| Lint | 0 errors, 0 warnings | ✅ |
+| Mobile | PWA + Capacitor scaffold | ⚠️ |
+| Public API | None | ❌ |
+| Plugin marketplace | Manifest + utils only; runtime not wired | ⚠️ |
+| AI | Adapters + utils; edge proxy not deployed | ⚠️ |
 
-### The five highest-leverage decisions this cycle
+### The 7 highest-leverage decisions this cycle
 
-1. **Audit & consolidate the 138-utility sprawl** — pre-emptive over-engineering risk.
-   Cull, merge, or wire every util; cap at ≤ 100 with `audit:utils` in CI.
-2. **Re-open the language decision: pilot TypeScript on new files** via opt-in ADR.
-   With TSC at 0 errors, the migration cost surface has narrowed; quantify in v32.
-3. **Plugin / theme marketplace + public REST API** — convert the OSS moat into a platform.
-4. **Native mobile (Capacitor) + iOS/Android signing pipeline** — close the only gap
-   competitors win on (PWA install rates plateau ~30%).
-5. **AI edge proxy (BYO key, multi-provider, streaming)** — finally wire the prompt-builders.
+1. **Halt utility sprawl immediately** — 190 files is unsustainable. Freeze new utils. Audit,
+   merge, delete. Hard CI gate at ≤ 120.
+2. **Adopt TypeScript for all new files** — at 0 TSC errors the migration surface is zero-risk.
+   `.ts` for new; gradual rename for existing. The JSDoc experiment succeeded but won't scale.
+3. **Deploy the AI proxy** — adapters and utils exist for everything but nothing is wired.
+   Ship one CF Worker that actually works end-to-end.
+4. **Wire the 10 newest utils into actual UI** — S664–S673 created theme-marketplace,
+   conditional-rsvp, floor-plan-builder, etc. None are wired to sections. "Built ≠ Done."
+5. **Ship Capacitor to App Store + Play Store** — scaffold exists since v31; signing + metadata
+   + distribution are the remaining steps.
+6. **Consolidate architecture: kill the "util-per-sprint" pattern** — the sprint methodology
+   of creating standalone utils without UI integration has produced 50+ unwired modules.
+   Every new feature must wire into a section or it doesn't ship.
+7. **Public REST API via PostgREST** — unlock integrations, third-party apps, and the plugin
+   ecosystem in one stroke.
 
-### Top 3 unique advantages to defend
+### Top 3 unique advantages (defend at all costs)
 
 1. **Bundle ≤ 60 KB gzip** — 5–10× smaller than every competitor. Hard CI gate, immutable.
-2. **WhatsApp-native** — only category app shipping WhatsApp Cloud API + bulk + delivery webhooks.
+2. **WhatsApp-native + WABA Cloud API** — only wedding app shipping bulk + webhooks + scheduling.
 3. **MIT + self-hostable + offline-first + RTL-first** — privacy, portability, locale moat.
+
+### Top 3 honest weaknesses (fix immediately)
+
+1. **190 utilities with no UI wiring** — over-engineering disguised as velocity.
+2. **No TypeScript** — JSDoc + `types.d.ts` is fragile at scale; refactoring is unsafe.
+3. **"Built but not wired" anti-pattern** — plugins, AI, themes, conditional RSVP all have
+   logic modules but no user-facing entry points.
 
 ---
 
-## 1. North Star & Current State (v31.5.0)
+## 1. Current State (v31.8.0)
 
 ### North Star
 
 *The fastest, most accessible, RTL-native, offline-first, open-source wedding manager on the web.
 Self-hostable in one click. Operable on flaky 3G in Hebrew. Integrated end-to-end with WhatsApp.
-Planner-grade analytics. AI-optional, privacy-first. A bundle 5–10× smaller than every commercial
-competitor. $0/month self-hosted. AI-augmented developer experience with 9 specialized agents.*
+Planner-grade analytics. AI-optional, privacy-first. $0/month self-hosted. Best-in-class DX.*
 
 ### Quality bar — every PR
 
 | Gate | Threshold |
 | --- | --- |
-| `npm run lint` | 0 errors, 0 warnings, 0 Node warnings |
-| `npm test` | All suites pass; 0 skipped |
-| `npm run build` | Exits 0; bundle ≤ 60 KB gzip (CI hard gate) |
+| `npm run lint` | 0 errors, 0 warnings |
+| `npm test` | All pass; 0 skipped |
+| `npm run build` | Bundle ≤ 60 KB gzip |
 | `npm run audit:arch` | 0 violations |
-| `npm run check:i18n` | 100% parity across all 6 locales |
+| `npm run check:i18n` | 100% parity (6 locales) |
 | `npm run check:credentials` | 0 plaintext secrets |
-| Lighthouse CI | ≥ 95 on perf · a11y · best-practices · SEO |
-| axe-core (Playwright) | 0 violations on every locale |
-| Coverage | ≥ 80% lines, ≥ 75% branches (enforced) |
-| TypeScript (`tsc --noEmit`) | 0 errors against `types.d.ts` |
+| Lighthouse CI | ≥ 95 perf · a11y · best-practices · SEO |
+| Coverage | ≥ 80% lines, ≥ 75% branches |
+| axe-core | 0 violations per locale |
 
-### Live state matrix
+### Technology stack snapshot
 
-| Dimension | Value | Health |
+| Layer | Technology | Version |
 | --- | --- | --- |
-| Tests | 6121 / 440 files / 0 Node warnings | ✅ |
-| Sections | 24 (BaseSection lifecycle) | ✅ |
-| Services | 25 (target ≤ 25 held) | ✅ |
-| Utilities | 138 | ⚠ audit & cap |
-| Repositories | 11 (mandatory data path) | ✅ |
-| Handlers | 7 | ✅ |
-| Core modules | 31 | ✅ |
-| Locales | 6 (HE · EN · AR · FR · ES · RU) | ✅ |
-| Migrations | 26 (Supabase) | ✅ |
-| Edge functions | 12 (csp-report, gdpr-erasure, guest-lookup, health, push-dispatcher, rsvp-email, rsvp-webhook, send-email, sync-to-sheets, waba-bulk-send, whatsapp-send, error-receiver) | ✅ |
-| Active backend | `BACKEND_TYPE = "supabase"` | ✅ |
-| Auth | Email allowlist + Google + Apple + anonymous guest | ✅ |
-| Realtime | Supabase Realtime active (presence + counters) | ✅ |
-| Router | pushState + typed routes + View Transitions | ✅ |
-| Modals | Native `<dialog>` (8 modals) | ✅ |
-| State | Preact Signals reactive store | ✅ |
-| Storage | IndexedDB primary + AES-GCM PII at rest | ✅ |
-| Offline queue | IDB-persistent + Background Sync | ✅ |
-| Service Worker | Strategy cache (5-mode) + precache + queue flush | ✅ |
-| Monitoring | Glitchtip/Sentry adapter (DSN env-driven) | ✅ |
-| CI/CD | OIDC tokens (no long-lived PATs); 18 workflows | ✅ |
-| Trusted Types | Enforced in production CSP | ✅ |
-| Bundle | ~50 KB gzip (gate ≤ 60 KB) | ✅ |
-| Copilot agents | 9 domain-specialized (guest, designer, analytics, vendor, release, supabase, security, performance, i18n) | ✅ |
-| Skills | 5 reusable (testing, store-state, auth-security, rtl-i18n, theming) | ✅ |
-| Prompts | 8 task templates (add-feature, code-review, debug-issue, i18n-add, pre-release, refactor-section, security-audit, version-bump) | ✅ |
-| Mobile | PWA only — no Capacitor build | ⚠ |
-| Public API | None | ⚠ |
-| Plugin marketplace | Manifest validated; runtime not wired | ⚠ |
-| AI | Prompt-builders + adapters; edge proxy not deployed | ⚠ |
-| Compliance pack | GDPR erasure edge function only | ⚠ |
-| Visual regression | Playwright smoke + per-section baseline | ✅ |
-| Mutation testing | Stryker pilot on `core/` + `repositories/` | ✅ |
+| UI runtime | Vanilla ES2025 + Preact Signals | 1.x (~3 KB) |
+| Build | Vite | 8.x |
+| CSS | `@layer` + nesting + `@scope` + container-q | Native |
+| Routing | pushState + View Transitions API | Native |
+| State | Preact Signals reactive store | 1.x |
+| Modals | Native `<dialog>` + Popover API | Native |
+| Validation | Valibot | 1.x (~1 KB) |
+| Sanitization | DOMPurify + Trusted Types | 3.x |
+| Backend | Supabase (Postgres + RLS + Realtime) | Latest |
+| Edge | Supabase Edge Functions (Deno) | Latest |
+| Auth | Supabase Auth (Google + Apple + anonymous) | Latest |
+| Storage | IndexedDB + AES-GCM encryption at rest | Native |
+| Offline | SW strategy cache + Background Sync | Native |
+| Tests | Vitest 4 + Playwright 1.59 | Latest |
+| Lint | ESLint 10 + Stylelint 17 + HTMLHint | Latest |
+| CI/CD | GitHub Actions (18 workflows + OIDC) | Latest |
+| Hosting | GitHub Pages | Static |
+| Node | 22 LTS | ≥22.0.0 |
 
 ---
 
-## 2. Re-opened Decisions — Master Verdict Matrix
+## 2. Deep Decision Rethink — Every Layer
 
-> **Every architecturally significant decision is re-opened from scratch — May 2026.**
-> Verdict columns: **KEEP**, **EVOLVE** (refine, no rewrite), **REPLACE** (rewrite), **DROP**.
-> Each REPLACE / DROP requires an ADR before implementation work begins.
+> **Methodology:** For each decision, we ask:
+>
+> 1. If we started today from scratch, would we make the same choice?
+> 2. What has changed in the ecosystem since this decision was made?
+> 3. What is the migration cost vs the benefit?
+>
+> Verdict: **KEEP** · **EVOLVE** (refine, no rewrite) · **REPLACE** · **DROP**
 
-### 2.1 Frontend — runtime, build, UI primitives
+### 2.1 Frontend Runtime & UI
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 1 | UI runtime (vanilla ES2025, no framework) | Active | **KEEP** | Bundle moat indefensible with any framework. Re-validated annually. |
-| 2 | Reactive state (Preact Signals 1.x, ~3 KB) | Active (S400) | **KEEP** | Explicit, 0-overhead, drop-in for the prior Proxy store. |
-| 3 | Build tool (Vite 8) | Active | **EVOLVE → Vite 9 (Rolldown) once stable** | In-place upgrade; Rolldown reduces CI build time ~40%. |
-| 4 | Build runtime (Node 22 LTS) | Active | **EVOLVE → Node 24 LTS Q4 2026** | Track LTS; pin in `.nvmrc` and CI. |
-| 5 | Local dev runtime (Bun) | Not used | **EVOLVE — adopt for `bun test` locally** | ~4× faster locally; CI stays Node for stability. |
-| 6 | CSS architecture (`@layer` + nesting + `@scope`) | Active | **KEEP + extend** | Native primitives outpace every CSS library at our scale. |
-| 7 | CSS modern primitives (container-q, `light-dark()`, `color-mix()`) | Partial | **EVOLVE — finish coverage** | Free wins; zero dep cost. |
-| 8 | Tailwind / Panda / UnoCSS | Not adopted | **DROP — permanent reject** | Token system already CSS-var-based; Tailwind v4 adds ~4 KB. |
-| 9 | Web Components | Not used | **EVOLVE — adopt for atomic primitives only** | `<wedding-badge>`, `<rsvp-pill>`, `<table-card>` — not sections. |
-| 10 | Routing (`pushState` + typed routes + View Transitions) | Active (S390–392) | **KEEP** | Solved. Maintain typed-route table. |
-| 11 | Modals (native `<dialog>` + Popover API) | Active (S402–403) | **KEEP** | Solved. Removed focus-trap polyfill. |
-| 12 | Animation (CSS + View Transitions API) | Active | **EVOLVE — Animation Timeline API** | Scroll-driven section reveals; 0 KB JS cost. |
-| 13 | Virtual scrolling (manual DOM, no library) | Active in Guests | **EVOLVE — extend to Vendors + RSVP_Log** | Threshold 200 rows. |
-| 14 | URL filter state | Active | **KEEP** | Power-user table-stakes. |
-| 15 | Error boundaries (BaseSection level) | Active (S380) | **KEEP** | Section crash isolated; toast fallback. |
-| 16 | Font strategy (system stack) | Active | **KEEP** | HE RTL renders best with system fonts; zero font-load. |
-| 17 | Print pipeline (`services/print-rows.js`) | Wired | **EVOLVE — add seating cards + dietary cards UI triggers** | Service is built; add UI. |
-| 18 | Structured data (JSON-LD `Event` schema) | Not added | **EVOLVE — add to public website builder** | SEO + rich results. |
-| 19 | Visual regression baseline | Per-section + per-theme | **KEEP — extend per-locale (HE/AR RTL parity)** | RTL leadership defended in CI. |
-| 20 | UI delegation (`data-action` namespacing) | Active | **KEEP** | `module:action` enforced. |
+| 1 | No framework (vanilla ES2025) | Active | **KEEP** | Bundle moat is indefensible with React/Vue/Svelte. Vanilla + Signals is the only way to stay ≤ 60 KB. |
+| 2 | Preact Signals for reactivity | Active | **KEEP** | 3 KB, explicit, zero-magic. Outperforms custom Proxy. |
+| 3 | Vite 8 build | Active | **EVOLVE → Vite 9 (Rolldown)** | Rolldown = 40% faster builds. Track stability; upgrade in-place. |
+| 4 | Native CSS (`@layer` + `@scope` + nesting) | Active | **KEEP + finish** | Zero-dep CSS. Extend: container-q everywhere, `light-dark()`, Animation Timeline. |
+| 5 | No Tailwind/UnoCSS/Panda | Active | **KEEP (permanent)** | Adds 4-12 KB; our CSS custom prop system is superior at this scale. |
+| 6 | Native `<dialog>` modals | Active | **KEEP** | Solved. No polyfills needed. |
+| 7 | pushState + View Transitions | Active | **KEEP** | Solved. Typed routes maintained. |
+| 8 | System font stack | Active | **KEEP** | Zero font-load FOUT; HE renders best with system fonts. |
+| 9 | Virtual scroll (Guests) | Active | **EVOLVE → extend to all lists >100 items** | Vendors, RSVP log, audit log need it. |
+| 10 | Web Components for primitives | Not started | **EVOLVE → pilot 3-5 atomic components** | `<wedding-badge>`, `<rsvp-pill>`, `<table-card>`. Shadow DOM for encapsulation. |
+| 11 | Animation Timeline API | Partial | **EVOLVE → full section reveals** | Scroll-driven animations; 0 KB JS. |
+| 12 | Structured data (JSON-LD) | Missing | **ADD** | SEO for public wedding websites. |
 
-### 2.2 Backend, Data, Auth
+### 2.2 Code Language & Type System
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 21 | Primary backend (Supabase Postgres + RLS) | Active (S396) | **KEEP + harden** | Solved. Add cross-region read replicas Phase E. |
-| 22 | DB indexing (composite on every `event_id` FK) | Done (S382) | **KEEP** | Re-audit on every new table. |
-| 23 | Soft delete + 90-day hard-delete cron | Active | **KEEP** | Retention policy caps storage; undo retains tombstones. |
-| 24 | Edge runtime (Supabase Edge primary; CF Workers fallback) | Hybrid | **EVOLVE — split LLM proxy + heavy CPU to CF Workers** | Free 100 K/day; faster cold start. |
-| 25 | Auth (Supabase Auth: Google + Apple + email allowlist) | Active | **KEEP + add WebAuthn passkeys** | Passkeys for admin; biometric kiosk unlock. |
-| 26 | Auth admin model (`admin_users` table + RLS) | Active (S386) | **KEEP** | Co-planner change requires zero deploy. |
-| 27 | Storage primary (IndexedDB + AES-GCM at rest) | Active (S393) | **KEEP** | 5 MB cap retired; PII encrypted. |
-| 28 | Offline write queue (IDB + Background Sync API) | Active (S394) | **KEEP** | Survives page crash. |
-| 29 | Realtime (Supabase Realtime: presence + counters) | Active | **EVOLVE — add live RSVP feed + conflict resolver UI** | Differentiator already built; expose more. |
-| 30 | File storage (Supabase Storage + signed URLs) | Active | **EVOLVE — Cloudflare image transforms in front** | Same provider; CDN-delivered. |
-| 31 | Secrets (GitHub Secrets + Actions OIDC) | Active | **KEEP** | OIDC tokens are short-lived; no rotation. |
-| 32 | Database lint (`supabase db lint` in CI) | Active | **KEEP** | Catches RLS / NULL / FK gaps before merge. |
-| 33 | CRDT | Not used | **DROP — permanent reject** | Realtime + last-write-wins suffices at couple+planner scale. |
-| 34 | Multi-tenant model | Single-tenant per deploy | **EVOLVE — `org_id` + RLS for SaaS path** | Optional Phase D; self-host stays single-tenant. |
-| 35 | Audit log surface | Tables exist; UI absent | **EVOLVE — Settings → Audit log viewer** | Required for SOC 2 / GDPR posture. |
+| 13 | JavaScript + JSDoc types | Active | **REPLACE → TypeScript for all new files** | JSDoc worked to bootstrap; at 190 files it's unmaintainable. TS gives: safe refactoring, auto-imports, exhaustive switches, discriminated unions. The `types.d.ts` + checkJs bridge worked; now graduate to real TS. |
+| 14 | `types.d.ts` for ambient types | Active | **EVOLVE → proper `.ts` interfaces** | Keep during migration; gradually replace with co-located types. |
+| 15 | ESLint 10 flat config | Active | **KEEP** | Depth + plugin ecosystem unmatched. |
+| 16 | Prettier formatting | Active | **KEEP** | Non-negotiable code style. |
+| 17 | Biome as supplemental | Not used | **ADD for local speed** | 10× faster local lint; ESLint remains CI authority. |
+| 18 | Valibot for runtime validation | Active | **KEEP** | 1 KB; tree-shakeable; same DX as Zod at 1/13th the size. |
 
-### 2.3 Code Language & Quality
+### 2.3 Backend & Database
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 36 | Code language (JS + JSDoc-strict + `types.d.ts` + `checkJs`) | TSC = 0 errors | **EVOLVE — pilot `.ts` for new files via opt-in ADR** | At 0 TSC errors the migration cost is now containable; quantify in Phase A. |
-| 37 | Validation (Valibot 100% boundary coverage) | Active | **KEEP** | 1 KB; same DX as Zod. |
-| 38 | Sanitization (DOMPurify + Trusted Types) | Active | **KEEP** | XSS depth-defence enforced in CSP. |
-| 39 | Linting (ESLint 10 flat) | Active | **EVOLVE — Biome as supplemental local speed check** | ESLint depth + Biome speed. |
-| 40 | Formatting (Prettier) | Active | **KEEP** | Single source for code style. |
-| 41 | Architecture enforcement (`arch-check.mjs --strict`) | Active | **KEEP + extend handler→repo contract enforcement** | Section → handler → repo → service is canonical. |
-| 42 | Dead-export audit | Gated 0 | **KEEP** | Prevents dead-code accumulation. |
-| 43 | Coverage gate (≥ 80% lines / 75% branches) | Enforced | **KEEP — ratchet upward** | Floor never drops. |
-| 44 | JSDoc gate (eslint-plugin-jsdoc) | All `src/` | **KEEP** | 100% function coverage required. |
-| 45 | Mutation testing (Stryker on `core/` + `repositories/`) | Active | **EVOLVE — extend to handlers + critical utils** | Reveals tests passing on dead code. |
-| 46 | **Utility sprawl audit (138 files)** | New concern | **REPLACE — inventory + cull + cap ≤ 100; `audit:utils` in CI** | S444→S553 expansion accumulated debt; some utils are unused. |
+| 19 | Supabase (Postgres + RLS) | Active | **KEEP** | Perfect fit: managed Postgres, built-in auth, realtime, storage, edge functions. |
+| 20 | Row-Level Security on all tables | Active | **KEEP + audit quarterly** | RLS is the single most important security layer. |
+| 21 | 26 migrations (schema) | Active | **KEEP** | Well-structured incremental schema. |
+| 22 | Soft delete + 90-day hard-delete | Active | **KEEP** | Storage-capped undo + GDPR compliance. |
+| 23 | IndexedDB + AES-GCM client storage | Active | **KEEP** | PII encrypted at rest on device. |
+| 24 | Background Sync offline queue | Active | **KEEP** | Zero data loss on network failure. |
+| 25 | Supabase Realtime (presence + counters) | Active | **EVOLVE → live RSVP feed + conflict UI** | Infrastructure exists; expose more features. |
+| 26 | Supabase Storage + signed URLs | Active | **EVOLVE → Cloudflare image transforms** | CDN delivery + on-the-fly resizing. |
+| 27 | Edge functions (Deno) | 13 active | **KEEP + add AI proxy + scheduling** | Supabase Edge is the right place for DB-coupled logic. |
+| 28 | No Redis/cache layer | Active | **KEEP for now** | At wedding scale (300-1000 guests), Postgres is fast enough. Revisit at multi-tenant SaaS scale. |
+| 29 | Multi-tenant model | Single-tenant | **EVOLVE → `org_id` + RLS for SaaS path** | Phase D. Self-host stays single-tenant. |
 
-### 2.4 Build, Test, Tooling
+### 2.4 Authentication & Security
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 47 | Bundler (Vite 8) | Active | **EVOLVE — Vite 9 (Rolldown) when stable** | In-place. |
-| 48 | Code splitting (dynamic `import()` only; no `manualChunks`) | Active (S385) | **KEEP** | Vite tree-shakes better than manual config. |
-| 49 | Package manager (npm 11) | Active | **EVOLVE — pnpm pilot in CI-only mode** | Phantom-dep blocking; shared `node_modules/` migration plan. |
-| 50 | Test runner (Vitest 4) | Active | **KEEP** | `pool: forks` is the only stable mode for happy-dom. |
-| 51 | E2E (Playwright + axe + visual reg) | Active | **EVOLVE — full RSVP + offline + multi-event + per-locale a11y** | One smoke is not a regression suite. |
-| 52 | Performance test (Lighthouse CI hard gate ≥ 95) | Active | **EVOLVE — per-locale + per-theme matrix** | RTL parity defended pixel-for-pixel. |
-| 53 | Service Worker (custom strategy cache) | Active | **EVOLVE — Workbox patterns without the dep** | Adopt patterns; reject the 30 KB. |
-| 54 | PWA (manifest + share target + protocol handlers) | Active | **EVOLVE — Badge API + Periodic Sync + Push payload encryption** | 2026 PWA baseline. |
-| 55 | GitHub Actions (7 workflows + OIDC) | Active | **KEEP + add Trivy daily + ZAP weekly** | Static + runtime defence. |
-| 56 | Dependabot (grouped) | Active | **KEEP** | Weekly cadence. |
-| 57 | Stryker mutation gate | Active | **KEEP — score ≥ 70%** | Floor never drops. |
-| 58 | Bundle budget (`scripts/bundle.budget.json`) | Active | **KEEP — ≤ 60 KB gzip immutable** | Bundle moat is the moat. |
+| 30 | Supabase Auth (Google + Apple + anon) | Active | **EVOLVE → add WebAuthn passkeys** | Passkeys for admin; biometric kiosk unlock. |
+| 31 | Facebook OAuth removed | Done | **KEEP (permanent drop)** | <2% adoption; GDPR cost too high. |
+| 32 | CSP + Trusted Types | Active | **KEEP** | XSS depth-defence. |
+| 33 | OIDC in GitHub Actions | Active | **KEEP** | No long-lived tokens. |
+| 34 | SRI for CDN assets | Active | **KEEP** | Supply chain protection. |
+| 35 | Zero-telemetry pledge | Active | **KEEP** | Privacy moat. Document in `docs/principles/`. |
+| 36 | Trufflehog + CodeQL + Trivy | Active | **KEEP** | Layered security scanning. |
 
-### 2.5 Infrastructure & Hosting
+### 2.5 External APIs & Integrations
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 59 | Hosting (GitHub Pages canonical) | Active | **KEEP — add Cloudflare proxy** | Brotli, HTTP/3, DDoS, image transforms; free. |
-| 60 | Custom domain | Not acquired | **EVOLVE — acquire short vanity domain ($10/yr)** | Memorable RSVP URLs. |
-| 61 | Self-host templates | Not built | **EVOLVE — 1-click deploy to Vercel · Netlify · CF · Render** | Required for enterprise self-host adoption. |
-| 62 | Monitoring (Sentry/Glitchtip) | Active (DSN env) | **KEEP + add UptimeRobot free** | Free 50-monitor, 5-min checks. |
-| 63 | Multi-region | Single region | **EVOLVE — region pick on self-host (GDPR data-residency)** | Phase E. |
-| 64 | Incident runbook | `docs/operations/` exists | **EVOLVE — quarterly chaos drill** | Test the runbook; don't just write it. |
+| 37 | WhatsApp Cloud API (WABA) | Active | **EVOLVE → bulk UI + scheduling + A/B** | Infrastructure wired; UI exposure incomplete. |
+| 38 | AI/LLM (multi-provider BYO key) | Adapters only | **REPLACE → deploy CF Worker proxy NOW** | This is the #1 "built but not wired" gap. |
+| 39 | Stripe (partial) | Deep links only | **REPLACE → Stripe Connect** | Full vendor payments, receipts, milestones, e-sign. |
+| 40 | Google Calendar | Partial | **EVOLVE → finish two-way sync** | Add-to-calendar must actually sync. |
+| 41 | Maps (OSM + Waze + GMaps) | Active | **KEEP** | Privacy-first + IL-native. |
+| 42 | Web Push (VAPID) | Active | **EVOLVE → Periodic Sync + Badge API** | 2026 PWA baseline. |
+| 43 | Photo CDN | Supabase Storage | **EVOLVE → CF image transforms** | On-the-fly resize/format. |
 
-### 2.6 i18n & Accessibility
+### 2.6 Documentation & Developer Experience
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 65 | i18n format (flat JSON + ICU MessageFormat for HE/AR plurals) | Partial | **EVOLVE — finish ICU coverage on HE + AR** | Plural forms not expressible in flat strings. |
-| 66 | Locales (HE · EN · AR · FR · ES · RU) | 6 active | **EVOLVE — community pipeline for additional languages** | Lower the bar to add a locale. |
-| 67 | Locale fallback (HE primary; per-key EN fallback) | Active | **KEEP** | Prevents blank strings. |
-| 68 | RTL testing (Playwright per-locale) | Active | **KEEP — pixel delta < 5% HE↔EN** | RTL leadership claim defended. |
-| 69 | Accessibility (WCAG 2.2 AA + axe-zero) | Active | **EVOLVE — real Hebrew screen-reader test (NVDA + VoiceOver)** | axe catches syntax; SR catches semantics. |
-| 70 | Reduced-motion / high-contrast | Partial | **EVOLVE — full coverage on every section** | OS preferences honoured everywhere. |
+| 44 | Docs amount | Extensive (ROADMAP, ARCH, AGENTS, ADRs, ops, how-to) | **EVOLVE → quality over quantity** | Some docs are stale or redundant. Archive what's outdated. |
+| 45 | Diátaxis structure | Partial | **EVOLVE → complete** | Tutorial, How-to, Reference, Explanation — all four must exist. |
+| 46 | ADR practice | 12+ ADRs | **KEEP** | Mandate ADR for every REPLACE/DROP. |
+| 47 | Mermaid diagrams | CI-validated | **KEEP + add sequence diagrams** | Auth, RSVP, sync, AI flows. |
+| 48 | User guides | Partial | **EVOLVE → complete all 4** | Couple, Planner, Vendor, Self-host guides. |
+| 49 | Copilot agents (9) | Active | **KEEP** | Full domain coverage. |
+| 50 | `AGENTS.md` as source of truth | Active | **KEEP** | `copilot-instructions.md` mirrors it. |
+| 51 | Codespaces template | Missing | **ADD** | First-PR friction removed. |
+| 52 | README quality | Good | **EVOLVE → top 1% polish** | Animated demo GIF, architecture diagram, badges row. |
 
-### 2.7 External APIs & Integrations
+### 2.7 Build, Test & CI/CD
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 71 | WhatsApp (`wa.me` + WABA helper + Cloud API edge fn) | Active | **EVOLVE — bulk sender UI + delivery webhooks + A/B** | Cloud API is wired; expose more in UI. |
-| 72 | Google OAuth (via Supabase Auth) | Active | **KEEP** | Three SDKs removed; uniform JWT. |
-| 73 | Apple OAuth (via Supabase Auth) | Active | **KEEP** | Same as above. |
-| 74 | Facebook OAuth | Removed | **KEEP — permanent drop** | < 2% adoption; GDPR cost too high. |
-| 75 | AI / LLM (BYO key edge proxy, multi-provider, streaming) | Adapters built; proxy not deployed | **REPLACE — deploy CF Worker proxy + Ollama local opt-in** | Phase A. |
-| 76 | Payments (deep links Bit/PayBox/PayPal + Stripe Checkout for vendors) | Partial | **EVOLVE — Stripe Connect + receipts + milestones** | HoneyBook-style contracts + e-sign. |
-| 77 | Maps (OSM embed + Waze + Google Maps deep link) | Active | **KEEP** | Privacy-first + IL-native (Waze). |
-| 78 | Calendar (`.ics` + Google Calendar OAuth two-way sync) | Partial | **EVOLVE — finish two-way sync** | Couples expect "add to calendar" to actually sync. |
-| 79 | Web Push (VAPID + payload encryption + Badge API) | Active | **EVOLVE — Periodic Sync for re-engagement** | 2026 baseline. |
-| 80 | Photo CDN (Supabase Storage + CF transforms) | Partial | **EVOLVE — finish CF transform layer** | Signed URLs delivered via CF. |
-| 81 | Vendor catalogue (CSV/JSON import + IL enrichment) | Partial | **EVOLVE — Lystio-format importer** | OSS-aligned; no walled directory. |
-| 82 | Registry (deep links: Amazon IL + boutique stores) | Not added | **EVOLVE — structured deep links + UI** | Couples expect this. |
-| 83 | Compliance API (GDPR + CCPA + LGPD erasure + portability) | GDPR erasure only | **EVOLVE — full pack Phase E** | EU/CA/BR self-host. |
+| 53 | Vitest 4 (forks pool) | Active | **KEEP** | Stable with happy-dom; fast enough. |
+| 54 | Playwright E2E + axe | Active | **EVOLVE → full RSVP flow + offline + per-locale** | One smoke test is not a regression suite. |
+| 55 | Stryker mutation testing | Active | **EVOLVE → extend to handlers + critical utils** | Reveals hollow tests. |
+| 56 | Bundle budget (≤ 60 KB) | Active | **KEEP (immutable)** | The moat. |
+| 57 | npm 11 | Active | **EVOLVE → pnpm** | Phantom-dep blocking; faster installs; better monorepo support. |
+| 58 | Node 22 LTS | Active | **EVOLVE → Node 24 LTS when available** | Track LTS. |
+| 59 | 18 GitHub Actions workflows | Active | **KEEP + consolidate where possible** | Some workflows could be merged. |
+| 60 | Lighthouse CI hard gate | Active | **EVOLVE → per-locale + per-theme matrix** | RTL parity defended in CI. |
 
-### 2.8 Documentation & Developer Experience
+### 2.8 Infrastructure & Hosting
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 84 | Docs structure (Diátaxis: tutorial / how-to / reference / explanation) | Partial | **EVOLVE — complete; archive >2 minor versions old** | Discoverability. |
-| 85 | Docs renderer (Markdown only) | Active | **KEEP — MkDocs/Starlight only if `docs/` > 80 files** | Markdown survives every renderer. |
-| 86 | ADR practice | 12+ ADRs | **KEEP — mandate ADR for every REPLACE/DROP verdict** | The "why" must outlive contributors. |
-| 87 | Mermaid diagrams (`validate-mermaid.mjs` in CI) | Active | **EVOLVE — sequence diagrams for auth, sync, RSVP, push, AI flows** | Diagrams are the living spec. |
-| 88 | User-facing guides (couple, planner, vendor, self-host) | Partial | **EVOLVE — finish all four** | Required for "best in class". |
-| 89 | Copilot agents (9 custom) | Active | **DONE — full coverage achieved** | Guest, Designer, Analytics, Vendor, Release, Supabase, Security, Performance, i18n agents. |
-| 90 | Inline docs (eslint-plugin-jsdoc on all `src/`) | Active | **KEEP** | 100% coverage. |
-| 91 | `AGENTS.md` + `.github/copilot-instructions.md` consolidation | Resolved | **DONE — single source-of-truth** | `AGENTS.md` canonical; copilot-instructions mirrors it. |
-| 92 | Contribution flow | `CONTRIBUTING.md` | **EVOLVE — first-PR Codespaces template** | Lower contribution friction. |
+| 61 | GitHub Pages (static) | Active | **EVOLVE → add Cloudflare proxy** | Brotli, HTTP/3, DDoS, image transforms — free tier. |
+| 62 | No custom domain | Active | **REPLACE → acquire short domain** | `weddingmgr.app` or similar. Memorable RSVP URLs. |
+| 63 | No 1-click deploy | Active | **ADD → Vercel/Netlify/CF/Render templates** | Required for self-host adoption. |
+| 64 | Single-region Supabase | Active | **KEEP for now** | Single-region is fine for wedding scale. Multi-region Phase E. |
+| 65 | Monitoring (Sentry/Glitchtip) | Active | **EVOLVE → add UptimeRobot** | External availability monitor. |
 
-### 2.9 Security
+### 2.9 Mobile & Native
 
-| # | Decision | Today | Verdict | Rationale |
+| # | Decision | Current | Verdict | Rationale |
 | --- | --- | --- | --- | --- |
-| 93 | CSP (production + Trusted Types) | Active | **KEEP — ratchet `unsafe-inline` removal** | Already require-trusted-types-for 'script'. |
-| 94 | SRI (CDN assets) | Active | **KEEP — validate in CI** | Already gated. |
-| 95 | Supply chain (SBOM + Trivy + Scorecard + CodeQL + OIDC) | Active | **EVOLVE — add `trufflehog` + Dependency Review** | Catch secrets regex misses. |
-| 96 | PII encryption (AES-GCM at rest in IDB) | Active | **KEEP** | All PII keys encrypted. |
-| 97 | Telemetry pledge (zero in upstream build) | Active | **KEEP — document in `docs/principles/no-telemetry.md`** | Privacy moat is documented + testable. |
-| 98 | OWASP runtime (ZAP weekly) | Not active | **EVOLVE — add weekly ZAP against Vite preview** | Static covered; runtime gap. |
-| 99 | Secret scanning | `check-plaintext-secrets.mjs` | **EVOLVE — add `trufflehog` GH Action** | Layered. |
-| 100 | Compliance posture | Partial | **EVOLVE — Phase E full pack (GDPR + CCPA + LGPD)** | EU/CA/BR self-host. |
+| 66 | PWA primary | Active | **KEEP as primary** | PWA install rates are sufficient for most users. |
+| 67 | Capacitor scaffold | Exists | **EVOLVE → ship to App Store + Play Store** | Native NFC, haptics, share, push — close the gap. |
+| 68 | Tauri considered | Not adopted | **DROP** | Capacitor is better for mobile; Tauri is for desktop. |
+
+### 2.10 The "Utility Sprawl" Problem (Critical Rethink)
+
+| # | Decision | Current | Verdict | Rationale |
+| --- | --- | --- | --- | --- |
+| 69 | One util file per concept | 190 files | **REPLACE → domain-grouped modules** | `src/utils/vendor/` not 12 separate vendor-*.js files. |
+| 70 | Sprint = create new util | Pattern since S444 | **REPLACE → Sprint = wire feature into UI** | "Built ≠ Done" principle violated 50+ times. |
+| 71 | No UI wiring requirement | Active | **REPLACE → every feature must have a UI entry point or it's not shipped** | Hard rule. |
+| 72 | No util ownership enforcement | Partial | **REPLACE → `@owner` JSDoc tag + CI gate** | Every util must declare which section/service uses it. |
 
 ---
 
-## 3. First-Principles Rethink — If We Built Today (mid-2026)
+## 3. Competitive Landscape — 18-Product Comparison
 
-> Pretend the repo is blank. It is May 2026. We are building a Hebrew-first RTL wedding manager
-> for a 300-guest event, $0/month budget, offline-capable, WhatsApp-native, open-source.
+### 3.1 Feature Matrix
 
-| Layer | 2026 greenfield choice | Current reality | Decision |
-| --- | --- | --- | --- |
-| UI runtime | Vanilla ES2025 + Preact Signals (3 KB) | Same | **MATCH — keep** |
-| Build | Vite 8 → 9 (Rolldown) + dynamic imports | Same | **MATCH — track Vite 9** |
-| CSS | `@layer` + `@scope` + container-q + `light-dark()` + `color-mix()` + View Transitions | Same | **MATCH — finish primitive coverage** |
-| Modals | Native `<dialog>` + Popover API + Anchor Positioning | Same | **MATCH — keep** |
-| Routing | `pushState` + typed routes + View Transitions | Same | **MATCH — keep** |
-| State | Preact Signals — explicit, 0-overhead | Same | **MATCH — keep** |
-| Storage | IndexedDB + AES-GCM at rest + persistent queue | Same | **MATCH — keep** |
-| Backend | Supabase as single source of truth | Same | **MATCH — keep** |
-| Edge | Supabase Edge (DB-coupled) + Cloudflare Workers (stateless + LLM) | Hybrid | **GAP — deploy CF Worker for AI** |
-| Auth | Supabase Auth (Google + Apple OIDC) + magic link + WebAuthn passkeys | OAuth + email allowlist | **GAP — add passkeys** |
-| Code language | JS + JSDoc-strict + 0 TSC errors; pilot `.ts` for new files | Same | **MATCH — pilot ADR Phase A** |
-| Validation | Valibot at every boundary (100%) | Same | **MATCH — re-audit annually** |
-| i18n | ICU MessageFormat + 6 locales | Partial ICU | **GAP — finish HE/AR plurals** |
-| Offline | SW strategy cache + Background Sync + Periodic Sync + Push | Same minus Periodic Sync | **GAP — add Periodic Sync** |
-| Tests | Vitest + Playwright + axe-per-locale + LH-CI + visual reg + mutation | Same | **MATCH — extend per-locale matrix** |
-| Hosting | GH Pages canonical + Cloudflare proxy | GH Pages only | **GAP — add CF proxy** |
-| AI | Edge proxy + BYO key (multi-provider + Ollama) + streaming | Adapters only | **GAP — deploy proxy** |
-| Mobile | PWA primary + Capacitor when install rate < 30% | PWA only | **GAP — Phase B Capacitor** |
-| Payments | Stripe Connect (vendor) + IL deep-links (registry) | Partial | **GAP — Stripe Connect** |
-| Photos | Supabase Storage + CF transforms + signed URLs | Partial | **GAP — CF transform layer** |
-| Monitoring | Sentry/Glitchtip opt-in DSN + UptimeRobot | Sentry only | **GAP — add UptimeRobot** |
-| Plugin marketplace | Manifest + sandboxed runtime + review pipeline | Manifest only | **GAP — Phase C runtime** |
-| Public REST API | Supabase PostgREST + API key UI + webhook subs | None | **GAP — Phase D** |
-| Docs | Diátaxis + ADR + user guides + Codespaces | Partial | **GAP — finish guides** |
-| Security | OWASP gated + Trusted Types in CSP + OIDC + ZAP weekly | All but ZAP | **GAP — add ZAP** |
+| Capability | Zola | Joy | RSVPify | Eventbrite | WithJoy | Aisle Planner | PlanningPod | Greenvelope | HoneyFund | Lystio IL | Minted | Riley&Grey | HoneyBook | Bridebook | The Knot | WeddingWire | **Ours v31.8** | **Target v36** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **Guest RSVP** | CRM+1 | Group | **Best forms** | Tickets | Co-edit | Full CRM | Full CRM | Email | Registry | HE basic | Gallery | Boutique | CRM | CRM | CRM | CRM | Phone-first+WA | Conditional Q + dietary |
+| **Seating** | DnD | DnD | Add-on | None | DnD RT | **Floor plan** | DnD+floor | None | None | None | None | None | None | None | DnD | DnD | DnD+conflict | AI CSP + floor + furniture |
+| **Budget** | Vendor-pay | Simple | None | None | None | Full | **Best** | None | Registry | None | None | None | Full | Benchmarks | Track | Track | Categories+projection | Burn-down+forecast+ML |
+| **Vendor mgmt** | Marketplace | List | None | None | None | **Best** | Full CRM | Curated | None | 5K+ IL | Curated | Premium | **Full CRM** | 70K UK | Dir | Dir | CRUD+WA+import | Inbox+contracts+e-sign |
+| **Website** | 100+ themes | **AI build** | Form | None | Modern | Limited | None | Email+web | Registry | None | **Premium** | **Typography** | None | Limited | 100+ | 100+ | Data model | AI build+CNAME+password |
+| **Check-in** | None | None | Add-on | **QR+NFC+kiosk** | None | None | None | None | None | None | None | None | None | None | None | None | RT+NFC+QR | NFC kiosk+badge+offline |
+| **WhatsApp** | None | None | None | None | None | None | None | None | None | Basic | None | None | None | None | None | None | **WABA+bulk** | +schedule+A/B+automations |
+| **Offline** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **✅ SW+IDB+BGSync** | +Periodic Sync |
+| **Multi-lang** | EN | EN | EN | 50+ | EN | EN | EN | EN | EN | **HE** | EN | EN | EN | EN | EN | EN | **HE+5 + ICU** | ICU full+community |
+| **A11y** | Partial | Partial | Partial | Solid | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | **WCAG 2.2 AA** | +Hebrew SR |
+| **Privacy/OSS** | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | **MIT+self-host** | +1-click deploy |
+| **AI** | Venue | **Site AI** | None | None | Seating | None | None | None | None | None | None | None | None | Shortlist | None | None | Adapters only | BYO-key+streaming+Ollama |
+| **Realtime** | None | None | None | Limited | **Best** | None | None | None | None | None | None | None | None | None | None | None | **Presence+counters** | +conflict UI+live RSVP |
+| **Payments** | Zola Pay | Registry | Stripe | Stripe | Registry | Stripe | Stripe | Stripe | **Best registry** | None | Stripe | Stripe | **Contracts** | Stripe | Registry | Registry | Deep-links | Stripe Connect+e-sign |
+| **Native app** | iOS+Android | iOS+Android | Web | iOS+Android | iOS+Android | iOS+Android | iOS+Android | Web | iOS+Android | iOS+Android | iOS+Android | iOS+Android | iOS+Android | iOS+Android | iOS+Android | iOS+Android | **PWA only** | Capacitor iOS+Android |
+| **Bundle** | ~300KB | ~250KB | ~180KB | ~250KB | ~220KB | ~350KB | ~400KB | ~200KB | ~180KB | ~200KB | ~350KB | ~300KB | ~300KB | ~280KB | ~320KB | ~350KB | **~50KB** | ≤60KB gate |
+| **Open source** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **✅ MIT** | +marketplace |
+| **Pricing** | $$ | Freemium | $$ | % | $$ | $$ | $$ | $$ | % | $$ | % | $$ | % | Freemium | Free+ads | Free+ads | **$0** | $0+optional managed |
 
-**Net verdict:** the current architecture **matches** the 2026 greenfield design across most layers.
-The remaining gaps cluster in three workstreams: **AI proxy deployment**, **Capacitor native mobile**,
-and **platform features (plugin runtime, public API, marketplace)**. These define Phases A → D.
+### 3.2 Technical Stack Benchmark
 
----
-
-## 4. Competitive Landscape & Harvest Matrix
-
-### 4.1 Deep feature comparison — 16 products (2026)
-
-| Capability | Zola | Joy | RSVPify | Eventbrite | Withjoy | Aisle Planner | PlanningPod | Greenvelope | Honeyfund | Lystio IL | Minted | Riley&Grey | HoneyBook | Bridebook | **Ours v29.0.0** | **Target v36** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Guest + RSVP | CRM, +1 | Group RSVP | **Best forms** | Tickets | Co-edit live | Full CRM | Full CRM | Email-rich | Registry-RSVP | HE basic | Gallery | Boutique | CRM | Full CRM | **Phone-first + WhatsApp + conditional** | Conditional Q chains + dietary |
-| Seating chart | DnD conflict | DnD | Add-on | None | DnD realtime | **Floor plan** | DnD + floor | None | None | None | None | None | None | None | DnD + conflict + AI solver | AI CSP solver + floor plan + furniture |
-| Budget | Vendor-pay | Simple | None | None | None | Full | **Best** | None | Registry | None | None | None | None | Benchmarks | Categories + variance + projection | Burn-down + forecast + cohort |
-| Vendor mgmt | Marketplace | List | None | None | None | **Best** | Full CRM | Curated | None | 5 000+ IL | Curated | Premium | **Full CRM** | 70 K+ UK | CRUD + payment + WA + import | Inbox + contracts + e-sign |
-| Website builder | 100+ themes | **AI builder** | Form only | None | Modern + live | Limited | None | Email+web | Registry page | None | **Premium** | **Premium typography** | None | Limited | Data model + slug | AI builder + custom domain |
-| Event check-in | None | None | Add-on | **QR+NFC+kiosk** | None | None | None | None | None | None | None | None | None | None | Real-time stats + NFC + QR | NFC kiosk + badge print + offline |
-| WhatsApp | None | None | None | None | None | None | None | None | None | Basic `wa.me` | None | None | None | None | **WABA Cloud API + bulk** | + scheduled + A/B + automations |
-| Offline | None | None | None | None | None | None | None | None | None | None | None | None | None | None | **SW + IDB queue + Background Sync** | + Periodic Sync |
-| Multi-language | EN | EN | EN | 50+ | EN | EN | EN | EN | EN | **HE** | EN | EN | EN | EN | **HE+EN+AR+FR+ES+RU + ICU partial** | ICU full + community pipeline |
-| Accessibility | Partial | Partial | Partial | Solid | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | Partial | **WCAG 2.2 AA + axe-zero + per-locale** | + Hebrew SR test |
-| Privacy / OSS | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | Lock-in | **OSS MIT + self-host + zero-telemetry** | + 1-click deploy + GDPR pack |
-| Multi-event | One | One | Pro | Many | **Realtime co-edit** | Best | **Best** | Multi | One | One | One | One | **Best** | Multi | Multi-event + workspace roles | Org/team/planner SaaS path |
-| AI features | Venue match | **Site builder AI** | None | None | AI seating | None | None | None | None | None | None | None | None | Shortlisting | Adapters built; proxy pending | BYO-key edge proxy + streaming + Ollama |
-| Analytics | Basic | Min | Funnels | Solid | None | Full | **Best** | Email opens | None | None | None | None | None | Market data | Funnel + budget + check-in + cohort | + A/B + no-show ML |
-| Realtime collab | None | None | None | Limited | **Best** | None | None | None | None | None | None | None | None | None | **Active: presence + counters** | + conflict resolver UI |
-| Payments | Zola Pay | Registry | Stripe add-on | Stripe | Registry | Stripe | Stripe | Stripe | **Registry best** | None | Stripe | Stripe | **Contracts+Stripe** | Stripe | Deep-links + Stripe partial | Stripe Connect + e-sign |
-| Native mobile | iOS+Android | iOS+Android | Web | iOS+Android | iOS+Android | iOS+Android | iOS+Android | Web | iOS+Android | iOS+Android | iOS+Android | iOS+Android | iOS+Android | iOS+Android | **PWA only** | Capacitor iOS + Android |
-| Bundle gzip | ~300 KB | ~250 KB | ~180 KB | ~250 KB | ~220 KB | ~350 KB | ~400 KB | ~200 KB | ~180 KB | ~200 KB | ~350 KB | ~300 KB | ~300 KB | ~280 KB | **~50 KB** | Hard gate ≤ 60 KB |
-| Open source | No | No | No | No | No | No | No | No | No | No | No | No | No | No | **Yes (MIT)** | + plugin & theme marketplace |
-| Pricing | Subscription | Freemium | Subscription | Commission | Subscription | Subscription | Subscription | Subscription | Commission | Subscription | Commission | Subscription | % revenue | Freemium | **Free + self-hosted** | $0 default + optional managed |
-
-### 4.2 Our unique advantages — defend and double down
-
-| Advantage | Moat strength | Investment needed |
-| --- | --- | --- |
-| **Bundle ≤ 60 KB gzip** | 5–10× smaller than every competitor | Hard CI gate; immutable |
-| **WhatsApp Cloud API native** | Only category app shipping bulk + delivery webhooks | Expose bulk UI Phase A |
-| **RTL-first HE + AR** | Unmatched depth | Finish ICU + Hebrew SR test |
-| **MIT + self-host + zero-telemetry** | Privacy + portability moat | 1-click deploys (Phase B) |
-| **Offline + Background Sync** | No competitor ships this | Add Periodic Sync (Phase A) |
-| **Multi-event planner workspace** | Most consumer tools cap at one event | Workspace roles UI (Phase B) |
-| **Open source** | Forkable, auditable, community-buildable | Plugin & theme marketplace (Phase C) |
-
-### 4.3 Capabilities to harvest — concrete sources
-
-| From | What to harvest | Why now |
-| --- | --- | --- |
-| **RSVPify** | Conditional RSVP question engine + plus-one chains + dietary cascade | Best RSVP forms in category |
-| **Zola** | DnD seating with relationship constraints + visual conflict surfacing | We have the algorithm; UI gap |
-| **Joy 2026** | AI website builder with live preview + custom domain handoff | Edge AI proxy unblocks |
-| **Eventbrite** | QR/NFC scan-in + offline-first verify + badge print | We have QR/NFC; finish kiosk UX |
-| **PlanningPod** | Vendor CRM: inbox + contracts + payment timeline + SLA scoring | We are CRUD-only |
-| **Aisle Planner** | Venue floor-plan builder — furniture, head table, dance floor | Extend DnD seating |
-| **HoneyBook** | Contract templates + e-signature + payment milestones | Phase C |
-| **Withjoy 2026** | Realtime co-edit any field simultaneously | Realtime channels active; expand |
-| **Riley & Grey** | Premium typography + animated section entrances | View Transitions + Animation Timeline |
-| **Bridebook** | Vendor SLA scoring + regional budget benchmarks | Planner-grade analytics |
-| **Loops.so** | Scheduled WhatsApp/email + trigger automations | WABA Cloud API ready |
-| **Cal.com** | Public-page builder + theme tokens + custom domain CNAME + password | Matches our website-builder |
-| **Linear / Height** | Keyboard-first power UX + ⌘K + saved views | Cmd-K palette pending |
-| **Stripe Apps** | Plugin manifest + permission scopes + sandboxed runtime | Plugin runtime pending |
-| **Notion AI** | Inline ⌘K AI commands in any field | Cmd-K + edge proxy |
-| **Eventbrite Day-of** | Offline kiosk + badge print + buffer flush on reconnect | Finish UX |
-| **Lystio IL** | Israeli vendor directory import format | CSV/JSON importer |
-| **Cal.com (OSS)** | Self-host playbook + 1-click templates | Phase B |
-| **Plausible / Umami** | Privacy-first analytics opt-in | Zero-telemetry pledge stays default |
-
-### 4.4 Technical stack benchmark — May 2026
-
-| Dimension | Zola | Joy | RSVPify | PlanningPod | HoneyBook | Lystio IL | **Ours v29.0.0** | Verdict |
+| Dimension | Zola | Joy | RSVPify | PlanningPod | HoneyBook | The Knot | **Ours** | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Frontend | React 18 + Next SSR | React 18 + AI | Vue 3 + Nuxt | Angular 15 | React 18 | PHP + jQuery | **Vanilla ES2025 + Vite 8 + Signals** | **Lead** |
-| CSS | Tailwind + CSS Modules | Styled-components | Sass + Bootstrap | Material UI | Tailwind | Bootstrap 3 | **`@layer` + nesting + `@scope`** | **Lead** |
-| State | Redux RTK | Apollo cache | Vuex | NgRx | Zustand | jQuery globals | **Preact Signals** | Lead |
-| Routing | Next file router | React Router | Vue Router | Angular Router | React Router | PHP routes | **pushState + typed routes + View Transitions** | Lead |
-| Backend | Node microservices | GraphQL + Lambda | Rails monolith | .NET + SQL Server | Node + PG | PHP + MySQL | **Supabase Postgres + RLS** | Match |
-| Edge | Lambda | Lambda + CF | n/a | n/a | Lambda | None | **Hybrid Supabase + CF Workers (planned)** | Match |
-| Auth | NextAuth | Auth0 | Devise | Custom | Firebase Auth | PHP sessions | **Supabase Auth (Google + Apple)** | Match |
-| DB | PG + Redis | DynamoDB + RDS | PG | SQL Server | PG | MySQL | **Supabase PG + RLS (26 mig)** | Match |
-| Realtime | Pusher | GraphQL subs | Polling | SignalR | None | None | **Supabase Realtime (active)** | Match |
-| File storage | S3 + CF | S3 | S3-compatible | Azure Blob | S3 | Local disk | **Supabase Storage** | Match |
-| Offline | None | None | None | None | None | None | **SW + IDB + Background Sync** | **Lead** |
-| Errors | Datadog | Sentry | Rollbar | Raygun | None | None | **Glitchtip/Sentry adapter** | Match |
-| CI/CD | GHA + Vercel | GHA + AWS | CircleCI | Azure DevOps | GHA | Manual FTP | **7 GHA + OIDC + Trivy + CodeQL** | Lead |
-| Bundle gzip | ~300 KB | ~250 KB | ~180 KB | ~400 KB | ~300 KB | ~200 KB | **~50 KB** | **Lead 5–10×** |
-| Hosting | Vercel SSR | AWS CF | Heroku | Azure | AWS | cPanel | **GH Pages (+ CF planned)** | Match (cost lead) |
-| AI | Some | **Yes (site)** | None | None | None | None | **Adapters; proxy planned** | Gap |
-| Native mobile | iOS+Android | iOS+Android | Web | iOS+Android | iOS+Android | iOS+Android | **PWA only** | **Gap** |
-| Open source | No | No | No | No | No | No | **Yes (MIT)** | **Lead** |
+| Frontend | React 18+Next | React 18+AI | Vue 3+Nuxt | Angular 15 | React 18 | React+Next | **Vanilla+Vite+Signals** | **Lead** |
+| CSS | Tailwind+Modules | Styled-comp | Sass+Bootstrap | Material UI | Tailwind | Tailwind | **@layer+@scope** | **Lead** |
+| State | Redux RTK | Apollo cache | Vuex 4 | NgRx | Zustand | Redux | **Preact Signals** | Lead |
+| Backend | Node µservices | GraphQL+Lambda | Rails | .NET+SQL | Node+PG | Node+PG | **Supabase PG+RLS** | Match |
+| Edge | Lambda@Edge | Lambda+CF | None | None | Lambda | Vercel Edge | **Supabase Edge+CF** | Match |
+| Auth | NextAuth | Auth0 | Devise | Custom | Firebase | Auth0 | **Supabase Auth** | Match |
+| DB | PG+Redis | DynamoDB | PG | SQL Server | PG | PG+Redis | **Supabase PG** | Match |
+| Realtime | Pusher | GraphQL subs | ActionCable | SignalR | None | Pusher | **Supabase Realtime** | Match |
+| Offline | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **SW+IDB+BGSync** | **Lead** |
+| Type system | TypeScript | TypeScript | TypeScript | C# | TypeScript | TypeScript | **JS+JSDoc** | **Gap** |
+| Test depth | Unit+E2E | Unit+E2E | RSpec+Capybara | NUnit | Jest | Jest | **Vitest+PW+Stryker** | Lead |
+| Bundle | ~300KB | ~250KB | ~180KB | ~400KB | ~300KB | ~320KB | **~50KB** | **Lead 5-10×** |
+| CI/CD | GHA+Vercel | GHA+AWS | CircleCI | Azure DevOps | GHA | GHA+Vercel | **18 GHA+OIDC** | Lead |
+| OSS | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **✅ MIT** | **Lead** |
+
+### 3.3 Key Insight: Every Competitor Uses TypeScript
+
+Every serious wedding/event platform (Zola, Joy, HoneyBook, The Knot, WeddingWire) uses
+TypeScript. Our JSDoc+checkJs approach was innovative at v1 but at 190+ source files it is now
+a **competitive disadvantage** for:
+
++ Safe refactoring across modules
++ Contributor onboarding
++ IDE auto-import reliability
++ Exhaustive pattern matching
++ Generic type inference
+
+**Verdict: Adopt TypeScript. The migration cost at 0 TSC errors is minimal.**
 
 ---
 
-## 5. Honest Audit by Layer
+## 4. Harvested Best Practices
 
-### 5.1 Frontend
+> Concrete lessons extracted from each competitor. Each harvest item maps to a sprint.
 
-✅ Vanilla ES2025 · ✅ Vite 8 (→ 9) · ✅ Preact Signals · ✅ `@layer` + `@scope` · ✅ pushState ·
-✅ View Transitions · ✅ Native `<dialog>` · ✅ `data-action` namespacing · ✅ Virtual scroll (Guests) ·
-✅ Error boundaries · ✅ System fonts · ⚠ Container queries partial · ⚠ `light-dark()` partial ·
-⚠ Animation Timeline API not used · ⚠ Web Component primitives not used · ⚠ Print pipeline UI gaps ·
-⚠ JSON-LD structured data missing.
-
-### 5.2 Backend & Data
-
-✅ Supabase primary · ✅ RLS + 26 migrations · ✅ Composite indexes · ✅ Soft delete + retention cron ·
-✅ IDB primary + AES-GCM PII · ✅ Background Sync queue · ✅ Realtime active · ✅ Supabase Storage ·
-✅ 12 edge functions · ✅ Admin table · ⚠ Audit log UI absent · ⚠ Multi-tenant `org_id` model not yet ·
-⚠ Cross-region replicas single-region.
-
-### 5.3 Code Language & Quality
-
-✅ JS + JSDoc-strict + TSC=0 · ✅ Valibot 100% boundaries · ✅ DOMPurify + Trusted Types · ✅ ESLint 10 ·
-✅ Prettier · ✅ Repositories enforced · ✅ Coverage 80/75 enforced · ✅ Mutation Stryker pilot ·
-⚠ **138 utilities — sprawl audit overdue** · ⚠ TypeScript pilot decision pending.
-
-### 5.4 Build & Tooling
-
-✅ Vite 8 dynamic imports only · ✅ Vitest 4 forks · ✅ Playwright + axe + visual reg ·
-✅ Lighthouse CI hard gate · ✅ Stryker · ✅ ESLint flat · ⚠ Bun for local dev not piloted ·
-⚠ pnpm pilot pending · ⚠ Vite 9 (Rolldown) tracking.
-
-### 5.5 Infrastructure & Hosting
-
-✅ GH Pages canonical · ✅ 7 GHA workflows · ✅ OIDC (no PATs) · ✅ Trivy + CodeQL + Scorecard + SBOM ·
-✅ Sentry/Glitchtip adapter · ⚠ Cloudflare proxy pending · ⚠ Custom domain pending ·
-⚠ UptimeRobot pending · ⚠ 1-click deploy templates pending · ⚠ Multi-region pending.
-
-### 5.6 i18n & Accessibility
-
-✅ 6 locales · ✅ HE primary · ✅ EN per-key fallback · ✅ axe-zero CI · ✅ Per-locale Playwright ·
-⚠ ICU MessageFormat partial · ⚠ AR quality pass partial · ⚠ Hebrew screen-reader test missing ·
-⚠ Reduced-motion / high-contrast partial coverage.
-
-### 5.7 External APIs
-
-✅ WhatsApp Cloud API edge fn · ✅ `wa.me` fallback · ✅ Supabase Auth (Google + Apple) ·
-✅ OSM + Waze + GMaps · ✅ ICS calendar · ✅ Web Push VAPID · ✅ Supabase Storage ·
-✅ GDPR erasure edge fn · ⚠ AI proxy not deployed · ⚠ Stripe Connect partial ·
-⚠ Google Calendar two-way sync partial · ⚠ Vendor catalogue importer partial ·
-⚠ Registry deep links missing.
-
-### 5.8 Documentation
-
-✅ Diátaxis structure · ✅ 12+ ADRs · ✅ Mermaid in CI · ✅ JSDoc 100% · ✅ AGENTS.md ·
-⚠ User guides incomplete · ⚠ AGENTS.md / copilot-instructions.md partial duplication ·
-⚠ Codespaces template missing.
-
-### 5.9 Security
-
-✅ CSP + Trusted Types · ✅ SRI · ✅ SBOM + Trivy + Scorecard + CodeQL · ✅ AES-GCM PII ·
-✅ OIDC Actions · ✅ Zero-telemetry · ⚠ ZAP runtime scan missing · ⚠ Trufflehog missing.
-
----
-
-## 6. Lessons Learned
-
-### 6.1 What we got right
-
-1. **Vanilla + Vite + ESM** — bundle moat is 5–10× smaller than every competitor.
-2. **`@layer` CSS** — cascade is sane; theme switching is one body class; zero specificity wars.
-3. **Repositories + handlers separation** — the architectural layer with the highest payback.
-4. **Valibot over Zod** — 1 KB vs 13 KB; same DX where it matters.
-5. **`enqueueWrite` debounced queue** — saved Sheets from quota every wedding season; survived
-   the Supabase flip without any caller change.
-6. **JSDoc + `types.d.ts` + `checkJs`** — types without compilation overhead; TSC = 0.
-7. **ADR culture** — 12+ ADRs make the *why* survive the people.
-8. **Hard CI gates from day one** — 0 lint warnings + LH ≥ 95 + bundle ≤ 60 KB; immutable.
-9. **Hebrew-first RTL** — every component tested RTL from birth; competitors retrofit and fail.
-10. **Open source from v0** — every external review tightens the codebase.
-11. **BaseSection adoption** — all 24 sections on one lifecycle = uniform mount/unmount/error surface.
-12. **`@scope` per section** — zero cross-section CSS bleed since S297.
-13. **Trusted Types ratchet** — XSS depth-defence enforced in CI from S327.
-14. **The Supabase flip (S396)** — the single decision that unlocked Realtime, Storage, Edge,
-   and the auth consolidation.
-15. **Keeping vanilla through 29 majors** — every framework wave (React, Vue, Svelte, Solid, Qwik)
-   came and went; bundle moat survived.
-
-### 6.2 What we got wrong (and how we fixed it)
-
-| # | Mistake | Cost paid | Fix shipped |
+| Source | What to Harvest | Why | Target Sprint |
 | --- | --- | --- | --- |
-| 1 | Kept `BACKEND_TYPE = "sheets"` for 3 majors | Sheets quota failures under concurrent RSVP | Flipped S396 ✅ |
-| 2 | 3 OAuth SDKs in parallel | ~30 KB bundle; non-uniform JWT | Consolidated to Supabase Auth ✅ |
-| 3 | Auth tokens in plaintext `localStorage` | OWASP A02 risk | AES-GCM via `secure-storage.js` ✅ |
-| 4 | Services grew to 62 with duplicate pairs | Dead exports inflated; refactor velocity halved | Consolidated to 25 ✅ |
-| 5 | Custom Proxy store with deep-mutation tracking | Nested mutations silently missed | Replaced with Preact Signals S400 ✅ |
-| 6 | Hash router with `replaceState` semantics | Back button broken; no deep links | pushState + View Transitions S390–392 ✅ |
-| 7 | In-memory write queue | Page crash mid-debounce = silent data loss | IDB + Background Sync S394 ✅ |
-| 8 | `manualChunks` in Vite config | Build broke on file rename | Removed S385 ✅ |
-| 9 | `ADMIN_EMAILS` in source-controlled config | Co-planner change required full deploy | `admin_users` table + Settings UI S386 ✅ |
-| 10 | 8 div-based modals + focus-trap polyfill | 8 lazy loads; non-native focus behaviour | Native `<dialog>` S402–403 ✅ |
-| 11 | Coverage was advisory | Coverage drift undetected | Enforced 80/75 S379 ✅ |
-| 12 | Monitoring adapter built but DSN unset | Production failures invisible | Activated S381 ✅ |
-| 13 | **Utility expansion S444–S553 unchecked** | **138 utils; some unused; no per-util ownership** | **OPEN — Phase A audit** |
-| 14 | Aspired to full TypeScript migration (v12) | High disruption, marginal benefit | **Revised:** TSC=0 with JSDoc; pilot `.ts` for new modules |
-| 15 | `AGENTS.md` and `copilot-instructions.md` duplicated content | Drift between the two files | **OPEN — consolidate Phase A** |
+| **RSVPify** | Conditional question engine + plus-one chains + dietary cascade | Best RSVP forms in category | Wire S665 conditional-rsvp into RSVP section |
+| **Zola** | Relationship-constraint seating with visual conflict markers | We have the algorithm (S673); need UI | Wire S673 into Tables section |
+| **Joy 2026** | AI website builder with live preview + theme selector | Our edge proxy + website-builder section | Deploy AI proxy → website-builder |
+| **Eventbrite** | NFC kiosk scan-in + offline verify + badge thermal print | We have check-in + NFC; finish kiosk UX | Capacitor NFC bridge + print API |
+| **PlanningPod** | Vendor CRM: inbox + contracts + payment timeline + SLA | We have CRUD; need inbox + contracts | Wire S668-S670 into Vendors section |
+| **Aisle Planner** | Floor-plan builder: furniture drag, head table, zones | S666 has the logic; need canvas UI | Wire S666 into Tables section |
+| **HoneyBook** | Contract templates + e-signature + payment milestones | Stripe Connect + PDF generation | Phase C |
+| **WithJoy** | Realtime co-edit (CRDT-like) with presence cursors | Supabase Realtime active; expand | Conflict resolver UI |
+| **Riley & Grey** | Premium typography + animated section transitions | View Transitions + Animation Timeline | CSS enhancement sprint |
+| **Bridebook** | Vendor scoring + regional budget benchmarks | Analytics section + vendor data | Analytics enhancement |
+| **The Knot** | Comprehensive vendor directory with reviews | Platform/marketplace feature | Phase D |
+| **WeddingWire** | User-generated content: reviews, photos, Q&A | Requires moderation system | Phase E |
+| **Cal.com (OSS)** | Self-host playbook + 1-click templates + custom domains | Model for our self-host story | Phase C |
+| **Linear** | ⌘K command palette + keyboard-first power UX | We have cmd-palette util; need UI | Wire into nav |
+| **Stripe Apps** | Plugin manifest + permission scopes + sandboxed runtime | S671 has logic; need runtime | Wire plugin-permission into Settings |
+| **Notion AI** | Inline AI commands in any field context | AI proxy + Cmd-K | Phase C |
+| **Loops.so** | Scheduled messaging + trigger automations | WhatsApp scheduling | Phase C |
+| **Plausible** | Privacy-first analytics (opt-in, self-hostable) | Model for our analytics export | Keep zero-telemetry; add opt-in export |
 
-### 6.3 Anti-patterns we refuse
+---
 
-- **No workarounds.** If a rule fires, fix the code. Suppression requires an ADR.
-- **No silent failures.** Every catch logs; every queue persists; every retry is observable.
-- **No `innerHTML` with anything that did not pass through `sanitize()`.** Trusted Types enforces this.
-- **No new runtime dependencies without a bundle-cost ADR.**
-- **No "built but not wired" utilities — features tracked separately as built vs wired.**
-- **No `window.*` globals — everything ESM.**
-- **No hardcoded colours — every colour is a CSS custom property.**
-- **No section-to-service direct imports — sections flow through handlers → repositories.**
-- **No string-format dates — `Asia/Jerusalem` timezone, ISO at the wire.**
-- **No long-lived GitHub Secrets where OIDC is possible.**
-- **No plaintext PII in `localStorage` — AES-GCM in IDB.**
-- **No telemetry in upstream builds.**
+## 5. Honest Audit — What's Wrong
+
+### 5.1 Critical Issues
+
+| # | Problem | Severity | Root Cause |
+| --- | --- | --- | --- |
+| 1 | **190 utility files** — 50+ with no UI integration | Critical | "Sprint = create util" pattern ran unchecked |
+| 2 | **No TypeScript** — refactoring 190 files is unsafe without real types | High | Over-indexed on "no build step" philosophy early on |
+| 3 | **"Built but not wired" pattern** — S664-S673 created 10 new utils with zero UI | High | Velocity metric (tests passing) confused with shipping |
+| 4 | **AI completely unwired** — adapters, prompt-builders, utils exist; nothing deployed | High | Blocked on CF Worker deploy decision |
+| 5 | **Plugin runtime not wired** — manifest validation exists; no dynamic import runtime | Medium | Phase C keeps slipping |
+| 6 | **Capacitor not shipped** — scaffold exists since v31.0; no App Store presence | Medium | Signing/metadata work not prioritized |
+| 7 | **No public API** — can't integrate with Zapier, Make, third-party tools | Medium | Supabase PostgREST available but not exposed |
+
+### 5.2 Architecture Smells
+
+| Smell | Evidence | Fix |
+| --- | --- | --- |
+| Util sprawl | 190 files, many single-function | Domain-group into modules; merge; delete unused |
+| No namespace | `src/utils/` is flat — 190 files in one directory | Create sub-directories: `vendor/`, `guest/`, `plugin/`, `ai/` |
+| Duplicate logic | `vendor-inbox.js`, `vendor-negotiate.js`, `vendor-timeline.js`, `vendor-sla.js` all separate | Merge into `src/utils/vendor/index.ts` |
+| Test-to-UI ratio | 474 test files testing utils with no UI | Tests are valid but testing unwired code |
+| Config sprawl | 33 core modules | Some could merge (e.g., `nav.js` + `router.js` + `history-router.js`) |
+
+### 5.3 What's Actually Good
+
+| Area | Assessment |
+| --- | --- |
+| Bundle size (50 KB) | **World-class** — 5-10× better than every competitor |
+| Offline capability | **Category-leading** — no competitor ships Background Sync |
+| WhatsApp integration | **Unique** — only wedding app with WABA Cloud API |
+| CI/CD pipeline | **Excellent** — 18 workflows, OIDC, multi-tool scanning |
+| RTL-first approach | **Unmatched** — every component born RTL-correct |
+| Test depth | **Very strong** — 6300+ tests, mutation testing, E2E |
+| Auth architecture | **Clean** — Supabase Auth, RLS, encrypted PII |
+| CSS architecture | **Leading edge** — @layer + @scope + container-q |
+| Open source posture | **Unique in category** — MIT, zero-telemetry, self-hostable |
+
+---
+
+## 6. What We Got Right & Wrong
+
+### 6.1 Decisions We Got Right
+
+1. **Vanilla JS + Vite** — bundle moat survived 31 major versions while every framework came and went
+2. **`@layer` CSS** — cascade is sane; zero specificity wars; theme = one body class
+3. **Repositories + handlers** — the architectural layer with highest payback
+4. **Valibot over Zod** — 1 KB vs 13 KB; same DX
+5. **Supabase as backend** — unlocked Realtime, Storage, Edge, Auth in one decision
+6. **Hard CI gates from day one** — culture of zero-tolerance
+7. **Hebrew-first RTL** — competitors retrofit and fail
+8. **ADR practice** — the "why" survives contributors
+9. **`enqueueWrite` pattern** — survived the Sheets→Supabase flip without caller changes
+10. **Preact Signals** — explicit reactivity without the framework baggage
+
+### 6.2 Decisions We Got Wrong
+
+| # | Mistake | Cost | Lesson |
+| --- | --- | --- | --- |
+| 1 | **"Sprint = create util" methodology** | 190 utils, 50+ unwired | Features must wire into UI or they don't count |
+| 2 | **Staying on JSDoc too long** | Unsafe refactoring at scale | Graduate to TS when TSC=0 is achieved (we're there) |
+| 3 | **Building AI adapters without deploying proxy** | Zero AI features shipped to users | Ship the smallest working thing first |
+| 4 | **Flat `src/utils/` directory** | 190 files ungrouped | Namespace from the start |
+| 5 | **Deferring Capacitor shipping** | Still no App Store presence | Ship MVP native build |
+| 6 | **Over-documenting** | ROADMAP alone is 1000+ lines | Keep docs proportional to audience |
+| 7 | **Counting test count as quality metric** | Tests pass on unwired code | Wire-to-UI is the quality metric |
+
+### 6.3 Anti-patterns We Now Enforce
+
++ **No new standalone util without a section that uses it** — CI gate
++ **No `innerHTML` with unsanitized data** — Trusted Types enforces
++ **No "built but not wired" features** — tracked in §8.4
++ **No new runtime dependency without bundle-cost ADR**
++ **No framework adoption** — vanilla + signals is permanent
++ **No suppressions without ADR**
++ **No plaintext PII in storage**
++ **No telemetry in upstream builds**
 
 ---
 
 ## 7. Technical Debt & Risk Register
 
-> **P0** = production blocker · **P1** = significant risk · **P2** = maintenance drag · **P3** = capability gap
-
-| Sev | Pri | Area | Risk | Effort | Target |
-| --- | --- | --- | --- | --- | --- |
-| Med | P1 | Utilities | 138 utils; sprawl risk; unwired duplicates; no per-util owner | M | v32 |
-| Med | P1 | Docs | `AGENTS.md` ↔ `copilot-instructions.md` drift | S | ✅ v31.2.0 |
-| Med | P1 | Mobile | PWA only; no Capacitor build → losing on App Store discovery | XL | ✅ v31.0.0 (scaffold) |
-| Med | P1 | AI | Adapters built; edge proxy not deployed | M | v32 |
-| Med | P2 | Security | No runtime ZAP scan | S | ✅ v31.2.0 |
-| Med | P2 | Security | Trufflehog secret scan missing | XS | ✅ v31.2.0 |
-| Med | P2 | Hosting | No Cloudflare proxy; no custom domain | S | v32 |
-| Med | P2 | Hosting | No UptimeRobot | XS | v32 |
-| Med | P2 | i18n | ICU MessageFormat partial; Hebrew SR test missing | M | v32 |
-| Med | P2 | A11y | Reduced-motion / high-contrast partial coverage | M | v32 |
-| Med | P2 | Lang | TS pilot decision pending | M | v32 |
-| Low | P3 | Platform | No public REST API; no plugin runtime; no marketplace | XL | v32–v33 |
-| Low | P3 | Compliance | GDPR erasure only; CCPA + LGPD pending | M | v33 |
-| Low | P3 | Multi-tenancy | `org_id` model not yet in migrations | L | v33 |
-| Low | P3 | Audit log | Tables exist; UI absent | M | v32 |
-| Low | P4 | Multi-region | Single-region Supabase | L | v34 |
+| Sev | Area | Debt/Risk | Effort | Target |
+| --- | --- | --- | --- | --- |
+| **P0** | Utils | 190 files; ~50 unwired; flat directory; no ownership | XL | v32.0 |
+| **P0** | Language | No TypeScript — refactoring unsafe at scale | XL (gradual) | v32-v33 |
+| **P0** | AI | Adapters built but proxy not deployed; zero user-facing AI | M | v32.0 |
+| **P1** | Mobile | Capacitor scaffold exists but no App Store distribution | L | v32.0 |
+| **P1** | Wiring | S664-S673 utils not wired to any section UI | L | v32.0 |
+| **P1** | Plugin | Runtime not wired; S671 permission logic exists | M | v32.0 |
+| **P1** | API | No public REST API; blocks integrations | M | v33.0 |
+| **P2** | Hosting | No Cloudflare proxy; no custom domain | S | v32.0 |
+| **P2** | i18n | ICU MessageFormat partial for HE/AR plurals | M | v32.0 |
+| **P2** | A11y | Hebrew screen-reader testing absent | M | v32.0 |
+| **P2** | Payments | Stripe Connect not wired | M | v32.0 |
+| **P3** | Platform | No theme marketplace UI | L | v33.0 |
+| **P3** | Multi-tenant | `org_id` model not in schema | L | v33.0 |
+| **P3** | Compliance | GDPR erasure only; CCPA/LGPD pending | M | v34.0 |
 
 ---
 
-## 8. Improve / Rewrite / Refactor / Enhance
+## 8. Improve / Rewrite / Refactor / Enhance Plan
 
-### 8.1 Improve — low disruption, high payoff (sprintable)
+### 8.1 IMPROVE — Low disruption, high payoff
 
-1. **Utility audit & cull** — `audit:utils` script: detect unused exports across `src/utils/`,
-   merge near-duplicates, document each utility's owner module; cap at ≤ 100.
-2. **Docs consolidation** — single source for project facts (`AGENTS.md`); generate
-   `copilot-instructions.md` excerpt at sync-version time.
-3. **Add UptimeRobot** — 5-minute external monitor; zero code change.
-4. **Cloudflare proxy** — front GH Pages with CF (Brotli, HTTP/3, image transforms); free.
-5. **Trufflehog GH Action** — layered secret scanning.
-6. **OWASP ZAP weekly** — runtime scan against Vite preview.
-7. **Hebrew screen-reader test** — Playwright + NVDA in CI matrix.
-8. **Reduced-motion / high-contrast audit** — every section honours OS prefs.
-9. **Codespaces template** — first-PR friction removed.
-10. **Periodic Sync API** — re-engagement push; PWA baseline.
+1. **Wire S664–S673 utils into existing sections** (theme-marketplace → Settings,
+   conditional-rsvp → RSVP, floor-plan → Tables, registry-deeplink → Registry,
+   vendor-negotiate/timeline/payment → Vendors, plugin-permission → Settings,
+   ai-suggest → Dashboard, guest-seating-auto → Tables)
+2. **Add Cloudflare proxy** — front GH Pages with CF (free: Brotli, HTTP/3, DDoS)
+3. **Add UptimeRobot** — 5-min external monitor
+4. **Codespaces / DevContainer template** — first-PR friction removed
+5. **Finish user guides** — Couple, Planner, Vendor, Self-host
 
-### 8.2 Rewrite — worth the disruption
+### 8.2 REWRITE — Worth the disruption
 
-1. **AI edge proxy (Cloudflare Worker)** — multi-provider, BYO key, streaming, Ollama opt-in.
-2. **Stripe Connect for vendor receipts + milestones + e-sign** — replaces partial Stripe Checkout.
-3. **Plugin runtime** — manifest validator → sandboxed dynamic import + permission scopes.
-4. **Capacitor native shell** — iOS + Android signing pipeline; native NFC + haptics + share.
-5. **Audit log UI** — Settings → Audit log viewer (read from existing tables).
+1. **TypeScript migration** — all new files as `.ts`; rename existing files in batches
+2. **Utility restructure** — reorganize 190 flat files into domain-grouped modules:
 
-### 8.3 Refactor — code health, zero user impact
+   ```text
+   src/utils/
+     vendor/         (negotiate, timeline, sla, inbox, payment → index.ts)
+     guest/          (seating-auto, dietary, plus-one → index.ts)
+     rsvp/           (conditional, question-engine, question-builder → index.ts)
+     plugin/         (permission, sandbox, marketplace → index.ts)
+     ai/             (suggest, prompt-builder, provider-router → index.ts)
+     common/         (phone, date, sanitize, misc, uid → index.ts)
+   ```
 
-1. **Utility ownership** — each util tagged with `@owner <section|service>` JSDoc; CI gate on missing.
-2. **Handler → repository contract types** — JSDoc `@param`/`@returns` to all 7 handlers.
-3. **`@scope` last-mile** — any section still using bare `[data-section]` selectors.
-4. **Action namespacing CI gate** — duplicate-detection on `module:action` keys.
-5. **`AGENTS.md` source of truth** — `copilot-instructions.md` becomes a generated excerpt.
-6. **Web Component primitives** — extract `<wedding-badge>`, `<rsvp-pill>`, `<table-card>`.
+3. **AI edge proxy deployment** — CF Worker, multi-provider, BYO key, streaming
+4. **Stripe Connect integration** — vendor accounts, receipts, milestones
+5. **Plugin runtime** — sandboxed dynamic import + permission scopes + review pipeline
 
-### 8.4 Enhance — new capabilities
+### 8.3 REFACTOR — Code health, zero user impact
 
-| Priority | Feature | Section / Entry | Built? | Wired? |
+1. **Merge redundant core modules** — `nav.js` + `router.js` + `history-router.js` → single router
+2. **Enforce `@owner` tag** — every util declares which section/service owns it
+3. **Dead-export audit** — remove all unused exports from utils
+4. **Web Component extraction** — `<wedding-badge>`, `<rsvp-pill>`, `<table-card>`
+5. **Consolidate vendor utils** — 12 separate vendor-*.js → 1 domain module
+
+### 8.4 ENHANCE — New capabilities (must wire into UI)
+
+| Priority | Feature | Target Section | Utils Built? | UI Wired? |
 | --- | --- | --- | --- | --- |
-| P0 | AI edge proxy + UI | All sections (Cmd-K) | Adapters ✅ | ❌ |
-| P0 | Capacitor iOS + Android | Build + CI | ❌ | ❌ |
-| P0 | Stripe Connect (vendor) | Vendors | Partial | ❌ |
-| P0 | Audit log UI | Settings | Tables ✅ | ❌ |
-| High | Public website builder UI | Website section | Data model ✅ | ❌ |
+| P0 | AI edge proxy + Cmd-K | All (via nav) | ✅ | ❌ |
+| P0 | Conditional RSVP questions | RSVP | ✅ (S665) | ❌ |
+| P0 | Auto-seating solver | Tables | ✅ (S673) | ❌ |
+| P0 | Floor-plan builder | Tables | ✅ (S666) | ❌ |
+| P0 | Vendor negotiate/timeline UI | Vendors | ✅ (S668-S670) | ❌ |
+| P0 | Plugin permission UI | Settings | ✅ (S671) | ❌ |
+| High | Theme marketplace UI | Settings | ✅ (S664) | ❌ |
+| High | Registry deep links UI | Registry | ✅ (S667) | ❌ |
+| High | AI suggestions dashboard | Dashboard | ✅ (S672) | ❌ |
+| High | Public website builder | Website | Partial | ❌ |
 | High | Workspace roles UI | Settings | Data model ✅ | ❌ |
-| High | Plugin runtime (sandboxed) | Settings | Manifest ✅ | ❌ |
-| High | ICU plurals (HE + AR) | i18n | ❌ | ❌ |
-| High | Vendor CRM (inbox + contracts) | Vendors | ❌ | ❌ |
-| Med | Floor-plan builder (extend DnD) | Tables | ❌ | ❌ |
-| Med | Cmd-K command palette | Nav | `search-index.js` ✅ | ❌ |
-| Med | Theme marketplace | Settings | ❌ | ❌ |
-| Med | Public REST API + webhook UI | Settings | ❌ | ❌ |
-| Med | Conditional RSVP question engine | RSVP | ❌ | ❌ |
-| Med | Registry deep links (Amazon IL +) | Registry | ❌ | ❌ |
-| Med | Animation Timeline API on section reveals | All sections | ❌ | ❌ |
-| Phase D | Multi-tenant `org_id` SaaS path | Migrations | ❌ | ❌ |
-| Phase D | CCPA + LGPD compliance | Edge functions | GDPR ✅ | ❌ |
-| Phase E | Cross-region read replicas | Infra | ❌ | ❌ |
-| Phase E | Hybrid event support (video deep links + virtual RSVP track) | RSVP | ❌ | ❌ |
+| Med | Capacitor native build | Mobile | Scaffold ✅ | ❌ |
+| Med | Public REST API | Settings | PostgREST available | ❌ |
+| Med | Stripe Connect | Vendors | Partial | ❌ |
 
 ---
 
 ## 9. Phased Plan v32 → v36
 
-> Each phase ends with a checkpoint. Every REPLACE / DROP verdict in §2 requires an ADR.
+### Phase C — v32.0.0 — "Wire Everything" (Q3 2026)
 
-### Phase A — v30.0.0 — Consolidation & AI Activation ✅ DONE
+**Theme:** Stop building unwired utils. Wire ALL existing logic into sections. TypeScript pilot.
+AI proxy deployed. Capacitor shipped.
 
-**Goal:** Cull utility sprawl. Deploy AI edge proxy. Close infrastructure gaps.
-**Status:** Completed. Utility audit done; agents expanded; infrastructure gaps closed.
+| # | Deliverable | Type |
+| --- | --- | --- |
+| C1 | **TypeScript adoption** — all new files `.ts`; tsconfig strict; rename core/ batch 1 | Rewrite |
+| C2 | **Utility restructure** — 190 → ~100 files in domain groups | Refactor |
+| C3 | **AI proxy deploy** (CF Worker) + Cmd-K palette wiring | Rewrite |
+| C4 | **Wire conditional RSVP** (S665) into RSVP section UI | Enhance |
+| C5 | **Wire auto-seating** (S673) + floor-plan (S666) into Tables UI | Enhance |
+| C6 | **Wire vendor negotiate/timeline/payment** (S668-S670) into Vendors UI | Enhance |
+| C7 | **Wire plugin permission** (S671) into Settings UI | Enhance |
+| C8 | **Wire theme marketplace** (S664) into Settings UI | Enhance |
+| C9 | **Wire registry deep links** (S667) into Registry section | Enhance |
+| C10 | **Wire AI suggestions** (S672) into Dashboard | Enhance |
+| C11 | **Capacitor native build** → TestFlight + Play Internal | Rewrite |
+| C12 | **Cloudflare proxy** + custom domain | Improve |
+| C13 | **Stripe Connect** — vendor payments, receipts, milestones | Rewrite |
 
-### Phase B — v31.0.0 → v31.5.0 — Mobile Native, Locale Depth & Animation ✅ COMPLETED
+**Phase OKR:** *Every "built" feature has a UI entry point. AI working end-to-end. TS for new files.*
 
-**Status:** Capacitor scaffold done; ICU strict complete; mobile builds available.
-v31.3.0: Accessibility + DevEx + observability phase complete.
-v31.4.0: Animation timeline API, full i18n parity (6 locales), periodicSync,
-@scope expansion (23/23 sections), @starting-style section entries, section-template parity 23/23.
-v31.5.0: CI audit:utils gate, ICU --strict plural arms (76 fixes across HE/AR/ES/FR/RU),
-vendor contracts, plugin review, website preview, payment receipts, dietary cascade,
-floor-plan presets, workspace invitations.
-Test count: 6121 across 440 files. Agent count: 9. Workflows: 18.
-
-### Phase C — v32.0.0 — Vendor CRM, Payments, Plugin Runtime
-
-| # | Deliverable |
-| --- | --- |
-| C1 | Vendor CRM: inbox + contracts + payment timeline + SLA scoring |
-| C2 | Stripe Connect: vendor accounts + receipts + milestones + e-sign |
-| C3 | Floor-plan builder: extend DnD seating with furniture, head table, dance floor |
-| C4 | Conditional RSVP question engine: plus-one chains, dietary cascade |
-| C5 | Plugin runtime: sandboxed dynamic import + permission scopes + review pipeline |
-| C6 | Cmd-K command palette + AI inline commands per section |
-| C7 | Public website builder UI: theme picker + live preview + custom domain CNAME + password |
-| C8 | Workspace roles UI: owner / co-planner / vendor / photographer / guest |
-| C9 | Registry deep links: Amazon IL + boutique stores |
-
-**Phase OKR:** *Vendor CRM prod-ready · payments end-to-end · plugin marketplace alpha.*
-
-### Phase D — v33.0.0 — Platform & Multi-Tenancy
+### Phase D — v33.0.0 — Platform & API (Q4 2026)
 
 | # | Deliverable |
 | --- | --- |
-| D1 | Multi-tenant `org_id` migrations + RLS update |
-| D2 | Public REST API via Supabase PostgREST + API key UI + webhook subscriptions |
-| D3 | Theme marketplace: community themes + review/install UI |
-| D4 | One-click deploy templates: Vercel + Netlify + Cloudflare + Render |
-| D5 | Codespaces template + DevContainer |
-| D6 | CCPA + LGPD compliance pack: erasure, portability, audit-log surfacing |
-| D7 | SOC 2-ready logging via edge function pipeline |
+| D1 | Public REST API (PostgREST + API key UI + webhook subscriptions) |
+| D2 | Plugin runtime — sandboxed dynamic import + review pipeline |
+| D3 | Theme marketplace — community themes + review/install flow |
+| D4 | Multi-tenant `org_id` + RLS for SaaS path |
+| D5 | One-click deploy templates (Vercel, Netlify, CF, Render) |
+| D6 | DevContainer + Codespaces first-PR experience |
+| D7 | Website builder AI (using deployed proxy) |
+| D8 | Contract templates + e-signature (HoneyBook-style) |
 
-### Phase E — v34.0.0 — Scale & Resilience
+**Phase OKR:** *Platform extensible. Third-party plugins possible. SaaS path viable.*
 
-| # | Deliverable |
-| --- | --- |
-| E1 | Cross-region read replicas + region pick on self-host |
-| E2 | Hybrid event support: video call deep links + virtual RSVP track |
-| E3 | Quarterly chaos drills (game-day) |
-| E4 | Observability v2: Glitchtip + UptimeRobot + LH-CI weekly cron + metrics export |
-| E5 | WebAuthn passkeys for admin (replaces email allowlist) |
-
-### Phase F — v35.0.0 → v36.0.0 — AI-Native, Compliance-Ready
+### Phase E — v34.0.0 — Scale, Compliance & Native (Q1 2027)
 
 | # | Deliverable |
 | --- | --- |
-| F1 | AI assistant in every section (Cmd-K driven; multi-turn streaming; multi-provider) |
-| F2 | Photo auto-tagging + face recognition (Ollama local; opt-in only) |
-| F3 | RSVP photo-extraction (snap a paper card → guest fields) |
-| F4 | Predictive no-show modelling (cohort-based; fully local; no external data) |
+| E1 | iOS App Store + Google Play Store submission |
+| E2 | WebAuthn passkeys for admin auth |
+| E3 | CCPA + LGPD compliance pack (erasure, portability, audit log UI) |
+| E4 | Cross-region read replicas (GDPR data residency) |
+| E5 | Full E2E Playwright suite (RSVP flow, offline, multi-locale, a11y) |
+| E6 | Quarterly chaos drills |
+
+**Phase OKR:** *Store-published. Passkey auth. Compliance-ready. Resilient.*
+
+### Phase F — v35.0.0 → v36.0.0 — AI-Native & Market (Q2-Q3 2027)
+
+| # | Deliverable |
+| --- | --- |
+| F1 | AI assistant every section (multi-turn, streaming, context-aware) |
+| F2 | Photo auto-tagging (Ollama local, opt-in) |
+| F3 | RSVP photo extraction (snap paper card → guest fields) |
+| F4 | Predictive no-show model (cohort-based, local-only) |
 | F5 | A/B test framework for invite flows |
-| F6 | Full GDPR + CCPA + LGPD pack with audit trail UI |
+| F6 | Full GDPR + CCPA + LGPD with audit trail |
+| F7 | Vendor marketplace with reviews |
+| F8 | SOC 2-ready logging pipeline |
+
+**Phase OKR:** *AI-native experience. Market-competitive native apps. Enterprise-ready compliance.*
 
 ---
 
 ## 10. Sprint Backlog — Next 30 Sprints
 
-> Phase A priority. Each sprint is one commit, one scope.
+> **New methodology:** Every sprint must wire something into a section UI.
+> Standalone utils without UI integration are no longer valid sprints.
 
-### Cluster A — Consolidation & AI (Sprints 554–573, target v30.0.0)
-
-| # | Sprint | Effort |
-| --- | --- | --- |
-| 554 | `audit:utils` script — detect unused exports + duplicates across `src/utils/` | S |
-| 555 | Utility cull batch 1 — remove confirmed-unused; merge near-duplicates (target -15) | M |
-| 556 | Utility cull batch 2 — wire dormant utilities into sections; document owners | M |
-| 557 | `@owner` JSDoc tag + ESLint rule | S |
-| 558 | `AGENTS.md` canonicalisation; generate `.github/copilot-instructions.md` from it | S |
-| 559 | UptimeRobot integration + status badge in README | XS |
-| 560 | Cloudflare proxy + DNS + custom domain acquisition | S |
-| 561 | Trufflehog GH Action (weekly) | XS |
-| 562 | OWASP ZAP GH Action (weekly against Vite preview) | S |
-| 563 | Periodic Sync API in SW + manifest declaration | S |
-| 564 | AI edge proxy scaffold — CF Worker + provider router | M |
-| 565 | AI edge proxy — OpenAI + Anthropic + Gemini + Ollama adapters | M |
-| 566 | AI edge proxy — streaming + BYO key UI in Settings | M |
-| 567 | Cmd-K command palette wiring (uses `search-index.js`) | M |
-| 568 | TypeScript pilot ADR + first new file as `.ts` | S |
-| 569 | Container-q coverage finish across remaining sections | S |
-| 570 | `light-dark()` + `color-mix()` finish across all theme tokens | S |
-| 571 | Animation Timeline API on dashboard + analytics section reveals | S |
-| 572 | Web Component primitive: `<wedding-badge>` | S |
-| 573 | v30.0.0 release — sync-version + CHANGELOG + tag + GH release | S |
-
-### Cluster B — Mobile Native & Locale Depth (Sprints 574–593, target v31.0.0)
+### Cluster C.1 — Foundation: TypeScript + Util Restructure (S674–S683)
 
 | # | Sprint | Effort |
 | --- | --- | --- |
-| 574 | Capacitor 6 scaffold (iOS + Android) | M |
-| 575 | Capacitor signing + provisioning + CI build matrix | L |
-| 576 | Native NFC bridge (read+write) | M |
-| 577 | Native haptics + share sheet bridges | S |
-| 578 | iOS App Store metadata + screenshots + privacy manifest | M |
-| 579 | Play Store metadata + screenshots + content rating | M |
-| 580 | TestFlight + Internal Testing distribution | S |
-| 581 | ICU MessageFormat — HE plural/gender coverage | M |
-| 582 | ICU MessageFormat — AR plural/gender coverage | M |
-| 583 | `check:i18n --icu` CI gate | S |
-| 584 | Hebrew screen-reader Playwright test (NVDA matrix) | M |
-| 585 | VoiceOver Playwright test on macOS runner | M |
-| 586 | Reduced-motion full audit + per-section fix | S |
-| 587 | High-contrast theme + OS pref detection | S |
-| 588 | Audit log viewer UI (Settings → Audit log) | M |
-| 589 | Web Component primitives: `<rsvp-pill>` `<table-card>` | S |
-| 590 | Animation Timeline API on section transitions (View Transitions integration) | S |
-| 591 | LH-CI per-locale matrix in CI | S |
-| 592 | Visual regression per-locale (HE/AR RTL parity) | S |
-| 593 | v31.0.0 release | S |
+| 674 | `tsconfig.json` strict mode; Vite TS support; first `.ts` file in `src/core/` | S |
+| 675 | Rename `src/core/constants.js` → `.ts`; add discriminated unions | M |
+| 676 | Rename `src/core/store.js` → `.ts`; typed store interface | M |
+| 677 | Create `src/utils/vendor/` domain module; merge vendor-negotiate + vendor-timeline + vendor-sla + vendor-inbox → `index.ts` | L |
+| 678 | Create `src/utils/guest/` domain module; merge guest-seating-auto + dietary + plus-one-chain | M |
+| 679 | Create `src/utils/rsvp/` domain module; merge conditional-rsvp + question-engine + question-builder | M |
+| 680 | Create `src/utils/plugin/` domain module; merge plugin-permission + plugin-sandbox | M |
+| 681 | Create `src/utils/ai/` domain module; merge ai-suggest + all prompt/provider utils | M |
+| 682 | Dead-export audit + delete all unused utils (target: reduce from 190 → 120) | L |
+| 683 | `@owner` JSDoc enforcement + CI gate (`audit:utils --enforce-owner`) | S |
+
+### Cluster C.2 — Wire AI + Cmd-K (S684–S688)
+
+| # | Sprint | Effort |
+| --- | --- | --- |
+| 684 | Deploy CF Worker AI proxy (OpenAI + Anthropic + Gemini + Ollama) | M |
+| 685 | Settings → AI Provider configuration UI (BYO key, model selection) | M |
+| 686 | Wire Cmd-K command palette into nav (keyboard shortcut: ⌘K / Ctrl+K) | M |
+| 687 | Cmd-K → AI inline commands (suggest seating, suggest budget, draft message) | M |
+| 688 | Dashboard → AI suggestions widget (wire S672 ai-suggest) | M |
+
+### Cluster C.3 — Wire Section Features (S689–S698)
+
+| # | Sprint | Effort |
+| --- | --- | --- |
+| 689 | RSVP section → conditional question UI (wire S665 conditional-rsvp) | L |
+| 690 | Tables section → auto-seating button + constraint config (wire S673) | L |
+| 691 | Tables section → floor-plan canvas UI (wire S666 floor-plan-builder) | L |
+| 692 | Vendors section → negotiation panel + timeline view (wire S668-S669) | L |
+| 693 | Vendors section → payment schedule + milestones (wire S670) | M |
+| 694 | Settings section → plugin permissions UI (wire S671) | M |
+| 695 | Settings section → theme marketplace browser/installer (wire S664) | M |
+| 696 | Registry section → deep link generator + store detection (wire S667) | M |
+| 697 | Stripe Connect integration → vendor onboarding + receipt generation | L |
+| 698 | Capacitor native build → iOS TestFlight + Android Internal Testing | L |
+
+### Cluster C.4 — Infrastructure + Polish (S699–S703)
+
+| # | Sprint | Effort |
+| --- | --- | --- |
+| 699 | Cloudflare proxy + DNS setup + custom domain | S |
+| 700 | UptimeRobot + status badge | XS |
+| 701 | DevContainer + Codespaces template | S |
+| 702 | User guides: Couple guide + Planner guide (Diátaxis) | M |
+| 703 | v32.0.0 release — sync-version + CHANGELOG + tag + GH release | S |
 
 ---
 
-## 11. Migration Playbooks
+## 11. Architecture Target State (v36)
 
-### 11.1 Utility audit (Sprint 554)
+```mermaid
+graph TD
+    subgraph Client ["Browser / Mobile (Capacitor)"]
+        UI["Vanilla ES2025 + Preact Signals<br/>TypeScript · ≤60KB gzip"]
+        SW["Service Worker<br/>Strategy Cache + BGSync"]
+        IDB["IndexedDB<br/>AES-GCM PII"]
+    end
 
-```js
-// scripts/audit-utils.mjs
-import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+    subgraph Edge ["Cloudflare"]
+        CF_PROXY["CF Proxy<br/>Brotli · HTTP/3 · DDoS"]
+        AI_WORKER["CF Worker — AI Proxy<br/>Multi-provider · BYO key · Streaming"]
+        IMG["CF Image Transforms"]
+    end
 
-const utilsDir = "src/utils";
-const allSrc = await import("./scan-src.mjs"); // returns concatenated source of src/**
-const violations = [];
+    subgraph Backend ["Supabase"]
+        PG["Postgres + RLS<br/>26+ migrations"]
+        AUTH["Supabase Auth<br/>Google · Apple · WebAuthn"]
+        RT["Realtime<br/>Presence · Counters · Live RSVP"]
+        STORAGE["Storage<br/>Signed URLs"]
+        EDGE_FN["Edge Functions (Deno)<br/>13+ functions"]
+        API["PostgREST<br/>Public REST API"]
+    end
 
-for (const file of readdirSync(utilsDir)) {
-  if (!file.endsWith(".js")) continue;
-  const src = readFileSync(join(utilsDir, file), "utf8");
-  const exports = [...src.matchAll(/export\s+(?:async\s+)?function\s+(\w+)/g)].map((m) => m[1]);
-  for (const name of exports) {
-    const importedRe = new RegExp(`\\b${name}\\b`);
-    const usedElsewhere = allSrc.allFilesExceptUtils.some((f) => importedRe.test(f));
-    if (!usedElsewhere) violations.push({ file, name });
-  }
-  const ownerTag = src.match(/@owner\s+([\w-]+)/);
-  if (!ownerTag) violations.push({ file, missing: "@owner" });
-}
+    subgraph Integrations ["External"]
+        WA["WhatsApp Cloud API<br/>WABA · Bulk · Schedule"]
+        STRIPE["Stripe Connect<br/>Payments · Receipts · E-sign"]
+        GCAL["Google Calendar<br/>Two-way Sync"]
+        PUSH["Web Push<br/>VAPID · Periodic Sync"]
+    end
 
-if (violations.length) {
-  console.error(JSON.stringify(violations, null, 2));
-  process.exit(1);
-}
+    UI --> CF_PROXY --> EDGE_FN
+    UI --> AI_WORKER
+    UI --> SW --> IDB
+    EDGE_FN --> PG
+    EDGE_FN --> WA
+    EDGE_FN --> STRIPE
+    EDGE_FN --> GCAL
+    UI --> RT
+    UI --> AUTH
+    STORAGE --> IMG --> CF_PROXY
+    API --> PG
 ```
 
-### 11.2 AI edge proxy (Sprint 564–566)
+### Key architectural principles (v36)
 
-```js
-// supabase/functions/_shared/ai-proxy.ts (Cloudflare Worker variant in workers/ai-proxy.ts)
-// Multi-provider router with BYO key + streaming + redaction.
-
-const PROVIDERS = {
-  openai: { url: "https://api.openai.com/v1/chat/completions", header: "Authorization", prefix: "Bearer " },
-  anthropic: { url: "https://api.anthropic.com/v1/messages", header: "x-api-key", prefix: "" },
-  gemini: { url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:streamGenerateContent", header: "x-goog-api-key", prefix: "" },
-  ollama: { url: process.env.OLLAMA_URL ?? "http://localhost:11434/api/chat", header: "x-ollama-token", prefix: "" },
-};
-
-export default async (req: Request) => {
-  const { provider, key, prompt } = await req.json();
-  const cfg = PROVIDERS[provider];
-  if (!cfg) return new Response("unknown provider", { status: 400 });
-
-  const upstream = await fetch(cfg.url, {
-    method: "POST",
-    headers: { "content-type": "application/json", [cfg.header]: cfg.prefix + key },
-    body: JSON.stringify({ stream: true, messages: redactPii(prompt) }),
-  });
-  return new Response(upstream.body, { headers: { "content-type": "text/event-stream" } });
-};
-```
-
-### 11.3 Capacitor scaffold (Sprint 574–575)
-
-```bash
-# Phase B kick-off
-npm i -D @capacitor/cli @capacitor/core @capacitor/ios @capacitor/android
-npx cap init "Wedding Manager" "il.wedding.manager" --web-dir dist
-npx cap add ios && npx cap add android
-# CI matrix builds + TestFlight + Play Internal upload
-```
-
-### 11.4 ICU MessageFormat (Sprint 581–583)
-
-```jsonc
-// src/i18n/he.json (snippet)
-{
-  "rsvp.guests_confirmed": "{count, plural, =0 {אין מאשרים} one {מאשר אחד} two {שני מאשרים} other {# מאשרים}}",
-  "guest.greeting": "{gender, select, male {שלום} female {שלום} other {שלום}} {name}"
-}
-```
-
-```js
-// src/core/i18n.js (additive)
-import IntlMessageFormat from "intl-messageformat"; // dev dep only when ICU keys detected
-export function tIcu(key, vars) {
-  const raw = lookup(key);
-  if (!raw.includes("{")) return raw;
-  return new IntlMessageFormat(raw, currentLocale).format(vars);
-}
-```
+1. **Client-first, server-optional** — app works fully offline; server syncs when available
+2. **TypeScript everywhere** — client, edge functions, build scripts
+3. **Domain-grouped modules** — not flat file sprawl
+4. **Every feature has a UI surface** — no "built but not wired"
+5. **Platform-ready** — public API, plugins, themes, marketplace
+6. **Privacy by default** — zero telemetry, encrypted PII, self-hostable
+7. **Bundle immutable** — ≤ 60 KB gzip is a hard constraint, never negotiable
 
 ---
 
 ## 12. Cost & Self-Hosting Profile
 
-| Tier | Backend | Edge | Storage | Realtime | Auth | Push | LLM | Hosting | **Monthly** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Self-host (default)** | Supabase free | Supabase free | Supabase free 1 GB | Supabase free | Supabase free | VAPID free | Ollama local | GH Pages + CF free | **$0** |
-| **Small wedding** | Supabase free | Supabase free | Supabase free | Supabase free | Supabase free | VAPID free | BYO OpenAI key | GH Pages + CF free | **~$0–10** |
-| **Large wedding (1 000 guests)** | Supabase Pro | Supabase Pro | Supabase Pro 100 GB | Supabase Pro | Supabase Pro | VAPID free | BYO key | CF Pages | **~$25** |
-| **Planner SaaS (10 events)** | Supabase Pro | Supabase Pro | Supabase Pro | Supabase Pro | Supabase Pro | VAPID free | BYO key | CF Pages + custom domain | **~$25–35** |
-
-> No subscription is ever enforced. Every paid tier above is opt-in; the free path remains viable
-> for any single wedding.
+| Tier | Description | Monthly Cost |
+| --- | --- | --- |
+| **Free (default)** | GH Pages + CF free + Supabase free + Ollama local + VAPID push | **$0** |
+| **Small wedding** | Free tier + BYO OpenAI key (~$2/month for AI features) | **~$2** |
+| **Large wedding (1000 guests)** | Supabase Pro + CF free + BYO AI key | **~$25** |
+| **Planner SaaS (10 events)** | Supabase Pro + custom domain ($10/yr) + BYO key | **~$30** |
+| **Enterprise** | Self-hosted Supabase + own infra + Ollama local | **Infra cost only** |
 
 ---
 
 ## 13. Success Metrics & SLOs
 
-| Dimension | Floor (immutable) | Target |
+| Metric | Floor (immutable) | Target |
 | --- | --- | --- |
 | Bundle gzip | ≤ 60 KB | ≤ 50 KB |
 | Lighthouse perf | ≥ 95 | ≥ 99 |
 | Lighthouse a11y | ≥ 95 | 100 |
-| LH best-practices | ≥ 95 | 100 |
-| LH SEO | ≥ 95 | 100 |
 | axe violations | 0 | 0 |
-| Coverage lines | ≥ 80% | ≥ 85% |
-| Coverage branches | ≥ 75% | ≥ 80% |
+| Coverage lines | ≥ 80% | ≥ 90% |
+| Coverage branches | ≥ 75% | ≥ 85% |
 | Mutation score | ≥ 70% | ≥ 80% |
-| RTL pixel-delta HE↔EN | < 5% | < 2% |
-| TTI on 3G (HE locale) | < 3 s | < 2 s |
+| TTI on 3G (HE) | < 3 s | < 2 s |
 | Offline write loss | 0 | 0 |
-| Production error budget | < 0.1% requests | < 0.05% |
-| Uptime (GH Pages + CF) | 99.9% | 99.95% |
-| WhatsApp Cloud API delivery | ≥ 95% | ≥ 98% |
-| Locale parity (key coverage) | 100% across 6 | 100% across 6+ |
+| Uptime | 99.9% | 99.95% |
+| WhatsApp delivery | ≥ 95% | ≥ 98% |
+| Locale parity | 100% (6 locales) | 100% (6+ locales) |
+| Utils wired-to-UI ratio | ≥ 80% | 100% |
+| TypeScript coverage | ≥ 30% (v32) | 100% (v35) |
 
 ---
 
@@ -889,174 +747,135 @@ export function tIcu(key, vars) {
 
 | ID | Decision | Owner | Status | Target |
 | --- | --- | --- | --- | --- |
-| OD-01 | TypeScript pilot scope (new files only? new services only?) | core | Open | Sprint 568 |
-| OD-02 | Utility cap (≤ 100 hard or ≤ 80 stretch?) | core | Open | Sprint 555 |
-| OD-03 | pnpm vs npm 11 | infra | Open | Phase B |
-| OD-04 | Custom domain choice | infra | Open | Sprint 560 |
-| OD-05 | Theme marketplace economics (free / paid / sponsorship) | platform | Open | Phase D |
-| OD-06 | SaaS managed-tier pricing (or zero) | platform | Open | Phase D |
-| OD-07 | Capacitor 6 vs Tauri 2 vs Lynx for shell | mobile | Open | Sprint 574 |
-| OD-08 | Multi-tenant `org_id` in shared DB vs schema-per-org | data | Open | Phase D |
-| OD-09 | LLM default provider for hosted demo (none = BYO only?) | platform | Open | Sprint 564 |
-| OD-10 | WebAuthn rollout (admin only? or all users?) | auth | Open | Phase E |
-
-Each row above must close with an ADR before its target sprint.
+| OD-01 | TypeScript migration strategy (new-only vs batch-rename) | core | **Decided: new + batch** | S674 |
+| OD-02 | Utility directory structure (domain-grouped vs flat) | core | **Decided: domain-grouped** | S677 |
+| OD-03 | AI proxy hosting (CF Worker vs Supabase Edge) | infra | Open | S684 |
+| OD-04 | Custom domain choice | infra | Open | S699 |
+| OD-05 | Package manager (npm vs pnpm) | infra | Open | v33 |
+| OD-06 | Capacitor vs Tauri for native | mobile | **Decided: Capacitor** | S698 |
+| OD-07 | Theme marketplace economics | platform | Open | Phase D |
+| OD-08 | Multi-tenant architecture (org_id vs schema-per-org) | data | Open | Phase D |
+| OD-09 | LLM default for hosted demo | platform | Open | S684 |
+| OD-10 | WebAuthn scope (admin-only vs all users) | auth | Open | Phase E |
 
 ---
 
 ## 15. Operational Methodology
 
-> Consolidated from the phased improvement framework. This is how we approach every major
-> change cycle — whether a sprint, a version bump, or a full architecture re-evaluation.
+### 15.1 The New Sprint Rule
 
-### 15.1 Non-Negotiable Process Rules
+> **A sprint is not valid unless it wires functionality into a user-visible UI surface.**
+>
+> Creating a standalone utility module with tests is **preparation work**, not a sprint.
+> It may be committed but does not count toward sprint velocity.
 
-1. **No suppression / waivers / workarounds.** Do not silence warnings/errors by disabling rules,
-   ignoring checks, or adding "skip" flags. Fix root causes. If truly unavoidable, document the
-   reason in an ADR and propose the correct production alternative.
-2. **Remove suspended/disabled/deprecated/commented-out options** from code, configs, and docs
-   unless demonstrably required for production — and if required, replace with the correct approach.
-3. **No dead artifacts.** Remove dead code, dead docs, dead configs, unused scripts, unused
-   dependencies. Everything that remains must be wired, coherent, and up to date.
-4. **Reproducibility first.** Deterministic builds, pinned tool versions, documented setup steps.
-5. **Do not hallucinate repository contents.** Only reference files and structures that exist.
-
-### 15.2 Phase Protocol (for every major change)
-
-For each change cycle, follow this protocol:
+### 15.2 Phase Protocol
 
 | Step | Action | Output |
 | --- | --- | --- |
-| **(A) Report** | Concise findings + risks + rationale | Understanding |
-| **(B) Actions** | Exact file edits (diff-style) + file moves | Implementation |
-| **(C) Commands** | Exact commands to run (local + CI) | Verification |
-| **(D) Acceptance** | What "done" means for this phase | Exit criteria |
-| **(E) Next** | What's next + info needed | Forward planning |
+| (A) Report | Findings + risks + rationale | Understanding |
+| (B) Actions | File edits (diff-style) | Implementation |
+| (C) Commands | Exact commands to run | Verification |
+| (D) Acceptance | What "done" means | Exit criteria |
+| (E) Next | What's next | Forward planning |
 
 ### 15.3 Quality Gate Sequence
 
-Run before every change is considered complete:
-
 ```bash
-npm run lint          # 0 errors, 0 warnings, 0 Node warnings
-npm test              # All suites pass; 0 skipped
-npm run build         # Exits 0; bundle ≤ 60 KB gzip
+npm run lint          # 0 errors, 0 warnings
+npm test              # All pass; 0 skipped
+npm run build         # ≤ 60 KB gzip
 npm run audit:arch    # 0 violations
-npm run check:i18n    # 100% parity across all 6 locales
-npm run check:credentials  # 0 plaintext secrets
+npm run check:i18n    # 100% parity
+npm run check:credentials  # 0 secrets
 ```
 
-### 15.4 Change Categories
+### 15.4 Non-Negotiable Process Rules
 
-| Category | Description | Process |
-| --- | --- | --- |
-| **Sprintable** | Low-disruption, high-payoff improvements | Single commit + push |
-| **Rewrite** | Worth the disruption; requires coordination | ADR → PR → review → merge |
-| **Refactor** | Code health, zero user impact | Batch in a sprint |
-| **Enhance** | New capabilities | Feature branch → PR |
+1. **No suppression / workarounds.** Fix root causes. ADR for exceptions.
+2. **No dead artifacts.** Remove dead code, configs, docs.
+3. **No "built but not wired".** Every feature has a UI entry or it's prep work.
+4. **Reproducibility first.** Deterministic builds, pinned versions.
+5. **Sprint = commit = shipped.** One focused commit; must be user-visible.
 
 ### 15.5 Agent-Augmented Development
-
-Every change category benefits from specialized Copilot agents:
 
 | Agent | Responsibility |
 | --- | --- |
 | `@guest-manager` | RSVP, tables, WhatsApp, guest data |
-| `@wedding-designer` | CSS, UI/UX, themes, RTL, accessibility |
-| `@analytics-agent` | Dashboards, charts, reporting, export |
+| `@wedding-designer` | CSS, UI/UX, themes, RTL, a11y |
+| `@analytics-agent` | Dashboards, charts, reporting |
 | `@vendor-agent` | Vendors, expenses, budget, payments |
-| `@release-engineer` | Versioning, CHANGELOG, tagging, releases |
-| `@supabase-agent` | Migrations, RLS, edge functions, realtime |
+| `@release-engineer` | Versioning, CHANGELOG, tagging |
+| `@supabase-agent` | Migrations, RLS, edge functions |
 | `@security-agent` | OWASP, CSP, secrets, supply chain |
-| `@performance-agent` | Bundle size, LH scores, caching, lazy loading |
-| `@i18n-agent` | Locale management, ICU, RTL parity |
-
-### 15.6 Documentation Excellence Standards
-
-- Every diagram is Mermaid (validated in CI) or SVG
-- README looks "top 1%" polished with badges, quickstart, architecture diagram
-- Diátaxis structure: tutorial / how-to / reference / explanation
-- ADR for every architecturally significant decision
-- User guides: couple, planner, vendor, self-host
+| `@performance-agent` | Bundle, Lighthouse, caching |
+| `@i18n-agent` | Locales, ICU, RTL parity |
 
 ---
 
 ## 16. Working Principles
 
-1. **One rule per change.** Every PR fixes exactly one rule, lints clean, tests green.
-2. **No suppressions without ADR.** ESLint disables, TS-ignore, axe-ignore — all require ADR.
-3. **Every dependency has a bundle cost.** New runtime dep = ADR with gzip impact.
-4. **Built ≠ Done.** A utility with no UI entry point does not count as shipped.
-5. **Privacy is a feature.** Zero telemetry; PII encrypted at rest; AI is opt-in BYO key.
-6. **RTL is the floor, not the ceiling.** Every component is born RTL-correct.
-7. **Offline is not optional.** Every write goes through `enqueueWrite`; queue is persistent.
-8. **Visibility before features.** Monitoring + audit log come before new capability.
-9. **Open by default.** New ideas land as ADRs in `docs/adr/`.
-10. **Sprint = commit.** One sprint = one focused commit + push, ASCII-only message.
-11. **After every sprint or chat session — commit + push.** No pending work in working tree.
-12. **Tests first; lint zero; build green.** No PR merges with red.
-13. **No dead artifacts.** Everything in the repo must be wired, coherent, and up to date.
-14. **Fix root causes, never suppress.** Workarounds require an ADR.
-15. **Reproducibility first.** Deterministic builds; pinned versions; documented setup.
+1. **Wire before build.** Plan the UI surface before creating logic modules.
+2. **TypeScript for new code.** No new `.js` files in `src/`.
+3. **Domain-group utils.** No flat files in `src/utils/` root.
+4. **Bundle is sacred.** ≤ 60 KB gzip is never negotiable.
+5. **Privacy is a feature.** Zero telemetry; encrypted PII; AI is BYO key.
+6. **RTL is the floor.** Every component is born RTL-correct.
+7. **Offline is mandatory.** Every write persists through page crash.
+8. **Built ≠ Done.** A feature without UI integration is prep work.
+9. **One sprint = one shipped UI change.** Tests alone don't count.
+10. **Open by default.** ADRs for decisions; MIT for code.
+11. **Fix root causes.** No suppressions without ADR.
+12. **Defend the moat.** Bundle size, WhatsApp-native, offline, RTL-first, OSS.
 
 ---
 
 ## 17. Release Line
 
-| Version | Theme | Target |
+| Version | Theme | Status |
 | --- | --- | --- |
-| **v29.0.0** | Utility expansion X (S544–S553) | **Released 2026-05-01** |
-| **v30.0.0** | Consolidation & AI Activation (Phase A) | **Released** |
-| **v31.0.0** | Mobile Native & Locale Depth (Phase B) | **Released** |
-| **v31.2.0** | Agent expansion + workflow hardening | **Current** |
-| v32.0.0 | Vendor CRM, Payments, Plugin Runtime (Phase C) | Q3 2026 |
-| v33.0.0 | Platform & Multi-Tenancy (Phase D) | Q4 2026 |
-| v34.0.0 | Scale & Resilience (Phase E) | Q1 2027 |
-| v35.0.0 | AI-Native I (Phase F.1) | Q2 2027 |
-| v36.0.0 | Compliance-Ready (Phase F.2) | Q3 2027 |
+| v29.0.0 | Utility expansion X | Released |
+| v30.0.0 | Consolidation & AI Activation (Phase A) | Released |
+| v31.0.0 | Mobile Native & Locale Depth (Phase B) | Released |
+| v31.5.0 | Agent expansion + workflow hardening | Released |
+| **v31.8.0** | **Phase C prep: 10 feature utils (S664–S673)** | **Current** |
+| v32.0.0 | Wire Everything + TypeScript + AI Proxy (Phase C) | Q3 2026 |
+| v33.0.0 | Platform & API (Phase D) | Q4 2026 |
+| v34.0.0 | Scale, Compliance & Native (Phase E) | Q1 2027 |
+| v35.0.0 | AI-Native (Phase F.1) | Q2 2027 |
+| v36.0.0 | Market-Ready (Phase F.2) | Q3 2027 |
 
 ---
 
-## 18. Done — Carried Forward (v13 → v31)
+## 18. Done — Sealed Decisions (v0 → v31.8)
 
-The prior roadmap cycles (v13 → v31) shipped the following major decisions; they are now sealed.
-A new ADR is required to revisit any of them.
+> These decisions are sealed. Reopening requires a new ADR.
 
-- ✅ `BACKEND_TYPE = "supabase"` flip (S396)
-- ✅ Auth consolidation through Supabase Auth (Google + Apple); Facebook dropped
-- ✅ `admin_users` table + Settings UI; `ADMIN_EMAILS` removed from source config
-- ✅ Storage encryption: IndexedDB primary + AES-GCM at rest for all PII
-- ✅ Offline write queue: IDB-persistent + Background Sync API
-- ✅ Router: `pushState` + typed routes + View Transitions API
-- ✅ Modals: native `<dialog>` (8 modals) + Popover API; focus-trap polyfill removed
-- ✅ State: Preact Signals reactive store (replaces custom Proxy)
-- ✅ Coverage gate enforced (≥ 80% lines, ≥ 75% branches)
-- ✅ Monitoring activated (Sentry/Glitchtip adapter, opt-in DSN, PII scrubber)
-- ✅ Trusted Types in production CSP (`require-trusted-types-for 'script'`)
-- ✅ GitHub Actions OIDC (no long-lived PATs)
-- ✅ DB composite indexes on every `event_id` FK table
-- ✅ Edge functions: 12 deployed (csp-report, gdpr-erasure, guest-lookup, health, push-dispatcher,
-  rsvp-email, rsvp-webhook, send-email, sync-to-sheets, waba-bulk-send, whatsapp-send, error-receiver)
-- ✅ 6 locales (HE · EN · AR · FR · ES · RU)
-- ✅ Realtime: presence badges + live counters
-- ✅ Service Worker: 5-strategy cache + precache + queue flush
-- ✅ Mutation testing: Stryker pilot on `core/` + `repositories/`
-- ✅ JSDoc gate extended to all `src/`
-- ✅ `manualChunks` removed (dynamic `import()` only)
-- ✅ Error boundaries in `BaseSection`
-- ✅ Virtual scroll in Guests section
-- ✅ 24 sections on `BaseSection` lifecycle
-- ✅ 11 repositories enforced as the data path
-- ✅ 7 handlers with clean separation
-- ✅ Visual regression per-section per-theme baseline
-- ✅ Lighthouse CI hard gate ≥ 95
-- ✅ Bundle ≤ 60 KB gzip immutable CI gate
-- ✅ S444–S553: ten consecutive utility-expansion sprint cycles
-- ✅ Copilot agents expanded to 9 domain-specialized (Phase A deliverable)
-- ✅ `AGENTS.md` ↔ `copilot-instructions.md` consolidation (Phase A deliverable)
-- ✅ Trufflehog + ZAP baseline workflows added (Phase A deliverable)
-- ✅ 18 GitHub Actions workflows operational
-- ✅ Capacitor scaffold (Phase B)
-- ✅ Mobile build + distribution workflows
-
-> **Anything in this list reopens only via a new ADR.**
++ ✅ Vanilla JS runtime (no framework) — permanent
++ ✅ `BACKEND_TYPE = "supabase"` (S396)
++ ✅ Auth via Supabase Auth (Google + Apple); Facebook permanently dropped
++ ✅ `admin_users` table + Settings UI; source-config removed
++ ✅ IndexedDB + AES-GCM encryption for all PII
++ ✅ IDB-persistent offline queue + Background Sync
++ ✅ pushState router + View Transitions API
++ ✅ Native `<dialog>` modals + Popover API
++ ✅ Preact Signals reactive store (replaces custom Proxy)
++ ✅ Coverage gate enforced (≥ 80/75)
++ ✅ Monitoring activated (Sentry/Glitchtip)
++ ✅ Trusted Types in production CSP
++ ✅ GitHub Actions OIDC (no PATs)
++ ✅ Bundle ≤ 60 KB gzip CI gate — immutable
++ ✅ 6 locales (HE · EN · AR · FR · ES · RU)
++ ✅ Supabase Realtime (presence + counters)
++ ✅ 5-strategy service worker cache
++ ✅ Mutation testing (Stryker on core + repositories)
++ ✅ 24+ sections on BaseSection lifecycle
++ ✅ 11 repositories as mandatory data path
++ ✅ 18 GitHub Actions workflows
++ ✅ 9 Copilot agents
++ ✅ Capacitor scaffold (Phase B)
++ ✅ S664–S673: 10 feature utils (Phase C prep)
++ ✅ Zero-telemetry pledge — permanent
++ ✅ MIT license — permanent
++ ✅ Hebrew-first RTL — permanent

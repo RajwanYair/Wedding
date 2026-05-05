@@ -141,7 +141,7 @@ export function autoAssign(guests, tables) {
       }
     } else {
       // Split across tables
-      let remaining = [...members];
+      const remaining = [...members];
       for (const t of tableCopies) {
         const space = t.capacity - t.assigned.length;
         if (space > 0 && remaining.length > 0) {
