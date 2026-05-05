@@ -19,6 +19,7 @@ import { GUEST_STATUSES, GUEST_SIDES, GUEST_GROUPS, MEAL_TYPES } from "../core/c
 import { getUrlParam, setUrlParams } from "../utils/url-state.js";
 import { onPresenceChange, groupByViewing, badgeFor } from "../services/realtime.js";
 import { tallyMeals as _tallyMeals, formatChefReport as _formatChefReport } from "../utils/meal-planner.js";
+import { printGuestList, printTableLayout } from "../utils/pdf-export.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -437,10 +438,19 @@ export function setSideFilter(side) {
 }
 
 /**
- * Trigger browser print for guest list.
+ * Trigger printable PDF-style guest list via pdf-export.js (S704).
+ * Opens a formatted print window instead of bare window.print().
  */
 export function printGuests() {
-  window.print();
+  printGuestList();
+}
+
+/**
+ * Trigger printable PDF-style table seating layout via pdf-export.js (S704).
+ * Opens a formatted print window for the seating plan.
+ */
+export function printTables() {
+  printTableLayout();
 }
 
 /**
