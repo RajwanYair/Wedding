@@ -1609,5 +1609,18 @@
   "dash_ai_refresh": "רענן",
   "dash_ai_suggestion_dismiss": "התעלם",
   "dash_ai_suggestion_apply": "יישם",
-  "rsvp_cq_select_placeholder": "בחר אפשרות"
+  "rsvp_cq_select_placeholder": "בחר אפשרות",
+  "btn_seating_constraints": "הגדרות שיבוץ",
+  "seating_constraints_title": "אילוצי שיבוץ",
+  "seating_constraints_hint": "הגדר מי ישב יחד ומי בנפרד בשיבוץ אוטומטי.",
+  "constraint_guest_a": "אורח א׳",
+  "constraint_guest_b": "אורח ב׳",
+  "constraint_type": "סוג אילוץ",
+  "constraint_together": "יחד",
+  "constraint_apart": "בנפרד",
+  "btn_add_constraint": "הוסף אילוץ",
+  "constraint_empty": "אין אילוצים מוגדרים",
+  "constraint_no_violations": "כל האילוצים מתקיימים ✔️",
+  "constraint_violations": "{n} הפרות אילוץ",
+  "ph_constraint_guest": "שם אורח..."
 }

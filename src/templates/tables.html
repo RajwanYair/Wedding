@@ -11,6 +11,9 @@
             <button class="btn btn-secondary btn-small" data-action="autoAssignTables" data-i18n-tooltip="tip_auto_assign">
               <span>🪄</span> <span data-i18n="btn_auto_assign">שיבוץ אוטומטי</span>
             </button>
+            <button class="btn btn-ghost btn-small" data-action="toggleSeatingConstraints">
+              <span>⚙️</span> <span data-i18n="btn_seating_constraints">הגדרות שיבוץ</span>
+            </button>
             <button class="btn btn-secondary btn-small" data-action="exportSeatMapCsv" data-i18n-tooltip="tip_export_seating_csv">
               <span>📥</span> <span data-i18n="btn_export_seating_csv">ייצוא CSV</span>
             </button>
@@ -28,6 +31,43 @@
           <div class="icon">🍽️</div>
           <p data-i18n="tables_empty">עדיין לא הגדרת שולחנות. לחץ על "הוסף שולחן" כדי להתחיל!</p>
           <p class="empty-sub">👆 ➕</p>
+        </div>
+      </div>
+
+      <!-- S690: Seating constraint config panel -->
+      <div class="card" id="seatingConstraintsPanel" hidden>
+        <div class="card-header">
+          <span class="icon">⚙️</span>
+          <span data-i18n="seating_constraints_title">הגדרות שיבוץ אוטומטי</span>
+        </div>
+        <div style="padding:1rem">
+          <p style="font-size:0.875rem;margin-bottom:0.75rem" data-i18n="seating_constraints_hint">
+            הגדר כיצד ה-AI ישבץ אורחים: מי יושב יחד ומי בנפרד.
+          </p>
+          <div class="form-group">
+            <label for="constraintGuestA" data-i18n="constraint_guest_a">אורח א׳</label>
+            <input id="constraintGuestA" list="constraintGuestListA" autocomplete="off"
+              data-i18n-placeholder="ph_constraint_guest" placeholder="שם אורח..." />
+            <datalist id="constraintGuestListA"></datalist>
+          </div>
+          <div class="form-group">
+            <label for="constraintGuestB" data-i18n="constraint_guest_b">אורח ב׳</label>
+            <input id="constraintGuestB" list="constraintGuestListB" autocomplete="off"
+              data-i18n-placeholder="ph_constraint_guest" placeholder="שם אורח..." />
+            <datalist id="constraintGuestListB"></datalist>
+          </div>
+          <div class="form-group" style="display:flex;gap:0.5rem;align-items:center">
+            <label for="constraintType" data-i18n="constraint_type">סוג אילוץ</label>
+            <select id="constraintType" style="flex:1">
+              <option value="together" data-i18n="constraint_together">יחד</option>
+              <option value="apart" data-i18n="constraint_apart">בנפרד</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-small" data-action="addSeatingConstraint">
+            <span>➕</span> <span data-i18n="btn_add_constraint">הוסף אילוץ</span>
+          </button>
+          <div id="seatingConstraintList" style="margin-top:1rem"></div>
+          <div id="seatingViolations" style="margin-top:0.5rem"></div>
         </div>
       </div>
 

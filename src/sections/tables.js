@@ -31,6 +31,16 @@ import {
   applyPlan as _applyPlan,
   remainingCapacity as _remainingCapacity,
 } from "../utils/seating-optimizer.js";
+import {
+  keepTogether as _keepTogether,
+  keepApart as _keepApart,
+  validateConstraints as _validateConstraints,
+} from "../utils/seating-constraint.js";
+import {
+  autoAssign as _autoAssign,
+  createSeatGuest as _createSeatGuest,
+  createSeatTable as _createSeatTable,
+} from "../utils/guest-seating-auto.js";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
@@ -99,45 +109,189 @@ export function deleteTable(id) {
 
 /**
  * Auto-assign unassigned guests to tables by group priority.
- * Fills tables in capacity order, preferring family > friends > work > other.
+ * S690: Upgraded to use guest-seating-auto.js `autoAssign` with constraints.
  */
 export function autoAssignTables() {
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
-  const priority = ["family", "friends", "work", "other"];
 
-  /** @type {Map<string, number>} tableId → seats used */
-  const usage = new Map(tables.map((tb) => [tb.id, 0]));
-  guests
-    .filter((g) => g.tableId)
-    .forEach((g) => {
-      const n = usage.get(g.tableId) ?? 0;
-      usage.set(g.tableId, n + (g.count || 1));
-    });
-
-  const unassigned = guests.filter((g) => !g.tableId && g.status !== "declined");
-  // Sort by group priority
-  unassigned.sort(
-    (a, b) => priority.indexOf(a.group || "other") - priority.indexOf(b.group || "other"),
+  const seatGuests = guests
+    .filter((g) => g.status !== "declined")
+    .map((g) =>
+      _createSeatGuest({
+        id: g.id,
+        name: `${g.firstName || ""} ${g.lastName || ""}`.trim(),
+        group: g.group ?? null,
+        tableId: g.tableId ?? null,
+        preferNear: [],
+        avoidNear: [],
+      }),
+    );
+  const seatTables = tables.map((tb) =>
+    _createSeatTable({
+      id: tb.id,
+      label: tb.name || tb.id,
+      capacity: tb.capacity || 8,
+      assigned: guests.filter((g) => g.tableId === tb.id).map((g) => g.id),
+    }),
   );
 
-  const updated = [...guests];
-  unassigned.forEach((g) => {
-    const guestCount = g.count || 1;
-    const table = tables.find((tb) => {
-      const used = usage.get(tb.id) ?? 0;
-      return tb.capacity - used >= guestCount;
-    });
-    if (table) {
-      const idx = updated.findIndex((ug) => ug.id === g.id);
-      if (idx !== -1) updated[idx] = { ...updated[idx], tableId: table.id };
-      usage.set(table.id, (usage.get(table.id) ?? 0) + guestCount);
-    }
-  });
+  const result = _autoAssign(seatGuests, seatTables);
+
+  const assignMap = new Map(
+    result.tables.flatMap((tb) => tb.assigned.map((gid) => [gid, tb.id])),
+  );
+  const updated = guests.map((g) => ({
+    ...g,
+    tableId: assignMap.has(g.id) ? assignMap.get(g.id) : g.tableId ?? null,
+  }));
 
   storeSet("guests", updated);
   enqueueWrite("tables", () => syncStoreKeyToSheets("tables"));
 }
+
+// ── S690: Seating constraint config ──────────────────────────────────────
+
+/** @type {import("../utils/seating-constraint.js").Constraint[]} */
+let _seatingConstraints = [];
+
+/** Toggle the seating constraint config panel. */
+export function toggleSeatingConstraints() {
+  const panel = /** @type {HTMLElement|null} */ (document.getElementById("seatingConstraintsPanel"));
+  if (!panel) return;
+  panel.hidden = !panel.hidden;
+  if (!panel.hidden) {
+    _populateConstraintGuestLists();
+    _renderConstraintList();
+  }
+}
+
+/**
+ * Add a seating constraint from the constraint form fields.
+ */
+export function addSeatingConstraint() {
+  const aEl = /** @type {HTMLInputElement|null} */ (document.getElementById("constraintGuestA"));
+  const bEl = /** @type {HTMLInputElement|null} */ (document.getElementById("constraintGuestB"));
+  const typeEl = /** @type {HTMLSelectElement|null} */ (document.getElementById("constraintType"));
+  if (!aEl || !bEl || !typeEl) return;
+
+  const nameA = aEl.value.trim();
+  const nameB = bEl.value.trim();
+  const type = /** @type {"together"|"apart"} */ (typeEl.value === "apart" ? "apart" : "together");
+
+  if (!nameA || !nameB || nameA === nameB) return;
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const gA = guests.find((g) => `${g.firstName || ""} ${g.lastName || ""}`.trim() === nameA);
+  const gB = guests.find((g) => `${g.firstName || ""} ${g.lastName || ""}`.trim() === nameB);
+
+  const idA = gA?.id ?? nameA;
+  const idB = gB?.id ?? nameB;
+
+  const constraint =
+    type === "apart" ? _keepApart(idA, idB, `${nameA} / ${nameB}`) : _keepTogether(idA, idB, `${nameA} / ${nameB}`);
+  _seatingConstraints = [..._seatingConstraints, constraint];
+
+  aEl.value = "";
+  bEl.value = "";
+  _renderConstraintList();
+  _renderConstraintViolations();
+}
+
+/**
+ * Fill the guest datalists for constraint input autocomplete.
+ */
+function _populateConstraintGuestLists() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  for (const listId of ["constraintGuestListA", "constraintGuestListB"]) {
+    const dl = document.getElementById(listId);
+    if (!dl) continue;
+    dl.textContent = "";
+    for (const g of guests) {
+      const name = `${g.firstName || ""} ${g.lastName || ""}`.trim();
+      if (!name) continue;
+      const opt = document.createElement("option");
+      opt.value = name;
+      dl.appendChild(opt);
+    }
+  }
+}
+
+/**
+ * Render the list of current constraints.
+ */
+function _renderConstraintList() {
+  const list = document.getElementById("seatingConstraintList");
+  if (!list) return;
+  list.textContent = "";
+
+  if (!_seatingConstraints.length) {
+    const p = document.createElement("p");
+    p.className = "u-text-muted";
+    p.textContent = t("constraint_empty");
+    list.appendChild(p);
+    return;
+  }
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const nameMap = new Map(
+    guests.map((g) => [g.id, `${g.firstName || ""} ${g.lastName || ""}`.trim()]),
+  );
+
+  _seatingConstraints.forEach((c, idx) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;gap:0.5rem;align-items:center;padding:0.25rem 0;font-size:0.875rem";
+
+    const icon = document.createElement("span");
+    icon.textContent = c.type === "together" ? "🤝" : "↔️";
+
+    const label = document.createElement("span");
+    label.style.flex = "1";
+    const nameA = nameMap.get(c.guestA) ?? c.guestA;
+    const nameB = nameMap.get(c.guestB) ?? c.guestB;
+    label.textContent = `${nameA} ${c.type === "together" ? t("constraint_together") : t("constraint_apart")} ${nameB}`;
+
+    const del = document.createElement("button");
+    del.className = "btn btn-ghost btn-small";
+    del.textContent = "✕";
+    del.addEventListener("click", () => {
+      _seatingConstraints = _seatingConstraints.filter((_, i) => i !== idx);
+      _renderConstraintList();
+      _renderConstraintViolations();
+    });
+
+    row.appendChild(icon);
+    row.appendChild(label);
+    row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+
+/**
+ * Validate current table assignments against constraints and show violations.
+ */
+function _renderConstraintViolations() {
+  const el = document.getElementById("seatingViolations");
+  if (!el) return;
+  if (!_seatingConstraints.length) {
+    el.textContent = "";
+    return;
+  }
+
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const assignments = Object.fromEntries(guests.filter((g) => g.tableId).map((g) => [g.id, g.tableId]));
+  const violations = _validateConstraints(_seatingConstraints, assignments);
+
+  if (!violations.length) {
+    el.style.color = "var(--color-success, #22c55e)";
+    el.textContent = t("constraint_no_violations");
+    return;
+  }
+
+  el.style.color = "var(--color-danger, #ef4444)";
+  el.textContent = t("constraint_violations").replace("{n}", String(violations.length));
+}
+
 
 // ── Rendering ────────────────────────────────────────────────────────────
 

@@ -1609,5 +1609,18 @@
   "dash_ai_refresh": "Refresh",
   "dash_ai_suggestion_dismiss": "Dismiss",
   "dash_ai_suggestion_apply": "Apply",
-  "rsvp_cq_select_placeholder": "Select an option"
+  "rsvp_cq_select_placeholder": "Select an option",
+  "btn_seating_constraints": "Seating Settings",
+  "seating_constraints_title": "Seating Constraints",
+  "seating_constraints_hint": "Define who sits together or apart during auto-assign.",
+  "constraint_guest_a": "Guest A",
+  "constraint_guest_b": "Guest B",
+  "constraint_type": "Constraint type",
+  "constraint_together": "together",
+  "constraint_apart": "apart",
+  "btn_add_constraint": "Add constraint",
+  "constraint_empty": "No constraints defined",
+  "constraint_no_violations": "All constraints satisfied ✔️",
+  "constraint_violations": "{n} constraint violation(s)",
+  "ph_constraint_guest": "Guest name..."
 }
