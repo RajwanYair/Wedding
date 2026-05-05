@@ -48,6 +48,9 @@ jobs:
       - name: Validate ICU MessageFormat (S583)
         run: npm run check:i18n:icu
 
+      - name: Validate ICU MessageFormat strict — AR plural arms (S619)
+        run: npm run check:i18n:icu:strict
+
       - name: Check credential hygiene
         run: npm run check:credentials
 
