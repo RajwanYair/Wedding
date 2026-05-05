@@ -54,6 +54,13 @@ import {
   expiringWithin as _expiringWithin,
   CONTRACT_STATUSES,
 } from "../utils/vendor-contracts.js";
+import {
+  createSigningIntent,
+  signContract as _signContract,
+  declineContract as _declineContract,
+  createAuditEntry,
+  signingProgress,
+} from "../utils/contract-esign.js";
 
 class VendorsSection extends BaseSection {
   async onMount() {
@@ -1466,4 +1473,108 @@ export function getExpiringContracts(days = 30) {
 }
 
 export { CONTRACT_STATUSES };
+
+// ─── S708: Contract E-Sign ────────────────────────────────────────────────────
+
+const _ESIGN_KEY = "wedding_v1_vendor_esign";
+
+/**
+ * Create a new signing intent for a contract and persist it.
+ *
+ * @param {string} contractId
+ * @param {string} signerEmail
+ * @param {string} signerName
+ * @returns {{ intent: import("../utils/contract-esign.js").SigningIntent, ok: boolean }}
+ */
+export function createContractSigningIntent(contractId, signerEmail, signerName) {
+  if (!contractId || !signerEmail || !signerName) {
+    showToast(t("esign_intent_invalid"), "error");
+    return { intent: null, ok: false };
+  }
+  const intent = createSigningIntent(contractId, signerEmail.trim(), signerName.trim());
+  const all = storeGet(_ESIGN_KEY) ?? [];
+  storeSet(_ESIGN_KEY, [...all, intent]);
+  const audit = createAuditEntry(intent.id, "created");
+  const audits = storeGet(`${_ESIGN_KEY}_audit`) ?? [];
+  storeSet(`${_ESIGN_KEY}_audit`, [...audits, audit]);
+  enqueueWrite(_ESIGN_KEY, () => {});
+  showToast(t("esign_intent_created"), "success");
+  return { intent, ok: true };
+}
+
+/**
+ * Sign a contract by updating its intent.
+ *
+ * @param {string} intentId
+ * @param {string} contractContent
+ * @returns {{ intent: import("../utils/contract-esign.js").SigningIntent | null, ok: boolean }}
+ */
+export function signVendorContract(intentId, contractContent) {
+  const all = storeGet(_ESIGN_KEY) ?? [];
+  const idx = all.findIndex((i) => i.id === intentId);
+  if (idx < 0) return { intent: null, ok: false };
+  const signed = _signContract(all[idx], contractContent ?? "");
+  all[idx] = signed;
+  storeSet(_ESIGN_KEY, all);
+  const audit = createAuditEntry(intentId, "signed");
+  const audits = storeGet(`${_ESIGN_KEY}_audit`) ?? [];
+  storeSet(`${_ESIGN_KEY}_audit`, [...audits, audit]);
+  enqueueWrite(_ESIGN_KEY, () => {});
+  showToast(t("esign_signed_ok"), "success");
+  return { intent: signed, ok: true };
+}
+
+/**
+ * Decline a signing intent.
+ *
+ * @param {string} intentId
+ * @param {string} [reason]
+ * @returns {{ intent: import("../utils/contract-esign.js").SigningIntent | null, ok: boolean }}
+ */
+export function declineVendorContractSigning(intentId, reason) {
+  const all = storeGet(_ESIGN_KEY) ?? [];
+  const idx = all.findIndex((i) => i.id === intentId);
+  if (idx < 0) return { intent: null, ok: false };
+  const declined = _declineContract(all[idx], reason);
+  all[idx] = declined;
+  storeSet(_ESIGN_KEY, all);
+  const audit = createAuditEntry(intentId, "declined");
+  const audits = storeGet(`${_ESIGN_KEY}_audit`) ?? [];
+  storeSet(`${_ESIGN_KEY}_audit`, [...audits, audit]);
+  enqueueWrite(_ESIGN_KEY, () => {});
+  showToast(t("esign_declined_ok"), "info");
+  return { intent: declined, ok: true };
+}
+
+/**
+ * Get all signing intents for a contract.
+ *
+ * @param {string} contractId
+ * @returns {import("../utils/contract-esign.js").SigningIntent[]}
+ */
+export function getSigningIntents(contractId) {
+  const all = storeGet(_ESIGN_KEY) ?? [];
+  return contractId ? all.filter((i) => i.contractId === contractId) : all;
+}
+
+/**
+ * Get the audit trail for a specific intent.
+ *
+ * @param {string} intentId
+ * @returns {import("../utils/contract-esign.js").AuditEntry[]}
+ */
+export function getSigningAuditTrail(intentId) {
+  const all = storeGet(`${_ESIGN_KEY}_audit`) ?? [];
+  return intentId ? all.filter((a) => a.intentId === intentId) : all;
+}
+
+/**
+ * Get signing progress for a contract's intents.
+ *
+ * @param {string} contractId
+ * @returns {{ total: number, signed: number, pending: number, declined: number, expired: number, rate: number }}
+ */
+export function getContractSigningProgress(contractId) {
+  return signingProgress(getSigningIntents(contractId));
+}
 
