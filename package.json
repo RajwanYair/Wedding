@@ -6,6 +6,7 @@
   "private": true,
   "packageManager": "npm@11.11.0",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "dev": "vite",
     "build": "vite build",
     "postbuild": "node scripts/generate-precache.mjs",
