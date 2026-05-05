@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [31.6.0] — 2026-05-05
+
+> **Phase C — Infrastructure Glue & Builder Utilities.**
+> Vendor contract editing, floor-plan IO/SVG export, plugin sandbox +
+> loader, website config schema, Cmd-K deep-links, workspace member CRUD,
+> registry thank-you automation, RSVP question builder.
+> Test count: 5810 across 423 files; 0 lint warnings, 0 Node warnings.
+
+### Added
+
+- `src/utils/vendor-edit.js` — contract draft, diff, auto-transition, status labels (S628)
+- `src/utils/floor-plan-io.js` — JSON export/import, SVG rendering with table types (S629)
+- `src/utils/plugin-sandbox.js` — MessageChannel sandbox, scope grants, permission mapping (S630)
+- `src/utils/plugin-loader.js` — registry lifecycle, permission gate, plugin summaries (S631)
+- `src/utils/website-config.js` — 5 themes, style defaults, hex validation, CSS vars (S632)
+- `src/utils/command-palette-links.js` — deep-link resolution, recent merge, plugin links (S633)
+- `src/utils/workspace-members.js` — member CRUD, role change, suspend, permission gate (S634)
+- `src/utils/registry-thankyou.js` — pending/batch/overdue thank-you automation (S635)
+- `src/utils/rsvp-question-builder.js` — question CRUD, reorder, conditions, validation (S636)
+
 ## [31.5.0] — 2025-07-15
 
 > **Phase C — Feature Helpers & CI Gates.**

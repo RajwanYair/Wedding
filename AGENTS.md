@@ -7,16 +7,16 @@
 > **Source of truth.** Other docs (copilot-instructions, README badges, agent files) must mirror these
 > values. `npm run check:canonical-facts` enforces parity.
 
-- version: `31.5.0`
-- tests: `5663`
-- test_files: `414`
-- utils: `138`
+- version: `31.6.0`
+- tests: `5810`
+- test_files: `423`
+- utils: `154`
 - locales: `6` (he, en, ar, fr, es, ru)
 - node: `>=22.0.0`
 
 ## Project Identity
 
-- **App**: Wedding Manager v31.5.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
+- **App**: Wedding Manager v31.6.0 — Hebrew RTL, RSVP, table seating, WhatsApp, multi-language
 - **Stack**: Vanilla JS ES2025 + Vite 8 + CSS `@layer` — minimal runtime deps (`@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`)
 - **Entry**: `src/main.js` (ESM, Vite build)
 - **Deploy**: GitHub Pages — <https://rajwanyair.github.io/Wedding>
