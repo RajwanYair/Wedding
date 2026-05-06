@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [32.2.0] — 2025-07-20
+
+> **Cluster C.3 — Dietary/Dedup, RSVP Analytics, iCal, Vendor Pipeline, Kiosk, Registry Gifts, Budget Allocator.**
+> Ten sprints (S713–S722): guests dietary summary + kitchen report, guest deduplication, RSVP
+> response-rate analytics + deadline countdown, iCal event export, vendor deal pipeline stages,
+> payment receipts, check-in kiosk + badge data, registry gift tracking + thank-you log,
+> and budget category allocator. v32.2.0 release.
+> Test count: 6803 across 482 files; 0 lint warnings, 0 Node warnings.
+
+### Added (32.2.0)
+
+- Guests dietary summary + kitchen report (S713): `getDietarySummary()`, `getKitchenReport()` via `dietary-summary.js`, 5 tests
+- Guest deduplication merge (S714): `findDuplicateGuests()`, `mergeDuplicateGuests()` via `guest-dedup.js`, 5 tests
+- RSVP response-rate analytics (S715): `getRsvpAnalytics()`, `getResponseRate()`, `getConfirmedHeadcount()` via `rsvp-analytics.js`, 3 tests
+- RSVP deadline countdown (S716): `getRsvpCountdown()`, `isRsvpOverdue()` via `rsvp-deadline.js`, 3 tests
+- iCal export (S717): `buildWeddingIcs()`, `getIcsDataUrl()` via `ical-export.js`, 3 tests
+- Vendor deal pipeline (S718): `createVendorDeal()`, `advanceVendorDeal()`, `getVendorPipelineSummary()` via `vendor-pipeline.js`, 3 tests
+- Vendor payment receipts (S719): `getVendorReceiptNumber()`, `buildVendorReceipt()` via `payment-receipt.js`, 2 tests
+- Check-in kiosk + badge data (S720): `startKioskSession()`, `recordKioskScan()`, `getGuestBadgeData()`, `getKioskStats()` via `checkin-kiosk.js`, 5 tests
+- Registry gift tracking + thank-you log (S721): `markGiftReceived()`, `markGiftPending()`, `getGiftSummary()`, `recordGiftThanks()`, `isGiftThanked()` via `gift-registry.js` + `gift-thanks.js`, 6 tests
+- Budget category allocator (S722): `getAllocatedBudget()`, `getBudgetAfterSpending()` via `budget-allocator.js`, 2 tests
+
 ## [32.1.0] — 2025-07-19
 
 > **Cluster C.2 — Plugin Permissions, Theme Marketplace, Registry Deep-links, Stripe Connect,
