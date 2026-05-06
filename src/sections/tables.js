@@ -43,6 +43,26 @@ import {
 } from "../utils/guest-seating-auto.js";
 import { getPreset as _getFloorPreset, listPresets as _listFloorPresets } from "../utils/floor-plan-presets.js";
 import { toSvg as _floorPlanToSvg, exportLayout as _exportLayout } from "../utils/floor-plan-io.js";
+import {
+  createWall as _createWall,
+  createZone as _createZone,
+  getFloorPlanStats as _getFloorPlanStats,
+  generatePerimeterWalls as _generatePerimeterWalls,
+  getZoneSummary as _getZoneSummary,
+  snapToGrid as _snapToGrid,
+} from "../utils/floor-plan-builder.js";
+import {
+  placeItem as _placeFurnitureItem,
+  suggestLayout as _suggestFurnitureLayout,
+  totalCapacity as _furnitureTotalCapacity,
+  getCatalogue as _getFurnitureCatalogue,
+} from "../utils/floor-plan-furniture.js";
+import {
+  validatePlacement as _validateFurniturePlacement,
+  findCollisions as _findFurnitureCollisions,
+  itemsCollide as _itemsCollide,
+  isWithinBounds as _isWithinBounds,
+} from "../utils/floor-plan-collision.js";
 
 // ── Public lifecycle ──────────────────────────────────────────────────────
 
@@ -1016,5 +1036,105 @@ function _renderFloorPlanCanvas() {
       collisionEl.textContent = t("floor_plan_no_collisions");
     }
   }
+}
+
+// ── S723: Floor-plan builder canvas ──────────────────────────────────────
+
+/**
+ * Add a wall to the current floor-plan room configuration.
+ * @param {{ x1: number, y1: number, x2: number, y2: number, thickness?: number }} opts
+ * @returns {object} The created wall object
+ */
+export function addFloorPlanWall(opts) {
+  return _createWall(opts);
+}
+
+/**
+ * Add a zone (area) to the floor-plan.
+ * @param {{ label: string, shape?: string, x: number, y: number, width: number, height: number, color?: string, category?: string }} opts
+ * @returns {object} The created zone object
+ */
+export function addFloorPlanZone(opts) {
+  return _createZone(opts);
+}
+
+/**
+ * Generate perimeter walls for a room rectangle.
+ * @param {{ width: number, height: number }} room
+ * @param {number} [thickness]
+ * @returns {object[]} Array of wall objects
+ */
+export function buildPerimeterWalls(room, thickness) {
+  return _generatePerimeterWalls(room, thickness);
+}
+
+/**
+ * Get summary statistics for the floor-plan (area, zone counts).
+ * @param {{ width: number, height: number }} room
+ * @param {object[]} walls
+ * @param {object[]} zones
+ * @returns {object}
+ */
+export function getFloorPlanStats(room, walls, zones) {
+  return _getFloorPlanStats(room, walls, zones);
+}
+
+/**
+ * Get a summary of all zones in the floor-plan.
+ * @param {object[]} zones
+ * @returns {object}
+ */
+export function getZoneSummary(zones) {
+  return _getZoneSummary(zones);
+}
+
+/**
+ * Place a furniture item on the canvas.
+ * @param {string} type
+ * @param {number} x
+ * @param {number} y
+ * @param {number} [rotation]
+ * @returns {object} Placed furniture item
+ */
+export function placeFurnitureItem(type, x, y, rotation) {
+  return _placeFurnitureItem(type, x, y, rotation);
+}
+
+/**
+ * Suggest a furniture layout for a given guest count and style.
+ * @param {number} guestCount
+ * @param {string} [style]
+ * @returns {object[]} Suggested furniture items
+ */
+export function suggestFurnitureLayout(guestCount, style) {
+  return _suggestFurnitureLayout(guestCount, style);
+}
+
+/**
+ * Get the full furniture catalogue.
+ * @returns {object[]}
+ */
+export function getFurnitureCatalogue() {
+  return _getFurnitureCatalogue();
+}
+
+/**
+ * Validate furniture placement — returns items with collision/bounds issues.
+ * @param {object[]} items
+ * @param {{ width: number, height: number }} room
+ * @returns {{ valid: object[], invalid: object[] }}
+ */
+export function validateFurniturePlacement(items, room) {
+  return _validateFurniturePlacement(items, room);
+}
+
+/**
+ * Snap a coordinate value to the nearest grid point.
+ * @param {number} value
+ * @param {number} gridSize
+ * @returns {number}
+ */
+export function snapValueToGrid(value, gridSize) {
+  return _snapToGrid(value, gridSize);
 }
 
