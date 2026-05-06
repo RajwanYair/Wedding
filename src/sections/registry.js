@@ -23,6 +23,15 @@ import {
   generateDeepLink,
   getRegistryStats,
 } from "../utils/registry-deeplink.js";
+import {
+  markReceived as _markReceived,
+  markPending as _markPending,
+  summarise as _summariseGifts,
+} from "../utils/gift-registry.js";
+import {
+  recordThanks as _recordThanks,
+  hasThanked as _hasThanked,
+} from "../utils/gift-thanks.js";
 
 /** localStorage key for affiliate tag. */
 const _AFFILIATE_KEY = "wedding_v1_registry_affiliate_tag";
@@ -309,5 +318,70 @@ export function buildBoutiqueLink(baseUrl, utm) {
  */
 export function getRegistryProvider(url) {
   return detectProvider(url);
+}
+
+// ─── S721: Gift Tracking + Thank-You Notes ───────────────────────────────────
+
+const _GIFTS_KEY = "wedding_v1_registry_gifts";
+const _THANKS_KEY = "wedding_v1_registry_thanks";
+
+/**
+ * Mark a gift as received by a giver.
+ *
+ * @param {string} id      Gift id.
+ * @param {string} giverId Guest id of the giver.
+ * @returns {{ ok: boolean }}
+ */
+export function markGiftReceived(id, giverId) {
+  const items = storeGet(_GIFTS_KEY) ?? [];
+  const updated = _markReceived(items, id, giverId);
+  storeSet(_GIFTS_KEY, updated);
+  return { ok: true };
+}
+
+/**
+ * Mark a gift as pending (not yet received / undo).
+ *
+ * @param {string} id
+ * @returns {{ ok: boolean }}
+ */
+export function markGiftPending(id) {
+  const items = storeGet(_GIFTS_KEY) ?? [];
+  storeSet(_GIFTS_KEY, _markPending(items, id));
+  return { ok: true };
+}
+
+/**
+ * Summarise totals across the gift registry.
+ *
+ * @returns {ReturnType<typeof _summariseGifts>}
+ */
+export function getGiftSummary() {
+  return _summariseGifts(storeGet(_GIFTS_KEY) ?? []);
+}
+
+/**
+ * Record that a thank-you note was sent for a gift.
+ *
+ * @param {string} giftId
+ * @param {string} giverId
+ * @param {{ channel?: "whatsapp"|"email"|"card"|"other", notes?: string }} [opts]
+ * @returns {{ ok: boolean }}
+ */
+export function recordGiftThanks(giftId, giverId, opts = {}) {
+  const log = storeGet(_THANKS_KEY) ?? [];
+  const updated = _recordThanks(log, { giftId, giverId, ...opts });
+  storeSet(_THANKS_KEY, updated);
+  return { ok: true };
+}
+
+/**
+ * Check whether a thank-you has been sent for a given gift.
+ *
+ * @param {string} giftId
+ * @returns {boolean}
+ */
+export function isGiftThanked(giftId) {
+  return _hasThanked(storeGet(_THANKS_KEY) ?? [], giftId);
 }
 
