@@ -23,6 +23,15 @@ import {
 } from "../utils/budget-forecast.js";
 import { buildIcs as _buildIcs } from "../utils/ical-export.js";
 import { allocate as _allocate, applySpending as _applySpending } from "../utils/budget-allocator.js";
+import {
+  getRegionalBenchmark as _getRegionalBenchmark,
+  getAvailableRegions as _getBenchmarkRegions,
+  compareCategorySpend as _compareCategorySpend,
+  compareFullBudget as _compareFullBudget,
+  budgetDeviationScore as _budgetDeviationScore,
+  topOverBudget as _topOverBudget,
+  savingsOpportunities as _savingsOpportunities,
+} from "../utils/budget-benchmark.js";
 
 /** @type {ReturnType<typeof setInterval> | null} */
 let _countdownTimer = null;
@@ -1427,4 +1436,53 @@ export function getAllocatedBudget(total, weights) {
 export function getBudgetAfterSpending(allocations, spent) {
   return _applySpending(allocations, spent);
 }
+
+// ── S728: Budget benchmark ────────────────────────────────────────────────
+
+/** Get benchmark data for a region. @param {string} region @returns {object|null} */
+export function getRegionalBenchmark(region) { return _getRegionalBenchmark(region); }
+
+/** List all available benchmark regions. @returns {string[]} */
+export function getBenchmarkRegions() { return _getBenchmarkRegions(); }
+
+/**
+ * Compare one category's actual spend to a benchmark.
+ * @param {number} actual
+ * @param {object} benchmark - regional benchmark with percent
+ * @returns {object}
+ */
+export function compareCategoryToBenchmark(actual, benchmark) { return _compareCategorySpend(actual, benchmark); }
+
+/**
+ * Compare full budget by category to a regional benchmark.
+ * @param {Record<string, number>} actualByCategory
+ * @param {string} region
+ * @returns {object[]}
+ */
+export function compareFullBudgetToBenchmark(actualByCategory, region) { return _compareFullBudget(actualByCategory, region); }
+
+/**
+ * Get overall deviation score (0 = on target, higher = more deviation).
+ * @param {Record<string, number>} actualByCategory
+ * @param {string} region
+ * @returns {number}
+ */
+export function getBudgetDeviationScore(actualByCategory, region) { return _budgetDeviationScore(actualByCategory, region); }
+
+/**
+ * Get top N over-budget categories.
+ * @param {Record<string, number>} actualByCategory
+ * @param {string} region
+ * @param {number} [n]
+ * @returns {object[]}
+ */
+export function getTopOverBudgetCategories(actualByCategory, region, n) { return _topOverBudget(actualByCategory, region, n); }
+
+/**
+ * Get savings opportunities (categories where spend exceeds benchmark).
+ * @param {Record<string, number>} actualByCategory
+ * @param {string} region
+ * @returns {object[]}
+ */
+export function getSavingsOpportunities(actualByCategory, region) { return _savingsOpportunities(actualByCategory, region); }
 
