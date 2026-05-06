@@ -29,6 +29,12 @@ import {
   getVisibleQuestions as _conditionalVisible,
   validateAnswers as _conditionalValidate,
 } from "../utils/conditional-rsvp.js";
+import {
+  statusDistribution as _statusDistribution,
+  responseRate as _responseRate,
+  confirmedHeadcount as _confirmedHeadcount,
+} from "../utils/rsvp-analytics.js";
+import { getCountdown as _getCountdown, isOverdue as _isOverdue } from "../utils/rsvp-deadline.js";
 
 /** @type {HTMLElement|null} */
 let _container = null;
@@ -752,4 +758,68 @@ export function getNextDueReminder(today) {
   const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
   const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
   return _nextDueWave(info.weddingDate ?? "", guests, today ?? new Date());
+}
+
+// ─── S715: RSVP Analytics ─────────────────────────────────────────────────────
+
+/**
+ * Status distribution + total across all RSVP responses (guests array).
+ *
+ * @returns {{ confirmed: number, declined: number, pending: number, maybe: number, total: number }}
+ */
+export function getRsvpAnalytics() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _statusDistribution(
+    guests.map((g) => ({ guestId: String(g.id ?? ""), status: g.status ?? "pending", respondedAt: g.respondedAt ?? "", partySize: g.seats })),
+  );
+}
+
+/**
+ * Response rate: percentage of guests who are not "pending".
+ *
+ * @returns {number}
+ */
+export function getResponseRate() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _responseRate(
+    guests.map((g) => ({ guestId: String(g.id ?? ""), status: g.status ?? "pending", respondedAt: g.respondedAt ?? "" })),
+  );
+}
+
+/**
+ * Total confirmed headcount including party sizes.
+ *
+ * @returns {number}
+ */
+export function getConfirmedHeadcount() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _confirmedHeadcount(
+    guests.map((g) => ({ guestId: String(g.id ?? ""), status: g.status ?? "pending", respondedAt: g.respondedAt ?? "", partySize: g.seats })),
+  );
+}
+
+// ─── S716: RSVP Deadline Countdown ───────────────────────────────────────────
+
+/**
+ * Countdown to the RSVP deadline (from weddingInfo.rsvpDeadline).
+ *
+ * @param {string|Date} [deadline] Override deadline; defaults to weddingInfo.rsvpDeadline.
+ * @returns {{ days: number, hours: number, minutes: number, seconds: number, isPast: boolean }}
+ */
+export function getRsvpCountdown(deadline) {
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const target = deadline ?? info.rsvpDeadline ?? new Date().toISOString();
+  return _getCountdown(target);
+}
+
+/**
+ * True when the RSVP deadline has passed.
+ *
+ * @param {string|Date} [deadline] Override; defaults to weddingInfo.rsvpDeadline.
+ * @returns {boolean}
+ */
+export function isRsvpOverdue(deadline) {
+  const info = /** @type {Record<string, string>} */ (storeGet("weddingInfo") ?? {});
+  const target = deadline ?? info.rsvpDeadline ?? new Date().toISOString();
+  return _isOverdue(target);
 }
