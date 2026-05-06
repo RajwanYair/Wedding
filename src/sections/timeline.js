@@ -12,6 +12,23 @@ import { uid } from "../utils/misc.js";
 import { sanitize } from "../utils/sanitize.js";
 import { enqueueWrite, syncStoreKeyToSheets } from "../core/sync.js";
 import { getRunOfShow, getNextItem, formatTimeUntil } from "../services/schedule.js";
+import {
+  sortItems as _sortTimelineItems,
+  findConflicts as _findTimelineConflicts,
+  totalSpan as _timelineTotalSpan,
+  insertWithShift as _timelineInsertWithShift,
+} from "../utils/event-timeline.js";
+import {
+  createEvent as _createMultiEvent,
+  activateEvent as _activateMultiEvent,
+  archiveEvent as _archiveMultiEvent,
+  switchActiveEvent as _switchActiveEvent,
+  getActiveEvent as _getActiveEvent,
+  mergeGuestLists as _mergeGuestLists,
+  eventSummary as _multiEventSummary,
+  duplicateEvent as _duplicateMultiEvent,
+  resetEventCounter as _resetMultiEventCounter,
+} from "../utils/multi-event.js";
 
 class TimelineSection extends BaseSection {
   async onMount() {
@@ -453,3 +470,97 @@ function renderRunOfShow() {
       : "";
   }
 }
+
+// ── S726: Event timeline helpers ──────────────────────────────────────────
+
+/**
+ * Sort timeline items by start time.
+ * @param {object[]} items
+ * @returns {object[]}
+ */
+export function sortTimelineItems(items) { return _sortTimelineItems(items); }
+
+/**
+ * Find overlapping or duplicate-id conflicts.
+ * @param {object[]} items
+ * @returns {object[]}
+ */
+export function findTimelineConflicts(items) { return _findTimelineConflicts(items); }
+
+/**
+ * Get the total minute span of all timeline items.
+ * @param {object[]} items
+ * @returns {number}
+ */
+export function getTimelineTotalSpan(items) { return _timelineTotalSpan(items); }
+
+/**
+ * Insert a new item into a sorted timeline, shifting later items as needed.
+ * @param {object[]} items
+ * @param {object} newItem
+ * @returns {object[]}
+ */
+export function insertTimelineItemWithShift(items, newItem) { return _timelineInsertWithShift(items, newItem); }
+
+// ── S726: Multi-event management ──────────────────────────────────────────
+
+/**
+ * Create a new multi-event.
+ * @param {string} name
+ * @param {object} [options]
+ * @returns {object}
+ */
+export function createMultiEvent(name, options) { return _createMultiEvent(name, options); }
+
+/**
+ * Activate an event (set status to active).
+ * @param {object} event
+ * @returns {object}
+ */
+export function activateMultiEvent(event) { return _activateMultiEvent(event); }
+
+/**
+ * Archive an event.
+ * @param {object} event
+ * @returns {object}
+ */
+export function archiveMultiEvent(event) { return _archiveMultiEvent(event); }
+
+/**
+ * Switch the active event in an array of events.
+ * @param {object[]} events
+ * @param {string} eventId
+ * @returns {object[]}
+ */
+export function switchActiveMultiEvent(events, eventId) { return _switchActiveEvent(events, eventId); }
+
+/**
+ * Get the currently active event from an array.
+ * @param {object[]} events
+ * @returns {object|null}
+ */
+export function getActiveMultiEvent(events) { return _getActiveEvent(events); }
+
+/**
+ * Merge multiple guest lists, deduplicating by phone.
+ * @param {object[][]} guestLists
+ * @returns {object[]}
+ */
+export function mergeMultiEventGuests(guestLists) { return _mergeGuestLists(guestLists); }
+
+/**
+ * Get a summary object for all events.
+ * @param {object[]} events
+ * @returns {object}
+ */
+export function getMultiEventSummary(events) { return _multiEventSummary(events); }
+
+/**
+ * Duplicate an event under a new name.
+ * @param {object} event
+ * @param {string} newName
+ * @returns {object}
+ */
+export function duplicateMultiEvent(event, newName) { return _duplicateMultiEvent(event, newName); }
+
+export { _resetMultiEventCounter as resetMultiEventCounter };
