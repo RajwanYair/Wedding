@@ -20,6 +20,18 @@ import {
   buildBadgeData as _buildBadgeData,
   sessionStats as _sessionStats,
 } from "../utils/checkin-kiosk.js";
+import {
+  buildBadgeLayout as _buildBadgeLayout,
+  formatThermalText as _formatThermalText,
+  createPrintJob as _createPrintJob,
+  batchPrintJobs as _batchPrintJobs,
+  markPrinting as _markPrinting,
+  markDone as _markDone,
+  markFailed as _markFailed,
+  queueStats as _queueStats,
+  filterByStatus as _filterJobsByStatus,
+  resetJobCounter as _resetJobCounter,
+} from "../utils/badge-printer.js";
 
 /** @type {string} */
 let _searchQuery = "";
@@ -598,4 +610,92 @@ export function getGuestBadgeData(guestId) {
 export function getKioskStats(session) {
   return _sessionStats(session);
 }
+
+// ── S725: Badge printer ───────────────────────────────────────────────────
+
+/**
+ * Build a badge layout object for a guest.
+ * @param {{ name: string, table?: string, meal?: string, [key: string]: unknown }} guest
+ * @param {object} [options]
+ * @returns {object}
+ */
+export function buildBadgeLayout(guest, options) {
+  return _buildBadgeLayout(guest, options);
+}
+
+/**
+ * Format badge data as printable thermal text.
+ * @param {object} badge
+ * @returns {string}
+ */
+export function formatBadgeText(badge) {
+  return _formatThermalText(badge);
+}
+
+/**
+ * Create a print job from a badge layout.
+ * @param {object} badge
+ * @returns {object}
+ */
+export function createBadgePrintJob(badge) {
+  return _createPrintJob(badge);
+}
+
+/**
+ * Create batch print jobs for multiple guests.
+ * @param {object[]} guests
+ * @param {object} [options]
+ * @returns {object[]}
+ */
+export function batchBadgePrintJobs(guests, options) {
+  return _batchPrintJobs(guests, options);
+}
+
+/**
+ * Mark a print job as printing.
+ * @param {object} job
+ * @returns {object}
+ */
+export function markBadgePrinting(job) {
+  return _markPrinting(job);
+}
+
+/**
+ * Mark a print job as done.
+ * @param {object} job
+ * @returns {object}
+ */
+export function markBadgeDone(job) {
+  return _markDone(job);
+}
+
+/**
+ * Mark a print job as failed.
+ * @param {object} job
+ * @returns {object}
+ */
+export function markBadgeFailed(job) {
+  return _markFailed(job);
+}
+
+/**
+ * Get queue stats for a set of print jobs.
+ * @param {object[]} jobs
+ * @returns {object}
+ */
+export function getBadgeQueueStats(jobs) {
+  return _queueStats(jobs);
+}
+
+/**
+ * Filter print jobs by status.
+ * @param {object[]} jobs
+ * @param {string} status
+ * @returns {object[]}
+ */
+export function filterBadgesByStatus(jobs, status) {
+  return _filterJobsByStatus(jobs, status);
+}
+
+export { _resetJobCounter as resetBadgeJobCounter };
 
