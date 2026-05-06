@@ -31,6 +31,8 @@ import {
   filterByTag as _filterByTag,
   bulkSetStatus as _bulkSetStatus,
 } from "../utils/guest-tags.js";
+import { summariseDietary as _summariseDietary, formatKitchenReport as _formatKitchenReport } from "../utils/dietary-summary.js";
+import { findDuplicates as _findDuplicates, mergeGuests as _mergeGuests } from "../utils/guest-dedup.js";
 
 /** @type {Set<string>} IDs of guests awaiting sync confirmation (S3.3 optimistic UI) */
 const _pendingSync = new Set();
@@ -1186,4 +1188,60 @@ export function bulkSetGuestStatus(ids, status) {
   enqueueWrite("guests", () => {});
   showToast(t("guest_tag_bulk_updated"), "success");
   return { ok: true, count: ids.length };
+}
+
+// ─── S713: Dietary Summary ────────────────────────────────────────────────────
+
+/**
+ * Summarise confirmed-guest dietary data: per-meal seat counts + top allergies.
+ *
+ * @returns {import("../utils/dietary-summary.js").DietarySummary}
+ */
+export function getDietarySummary() {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  return _summariseDietary(
+    guests.map((g) => ({
+      id: String(g.id ?? ""),
+      meal: g.meal,
+      allergies: Array.isArray(g.allergies) ? g.allergies : [],
+      seats: Number(g.seats) || 1,
+      status: g.status,
+    })),
+  );
+}
+
+/**
+ * Build a kitchen-ready tab-separated dietary report.
+ *
+ * @returns {string}
+ */
+export function getKitchenReport() {
+  return _formatKitchenReport(getDietarySummary());
+}
+
+// ─── S714: Guest Deduplication ───────────────────────────────────────────────
+
+/**
+ * Find likely duplicate guests by matching normalised phone or name.
+ *
+ * @returns {import("../utils/guest-dedup.js").DuplicatePair[]}
+ */
+export function findDuplicateGuests() {
+  return _findDuplicates(storeGet("guests") ?? []);
+}
+
+/**
+ * Merge a duplicate guest into a primary guest, removing the duplicate
+ * from the store.
+ *
+ * @param {string} primaryId
+ * @param {string} dupId
+ * @returns {{ ok: boolean, count: number }}
+ */
+export function mergeDuplicateGuests(primaryId, dupId) {
+  const guests = storeGet("guests") ?? [];
+  const updated = _mergeGuests(primaryId, dupId, guests);
+  storeSet("guests", updated);
+  enqueueWrite("guests", () => {});
+  return { ok: true, count: guests.length - updated.length };
 }
