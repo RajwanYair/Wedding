@@ -21,6 +21,8 @@ import {
   spendByCategory as _spendByCategory,
   projectFinal as _projectFinal,
 } from "../utils/budget-forecast.js";
+import { buildIcs as _buildIcs } from "../utils/ical-export.js";
+import { allocate as _allocate, applySpending as _applySpending } from "../utils/budget-allocator.js";
 
 /** @type {ReturnType<typeof setInterval> | null} */
 let _countdownTimer = null;
@@ -1377,5 +1379,52 @@ export function getBudgetForecastSummary() {
   const perCat = cats.length > 0 ? budgetTarget / cats.length : 0;
   const budget = cats.map((c) => ({ category: c, amount: perCat }));
   return _forecast(budget, expenses);
+}
+
+// ─── S717: iCal Export ───────────────────────────────────────────────────────
+
+/**
+ * Build a RFC-5545 iCalendar string from one or more events.
+ *
+ * @param {import("../utils/ical-export.js").IcalEvent|import("../utils/ical-export.js").IcalEvent[]} events
+ * @returns {string}
+ */
+export function buildWeddingIcs(events) {
+  return _buildIcs(Array.isArray(events) ? events : [events]);
+}
+
+/**
+ * Build a `data:text/calendar` URL ready for an `<a download>` link.
+ *
+ * @param {import("../utils/ical-export.js").IcalEvent|import("../utils/ical-export.js").IcalEvent[]} events
+ * @returns {string}
+ */
+export function getIcsDataUrl(events) {
+  const ics = buildWeddingIcs(events);
+  return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+}
+
+// ─── S722: Budget Allocation ─────────────────────────────────────────────────
+
+/**
+ * Allocate a total budget across categories by percentage weights.
+ *
+ * @param {number} total  Budget in smallest currency unit (agorot/cents).
+ * @param {Array<{category: string, weight: number}>} weights
+ * @returns {import("../utils/budget-allocator.js").CategoryAllocation[]}
+ */
+export function getAllocatedBudget(total, weights) {
+  return _allocate(total, weights);
+}
+
+/**
+ * Subtract actual spending from allocations to show per-category remaining.
+ *
+ * @param {import("../utils/budget-allocator.js").CategoryAllocation[]} allocations
+ * @param {Array<{category: string, spent: number}>} spent
+ * @returns {Array<import("../utils/budget-allocator.js").CategoryAllocation & { remaining: number, over: boolean }>}
+ */
+export function getBudgetAfterSpending(allocations, spent) {
+  return _applySpending(allocations, spent);
 }
 
