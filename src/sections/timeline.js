@@ -29,6 +29,15 @@ import {
   duplicateEvent as _duplicateMultiEvent,
   resetEventCounter as _resetMultiEventCounter,
 } from "../utils/multi-event.js";
+import {
+  milestoneToEvent as _milestoneToEvent,
+  gcalToEvent as _gcalToEvent,
+  eventToGcal as _eventToGcal,
+  diffEvents as _diffCalendarEvents,
+  resolveByLatest as _resolveByLatest,
+  resolvePreferLocal as _resolvePreferLocal,
+  syncSummary as _calendarSyncSummary,
+} from "../utils/calendar-sync.js";
 
 class TimelineSection extends BaseSection {
   async onMount() {
@@ -564,3 +573,56 @@ export function getMultiEventSummary(events) { return _multiEventSummary(events)
 export function duplicateMultiEvent(event, newName) { return _duplicateMultiEvent(event, newName); }
 
 export { _resetMultiEventCounter as resetMultiEventCounter };
+
+// ── S729: Calendar sync ───────────────────────────────────────────────────
+
+/**
+ * Convert a wedding milestone to a calendar event.
+ * @param {{ id: string, title: string, date: string, time?: string, duration?: number, location?: string }} milestone
+ * @returns {object}
+ */
+export function milestoneToCalendarEvent(milestone) { return _milestoneToEvent(milestone); }
+
+/**
+ * Convert a Google Calendar event to our internal format.
+ * @param {object} gcalEvent
+ * @returns {object}
+ */
+export function gcalEventToLocal(gcalEvent) { return _gcalToEvent(gcalEvent); }
+
+/**
+ * Convert our internal event to Google Calendar API payload.
+ * @param {object} event
+ * @returns {object}
+ */
+export function localEventToGcal(event) { return _eventToGcal(event); }
+
+/**
+ * Diff local and remote calendar events for two-way sync.
+ * @param {object[]} local
+ * @param {object[]} remote
+ * @returns {{ toUpload: object[], toDownload: object[], conflicts: object[] }}
+ */
+export function diffCalendarEvents(local, remote) { return _diffCalendarEvents(local, remote); }
+
+/**
+ * Resolve sync conflicts by choosing the latest updatedAt.
+ * @param {object} local
+ * @param {object} remote
+ * @returns {object}
+ */
+export function resolveCalendarConflictByLatest(local, remote) { return _resolveByLatest(local, remote); }
+
+/**
+ * Resolve sync conflicts by always preferring local.
+ * @param {object} local
+ * @returns {object}
+ */
+export function resolveCalendarConflictPreferLocal(local) { return _resolvePreferLocal(local); }
+
+/**
+ * Get a human-readable sync result summary.
+ * @param {{ toUpload: object[], toDownload: object[], conflicts: object[] }} result
+ * @returns {object}
+ */
+export function getCalendarSyncSummary(result) { return _calendarSyncSummary(result); }
