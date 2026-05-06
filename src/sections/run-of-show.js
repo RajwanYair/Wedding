@@ -16,6 +16,14 @@ import {
   detectOverlaps,
 } from "../services/schedule.js";
 import { BaseSection, fromSection } from "../core/section-base.js";
+import {
+  addTask as _addTask,
+  completeTask as _completeTask,
+  daysUntil as _daysUntil,
+  pendingTasks as _pendingTasks,
+  groupByDueWindow as _groupByDueWindow,
+  progress as _taskProgress,
+} from "../utils/task-list.js";
 
 /** @type {import('../services/schedule.js').TimelineItem[]} */
 let _items = [];
@@ -158,4 +166,58 @@ function _fromMinutes(/** @type {number} */ n) {
   const h = Math.floor(wrapped / 60);
   const m = wrapped % 60;
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
+// ── S727: Task list helpers ───────────────────────────────────────────────
+
+/**
+ * Add a task to an existing task list.
+ * @param {object[]} tasks
+ * @param {{ title: string, dueISO?: string, priority?: string }} task
+ * @returns {object[]} Updated tasks array
+ */
+export function addTaskToList(tasks, task) { return _addTask(tasks, task); }
+
+/**
+ * Mark a task as complete.
+ * @param {object[]} tasks
+ * @param {string} id
+ * @param {string} [doneAt] - ISO timestamp; defaults to now
+ * @returns {object[]}
+ */
+export function completeTaskInList(tasks, id, doneAt) { return _completeTask(tasks, id, doneAt); }
+
+/**
+ * Get days remaining until an event date.
+ * @param {string} eventISO
+ * @param {number} [now] - Timestamp override for tests
+ * @returns {number}
+ */
+export function getDaysUntilEvent(eventISO, now) { return _daysUntil(eventISO, now); }
+
+/**
+ * Filter tasks that are still pending (not done).
+ * @param {object[]} tasks
+ * @returns {object[]}
+ */
+export function getPendingTasks(tasks) { return _pendingTasks(tasks); }
+
+/**
+ * Group pending tasks by due window (overdue / this-week / later).
+ * @param {object[]} tasks
+ * @param {number} daysRemaining
+ * @returns {object}
+ */
+export function groupTasksByDueWindow(tasks, daysRemaining) { return _groupByDueWindow(tasks, daysRemaining); }
+
+/**
+ * Get task completion progress.
+ * @param {object[]} tasks
+ * @returns {{ total: number, done: number, percent: number }}
+ */
+export function getTaskProgress(tasks) {
+  const ratio = _taskProgress(tasks);
+  const total = tasks.length;
+  const done = Math.round(ratio * total);
+  return { total, done, percent: Math.round(ratio * 100) };
 }
