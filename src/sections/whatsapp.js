@@ -26,6 +26,20 @@ import {
   queueSummary as _queueSummary,
   resetIdCounter as _resetSchedulerIdCounter,
 } from "../utils/whatsapp-scheduler.js";
+import {
+  addToDnc as _addToDnc,
+  removeFromDnc as _removeFromDnc,
+  isOnDnc as _isOnDnc,
+  listDnc as _listDnc,
+  clearDnc as _clearDnc,
+  filterDnc as _filterDnc,
+} from "../utils/whatsapp-dnc.js";
+import {
+  renderNamed as _renderNamedTemplate,
+  listTemplates as _listMessageTemplates,
+  registerTemplate as _registerTemplate,
+  TEMPLATES as _BUILT_IN_TEMPLATES,
+} from "../utils/message-templates.js";
 
 class WhatsAppSection extends BaseSection {
   async onMount() {
@@ -637,3 +651,46 @@ export function getQueueSummary() {
 }
 
 export { _resetSchedulerIdCounter as resetSchedulerIdCounter };
+
+// ── S724: WhatsApp DNC list ───────────────────────────────────────────────
+
+/** Add a phone to the do-not-contact list. @param {string} phone @returns {boolean} */
+export function addToDncList(phone) { return _addToDnc(phone); }
+
+/** Remove a phone from the DNC list. @param {string} phone @returns {boolean} */
+export function removeFromDncList(phone) { return _removeFromDnc(phone); }
+
+/** Check if a phone is on the DNC list. @param {string} phone @returns {boolean} */
+export function isDncListed(phone) { return _isOnDnc(phone); }
+
+/** Get all DNC phone numbers. @returns {string[]} */
+export function getDncList() { return _listDnc(); }
+
+/** Clear all DNC entries. */
+export function clearDncList() { _clearDnc(); }
+
+/** Filter an array of phones, returning only those NOT on DNC. @param {string[]} phones @returns {string[]} */
+export function filterOutDnc(phones) { return _filterDnc(phones); }
+
+// ── S724: Message templates ───────────────────────────────────────────────
+
+/** List all registered message template names. @returns {string[]} */
+export function listMessageTemplates() { return _listMessageTemplates(); }
+
+/**
+ * Render a named template with variable substitution.
+ * @param {string} name - Template name (e.g. "rsvpConfirm")
+ * @param {Record<string, string>} vars
+ * @returns {string}
+ */
+export function renderMessageTemplate(name, vars) { return _renderNamedTemplate(name, vars); }
+
+/**
+ * Register a custom message template.
+ * @param {string} name
+ * @param {string} source - Handlebars-style template string
+ */
+export function registerMessageTemplate(name, source) { _registerTemplate(name, source); }
+
+/** Get the built-in template map. @returns {object} */
+export function getBuiltInTemplates() { return { ..._BUILT_IN_TEMPLATES }; }
