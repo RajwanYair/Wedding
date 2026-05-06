@@ -46,7 +46,13 @@ import {
 } from "../utils/stripe-connect.js";
 import {
   buildReceipt as _buildReceipt,
+  generateReceiptNumber as _generateReceiptNumber,
 } from "../utils/payment-receipt.js";
+import {
+  createDeal as _createDeal,
+  advanceStage as _advanceStage,
+  pipelineSummary as _pipelineSummary,
+} from "../utils/vendor-pipeline.js";
 import {
   validateContract,
   canTransition,
@@ -1576,5 +1582,62 @@ export function getSigningAuditTrail(intentId) {
  */
 export function getContractSigningProgress(contractId) {
   return signingProgress(getSigningIntents(contractId));
+}
+
+// ─── S718: Vendor Pipeline ───────────────────────────────────────────────────
+
+/**
+ * Create a new pipeline deal for a vendor (starts in "lead" stage).
+ *
+ * @param {string} vendorId
+ * @param {Record<string, unknown>} [metadata]
+ * @returns {import("../utils/vendor-pipeline.js").Deal}
+ */
+export function createVendorDeal(vendorId, metadata) {
+  return _createDeal(vendorId, metadata);
+}
+
+/**
+ * Advance a deal to the next stage in the pipeline.
+ *
+ * @param {import("../utils/vendor-pipeline.js").Deal} deal
+ * @param {string} newStage
+ * @returns {import("../utils/vendor-pipeline.js").Deal}
+ */
+export function advanceVendorDeal(deal, newStage) {
+  return _advanceStage(deal, newStage);
+}
+
+/**
+ * Pipeline summary statistics across all vendor deals stored in
+ * the `vendorDeals` store key.
+ *
+ * @returns {ReturnType<import("../utils/vendor-pipeline.js").pipelineSummary>}
+ */
+export function getVendorPipelineSummary() {
+  return _pipelineSummary(storeGet("vendorDeals") ?? []);
+}
+
+// ─── S719: Vendor Payment Receipts ──────────────────────────────────────────
+
+/**
+ * Generate a unique receipt number for a vendor.
+ *
+ * @param {string} vendorId
+ * @returns {string}
+ */
+export function getVendorReceiptNumber(vendorId) {
+  return _generateReceiptNumber(vendorId);
+}
+
+/**
+ * Build a full receipt data structure for a vendor payment.
+ *
+ * @param {string} vendorId
+ * @param {{ vendorName: string, lines: import("../utils/payment-receipt.js").PaymentLine[], taxRate?: number, currency?: string, notes?: string }} opts
+ * @returns {import("../utils/payment-receipt.js").ReceiptData}
+ */
+export function buildVendorReceipt(vendorId, opts) {
+  return _buildReceipt({ vendorId, ...opts });
 }
 
