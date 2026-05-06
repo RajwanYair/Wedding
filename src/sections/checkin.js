@@ -14,6 +14,12 @@ import { vibrate, HAPTIC } from "../utils/haptic.js";
 import { isNFCSupported, startNFCScan } from "../services/security.js";
 import { lockOrientation, unlockOrientation } from "../utils/orientation.js";
 import { buildCheckinUrl, getQrDataUrl } from "../utils/qr-code.js";
+import {
+  createSession as _createKioskSession,
+  recordScan as _recordScan,
+  buildBadgeData as _buildBadgeData,
+  sessionStats as _sessionStats,
+} from "../utils/checkin-kiosk.js";
 
 /** @type {string} */
 let _searchQuery = "";
@@ -538,5 +544,58 @@ export function stopNFCCheckin() {
     _stopNFCScan();
     _stopNFCScan = null;
   }
+}
+
+// ─── S720: Kiosk Mode + Badge Data ───────────────────────────────────────────
+
+/**
+ * Start a new kiosk session (NFC/QR scan tracking).
+ *
+ * @param {string} [kioskId]
+ * @returns {import("../utils/checkin-kiosk.js").KioskSession}
+ */
+export function startKioskSession(kioskId) {
+  return _createKioskSession(kioskId ?? "kiosk_default");
+}
+
+/**
+ * Record a successful QR/NFC scan in a kiosk session.
+ *
+ * @param {import("../utils/checkin-kiosk.js").KioskSession} session
+ * @returns {import("../utils/checkin-kiosk.js").KioskSession}
+ */
+export function recordKioskScan(session) {
+  return _recordScan(session);
+}
+
+/**
+ * Build badge data for a guest (name, table, meal, checkin time).
+ *
+ * @param {string} guestId
+ * @returns {import("../utils/checkin-kiosk.js").BadgeData|null}
+ */
+export function getGuestBadgeData(guestId) {
+  const guests = /** @type {any[]} */ (storeGet("guests") ?? []);
+  const tables = /** @type {any[]} */ (storeGet("tables") ?? []);
+  const guest = guests.find((g) => g.id === guestId);
+  if (!guest) return null;
+  const table = tables.find((t) => t.id === guest.tableId);
+  return _buildBadgeData({
+    id: guest.id,
+    name: guest.name ?? "",
+    table: table?.number ?? 0,
+    meal: guest.meal ?? "",
+    checkedInAt: guest.checkedInAt ?? new Date().toISOString(),
+  });
+}
+
+/**
+ * Get session stats: scan counts, failure rate, online status.
+ *
+ * @param {import("../utils/checkin-kiosk.js").KioskSession} session
+ * @returns {ReturnType<typeof _sessionStats>}
+ */
+export function getKioskStats(session) {
+  return _sessionStats(session);
 }
 
