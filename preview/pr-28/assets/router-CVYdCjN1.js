@@ -1,1 +1,0 @@
-import{n as e,r as t,t as n}from"./router-BGEa6Ygy.js";export{n as currentRoute,e as initRouterListener,t as navigate};

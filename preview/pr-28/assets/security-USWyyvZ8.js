@@ -1,1 +1,0 @@
-import{F as e}from"./compliance-BAReXsyE.js";export{e as writeNFCTag};

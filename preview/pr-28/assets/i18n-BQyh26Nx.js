@@ -1,1 +1,0 @@
-import{n as e}from"./i18n-CTPcp2VT.js";export{e as applyI18n};
