@@ -3,7 +3,7 @@
  *
  * @vitest-environment happy-dom
  */
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { initStore, storeSet } from "../../src/core/store.js";
 
@@ -15,7 +15,17 @@ vi.mock("../../src/services/sheets.js", () => ({
 
 const SECTION = readFileSync("src/sections/rsvp.js", "utf8");
 
+let getRsvpQuestions, getVisibleRsvpQuestions, validateRsvpAnswers, expandRsvpPlusOnes;
+
 describe("S607 RSVP conditional question engine", () => {
+  beforeAll(async () => {
+    const mod = await import("../../src/sections/rsvp.js");
+    getRsvpQuestions = mod.getRsvpQuestions;
+    getVisibleRsvpQuestions = mod.getVisibleRsvpQuestions;
+    validateRsvpAnswers = mod.validateRsvpAnswers;
+    expandRsvpPlusOnes = mod.expandRsvpPlusOnes;
+  });
+
   beforeEach(() => {
     initStore({ weddingInfo: { value: {} } });
   });
@@ -27,8 +37,7 @@ describe("S607 RSVP conditional question engine", () => {
     expect(SECTION).toMatch(/expandPlusOnes/);
   });
 
-  it("getRsvpQuestions returns weddingInfo.rsvpQuestions array", async () => {
-    const { getRsvpQuestions } = await import("../../src/sections/rsvp.js");
+  it("getRsvpQuestions returns weddingInfo.rsvpQuestions array", () => {
     storeSet("weddingInfo", {
       rsvpQuestions: [{ id: "q1", type: "text", label: "Test" }],
     });
@@ -37,8 +46,7 @@ describe("S607 RSVP conditional question engine", () => {
     expect(qs[0].id).toBe("q1");
   });
 
-  it("getVisibleRsvpQuestions filters by showWhen", async () => {
-    const { getVisibleRsvpQuestions } = await import("../../src/sections/rsvp.js");
+  it("getVisibleRsvpQuestions filters by showWhen", () => {
     storeSet("weddingInfo", {
       rsvpQuestions: [
         { id: "veg", type: "boolean", label: "Vegan?" },
@@ -54,8 +62,7 @@ describe("S607 RSVP conditional question engine", () => {
     expect(getVisibleRsvpQuestions({ veg: true })).toHaveLength(2);
   });
 
-  it("validateRsvpAnswers detects missing required answers", async () => {
-    const { validateRsvpAnswers } = await import("../../src/sections/rsvp.js");
+  it("validateRsvpAnswers detects missing required answers", () => {
     storeSet("weddingInfo", {
       rsvpQuestions: [{ id: "diet", type: "text", label: "Diet", required: true }],
     });
@@ -64,8 +71,7 @@ describe("S607 RSVP conditional question engine", () => {
     expect(r.missing).toContain("diet");
   });
 
-  it("expandRsvpPlusOnes builds synthetic stubs", async () => {
-    const { expandRsvpPlusOnes } = await import("../../src/sections/rsvp.js");
+  it("expandRsvpPlusOnes builds synthetic stubs", () => {
     const stubs = expandRsvpPlusOnes("g1", 2);
     expect(stubs).toHaveLength(2);
     expect(stubs[0].parentId).toBe("g1");

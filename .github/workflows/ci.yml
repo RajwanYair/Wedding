@@ -35,56 +35,28 @@ jobs:
       - name: Lint (HTML + CSS + JS + Markdown)
         run: npm run lint
 
-      - name: Validate i18n parity
-        run: npm run check:i18n
+      - name: Validate i18n parity + ICU
+        run: |
+          npm run check:i18n
+          npm run check:i18n:icu
+          npm run check:i18n:icu:strict
 
-      - name: Validate ICU MessageFormat (S583)
-        run: npm run check:i18n:icu
-
-      - name: Validate ICU MessageFormat strict — AR plural arms (S619)
-        run: npm run check:i18n:icu:strict
-
-      - name: Check credential hygiene
-        run: npm run check:credentials
-
-      - name: Audit action namespace — ratchet gate (baseline=116 flat, 0 duplicates — S291)
-        run: npm run audit:actions
-
-      - name: Audit modal native-dialog adoption (enforce baseline=10 — S233)
-        run: node scripts/audit-modals.mjs --baseline=10
-
-      - name: Audit BaseSection adoption — all 23 sections enforced (S296)
-        run: node scripts/audit-base-section.mjs --enforce
-
-      - name: Audit CSS @scope — no bare [data-section] selectors (enforce BASELINE=0 — S297)
-        run: node scripts/audit-css-scope.mjs --enforce
-
-      - name: Audit console.error usage — enforce BASELINE=0 (ADR-032 — S298)
-        run: node scripts/audit-console-error.mjs --enforce
-
-      - name: Validate Mermaid diagrams (enforce — S236)
-        run: node scripts/validate-mermaid.mjs --enforce
-
-      - name: Audit JSDoc coverage (enforce 100% — S236)
-        run: node scripts/audit-jsdoc.mjs --enforce
-
-      - name: Audit Supabase migrations (enforce — S243)
-        run: node scripts/audit-supabase-migrations.mjs --enforce
-
-      - name: "Supabase SQL lint — BASELINE=0 (S304: 008 fixed with DO block guard)"
-        run: node scripts/audit-supabase-lint.mjs --enforce
-
-      - name: Architecture check — no section→service direct imports (enforce — S290)
-        run: node scripts/arch-check.mjs --strict
-
-      - name: Audit utils — no unused exports, no missing @owner (S618, S683)
-        run: node scripts/audit-utils.mjs --enforce-owner
-
-      - name: Audit CSS a11y — reduced-motion + contrast + forced-colors (S586-S587)
-        run: npm run audit:a11y
-
-      - name: Audit Trusted Types sinks — enforce baseline=19 ratchet (S318-S321)
-        run: node scripts/audit-trusted-types.mjs --baseline=5
+      - name: Code quality audits
+        run: |
+          npm run check:credentials
+          npm run audit:actions
+          node scripts/audit-modals.mjs --baseline=10
+          node scripts/audit-base-section.mjs --enforce
+          node scripts/audit-css-scope.mjs --enforce
+          node scripts/audit-console-error.mjs --enforce
+          node scripts/validate-mermaid.mjs --enforce
+          node scripts/audit-jsdoc.mjs --enforce
+          node scripts/audit-supabase-migrations.mjs --enforce
+          node scripts/audit-supabase-lint.mjs --enforce
+          node scripts/arch-check.mjs --strict
+          node scripts/audit-utils.mjs --enforce-owner
+          npm run audit:a11y
+          node scripts/audit-trusted-types.mjs --baseline=5
 
       - name: Validate Trusted Types + CSP directives present (enforce — S244)
         run: |
@@ -107,16 +79,13 @@ jobs:
         env:
           NODE_NO_WARNINGS: "1"
 
-      - name: Vite build
-        run: npm run build
-
-      - name: Guard — no manualChunks in vite.config.js (S385)
+      - name: Vite build + guards
         run: |
+          npm run build
           if grep -q "manualChunks" vite.config.js; then
             echo "::error file=vite.config.js::manualChunks must not be defined — use dynamic import() boundaries instead (S385)"
             exit 1
           fi
-          echo "vite.config.js: no manualChunks — auto code-splitting verified."
 
       - name: Coverage report
         if: matrix.node-version == '22'
@@ -136,11 +105,9 @@ jobs:
     steps:
       - uses: ./.github/actions/node-setup
 
-      - name: npm audit
-        run: npm audit --audit-level=high
-
-      - name: Check for dangerous JS patterns
+      - name: npm audit + dangerous pattern scan
         run: |
+          npm audit --audit-level=high
           FAILED=0
           for f in $(find src/ -name '*.js' -o -name '*.ts') index.html; do
             if grep -n "eval(" "$f"; then
@@ -152,7 +119,6 @@ jobs:
               FAILED=1
             fi
           done
-          # Scan HTML templates and modals for innerHTML / eval
           for f in $(find src/templates/ src/modals/ -name '*.html' 2>/dev/null); do
             if grep -n "innerHTML" "$f"; then
               echo "::error file=$f::innerHTML usage detected in template"
@@ -170,7 +136,6 @@ jobs:
               echo "::warning file=$f::Inline event handler detected (prefer data-action)"
             fi
           done
-          # Check index.html has no inline scripts (CSP moved to _headers)
           if grep -Pn '<script>[^<]' index.html; then
             echo "::error file=index.html::Inline script detected — use external files only (CSP disallows inline)"
             FAILED=1

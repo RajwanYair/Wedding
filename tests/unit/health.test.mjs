@@ -6,14 +6,17 @@
  *        resetHealthState, offline queue integration.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 
 let captureHealthError, getHealthReport, resetHealthState, _setQueueStatsFnForTests;
 
-beforeEach(async () => {
+beforeAll(async () => {
   vi.resetModules();
   ({ captureHealthError, getHealthReport, resetHealthState, _setQueueStatsFnForTests } =
     await import("../../src/services/platform-ops.js"));
+});
+
+beforeEach(() => {
   resetHealthState();
 });
 

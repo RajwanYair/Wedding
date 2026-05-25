@@ -458,6 +458,15 @@ Every competitor uses TypeScript. Adopt TS — the migration cost at 0 TSC error
 
 > **Rule:** Every sprint wires into user-visible UI.
 
+### Code Quality & DX — HIGH PRIORITY (S700–S703)
+
+| # | Sprint | Effort | Status |
+| --- | --- | --- | --- |
+| 700 | Test perf: eliminate per-test dynamic imports (top 10 slowest) | M | ✅ Done |
+| 701 | CI consolidation: 20 audit steps → 2 batched steps | S | ✅ Done |
+| 702 | Decompose large section files (settings 2154 → ≤800, analytics 1959 → ≤800) | L | Planned |
+| 703 | Remove duplicate docs, enforce block-comment style in source | S | ✅ Done |
+
 ### Foundation (S704–S710)
 
 | # | Sprint | Effort |

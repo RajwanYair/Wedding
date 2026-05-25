@@ -3,7 +3,7 @@
  *
  * @vitest-environment happy-dom
  */
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { initStore, storeSet } from "../../src/core/store.js";
 
@@ -14,7 +14,15 @@ vi.mock("../../src/services/sheets.js", () => ({
 
 const SECTION = readFileSync("src/sections/guests.js", "utf8");
 
+let getMealReport, getChefReport;
+
 describe("S615 meal-planner wiring", () => {
+  beforeAll(async () => {
+    const mod = await import("../../src/sections/guests.js");
+    getMealReport = mod.getMealReport;
+    getChefReport = mod.getChefReport;
+  });
+
   beforeEach(() => {
     initStore({ guests: { value: [] } });
   });
@@ -25,15 +33,14 @@ describe("S615 meal-planner wiring", () => {
     expect(SECTION).toMatch(/formatChefReport/);
   });
 
-  it("getMealReport returns zeros on empty roster", async () => {
-    const { getMealReport } = await import("../../src/sections/guests.js");
+  it("getMealReport returns zeros on empty roster", () => {
     const r = getMealReport();
     expect(r.totalSeats).toBe(0);
     expect(r.unspecified).toBe(0);
     expect(r.sorted).toHaveLength(0);
   });
 
-  it("getMealReport tallies confirmed guests by meal type", async () => {
+  it("getMealReport tallies confirmed guests by meal type", () => {
     storeSet("guests", [
       { id: "1", status: "confirmed", meal: "Vegan", seats: 2 },
       { id: "2", status: "confirmed", meal: "vegan" },
@@ -41,7 +48,6 @@ describe("S615 meal-planner wiring", () => {
       { id: "4", status: "confirmed" },
       { id: "5", status: "declined", meal: "fish" },
     ]);
-    const { getMealReport } = await import("../../src/sections/guests.js");
     const r = getMealReport();
     expect(r.totalSeats).toBe(5);
     expect(r.byType.vegan).toBe(3);
@@ -49,9 +55,8 @@ describe("S615 meal-planner wiring", () => {
     expect(r.unspecified).toBe(1);
   });
 
-  it("getChefReport produces tab-separated TOTAL line", async () => {
+  it("getChefReport produces tab-separated TOTAL line", () => {
     storeSet("guests", [{ id: "1", status: "confirmed", meal: "veg" }]);
-    const { getChefReport } = await import("../../src/sections/guests.js");
     const out = getChefReport();
     expect(out).toMatch(/veg\t1/);
     expect(out).toMatch(/TOTAL\t1/);
