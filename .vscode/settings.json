@@ -167,11 +167,18 @@
     // ── Playwright ──
     "playwright.reuseBrowser": false,
     "playwright.showTrace": false,
-    // ── TypeScript / JavaScript Language Service ──
+    // ── CSS Language Service ──
+    // Disable built-in browser compat warnings — our browserslist (Chrome 118+)
+    // explicitly excludes IE. Stylelint handles CSS linting.
+    "css.lint.compatibleVendorPrefixes": "ignore",
+    "css.lint.validProperties": [],
+    "css.validate": false,
+    // ── HTML Language Service ──
+    "html.validate.scripts": false,
+    "html.validate.styles": false,
+    // ── JavaScript/TypeScript Language Service ──
     // Prevent VS Code from type-checking .js/.mjs files that are NOT covered
     // by tsconfig.json (tests/, scripts/, worker/) using an implicit project.
-    // Those files are checked by ESLint + Vitest; TS strict mode on them
-    // would generate tens of thousands of spurious Problems panel entries.
     "javascript.implicitProjectConfig.checkJs": false,
     "javascript.implicitProjectConfig.strictNullChecks": false,
     // Validate .js files explicitly included in tsconfig.json (src/**).
@@ -182,6 +189,11 @@
         "watchFile": "useFsEvents",
         "watchDirectory": "useFsEvents",
         "fallbackPolling": "dynamicPriority"
-    }
+    },
+    // ── Linters own validation — disable VS Code built-in compat checks ──
+    // All browser compat is enforced by eslint-plugin-compat + browserslist
+    // in package.json (Chrome >= 118, no IE). VS Code built-in checks use
+    // a stale/incorrect browser matrix.
+    "javascript.validate.enable": false
 }
 

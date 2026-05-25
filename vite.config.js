@@ -71,6 +71,7 @@ export default defineConfig({
     alias: [{ find: "@sentry/browser", replacement: resolve("tests/stubs/sentry-browser.mjs") }],
     coverage: {
       provider: "v8",
+      reportsDirectory: join(TEMP_BASE, "coverage"),
       reporter: ["text", "lcov", "html", "json-summary"],
       include: ["src/**"],
       exclude: [

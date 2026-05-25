@@ -2,7 +2,7 @@
  * @owner edge
  * Shared types for the AI edge proxy.  Imported by `router.js` and
  * `providers.js` via JSDoc `import("./types.js")` typedefs.  Compiled
- * via `tsconfig.worker.json` with `noEmit: true` — no runtime code.
+ * via `worker/tsconfig.json` with `noEmit: true` — no runtime code.
  */
 
 /** A single chat turn. */

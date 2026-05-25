@@ -22,7 +22,7 @@ Browser → wedding.rajwanyair.com     → GitHub Pages (static app)
 cd worker
 
 # Build TypeScript (if editing src/index.ts):
-npx tsc --project tsconfig.worker.json
+npx tsc --project tsconfig.json
 
 # Deploy to production environment:
 wrangler deploy --env production

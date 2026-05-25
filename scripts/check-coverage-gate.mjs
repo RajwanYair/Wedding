@@ -19,6 +19,7 @@
 
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
 import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 // S379: ratcheted to current global actuals (58/51/66/58).
@@ -34,8 +35,9 @@ const TARGETS = {
 };
 
 function readSummary() {
-  // vitest writes coverage/coverage-summary.json in lcov reporter mode.
+  // vitest writes coverage-summary.json to $TEMP/wedding-dev/coverage/
   const candidates = [
+    join(tmpdir(), "wedding-dev", "coverage", "coverage-summary.json"),
     "coverage/coverage-summary.json",
     join(process.env.TEMP || ".", "vitest-cache", "coverage-summary.json"),
   ];

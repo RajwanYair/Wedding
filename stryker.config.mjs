@@ -1,16 +1,18 @@
 // @ts-check
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+const TEMP_BASE = join(tmpdir(), "wedding-dev");
+
 /**
- * Stryker Mutation Testing — Wedding Manager (S406 pilot)
+ * Stryker Mutation Testing — Wedding Manager
  *
  * Scope: src/core/** + src/repositories/**
  * Runner: @stryker-mutator/vitest-runner
  *
  * Usage:
- *   npm run mutate          # full pilot run
+ *   npm run mutate          # full run
  *   npx stryker run --reporter clear-text
- *
- * Mutation score thresholds (pilot — not enforced in CI yet):
- *   high ≥ 80 | low ≥ 60 | break ≥ 0 (no CI break for now)
  */
 
 /** @type {import("@stryker-mutator/api/core").PartialStrykerOptions} */
@@ -50,19 +52,18 @@ const config = {
   // Reporters
   reporters: ["clear-text", "html", "progress"],
   htmlReporter: {
-    // Output to .stryker-tmp so it's gitignored
-    fileName: ".stryker-tmp/reports/mutation/index.html",
+    fileName: join(TEMP_BASE, "stryker-report/index.html"),
   },
 
-  // Threshold (pilot: warn only — no CI break yet)
+  // Threshold — enforced for production readiness
   thresholds: {
     high: 80,
     low: 60,
-    break: null,
+    break: 60,
   },
 
   // Working dir for Stryker temp files
-  tempDirName: ".stryker-tmp",
+  tempDirName: join(TEMP_BASE, "stryker-tmp"),
 
   // Ignore these mutant types (they produce too many false positives)
   mutator: {

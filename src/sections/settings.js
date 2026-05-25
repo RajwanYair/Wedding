@@ -1,4 +1,4 @@
-﻿/**
+/**
  * src/sections/settings.js — Settings section ESM module (S0.8)
  *
  * Manages wedding info (names, date, venue), theme, language, and admin access.
@@ -81,6 +81,21 @@ import {
 } from "../services/auth.js";
 import { ONBOARDING_STEPS, setOnboardingState } from "../services/workspace.js";
 import { buildAllDeployButtons } from "../utils/deploy-buttons.js";
+import {
+  normalizeDomain as _normalizeDomain,
+  validateDomain as _validateDomain,
+  isApex as _isApex,
+  buildDnsInstructions as _buildDnsInstructions,
+} from "../utils/dns-cname.js";
+import {
+  createSubmission as _createPluginSubmission,
+  approveReview as _approvePluginReview,
+  rejectReview as _rejectPluginReview,
+  isApproved as _isPluginApproved,
+  filterByStatus as _filterReviewsByStatus,
+  reviewStats as _getReviewStats,
+  REVIEW_STATUSES as _REVIEW_STATUSES,
+} from "../utils/plugin-review.js";
 
 // ── Lifecycle ──────────────────────────────────────────────────────────
 

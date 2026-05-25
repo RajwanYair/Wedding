@@ -109,7 +109,7 @@ describe("S725 -- markBadgePrinting / markBadgeDone / markBadgeFailed", () => {
 describe("S725 -- getBadgeQueueStats", () => {
   it("counts jobs by status", () => {
     const guests = [{ name: "A" }, { name: "B" }, { name: "C" }];
-    let jobs = batchBadgePrintJobs(guests, {});
+    const jobs = batchBadgePrintJobs(guests, {});
     jobs[0] = markBadgeDone(markBadgePrinting(jobs[0]));
     jobs[1] = markBadgeFailed(jobs[1]);
     const stats = getBadgeQueueStats(jobs);
@@ -122,7 +122,7 @@ describe("S725 -- getBadgeQueueStats", () => {
 describe("S725 -- filterBadgesByStatus", () => {
   it("filters jobs by status", () => {
     const guests = [{ name: "X" }, { name: "Y" }];
-    let jobs = batchBadgePrintJobs(guests, {});
+    const jobs = batchBadgePrintJobs(guests, {});
     jobs[0] = markBadgeDone(markBadgePrinting(jobs[0]));
     const done = filterBadgesByStatus(jobs, "done");
     expect(done.length).toBe(1);

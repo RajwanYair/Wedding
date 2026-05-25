@@ -45,3 +45,6 @@ e2e-fail.txt
 
 release-notes.tmp.md
 
+# Secrets
+.env.ps1
+

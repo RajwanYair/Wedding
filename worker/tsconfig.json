@@ -13,6 +13,6 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": false
   },
-  "include": ["worker/**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }
