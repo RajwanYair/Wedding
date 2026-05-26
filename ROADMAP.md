@@ -37,11 +37,11 @@
 Self-hostable in one click. Operable on flaky 3G in Hebrew. Integrated end-to-end with WhatsApp.
 Planner-grade analytics. AI-optional, privacy-first. $0/month self-hosted. Best-in-class DX.*
 
-### State (2026-05-25, v32.2.0)
+### State (2026-06-05, v32.2.0)
 
 | Metric | Value | Health |
 | --- | --- | --- |
-| Tests | 6803 across 482 files | ✅ |
+| Tests | 6894 across 489 files | ✅ |
 | Sections | 24 (mount/unmount lifecycle) | ✅ |
 | Core modules | 33 | ✅ |
 | Utilities | 190 | ⚠️ Critical sprawl |
@@ -78,8 +78,8 @@ Planner-grade analytics. AI-optional, privacy-first. $0/month self-hosted. Best-
 
 1. **190 utilities with incomplete UI wiring** — over-engineering disguised as velocity.
 2. **No TypeScript** — JSDoc + `types.d.ts` is fragile at scale; refactoring is unsafe.
-3. **IE compatibility warnings in tooling** — browserslist correct but VS Code config needed
-   alignment for production-clean DX.
+3. **Suspended configs removed** — LiveServer, webhint, and all IE-targeting noise eliminated from
+   VS Code workspace; extensions.json cleaned; DX fully production-clean.
 
 ---
 

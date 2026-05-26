@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Remove LiveServer settings from `.vscode/settings.json` — Vite is the sole dev server
+- Remove `webhint.vscode-webhint` from recommended extensions (IE compat noise)
+- Remove `ms-vscode.live-server` from recommended extensions
+- Move `CODEOWNERS` to `.github/CODEOWNERS` (GitHub convention)
+- Fix duplicate "Available Prompts" heading in workspace instructions
+- Fix list formatting in `cleanup-generated.prompt.md`
+- Fix `audit-reduced-motion.test.mjs` timeout (5s → 15s for subprocess)
+- Update test counts: 6894 tests across 489 files
+- Update ROADMAP.md state date and resolve IE weakness item
+
 ## [32.2.0] — 2025-07-20
 
 > **Cluster C.3 — Dietary/Dedup, RSVP Analytics, iCal, Vendor Pipeline, Kiosk, Registry Gifts, Budget Allocator.**

@@ -8,7 +8,7 @@
 > values. `npm run check:canonical-facts` enforces parity.
 
 - version: `32.2.0`
-- tests: `6803`
+- tests: `6894`
 - test_files: `482`
 - utils: `190`
 - locales: `6` (he, en, ar, fr, es, ru)

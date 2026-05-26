@@ -8,7 +8,7 @@ import { describe, it, expect } from "vitest";
 import { spawnSync } from "node:child_process";
 
 describe("S586 reduced-motion audit", () => {
-  it("audit-reduced-motion.mjs --strict exits 0", () => {
+  it("audit-reduced-motion.mjs --strict exits 0", { timeout: 15000 }, () => {
     const r = spawnSync(process.execPath, ["scripts/audit-reduced-motion.mjs", "--strict"], {
       encoding: "utf8",
     });

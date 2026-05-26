@@ -18,21 +18,6 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | `@performance-agent` | `.github/agents/performance-agent.agent.md` | bundle size/LH scores/caching/lazy loading |
 | `@i18n-agent` | `.github/agents/i18n-agent.agent.md` | locales/RTL parity/ICU/translations |
 
-## Available Prompts
-
-| Prompt | File | Use when |
-| --- | --- | --- |
-| `/add-feature` | `prompts/add-feature.prompt.md` | scaffold new section end-to-end |
-| `/code-review` | `prompts/code-review.prompt.md` | full security + i18n + quality audit |
-| `/debug-issue` | `prompts/debug-issue.prompt.md` | structured bug investigation |
-| `/i18n-add` | `prompts/i18n-add.prompt.md` | add key to all 5 locale files |
-| `/new-util` | `prompts/new-util.prompt.md` | scaffold a pure utility helper with tests |
-| `/pre-release` | `prompts/pre-release.prompt.md` | full pre-release checklist |
-| `/refactor-section` | `prompts/refactor-section.prompt.md` | bring section to mount/unmount contract |
-| `/security-audit` | `prompts/security-audit.prompt.md` | OWASP Top 10 review |
-| `/sprint` | `prompts/sprint.prompt.md` | implement N roadmap sprints + release |
-| `/version-bump` | `prompts/version-bump.prompt.md` | bump version across all 14 files |
-
 ## Available Skills
 
 | Skill | File | Use when |
@@ -42,6 +27,30 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | `auth-security` | `skills/auth-security.skill.md` | auth flow, token storage, input sanitization |
 | `rtl-i18n` | `skills/rtl-i18n.skill.md` | Hebrew/RTL layout, i18n key management |
 | `theming` | `skills/theming.skill.md` | CSS layers, themes, custom properties |
+| `production-ops` | `skills/production-ops.skill.md` | deployment, monitoring, rollback, health checks |
+| `workspace-mgmt` | `skills/workspace-mgmt.skill.md` | file routing, $TEMP enforcement, DX patterns |
+
+## Available Prompts
+
+| Prompt | File | Use when |
+| --- | --- | --- |
+| `/add-feature` | `prompts/add-feature.prompt.md` | scaffold new section end-to-end |
+| `/add-section` | `prompts/add-section.prompt.md` | add a new section module |
+| `/code-review` | `prompts/code-review.prompt.md` | full security + i18n + quality audit |
+| `/cleanup-generated` | `prompts/cleanup-generated.prompt.md` | audit generated files, enforce $TEMP |
+| `/debug-issue` | `prompts/debug-issue.prompt.md` | structured bug investigation |
+| `/i18n-add` | `prompts/i18n-add.prompt.md` | add key to all locale files |
+| `/new-util` | `prompts/new-util.prompt.md` | scaffold a pure utility helper with tests |
+| `/optimize-bundle` | `prompts/optimize-bundle.prompt.md` | analyze and optimize bundle size |
+| `/optimize-section` | `prompts/optimize-section.prompt.md` | optimize a section module |
+| `/pre-release` | `prompts/pre-release.prompt.md` | full pre-release checklist |
+| `/production-check` | `prompts/production-check.prompt.md` | production readiness validation |
+| `/refactor-section` | `prompts/refactor-section.prompt.md` | bring section to mount/unmount contract |
+| `/roadmap-status` | `prompts/roadmap-status.prompt.md` | roadmap progress report |
+| `/security-audit` | `prompts/security-audit.prompt.md` | OWASP Top 10 review |
+| `/sprint` | `prompts/sprint.prompt.md` | implement N roadmap sprints + release |
+| `/version-bump` | `prompts/version-bump.prompt.md` | bump version across all files |
+| `/workspace-cleanup` | `prompts/workspace-cleanup.prompt.md` | clean stale files, verify .gitignore |
 
 ## Auto-Loaded Instructions
 
@@ -53,6 +62,7 @@ description: "Use when: exploring the Wedding workspace file structure, availabl
 | `tests/**` | `instructions/tests.instructions.md` | any test file |
 | `supabase/**` | `instructions/supabase.instructions.md` | Supabase migrations/functions |
 | `**/*.html` | `instructions/wedding.instructions.md` | HTML templates/index |
+| `**/*.yml,**/*.yaml` | `instructions/cicd.instructions.md` | CI/CD workflows and YAML config |
 
 ## Canonical Docs
 
@@ -76,8 +86,8 @@ src/services/      auth · sheets · backend · presence · supabase · seating 
 src/types/         TypeScript type stubs
 src/templates/     lazy section HTML (15 files)
 src/modals/        lazy modal HTML (7 files)
-src/i18n/          he · en · ar · es · fr locale files
-tests/             repo sanity · unit · integration · e2e · perf (6450 tests, 458 files)
+src/i18n/          he · en · ar · es · fr · ru locale files
+tests/             repo sanity · unit · integration · e2e · perf (6894 tests, 489 files)
 scripts/           build/lint/audit/sync scripts (.mjs)
 supabase/          Edge Functions · migrations
 worker/            Cloudflare Worker AI proxy (wrangler.toml · src/index.ts)

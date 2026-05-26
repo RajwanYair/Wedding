@@ -14,6 +14,9 @@ coverage/
 dist/
 .stryker-tmp/
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Lint caches (stored in node_modules/.cache — already ignored, but explicit)
 .eslintcache
 .stylelintcache
@@ -28,7 +31,7 @@ ci_output.txt
 ci_result.txt
 test-results/
 
-# Temp lint/build outputs
+# Temp lint/build outputs — all generated files route to $TEMP/wedding-dev/
 lint_*.txt
 release_notes.md
 
@@ -47,4 +50,31 @@ release-notes.tmp.md
 
 # Secrets
 .env.ps1
+.env
+.env.local
+.env.*.local
+
+# ── Generated / Intermediate (route to $TEMP in scripts, not workspace) ──
+# Vite cache → $TEMP/wedding-dev/vite-cache (configured in vite.config.js)
+# Vitest cache → $TEMP/wedding-dev/vitest-cache (configured in vite.config.js)
+# Coverage reports → $TEMP/wedding-dev/coverage (configured in vite.config.js)
+# Size reports → stdout only (no file output)
+# SRI hashes → stdout only (no file output)
+*.lcov
+lcov-report/
+htmlcov/
+reports/
+*.tgz
+.cache/
+.parcel-cache/
+.turbo/
+.vercel/
+.output/
+
+# Capacitor native build artifacts
+android/
+ios/
+*.apk
+*.ipa
+*.aab
 

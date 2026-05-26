@@ -44,6 +44,32 @@
       "env": { "NODE_NO_WARNINGS": "1" },
       "console": "integratedTerminal",
       "sourceMaps": true
+    },
+    {
+      "name": "Playwright: Debug E2E",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/../MyScripts/node_modules/@playwright/test/cli.js",
+      "args": [
+        "test",
+        "--headed",
+        "--debug"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "sourceMaps": true
+    },
+    {
+      "name": "Scripts: Run Current",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NODE_NO_WARNINGS": "1"
+      },
+      "console": "integratedTerminal",
+      "sourceMaps": true
     }
   ]
 }

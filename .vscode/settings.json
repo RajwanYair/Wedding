@@ -24,10 +24,8 @@
         "html": "html"
     },
 
-    // ── Live Server ──
-    "liveServer.settings.donotShowInfoMsg": true,
-    "liveServer.settings.port": 5502,
-    "liveServer.settings.root": "/",
+    // ── Vite Dev Server (primary) ──
+    // Dev server: `npx vite --port 5173 --open` (task: "Dev: Vite Server")
 
     // ── Git ──
     "git.autofetch": "all",
@@ -194,6 +192,68 @@
     // All browser compat is enforced by eslint-plugin-compat + browserslist
     // in package.json (Chrome >= 118, no IE). VS Code built-in checks use
     // a stale/incorrect browser matrix.
-    "javascript.validate.enable": false
+    "javascript.validate.enable": false,
+    // ── Todo Tree (roadmap tracking) ──
+    "todo-tree.general.tags": [
+        "TODO",
+        "FIXME",
+        "HACK",
+        "BUG",
+        "ROADMAP",
+        "SPRINT",
+        "PERF",
+        "SECURITY"
+    ],
+    "todo-tree.highlights.defaultHighlight": {
+        "gutterIcon": true,
+        "type": "tag"
+    },
+    "todo-tree.highlights.customHighlight": {
+        "ROADMAP": {
+            "icon": "milestone",
+            "foreground": "#c792ea"
+        },
+        "SPRINT": {
+            "icon": "rocket",
+            "foreground": "#82aaff"
+        },
+        "PERF": {
+            "icon": "flame",
+            "foreground": "#ffcb6b"
+        },
+        "SECURITY": {
+            "icon": "shield",
+            "foreground": "#ff5370"
+        }
+    },
+    "todo-tree.filtering.excludeGlobs": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/coverage/**"
+    ],
+    // ── Import Cost ──
+    "importCost.showCalculatingDecoration": false,
+    "importCost.bundleSizeDecoration": "both",
+    // ── ErrorLens ──
+    "errorLens.enabledDiagnosticLevels": [
+        "error",
+        "warning"
+    ],
+    "errorLens.excludeBySource": [
+        "ts(80001)"
+    ],
+    // ── SonarLint ──
+    "sonarlint.rules": {
+        "javascript:S1128": {
+            "level": "on"
+        },
+        "javascript:S3776": {
+            "level": "on"
+        }
+    },
+    "sonarlint.pathToNodeExecutable": "",
+    // ── Output & Debug ──
+    "output.smartScroll.enabled": true,
+    "debug.javascript.autoAttachFilter": "smart"
 }
 

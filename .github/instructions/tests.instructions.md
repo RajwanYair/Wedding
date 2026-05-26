@@ -9,7 +9,7 @@ applyTo: "tests/**"
 - **Vitest 4** for unit and integration tests (`npm test` = `vitest run --pool forks --no-warnings`).
 - **Playwright** for E2E tests (`npm run test:e2e`); configs in `playwright.config.mjs`.
 - Test files: `*.test.mjs` (unit/integration), `*.spec.mjs` (E2E).
-- **Current suite**: **6803 tests** across **482 files** · 0 Node warnings.
+- **Current suite**: **6894 tests** across **489 files** · 0 Node warnings.
 
 ## File Organization
 

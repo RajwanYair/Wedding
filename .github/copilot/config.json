@@ -1,8 +1,8 @@
 {
-"version": "1.4.0",
+  "version": "1.5.0",
   "chat": {
     "localeOverride": "auto",
-    "welcomeMessage": "Wedding Manager v32.2.0 — Hebrew RTL · ES2025 · Vite 8 · 6803 tests · 482 files · 9 agents · 0 lint · CI green",
+    "welcomeMessage": "Wedding Manager v32.2.0 — Hebrew RTL · ES2025 · Vite 8 · 6894 tests · 489 files · 9 agents · 7 skills · 17 prompts · 0 lint · CI green · Production-ready",
     "defaultModel": "claude-sonnet-4-6"
   },
   "codeGeneration": {
@@ -17,7 +17,11 @@
       "*.lcov",
       "public/icons/**",
       ".git/**",
-      "stryker.config.mjs"
+      "stryker.config.mjs",
+      "playwright-report/**",
+      "test-results/**",
+      ".stryker-tmp/**",
+      "*.tsbuildinfo"
     ]
   },
   "review": {
@@ -32,14 +36,27 @@
       "Section modules must export mount(), unmount(), and at least one render*() function.",
       "New runtime dependencies must be justified by an ADR — current count is 4, target ceiling is 6.",
       "New utility files in src/utils/ must have @module and @owner JSDoc tags and a matching test file.",
-    "Prefer pure functions with no side-effects in src/utils/ — no DOM, no store, no network.",
-    "AI proxy calls must use callAiProxy() from src/services/ai-proxy.js — never fetch AI APIs directly from sections.",
-    "Floor plan presets must use the string literals 'banquet' | 'classroom' | 'cocktail' — no magic strings.",
-    "Vendor workflow actions (startVendorNegotiation, submitVendorOffer, generatePaymentSchedule) must only be called from handlers layer.",
-    "CF Worker (worker/) code must not import from src/ — it is a separate Cloudflare Workers bundle.",
-    "New data-action attributes in templates must have a matching on() registration in src/handlers/."
+      "Prefer pure functions with no side-effects in src/utils/ — no DOM, no store, no network.",
+      "AI proxy calls must use callAiProxy() from src/services/ai-proxy.js — never fetch AI APIs directly from sections.",
+      "Floor plan presets must use the string literals 'banquet' | 'classroom' | 'cocktail' — no magic strings.",
+      "Vendor workflow actions (startVendorNegotiation, submitVendorOffer, generatePaymentSchedule) must only be called from handlers layer.",
+      "CF Worker (worker/) code must not import from src/ — it is a separate Cloudflare Workers bundle.",
+      "New data-action attributes in templates must have a matching on() registration in src/handlers/.",
+      "No console.log in production code — only console.error/warn in error paths.",
+      "Generated/intermediate files must route to $TEMP/wedding-dev/ — never write to workspace root.",
+      "All event listeners added in mount() must be cleaned in unmount() — no leaks.",
+      "Imports must be static ESM — no require(), no dynamic import() except for lazy-loaded sections/modals/i18n."
+    ]
+  },
+  "testGeneration": {
+    "framework": "vitest",
+    "filePattern": "tests/unit/{module}.test.mjs",
+    "instructions": [
+      "Use describe/it pattern with descriptive names: 'it(verb subject when condition)'.",
+      "Mock external dependencies (store, DOM, network) — test pure logic.",
+      "Test file goes in tests/unit/ mirroring src/ structure.",
+      "Import from source using relative paths: '../../src/utils/phone.js'.",
+      "Include edge cases: empty input, null, Hebrew text, RTL strings."
     ]
   }
 }
-
-

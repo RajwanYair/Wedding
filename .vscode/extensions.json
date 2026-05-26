@@ -1,37 +1,57 @@
 {
     "recommendations": [
+      // ── GitHub & Copilot ──
+      "GitHub.copilot",
       "GitHub.copilot-chat",
       "GitHub.vscode-pull-request-github",
       "GitHub.vscode-github-actions",
       "GitHub.remotehub",
+      // ── Git ──
       "eamodio.gitlens",
       "mhutchie.git-graph",
+      // ── Testing ──
       "vitest.explorer",
       "connor4312.nodejs-testing",
       "ms-playwright.playwright",
+      // ── Linting & Formatting ──
       "dbaeumer.vscode-eslint",
       "stylelint.vscode-stylelint",
       "esbenp.prettier-vscode",
       "HTMLHint.vscode-htmlhint",
       "DavidAnson.vscode-markdownlint",
+      // ── HTML/CSS ──
       "ecmel.vscode-html-css",
       "formulahendry.auto-rename-tag",
       "formulahendry.auto-close-tag",
       "pranaygp.vscode-css-peek",
       "vincaslt.highlight-matching-tag",
       "naumovs.color-highlight",
-      "ritwickdey.LiveServer",
+      // ── DX & Productivity ──
+      "usernamehw.errorlens",
       "christian-kohler.path-intellisense",
       "streetsidesoftware.code-spell-checker",
       "streetsidesoftware.code-spell-checker-hebrew",
       "Gruntfuggly.todo-tree",
       "EditorConfig.EditorConfig",
+      // ── Docs & Diagrams ──
       "bierner.markdown-mermaid",
       "jock.svg",
+      // ── Performance & Profiling ──
       "ms-vscode.vscode-js-profile-flame",
       "ms-edgetools.vscode-edge-devtools",
-      "pwesium.chromium-source-tools",
-      /* Browser compat tooling */
+      // ── Copilot Customizations ──
+      "ms-vscode.vscode-chat-customizations-evaluations",
+      // ── Security & Quality ──
+      "SonarSource.sonarlint-vscode",
+      // ── Production Readiness ──
+      "pflannery.vscode-versionlens",
+      "wix.vscode-import-cost",
+      "wayou.vscode-todo-highlight",
+      "quicktype.quicktype",
+      "VisualStudioExptTeam.vscodeintellicode"
+    ],
+    "unwantedRecommendations": [
+      "ritwickdey.LiveServer",
       "webhint.vscode-webhint"
     ]
 }

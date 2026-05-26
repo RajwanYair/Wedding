@@ -1,31 +1,26 @@
-# CODEOWNERS — Wedding Manager
-# =============================================================================
-# Default owner for everything
-* @RajwanYair
+# Wedding Manager — Code Ownership
+#
+# Default owner for everything in the repo.
+# Required reviewer for all PRs unless overridden below.
 
-# GitHub workflows & config — always requires review
-/.github/ @RajwanYair
+*                               @RajwanYair
 
-# Security-critical modules
-/src/services/auth.js @RajwanYair
-/src/core/config.js @RajwanYair
-/src/sections/rsvp.js @RajwanYair
-/src/core/state.js @RajwanYair
+# Build / CI / release surfaces — owner-only changes
+/.github/workflows/             @RajwanYair
+/.github/copilot-instructions.md @RajwanYair
+/scripts/sync-version.mjs       @RajwanYair
+/scripts/check-canonical-facts.mjs @RajwanYair
+/package.json                   @RajwanYair
+/package-lock.json              @RajwanYair
 
-# Data layer — mutations only here
-/src/repositories/ @RajwanYair
+# Security-sensitive surfaces
+/SECURITY.md                    @RajwanYair
+/scripts/security-scan.mjs      @RajwanYair
+/scripts/check-credentials.mjs  @RajwanYair
+/supabase/                      @RajwanYair
 
-# Action dispatch — thin glue layer
-/src/handlers/ @RajwanYair
-
-# Database migrations — irreversible
-/supabase/migrations/ @RajwanYair
-
-# Core CSS variables — theme changes need careful review
-/css/variables.css @RajwanYair
-
-# Entry points & docs
-/index.html @RajwanYair
-/README.md @RajwanYair
-/CHANGELOG.md @RajwanYair
-/package.json @RajwanYair
+# Canonical docs
+/AGENTS.md                      @RajwanYair
+/ARCHITECTURE.md                @RajwanYair
+/ROADMAP.md                     @RajwanYair
+/CHANGELOG.md                   @RajwanYair

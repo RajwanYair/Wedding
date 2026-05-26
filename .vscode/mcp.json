@@ -31,7 +31,7 @@
         "@modelcontextprotocol/server-filesystem",
         "${workspaceFolder}",
         "--exclude",
-        "coverage,dist,lcov-report,.git,node_modules"
+        "coverage,dist,lcov-report,.git,node_modules,.stryker-tmp,playwright-report"
       ],
       "description": "Scoped read/write access to the Wedding workspace — heavy dirs excluded."
     },
@@ -49,6 +49,15 @@
         "--read-only"
       ],
       "description": "Supabase schema, table data, and RLS policy inspection — read-only, no mutations from chat."
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "description": "Persistent project knowledge graph — decisions, patterns, sprint context."
     }
   }
 }

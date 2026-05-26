@@ -1,0 +1,68 @@
+# =============================================================================
+# Sprint Health — Wedding Manager v32.2.0
+# Runs weekly or on-demand to verify project health and roadmap alignment.
+# =============================================================================
+
+name: Sprint Health
+
+on:
+  schedule:
+    - cron: "0 8 * * 1" # Every Monday 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  health-check:
+    name: Project Health Report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/node-setup
+
+      - name: Setup shared tooling
+        run: node scripts/ensure-shared-tooling.mjs
+
+      - name: Lint (zero tolerance)
+        run: npm run lint
+
+      - name: Test suite
+        run: npm test
+
+      - name: Canonical facts alignment
+        run: npm run check:canonical-facts
+
+      - name: Coverage gate
+        run: npm run check:coverage
+
+      - name: Architecture audit
+        run: npm run audit:arch
+
+      - name: Bundle size budget
+        run: npm run size
+
+      - name: Dead exports check
+        run: npm run audit:dead
+
+      - name: Security scan
+        run: |
+          node scripts/security-scan.mjs
+          npm run check:credentials
+
+      - name: i18n parity
+        run: |
+          npm run check:i18n
+          npm run check:i18n:icu
+
+      - name: Generate health summary
+        if: always()
+        run: |
+          echo "## Sprint Health Report — $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | ${{ steps.lint.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests | ${{ steps.test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Bundle | ${{ steps.size.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | ${{ steps.security.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
