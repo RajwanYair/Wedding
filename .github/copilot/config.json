@@ -2,7 +2,7 @@
   "version": "1.5.0",
   "chat": {
     "localeOverride": "auto",
-    "welcomeMessage": "Wedding Manager v32.2.0 — Hebrew RTL · ES2025 · Vite 8 · 6894 tests · 489 files · 9 agents · 10 skills · 21 prompts · 0 lint · CI green · Production-ready",
+    "welcomeMessage": "Wedding Manager v32.2.1 — Hebrew RTL · ES2025 · Vite 8 · 6894 tests · 489 files · 9 agents · 10 skills · 21 prompts · 0 lint · CI green · Production-ready",
     "defaultModel": "claude-sonnet-4-6"
   },
   "codeGeneration": {

@@ -2,9 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [32.2.1] — 2025-07-20
 
-### Changed
+> **Production readiness: DX overhaul, doc modernization, dead code cleanup.**
+> Patch release for developer-experience improvements, workspace hygiene, and documentation updates.
+> Test count: 6894 across 489 files; 0 lint warnings, 0 Node warnings.
+
+### Changed (32.2.1)
 
 - Remove LiveServer settings from `.vscode/settings.json` — Vite is the sole dev server
 - Remove `webhint.vscode-webhint` from recommended extensions (IE compat noise)
@@ -15,6 +19,11 @@ All notable changes to this project will be documented in this file.
 - Fix `audit-reduced-motion.test.mjs` timeout (5s → 15s for subprocess)
 - Update test counts: 6894 tests across 489 files
 - Update ROADMAP.md state date and resolve IE weakness item
+- Update `check-section-template-parity.mjs` to read `constants.ts` (was `.js`)
+- Update `stryker.config.mjs` exclusion to `constants.ts`
+- Remove stray `debug.log` files from repo
+
+## [Unreleased]
 
 ## [32.2.0] — 2025-07-20
 

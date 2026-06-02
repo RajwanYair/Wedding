@@ -55,6 +55,10 @@ patch("public/sw.js", [
   [/CACHE_NAME\s*=\s*["']wedding-v[^"']+["']/, `CACHE_NAME = "wedding-v${ver}"`],
 ]);
 
+// public/health.json — version field
+patch("public/health.json", [[/"version":\s*"[\d.]+"/, `"version": "${ver}"`]]);
+
+
 // README.md — version badge
 patch("README.md", [[/version-v[\d.]+-d4a574/, `version-v${ver}-d4a574`]]);
 
