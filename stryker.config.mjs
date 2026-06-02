@@ -32,7 +32,7 @@ const config = {
     "src/repositories/**/*.js",
     // Exclude config/constants (no logic to mutate)
     "!src/core/config.js",
-    "!src/core/constants.js",
+    "!src/core/constants.ts",
     "!src/core/defaults.js",
   ],
 

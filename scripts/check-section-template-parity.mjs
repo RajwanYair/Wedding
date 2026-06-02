@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { parseAuditArgs } from "./lib/audit-utils.mjs";
 
 const ROOT = process.cwd();
-const CONSTANTS = readFileSync(join(ROOT, "src/core/constants.js"), "utf8");
+const CONSTANTS = readFileSync(join(ROOT, "src/core/constants.ts"), "utf8");
 
 function extract(name) {
   const re = new RegExp(`${name}[^[]*\\[([^\\]]+)\\]`, "m");
@@ -41,7 +41,9 @@ console.log(`[check-section-template-parity] ${missing.length} issue(s):\n`);
 for (const m of missing) console.log(`  ${m}`);
 if (BASELINE !== null && Number.isFinite(BASELINE)) {
   if (missing.length > BASELINE) {
-    console.log(`\n[check-section-template-parity] BASELINE ${BASELINE}: ${missing.length} (regression). Failing.`);
+    console.log(
+      `\n[check-section-template-parity] BASELINE ${BASELINE}: ${missing.length} (regression). Failing.`,
+    );
     process.exit(1);
   }
   console.log(`\n[check-section-template-parity] OK: ${missing.length} ≤ baseline ${BASELINE}.`);

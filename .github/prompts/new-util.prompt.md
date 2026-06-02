@@ -17,7 +17,7 @@ Get-ChildItem src/utils -Filter "*.js" | Select-Object Name | Sort-Object Name
 #    e.g. vendor-sla.js, vendor-contracts.js — extend rather than create a new file
 ```
 
-Read `src/core/constants.js` and `src/types.d.ts` — use existing enums, don't invent new ones.
+Read `src/core/constants.ts` and `src/types.d.ts` — use existing enums, don't invent new ones.
 
 ## File: `src/utils/${input:fileName}.js`
 

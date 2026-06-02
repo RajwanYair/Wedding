@@ -9,7 +9,7 @@
 
 - version: `32.2.0`
 - tests: `6894`
-- test_files: `482`
+- test_files: `489`
 - utils: `190`
 - locales: `6` (he, en, ar, fr, es, ru)
 - node: `>=22.0.0`
@@ -39,7 +39,7 @@ supabase/     — Migrations and edge functions
 ## Before Every Change
 
 1. Read the relevant section file in `src/sections/` and its template in `src/templates/`.
-2. Check `src/core/constants.js` for existing enums before adding new ones.
+2. Check `src/core/constants.ts` for existing enums before adding new ones.
 3. Check `src/core/store.js` for existing store keys before adding storage.
 4. Run `npm run lint` — must exit 0 (0 errors, 0 warnings).
 5. Run `npm test` — all suites must pass.
@@ -57,17 +57,17 @@ supabase/     — Migrations and edge functions
 
 ## Available Agents
 
-| Agent            | File                                       | Use When                                                |
-| ---------------- | ------------------------------------------ | ------------------------------------------------------- |
-| Guest Manager    | `.github/agents/guest-manager.agent.md`    | Adding guest features, RSVP, table assignment, WhatsApp |
-| Wedding Designer | `.github/agents/wedding-designer.agent.md` | UI/UX, themes, CSS, RTL layout, accessibility           |
-| Analytics Agent  | `.github/agents/analytics-agent.agent.md`  | Dashboard stats, charts, reporting, export              |
-| Vendor Agent     | `.github/agents/vendor-agent.agent.md`     | Vendors, expenses, budget tracking, payments            |
-| Release Engineer | `.github/agents/release-engineer.agent.md` | Version bumps, CHANGELOG, sync-version, tagging, GH release notes |
-| Supabase Agent   | `.github/agents/supabase-agent.agent.md`   | Migrations, RLS policies, edge functions, realtime, auth |
-| Security Agent   | `.github/agents/security-agent.agent.md`   | OWASP Top 10, CSP/Trusted Types, secrets, supply chain |
-| Performance Agent | `.github/agents/performance-agent.agent.md` | Bundle size, Lighthouse, caching, lazy loading, TTI |
-| i18n Agent       | `.github/agents/i18n-agent.agent.md`       | Locale management, RTL parity, ICU MessageFormat, translations |
+| Agent             | File                                        | Use When                                                          |
+| ----------------- | ------------------------------------------- | ----------------------------------------------------------------- |
+| Guest Manager     | `.github/agents/guest-manager.agent.md`     | Adding guest features, RSVP, table assignment, WhatsApp           |
+| Wedding Designer  | `.github/agents/wedding-designer.agent.md`  | UI/UX, themes, CSS, RTL layout, accessibility                     |
+| Analytics Agent   | `.github/agents/analytics-agent.agent.md`   | Dashboard stats, charts, reporting, export                        |
+| Vendor Agent      | `.github/agents/vendor-agent.agent.md`      | Vendors, expenses, budget tracking, payments                      |
+| Release Engineer  | `.github/agents/release-engineer.agent.md`  | Version bumps, CHANGELOG, sync-version, tagging, GH release notes |
+| Supabase Agent    | `.github/agents/supabase-agent.agent.md`    | Migrations, RLS policies, edge functions, realtime, auth          |
+| Security Agent    | `.github/agents/security-agent.agent.md`    | OWASP Top 10, CSP/Trusted Types, secrets, supply chain            |
+| Performance Agent | `.github/agents/performance-agent.agent.md` | Bundle size, Lighthouse, caching, lazy loading, TTI               |
+| i18n Agent        | `.github/agents/i18n-agent.agent.md`        | Locale management, RTL parity, ICU MessageFormat, translations    |
 
 ## Common Tasks
 
@@ -75,7 +75,7 @@ supabase/     — Migrations and edge functions
 
 1. Create `src/sections/<name>.js` — export `mount()`, `unmount()`, `render<Name>()`.
 2. Create `src/templates/<name>.html` — use `data-i18n` on all visible strings.
-3. Add to `SECTION_LIST` in `src/core/constants.js`.
+3. Add to `SECTION_LIST` in `src/core/constants.ts`.
 4. Import as namespace in `src/main.js`: `import * as <Name>Section from "./sections/<name>.js"`.
 5. Add `he` + `en` keys to `src/i18n/he.json` and `src/i18n/en.json`.
 6. Run `npm run lint && npm test`.

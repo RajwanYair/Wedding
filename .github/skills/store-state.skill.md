@@ -17,7 +17,7 @@ The app uses a Proxy-based reactive store in `src/core/store.js`.
 
 All localStorage keys use the `wedding_v1_` prefix. Canonical keys and defaults live in:
 
-- `src/core/constants.js` — `STORAGE_KEYS` enum
+- `src/core/constants.ts` — `STORAGE_KEYS` enum
 - `src/core/defaults.js` — initial default values per domain
 
 Never invent new raw localStorage keys. Add to `STORAGE_KEYS` first.
@@ -36,7 +36,7 @@ enqueueWrite("guests", () => syncGuestsToSheets());
 
 ## Persistence Pattern for a New Domain
 
-1. Add a key to `STORAGE_KEYS` in `src/core/constants.js`.
+1. Add a key to `STORAGE_KEYS` in `src/core/constants.ts`.
 2. Add a default value to `src/core/defaults.js`.
 3. Create `src/repositories/<domain>-repo.js` with CRUD helpers (only layer that mutates store arrays).
 4. Read with `storeGet(STORAGE_KEYS.MY_KEY)`.

@@ -27,20 +27,20 @@ Search for relevant code using these patterns:
 
 ### 3. Check Common Failure Points
 
-| Area | What to Check |
-|------|--------------|
-| Render not updating | Is there a `storeSubscribe` in `mount()`? Is `unmount()` cleaning it up? |
-| Data not persisting | Is `storeSet` being called with the correct `wedding_v1_` key? |
-| Sheets sync broken | Is `enqueueWrite()` used (not direct `syncStoreKeyToSheets`)? |
-| Phone lookup failing | Is `cleanPhone()` normalizing the input before lookup? |
-| Auth redirect loop | Is `PUBLIC_SECTIONS` including the target section? |
-| Missing i18n text | Does the key exist in both `he.json` and `en.json`? |
-| Modal not opening | Is `openModal('<modalName>')` called with the correct name from `MODALS` in `constants.js`? |
-| Validation error | Did `sanitize(input, schema)` return `errors`? Check the schema in `src/utils/sanitize.js`. |
-| Repository not found | Does `src/repositories/<domain>-repo.js` exist and export the expected helper? |
-| Handler not firing | Is the `data-action` attribute value registered in the handlers map in `src/core/events.js`? |
-| AI suggestion not loading | Is `callAiProxy()` returning an error? Check `AI_PROXY_URL` config and CF Worker logs. |
-| Floor plan not rendering | Is `applyFloorPlanPreset()` called after the tables section is mounted? |
+| Area                      | What to Check                                                                                |
+| ------------------------- | -------------------------------------------------------------------------------------------- |
+| Render not updating       | Is there a `storeSubscribe` in `mount()`? Is `unmount()` cleaning it up?                     |
+| Data not persisting       | Is `storeSet` being called with the correct `wedding_v1_` key?                               |
+| Sheets sync broken        | Is `enqueueWrite()` used (not direct `syncStoreKeyToSheets`)?                                |
+| Phone lookup failing      | Is `cleanPhone()` normalizing the input before lookup?                                       |
+| Auth redirect loop        | Is `PUBLIC_SECTIONS` including the target section?                                           |
+| Missing i18n text         | Does the key exist in both `he.json` and `en.json`?                                          |
+| Modal not opening         | Is `openModal('<modalName>')` called with the correct name from `MODALS` in `constants.ts`?  |
+| Validation error          | Did `sanitize(input, schema)` return `errors`? Check the schema in `src/utils/sanitize.js`.  |
+| Repository not found      | Does `src/repositories/<domain>-repo.js` exist and export the expected helper?               |
+| Handler not firing        | Is the `data-action` attribute value registered in the handlers map in `src/core/events.js`? |
+| AI suggestion not loading | Is `callAiProxy()` returning an error? Check `AI_PROXY_URL` config and CF Worker logs.       |
+| Floor plan not rendering  | Is `applyFloorPlanPreset()` called after the tables section is mounted?                      |
 
 ### 4. Write a Failing Test
 

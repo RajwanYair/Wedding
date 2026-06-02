@@ -5,7 +5,7 @@
  *
  * Reports any `localStorage.setItem("<sensitive_key>", …)` call site that
  * is NOT routed through `secure-storage.js`. Sensitive keys are taken
- * from `src/core/constants.js` (Critical/High tier).
+ * from `src/core/constants.ts` (Critical/High tier).
  *
  * Advisory mode (default): always exits 0.
  * Pass `--enforce` to exit 1 on any violation (target: v12.0.0).
@@ -41,7 +41,10 @@ function main() {
     const src = readFileSync(f, "utf8");
     for (const key of SENSITIVE_KEYS) {
       // Match: localStorage.setItem("<key>", …) or storage.set("<key>", …)
-      const re = new RegExp(`(?:localStorage\\.setItem|storage\\.set)\\s*\\(\\s*['"\`]${key.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}['"\`]`, "g");
+      const re = new RegExp(
+        `(?:localStorage\\.setItem|storage\\.set)\\s*\\(\\s*['"\`]${key.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}['"\`]`,
+        "g",
+      );
       const matches = src.match(re);
       if (matches) {
         violations.push({ file: rel, key, count: matches.length });

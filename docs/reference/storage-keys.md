@@ -6,7 +6,7 @@
 
 All Wedding Manager data persists in `localStorage` under the
 `wedding_v1_` prefix. The canonical source is
-[`src/core/constants.js`](../../src/core/constants.js) — this page is a
+[`src/core/constants.ts`](../../src/core/constants.ts) — this page is a
 human-readable mirror.
 
 > **Schema bump policy**: any breaking change to a value's shape requires
@@ -16,13 +16,13 @@ human-readable mirror.
 
 ## Categories
 
-| Category | Purpose | Cleared on logout? |
-| --- | --- | --- |
-| Domain data | Guests, tables, vendors, expenses, timeline | No (admin manages) |
-| Auth | Supabase session, OAuth tokens | Yes |
-| User preferences | Theme, language, color scheme | No |
-| Diagnostics | Error queue, session id, sync state | No |
-| Integrations | WhatsApp, Sheets, Push subscription | Partial (see entry) |
+| Category         | Purpose                                     | Cleared on logout?  |
+| ---------------- | ------------------------------------------- | ------------------- |
+| Domain data      | Guests, tables, vendors, expenses, timeline | No (admin manages)  |
+| Auth             | Supabase session, OAuth tokens              | Yes                 |
+| User preferences | Theme, language, color scheme               | No                  |
+| Diagnostics      | Error queue, session id, sync state         | No                  |
+| Integrations     | WhatsApp, Sheets, Push subscription         | Partial (see entry) |
 
 ## Key catalogue
 
@@ -31,56 +31,56 @@ human-readable mirror.
 These keys are owned by [`store.js`](../../src/core/store.js) — _never_
 write to them directly. Use `storeSet(domain, value)` instead.
 
-| Key | Domain | Type |
-| --- | --- | --- |
-| `wedding_v1_guests` | guests | `Guest[]` |
-| `wedding_v1_tables` | tables | `Table[]` |
-| `wedding_v1_vendors` | vendors | `Vendor[]` |
-| `wedding_v1_expenses` | expenses | `Expense[]` |
-| `wedding_v1_timeline` | timeline | `TimelineItem[]` |
-| `wedding_v1_settings` | settings | `Settings` |
-| `wedding_v1_messageTemplates` | message templates | `Template[]` |
-| `wedding_v1_rsvpLog` | RSVP audit log | `RsvpLogEntry[]` |
+| Key                           | Domain            | Type             |
+| ----------------------------- | ----------------- | ---------------- |
+| `wedding_v1_guests`           | guests            | `Guest[]`        |
+| `wedding_v1_tables`           | tables            | `Table[]`        |
+| `wedding_v1_vendors`          | vendors           | `Vendor[]`       |
+| `wedding_v1_expenses`         | expenses          | `Expense[]`      |
+| `wedding_v1_timeline`         | timeline          | `TimelineItem[]` |
+| `wedding_v1_settings`         | settings          | `Settings`       |
+| `wedding_v1_messageTemplates` | message templates | `Template[]`     |
+| `wedding_v1_rsvpLog`          | RSVP audit log    | `RsvpLogEntry[]` |
 
 > Concrete shapes live in [`src/types.d.ts`](../../src/types.d.ts).
 
 ### Auth & session
 
-| Key | Purpose |
-| --- | --- |
-| `wedding_v1_supabase_session` | Supabase JWT bundle |
-| `wedding_v1_supabase_auth` | OAuth provider state |
-| `wedding_v1_revoked_tokens` | Server-revoked guest tokens (offline cache) |
+| Key                           | Purpose                                     |
+| ----------------------------- | ------------------------------------------- |
+| `wedding_v1_supabase_session` | Supabase JWT bundle                         |
+| `wedding_v1_supabase_auth`    | OAuth provider state                        |
+| `wedding_v1_revoked_tokens`   | Server-revoked guest tokens (offline cache) |
 
 ### User preferences
 
-| Key | Purpose |
-| --- | --- |
-| `wedding_v1_theme` | Active theme slug (`rosegold`, `gold`, …) |
-| `wedding_v1_lightMode` | `light` / `dark` / `auto` |
-| `wedding_v1_colorScheme` | OS-level scheme override |
-| `wedding_v1_lastSeenVersion` | "What's new" banner gate |
+| Key                          | Purpose                                   |
+| ---------------------------- | ----------------------------------------- |
+| `wedding_v1_theme`           | Active theme slug (`rosegold`, `gold`, …) |
+| `wedding_v1_lightMode`       | `light` / `dark` / `auto`                 |
+| `wedding_v1_colorScheme`     | OS-level scheme override                  |
+| `wedding_v1_lastSeenVersion` | "What's new" banner gate                  |
 
 ### Diagnostics
 
-| Key | Purpose |
-| --- | --- |
-| `wedding_v1_errors` | Buffered error queue (offline) |
-| `wedding_v1_error_session_id` | Stable session id for grouping |
-| `wedding_v1_idb_migrated` | One-shot IndexedDB migration flag |
+| Key                           | Purpose                           |
+| ----------------------------- | --------------------------------- |
+| `wedding_v1_errors`           | Buffered error queue (offline)    |
+| `wedding_v1_error_session_id` | Stable session id for grouping    |
+| `wedding_v1_idb_migrated`     | One-shot IndexedDB migration flag |
 
 ### Integrations
 
-| Key | Purpose |
-| --- | --- |
-| `wedding_v1_sheets_mirror` | Last-known Google Sheets snapshot |
-| `wedding_v1_greenApiInstanceId` | WhatsApp Green API id |
-| `wedding_v1_greenApiToken` | WhatsApp Green API token |
-| `wedding_v1_wa_phone_number_id` | WhatsApp Business phone id |
-| `wedding_v1_reminderQueue` | Pending guest reminder messages |
-| `wedding_v1_push_sub` | Web Push subscription cache |
-| `wedding_v1_install_dismissed_until` | PWA install banner suppress date |
-| `wedding_v1_runtime_cfg` | Runtime feature-flag overrides |
+| Key                                  | Purpose                           |
+| ------------------------------------ | --------------------------------- |
+| `wedding_v1_sheets_mirror`           | Last-known Google Sheets snapshot |
+| `wedding_v1_greenApiInstanceId`      | WhatsApp Green API id             |
+| `wedding_v1_greenApiToken`           | WhatsApp Green API token          |
+| `wedding_v1_wa_phone_number_id`      | WhatsApp Business phone id        |
+| `wedding_v1_reminderQueue`           | Pending guest reminder messages   |
+| `wedding_v1_push_sub`                | Web Push subscription cache       |
+| `wedding_v1_install_dismissed_until` | PWA install banner suppress date  |
+| `wedding_v1_runtime_cfg`             | Runtime feature-flag overrides    |
 
 ## Reading & writing
 

@@ -16,7 +16,7 @@ Description: `${input:sectionDescription}`
 Get-ChildItem src/sections -Filter "*.js" | Select-Object Name | Sort-Object Name
 ```
 
-Read `src/core/constants.js` — check `SECTION_LIST` for conflicts.
+Read `src/core/constants.ts` — check `SECTION_LIST` for conflicts.
 
 ### 2. Create Section Module
 
@@ -60,7 +60,7 @@ File: `src/templates/${input:sectionName}.html`
 
 ### 4. Register in Constants
 
-Add to `SECTION_LIST` in `src/core/constants.js`.
+Add to `SECTION_LIST` in `src/core/constants.ts`.
 
 ### 5. Import in main.js
 

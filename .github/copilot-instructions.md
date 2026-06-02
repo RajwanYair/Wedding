@@ -4,19 +4,19 @@
 
 ## Quick Facts
 
-| Key | Value |
-| --- | --- |
-| Version | **v32.2.0** |
-| Stack | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules) |
-| Runtime deps | **4** — `@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
-| Node modules | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci` |
-| Language | Hebrew RTL primary, English toggle (lazy JSON) |
-| Tests | `npm test` — **6894 tests** across 489 files · 0 Node warnings · 190 utils |
-| Lint | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache) |
-| Deploy | GitHub Pages — <https://rajwanyair.github.io/Wedding> |
-| Build | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`) |
-| Commit rule | After every Copilot chat session **or** completed sprint: `git commit` with clear message + `git push` |
-| Auth providers | Google · Facebook · Apple OAuth + email allowlist + anonymous guest |
+| Key            | Value                                                                                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Version        | **v32.2.0**                                                                                                                                             |
+| Stack          | HTML5 · vanilla CSS3 (`@layer` + nesting) · vanilla JS (ES2025, modules)                                                                                |
+| Runtime deps   | **4** — `@supabase/supabase-js`, `dompurify`, `valibot`, `@preact/signals-core`; devDeps: ESLint, Stylelint, HTMLHint, markdownlint, Vitest, Playwright |
+| Node modules   | Shared `../MyScripts/node_modules/` — run `npm install` from parent dir; CI uses its own `npm ci`                                                       |
+| Language       | Hebrew RTL primary, English toggle (lazy JSON)                                                                                                          |
+| Tests          | `npm test` — **6894 tests** across 489 files · 0 Node warnings · 190 utils                                                                              |
+| Lint           | `npm run lint` → 0 errors · 0 warnings (ESLint --cache, Stylelint --cache)                                                                              |
+| Deploy         | GitHub Pages — <https://rajwanyair.github.io/Wedding>                                                                                                   |
+| Build          | Vite 8 · `src/main.js` entry · pure ESM (no `window.*`)                                                                                                 |
+| Commit rule    | After every Copilot chat session **or** completed sprint: `git commit` with clear message + `git push`                                                  |
+| Auth providers | Google · Facebook · Apple OAuth + email allowlist + anonymous guest                                                                                     |
 
 ## File Structure
 
@@ -57,19 +57,19 @@ worker/              # Cloudflare Worker AI proxy (wrangler.toml · src/index.ts
 
 Canonical runtime types live in `src/types.d.ts`.
 
-- Guest/Table/Vendor/Expense enums, modal names, and storage keys live in `src/core/constants.js`
+- Guest/Table/Vendor/Expense enums, modal names, and storage keys live in `src/core/constants.ts`
 - Store defaults and persisted store domains live in `src/core/defaults.js`
 - Prefer referencing those runtime files instead of duplicating shape definitions in new docs or agent files
 
 ## Auth Providers
 
-| Provider | Status | Config key |
-| --- | --- | --- |
-| Email allowlist | ✅ Primary | `ADMIN_EMAILS` + Settings → User Access |
-| Google | ✅ Active (GIS SDK) | `GOOGLE_CLIENT_ID` in `src/core/config.js` |
-| Facebook | ✅ Active (FB JS SDK, dynamic) | `FB_APP_ID` in `src/core/config.js` |
-| Apple | ✅ Active (AppleID SDK, dynamic) | `APPLE_SERVICE_ID` in `src/core/config.js` |
-| Guest / Anonymous | ✅ Default | Auto-login, RSVP-only |
+| Provider          | Status                           | Config key                                 |
+| ----------------- | -------------------------------- | ------------------------------------------ |
+| Email allowlist   | ✅ Primary                       | `ADMIN_EMAILS` + Settings → User Access    |
+| Google            | ✅ Active (GIS SDK)              | `GOOGLE_CLIENT_ID` in `src/core/config.js` |
+| Facebook          | ✅ Active (FB JS SDK, dynamic)   | `FB_APP_ID` in `src/core/config.js`        |
+| Apple             | ✅ Active (AppleID SDK, dynamic) | `APPLE_SERVICE_ID` in `src/core/config.js` |
+| Guest / Anonymous | ✅ Default                       | Auto-login, RSVP-only                      |
 
 All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single source of truth.
 
@@ -98,44 +98,44 @@ All OAuth providers call `isApprovedAdmin(email)` — allowlist is the single so
 
 Run before every version tag / GitHub Pages deploy. All items must be green.
 
-| # | Check | Command / Action |
-| --- | --- | --- |
-| 1 | **Zero lint errors/warnings** | `npm run lint` — 0 errors, 0 warnings, 0 Node warnings |
-| 2 | **Zero test failures** | `npm test` — all current suites pass, 0 skipped |
-| 3 | **Zero deprecation notices** | No `npm WARN deprecated` in `npm ci` output |
-| 4 | **No dead code/files** | No unused exports, no orphaned templates or JS modules |
-| 5 | **No eval/innerHTML** | CI security scan passes (`src/**/*.js`, `index.html`) |
-| 6 | **Vite build succeeds** | `npm run build` exits 0; check `dist/` size with `npm run size` |
-| 7 | **SW cache name bumped** | `public/sw.js` `CACHE_NAME` matches new `vX.Y.Z` |
-| 8 | **Docs current** | `CHANGELOG.md` has entry; `README.md` badge matches `package.json` |
-| 9 | **Auth providers confirmed** | Google · Facebook · Apple secrets in GitHub Secrets; email allowlist current |
-| 10 | **Commit + push** | `git commit -m "vX.Y.Z — ..."` + `git push` + `git tag vX.Y.Z && git push --tags` |
-| 11 | **GH issues closed** | Link each resolved issue to commit hash in its closing comment |
-| 12 | **i18n complete** | Every new `t('key')` has both `he` + `en` entries in `src/i18n/*.json` |
+| #   | Check                         | Command / Action                                                                  |
+| --- | ----------------------------- | --------------------------------------------------------------------------------- |
+| 1   | **Zero lint errors/warnings** | `npm run lint` — 0 errors, 0 warnings, 0 Node warnings                            |
+| 2   | **Zero test failures**        | `npm test` — all current suites pass, 0 skipped                                   |
+| 3   | **Zero deprecation notices**  | No `npm WARN deprecated` in `npm ci` output                                       |
+| 4   | **No dead code/files**        | No unused exports, no orphaned templates or JS modules                            |
+| 5   | **No eval/innerHTML**         | CI security scan passes (`src/**/*.js`, `index.html`)                             |
+| 6   | **Vite build succeeds**       | `npm run build` exits 0; check `dist/` size with `npm run size`                   |
+| 7   | **SW cache name bumped**      | `public/sw.js` `CACHE_NAME` matches new `vX.Y.Z`                                  |
+| 8   | **Docs current**              | `CHANGELOG.md` has entry; `README.md` badge matches `package.json`                |
+| 9   | **Auth providers confirmed**  | Google · Facebook · Apple secrets in GitHub Secrets; email allowlist current      |
+| 10  | **Commit + push**             | `git commit -m "vX.Y.Z — ..."` + `git push` + `git tag vX.Y.Z && git push --tags` |
+| 11  | **GH issues closed**          | Link each resolved issue to commit hash in its closing comment                    |
+| 12  | **i18n complete**             | Every new `t('key')` has both `he` + `en` entries in `src/i18n/*.json`            |
 
 ## Known Gotchas
 
-| Area | Rule |
-| --- | --- |
-| ESLint scope | `src/` uses `^_` varsIgnorePattern |
-| Stylelint fonts | lowercase: `tahoma` ✅; multi-word: `"Segoe UI"` ✅ |
-| GH Actions | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5` |
+| Area                   | Rule                                                                                                                                                |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ESLint scope           | `src/` uses `^_` varsIgnorePattern                                                                                                                  |
+| Stylelint fonts        | lowercase: `tahoma` ✅; multi-word: `"Segoe UI"` ✅                                                                                                 |
+| GH Actions             | `checkout@v4` · `setup-node@v4` · `upload-pages-artifact@v4` · `deploy-pages@v5`                                                                    |
 | Copilot customizations | `.agent.md` + `.prompt.md` + `.instructions.md` + `.vscode/mcp.json`; Chat Customizations editor for discovery; `model:` field in agent frontmatter |
-| OAuth globals | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs` |
-| RSVP flow | `lookupRsvpByPhone()` fires on phone input; phone-first lookup |
-| Sheets sync | `enqueueWrite(key, fn)` only — never call `syncStoreKeyToSheets` directly |
-| RSVP log | `enqueueWrite("rsvp_log", () => appendToRsvpLog(entry))` — logs to RSVP_Log sheet |
-| Vitest | `npm test` only — `pool: "forks"` with `--no-warnings` suppresses happy-dom noise |
-| Lint cache | ESLint + Stylelint use `node_modules/.cache/` — no manual cache files in repo root |
-| node_modules | Shared at `../MyScripts/node_modules/`; CI runs its own `npm ci` |
-| SW update | `initSW()` in `src/core/ui.js` — detects new deployments; shows banner or auto-reloads |
-| Guest default | Guests land on `landing` section; `PUBLIC_SECTIONS` controls no-auth access |
-| CF Worker | `worker/` at repo root; `wrangler.toml` configures AI proxy; deploy with `wrangler deploy` |
-| AI Proxy | `callAiProxy(prompt, opts)` in `src/services/ai-proxy.js`; env var `AI_PROXY_URL` injected at build; never log AI API keys |
-| Cmd-K palette | `initCommandPalette()` wired in `src/core/nav.js`; actions registered in command registry; AI inline via `dispatchAiCommand()` |
-| Floor plan | `applyFloorPlanPreset(preset)` / `exportFloorPlanSvg()` in `src/sections/tables.js`; preset values: `"banquet"` \| `"classroom"` \| `"cocktail"` |
-| Vendor workflows | `startVendorNegotiation()` / `submitVendorOffer()` / `generatePaymentSchedule()` in `src/sections/vendors.js` |
-| Session commit | After every Copilot chat session or sprint: commit with clear message and push |
+| OAuth globals          | `FB`, `AppleID`, `google` declared `readonly` in `eslint.config.mjs`                                                                                |
+| RSVP flow              | `lookupRsvpByPhone()` fires on phone input; phone-first lookup                                                                                      |
+| Sheets sync            | `enqueueWrite(key, fn)` only — never call `syncStoreKeyToSheets` directly                                                                           |
+| RSVP log               | `enqueueWrite("rsvp_log", () => appendToRsvpLog(entry))` — logs to RSVP_Log sheet                                                                   |
+| Vitest                 | `npm test` only — `pool: "forks"` with `--no-warnings` suppresses happy-dom noise                                                                   |
+| Lint cache             | ESLint + Stylelint use `node_modules/.cache/` — no manual cache files in repo root                                                                  |
+| node_modules           | Shared at `../MyScripts/node_modules/`; CI runs its own `npm ci`                                                                                    |
+| SW update              | `initSW()` in `src/core/ui.js` — detects new deployments; shows banner or auto-reloads                                                              |
+| Guest default          | Guests land on `landing` section; `PUBLIC_SECTIONS` controls no-auth access                                                                         |
+| CF Worker              | `worker/` at repo root; `wrangler.toml` configures AI proxy; deploy with `wrangler deploy`                                                          |
+| AI Proxy               | `callAiProxy(prompt, opts)` in `src/services/ai-proxy.js`; env var `AI_PROXY_URL` injected at build; never log AI API keys                          |
+| Cmd-K palette          | `initCommandPalette()` wired in `src/core/nav.js`; actions registered in command registry; AI inline via `dispatchAiCommand()`                      |
+| Floor plan             | `applyFloorPlanPreset(preset)` / `exportFloorPlanSvg()` in `src/sections/tables.js`; preset values: `"banquet"` \| `"classroom"` \| `"cocktail"`    |
+| Vendor workflows       | `startVendorNegotiation()` / `submitVendorOffer()` / `generatePaymentSchedule()` in `src/sections/vendors.js`                                       |
+| Session commit         | After every Copilot chat session or sprint: commit with clear message and push                                                                      |
 
 ## Key Patterns
 

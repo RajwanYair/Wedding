@@ -18,7 +18,7 @@ Entry point: `src/core/nav-auth.js` — `isApprovedAdmin(email)` is the single g
 ## Rules
 
 - Never bypass `isApprovedAdmin()` — it is the single source of truth for admin access.
-- `PUBLIC_SECTIONS` in `src/core/constants.js` controls what anonymous users see.
+- `PUBLIC_SECTIONS` in `src/core/constants.ts` controls what anonymous users see.
 - Sensitive config (`GOOGLE_CLIENT_ID`, `FB_APP_ID`, etc.) lives in `src/core/config.js` — never hardcode in templates.
 - Credentials are injected at build time by `scripts/inject-config.mjs` — source defaults are empty strings.
 

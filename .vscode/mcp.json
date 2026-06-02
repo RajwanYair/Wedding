@@ -1,63 +1,81 @@
 {
-  "servers": {
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp",
-      "description": "GitHub repository, issue, and pull request context in chat."
-    },
-    "fetch": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-fetch"
-      ],
-      "description": "Test API endpoints directly in chat."
-    },
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@microsoft/mcp-server-playwright"
-      ],
-      "description": "Browser automation and visual debugging in chat."
-    },
-    "filesystem": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "${workspaceFolder}",
-        "--exclude",
-        "coverage,dist,lcov-report,.git,node_modules,.stryker-tmp,playwright-report"
-      ],
-      "description": "Scoped read/write access to the Wedding workspace — heavy dirs excluded."
-    },
-    "gitkraken": {
-      "type": "http",
-      "url": "https://mcp.gitkraken.com/sse",
-      "description": "GitKraken git history, blame, branch, and launchpad context in chat."
-    },
-    "supabase": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@supabase/mcp-server-supabase@latest",
-        "--read-only"
-      ],
-      "description": "Supabase schema, table data, and RLS policy inspection — read-only, no mutations from chat."
-    },
-    "memory": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
-      "description": "Persistent project knowledge graph — decisions, patterns, sprint context."
+    "servers": {
+        "github": {
+            "type": "http",
+            "url": "https://api.githubcopilot.com/mcp",
+            "description": "GitHub repository, issue, and pull request context in chat."
+        },
+        "fetch": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-fetch"
+            ],
+            "description": "Test API endpoints directly in chat."
+        },
+        "playwright": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@microsoft/mcp-server-playwright"
+            ],
+            "description": "Browser automation and visual debugging in chat."
+        },
+        "filesystem": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "${workspaceFolder}",
+                "--exclude",
+                "coverage,dist,lcov-report,.git,node_modules,.stryker-tmp,playwright-report"
+            ],
+            "description": "Scoped read/write access to the Wedding workspace — heavy dirs excluded."
+        },
+        "gitkraken": {
+            "type": "http",
+            "url": "https://mcp.gitkraken.com/sse",
+            "description": "GitKraken git history, blame, branch, and launchpad context in chat."
+        },
+        "supabase": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@supabase/mcp-server-supabase@latest",
+                "--read-only"
+            ],
+            "description": "Supabase schema, table data, and RLS policy inspection — read-only, no mutations from chat."
+        },
+        "memory": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-memory"
+            ],
+            "description": "Persistent project knowledge graph — decisions, patterns, sprint context."
+        },
+        "context7": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@upstash/context7-mcp"
+            ],
+            "description": "Retrieves current, version-accurate documentation for npm packages — prevents hallucinated APIs."
+        },
+        "sequentialthinking": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ],
+            "description": "Structured multi-step reasoning for complex problem decomposition."
+        }
     }
-  }
 }

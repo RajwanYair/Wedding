@@ -4,7 +4,7 @@
 
 ## Scope
 
-This is a **pure web application**: one production build (`dist/`), one dev-server command (`npm run dev`), zero native binaries, zero Python build steps.  All CI and tooling runs on Node ≥ 22 (GitHub Actions ubuntu-latest + local VS Code).
+This is a **pure web application**: one production build (`dist/`), one dev-server command (`npm run dev`), zero native binaries, zero Python build steps. All CI and tooling runs on Node ≥ 22 (GitHub Actions ubuntu-latest + local VS Code).
 
 ## Module Dependency Graph
 
@@ -134,17 +134,17 @@ graph TD
 
 ## Layer Overview
 
-| Layer | Path | Responsibility |
-| --- | --- | --- |
-| Bootstrap | `src/main.js` | App init, event wiring, section lifecycle |
-| Core | `src/core/` | Store, events, i18n, nav, UI, DOM, config, constants |
-| Sections | `src/sections/` | Feature modules mounted from the runtime entry |
-| Services | `src/services/` | Auth, Sheets, backend, presence, Supabase integrations |
-| Utils | `src/utils/` | Pure helpers and reusable primitives |
-| Templates | `src/templates/` | Lazy-loaded section markup |
-| Modals | `src/modals/` | Lazy-loaded modal markup |
+| Layer     | Path             | Responsibility                                         |
+| --------- | ---------------- | ------------------------------------------------------ |
+| Bootstrap | `src/main.js`    | App init, event wiring, section lifecycle              |
+| Core      | `src/core/`      | Store, events, i18n, nav, UI, DOM, config, constants   |
+| Sections  | `src/sections/`  | Feature modules mounted from the runtime entry         |
+| Services  | `src/services/`  | Auth, Sheets, backend, presence, Supabase integrations |
+| Utils     | `src/utils/`     | Pure helpers and reusable primitives                   |
+| Templates | `src/templates/` | Lazy-loaded section markup                             |
+| Modals    | `src/modals/`    | Lazy-loaded modal markup                               |
 
-Canonical shared definitions live in `src/core/constants.js` for section names and domain enums, and in `src/core/defaults.js` for initial store data.
+Canonical shared definitions live in `src/core/constants.ts` for section names and domain enums, and in `src/core/defaults.js` for initial store data.
 
 Legacy or experimental modules may still exist elsewhere in `src/`, but the production path should be traced from `src/main.js` first.
 
@@ -427,37 +427,37 @@ flowchart TD
 
 Run: `npm run audit:dead` via `scripts/dead-export-check.mjs`
 
-| Metric | Value |
-| ------ | ----- |
-| Total exported symbols | 904 |
-| Imported somewhere | 725 (80%) |
-| Dead (no import found) | 179 (20%) |
-| Files audited | 131 source files |
+| Metric                 | Value            |
+| ---------------------- | ---------------- |
+| Total exported symbols | 904              |
+| Imported somewhere     | 725 (80%)        |
+| Dead (no import found) | 179 (20%)        |
+| Files audited          | 131 source files |
 
 ### Removed Aspirational Files
 
 The following files were explicitly removed as aspirational with no active consumers:
 
-| File | Version Removed | Justification |
-| ---- | --------------- | ------------- |
-| `src/services/donation-tracker.js` | v8.2.0 | No UI, no section, no activation plan |
-| `src/services/vendor-proposals.js` | v8.2.0 | No UI, no section, no activation plan |
-| `src/services/sms-service.js` | v8.2.0 | Redundant with WhatsApp path; no activation plan |
-| `src/core/plugins.js` | v8.2.0 | Plugin system designed but never had real consumers |
-| `src/utils/retry-policy.js` | v10.1.0 | Duplicate of retry-with-backoff.js; neither imported |
-| `src/utils/retry-queue.js` | v10.1.0 | Persistent retry queue; no consumer |
-| `src/utils/retry-with-backoff.js` | v10.1.0 | Duplicate of retry-policy.js; neither imported |
-| `src/utils/form-builder.js` | v10.1.0 | Overlaps form-helpers.js (which is used); no consumer |
-| `src/utils/form-validator.js` | v10.1.0 | Overlaps form-helpers.js; no consumer |
-| `src/utils/form-metadata.js` | v10.1.0 | Overlaps form-builder.js; no consumer |
-| `src/utils/event-bus.js` | v10.1.0 | Superseded by core/events.js; no consumer |
-| `src/utils/event-emitter.js` | v10.1.0 | Superseded by core/events.js; no consumer |
-| `src/utils/event-queue.js` | v10.1.0 | Superseded by core/events.js; no consumer |
-| `src/utils/storage-helpers.js` | v10.1.0 | Superseded by core/storage.js; no consumer |
-| `src/utils/storage-quota.js` | v10.1.0 | No consumer |
-| `src/utils/number-formatter.js` | v10.1.0 | Re-exports currency.js; no direct consumer |
-| `src/utils/number-helpers.js` | v10.1.0 | Generic math utils; no consumer |
-| `src/utils/index.js` | v10.1.0 | Dead barrel; nothing imported it |
+| File                               | Version Removed | Justification                                         |
+| ---------------------------------- | --------------- | ----------------------------------------------------- |
+| `src/services/donation-tracker.js` | v8.2.0          | No UI, no section, no activation plan                 |
+| `src/services/vendor-proposals.js` | v8.2.0          | No UI, no section, no activation plan                 |
+| `src/services/sms-service.js`      | v8.2.0          | Redundant with WhatsApp path; no activation plan      |
+| `src/core/plugins.js`              | v8.2.0          | Plugin system designed but never had real consumers   |
+| `src/utils/retry-policy.js`        | v10.1.0         | Duplicate of retry-with-backoff.js; neither imported  |
+| `src/utils/retry-queue.js`         | v10.1.0         | Persistent retry queue; no consumer                   |
+| `src/utils/retry-with-backoff.js`  | v10.1.0         | Duplicate of retry-policy.js; neither imported        |
+| `src/utils/form-builder.js`        | v10.1.0         | Overlaps form-helpers.js (which is used); no consumer |
+| `src/utils/form-validator.js`      | v10.1.0         | Overlaps form-helpers.js; no consumer                 |
+| `src/utils/form-metadata.js`       | v10.1.0         | Overlaps form-builder.js; no consumer                 |
+| `src/utils/event-bus.js`           | v10.1.0         | Superseded by core/events.js; no consumer             |
+| `src/utils/event-emitter.js`       | v10.1.0         | Superseded by core/events.js; no consumer             |
+| `src/utils/event-queue.js`         | v10.1.0         | Superseded by core/events.js; no consumer             |
+| `src/utils/storage-helpers.js`     | v10.1.0         | Superseded by core/storage.js; no consumer            |
+| `src/utils/storage-quota.js`       | v10.1.0         | No consumer                                           |
+| `src/utils/number-formatter.js`    | v10.1.0         | Re-exports currency.js; no direct consumer            |
+| `src/utils/number-helpers.js`      | v10.1.0         | Generic math utils; no consumer                       |
+| `src/utils/index.js`               | v10.1.0         | Dead barrel; nothing imported it                      |
 
 ### Remaining Dead Exports
 

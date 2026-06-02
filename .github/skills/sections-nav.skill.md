@@ -52,7 +52,7 @@ const html = await loadTemplate('guests'); // loads src/templates/guests.html
 
 ## Section List
 
-Canonical list in `src/core/constants.js` → `SECTION_LIST`:
+Canonical list in `src/core/constants.ts` → `SECTION_LIST`:
 
 ```text
 landing · dashboard · guests · tables · invitation · whatsapp · rsvp
