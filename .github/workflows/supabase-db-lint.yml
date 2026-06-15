@@ -47,7 +47,7 @@ jobs:
     # Skip silently on PRs from forks (no secret access).
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Supabase CLI
         run: |
