@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Label issues and PRs
-        uses: actions/labeler@v5
+        uses: actions/labeler@v7
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: Add issue/PR to project
         if: vars.PROJECT_NUMBER != ''
-        uses: actions/add-to-project@v1.0.2
+        uses: actions/add-to-project@v2.0.0
         with:
           project-url: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/projects/${{ vars.PROJECT_NUMBER }}
           github-token: ${{ secrets.GH_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
