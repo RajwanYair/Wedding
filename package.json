@@ -86,7 +86,7 @@
   "dependencies": {
     "@preact/signals-core": "^1.14.5",
     "@supabase/supabase-js": "^2.119.2",
-    "dompurify": "^3.4.17",
+    "dompurify": "^3.4.18",
     "valibot": "^1.5.0"
   }
 }
